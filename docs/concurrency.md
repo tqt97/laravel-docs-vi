@@ -1,35 +1,35 @@
-# Concurrency
+# Thực thi đồng thời (Concurrency)
 
-- [Introduction](#introduction)
-- [Running Concurrent Tasks](#running-concurrent-tasks)
-    - [Named Results](#named-results)
-    - [Task Timeouts](#task-timeouts)
-- [Deferring Concurrent Tasks](#deferring-concurrent-tasks)
+- [Giới thiệu](#introduction)
+- [Chạy các tác vụ đồng thời](#running-concurrent-tasks)
+    - [Kết quả có tên](#named-results)
+    - [Thời gian chờ của tác vụ](#task-timeouts)
+- [Trì hoãn các tác vụ đồng thời](#deferring-concurrent-tasks)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Sometimes you may need to execute several slow tasks which do not depend on one another. In many cases, significant performance improvements can be realized by executing the tasks concurrently. Laravel's `Concurrency` facade provides a simple, convenient API for executing closures concurrently.
+Đôi khi bạn cần thực thi nhiều tác vụ chậm nhưng không phụ thuộc lẫn nhau. Trong nhiều trường hợp, chạy các tác vụ này đồng thời có thể cải thiện đáng kể hiệu năng. Facade `Concurrency` của Laravel cung cấp một API đơn giản và thuận tiện để chạy nhiều closure song song.
 
 <a name="how-it-works"></a>
-#### How it Works
+#### Cơ chế hoạt động
 
-Laravel achieves concurrency by serializing the given closures and dispatching them to a hidden Artisan CLI command, which unserializes the closures and invokes it within its own PHP process. After the closure has been invoked, the resulting value is serialized back to the parent process.
+Laravel thực hiện concurrency bằng cách serialize các closure được cung cấp rồi gửi chúng tới một Artisan CLI command nội bộ. Command này unserialize các closure và gọi từng closure trong một PHP process riêng. Sau khi closure hoàn tất, giá trị kết quả được serialize và gửi trở lại process cha.
 
-The `Concurrency` facade supports three drivers: `process` (the default), `fork`, and `sync`.
+Facade `Concurrency` hỗ trợ ba driver: `process` (mặc định), `fork` và `sync`.
 
-The `fork` driver offers improved performance compared to the default `process` driver, but it may only be used within PHP's CLI context, as PHP does not support forking during web requests. Before using the `fork` driver, you need to install the `spatie/fork` package:
+Driver `fork` có hiệu năng tốt hơn driver `process` mặc định, nhưng chỉ có thể sử dụng trong ngữ cảnh PHP CLI vì PHP không hỗ trợ fork process trong lúc xử lý web request. Trước khi dùng driver `fork`, bạn cần cài package `spatie/fork`:
 
 ```shell
 composer require spatie/fork
 ```
 
-The `sync` driver is primarily useful during testing when you want to disable all concurrency and simply execute the given closures in sequence within the parent process.
+Driver `sync` chủ yếu hữu ích trong testing khi bạn muốn vô hiệu hóa concurrency và đơn giản là chạy tuần tự các closure trong process cha.
 
 <a name="running-concurrent-tasks"></a>
-## Running Concurrent Tasks
+## Chạy các tác vụ đồng thời
 
-To run concurrent tasks, you may invoke the `Concurrency` facade's `run` method. The `run` method accepts an array of closures which should be executed simultaneously in child PHP processes:
+Để chạy các tác vụ đồng thời, bạn có thể gọi method `run` trên facade `Concurrency`. Method `run` nhận một mảng closure và thực thi chúng cùng lúc trong các PHP process con:
 
 ```php
 use Illuminate\Support\Facades\Concurrency;
@@ -41,22 +41,22 @@ use Illuminate\Support\Facades\DB;
 ]);
 ```
 
-To use a specific driver, you may use the `driver` method:
+Để sử dụng một driver cụ thể, hãy gọi method `driver`:
 
 ```php
 $results = Concurrency::driver('fork')->run(...);
 ```
 
-Or, to change the default concurrency driver, you should publish the `concurrency` configuration file via the `config:publish` Artisan command and update the `default` option within the file:
+Hoặc nếu muốn thay đổi concurrency driver mặc định, hãy publish file cấu hình `concurrency` bằng Artisan command `config:publish`, sau đó cập nhật tùy chọn `default` trong file:
 
 ```shell
 php artisan config:publish concurrency
 ```
 
 <a name="named-results"></a>
-### Named Results
+### Kết quả có tên
 
-If you would like to access concurrent task results by name rather than by position, you may provide an associative array of closures. Each result will be returned using the same key as its corresponding closure:
+Nếu muốn truy cập kết quả theo tên thay vì vị trí trong mảng, bạn có thể truyền một associative array các closure. Mỗi kết quả sẽ được trả về với cùng key tương ứng với closure của nó:
 
 ```php
 use Illuminate\Support\Facades\Concurrency;
@@ -72,9 +72,9 @@ $orderCount = $results['orders'];
 ```
 
 <a name="task-timeouts"></a>
-### Task Timeouts
+### Thời gian chờ của tác vụ
 
-When using the `process` driver (the default), you may specify a maximum number of seconds a concurrent task is allowed to run before it is terminated by providing a timeout to the `run` method:
+Khi dùng driver `process` (mặc định), bạn có thể chỉ định số giây tối đa mà một tác vụ được phép chạy trước khi bị kết thúc bằng cách truyền `timeout` vào method `run`:
 
 ```php
 use Illuminate\Support\Facades\Concurrency;
@@ -86,7 +86,7 @@ use Illuminate\Support\Facades\DB;
 ], timeout: 30);
 ```
 
-You may also provide a `CarbonInterval` instance if you prefer a more expressive timeout definition:
+Bạn cũng có thể truyền một instance `CarbonInterval` nếu muốn biểu diễn timeout rõ nghĩa hơn:
 
 ```php
 use Illuminate\Support\Facades\Concurrency;
@@ -97,9 +97,9 @@ Concurrency::run([...], timeout: seconds(30));
 ```
 
 <a name="deferring-concurrent-tasks"></a>
-## Deferring Concurrent Tasks
+## Trì hoãn các tác vụ đồng thời
 
-If you would like to execute an array of closures concurrently, but are not interested in the results returned by those closures, you should consider using the `defer` method. When the `defer` method is invoked, the given closures are not executed immediately. Instead, Laravel will execute the closures concurrently after the HTTP response has been sent to the user:
+Nếu muốn chạy đồng thời một mảng closure nhưng không cần quan tâm tới giá trị trả về, bạn nên cân nhắc method `defer`. Khi `defer` được gọi, các closure không chạy ngay lập tức. Thay vào đó, Laravel sẽ chạy chúng đồng thời sau khi HTTP response đã được gửi cho người dùng:
 
 ```php
 use App\Services\Metrics;

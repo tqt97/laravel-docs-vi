@@ -1,19 +1,19 @@
-# Console Tests
+# Kiểm thử Console
 
-- [Introduction](#introduction)
-- [Success / Failure Expectations](#success-failure-expectations)
-- [Input / Output Expectations](#input-output-expectations)
+- [Giới thiệu](#introduction)
+- [Kỳ vọng thành công / thất bại](#success-failure-expectations)
+- [Kỳ vọng input / output](#input-output-expectations)
 - [Console Events](#console-events)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-In addition to simplifying HTTP testing, Laravel provides a simple API for testing your application's [custom console commands](/docs/{{version}}/artisan).
+Bên cạnh việc đơn giản hóa HTTP testing, Laravel còn cung cấp một API gọn gàng để kiểm thử các [console command tùy chỉnh](/docs/{{version}}/artisan) của ứng dụng.
 
 <a name="success-failure-expectations"></a>
-## Success / Failure Expectations
+## Kỳ vọng thành công / thất bại
 
-To get started, let's explore how to make assertions regarding an Artisan command's exit code. To accomplish this, we will use the `artisan` method to invoke an Artisan command from our test. Then, we will use the `assertExitCode` method to assert that the command completed with a given exit code:
+Trước tiên, hãy xem cách assert exit code của một Artisan command. Ta dùng method `artisan` để gọi command trong test, sau đó dùng `assertExitCode` để xác nhận command kết thúc với exit code mong muốn:
 
 ```php tab=Pest
 test('console command', function () {
@@ -31,13 +31,13 @@ public function test_console_command(): void
 }
 ```
 
-You may use the `assertNotExitCode` method to assert that the command did not exit with a given exit code:
+Bạn có thể dùng `assertNotExitCode` để xác nhận command không kết thúc bằng một exit code cụ thể:
 
 ```php
 $this->artisan('inspire')->assertNotExitCode(1);
 ```
 
-Of course, all terminal commands typically exit with a status code of `0` when they are successful and a non-zero exit code when they are not successful. Therefore, for convenience, you may utilize the `assertSuccessful` and `assertFailed` assertions to assert that a given command exited with a successful exit code or not:
+Thông thường, command trong terminal trả status code `0` khi thành công và giá trị khác `0` khi thất bại. Vì vậy Laravel cung cấp hai assertion tiện dụng `assertSuccessful` và `assertFailed` để kiểm tra command thành công hay thất bại:
 
 ```php
 $this->artisan('inspire')->assertSuccessful();
@@ -46,9 +46,9 @@ $this->artisan('inspire')->assertFailed();
 ```
 
 <a name="input-output-expectations"></a>
-## Input / Output Expectations
+## Kỳ vọng input / output
 
-Laravel allows you to easily "mock" user input for your console commands using the `expectsQuestion` method. In addition, you may specify the exit code and text that you expect to be output by the console command using the `assertExitCode` and `expectsOutput` methods. For example, consider the following console command:
+Laravel cho phép "mock" input của người dùng cho console command bằng method `expectsQuestion`. Bạn cũng có thể chỉ định exit code và nội dung output mong đợi thông qua `assertExitCode` và `expectsOutput`. Ví dụ với command sau:
 
 ```php
 Artisan::command('question', function () {
@@ -64,7 +64,7 @@ Artisan::command('question', function () {
 });
 ```
 
-You may test this command with the following test:
+Bạn có thể kiểm thử command này như sau:
 
 ```php tab=Pest
 test('console command', function () {
@@ -92,7 +92,7 @@ public function test_console_command(): void
 }
 ```
 
-If you are utilizing the `search` or `multisearch` functions provided by [Laravel Prompts](/docs/{{version}}/prompts), you may use the `expectsSearch` assertion to mock the user's input, search results, and selection:
+Nếu đang sử dụng function `search` hoặc `multisearch` của [Laravel Prompts](/docs/{{version}}/prompts), bạn có thể dùng assertion `expectsSearch` để mock input người dùng, kết quả tìm kiếm và lựa chọn cuối cùng:
 
 ```php tab=Pest
 test('console command', function () {
@@ -122,7 +122,7 @@ public function test_console_command(): void
 }
 ```
 
-You may also assert that a console command does not generate any output using the `doesntExpectOutput` method:
+Bạn cũng có thể dùng `doesntExpectOutput` để xác nhận console command không tạo bất kỳ output nào:
 
 ```php tab=Pest
 test('console command', function () {
@@ -144,7 +144,7 @@ public function test_console_command(): void
 }
 ```
 
-The `expectsOutputToContain` and `doesntExpectOutputToContain` methods may be used to make assertions against a portion of the output:
+Các method `expectsOutputToContain` và `doesntExpectOutputToContain` dùng để assert một phần nội dung output:
 
 ```php tab=Pest
 test('console command', function () {
@@ -167,9 +167,9 @@ public function test_console_command(): void
 ```
 
 <a name="confirmation-expectations"></a>
-#### Confirmation Expectations
+#### Kỳ vọng xác nhận
 
-When writing a command which expects confirmation in the form of a "yes" or "no" answer, you may utilize the `expectsConfirmation` method:
+Khi command yêu cầu người dùng xác nhận bằng câu trả lời "yes" hoặc "no", bạn có thể dùng method `expectsConfirmation`:
 
 ```php
 $this->artisan('module:import')
@@ -178,9 +178,9 @@ $this->artisan('module:import')
 ```
 
 <a name="table-expectations"></a>
-#### Table Expectations
+#### Kỳ vọng đối với bảng
 
-If your command displays a table of information using Artisan's `table` method, it can be cumbersome to write output expectations for the entire table. Instead, you may use the `expectsTable` method. This method accepts the table's headers as its first argument and the table's data as its second argument:
+Nếu command hiển thị dữ liệu dạng bảng bằng method `table` của Artisan, việc viết expectation cho toàn bộ output của bảng sẽ khá rườm rà. Thay vào đó, hãy dùng `expectsTable`. Method này nhận header của bảng ở tham số đầu tiên và dữ liệu bảng ở tham số thứ hai:
 
 ```php
 $this->artisan('users:all')
@@ -196,7 +196,7 @@ $this->artisan('users:all')
 <a name="console-events"></a>
 ## Console Events
 
-By default, the `Illuminate\Console\Events\CommandStarting` and `Illuminate\Console\Events\CommandFinished` events are not dispatched while running your application's tests. However, you can enable these events for a given test class by adding the `Illuminate\Foundation\Testing\WithConsoleEvents` trait to the class:
+Mặc định, event `Illuminate\Console\Events\CommandStarting` và `Illuminate\Console\Events\CommandFinished` không được dispatch khi chạy test của ứng dụng. Nếu cần các event này trong một test class, hãy thêm trait `Illuminate\Foundation\Testing\WithConsoleEvents`:
 
 ```php tab=Pest
 <?php

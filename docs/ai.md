@@ -1,109 +1,109 @@
-# AI Assisted Development
+# Phát triển với sự hỗ trợ của AI
 
- - [Introduction](#introduction)
-     - [Why Laravel for AI Development?](#why-laravel-for-ai-development)
- - [Laravel Boost](#laravel-boost)
-     - [Installation](#installation)
-     - [Available Tools](#available-tools)
-     - [AI Guidelines](#ai-guidelines)
-     - [Agent Skills](#agent-skills)
-     - [Documentation Search](#documentation-search)
-     - [Agents Integration](#agents-integration)
+- [Giới thiệu](#introduction)
+    - [Vì sao Laravel phù hợp cho phát triển với AI?](#why-laravel-for-ai-development)
+- [Laravel Boost](#laravel-boost)
+    - [Cài đặt](#installation)
+    - [Các công cụ có sẵn](#available-tools)
+    - [AI Guidelines](#ai-guidelines)
+    - [Agent Skills](#agent-skills)
+    - [Tìm kiếm tài liệu](#documentation-search)
+    - [Tích hợp Agent](#agents-integration)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel is uniquely positioned to be the best framework for AI assisted and agentic development. The rise of AI coding agents like [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [OpenCode](https://opencode.ai), [Cursor](https://cursor.com), and [GitHub Copilot](https://github.com/features/copilot) has transformed how developers write code. These tools can generate entire features, debug complex issues, and refactor code at unprecedented speed - but their effectiveness depends heavily on how well they understand your codebase.
+Laravel có nhiều đặc điểm khiến framework đặc biệt phù hợp với quy trình phát triển có AI hỗ trợ và agentic development. Sự phát triển của các AI coding agent như [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [OpenCode](https://opencode.ai), [Cursor](https://cursor.com) và [GitHub Copilot](https://github.com/features/copilot) đã thay đổi cách developer viết code. Những công cụ này có thể tạo cả một feature, debug vấn đề phức tạp và refactor code với tốc độ rất cao — nhưng hiệu quả của chúng phụ thuộc nhiều vào mức độ hiểu codebase.
 
 <a name="why-laravel-for-ai-development"></a>
-### Why Laravel for AI Development?
+### Vì sao Laravel phù hợp cho phát triển với AI?
 
-Laravel's opinionated conventions and well-defined structure make it an ideal framework for AI assisted development. When you ask an AI agent to add a controller, it knows exactly where to place it. When you need a new migration, the naming conventions and file locations are predictable. This consistency eliminates the guesswork that often trips up AI tools in more flexible frameworks.
+Các convention rõ ràng và cấu trúc được định nghĩa chặt chẽ của Laravel khiến framework phù hợp với AI-assisted development. Khi bạn yêu cầu AI agent thêm controller, agent có thể biết chính xác file nên nằm ở đâu. Khi cần migration mới, naming convention và vị trí file có tính dự đoán cao. Sự nhất quán này loại bỏ nhiều phỏng đoán thường khiến AI tool gặp khó trong các framework linh hoạt hơn.
 
-Beyond file organization, Laravel's expressive syntax and comprehensive documentation give AI agents the context they need to generate accurate, idiomatic code. Features like Eloquent relationships, form requests, and middleware follow patterns that agents can reliably understand and replicate. The result is AI-generated code that looks like it was written by a seasoned Laravel developer, not stitched together from generic PHP snippets.
+Không chỉ ở tổ chức file, syntax giàu tính biểu đạt và documentation đầy đủ của Laravel còn cung cấp context để AI agent sinh code chính xác và đúng phong cách Laravel. Eloquent relationship, form request và middleware đều tuân theo các pattern mà agent có thể hiểu và tái sử dụng một cách đáng tin cậy. Kết quả là code do AI tạo có khả năng gần với cách một Laravel developer có kinh nghiệm sẽ viết, thay vì chỉ ghép các PHP snippet chung chung.
 
 <a name="laravel-boost"></a>
 ## Laravel Boost
 
-[Laravel Boost](https://github.com/laravel/boost) bridges the gap between AI coding agents and your Laravel application. Boost is an MCP (Model Context Protocol) server equipped with over 15 specialized tools that provide AI agents with deep insight into your application's structure, database, routes, and more. When you install Boost, your AI agent transforms from a general-purpose code assistant into a Laravel expert that understands your specific application.
+[Laravel Boost](https://github.com/laravel/boost) kết nối AI coding agent với ứng dụng Laravel của bạn. Boost là một MCP (Model Context Protocol) server được trang bị hơn 15 công cụ chuyên biệt, cung cấp cho AI agent thông tin sâu về cấu trúc ứng dụng, database, route và nhiều thành phần khác. Khi cài Boost, một AI coding assistant tổng quát có thể làm việc như một Laravel assistant hiểu context cụ thể của project.
 
-Boost provides three major capabilities: a suite of MCP tools for inspecting and interacting with your application, composable AI guidelines crafted specifically for the Laravel ecosystem, and a powerful documentation API containing over 17,000 pieces of Laravel-specific knowledge.
+Boost cung cấp ba nhóm khả năng chính: bộ MCP tool để kiểm tra và tương tác với ứng dụng; các AI guideline có thể kết hợp, được xây dựng riêng cho Laravel ecosystem; và documentation API chứa hơn 17.000 đơn vị kiến thức liên quan tới Laravel.
 
 <a name="installation"></a>
-### Installation
+### Cài đặt
 
-Boost can be installed in Laravel 10, 11, 12, and 13 applications running PHP 8.1 or higher. To get started, install Boost as a development dependency:
+Boost có thể được cài trong ứng dụng Laravel 10, 11, 12 và 13 chạy PHP 8.1 trở lên. Để bắt đầu, cài Boost dưới dạng development dependency:
 
 ```shell
 composer require laravel/boost --dev
 ```
 
-Once installed, run the interactive installer:
+Sau đó chạy installer tương tác:
 
 ```shell
 php artisan boost:install
 ```
 
-The installer will auto-detect your IDE and AI agents, allowing you to select the integrations that make sense for your project. Boost will generate the necessary configuration files, such as `.mcp.json` for MCP-compatible editors and guideline files for AI context.
+Installer sẽ tự phát hiện IDE và AI agent của bạn, từ đó cho phép chọn các integration phù hợp với project. Boost sẽ tạo các file cấu hình cần thiết, ví dụ `.mcp.json` cho editor hỗ trợ MCP và các guideline file dùng làm AI context.
 
 > [!NOTE]
-> Generated configuration files like `.mcp.json`, `CLAUDE.md`, and `boost.json` can be safely added to your `.gitignore` if you prefer each developer to configure their own environment.
+> Các file cấu hình được sinh như `.mcp.json`, `CLAUDE.md` và `boost.json` có thể được thêm vào `.gitignore` nếu team muốn mỗi developer tự cấu hình environment riêng.
 
 <a name="available-tools"></a>
-### Available Tools
+### Các công cụ có sẵn
 
-Boost exposes a comprehensive set of tools to AI agents via the Model Context Protocol. These tools allow agents to deeply understand and interact with your Laravel application:
+Boost cung cấp một tập công cụ khá đầy đủ cho AI agent thông qua Model Context Protocol. Các tool này cho phép agent hiểu và tương tác sâu hơn với ứng dụng Laravel:
 
 <div class="content-list" markdown="1">
 
-- **Application Introspection** - Query your PHP and Laravel versions, list installed packages, and inspect your application's configuration and environment variables.
-- **Database Tools** - Inspect your database schema, execute read-only queries, and understand your data structure without leaving the conversation.
-- **Route Inspection** - List all registered routes with their middleware, controllers, and parameters.
-- **Artisan Commands** - Discover available Artisan commands and their arguments, enabling agents to suggest and execute the right commands for your task.
-- **Log Analysis** - Read and analyze your application's log files to help debug issues.
-- **Browser Logs** - Access browser console logs and errors when developing with Laravel's frontend tools.
-- **Tinker Integration** - Execute PHP code in the context of your application via Laravel Tinker, allowing agents to test hypotheses and verify behavior.
-- **Documentation Search** - Search Laravel ecosystem documentation with results tailored to your installed package versions.
+- **Application Introspection** - Truy vấn phiên bản PHP/Laravel, liệt kê package đã cài và kiểm tra configuration hoặc environment variable của ứng dụng.
+- **Database Tools** - Kiểm tra database schema, chạy read-only query và hiểu cấu trúc dữ liệu ngay trong cuộc hội thoại.
+- **Route Inspection** - Liệt kê route đã đăng ký cùng middleware, controller và parameter.
+- **Artisan Commands** - Khám phá các Artisan command và argument hiện có, giúp agent đề xuất hoặc thực thi đúng command cho task.
+- **Log Analysis** - Đọc và phân tích log của ứng dụng để hỗ trợ debug.
+- **Browser Logs** - Truy cập console log và error của browser khi phát triển với frontend tool của Laravel.
+- **Tinker Integration** - Chạy PHP code trong context ứng dụng thông qua Laravel Tinker, giúp agent kiểm tra giả thuyết và xác minh behavior.
+- **Documentation Search** - Tìm kiếm documentation trong Laravel ecosystem với kết quả phù hợp phiên bản package đang cài.
 
 </div>
 
 <a name="ai-guidelines"></a>
 ### AI Guidelines
 
-Boost includes a comprehensive set of AI guidelines specifically crafted for the Laravel ecosystem. These guidelines teach AI agents how to write idiomatic Laravel code, follow framework conventions, and avoid common pitfalls. Guidelines are composable and version-aware, meaning agents receive instructions appropriate for your exact package versions.
+Boost bao gồm một tập AI guideline được thiết kế riêng cho Laravel ecosystem. Các guideline này hướng dẫn AI agent viết code đúng phong cách Laravel, tuân theo convention của framework và tránh các lỗi phổ biến. Guideline có thể kết hợp và nhận biết version, vì vậy agent nhận instruction phù hợp với chính xác phiên bản package của project.
 
-Guidelines are available for Laravel itself and over 16 packages in the Laravel ecosystem, including:
+Guideline có sẵn cho Laravel và hơn 16 package trong ecosystem, bao gồm:
 
 <div class="content-list" markdown="1">
 
-- Livewire (2.x, 3.x, and 4.x)
-- Inertia.js (React, Svelte, and Vue variants)
-- Tailwind CSS (3.x and 4.x)
-- Filament (3.x and 4.x)
+- Livewire (2.x, 3.x và 4.x)
+- Inertia.js (React, Svelte và Vue)
+- Tailwind CSS (3.x và 4.x)
+- Filament (3.x và 4.x)
 - PHPUnit
 - Pest PHP
 - Laravel Pint
-- And many more
+- Và nhiều package khác
 
 </div>
 
-When you run `boost:install`, Boost automatically detects which packages your application uses and assembles the relevant guidelines into your project's AI context files.
+Khi chạy `boost:install`, Boost tự phát hiện package mà ứng dụng sử dụng và tổng hợp các guideline liên quan vào AI context file của project.
 
 <a name="agent-skills"></a>
 ### Agent Skills
 
-[Agent Skills](https://agentskills.io/home) are lightweight, targeted knowledge modules that agents can activate on-demand when working on specific domains. Unlike guidelines, which are loaded upfront, skills allow detailed patterns and best practices to be loaded only when relevant, reducing context bloat and improving the relevance of AI-generated code.
+[Agent Skills](https://agentskills.io/home) là các module kiến thức nhỏ, tập trung theo từng mục tiêu mà agent có thể kích hoạt khi cần làm việc với một domain cụ thể. Khác với guideline thường được nạp từ đầu, skill cho phép pattern và best practice chi tiết chỉ được nạp khi liên quan, giúp giảm context thừa và tăng độ liên quan của code AI tạo ra.
 
-Skills are available for popular Laravel packages like Livewire, Inertia, Tailwind CSS, Pest, and more. When you run `boost:install` and select skills as a feature, skills are automatically installed based on the packages detected in your `composer.json`.
+Skill có sẵn cho nhiều package Laravel phổ biến như Livewire, Inertia, Tailwind CSS, Pest và các package khác. Khi chạy `boost:install` và chọn skills là một feature, Boost tự cài skill dựa trên package phát hiện trong `composer.json`.
 
 <a name="documentation-search"></a>
-### Documentation Search
+### Tìm kiếm tài liệu
 
-Boost includes a powerful documentation API that gives AI agents access to over 17,000 pieces of Laravel ecosystem documentation. Unlike generic web searches, this documentation is indexed, vectorized, and filtered to match your exact package versions.
+Boost bao gồm documentation API cung cấp cho AI agent quyền truy cập vào hơn 17.000 phần tài liệu trong Laravel ecosystem. Khác với tìm kiếm web chung, nguồn này đã được index, vectorize và lọc để phù hợp với chính xác version package của project.
 
-When an agent needs to understand how a feature works, it can search Boost's documentation API and receive accurate, version-specific information. This eliminates the common problem of AI agents suggesting deprecated methods or syntax from older framework versions.
+Khi agent cần hiểu một feature, nó có thể tìm trong Boost documentation API và nhận thông tin chính xác theo version. Điều này giúp giảm tình trạng AI đề xuất method đã deprecated hoặc syntax thuộc version framework cũ.
 
 <a name="agents-integration"></a>
-### Agents Integration
+### Tích hợp Agent
 
-Boost integrates with popular IDEs and AI tools that support the Model Context Protocol. For detailed setup instructions for Cursor, Claude Code, Codex, Gemini CLI, GitHub Copilot, and Junie, see the [Set Up Your Agents](/docs/{{version}}/boost#set-up-your-agents) section of the Boost documentation.
+Boost tích hợp với các IDE và AI tool phổ biến hỗ trợ Model Context Protocol. Để xem hướng dẫn cài đặt chi tiết cho Cursor, Claude Code, Codex, Gemini CLI, GitHub Copilot và Junie, hãy xem phần [Set Up Your Agents](/docs/{{version}}/boost#set-up-your-agents) trong tài liệu Boost.

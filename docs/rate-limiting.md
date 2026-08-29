@@ -1,23 +1,23 @@
-# Rate Limiting
+# Giới hạn tần suất (Rate Limiting)
 
-- [Introduction](#introduction)
-    - [Cache Configuration](#cache-configuration)
-- [Basic Usage](#basic-usage)
-    - [Manually Incrementing Attempts](#manually-incrementing-attempts)
-    - [Clearing Attempts](#clearing-attempts)
+- [Giới thiệu](#introduction)
+    - [Cấu hình cache](#cache-configuration)
+- [Cách sử dụng cơ bản](#basic-usage)
+    - [Tăng số lần thử thủ công](#manually-incrementing-attempts)
+    - [Xóa số lần thử](#clearing-attempts)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel includes a simple to use rate limiting abstraction which, in conjunction with your application's [cache](cache), provides an easy way to limit any action during a specified window of time.
+Laravel cung cấp một abstraction rate limiting dễ sử dụng. Khi kết hợp với [cache](cache) của ứng dụng, abstraction này cho phép bạn giới hạn số lần một hành động bất kỳ được thực hiện trong một khoảng thời gian xác định.
 
 > [!NOTE]
-> If you are interested in rate limiting incoming HTTP requests, please consult the [rate limiter middleware documentation](/docs/{{version}}/routing#rate-limiting).
+> Nếu bạn muốn giới hạn tần suất các HTTP request đi vào ứng dụng, hãy xem [tài liệu rate limiter middleware](/docs/{{version}}/routing#rate-limiting).
 
 <a name="cache-configuration"></a>
-### Cache Configuration
+### Cấu hình cache
 
-Typically, the rate limiter utilizes your default application cache as defined by the `default` key within your application's `cache` configuration file. However, you may specify which cache driver the rate limiter should use by defining a `limiter` key within your application's `cache` configuration file:
+Thông thường, rate limiter sử dụng cache mặc định của ứng dụng được khai báo bởi key `default` trong file cấu hình `cache`. Tuy nhiên, bạn có thể chỉ định cache driver riêng cho rate limiter bằng cách thêm key `limiter` trong file cấu hình `cache`:
 
 ```php
 'default' => env('CACHE_STORE', 'database'),
@@ -26,11 +26,11 @@ Typically, the rate limiter utilizes your default application cache as defined b
 ```
 
 <a name="basic-usage"></a>
-## Basic Usage
+## Cách sử dụng cơ bản
 
-The `Illuminate\Support\Facades\RateLimiter` facade may be used to interact with the rate limiter. The simplest method offered by the rate limiter is the `attempt` method, which rate limits a given callback for a given number of seconds.
+Bạn có thể tương tác với rate limiter thông qua facade `Illuminate\Support\Facades\RateLimiter`. Method đơn giản nhất là `attempt`, dùng để giới hạn số lần một callback được phép thực thi trong một khoảng thời gian.
 
-The `attempt` method returns `false` when the callback has no remaining attempts available; otherwise, the `attempt` method will return the callback's result or `true`. The first argument accepted by the `attempt` method is a rate limiter "key", which may be any string of your choosing that represents the action being rate limited:
+Method `attempt` trả về `false` khi callback đã hết số lần thử cho phép; ngược lại, method sẽ trả về kết quả của callback hoặc `true`. Tham số đầu tiên của `attempt` là một "key" của rate limiter. Key có thể là bất kỳ chuỗi nào bạn chọn để đại diện cho hành động cần giới hạn:
 
 ```php
 use Illuminate\Support\Facades\RateLimiter;
@@ -48,7 +48,7 @@ if (! $executed) {
 }
 ```
 
-If necessary, you may provide a fourth argument to the `attempt` method, which is the "decay rate", or the number of seconds until the available attempts are reset. For example, we can modify the example above to allow five attempts every two minutes:
+Khi cần, bạn có thể truyền tham số thứ tư cho `attempt` là "decay rate" — số giây trước khi số lần thử khả dụng được reset. Ví dụ, ta có thể sửa ví dụ trên để cho phép năm lần thử trong mỗi hai phút:
 
 ```php
 $executed = RateLimiter::attempt(
@@ -62,9 +62,9 @@ $executed = RateLimiter::attempt(
 ```
 
 <a name="manually-incrementing-attempts"></a>
-### Manually Incrementing Attempts
+### Tăng số lần thử thủ công
 
-If you would like to manually interact with the rate limiter, a variety of other methods are available. For example, you may invoke the `tooManyAttempts` method to determine if a given rate limiter key has exceeded its maximum number of allowed attempts per minute:
+Nếu muốn tương tác trực tiếp hơn với rate limiter, Laravel cung cấp nhiều method khác. Chẳng hạn, bạn có thể gọi `tooManyAttempts` để xác định một key đã vượt quá số lần thử tối đa được phép trong mỗi phút hay chưa:
 
 ```php
 use Illuminate\Support\Facades\RateLimiter;
@@ -78,7 +78,7 @@ RateLimiter::increment('send-message:'.$user->id);
 // Send message...
 ```
 
-When rate limiting an endpoint that may receive many simultaneous requests, you may wish to check the value returned by the `increment` method instead of using `tooManyAttempts` and `increment` as separate operations. When using the `redis`, `memcached`, or `database` cache stores, this value is incremented atomically, ensuring each concurrent request receives a unique count:
+Khi rate-limit một endpoint có thể nhận nhiều request đồng thời, bạn có thể kiểm tra trực tiếp giá trị trả về từ `increment` thay vì gọi riêng `tooManyAttempts` rồi `increment`. Với cache store `redis`, `memcached` hoặc `database`, giá trị này được tăng theo cách atomic, bảo đảm mỗi request đồng thời nhận được một counter riêng và nhất quán:
 
 ```php
 use Illuminate\Support\Facades\RateLimiter;
@@ -92,7 +92,7 @@ if (RateLimiter::increment('send-message:'.$user->id) > $perMinute) {
 // Send message...
 ```
 
-Alternatively, you may use the `remaining` method to retrieve the number of attempts remaining for a given key. If a given key has retries remaining, you may invoke the `increment` method to increment the number of total attempts:
+Ngoài ra, bạn có thể dùng `remaining` để lấy số lần thử còn lại của một key. Nếu key vẫn còn lượt thử, bạn có thể gọi `increment` để tăng tổng số lần đã thử:
 
 ```php
 use Illuminate\Support\Facades\RateLimiter;
@@ -104,16 +104,16 @@ if (RateLimiter::remaining('send-message:'.$user->id, $perMinute = 5)) {
 }
 ```
 
-If you would like to increment the value for a given rate limiter key by more than one, you may provide the desired amount to the `increment` method:
+Nếu muốn tăng counter của một rate limiter key nhiều hơn một đơn vị, hãy truyền số lượng mong muốn vào `increment`:
 
 ```php
 RateLimiter::increment('send-message:'.$user->id, amount: 5);
 ```
 
 <a name="determining-limiter-availability"></a>
-#### Determining Limiter Availability
+#### Xác định khi nào limiter khả dụng trở lại
 
-When a key has no more attempts left, the `availableIn` method returns the number of seconds remaining until more attempts will be available:
+Khi một key không còn lượt thử, method `availableIn` trả về số giây còn lại trước khi có thêm lượt thử mới:
 
 ```php
 use Illuminate\Support\Facades\RateLimiter;
@@ -130,9 +130,9 @@ RateLimiter::increment('send-message:'.$user->id);
 ```
 
 <a name="clearing-attempts"></a>
-### Clearing Attempts
+### Xóa số lần thử
 
-You may reset the number of attempts for a given rate limiter key using the `clear` method. For example, you may reset the number of attempts when a given message is read by the receiver:
+Bạn có thể reset số lần thử của một rate limiter key bằng method `clear`. Ví dụ, có thể reset counter khi message tương ứng đã được người nhận đọc:
 
 ```php
 use App\Models\Message;

@@ -1,38 +1,38 @@
 # Hashing
 
-- [Introduction](#introduction)
-- [Configuration](#configuration)
-- [Basic Usage](#basic-usage)
-    - [Hashing Passwords](#hashing-passwords)
-    - [Verifying That a Password Matches a Hash](#verifying-that-a-password-matches-a-hash)
-    - [Determining if a Password Needs to be Rehashed](#determining-if-a-password-needs-to-be-rehashed)
-- [Hash Algorithm Verification](#hash-algorithm-verification)
+- [Giới thiệu](#introduction)
+- [Cấu hình](#configuration)
+- [Cách sử dụng cơ bản](#basic-usage)
+    - [Hash mật khẩu](#hashing-passwords)
+    - [Xác minh mật khẩu khớp với hash](#verifying-that-a-password-matches-a-hash)
+    - [Xác định mật khẩu có cần hash lại hay không](#determining-if-a-password-needs-to-be-rehashed)
+- [Xác minh thuật toán hash](#hash-algorithm-verification)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-The Laravel `Hash` [facade](/docs/{{version}}/facades) provides secure Bcrypt and Argon2 hashing for storing user passwords. If you are using one of the [Laravel application starter kits](/docs/{{version}}/starter-kits), Bcrypt will be used for registration and authentication by default.
+[Facade](/docs/{{version}}/facades) `Hash` của Laravel cung cấp khả năng hash an toàn bằng Bcrypt và Argon2 để lưu mật khẩu người dùng. Nếu bạn sử dụng một trong các [Laravel application starter kit](/docs/{{version}}/starter-kits), Bcrypt được dùng mặc định cho quá trình đăng ký và xác thực.
 
-Bcrypt is a great choice for hashing passwords because its "work factor" is adjustable, which means that the time it takes to generate a hash can be increased as hardware power increases. When hashing passwords, slow is good. The longer an algorithm takes to hash a password, the longer it takes malicious users to generate "rainbow tables" of all possible string hash values that may be used in brute force attacks against applications.
+Bcrypt là lựa chọn phù hợp để hash mật khẩu vì "work factor" của nó có thể điều chỉnh. Điều này có nghĩa thời gian cần để tạo hash có thể được tăng lên khi sức mạnh phần cứng ngày càng lớn. Với việc hash mật khẩu, xử lý chậm có chủ đích là điều tốt: thuật toán càng mất nhiều thời gian để hash một mật khẩu, kẻ tấn công càng phải tốn nhiều thời gian để tạo các "rainbow table" chứa những giá trị hash có thể dùng cho tấn công brute-force vào ứng dụng.
 
 <a name="configuration"></a>
-## Configuration
+## Cấu hình
 
-By default, Laravel uses the `bcrypt` hashing driver when hashing data. However, several other hashing drivers are supported, including [argon](https://en.wikipedia.org/wiki/Argon2) and [argon2id](https://en.wikipedia.org/wiki/Argon2).
+Mặc định, Laravel sử dụng hashing driver `bcrypt` khi hash dữ liệu. Framework cũng hỗ trợ các driver khác, bao gồm [argon](https://en.wikipedia.org/wiki/Argon2) và [argon2id](https://en.wikipedia.org/wiki/Argon2).
 
-You may specify your application's hashing driver using the `HASH_DRIVER` environment variable. But, if you want to customize all of Laravel's hashing driver options, you should publish the complete `hashing` configuration file using the `config:publish` Artisan command:
+Bạn có thể chỉ định hashing driver của ứng dụng thông qua biến môi trường `HASH_DRIVER`. Nếu muốn tùy chỉnh đầy đủ các tùy chọn của hashing driver trong Laravel, hãy publish file cấu hình `hashing` bằng Artisan command `config:publish`:
 
 ```shell
 php artisan config:publish hashing
 ```
 
 <a name="basic-usage"></a>
-## Basic Usage
+## Cách sử dụng cơ bản
 
 <a name="hashing-passwords"></a>
-### Hashing Passwords
+### Hash mật khẩu
 
-You may hash a password by calling the `make` method on the `Hash` facade:
+Bạn có thể hash mật khẩu bằng cách gọi method `make` trên facade `Hash`:
 
 ```php
 <?php
@@ -62,9 +62,9 @@ class PasswordController extends Controller
 ```
 
 <a name="adjusting-the-bcrypt-work-factor"></a>
-#### Adjusting The Bcrypt Work Factor
+#### Điều chỉnh Bcrypt Work Factor
 
-If you are using the Bcrypt algorithm, the `make` method allows you to manage the work factor of the algorithm using the `rounds` option; however, the default work factor managed by Laravel is acceptable for most applications:
+Nếu sử dụng thuật toán Bcrypt, method `make` cho phép bạn điều chỉnh work factor của thuật toán thông qua tùy chọn `rounds`. Tuy nhiên, work factor mặc định mà Laravel cấu hình phù hợp với phần lớn ứng dụng:
 
 ```php
 $hashed = Hash::make('password', [
@@ -73,9 +73,9 @@ $hashed = Hash::make('password', [
 ```
 
 <a name="adjusting-the-argon2-work-factor"></a>
-#### Adjusting The Argon2 Work Factor
+#### Điều chỉnh Argon2 Work Factor
 
-If you are using the Argon2 algorithm, the `make` method allows you to manage the work factor of the algorithm using the `memory`, `time`, and `threads` options; however, the default values managed by Laravel are acceptable for most applications:
+Nếu sử dụng thuật toán Argon2, method `make` cho phép bạn điều chỉnh work factor thông qua các tùy chọn `memory`, `time` và `threads`. Các giá trị mặc định do Laravel quản lý phù hợp với phần lớn ứng dụng:
 
 ```php
 $hashed = Hash::make('password', [
@@ -86,12 +86,12 @@ $hashed = Hash::make('password', [
 ```
 
 > [!NOTE]
-> For more information on these options, please refer to the [official PHP documentation regarding Argon hashing](https://secure.php.net/manual/en/function.password-hash.php).
+> Để tìm hiểu thêm về các tùy chọn này, hãy xem [tài liệu PHP chính thức về Argon hashing](https://secure.php.net/manual/en/function.password-hash.php).
 
 <a name="verifying-that-a-password-matches-a-hash"></a>
-### Verifying That a Password Matches a Hash
+### Xác minh mật khẩu khớp với hash
 
-The `check` method provided by the `Hash` facade allows you to verify that a given plain-text string corresponds to a given hash:
+Method `check` của facade `Hash` cho phép bạn kiểm tra một chuỗi plain-text có tương ứng với giá trị hash đã cho hay không:
 
 ```php
 if (Hash::check('plain-text', $hashedPassword)) {
@@ -100,9 +100,9 @@ if (Hash::check('plain-text', $hashedPassword)) {
 ```
 
 <a name="determining-if-a-password-needs-to-be-rehashed"></a>
-### Determining if a Password Needs to be Rehashed
+### Xác định mật khẩu có cần hash lại hay không
 
-The `needsRehash` method provided by the `Hash` facade allows you to determine if the work factor used by the hasher has changed since the password was hashed. Some applications choose to perform this check during the application's authentication process:
+Method `needsRehash` của facade `Hash` cho phép xác định work factor mà hasher sử dụng có thay đổi kể từ lúc mật khẩu được hash hay không. Một số ứng dụng thực hiện kiểm tra này trong quá trình xác thực:
 
 ```php
 if (Hash::needsRehash($hashed)) {
@@ -111,11 +111,11 @@ if (Hash::needsRehash($hashed)) {
 ```
 
 <a name="hash-algorithm-verification"></a>
-## Hash Algorithm Verification
+## Xác minh thuật toán hash
 
-To prevent hash algorithm manipulation, Laravel's `Hash::check` method will first verify the given hash was generated using the application's selected hashing algorithm. If the algorithms are different, a `RuntimeException` exception will be thrown.
+Để ngăn việc can thiệp vào thuật toán hash, method `Hash::check` của Laravel trước tiên sẽ xác minh hash được cung cấp có được tạo bởi đúng thuật toán hashing mà ứng dụng đã chọn hay không. Nếu hai thuật toán khác nhau, Laravel sẽ ném `RuntimeException`.
 
-This is the expected behavior for most applications, where the hashing algorithm is not expected to change and different algorithms can be an indication of a malicious attack. However, if you need to support multiple hashing algorithms within your application, such as when migrating from one algorithm to another, you can disable hash algorithm verification by setting the `HASH_VERIFY` environment variable to `false`:
+Đây là behavior mong đợi đối với phần lớn ứng dụng, nơi thuật toán hashing không thường xuyên thay đổi và sự xuất hiện của một thuật toán khác có thể là dấu hiệu của hành vi tấn công. Tuy nhiên, nếu ứng dụng cần hỗ trợ nhiều thuật toán hashing cùng lúc, chẳng hạn trong quá trình migration từ thuật toán cũ sang thuật toán mới, bạn có thể tắt bước xác minh thuật toán bằng cách đặt biến môi trường `HASH_VERIFY` thành `false`:
 
 ```ini
 HASH_VERIFY=false
