@@ -339,3 +339,7 @@ Folio::path(resource_path('views/pages'))->middleware([
 ## Route Caching
 
 When using Folio, you should always take advantage of [Laravel's route caching capabilities](/docs/{{version}}/routing#route-caching). Folio listens for the `route:cache` Artisan command to ensure that Folio page definitions and route names are properly cached for maximum performance.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/folio). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

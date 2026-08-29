@@ -175,3 +175,7 @@ In a fresh Laravel application, this directory will already contain the `AppServ
 ### The Rules Directory
 
 This directory does not exist by default, but will be created for you if you execute the `make:rule` Artisan command. The `Rules` directory contains the custom validation rule objects for your application. Rules are used to encapsulate complicated validation logic in a simple object. For more information, check out the [validation documentation](/docs/{{version}}/validation).
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/structure). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

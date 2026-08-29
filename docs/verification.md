@@ -165,3 +165,7 @@ public function boot(): void
 ## Events
 
 When using the [Laravel application starter kits](/docs/{{version}}/starter-kits), Laravel dispatches an `Illuminate\Auth\Events\Verified` [event](/docs/{{version}}/events) during the email verification process. If you are manually handling email verification for your application, you may wish to manually dispatch these events after verification is completed.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/verification). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

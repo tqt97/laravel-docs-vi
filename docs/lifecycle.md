@@ -72,3 +72,7 @@ Service providers are truly the key to bootstrapping a Laravel application. The 
 Having a firm grasp of how a Laravel application is built and bootstrapped via service providers is very valuable. Your application's user-defined service providers are stored in the `app/Providers` directory.
 
 By default, the `AppServiceProvider` is fairly empty. This provider is a great place to add your application's own bootstrapping and service container bindings. For large applications, you may wish to create several service providers, each with more granular bootstrapping for specific services used by your application.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/lifecycle). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

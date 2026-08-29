@@ -157,3 +157,7 @@ This table provides a quick reference to all of the Laravel contracts and their 
 | [Illuminate\Contracts\View\View](https://github.com/illuminate/contracts/blob/{{version}}/View/View.php) | `View::make()` |
 
 </div>
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/contracts). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

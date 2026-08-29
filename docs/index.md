@@ -27,3 +27,7 @@ features:
 ## Lưu ý
 
 Đây là dự án cộng đồng phục vụ **học tập và tham khảo**, không phải tài liệu chính thức của Laravel. Khi xây dựng hệ thống production hoặc cần xác minh một API/behavior cụ thể, hãy kiểm tra lại [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x).
+
+## Tài liệu chính thức
+
+Trang này giới thiệu bản dịch cộng đồng dựa trên [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

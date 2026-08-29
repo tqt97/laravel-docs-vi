@@ -1635,3 +1635,7 @@ For convenience, each migration operation will dispatch an [event](/docs/{{versi
 | `Illuminate\Database\Events\SchemaLoaded`        | An existing database schema dump has loaded.     |
 
 </div>
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/migrations). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -297,3 +297,7 @@ You may use the `view:clear` command to clear the view cache:
 ```shell
 php artisan view:clear
 ```
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/views). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

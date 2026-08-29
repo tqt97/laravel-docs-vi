@@ -887,3 +887,7 @@ If you need to access your application's configuration files or database to dete
     $middleware->trustHosts(at: fn () => config('app.trusted_hosts'));
 })
 ```
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/requests). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

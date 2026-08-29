@@ -813,3 +813,7 @@ Route::get('/', function (ContainerInterface $container) {
 ```
 
 An exception is thrown if the given identifier can't be resolved. The exception will be an instance of `Psr\Container\NotFoundExceptionInterface` if the identifier was never bound. If the identifier was bound but was unable to be resolved, an instance of `Psr\Container\ContainerExceptionInterface` will be thrown.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/container). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

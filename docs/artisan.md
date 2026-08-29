@@ -1036,3 +1036,7 @@ The published stubs will be located within a `stubs` directory in the root of yo
 ## Events
 
 Artisan dispatches three events when running commands: `Illuminate\Console\Events\ArtisanStarting`, `Illuminate\Console\Events\CommandStarting`, and `Illuminate\Console\Events\CommandFinished`. The `ArtisanStarting` event is dispatched immediately when Artisan starts running. Next, the `CommandStarting` event is dispatched immediately before a command runs. Finally, the `CommandFinished` event is dispatched once a command finishes executing.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/artisan). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

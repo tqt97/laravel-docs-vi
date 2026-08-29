@@ -188,3 +188,7 @@ The Laravel code of conduct is derived from the Ruby code of conduct. Any violat
 - Behavior that can be reasonably considered harassment will not be tolerated.
 
 </div>
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/contributions). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

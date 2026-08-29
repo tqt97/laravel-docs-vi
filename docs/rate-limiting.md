@@ -150,3 +150,7 @@ public function read(Message $message): Message
     return $message;
 }
 ```
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/rate-limiting). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

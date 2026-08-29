@@ -702,3 +702,7 @@ public function test_it_validates_registration_form_with_precognition()
     $this->assertSame(0, User::count());
 }
 ```
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/precognition). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

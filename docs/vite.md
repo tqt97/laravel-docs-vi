@@ -1178,3 +1178,7 @@ Now, while Vite is serving Assets, it will output URLs that point to the Vite de
 - <img src="/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520"><!-- [tl! remove] -->
 + <img src="http://[::1]:5173/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520"><!-- [tl! add] -->
 ```
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/vite). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -397,3 +397,7 @@ While your application is in maintenance mode, no [queued jobs](/docs/{{version}
 #### Alternatives to Maintenance Mode
 
 Since maintenance mode requires your application to have several seconds of downtime, consider running your applications on a fully-managed platform like [Laravel Cloud](https://cloud.laravel.com) to accomplish zero-downtime deployment with Laravel.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/configuration). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

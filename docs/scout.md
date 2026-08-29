@@ -1201,3 +1201,7 @@ Once your engine has been registered, you may specify it as your default Scout `
 ```php
 'driver' => 'mysql',
 ```
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/scout). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

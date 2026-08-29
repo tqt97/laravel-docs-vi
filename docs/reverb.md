@@ -344,3 +344,7 @@ Dispatched when a message is received from a client connection. The event receiv
 #### `Laravel\Reverb\Events\MessageSent`
 
 Dispatched when a message is sent to a client connection. The event receives the `Laravel\Reverb\Contracts\Connection` instance and the raw string `$message`.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/reverb). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

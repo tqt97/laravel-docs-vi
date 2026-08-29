@@ -415,3 +415,7 @@ Each cursor paginator instance provides additional pagination information via th
 | `$paginator->url($cursor)`      | Get the URL for a given cursor instance.                          |
 
 </div>
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/pagination). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

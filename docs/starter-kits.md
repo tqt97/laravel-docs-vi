@@ -591,3 +591,7 @@ php artisan vendor:publish --tag=laravel-mail
 ```
 
 This will generate several files in `resources/views/vendor/mail`. You can modify any of these files as well as the `resources/views/vendor/mail/themes/default.css` file to change the look and appearance of the default email template.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/starter-kits). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

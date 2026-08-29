@@ -1746,3 +1746,7 @@ DB::table('users')->where('votes', '>', 100)->dumpRawSql();
 
 DB::table('users')->where('votes', '>', 100)->ddRawSql();
 ```
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/queries). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

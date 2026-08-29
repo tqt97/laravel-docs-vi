@@ -2685,3 +2685,7 @@ pipeline:
 ```
 
 To learn more about running Dusk tests on Chipper CI, including how to use databases, consult the [official Chipper CI documentation](https://chipperci.com/docs/testing/laravel-dusk-new/).
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/dusk). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

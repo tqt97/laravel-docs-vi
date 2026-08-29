@@ -841,3 +841,7 @@ Laravel dispatches a variety of [events](/docs/{{version}}/events) during the au
 | `Illuminate\Auth\Events\PasswordResetLinkSent` |
 
 </div>
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/authentication). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

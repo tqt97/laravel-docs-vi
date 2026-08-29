@@ -747,3 +747,7 @@ Fortify will take care of defining the `/user/confirm-password` endpoint that re
 If the password matches the user's current password, Fortify will redirect the user to the route they were attempting to access. If the request was an XHR request, a 201 HTTP response will be returned.
 
 If the request was not successful, the user will be redirected back to the confirm password screen and the validation errors will be available to you via the shared `$errors` Blade template variable. Or, in the case of an XHR request, the validation errors will be returned with a 422 HTTP response.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/fortify). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -2597,3 +2597,7 @@ class Comment extends Model
 
 > [!WARNING]
 > Parent model timestamps will only be updated if the child model is updated using Eloquent's `save` method.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/eloquent-relationships). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

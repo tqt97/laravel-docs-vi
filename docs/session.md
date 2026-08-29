@@ -407,3 +407,7 @@ class SessionServiceProvider extends ServiceProvider
 ```
 
 Once the session driver has been registered, you may specify the `mongo` driver as your application's session driver using the `SESSION_DRIVER` environment variable or within the application's `config/session.php` configuration file.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/session). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -363,3 +363,7 @@ Below you will find every facade and its underlying class. This is a useful tool
 | Vite | [Illuminate\Foundation\Vite](https://api.laravel.com/docs/{{version}}/Illuminate/Foundation/Vite.html) | &nbsp; |
 
 </div>
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/facades). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

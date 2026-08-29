@@ -705,3 +705,7 @@ return Octane::table('example')->get('uuid');
 
 > [!WARNING]
 > The column types supported by Swoole tables are: `string`, `int`, and `float`.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/octane). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

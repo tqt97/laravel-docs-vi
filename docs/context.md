@@ -451,3 +451,7 @@ public function boot(): void
 
 > [!NOTE]
 > You should not use the `Context` facade within the `hydrated` callback and instead ensure you only make changes to the repository passed to the callback.
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/context). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

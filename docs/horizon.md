@@ -818,3 +818,7 @@ You may provide the `queue` option to delete jobs from a specific queue:
 ```shell
 php artisan horizon:clear --queue=emails
 ```
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/horizon). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

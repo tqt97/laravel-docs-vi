@@ -475,3 +475,7 @@ Your users can also publish all publishable files defined by your package's serv
 ```shell
 php artisan vendor:publish --provider="Your\Package\ServiceProvider"
 ```
+
+## Tài liệu chính thức
+
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/packages). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.
