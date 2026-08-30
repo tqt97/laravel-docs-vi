@@ -3,8 +3,8 @@ import path from 'node:path'
 import { defineConfig } from 'vitepress'
 
 const base = process.env.DOCS_BASE || '/'
-const siteOrigin = (process.env.SITE_URL || 'https://example.com').replace(/\/$/, '')
-const repoUrl = process.env.REPO_URL || 'https://github.com/your-username/laravel-docs-vi'
+const siteOrigin = (process.env.SITE_URL || 'https://tqt97.github.io/laravel-docs-vi/').replace(/\/$/, '')
+const repoUrl = process.env.REPO_URL || 'https://github.com/tqt97/laravel-docs-vi'
 const normalizedBase = base === '/' ? '/' : `/${base.replace(/^\/+|\/+$/g, '')}/`
 const siteRoot = `${siteOrigin}${normalizedBase}`
 const socialImage = `${siteRoot}og-image.png`
