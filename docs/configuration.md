@@ -94,7 +94,7 @@ Giá trị thứ hai truyền vào hàm `env` là "giá trị mặc định". Gi
 <a name="determining-the-current-environment"></a>
 ### Xác định môi trường hiện tại
 
-Môi trường hiện tại của ứng dụng được xác định bởi biến `APP_ENV` trong file `.env`. Bạn có thể truy cập giá trị này thông qua phương thức `environment` trên [facade](/docs/{{version}}/facades) `App`:
+Môi trường hiện tại của ứng dụng được xác định bởi biến `APP_ENV` trong file `.env`. Bạn có thể truy cập giá trị này thông qua phương thức `environment` trên [facade](/facades) `App`:
 
 ```php
 use Illuminate\Support\Facades\App;
@@ -379,7 +379,7 @@ php artisan up
 <a name="maintenance-mode-queues"></a>
 #### Chế độ bảo trì và Queue
 
-Khi ứng dụng đang ở chế độ bảo trì, không có [queued job](/docs/{{version}}/queues) nào được xử lý. Các job sẽ tiếp tục được xử lý bình thường sau khi ứng dụng thoát khỏi chế độ bảo trì.
+Khi ứng dụng đang ở chế độ bảo trì, không có [queued job](/queues) nào được xử lý. Các job sẽ tiếp tục được xử lý bình thường sau khi ứng dụng thoát khỏi chế độ bảo trì.
 
 <a name="alternatives-to-maintenance-mode"></a>
 #### Giải pháp thay thế chế độ bảo trì

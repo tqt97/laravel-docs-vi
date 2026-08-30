@@ -59,7 +59,7 @@ Phương thức `redirect` của facade `Socialite` xử lý việc redirect ng�
 
 ### Authentication và lưu trữ
 
-Sau khi lấy người dùng từ OAuth provider, bạn có thể kiểm tra người dùng đó đã tồn tại trong database hay chưa và [authenticate user](/docs/{{version}}/authentication#authenticate-a-user-instance). Nếu chưa tồn tại, thông thường bạn sẽ tạo record mới để đại diện cho người dùng:
+Sau khi lấy người dùng từ OAuth provider, bạn có thể kiểm tra người dùng đó đã tồn tại trong database hay chưa và [authenticate user](/authentication#authenticate-a-user-instance). Nếu chưa tồn tại, thông thường bạn sẽ tạo record mới để đại diện cho người dùng:
 
 ```php
 use App\Models\User;
@@ -194,7 +194,7 @@ Ngoài ra, bạn cũng phải gọi `asBotUser` trước `user` sau khi Slack re
 $user = Socialite::driver('facebook')->userFromToken($token, $nonce);
 ```
 
-Khi tạo bot token, phương thức `user` vẫn trả về instance `Laravel\Socialite\Two\User`; tuy nhiên chỉ property `token` được hydrate. Token này có thể được lưu để [gửi notification tới Slack workspace của người dùng đã xác thực](/docs/{{version}}/notifications#notifying-external-slack-workspaces).
+Khi tạo bot token, phương thức `user` vẫn trả về instance `Laravel\Socialite\Two\User`; tuy nhiên chỉ property `token` được hydrate. Token này có thể được lưu để [gửi notification tới Slack workspace của người dùng đã xác thực](/notifications#notifying-external-slack-workspaces).
 <a name="stateless-authentication"></a>
 
 ### Tham số tùy chọn

@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-Bên cạnh các dịch vụ [xác thực](/docs/{{version}}/authentication) được tích hợp sẵn, Laravel còn cung cấp một cơ chế đơn giản để xác định người dùng có được phép thực hiện một hành động trên một tài nguyên cụ thể hay không. Ví dụ, một người dùng dù đã được xác thực vẫn có thể không có quyền cập nhật hoặc xóa một số Eloquent model hay bản ghi cơ sở dữ liệu do ứng dụng quản lý. Các tính năng phân quyền của Laravel giúp bạn tổ chức và quản lý những phép kiểm tra quyền này một cách rõ ràng.
+Bên cạnh các dịch vụ [xác thực](/authentication) được tích hợp sẵn, Laravel còn cung cấp một cơ chế đơn giản để xác định người dùng có được phép thực hiện một hành động trên một tài nguyên cụ thể hay không. Ví dụ, một người dùng dù đã được xác thực vẫn có thể không có quyền cập nhật hoặc xóa một số Eloquent model hay bản ghi cơ sở dữ liệu do ứng dụng quản lý. Các tính năng phân quyền của Laravel giúp bạn tổ chức và quản lý những phép kiểm tra quyền này một cách rõ ràng.
 
 Laravel cung cấp hai cơ chế chính để phân quyền hành động: [gate](#gates) và [policy](#creating-policies). Có thể hình dung gate và policy tương tự mối quan hệ giữa route và controller. Gate cung cấp cách phân quyền đơn giản dựa trên closure, còn policy, tương tự controller, gom nhóm logic xoay quanh một model hoặc tài nguyên cụ thể. Tài liệu này sẽ trình bày gate trước, sau đó đi sâu vào policy.
 
@@ -372,7 +372,7 @@ Bạn có thể tiếp tục định nghĩa thêm các phương thức trong Pol
 Nếu sử dụng option `--model` khi sinh Policy bằng Artisan, class được tạo sẽ có sẵn các phương thức cho `viewAny`, `view`, `create`, `update`, `delete`, `restore` và `forceDelete`.
 
 > [!NOTE]
-> Tất cả Policy đều được phân giải thông qua [Service Container](/docs/{{version}}/container) của Laravel, vì vậy bạn có thể type-hint các dependency cần thiết trong constructor của Policy để chúng được tự động inject.
+> Tất cả Policy đều được phân giải thông qua [Service Container](/container) của Laravel, vì vậy bạn có thể type-hint các dependency cần thiết trong constructor của Policy để chúng được tự động inject.
 
 <a name="policy-responses"></a>
 ### Response của Policy
@@ -655,7 +655,7 @@ public function create(Request $request): RedirectResponse
 <a name="via-middleware"></a>
 ### Thông qua Middleware
 
-Laravel cung cấp middleware có thể phân quyền hành động trước khi request đi đến route hoặc controller. Mặc định, middleware `Illuminate\Auth\Middleware\Authorize` có thể được gắn vào route thông qua [middleware alias](/docs/{{version}}/middleware#middleware-aliases) `can`, alias này được Laravel đăng ký tự động. Ví dụ sau dùng middleware `can` để kiểm tra người dùng có quyền cập nhật bài viết:
+Laravel cung cấp middleware có thể phân quyền hành động trước khi request đi đến route hoặc controller. Mặc định, middleware `Illuminate\Auth\Middleware\Authorize` có thể được gắn vào route thông qua [middleware alias](/middleware#middleware-aliases) `can`, alias này được Laravel đăng ký tự động. Ví dụ sau dùng middleware `can` để kiểm tra người dùng có quyền cập nhật bài viết:
 
 ```php
 use App\Models\Post;
@@ -665,7 +665,7 @@ Route::put('/post/{post}', function (Post $post) {
 })->middleware('can:update,post');
 ```
 
-Trong ví dụ này, middleware `can` nhận hai đối số: đối số đầu là tên hành động cần phân quyền, đối số thứ hai là route parameter sẽ được truyền vào phương thức Policy. Vì đang sử dụng [implicit model binding](/docs/{{version}}/routing#implicit-binding), một model `App\Models\Post` sẽ được truyền vào phương thức Policy. Nếu người dùng không được phép thực hiện hành động, middleware sẽ trả về HTTP response có status code `403`.
+Trong ví dụ này, middleware `can` nhận hai đối số: đối số đầu là tên hành động cần phân quyền, đối số thứ hai là route parameter sẽ được truyền vào phương thức Policy. Vì đang sử dụng [implicit model binding](/routing#implicit-binding), một model `App\Models\Post` sẽ được truyền vào phương thức Policy. Nếu người dùng không được phép thực hiện hành động, middleware sẽ trả về HTTP response có status code `403`.
 
 Để thuận tiện, bạn cũng có thể gắn middleware `can` vào route bằng phương thức `can`:
 
@@ -677,7 +677,7 @@ Route::put('/post/{post}', function (Post $post) {
 })->can('update', 'post');
 ```
 
-Nếu sử dụng [controller middleware attributes](/docs/{{version}}/controllers#middleware-attributes), bạn có thể áp dụng middleware `can` thông qua attribute `Authorize`:
+Nếu sử dụng [controller middleware attributes](/controllers#middleware-attributes), bạn có thể áp dụng middleware `can` thông qua attribute `Authorize`:
 
 ```php
 use Illuminate\Routing\Attributes\Controllers\Authorize;
@@ -807,7 +807,7 @@ public function update(Request $request, Post $post): RedirectResponse
 
 Mặc dù việc phân quyền luôn phải được thực thi ở phía server, việc cung cấp dữ liệu phân quyền cho frontend thường hữu ích để giao diện có thể render đúng theo quyền của người dùng. Laravel không áp đặt một quy ước bắt buộc nào về cách cung cấp thông tin phân quyền cho frontend sử dụng Inertia.
 
-Tuy nhiên, nếu sử dụng một trong các [starter kit](/docs/{{version}}/starter-kits) dựa trên Inertia của Laravel, ứng dụng đã có middleware `HandleInertiaRequests`. Trong phương thức `share` của middleware này, bạn có thể trả về dữ liệu dùng chung được cung cấp cho mọi trang Inertia. Đây là vị trí thuận tiện để khai báo thông tin phân quyền của người dùng:
+Tuy nhiên, nếu sử dụng một trong các [starter kit](/starter-kits) dựa trên Inertia của Laravel, ứng dụng đã có middleware `HandleInertiaRequests`. Trong phương thức `share` của middleware này, bạn có thể trả về dữ liệu dùng chung được cung cấp cho mọi trang Inertia. Đây là vị trí thuận tiện để khai báo thông tin phân quyền của người dùng:
 
 ```php
 <?php

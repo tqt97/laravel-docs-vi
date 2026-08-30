@@ -2,7 +2,7 @@
 
 <a name="introduction"></a>
 ## Giới thiệu
-Laravel là framework backend cung cấp đầy đủ tính năng cần thiết để xây dựng ứng dụng web hiện đại như [routing](/docs/{{version}}/routing), [validation](/docs/{{version}}/validation), [caching](/docs/{{version}}/cache), [queues](/docs/{{version}}/queues), [file storage](/docs/{{version}}/filesystem) và nhiều hơn nữa. Tuy nhiên, Laravel cũng hướng tới trải nghiệm full-stack hoàn chỉnh, bao gồm các cách mạnh mẽ để xây dựng frontend.
+Laravel là framework backend cung cấp đầy đủ tính năng cần thiết để xây dựng ứng dụng web hiện đại như [routing](/routing), [validation](/validation), [caching](/cache), [queues](/queues), [file storage](/filesystem) và nhiều hơn nữa. Tuy nhiên, Laravel cũng hướng tới trải nghiệm full-stack hoàn chỉnh, bao gồm các cách mạnh mẽ để xây dựng frontend.
 Có hai hướng chính khi phát triển frontend cho ứng dụng Laravel. Lựa chọn phụ thuộc vào việc bạn muốn tận dụng PHP hay dùng JavaScript framework như React, Svelte hoặc Vue. Phần dưới đây trình bày cả hai để bạn có thể chọn cách phù hợp với ứng dụng.
 <a name="using-php"></a>
 ## Sử dụng PHP
@@ -16,7 +16,7 @@ Trước đây, phần lớn ứng dụng PHP render HTML ra browser bằng các
     <?php endforeach; ?>
 </div>
 ```
-Trong Laravel, cách render HTML này vẫn được hỗ trợ thông qua [views](/docs/{{version}}/views) và [Blade](/docs/{{version}}/blade). Blade là templating language rất nhẹ, cung cấp syntax ngắn gọn để hiển thị data, lặp qua data và nhiều thao tác khác:
+Trong Laravel, cách render HTML này vẫn được hỗ trợ thông qua [views](/views) và [Blade](/blade). Blade là templating language rất nhẹ, cung cấp syntax ngắn gọn để hiển thị data, lặp qua data và nhiều thao tác khác:
 ```blade
 <div>
     @foreach ($users as $user)
@@ -58,10 +58,10 @@ new class extends Component
 ```
 Livewire cho phép viết thuộc tính HTML như `wire:click` để kết nối frontend với backend Laravel. Đồng thời, trạng thái hiện tại của component có thể được render bằng một biểu thức Blade đơn giản.
 Với nhiều lập trình viên, Livewire thay đổi đáng kể cách phát triển frontend Laravel: họ vẫn ở trong hệ sinh thái Laravel nhưng có thể xây dựng ứng dụng web hiện đại và có tính tương tác cao. Thông thường developer dùng Livewire cũng dùng [Alpine.js](https://alpinejs.dev/) để bổ sung JavaScript ở nơi thực sự cần, chẳng hạn render dialog.
-Nếu mới học Laravel, trước tiên hãy làm quen với [views](/docs/{{version}}/views) và [Blade](/docs/{{version}}/blade), sau đó xem [tài liệu Laravel Livewire](https://livewire.laravel.com/docs) chính thức để học cách xây component tương tác.
+Nếu mới học Laravel, trước tiên hãy làm quen với [views](/views) và [Blade](/blade), sau đó xem [tài liệu Laravel Livewire](https://livewire.laravel.com/docs) chính thức để học cách xây component tương tác.
 <a name="php-starter-kits"></a>
 ### Starter Kits
-Nếu muốn xây frontend bằng PHP và Livewire, bạn có thể dùng [Livewire starter kit](/docs/{{version}}/starter-kits) để khởi động project nhanh hơn.
+Nếu muốn xây frontend bằng PHP và Livewire, bạn có thể dùng [Livewire starter kit](/starter-kits) để khởi động project nhanh hơn.
 <a name="using-react-svelte-or-vue"></a>
 ## Sử dụng React, Svelte hoặc Vue
 Dù Laravel + Livewire có thể xây dựng frontend hiện đại, nhiều lập trình viên vẫn muốn tận dụng sức mạnh của framework JavaScript như React, Svelte hoặc Vue. Điều này mở ra hệ sinh thái package và công cụ phong phú từ NPM.
@@ -113,11 +113,11 @@ Như vậy, Inertia cho phép tận dụng toàn bộ sức mạnh của React, 
 Nếu ứng dụng cần server-side rendering, Inertia có [hỗ trợ SSR](https://inertiajs.com/server-side-rendering). Khi deploy qua [Laravel Cloud](https://cloud.laravel.com) hoặc [Laravel Forge](https://forge.laravel.com), việc đảm bảo process SSR của Inertia luôn chạy cũng tương đối đơn giản.
 <a name="inertia-starter-kits"></a>
 ### Starter Kits
-Nếu muốn xây frontend bằng Inertia và React / Svelte / Vue, bạn có thể dùng [starter kit React, Svelte hoặc Vue](/docs/{{version}}/starter-kits). Các starter kit scaffold flow authentication cho cả backend và frontend bằng Inertia, React / Svelte / Vue, [Tailwind](https://tailwindcss.com) và [Vite](https://vitejs.dev), giúp bạn bắt đầu feature ứng dụng nhanh hơn.
+Nếu muốn xây frontend bằng Inertia và React / Svelte / Vue, bạn có thể dùng [starter kit React, Svelte hoặc Vue](/starter-kits). Các starter kit scaffold flow authentication cho cả backend và frontend bằng Inertia, React / Svelte / Vue, [Tailwind](https://tailwindcss.com) và [Vite](https://vitejs.dev), giúp bạn bắt đầu feature ứng dụng nhanh hơn.
 <a name="bundling-assets"></a>
 ## Đóng gói tài nguyên
 Dù chọn Blade + Livewire hay React / Svelte / Vue + Inertia, bạn thường vẫn cần đóng gói CSS thành tài nguyên sẵn sàng cho môi trường production. Nếu dùng React, Svelte hoặc Vue, bạn cũng cần bundle component thành JavaScript asset mà browser có thể chạy.
 Mặc định Laravel dùng [Vite](https://vitejs.dev) để đóng gói tài nguyên. Vite cho thời gian build rất nhanh và Hot Module Replacement (HMR) gần như tức thời khi phát triển local. Trong mọi ứng dụng Laravel mới, bao gồm starter kit, bạn sẽ thấy file `vite.config.js` nạp Laravel Vite plugin gọn nhẹ để tích hợp Vite thuận tiện với Laravel.
-Cách nhanh nhất để bắt đầu Laravel + Vite là dùng [application starter kit](/docs/{{version}}/starter-kits), vốn đã cung cấp scaffolding authentication cho frontend và backend.
+Cách nhanh nhất để bắt đầu Laravel + Vite là dùng [application starter kit](/starter-kits), vốn đã cung cấp scaffolding authentication cho frontend và backend.
 > [!NOTE]
-> Để tìm hiểu chi tiết cách dùng Vite với Laravel, hãy xem [tài liệu Vite dành riêng cho asset bundling](/docs/{{version}}/vite).
+> Để tìm hiểu chi tiết cách dùng Vite với Laravel, hãy xem [tài liệu Vite dành riêng cho asset bundling](/vite).

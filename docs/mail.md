@@ -291,7 +291,7 @@ php artisan make:mail OrderShipped
 
 Sau khi tạo class mailable, hãy mở class đó để xem nội dung. Việc cấu hình mailable được thực hiện thông qua một số phương thức, bao gồm `envelope`, `content` và `attachments`.
 
-Phương thức `envelope` trả về đối tượng `Illuminate\Mail\Mailables\Envelope`, dùng để định nghĩa tiêu đề và đôi khi cả người nhận của message. Phương thức `content` trả về đối tượng `Illuminate\Mail\Mailables\Content`, dùng để định nghĩa [Blade template](/docs/{{version}}/blade) sẽ được sử dụng để tạo nội dung message.
+Phương thức `envelope` trả về đối tượng `Illuminate\Mail\Mailables\Envelope`, dùng để định nghĩa tiêu đề và đôi khi cả người nhận của message. Phương thức `content` trả về đối tượng `Illuminate\Mail\Mailables\Content`, dùng để định nghĩa [Blade template](/blade) sẽ được sử dụng để tạo nội dung message.
 
 <a name="configuring-the-sender"></a>
 ### Cấu hình người gửi
@@ -353,7 +353,7 @@ Ngoài ra, bạn có thể định nghĩa địa chỉ `reply_to` toàn cục tr
 <a name="configuring-the-view"></a>
 ### Cấu hình View
 
-Trong phương thức `content` của class mailable, bạn có thể định nghĩa `view`, tức template sẽ được sử dụng khi render nội dung email. Vì mỗi email thường sử dụng [Blade template](/docs/{{version}}/blade) để render nội dung, bạn có thể tận dụng đầy đủ sức mạnh và sự tiện lợi của Blade khi xây dựng HTML cho email:
+Trong phương thức `content` của class mailable, bạn có thể định nghĩa `view`, tức template sẽ được sử dụng khi render nội dung email. Vì mỗi email thường sử dụng [Blade template](/blade) để render nội dung, bạn có thể tận dụng đầy đủ sức mạnh và sự tiện lợi của Blade khi xây dựng HTML cho email:
 
 ```php
 /**
@@ -540,7 +540,7 @@ public function attachments(): array
 <a name="attaching-files-from-disk"></a>
 #### Đính kèm file từ disk
 
-Nếu đã lưu file trên một trong các [filesystem disk](/docs/{{version}}/filesystem), bạn có thể đính kèm file đó vào email bằng phương thức `fromStorage`:
+Nếu đã lưu file trên một trong các [filesystem disk](/filesystem), bạn có thể đính kèm file đó vào email bằng phương thức `fromStorage`:
 
 ```php
 /**
@@ -683,7 +683,7 @@ public function attachments(): array
 }
 ```
 
-Dữ liệu đính kèm có thể được lưu trên dịch vụ lưu trữ file từ xa như Amazon S3. Vì vậy, Laravel cũng cho phép bạn tạo các instance attachment từ dữ liệu được lưu trên một trong các [filesystem disk](/docs/{{version}}/filesystem) của ứng dụng:
+Dữ liệu đính kèm có thể được lưu trên dịch vụ lưu trữ file từ xa như Amazon S3. Vì vậy, Laravel cũng cho phép bạn tạo các instance attachment từ dữ liệu được lưu trên một trong các [filesystem disk](/filesystem) của ứng dụng:
 
 ```php
 // Create an attachment from a file on your default disk...
@@ -789,7 +789,7 @@ public function envelope(): Envelope
 <a name="markdown-mailables"></a>
 ## Mailable Markdown
 
-Mailable Markdown cho phép bạn tận dụng các template và component dựng sẵn của [mail notification](/docs/{{version}}/notifications#mail-notifications). Vì message được viết bằng Markdown, Laravel có thể render template HTML đẹp, responsive, đồng thời tự động tạo phiên bản plain-text tương ứng.
+Mailable Markdown cho phép bạn tận dụng các template và component dựng sẵn của [mail notification](/notifications#mail-notifications). Vì message được viết bằng Markdown, Laravel có thể render template HTML đẹp, responsive, đồng thời tự động tạo phiên bản plain-text tương ứng.
 
 <a name="generating-markdown-mailables"></a>
 ### Tạo Mailable Markdown
@@ -901,7 +901,7 @@ Nếu muốn xây dựng theme hoàn toàn mới cho Markdown component của La
 <a name="sending-mail"></a>
 ## Gửi email
 
-Để gửi message, hãy dùng phương thức `to` trên [facade](/docs/{{version}}/facades) `Mail`. Phương thức `to` nhận địa chỉ email, một instance user hoặc collection các user. Nếu truyền object hoặc collection object, mailer sẽ tự động dùng các property `email` và `name` để xác định người nhận, vì vậy hãy đảm bảo các attribute này tồn tại trên object. Sau khi xác định người nhận, hãy truyền instance mailable vào phương thức `send`:
+Để gửi message, hãy dùng phương thức `to` trên [facade](/facades) `Mail`. Phương thức `to` nhận địa chỉ email, một instance user hoặc collection các user. Nếu truyền object hoặc collection object, mailer sẽ tự động dùng các property `email` và `name` để xác định người nhận, vì vậy hãy đảm bảo các attribute này tồn tại trên object. Sau khi xác định người nhận, hãy truyền instance mailable vào phương thức `send`:
 
 ```php
 <?php
@@ -969,7 +969,7 @@ Mail::mailer('postmark')
 <a name="queueing-a-mail-message"></a>
 #### Đưa một email vào queue
 
-Vì việc gửi email có thể làm tăng thời gian phản hồi của ứng dụng, nhiều developer chọn đưa email vào queue để gửi ở background. Laravel hỗ trợ việc này thuận tiện thông qua [queue API thống nhất](/docs/{{version}}/queues). Để đưa mail message vào queue, hãy gọi phương thức `queue` trên facade `Mail` sau khi chỉ định người nhận:
+Vì việc gửi email có thể làm tăng thời gian phản hồi của ứng dụng, nhiều developer chọn đưa email vào queue để gửi ở background. Laravel hỗ trợ việc này thuận tiện thông qua [queue API thống nhất](/queues). Để đưa mail message vào queue, hãy gọi phương thức `queue` trên facade `Mail` sau khi chỉ định người nhận:
 
 ```php
 Mail::to($request->user())
@@ -978,7 +978,7 @@ Mail::to($request->user())
     ->queue(new OrderShipped($order));
 ```
 
-Phương thức này tự động đẩy một job vào queue để message được gửi ở background. Bạn cần [cấu hình queue](/docs/{{version}}/queues) trước khi sử dụng tính năng này.
+Phương thức này tự động đẩy một job vào queue để message được gửi ở background. Bạn cần [cấu hình queue](/queues) trước khi sử dụng tính năng này.
 
 <a name="delayed-message-queueing"></a>
 #### Trì hoãn email trong queue
@@ -1076,7 +1076,7 @@ class OrderShipped extends Mailable implements ShouldQueue
 ```
 
 > [!NOTE]
-> Để tìm hiểu thêm về cách xử lý các vấn đề này, hãy xem tài liệu về [queued job và database transaction](/docs/{{version}}/queues#jobs-and-database-transactions).
+> Để tìm hiểu thêm về cách xử lý các vấn đề này, hãy xem tài liệu về [queued job và database transaction](/queues#jobs-and-database-transactions).
 
 <a name="queued-email-failures"></a>
 #### Lỗi khi xử lý email trong queue
@@ -1422,14 +1422,14 @@ Khi phát triển ứng dụng có chức năng gửi email, bạn thường kh�
 <a name="log-driver"></a>
 #### Driver Log
 
-Thay vì gửi email, mail driver `log` sẽ ghi toàn bộ message email vào file log để bạn kiểm tra. Thông thường driver này chỉ được dùng trong môi trường phát triển local. Để biết thêm về cách cấu hình ứng dụng theo từng môi trường, hãy xem [tài liệu cấu hình](/docs/{{version}}/configuration#environment-configuration).
+Thay vì gửi email, mail driver `log` sẽ ghi toàn bộ message email vào file log để bạn kiểm tra. Thông thường driver này chỉ được dùng trong môi trường phát triển local. Để biết thêm về cách cấu hình ứng dụng theo từng môi trường, hãy xem [tài liệu cấu hình](/configuration#environment-configuration).
 
 <a name="mailtrap"></a>
 #### HELO / Mailtrap / Mailpit
 
 Ngoài ra, bạn có thể dùng dịch vụ như [HELO](https://usehelo.com) hoặc [Mailtrap](https://mailtrap.io) cùng driver `smtp` để gửi email đến một mailbox thử nghiệm và xem chúng trong email client thực tế. Cách này cho phép bạn kiểm tra email cuối cùng bằng trình xem message của Mailtrap.
 
-Nếu đang sử dụng [Laravel Sail](/docs/{{version}}/sail), bạn có thể xem trước message bằng [Mailpit](https://github.com/axllent/mailpit). Khi Sail đang chạy, giao diện Mailpit có thể được truy cập tại: `http://localhost:8025`.
+Nếu đang sử dụng [Laravel Sail](/sail), bạn có thể xem trước message bằng [Mailpit](https://github.com/axllent/mailpit). Khi Sail đang chạy, giao diện Mailpit có thể được truy cập tại: `http://localhost:8025`.
 
 <a name="using-a-global-to-address"></a>
 #### Sử dụng địa chỉ `to` toàn cục
@@ -1455,7 +1455,7 @@ Khi sử dụng phương thức `alwaysTo`, mọi địa chỉ "cc" hoặc "bcc"
 <a name="events"></a>
 ## Event
 
-Laravel dispatch hai event trong quá trình gửi email. Event `MessageSending` được dispatch trước khi message được gửi, còn `MessageSent` được dispatch sau khi message đã được gửi. Lưu ý rằng các event này được dispatch khi email thực sự đang được *gửi*, không phải khi nó được đưa vào queue. Bạn có thể tạo [event listener](/docs/{{version}}/events) cho các event này trong ứng dụng:
+Laravel dispatch hai event trong quá trình gửi email. Event `MessageSending` được dispatch trước khi message được gửi, còn `MessageSent` được dispatch sau khi message đã được gửi. Lưu ý rằng các event này được dispatch khi email thực sự đang được *gửi*, không phải khi nó được đưa vào queue. Bạn có thể tạo [event listener](/events) cho các event này trong ứng dụng:
 
 ```php
 use Illuminate\Mail\Events\MessageSending;

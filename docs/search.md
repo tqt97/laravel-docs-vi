@@ -17,17 +17,17 @@ Khi bạn cần xếp hạng theo mức độ liên quan của từ khóa — t�
 
 Đối với semantic search dựa trên AI, nơi kết quả được khớp theo *ý nghĩa* thay vì từ khóa chính xác, method `whereVectorSimilarTo` của query builder sử dụng vector embedding được lưu trong PostgreSQL với extension `pgvector` hoặc MariaDB. Ví dụ, tìm kiếm "best wineries in Napa Valley" có thể trả về bài viết có tiêu đề "Top Vineyards to Visit" — dù các từ không hề trùng nhau.
 
-Vector search yêu cầu PostgreSQL với extension `pgvector` hoặc MariaDB 11.7 trở lên, đồng thời cần [Laravel AI SDK](/docs/{{version}}/ai-sdk).
+Vector search yêu cầu PostgreSQL với extension `pgvector` hoặc MariaDB 11.7 trở lên, đồng thời cần [Laravel AI SDK](/ai-sdk).
 
 <a name="introduction-reranking"></a>
 #### Xếp hạng lại
 
-[AI SDK](/docs/{{version}}/ai-sdk) của Laravel cung cấp khả năng reranking, sử dụng AI model để sắp xếp lại bất kỳ tập kết quả nào theo mức độ liên quan ngữ nghĩa với một query. Reranking đặc biệt hiệu quả khi được dùng làm bước thứ hai sau một bước truy xuất ban đầu nhanh như full-text search — nhờ đó bạn có cả tốc độ lẫn độ chính xác ngữ nghĩa.
+[AI SDK](/ai-sdk) của Laravel cung cấp khả năng reranking, sử dụng AI model để sắp xếp lại bất kỳ tập kết quả nào theo mức độ liên quan ngữ nghĩa với một query. Reranking đặc biệt hiệu quả khi được dùng làm bước thứ hai sau một bước truy xuất ban đầu nhanh như full-text search — nhờ đó bạn có cả tốc độ lẫn độ chính xác ngữ nghĩa.
 
 <a name="introduction-scout-search-engines"></a>
 #### Tìm kiếm với Laravel Scout
 
-Đối với các ứng dụng muốn sử dụng trait `Searchable` để tự động giữ search index đồng bộ với Eloquent model, [Laravel Scout](/docs/{{version}}/scout) cung cấp cả database engine tích hợp sẵn lẫn driver cho các dịch vụ bên thứ ba như Algolia, Meilisearch, Typesense và Turbopuffer.
+Đối với các ứng dụng muốn sử dụng trait `Searchable` để tự động giữ search index đồng bộ với Eloquent model, [Laravel Scout](/scout) cung cấp cả database engine tích hợp sẵn lẫn driver cho các dịch vụ bên thứ ba như Algolia, Meilisearch, Typesense và Turbopuffer.
 
 <a name="full-text-search"></a>
 ## Tìm kiếm toàn văn
@@ -61,7 +61,7 @@ Trên PostgreSQL, bạn có thể chỉ định language configuration cho index
 $table->fullText('body')->language('english');
 ```
 
-Để biết thêm thông tin về việc tạo index, hãy xem [tài liệu migration](/docs/{{version}}/migrations#available-index-types).
+Để biết thêm thông tin về việc tạo index, hãy xem [tài liệu migration](/migrations#available-index-types).
 
 <a name="running-full-text-queries"></a>
 ### Thực thi truy vấn toàn văn
@@ -82,7 +82,7 @@ $articles = Article::whereFullText(
 )->get();
 ```
 
-Method `orWhereFullText` có thể được dùng để thêm một mệnh đề full-text search dưới dạng điều kiện "or". Để biết đầy đủ chi tiết, hãy xem [tài liệu query builder](/docs/{{version}}/queries#full-text-where-clauses).
+Method `orWhereFullText` có thể được dùng để thêm một mệnh đề full-text search dưới dạng điều kiện "or". Để biết đầy đủ chi tiết, hãy xem [tài liệu query builder](/queries#full-text-where-clauses).
 
 <a name="semantic-vector-search"></a>
 ## Tìm kiếm ngữ nghĩa / vector
@@ -92,7 +92,7 @@ Full-text search dựa vào việc khớp từ khóa — các từ trong query p
 Workflow cơ bản của vector search là: tạo embedding (một array số) cho từng phần nội dung và lưu cùng dữ liệu; sau đó, tại thời điểm tìm kiếm, tạo embedding cho query của người dùng rồi tìm các embedding đã lưu có vị trí gần nó nhất trong vector space.
 
 > [!NOTE]
-> Vector search yêu cầu [Laravel AI SDK](/docs/{{version}}/ai-sdk) và được hỗ trợ bởi PostgreSQL (cần extension `pgvector`), MariaDB 11.7 trở lên và MongoDB (cần [Laravel MongoDB package](https://laravel.com/docs/13.x/mongodb)). Tất cả PostgreSQL database trên [Laravel Cloud](https://laravel.com/cloud) đều đã cài `pgvector`.
+> Vector search yêu cầu [Laravel AI SDK](/ai-sdk) và được hỗ trợ bởi PostgreSQL (cần extension `pgvector`), MariaDB 11.7 trở lên và MongoDB (cần [Laravel MongoDB package](https://laravel.com/docs/13.x/mongodb)). Tất cả PostgreSQL database trên [Laravel Cloud](https://laravel.com/cloud) đều đã cài `pgvector`.
 
 <a name="generating-embeddings"></a>
 ### Tạo embedding
@@ -118,7 +118,7 @@ $response = Embeddings::for([
 $response->embeddings; // [[0.123, 0.456, ...], [0.789, 0.012, ...]]
 ```
 
-Để biết thêm chi tiết về cấu hình embedding provider, tùy chỉnh dimensions và caching, hãy xem [tài liệu AI SDK](/docs/{{version}}/ai-sdk#embeddings).
+Để biết thêm chi tiết về cấu hình embedding provider, tùy chỉnh dimensions và caching, hãy xem [tài liệu AI SDK](/ai-sdk#embeddings).
 
 <a name="storing-and-indexing-vectors"></a>
 ### Lưu trữ và lập chỉ mục vector
@@ -152,7 +152,7 @@ protected function casts(): array
 }
 ```
 
-Để biết thêm chi tiết về vector column và index, hãy xem [tài liệu migration](/docs/{{version}}/migrations#available-column-types).
+Để biết thêm chi tiết về vector column và index, hãy xem [tài liệu migration](/migrations#available-column-types).
 
 <a name="querying-by-similarity"></a>
 ### Truy vấn theo độ tương đồng
@@ -177,7 +177,7 @@ $documents = Document::query()
 
 Nếu cần kiểm soát vector query ở mức thấp hơn, các method `whereVectorDistanceLessThan`, `selectVectorDistance` và `orderByVectorDistance` cũng có sẵn. Các method này cho phép bạn làm việc trực tiếp với distance value thay vì similarity score, select distance đã tính thành một column trong result, hoặc tự kiểm soát việc ordering.
 
-Để biết đầy đủ chi tiết, hãy xem [tài liệu query builder](/docs/{{version}}/queries#vector-similarity-clauses) và [tài liệu AI SDK](/docs/{{version}}/ai-sdk#querying-embeddings).
+Để biết đầy đủ chi tiết, hãy xem [tài liệu query builder](/queries#vector-similarity-clauses) và [tài liệu AI SDK](/ai-sdk#querying-embeddings).
 
 <a name="reranking-results"></a>
 ## Xếp hạng lại kết quả
@@ -207,12 +207,12 @@ $articles = Article::all()
     ->rerank('body', 'Laravel tutorials');
 ```
 
-Để biết đầy đủ chi tiết về cấu hình reranking provider và các option khả dụng, hãy xem [tài liệu AI SDK](/docs/{{version}}/ai-sdk#reranking).
+Để biết đầy đủ chi tiết về cấu hình reranking provider và các option khả dụng, hãy xem [tài liệu AI SDK](/ai-sdk#reranking).
 
 <a name="laravel-scout"></a>
 ## Laravel Scout
 
-Các kỹ thuật tìm kiếm được mô tả ở trên đều là các query builder method mà bạn gọi trực tiếp trong code. [Laravel Scout](/docs/{{version}}/scout) có cách tiếp cận khác: nó cung cấp trait `Searchable` để bạn thêm vào Eloquent model, và Scout tự động giữ search index đồng bộ khi record được tạo, cập nhật hoặc xóa. Cách này đặc biệt tiện lợi khi bạn muốn model luôn có thể tìm kiếm mà không phải tự quản lý việc cập nhật index.
+Các kỹ thuật tìm kiếm được mô tả ở trên đều là các query builder method mà bạn gọi trực tiếp trong code. [Laravel Scout](/scout) có cách tiếp cận khác: nó cung cấp trait `Searchable` để bạn thêm vào Eloquent model, và Scout tự động giữ search index đồng bộ khi record được tạo, cập nhật hoặc xóa. Cách này đặc biệt tiện lợi khi bạn muốn model luôn có thể tìm kiếm mà không phải tự quản lý việc cập nhật index.
 
 <a name="database-engine"></a>
 ### Database Engine
@@ -249,7 +249,7 @@ class Article extends Model
 ```
 
 > [!WARNING]
-> Trước khi chỉ định một column nên dùng full-text query constraint, hãy bảo đảm column đó đã được gán [full-text index](/docs/{{version}}/migrations#available-index-types).
+> Trước khi chỉ định một column nên dùng full-text query constraint, hãy bảo đảm column đó đã được gán [full-text index](/migrations#available-index-types).
 
 Sau khi thêm trait, bạn có thể tìm model bằng method `search` của Scout. Database engine của Scout sẽ tự động sắp xếp kết quả theo relevance, kể cả trên PostgreSQL:
 
@@ -257,7 +257,7 @@ Sau khi thêm trait, bạn có thể tìm model bằng method `search` của Sco
 $articles = Article::search('Laravel')->get();
 ```
 
-Database engine là lựa chọn rất phù hợp khi nhu cầu tìm kiếm của bạn ở mức vừa phải và bạn muốn sự tiện lợi của cơ chế tự đồng bộ index của Scout mà không cần triển khai dịch vụ bên ngoài. Nó xử lý tốt các use case tìm kiếm phổ biến nhất, bao gồm filtering, pagination và xử lý soft-deleted record. Để biết đầy đủ chi tiết, hãy xem [tài liệu Scout](/docs/{{version}}/scout#database-engine).
+Database engine là lựa chọn rất phù hợp khi nhu cầu tìm kiếm của bạn ở mức vừa phải và bạn muốn sự tiện lợi của cơ chế tự đồng bộ index của Scout mà không cần triển khai dịch vụ bên ngoài. Nó xử lý tốt các use case tìm kiếm phổ biến nhất, bao gồm filtering, pagination và xử lý soft-deleted record. Để biết đầy đủ chi tiết, hãy xem [tài liệu Scout](/scout#database-engine).
 
 <a name="third-party-engines"></a>
 ### Các engine bên thứ ba
@@ -266,7 +266,7 @@ Scout cũng hỗ trợ các search engine bên thứ ba như [Algolia](https://w
 
 Vì Scout cung cấp một API thống nhất trên tất cả driver, việc chuyển từ database engine sang engine bên thứ ba sau này chỉ cần thay đổi code tối thiểu. Bạn có thể bắt đầu với database engine và chỉ chuyển sang dịch vụ bên thứ ba nếu nhu cầu của ứng dụng vượt quá khả năng database có thể cung cấp.
 
-Để biết đầy đủ chi tiết về cấu hình các engine bên thứ ba, hãy xem [tài liệu Scout](/docs/{{version}}/scout).
+Để biết đầy đủ chi tiết về cấu hình các engine bên thứ ba, hãy xem [tài liệu Scout](/scout).
 
 > [!NOTE]
 > Nhiều ứng dụng sẽ không bao giờ cần search engine bên ngoài. Các kỹ thuật tích hợp sẵn được mô tả trên trang này đã bao phủ phần lớn use case.

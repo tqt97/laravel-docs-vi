@@ -2,7 +2,7 @@
 
 <a name="introduction"></a>
 ## Giới thiệu
-[Laravel Reverb](https://github.com/laravel/reverb) mang khả năng giao tiếp WebSocket real-time nhanh và có thể mở rộng trực tiếp vào ứng dụng Laravel, đồng thời tích hợp liền mạch với bộ công cụ [event broadcasting](/docs/{{version}}/broadcasting) hiện có của Laravel.
+[Laravel Reverb](https://github.com/laravel/reverb) mang khả năng giao tiếp WebSocket real-time nhanh và có thể mở rộng trực tiếp vào ứng dụng Laravel, đồng thời tích hợp liền mạch với bộ công cụ [event broadcasting](/broadcasting) hiện có của Laravel.
 <a name="installation"></a>
 ## Cài đặt
 Bạn có thể cài Reverb bằng lệnh Artisan `install:broadcasting`:
@@ -55,7 +55,7 @@ Ví dụ, bạn có thể duy trì một ứng dụng Laravel trung tâm sử d�
 <a name="ssl"></a>
 ### SSL
 Trong phần lớn trường hợp, kết nối WebSocket bảo mật được web server phía trước như Nginx xử lý trước khi request được proxy tới Reverb server.
-Tuy nhiên, trong một số tình huống như local development, bạn có thể muốn Reverb server tự xử lý kết nối bảo mật. Nếu dùng tính năng site bảo mật của [Laravel Herd](https://herd.laravel.com), hoặc dùng [Laravel Valet](/docs/{{version}}/valet) và đã chạy [lệnh secure](/docs/{{version}}/valet#securing-sites), bạn có thể dùng chứng chỉ do Herd / Valet tạo cho site để bảo vệ Reverb connection. Hãy đặt `REVERB_HOST` thành hostname của site hoặc truyền hostname khi khởi động Reverb server:
+Tuy nhiên, trong một số tình huống như local development, bạn có thể muốn Reverb server tự xử lý kết nối bảo mật. Nếu dùng tính năng site bảo mật của [Laravel Herd](https://herd.laravel.com), hoặc dùng [Laravel Valet](/valet) và đã chạy [lệnh secure](/valet#securing-sites), bạn có thể dùng chứng chỉ do Herd / Valet tạo cho site để bảo vệ Reverb connection. Hãy đặt `REVERB_HOST` thành hostname của site hoặc truyền hostname khi khởi động Reverb server:
 ```shell
 php artisan reverb:start --host="0.0.0.0" --port=8080 --hostname="laravel.test"
 ```
@@ -107,8 +107,8 @@ php artisan reverb:restart
 
 <a name="monitoring"></a>
 ## Giám sát
-Bạn có thể giám sát Reverb thông qua tích hợp với [Laravel Pulse](/docs/{{version}}/pulse). Khi bật tích hợp Pulse, bạn có thể theo dõi số lượng kết nối và thông điệp mà server đang xử lý.
-Để bật tích hợp, trước hết hãy đảm bảo đã [cài Pulse](/docs/{{version}}/pulse#installation). Sau đó thêm recorder của Reverb vào `config/pulse.php`:
+Bạn có thể giám sát Reverb thông qua tích hợp với [Laravel Pulse](/pulse). Khi bật tích hợp Pulse, bạn có thể theo dõi số lượng kết nối và thông điệp mà server đang xử lý.
+Để bật tích hợp, trước hết hãy đảm bảo đã [cài Pulse](/pulse#installation). Sau đó thêm recorder của Reverb vào `config/pulse.php`:
 ```php
 use Laravel\Reverb\Pulse\Recorders\ReverbConnections;
 use Laravel\Reverb\Pulse\Recorders\ReverbMessages;
@@ -125,7 +125,7 @@ use Laravel\Reverb\Pulse\Recorders\ReverbMessages;
     // ...
 ],
 ```
-Tiếp theo, thêm Pulse card tương ứng với từng recorder vào [Pulse dashboard](/docs/{{version}}/pulse#dashboard-customization):
+Tiếp theo, thêm Pulse card tương ứng với từng recorder vào [Pulse dashboard](/pulse#dashboard-customization):
 ```blade
 <x-pulse>
     <livewire:reverb.connections cols="full" />
@@ -226,11 +226,11 @@ Nếu cần xử lý nhiều kết nối hơn khả năng của một server, b�
 ```env
 REVERB_SCALING_ENABLED=true
 ```
-Tiếp theo, bạn cần một Redis server trung tâm để tất cả Reverb server cùng kết nối. Reverb sử dụng [Redis connection mặc định của ứng dụng](/docs/{{version}}/redis#configuration) để publish thông điệp tới toàn bộ Reverb server.
+Tiếp theo, bạn cần một Redis server trung tâm để tất cả Reverb server cùng kết nối. Reverb sử dụng [Redis connection mặc định của ứng dụng](/redis#configuration) để publish thông điệp tới toàn bộ Reverb server.
 Sau khi bật scaling và cấu hình Redis, bạn chỉ cần chạy `reverb:start` trên nhiều server có thể giao tiếp với Redis. Các Reverb server này nên nằm sau load balancer để phân phối request đồng đều.
 <a name="events"></a>
 ## Sự kiện
-Reverb dispatch các sự kiện nội bộ trong vòng đời của kết nối và quá trình xử lý thông điệp. Bạn có thể [lắng nghe các sự kiện này](/docs/{{version}}/events) để thực hiện hành động khi kết nối được quản lý hoặc thông điệp được trao đổi.
+Reverb dispatch các sự kiện nội bộ trong vòng đời của kết nối và quá trình xử lý thông điệp. Bạn có thể [lắng nghe các sự kiện này](/events) để thực hiện hành động khi kết nối được quản lý hoặc thông điệp được trao đổi.
 Các sự kiện sau được Reverb dispatch:
 #### `Laravel\Reverb\Events\ChannelCreated`
 

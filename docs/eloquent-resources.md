@@ -425,7 +425,7 @@ Theo mặc định, resource ngoài cùng sẽ được bao bọc trong key `dat
 }
 ```
 
-Nếu muốn tắt việc bao bọc resource ngoài cùng, bạn nên gọi phương thức `withoutWrapping` trên class cơ sở `Illuminate\Http\Resources\Json\JsonResource`. Thông thường, phương thức này nên được gọi từ `AppServiceProvider` hoặc một [service provider](/docs/{{version}}/providers) khác được load trong mọi request của ứng dụng:
+Nếu muốn tắt việc bao bọc resource ngoài cùng, bạn nên gọi phương thức `withoutWrapping` trên class cơ sở `Illuminate\Http\Resources\Json\JsonResource`. Thông thường, phương thức này nên được gọi từ `AppServiceProvider` hoặc một [service provider](/providers) khác được load trong mọi request của ứng dụng:
 
 ```php
 <?php
@@ -771,7 +771,7 @@ public function toArray(Request $request): array
 }
 ```
 
-Nếu quan hệ của bạn sử dụng [model bảng trung gian tùy chỉnh](/docs/{{version}}/eloquent-relationships#defining-custom-intermediate-table-models), bạn có thể truyền một instance của model bảng trung gian làm đối số đầu tiên cho phương thức `whenPivotLoaded`:
+Nếu quan hệ của bạn sử dụng [model bảng trung gian tùy chỉnh](/eloquent-relationships#defining-custom-intermediate-table-models), bạn có thể truyền một instance của model bảng trung gian làm đối số đầu tiên cho phương thức `whenPivotLoaded`:
 
 ```php
 'expires_at' => $this->whenPivotLoaded(new Membership, function () {

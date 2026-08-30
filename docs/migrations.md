@@ -5,12 +5,12 @@
 
 Migration hoạt động tương tự hệ thống quản lý phiên bản dành cho database, cho phép đội ngũ định nghĩa và chia sẻ schema database của ứng dụng. Nếu bạn từng phải yêu cầu đồng đội tự thêm một cột vào schema database trên máy local sau khi họ pull thay đổi của bạn từ source control, thì đó chính là vấn đề mà database migration giải quyết.
 
-[Facade](/docs/{{version}}/facades) `Schema` của Laravel cung cấp API không phụ thuộc vào hệ quản trị database để tạo và thao tác với bảng trên tất cả các hệ database mà Laravel hỗ trợ. Thông thường, migration sử dụng facade này để tạo và thay đổi bảng cũng như cột trong database.
+[Facade](/facades) `Schema` của Laravel cung cấp API không phụ thuộc vào hệ quản trị database để tạo và thao tác với bảng trên tất cả các hệ database mà Laravel hỗ trợ. Thông thường, migration sử dụng facade này để tạo và thay đổi bảng cũng như cột trong database.
 
 <a name="generating-migrations"></a>
 ## Tạo migration
 
-Bạn có thể sử dụng [lệnh Artisan](/docs/{{version}}/artisan) `make:migration` để tạo database migration. Migration mới sẽ được đặt trong thư mục `database/migrations`. Tên file của mỗi migration chứa timestamp để Laravel xác định thứ tự chạy migration:
+Bạn có thể sử dụng [lệnh Artisan](/artisan) `make:migration` để tạo database migration. Migration mới sẽ được đặt trong thư mục `database/migrations`. Tên file của mỗi migration chứa timestamp để Laravel xác định thứ tự chạy migration:
 
 ```shell
 php artisan make:migration create_flights_table
@@ -21,7 +21,7 @@ Laravel sẽ dựa vào tên migration để thử suy đoán tên bảng và mi
 Nếu muốn chỉ định đường dẫn tùy chỉnh cho migration được tạo, bạn có thể dùng tùy chọn `--path` khi chạy lệnh `make:migration`. Đường dẫn được cung cấp phải là đường dẫn tương đối so với base path của ứng dụng.
 
 > [!NOTE]
-> Có thể tùy chỉnh migration stub bằng cách [publish stub](/docs/{{version}}/artisan#stub-customization).
+> Có thể tùy chỉnh migration stub bằng cách [publish stub](/artisan#stub-customization).
 
 <a name="squashing-migrations"></a>
 ### Gộp migration
@@ -240,7 +240,7 @@ php artisan migrate:fresh
 php artisan migrate:fresh --seed
 ```
 
-Theo mặc định, lệnh `migrate:fresh` chỉ xóa các bảng thuộc database connection mặc định. Tuy nhiên, bạn có thể dùng tùy chọn `--database` để chỉ định database connection cần migrate. Tên connection phải tương ứng với một connection được định nghĩa trong [file cấu hình](/docs/{{version}}/configuration) `database` của ứng dụng:
+Theo mặc định, lệnh `migrate:fresh` chỉ xóa các bảng thuộc database connection mặc định. Tuy nhiên, bạn có thể dùng tùy chọn `--database` để chỉ định database connection cần migrate. Tên connection phải tương ứng với một connection được định nghĩa trong [file cấu hình](/configuration) `database` của ứng dụng:
 
 ```shell
 php artisan migrate:fresh --database=admin
@@ -879,7 +879,7 @@ $table->mediumText('data')->charset('binary'); // MEDIUMBLOB
 
 Phương thức `morphs` là một phương thức tiện ích, thêm cột `{column}_type` tương đương `VARCHAR` và cột `{column}_id` tương ứng. Kiểu của cột `{column}_id` sẽ là `UNSIGNED BIGINT`, `CHAR(36)` hoặc `CHAR(26)` tùy theo kiểu khóa của model.
 
-Phương thức này được dùng khi định nghĩa các cột cần thiết cho [quan hệ Eloquent đa hình](/docs/{{version}}/eloquent-relationships). Trong ví dụ sau, các cột `taggable_type` và `taggable_id` sẽ được tạo:
+Phương thức này được dùng khi định nghĩa các cột cần thiết cho [quan hệ Eloquent đa hình](/eloquent-relationships). Trong ví dụ sau, các cột `taggable_type` và `taggable_id` sẽ được tạo:
 
 ```php
 $table->morphs('taggable');
@@ -915,7 +915,7 @@ $table->nullableUuidMorphs('taggable');
 <a name="column-method-rememberToken"></a>
 #### `rememberToken()` {.collection-method}
 
-Phương thức `rememberToken` tạo một cột tương đương `VARCHAR(100)` cho phép `null`, dùng để lưu [authentication token](/docs/{{version}}/authentication#remembering-users) hiện tại của chức năng "remember me":
+Phương thức `rememberToken` tạo một cột tương đương `VARCHAR(100)` cho phép `null`, dùng để lưu [authentication token](/authentication#remembering-users) hiện tại của chức năng "remember me":
 
 ```php
 $table->rememberToken();
@@ -1127,7 +1127,7 @@ $table->unsignedTinyInteger('votes');
 
 Phương thức `ulidMorphs` là một phương thức tiện ích, thêm cột `{column}_type` tương đương `VARCHAR` và cột `{column}_id` tương đương `CHAR(26)`.
 
-Phương thức này được dùng khi định nghĩa các cột cần thiết cho [quan hệ Eloquent đa hình](/docs/{{version}}/eloquent-relationships) sử dụng định danh ULID. Trong ví dụ sau, các cột `taggable_type` và `taggable_id` sẽ được tạo:
+Phương thức này được dùng khi định nghĩa các cột cần thiết cho [quan hệ Eloquent đa hình](/eloquent-relationships) sử dụng định danh ULID. Trong ví dụ sau, các cột `taggable_type` và `taggable_id` sẽ được tạo:
 
 ```php
 $table->ulidMorphs('taggable');
@@ -1138,7 +1138,7 @@ $table->ulidMorphs('taggable');
 
 Phương thức `uuidMorphs` là một phương thức tiện ích, thêm cột `{column}_type` tương đương `VARCHAR` và cột `{column}_id` tương đương `CHAR(36)`.
 
-Phương thức này được dùng khi định nghĩa các cột cần thiết cho [quan hệ Eloquent đa hình](/docs/{{version}}/eloquent-relationships#polymorphic-relationships) sử dụng định danh UUID. Trong ví dụ sau, các cột `taggable_type` và `taggable_id` sẽ được tạo:
+Phương thức này được dùng khi định nghĩa các cột cần thiết cho [quan hệ Eloquent đa hình](/eloquent-relationships#polymorphic-relationships) sử dụng định danh UUID. Trong ví dụ sau, các cột `taggable_type` và `taggable_id` sẽ được tạo:
 
 ```php
 $table->uuidMorphs('taggable');
@@ -1590,12 +1590,12 @@ Schema::withoutForeignKeyConstraints(function () {
 ```
 
 > [!WARNING]
-> SQLite mặc định tắt các ràng buộc khóa ngoại. Khi sử dụng SQLite, hãy đảm bảo đã [bật hỗ trợ khóa ngoại](/docs/{{version}}/database#configuration) trong cấu hình cơ sở dữ liệu trước khi cố gắng tạo chúng trong migration.
+> SQLite mặc định tắt các ràng buộc khóa ngoại. Khi sử dụng SQLite, hãy đảm bảo đã [bật hỗ trợ khóa ngoại](/database#configuration) trong cấu hình cơ sở dữ liệu trước khi cố gắng tạo chúng trong migration.
 
 <a name="events"></a>
 ## Sự kiện
 
-Để thuận tiện, mỗi thao tác migration sẽ phát một [event](/docs/{{version}}/events). Tất cả các event sau đều kế thừa lớp cơ sở `Illuminate\Database\Events\MigrationEvent`:
+Để thuận tiện, mỗi thao tác migration sẽ phát một [event](/events). Tất cả các event sau đều kế thừa lớp cơ sở `Illuminate\Database\Events\MigrationEvent`:
 
 <div class="overflow-auto">
 

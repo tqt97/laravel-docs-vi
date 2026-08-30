@@ -316,7 +316,7 @@ while ($process->running()) {
 
 Laravel cũng giúp việc quản lý một pool gồm nhiều process bất đồng bộ chạy đồng thời trở nên đơn giản, cho phép thực thi nhiều tác vụ cùng lúc. Để bắt đầu, gọi method `pool`; method này nhận một closure, và closure nhận instance `Illuminate\Process\Pool`.
 
-Trong closure này, bạn có thể định nghĩa các process thuộc pool. Sau khi process pool được khởi động bằng method `start`, có thể truy cập [collection](/docs/{{version}}/collections) chứa các process đang chạy thông qua method `running`:
+Trong closure này, bạn có thể định nghĩa các process thuộc pool. Sau khi process pool được khởi động bằng method `start`, có thể truy cập [collection](/collections) chứa các process đang chạy thông qua method `running`:
 
 ```php
 use Illuminate\Process\Pool;

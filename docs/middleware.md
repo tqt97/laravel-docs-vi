@@ -40,7 +40,7 @@ class EnsureTokenIsValid
 Như bạn thấy, nếu `token` được cung cấp không khớp secret token, middleware trả về một HTTP redirect cho client. Ngược lại, request được chuyển tiếp sâu hơn vào ứng dụng. Để request tiếp tục đi qua middleware, hãy gọi callback `$next` và truyền `$request` vào đó.
 Có thể hình dung middleware như một chuỗi "lớp" mà HTTP request phải đi qua trước khi chạm tới logic ứng dụng. Mỗi lớp có thể kiểm tra request và thậm chí từ chối hoàn toàn request đó.
 > [!NOTE]
-> Tất cả middleware đều được resolve thông qua [service container](/docs/{{version}}/container), vì vậy bạn có thể type-hint bất kỳ dependency nào cần thiết trong constructor của middleware.
+> Tất cả middleware đều được resolve thông qua [service container](/container), vì vậy bạn có thể type-hint bất kỳ dependency nào cần thiết trong constructor của middleware.
 <a name="middleware-and-responses"></a>
 #### Middleware và response
 Middleware có thể thực hiện công việc trước hoặc sau khi chuyển request sâu hơn vào ứng dụng. Ví dụ, middleware sau thực hiện một tác vụ **trước khi** request được ứng dụng xử lý:
@@ -150,7 +150,7 @@ Route::middleware([EnsureTokenIsValid::class])->group(function () {
     })->withoutMiddleware([EnsureTokenIsValid::class]);
 });
 ```
-Bạn cũng có thể loại trừ một tập middleware khỏi toàn bộ [group](/docs/{{version}}/routing#route-groups) route:
+Bạn cũng có thể loại trừ một tập middleware khỏi toàn bộ [group](/routing#route-groups) route:
 ```php
 use App\Http\Middleware\EnsureTokenIsValid;
 
@@ -420,7 +420,7 @@ class TerminatingMiddleware
 }
 ```
 Method `terminate` nên nhận cả request và response. Sau khi định nghĩa terminable middleware, hãy thêm nó vào route hoặc global middleware trong file `bootstrap/app.php`.
-Khi gọi method `terminate`, Laravel sẽ resolve một instance middleware mới từ [service container](/docs/{{version}}/container). Nếu muốn dùng cùng một instance middleware cho cả `handle` và `terminate`, hãy đăng ký middleware với container bằng method `singleton`. Thông thường việc này được thực hiện trong method `register` của `AppServiceProvider`:
+Khi gọi method `terminate`, Laravel sẽ resolve một instance middleware mới từ [service container](/container). Nếu muốn dùng cùng một instance middleware cho cả `handle` và `terminate`, hãy đăng ký middleware với container bằng method `singleton`. Thông thường việc này được thực hiện trong method `register` của `AppServiceProvider`:
 ```php
 use App\Http\Middleware\TerminatingMiddleware;
 

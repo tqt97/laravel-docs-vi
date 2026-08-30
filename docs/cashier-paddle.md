@@ -318,7 +318,7 @@ Chúng ta cũng có thể dễ dàng xác định user có đăng ký một prod
 <a name="quickstart-building-a-subscribed-middleware"></a>
 #### Xây dựng middleware kiểm tra subscription
 
-Để thuận tiện, bạn có thể tạo một [middleware](/docs/{{version}}/middleware) xác định request đến có phải từ user đã đăng ký hay không. Sau khi middleware được định nghĩa, bạn có thể gán nó cho route để ngăn user chưa đăng ký truy cập:
+Để thuận tiện, bạn có thể tạo một [middleware](/middleware) xác định request đến có phải từ user đã đăng ký hay không. Sau khi middleware được định nghĩa, bạn có thể gán nó cho route để ngăn user chưa đăng ký truy cập:
 
 ```php
 <?php
@@ -411,7 +411,7 @@ Route::get('/buy', function (Request $request) {
 });
 ```
 
-Cashier cung cấp [Blade component](/docs/{{version}}/blade#components) `paddle-button`. Bạn có thể truyền phiên checkout vào component dưới dạng "prop". Khi nút được nhấn, checkout widget của Paddle sẽ hiển thị:
+Cashier cung cấp [Blade component](/blade#components) `paddle-button`. Bạn có thể truyền phiên checkout vào component dưới dạng "prop". Khi nút được nhấn, checkout widget của Paddle sẽ hiển thị:
 
 ```html
 <x-paddle-button :checkout="$checkout" class="px-8 py-4">
@@ -744,7 +744,7 @@ if ($user->subscribed('default')) {
 }
 ```
 
-Phương thức `subscribed` cũng rất phù hợp để sử dụng trong [route middleware](/docs/{{version}}/middleware), cho phép bạn lọc quyền truy cập vào route và controller dựa trên trạng thái subscription của người dùng:
+Phương thức `subscribed` cũng rất phù hợp để sử dụng trong [route middleware](/middleware), cho phép bạn lọc quyền truy cập vào route và controller dựa trên trạng thái subscription của người dùng:
 
 ```php
 <?php
@@ -1301,12 +1301,12 @@ Theo mặc định, controller này tự động xử lý việc hủy các subs
 - Subscription Canceled
 
 > [!WARNING]
-> Hãy đảm bảo bảo vệ các request gửi đến bằng middleware [xác minh chữ ký webhook](/docs/{{version}}/cashier-paddle#verifying-webhook-signatures) đi kèm Cashier.
+> Hãy đảm bảo bảo vệ các request gửi đến bằng middleware [xác minh chữ ký webhook](/cashier-paddle#verifying-webhook-signatures) đi kèm Cashier.
 
 <a name="webhooks-csrf-protection"></a>
 #### Webhook và bảo vệ CSRF
 
-Vì Paddle webhook cần bỏ qua cơ chế [bảo vệ CSRF](/docs/{{version}}/csrf) của Laravel, bạn cần đảm bảo Laravel không cố xác minh CSRF token đối với Paddle webhook gửi đến. Để thực hiện điều này, hãy loại trừ `paddle/*` khỏi bảo vệ CSRF trong file `bootstrap/app.php` của ứng dụng:
+Vì Paddle webhook cần bỏ qua cơ chế [bảo vệ CSRF](/csrf) của Laravel, bạn cần đảm bảo Laravel không cố xác minh CSRF token đối với Paddle webhook gửi đến. Để thực hiện điều này, hãy loại trừ `paddle/*` khỏi bảo vệ CSRF trong file `bootstrap/app.php` của ứng dụng:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -1319,7 +1319,7 @@ Vì Paddle webhook cần bỏ qua cơ chế [bảo vệ CSRF](/docs/{{version}}/
 <a name="webhooks-local-development"></a>
 #### Webhook trong môi trường phát triển local
 
-Để Paddle có thể gửi webhook đến ứng dụng trong quá trình phát triển local, bạn cần public ứng dụng thông qua một dịch vụ chia sẻ site như [Ngrok](https://ngrok.com/) hoặc [Expose](https://expose.dev/docs/introduction). Nếu đang phát triển ứng dụng local bằng [Laravel Sail](/docs/{{version}}/sail), bạn có thể sử dụng [lệnh chia sẻ site](/docs/{{version}}/sail#sharing-your-site) của Sail.
+Để Paddle có thể gửi webhook đến ứng dụng trong quá trình phát triển local, bạn cần public ứng dụng thông qua một dịch vụ chia sẻ site như [Ngrok](https://ngrok.com/) hoặc [Expose](https://expose.dev/docs/introduction). Nếu đang phát triển ứng dụng local bằng [Laravel Sail](/sail), bạn có thể sử dụng [lệnh chia sẻ site](/sail#sharing-your-site) của Sail.
 
 <a name="defining-webhook-event-handlers"></a>
 ### Định nghĩa webhook event handler
@@ -1329,7 +1329,7 @@ Cashier tự động xử lý việc hủy subscription khi tính phí thất b�
 - `Laravel\Paddle\Events\WebhookReceived`
 - `Laravel\Paddle\Events\WebhookHandled`
 
-Cả hai event đều chứa toàn bộ payload của Paddle webhook. Ví dụ, nếu muốn xử lý webhook `transaction.billed`, bạn có thể đăng ký một [listener](/docs/{{version}}/events#defining-listeners) để xử lý event:
+Cả hai event đều chứa toàn bộ payload của Paddle webhook. Ví dụ, nếu muốn xử lý webhook `transaction.billed`, bạn có thể đăng ký một [listener](/events#defining-listeners) để xử lý event:
 
 ```php
 <?php
@@ -1530,4 +1530,4 @@ Next payment: {{ $nextPayment->amount() }} due on {{ $nextPayment->date()->forma
 
 Khi kiểm thử, bạn nên kiểm tra thủ công billing flow để đảm bảo integration hoạt động như mong đợi.
 
-Đối với automated test, bao gồm các test được chạy trong môi trường CI, bạn có thể sử dụng [HTTP Client của Laravel](/docs/{{version}}/http-client#testing) để giả lập các HTTP call gửi đến Paddle. Mặc dù cách này không kiểm thử response thực tế từ Paddle, nó cung cấp một phương thức để kiểm thử ứng dụng mà không thực sự gọi Paddle API.
+Đối với automated test, bao gồm các test được chạy trong môi trường CI, bạn có thể sử dụng [HTTP Client của Laravel](/http-client#testing) để giả lập các HTTP call gửi đến Paddle. Mặc dù cách này không kiểm thử response thực tế từ Paddle, nó cung cấp một phương thức để kiểm thử ứng dụng mà không thực sự gọi Paddle API.

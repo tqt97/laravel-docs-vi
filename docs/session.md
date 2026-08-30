@@ -10,7 +10,7 @@ Laravel đi kèm nhiều session backend khác nhau nhưng được truy cập t
 Vì ứng dụng dựa trên HTTP có tính stateless, session cung cấp cách lưu thông tin người dùng qua nhiều request. Dữ liệu này thường được lưu trong một persistent store / backend để các request sau có thể truy cập lại.
 Laravel đi kèm nhiều session backend khác nhau nhưng được truy cập thông qua một API thống nhất và dễ dùng. Các backend phổ biến như [Memcached](https://memcached.org), [Redis](https://redis.io) và database đều được hỗ trợ.
 > [!NOTE]
-> Driver `array` chủ yếu dùng trong [testing](/docs/{{version}}/testing) và không persist dữ liệu session.
+> Driver `array` chủ yếu dùng trong [testing](/testing) và không persist dữ liệu session.
 <a name="driver-prerequisites"></a>
 Cấu hình session của ứng dụng nằm trong `config/session.php`. Bạn nên xem qua các option có sẵn. Mặc định, Laravel dùng session driver `database`.
 <a name="database"></a>
@@ -29,7 +29,7 @@ php artisan migrate
 
 #### Redis
 
-Trước khi dùng Redis session với Laravel, bạn cần cài extension PHP PhpRedis qua PECL hoặc package `predis/predis` qua Composer. Xem [tài liệu Redis](/docs/{{version}}/redis#configuration) để biết cách cấu hình.
+Trước khi dùng Redis session với Laravel, bạn cần cài extension PHP PhpRedis qua PECL hoặc package `predis/predis` qua Composer. Xem [tài liệu Redis](/redis#configuration) để biết cách cấu hình.
 > [!NOTE]
 > Biến môi trường `SESSION_CONNECTION`, hoặc option `connection` trong `session.php`, dùng để chỉ định Redis connection dành cho session storage.
 <a name="interacting-with-the-session"></a>
@@ -126,7 +126,7 @@ if ($request->session()->has('users')) {
 ```
 
 > [!NOTE]
-> Về thực tế, dùng session qua HTTP request instance hay global helper `session` gần như không khác biệt. Cả hai đều có thể [test](/docs/{{version}}/testing) bằng method `assertSessionHas` có sẵn trong test case.
+> Về thực tế, dùng session qua HTTP request instance hay global helper `session` gần như không khác biệt. Cả hai đều có thể [test](/testing) bằng method `assertSessionHas` có sẵn trong test case.
 
 ```php
 if ($request->session()->exists('users')) {
@@ -238,7 +238,7 @@ Method `pull` lấy và xóa item khỏi session trong cùng một câu lệnh:
 ### Tạo lại session ID
 
 Regenerate session ID thường được thực hiện để ngăn attacker khai thác [session fixation](https://owasp.org/www-community/attacks/Session_fixation).
-Laravel tự động regenerate session ID trong quá trình authentication nếu dùng [application starter kit](/docs/{{version}}/starter-kits) hoặc [Laravel Fortify](/docs/{{version}}/fortify). Nếu cần tự thực hiện, dùng method `regenerate`:
+Laravel tự động regenerate session ID trong quá trình authentication nếu dùng [application starter kit](/starter-kits) hoặc [Laravel Fortify](/fortify). Nếu cần tự thực hiện, dùng method `regenerate`:
 
 ```php
 $request->session()->regenerate();
@@ -254,7 +254,7 @@ $request->session()->invalidate();
 
 ## Session cache
 
-Session cache của Laravel cung cấp cách cache dữ liệu theo phạm vi từng user session. Khác global application cache, dữ liệu session cache được tự động cô lập theo session và được dọn khi session hết hạn hoặc bị hủy. Session cache hỗ trợ các method quen thuộc của [Laravel cache](/docs/{{version}}/cache) như `get`, `put`, `remember`, `forget`... nhưng scoped vào session hiện tại.
+Session cache của Laravel cung cấp cách cache dữ liệu theo phạm vi từng user session. Khác global application cache, dữ liệu session cache được tự động cô lập theo session và được dọn khi session hết hạn hoặc bị hủy. Session cache hỗ trợ các method quen thuộc của [Laravel cache](/cache) như `get`, `put`, `remember`, `forget`... nhưng scoped vào session hiện tại.
 Session cache phù hợp với dữ liệu tạm thời theo người dùng cần tồn tại qua nhiều request trong cùng session nhưng không cần lưu vĩnh viễn, chẳng hạn form data, kết quả tính tạm, API response hoặc dữ liệu ngắn hạn khác.
 Bạn có thể truy cập session cache thông qua method `cache` trên session:
 
@@ -320,7 +320,7 @@ Vì mục đích của các method trong interface có thể chưa rõ, dưới 
 ### Tạo lại session ID
 
 <a name="registering-the-driver"></a>
-Laravel tự động regenerate session ID trong quá trình authentication nếu dùng [application starter kit](/docs/{{version}}/starter-kits) hoặc [Laravel Fortify](/docs/{{version}}/fortify). Nếu cần tự thực hiện, dùng method `regenerate`:
+Laravel tự động regenerate session ID trong quá trình authentication nếu dùng [application starter kit](/starter-kits) hoặc [Laravel Fortify](/fortify). Nếu cần tự thực hiện, dùng method `regenerate`:
 
 ```php
 <?php

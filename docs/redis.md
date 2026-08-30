@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 [Redis](https://redis.io) là một key-value store mã nguồn mở với nhiều khả năng nâng cao. Redis thường được gọi là một data structure server vì mỗi key có thể chứa [string](https://redis.io/docs/latest/develop/data-types/strings/), [hash](https://redis.io/docs/latest/develop/data-types/hashes/), [list](https://redis.io/docs/latest/develop/data-types/lists/), [set](https://redis.io/docs/latest/develop/data-types/sets/) và [sorted set](https://redis.io/docs/latest/develop/data-types/sorted-sets/).
-Trước khi dùng Redis với Laravel, bạn nên cài extension PHP [PhpRedis](https://github.com/phpredis/phpredis) qua PECL. So với package PHP thuần user-land, extension này phức tạp hơn khi cài đặt nhưng có thể mang lại hiệu năng tốt hơn cho ứng dụng sử dụng Redis nhiều. Nếu dùng [Laravel Sail](/docs/{{version}}/sail), extension này đã được cài sẵn trong Docker container của ứng dụng.
+Trước khi dùng Redis với Laravel, bạn nên cài extension PHP [PhpRedis](https://github.com/phpredis/phpredis) qua PECL. So với package PHP thuần user-land, extension này phức tạp hơn khi cài đặt nhưng có thể mang lại hiệu năng tốt hơn cho ứng dụng sử dụng Redis nhiều. Nếu dùng [Laravel Sail](/sail), extension này đã được cài sẵn trong Docker container của ứng dụng.
 Nếu không thể cài PhpRedis, bạn có thể cài package `predis/predis` bằng Composer. Predis là Redis client được viết hoàn toàn bằng PHP và không yêu cầu extension bổ sung:
 ```shell
 composer require predis/predis
@@ -268,7 +268,7 @@ Các serializer hiện được hỗ trợ gồm `Redis::SERIALIZER_NONE` (mặc
 Các thuật toán nén được hỗ trợ gồm `Redis::COMPRESSION_NONE` (mặc định), `Redis::COMPRESSION_LZF`, `Redis::COMPRESSION_ZSTD` và `Redis::COMPRESSION_LZ4`.
 <a name="interacting-with-redis"></a>
 ## Tương tác với Redis
-Bạn có thể tương tác với Redis bằng cách gọi các method trên [facade](/docs/{{version}}/facades) `Redis`. Facade này hỗ trợ dynamic method, nghĩa là bạn có thể gọi bất kỳ [Redis command](https://redis.io/commands) nào và command sẽ được chuyển trực tiếp tới Redis. Ví dụ sau gọi Redis command `GET` thông qua method `get` của facade `Redis`:
+Bạn có thể tương tác với Redis bằng cách gọi các method trên [facade](/facades) `Redis`. Facade này hỗ trợ dynamic method, nghĩa là bạn có thể gọi bất kỳ [Redis command](https://redis.io/commands) nào và command sẽ được chuyển trực tiếp tới Redis. Ví dụ sau gọi Redis command `GET` thông qua method `get` của facade `Redis`:
 ```php
 <?php
 
@@ -362,7 +362,7 @@ Facades\Redis::pipeline(function (Redis $pipe) {
 <a name="pubsub"></a>
 ## Pub / Sub
 Laravel cung cấp interface thuận tiện cho các Redis command `publish` và `subscribe`. Những command này cho phép lắng nghe thông điệp trên một "channel". Bạn có thể publish message từ ứng dụng khác, thậm chí từ ngôn ngữ lập trình khác, nhờ đó các ứng dụng và process có thể giao tiếp với nhau dễ dàng.
-Trước tiên, hãy thiết lập listener cho channel bằng method `subscribe`. Ta đặt lệnh này bên trong một [Artisan command](/docs/{{version}}/artisan), vì gọi `subscribe` sẽ khởi động một process chạy lâu dài:
+Trước tiên, hãy thiết lập listener cho channel bằng method `subscribe`. Ta đặt lệnh này bên trong một [Artisan command](/artisan), vì gọi `subscribe` sẽ khởi động một process chạy lâu dài:
 ```php
 <?php
 

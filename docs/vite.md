@@ -11,7 +11,7 @@ Laravel tích hợp liền mạch với Vite thông qua plugin chính thức và
 ## Cài đặt & Thiết lập
 
 > [!NOTE]
-> Phần tài liệu sau trình bày cách cài đặt và cấu hình Laravel Vite plugin theo cách thủ công. Tuy nhiên, các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm toàn bộ scaffolding này và là cách nhanh nhất để bắt đầu với Laravel và Vite.
+> Phần tài liệu sau trình bày cách cài đặt và cấu hình Laravel Vite plugin theo cách thủ công. Tuy nhiên, các [starter kit](/starter-kits) của Laravel đã bao gồm toàn bộ scaffolding này và là cách nhanh nhất để bắt đầu với Laravel và Vite.
 
 <a name="installing-node"></a>
 ### Cài đặt Node
@@ -23,7 +23,7 @@ node -v
 npm -v
 ```
 
-Bạn có thể dễ dàng cài phiên bản Node và NPM mới nhất bằng bộ cài đồ họa từ [website Node chính thức](https://nodejs.org/en/download/). Hoặc nếu đang dùng [Laravel Sail](https://laravel.com/docs/{{version}}/sail), bạn có thể gọi Node và NPM thông qua Sail:
+Bạn có thể dễ dàng cài phiên bản Node và NPM mới nhất bằng bộ cài đồ họa từ [website Node chính thức](https://nodejs.org/en/download/). Hoặc nếu đang dùng [Laravel Sail](https://laravel.com/docs/13.x/sail), bạn có thể gọi Node và NPM thông qua Sail:
 
 ```shell
 ./vendor/bin/sail node -v
@@ -90,7 +90,7 @@ Laravel plugin cũng hỗ trợ nhiều entry point và các tùy chọn cấu h
 
 Nếu web server phát triển cục bộ phục vụ ứng dụng qua HTTPS, bạn có thể gặp vấn đề khi kết nối tới Vite development server.
 
-Nếu dùng [Laravel Herd](https://herd.laravel.com) và đã bật HTTPS cho site, hoặc dùng [Laravel Valet](/docs/{{version}}/valet) và đã chạy [lệnh `secure`](/docs/{{version}}/valet#securing-sites) cho ứng dụng, Laravel Vite plugin sẽ tự động phát hiện và sử dụng TLS certificate đã được tạo.
+Nếu dùng [Laravel Herd](https://herd.laravel.com) và đã bật HTTPS cho site, hoặc dùng [Laravel Valet](/valet) và đã chạy [lệnh `secure`](/valet#securing-sites) cho ứng dụng, Laravel Vite plugin sẽ tự động phát hiện và sử dụng TLS certificate đã được tạo.
 
 Nếu bạn bảo mật site bằng host không trùng với tên thư mục ứng dụng, có thể chỉ định host thủ công trong file `vite.config.js`:
 
@@ -134,7 +134,7 @@ Nếu không thể tạo certificate đáng tin cậy cho hệ thống, bạn c�
 <a name="configuring-hmr-in-sail-on-wsl2"></a>
 #### Chạy Development Server trong Sail trên WSL2
 
-Khi chạy Vite development server trong [Laravel Sail](/docs/{{version}}/sail) trên Windows Subsystem for Linux 2 (WSL2), bạn nên thêm cấu hình sau vào `vite.config.js` để bảo đảm trình duyệt có thể giao tiếp với development server:
+Khi chạy Vite development server trong [Laravel Sail](/sail) trên Windows Subsystem for Linux 2 (WSL2), bạn nên thêm cấu hình sau vào `vite.config.js` để bảo đảm trình duyệt có thể giao tiếp với development server:
 
 ```js
 // ...
@@ -225,7 +225,7 @@ npm run dev
 npm run build
 ```
 
-Nếu đang chạy development server trong [Sail](/docs/{{version}}/sail) trên WSL2, bạn có thể cần một số [cấu hình bổ sung](#configuring-hmr-in-sail-on-wsl2).
+Nếu đang chạy development server trong [Sail](/sail) trên WSL2, bạn có thể cần một số [cấu hình bổ sung](#configuring-hmr-in-sail-on-wsl2).
 
 <a name="working-with-scripts"></a>
 ## Làm việc với JavaScript
@@ -301,7 +301,7 @@ export default defineConfig({
 ```
 
 > [!NOTE]
-> [Starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình Laravel, Vue và Vite phù hợp. Đây là cách nhanh nhất để bắt đầu với Laravel, Vue và Vite.
+> [Starter kit](/starter-kits) của Laravel đã bao gồm cấu hình Laravel, Vue và Vite phù hợp. Đây là cách nhanh nhất để bắt đầu với Laravel, Vue và Vite.
 
 <a name="react"></a>
 ### React
@@ -339,7 +339,7 @@ Bạn cũng cần thêm Blade directive `@viteReactRefresh` bên cạnh directiv
 Directive `@viteReactRefresh` phải được gọi trước directive `@vite`.
 
 > [!NOTE]
-> Các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, React và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, React và Vite.
+> Các [starter kit](/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, React và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, React và Vite.
 
 <a name="svelte"></a>
 ### Svelte
@@ -370,7 +370,7 @@ export default defineConfig({
 ```
 
 > [!NOTE]
-> Các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, Svelte và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, Svelte và Vite.
+> Các [starter kit](/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, Svelte và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, Svelte và Vite.
 
 <a name="inertia"></a>
 ### Inertia
@@ -395,7 +395,7 @@ createInertiaApp({
 Nếu đang sử dụng tính năng code splitting của Vite với Inertia, bạn nên cấu hình [prefetch asset](#asset-prefetching).
 
 > [!NOTE]
-> Các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, Inertia và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, Inertia và Vite.
+> Các [starter kit](/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, Inertia và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, Inertia và Vite.
 
 <a name="url-processing"></a>
 ### Xử lý URL
@@ -431,7 +431,7 @@ Ví dụ sau minh họa cách Vite xử lý URL tương đối và tuyệt đố
 ## Làm việc với stylesheet
 
 > [!NOTE]
-> [Starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình Tailwind và Vite phù hợp. Hoặc, nếu muốn dùng Tailwind với Laravel mà không dùng starter kit, hãy xem [hướng dẫn cài đặt Tailwind cho Laravel](https://tailwindcss.com/docs/guides/laravel).
+> [Starter kit](/starter-kits) của Laravel đã bao gồm cấu hình Tailwind và Vite phù hợp. Hoặc, nếu muốn dùng Tailwind với Laravel mà không dùng starter kit, hãy xem [hướng dẫn cài đặt Tailwind cho Laravel](https://tailwindcss.com/docs/guides/laravel).
 
 Mọi ứng dụng Laravel đều đã bao gồm Tailwind và file `vite.config.js` được cấu hình phù hợp. Vì vậy, bạn chỉ cần khởi động Vite development server hoặc chạy lệnh Composer `dev`; lệnh này sẽ khởi động cả Laravel và Vite development server:
 
@@ -444,7 +444,7 @@ CSS của ứng dụng có thể được đặt trong file `resources/css/app.c
 <a name="working-with-fonts"></a>
 ## Làm việc với font
 
-Laravel Vite plugin có thể phục vụ các font self-hosted đã được tối ưu cho ứng dụng. Khi font được cấu hình, plugin sẽ resolve các file font được yêu cầu, xuất chúng thành Vite asset, sinh CSS cho font và ghi font manifest để Blade [`@fonts` directive](/docs/{{version}}/blade#fonts) sử dụng.
+Laravel Vite plugin có thể phục vụ các font self-hosted đã được tối ưu cho ứng dụng. Khi font được cấu hình, plugin sẽ resolve các file font được yêu cầu, xuất chúng thành Vite asset, sinh CSS cho font và ghi font manifest để Blade [`@fonts` directive](/blade#fonts) sử dụng.
 
 Để cấu hình font, hãy import một hoặc nhiều provider helper từ `laravel-vite-plugin/fonts` và thêm chúng vào option `fonts` của Laravel plugin:
 
@@ -658,7 +658,7 @@ export default defineConfig({
 <a name="blade-aliases"></a>
 ### Alias trong Blade
 
-Trong các ứng dụng JavaScript, việc [tạo alias](#aliases) cho những thư mục thường xuyên được tham chiếu là khá phổ biến. Tuy nhiên, bạn cũng có thể tạo alias để sử dụng trong Blade bằng phương thức `macro` của class `Illuminate\Support\Facades\Vite`. Thông thường, các "macro" nên được định nghĩa trong phương thức `boot` của một [service provider](/docs/{{version}}/providers):
+Trong các ứng dụng JavaScript, việc [tạo alias](#aliases) cho những thư mục thường xuyên được tham chiếu là khá phổ biến. Tuy nhiên, bạn cũng có thể tạo alias để sử dụng trong Blade bằng phương thức `macro` của class `Illuminate\Support\Facades\Vite`. Thông thường, các "macro" nên được định nghĩa trong phương thức `boot` của một [service provider](/providers):
 
 ```php
 /**
@@ -681,7 +681,7 @@ Sau khi macro được định nghĩa, bạn có thể gọi nó trong template.
 
 Khi xây dựng SPA bằng tính năng code splitting của Vite, các asset cần thiết sẽ được tải mỗi khi chuyển trang. Hành vi này có thể khiến việc render UI bị trễ. Nếu đây là vấn đề với frontend framework bạn sử dụng, Laravel cho phép prefetch sớm các asset JavaScript và CSS của ứng dụng ngay trong lần tải trang đầu tiên.
 
-Bạn có thể yêu cầu Laravel prefetch sớm các asset bằng cách gọi phương thức `Vite::prefetch` trong phương thức `boot` của một [service provider](/docs/{{version}}/providers):
+Bạn có thể yêu cầu Laravel prefetch sớm các asset bằng cách gọi phương thức `Vite::prefetch` trong phương thức `boot` của một [service provider](/providers):
 
 ```php
 <?php
@@ -869,7 +869,7 @@ php artisan inertia:start-ssr
 ```
 
 > [!NOTE]
-> Các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, Inertia SSR và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, Inertia SSR và Vite.
+> Các [starter kit](/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, Inertia SSR và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, Inertia SSR và Vite.
 
 <a name="script-and-style-attributes"></a>
 ## Thuộc tính của thẻ script và style
@@ -877,7 +877,7 @@ php artisan inertia:start-ssr
 <a name="content-security-policy-csp-nonce"></a>
 ### Nonce cho Content Security Policy (CSP)
 
-Nếu muốn thêm [thuộc tính nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) vào các thẻ script và style như một phần của [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP), bạn có thể tạo hoặc chỉ định nonce bằng phương thức `useCspNonce` trong một [middleware](/docs/{{version}}/middleware) tùy chỉnh:
+Nếu muốn thêm [thuộc tính nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) vào các thẻ script và style như một phần của [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP), bạn có thể tạo hoặc chỉ định nonce bằng phương thức `useCspNonce` trong một [middleware](/middleware) tùy chỉnh:
 
 ```php
 <?php
@@ -909,7 +909,7 @@ class AddContentSecurityPolicyHeaders
 
 Sau khi gọi phương thức `useCspNonce`, Laravel sẽ tự động thêm thuộc tính `nonce` vào mọi thẻ script và style được tạo.
 
-Nếu cần sử dụng nonce ở nơi khác, bao gồm [directive `@route` của Ziggy](https://github.com/tighten/ziggy#using-routes-with-a-content-security-policy) đi kèm [starter kit](/docs/{{version}}/starter-kits) của Laravel, bạn có thể lấy giá trị đó bằng phương thức `cspNonce`:
+Nếu cần sử dụng nonce ở nơi khác, bao gồm [directive `@route` của Ziggy](https://github.com/tighten/ziggy#using-routes-with-a-content-security-policy) đi kèm [starter kit](/starter-kits) của Laravel, bạn có thể lấy giá trị đó bằng phương thức `cspNonce`:
 
 ```blade
 @routes(nonce: Vite::cspNonce())
@@ -964,7 +964,7 @@ Vite::useIntegrityKey(false);
 <a name="arbitrary-attributes"></a>
 ### Thuộc tính tùy ý
 
-Nếu cần thêm các thuộc tính khác vào thẻ script và style, chẳng hạn thuộc tính [data-turbo-track](https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change), bạn có thể chỉ định chúng thông qua các phương thức `useScriptTagAttributes` và `useStyleTagAttributes`. Thông thường, các phương thức này nên được gọi từ một [service provider](/docs/{{version}}/providers):
+Nếu cần thêm các thuộc tính khác vào thẻ script và style, chẳng hạn thuộc tính [data-turbo-track](https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change), bạn có thể chỉ định chúng thông qua các phương thức `useScriptTagAttributes` và `useStyleTagAttributes`. Thông thường, các phương thức này nên được gọi từ một [service provider](/providers):
 
 ```php
 use Illuminate\Support\Facades\Vite;

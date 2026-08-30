@@ -11,9 +11,9 @@
 <a name="passport-or-sanctum"></a>
 ### Passport hay Sanctum?
 
-Trước khi bắt đầu, bạn nên xác định ứng dụng của mình phù hợp hơn với Laravel Passport hay [Laravel Sanctum](/docs/{{version}}/sanctum). Nếu ứng dụng bắt buộc phải hỗ trợ OAuth2, bạn nên sử dụng Laravel Passport.
+Trước khi bắt đầu, bạn nên xác định ứng dụng của mình phù hợp hơn với Laravel Passport hay [Laravel Sanctum](/sanctum). Nếu ứng dụng bắt buộc phải hỗ trợ OAuth2, bạn nên sử dụng Laravel Passport.
 
-Tuy nhiên, nếu bạn cần xác thực ứng dụng single-page, ứng dụng di động hoặc phát hành API token, bạn nên sử dụng [Laravel Sanctum](/docs/{{version}}/sanctum). Laravel Sanctum không hỗ trợ OAuth2, nhưng cung cấp trải nghiệm phát triển xác thực API đơn giản hơn đáng kể.
+Tuy nhiên, nếu bạn cần xác thực ứng dụng single-page, ứng dụng di động hoặc phát hành API token, bạn nên sử dụng [Laravel Sanctum](/sanctum). Laravel Sanctum không hỗ trợ OAuth2, nhưng cung cấp trải nghiệm phát triển xác thực API đơn giản hơn đáng kể.
 
 <a name="installation"></a>
 ## Cài đặt
@@ -477,7 +477,7 @@ php artisan passport:purge --revoked
 php artisan passport:purge --expired
 ```
 
-Bạn cũng có thể cấu hình một [scheduled job](/docs/{{version}}/scheduling) trong file `routes/console.php` của ứng dụng để tự động dọn token theo lịch:
+Bạn cũng có thể cấu hình một [scheduled job](/scheduling) trong file `routes/console.php` của ứng dụng để tự động dọn token theo lịch:
 
 ```php
 use Illuminate\Support\Facades\Schedule;
@@ -787,7 +787,7 @@ $response = Http::asForm()->post('https://passport-app.test/oauth/token', [
 <a name="customizing-the-user-provider"></a>
 ### Tùy chỉnh User Provider
 
-Nếu ứng dụng sử dụng nhiều hơn một [authentication user provider](/docs/{{version}}/authentication#introduction), bạn có thể chỉ định user provider mà Password Grant client sử dụng bằng tùy chọn `--provider` khi tạo client qua lệnh `artisan passport:client --password`. Tên provider được cung cấp phải khớp với một provider hợp lệ được định nghĩa trong file cấu hình `config/auth.php` của ứng dụng. Sau đó, bạn có thể [bảo vệ route bằng middleware](#multiple-authentication-guards) để đảm bảo chỉ người dùng từ provider được guard chỉ định mới được cấp quyền.
+Nếu ứng dụng sử dụng nhiều hơn một [authentication user provider](/authentication#introduction), bạn có thể chỉ định user provider mà Password Grant client sử dụng bằng tùy chọn `--provider` khi tạo client qua lệnh `artisan passport:client --password`. Tên provider được cung cấp phải khớp với một provider hợp lệ được định nghĩa trong file cấu hình `config/auth.php` của ứng dụng. Sau đó, bạn có thể [bảo vệ route bằng middleware](#multiple-authentication-guards) để đảm bảo chỉ người dùng từ provider được guard chỉ định mới được cấp quyền.
 
 <a name="customizing-the-username-field"></a>
 ### Tùy chỉnh trường Username
@@ -953,7 +953,7 @@ return $response->json()['access_token'];
 Đôi khi, user có thể muốn tự phát hành access token mà không cần đi qua luồng redirect authorization code thông thường. Cho phép user tự phát hành token thông qua UI của ứng dụng có thể hữu ích để họ thử nghiệm API, hoặc đơn giản là một cách phát hành access token thuận tiện hơn.
 
 > [!NOTE]
-> Nếu ứng dụng chủ yếu dùng Passport để phát hành personal access token, hãy cân nhắc sử dụng [Laravel Sanctum](/docs/{{version}}/sanctum), thư viện first-party gọn nhẹ của Laravel dành cho việc phát hành API access token.
+> Nếu ứng dụng chủ yếu dùng Passport để phát hành personal access token, hãy cân nhắc sử dụng [Laravel Sanctum](/sanctum), thư viện first-party gọn nhẹ của Laravel dành cho việc phát hành API access token.
 
 <a name="creating-a-personal-access-client"></a>
 ### Tạo Personal Access Client
@@ -967,7 +967,7 @@ php artisan passport:client --personal
 <a name="customizing-the-user-provider-for-pat"></a>
 ### Tùy chỉnh User Provider
 
-Nếu ứng dụng sử dụng nhiều [authentication user provider](/docs/{{version}}/authentication#introduction), bạn có thể chỉ định user provider mà personal access grant client sử dụng bằng tùy chọn `--provider` khi tạo client qua lệnh `artisan passport:client --personal`. Tên provider phải khớp với một provider hợp lệ được định nghĩa trong file cấu hình `config/auth.php`. Sau đó, bạn có thể [bảo vệ route bằng middleware](#multiple-authentication-guards) để bảo đảm chỉ user thuộc provider được guard chỉ định mới được cấp quyền.
+Nếu ứng dụng sử dụng nhiều [authentication user provider](/authentication#introduction), bạn có thể chỉ định user provider mà personal access grant client sử dụng bằng tùy chọn `--provider` khi tạo client qua lệnh `artisan passport:client --personal`. Tên provider phải khớp với một provider hợp lệ được định nghĩa trong file cấu hình `config/auth.php`. Sau đó, bạn có thể [bảo vệ route bằng middleware](#multiple-authentication-guards) để bảo đảm chỉ user thuộc provider được guard chỉ định mới được cấp quyền.
 
 <a name="managing-personal-access-tokens"></a>
 ### Quản lý Personal Access Token
@@ -1005,7 +1005,7 @@ $tokens = $user->tokens()
 <a name="via-middleware"></a>
 ### Qua middleware
 
-Passport cung cấp một [authentication guard](/docs/{{version}}/authentication#adding-custom-guards) để xác thực access token trên request gửi đến. Sau khi cấu hình guard `api` sử dụng driver `passport`, bạn chỉ cần gắn middleware `auth:api` vào các route yêu cầu access token hợp lệ:
+Passport cung cấp một [authentication guard](/authentication#adding-custom-guards) để xác thực access token trên request gửi đến. Sau khi cấu hình guard `api` sử dụng driver `passport`, bạn chỉ cần gắn middleware `auth:api` vào các route yêu cầu access token hợp lệ:
 
 ```php
 Route::get('/user', function () {
@@ -1170,7 +1170,7 @@ Route::get('/orders', function () {
 <a name="scope-attributes"></a>
 #### Scope Attribute
 
-Nếu ứng dụng sử dụng [controller middleware attribute](/docs/{{version}}/controllers#middleware-attributes), bạn có thể dùng attribute `Laravel\Passport\Attributes\AuthorizeToken` như một cách viết tắt thuận tiện cho scope middleware của Passport:
+Nếu ứng dụng sử dụng [controller middleware attribute](/controllers#middleware-attributes), bạn có thể dùng attribute `Laravel\Passport\Attributes\AuthorizeToken` như một cách viết tắt thuận tiện cho scope middleware của Passport:
 
 ```php
 <?php
@@ -1297,7 +1297,7 @@ Khi sử dụng phương thức xác thực này, bạn cần bảo đảm reque
 <a name="events"></a>
 ## Sự kiện
 
-Passport phát sinh các event khi phát hành access token và refresh token. Bạn có thể [lắng nghe các event này](/docs/{{version}}/events) để dọn dẹp hoặc thu hồi các access token khác trong database:
+Passport phát sinh các event khi phát hành access token và refresh token. Bạn có thể [lắng nghe các event này](/events) để dọn dẹp hoặc thu hồi các access token khác trong database:
 
 <div class="overflow-auto">
 

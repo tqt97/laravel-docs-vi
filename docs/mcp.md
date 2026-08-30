@@ -107,7 +107,7 @@ Mcp::web('/mcp/weather', WeatherServer::class)
 <a name="local-servers"></a>
 ### Local server
 
-Local server chạy dưới dạng lệnh Artisan, rất phù hợp để xây dựng các tích hợp trợ lý AI cục bộ như [Laravel Boost](/docs/{{version}}/installation#installing-laravel-boost). Đăng ký local server bằng phương thức `local`:
+Local server chạy dưới dạng lệnh Artisan, rất phù hợp để xây dựng các tích hợp trợ lý AI cục bộ như [Laravel Boost](/installation#installing-laravel-boost). Đăng ký local server bằng phương thức `local`:
 
 ```php
 use App\Mcp\Servers\WeatherServer;
@@ -309,7 +309,7 @@ class CurrentWeatherTool extends Tool
 
 Các định nghĩa JSON Schema cung cấp cấu trúc cơ bản cho đối số của tool, nhưng bạn cũng có thể cần áp dụng các validation rule phức tạp hơn.
 
-Laravel MCP tích hợp liền mạch với [tính năng validation](/docs/{{version}}/validation) của Laravel. Bạn có thể xác thực các đối số tool nhận vào ngay trong phương thức `handle` của tool:
+Laravel MCP tích hợp liền mạch với [tính năng validation](/validation) của Laravel. Bạn có thể xác thực các đối số tool nhận vào ngay trong phương thức `handle` của tool:
 
 ```php
 <?php
@@ -352,7 +352,7 @@ $validated = $request->validate([
 <a name="tool-dependency-injection"></a>
 #### Dependency Injection cho tool
 
-Laravel [service container](/docs/{{version}}/container) được sử dụng để resolve tất cả tool. Vì vậy, bạn có thể type-hint bất kỳ dependency nào mà tool cần trong constructor. Các dependency đã khai báo sẽ tự động được resolve và inject vào instance của tool:
+Laravel [service container](/container) được sử dụng để resolve tất cả tool. Vì vậy, bạn có thể type-hint bất kỳ dependency nào mà tool cần trong constructor. Các dependency đã khai báo sẽ tự động được resolve và inject vào instance của tool:
 
 ```php
 <?php
@@ -731,7 +731,7 @@ class DescribeWeatherPrompt extends Prompt
 
 Các đối số của prompt được tự động xác thực dựa trên định nghĩa của chúng, nhưng bạn cũng có thể cần áp dụng các quy tắc validation phức tạp hơn.
 
-Laravel MCP tích hợp liền mạch với [các tính năng validation](/docs/{{version}}/validation) của Laravel. Bạn có thể xác thực các đối số prompt đầu vào bên trong phương thức `handle` của prompt:
+Laravel MCP tích hợp liền mạch với [các tính năng validation](/validation) của Laravel. Bạn có thể xác thực các đối số prompt đầu vào bên trong phương thức `handle` của prompt:
 
 ```php
 <?php
@@ -773,7 +773,7 @@ $validated = $request->validate([
 <a name="prompt-dependency-injection"></a>
 ### Dependency Injection cho prompt
 
-[Service container](/docs/{{version}}/container) của Laravel được dùng để resolve tất cả prompt. Vì vậy, bạn có thể type-hint bất kỳ dependency nào mà prompt cần trong constructor. Các dependency đã khai báo sẽ tự động được resolve và inject vào instance của prompt:
+[Service container](/container) của Laravel được dùng để resolve tất cả prompt. Vì vậy, bạn có thể type-hint bất kỳ dependency nào mà prompt cần trong constructor. Các dependency đã khai báo sẽ tự động được resolve và inject vào instance của prompt:
 
 ```php
 <?php
@@ -1116,7 +1116,7 @@ class WeatherGuidelinesResource extends Resource
 <a name="resource-dependency-injection"></a>
 ### Dependency Injection cho resource
 
-[Service container](/docs/{{version}}/container) của Laravel được dùng để resolve tất cả resource. Vì vậy, bạn có thể type-hint bất kỳ dependency nào resource cần trong constructor. Các dependency đã khai báo sẽ tự động được resolve và inject vào instance của resource:
+[Service container](/container) của Laravel được dùng để resolve tất cả resource. Vì vậy, bạn có thể type-hint bất kỳ dependency nào resource cần trong constructor. Các dependency đã khai báo sẽ tự động được resolve và inject vào instance của resource:
 
 ```php
 <?php
@@ -1456,7 +1456,7 @@ Enum `Library` bao gồm các CDN script được cấu hình sẵn cho những 
 <a name="building-apps-with-boost"></a>
 ### Xây dựng app với Boost
 
-Laravel MCP bao gồm một skill reference [Boost](/docs/{{version}}/boost) chuyên dụng để xây dựng MCP Apps. Nếu đã cài đặt [Laravel Boost](/docs/{{version}}/boost), AI coding agent của bạn có thể gọi skill `mcp-development` và yêu cầu nó scaffold app resource, Blade view cùng tool được liên kết.
+Laravel MCP bao gồm một skill reference [Boost](/boost) chuyên dụng để xây dựng MCP Apps. Nếu đã cài đặt [Laravel Boost](/boost), AI coding agent của bạn có thể gọi skill `mcp-development` và yêu cầu nó scaffold app resource, Blade view cùng tool được liên kết.
 
 Để xem tài liệu tham chiếu protocol đầy đủ, bao gồm toàn bộ API phía client và chi tiết schema, hãy xem [tài liệu MCP Apps](https://modelcontextprotocol.io/extensions/apps/overview) chính thức.
 
@@ -1571,12 +1571,12 @@ Các icon được định nghĩa qua attribute và method `icons` sẽ tự đ�
 
 Tương tự route, bạn có thể xác thực các web MCP server bằng middleware. Khi thêm xác thực vào MCP server, người dùng sẽ phải xác thực trước khi sử dụng bất kỳ khả năng nào của server.
 
-Có hai cách để xác thực quyền truy cập MCP server: xác thực đơn giản dựa trên token thông qua [Laravel Sanctum](/docs/{{version}}/sanctum), hoặc bất kỳ token nào được truyền qua HTTP header `Authorization`. Ngoài ra, bạn có thể xác thực qua OAuth bằng [Laravel Passport](/docs/{{version}}/passport).
+Có hai cách để xác thực quyền truy cập MCP server: xác thực đơn giản dựa trên token thông qua [Laravel Sanctum](/sanctum), hoặc bất kỳ token nào được truyền qua HTTP header `Authorization`. Ngoài ra, bạn có thể xác thực qua OAuth bằng [Laravel Passport](/passport).
 
 <a name="oauth"></a>
 ### OAuth 2.1
 
-Cách mạnh mẽ nhất để bảo vệ các MCP server chạy trên web là sử dụng OAuth với [Laravel Passport](/docs/{{version}}/passport).
+Cách mạnh mẽ nhất để bảo vệ các MCP server chạy trên web là sử dụng OAuth với [Laravel Passport](/passport).
 
 Khi xác thực MCP server qua OAuth, hãy gọi phương thức `Mcp::oauthRoutes` trong file `routes/ai.php` để đăng ký các route OAuth2 discovery và client registration bắt buộc. Sau đó, áp dụng middleware `auth:api` của Passport cho route `Mcp::web` trong file `routes/ai.php`:
 
@@ -1592,7 +1592,7 @@ Mcp::web('/mcp/weather', WeatherExample::class)
 
 #### Cài đặt Passport mới
 
-Nếu ứng dụng chưa sử dụng Laravel Passport, hãy làm theo [hướng dẫn cài đặt và triển khai](/docs/{{version}}/passport#installation) của Passport để thêm Passport vào ứng dụng. Trước khi tiếp tục, bạn cần có model `OAuthenticatable`, authentication guard mới và các Passport key.
+Nếu ứng dụng chưa sử dụng Laravel Passport, hãy làm theo [hướng dẫn cài đặt và triển khai](/passport#installation) của Passport để thêm Passport vào ứng dụng. Trước khi tiếp tục, bạn cần có model `OAuthenticatable`, authentication guard mới và các Passport key.
 
 Tiếp theo, hãy publish Passport authorization view do Laravel MCP cung cấp:
 
@@ -1633,12 +1633,12 @@ Laravel MCP, thông qua phương thức `Mcp::oauthRoutes` đã đề cập ở 
 
 OAuth 2.1 là cơ chế xác thực được mô tả trong đặc tả Model Context Protocol và được hỗ trợ rộng rãi nhất trong các MCP client. Vì vậy, chúng tôi khuyến nghị sử dụng Passport khi có thể.
 
-Nếu ứng dụng đã sử dụng [Sanctum](/docs/{{version}}/sanctum), việc bổ sung Passport có thể khá phức tạp. Trong trường hợp này, chúng tôi khuyến nghị tiếp tục dùng Sanctum mà không thêm Passport cho đến khi bạn có yêu cầu rõ ràng và thực sự cần sử dụng một MCP client chỉ hỗ trợ OAuth.
+Nếu ứng dụng đã sử dụng [Sanctum](/sanctum), việc bổ sung Passport có thể khá phức tạp. Trong trường hợp này, chúng tôi khuyến nghị tiếp tục dùng Sanctum mà không thêm Passport cho đến khi bạn có yêu cầu rõ ràng và thực sự cần sử dụng một MCP client chỉ hỗ trợ OAuth.
 
 <a name="sanctum"></a>
 ### Sanctum
 
-Nếu muốn bảo vệ MCP server bằng [Sanctum](/docs/{{version}}/sanctum), chỉ cần thêm authentication middleware của Sanctum vào server trong file `routes/ai.php`. Sau đó, bảo đảm các MCP client gửi header `Authorization: Bearer <token>` để xác thực thành công:
+Nếu muốn bảo vệ MCP server bằng [Sanctum](/sanctum), chỉ cần thêm authentication middleware của Sanctum vào server trong file `routes/ai.php`. Sau đó, bảo đảm các MCP client gửi header `Authorization: Bearer <token>` để xác thực thành công:
 
 ```php
 use App\Mcp\Servers\WeatherExample;
@@ -1656,7 +1656,7 @@ Nếu ứng dụng tự phát hành custom API token, bạn có thể xác thự
 <a name="authorization"></a>
 ## Phân quyền
 
-Bạn có thể truy cập người dùng hiện đang được xác thực thông qua phương thức `$request->user()`, từ đó thực hiện các [kiểm tra phân quyền](/docs/{{version}}/authorization) bên trong MCP tool và resource:
+Bạn có thể truy cập người dùng hiện đang được xác thực thông qua phương thức `$request->user()`, từ đó thực hiện các [kiểm tra phân quyền](/authorization) bên trong MCP tool và resource:
 
 ```php
 use Laravel\Mcp\Request;
@@ -1678,7 +1678,7 @@ public function handle(Request $request): Response
 <a name="client"></a>
 ## MCP client
 
-Ngoài việc xây dựng server, Laravel MCP còn cung cấp client để kết nối đến các MCP server khác, dù là first-party hay third-party. Client cho phép ứng dụng khám phá và gọi các tool do MCP server cung cấp, đặc biệt hữu ích khi cấp cho [AI agent](/docs/{{version}}/ai-sdk#mcp-tools) quyền truy cập các khả năng do MCP server bên ngoài cung cấp.
+Ngoài việc xây dựng server, Laravel MCP còn cung cấp client để kết nối đến các MCP server khác, dù là first-party hay third-party. Client cho phép ứng dụng khám phá và gọi các tool do MCP server cung cấp, đặc biệt hữu ích khi cấp cho [AI agent](/ai-sdk#mcp-tools) quyền truy cập các khả năng do MCP server bên ngoài cung cấp.
 
 <a name="client-connecting"></a>
 ### Kết nối đến server
@@ -1845,7 +1845,7 @@ $result = $tools['current-weather']->call([
 ]);
 ```
 
-Nếu đang xây dựng agent bằng [Laravel AI SDK](/docs/{{version}}/ai-sdk), bạn cũng có thể cung cấp trực tiếp các tool từ MCP client cho agent, cho phép model gọi chúng trong khi phản hồi prompt. Xem phần [MCP Tools](/docs/{{version}}/ai-sdk#mcp-tools) trong tài liệu AI SDK để biết thêm thông tin.
+Nếu đang xây dựng agent bằng [Laravel AI SDK](/ai-sdk), bạn cũng có thể cung cấp trực tiếp các tool từ MCP client cho agent, cho phép model gọi chúng trong khi phản hồi prompt. Xem phần [MCP Tools](/ai-sdk#mcp-tools) trong tài liệu AI SDK để biết thêm thông tin.
 
 <a name="client-prompts"></a>
 ### Prompt

@@ -15,7 +15,7 @@ Khi tham chiếu Laravel framework hoặc các component của nó từ applicat
 <a name="support-policy"></a>
 ## Chính sách hỗ trợ
 
-Đối với mọi Laravel release, bug fix được cung cấp trong 18 tháng và security fix được cung cấp trong 2 năm. Với tất cả library bổ sung, chỉ major release mới nhất nhận bug fix. Ngoài ra, vui lòng xem các phiên bản database [được Laravel hỗ trợ](/docs/{{version}}/database#introduction).
+Đối với mọi Laravel release, bug fix được cung cấp trong 18 tháng và security fix được cung cấp trong 2 năm. Với tất cả library bổ sung, chỉ major release mới nhất nhận bug fix. Ngoài ra, vui lòng xem các phiên bản database [được Laravel hỗ trợ](/database#introduction).
 
 <div class="overflow-auto">
 
@@ -107,19 +107,19 @@ $embeddings = Str::of('Napa Valley has great wine.')->toEmbeddings();
 <a name="json-api"></a>
 ### JSON:API Resources
 
-Laravel giờ đây bao gồm [JSON:API resource](/docs/{{version}}/eloquent-resources#jsonapi-resources) first-party, giúp việc trả về response tuân theo JSON:API specification trở nên đơn giản.
+Laravel giờ đây bao gồm [JSON:API resource](/eloquent-resources#jsonapi-resources) first-party, giúp việc trả về response tuân theo JSON:API specification trở nên đơn giản.
 
 JSON:API resource xử lý serialization resource object, inclusion relationship, sparse fieldset, link và response header tuân theo JSON:API.
 
 <a name="request-forgery-protection"></a>
 ### Bảo vệ chống giả mạo request
 
-Vì lý do security, middleware [request forgery protection](/docs/{{version}}/csrf#preventing-csrf-requests) của Laravel đã được tăng cường và chính thức hóa thành `PreventRequestForgery`, bổ sung cơ chế xác minh request có xét origin trong khi vẫn giữ compatibility với CSRF protection dựa trên token.
+Vì lý do security, middleware [request forgery protection](/csrf#preventing-csrf-requests) của Laravel đã được tăng cường và chính thức hóa thành `PreventRequestForgery`, bổ sung cơ chế xác minh request có xét origin trong khi vẫn giữ compatibility với CSRF protection dựa trên token.
 
 <a name="queue-routing"></a>
 ### Queue Routing
 
-Laravel 13 bổ sung [queue routing theo class](/docs/{{version}}/queues#queue-routing) thông qua `Queue::route(...)`, cho phép bạn định nghĩa default queue / connection routing rule cho các job cụ thể tại một nơi tập trung:
+Laravel 13 bổ sung [queue routing theo class](/queues#queue-routing) thông qua `Queue::route(...)`, cho phép bạn định nghĩa default queue / connection routing rule cho các job cụ thể tại một nơi tập trung:
 
 ```php
 Queue::route(ProcessPodcast::class, connection: 'redis', queue: 'podcasts');
@@ -130,7 +130,7 @@ Queue::route(ProcessPodcast::class, connection: 'redis', queue: 'podcasts');
 
 Laravel 13 tiếp tục mở rộng hỗ trợ PHP attribute first-party trên toàn framework, giúp các concern về configuration và behavior phổ biến trở nên declarative hơn và nằm gần class/method liên quan.
 
-Các bổ sung đáng chú ý gồm controller và authorization attribute như [`#[Middleware]`](/docs/{{version}}/controllers#controller-middleware) và [`#[Authorize]`](/docs/{{version}}/controllers#authorization-attributes), cùng các cơ chế kiểm soát job liên quan queue như [`#[Tries]`](/docs/{{version}}/queues#max-job-attempts-and-timeout), [`#[Backoff]`](/docs/{{version}}/queues#dealing-with-failed-jobs), [`#[Timeout]`](/docs/{{version}}/queues#max-job-attempts-and-timeout) và [`#[FailOnTimeout]`](/docs/{{version}}/queues#failing-on-timeout).
+Các bổ sung đáng chú ý gồm controller và authorization attribute như [`#[Middleware]`](/controllers#controller-middleware) và [`#[Authorize]`](/controllers#authorization-attributes), cùng các cơ chế kiểm soát job liên quan queue như [`#[Tries]`](/queues#max-job-attempts-and-timeout), [`#[Backoff]`](/queues#dealing-with-failed-jobs), [`#[Timeout]`](/queues#max-job-attempts-and-timeout) và [`#[FailOnTimeout]`](/queues#failing-on-timeout).
 
 Ví dụ, controller middleware và policy check giờ có thể được khai báo trực tiếp trên class và method:
 
@@ -161,12 +161,12 @@ Các attribute bổ sung cũng đã được giới thiệu trên Eloquent, even
 <a name="cache-touch"></a>
 ### Gia hạn Cache TTL
 
-Laravel giờ bao gồm [`Cache::touch(...)`](/docs/{{version}}/cache), cho phép bạn gia hạn TTL của một cache item hiện có mà không cần retrieve rồi lưu lại value.
+Laravel giờ bao gồm [`Cache::touch(...)`](/cache), cho phép bạn gia hạn TTL của một cache item hiện có mà không cần retrieve rồi lưu lại value.
 
 <a name="semantic-search"></a>
 ### Tìm kiếm ngữ nghĩa / vector
 
-Laravel 13 mở rộng mạnh hơn khả năng semantic search với hỗ trợ vector query native, workflow embedding và các API liên quan được mô tả trong [search](/docs/{{version}}/search#semantic-vector-search), [queries](/docs/{{version}}/queries#vector-similarity-clauses) và [AI SDK](/docs/{{version}}/ai-sdk#embeddings).
+Laravel 13 mở rộng mạnh hơn khả năng semantic search với hỗ trợ vector query native, workflow embedding và các API liên quan được mô tả trong [search](/search#semantic-vector-search), [queries](/queries#vector-similarity-clauses) và [AI SDK](/ai-sdk#embeddings).
 
 Các tính năng này giúp việc xây dựng trải nghiệm tìm kiếm dựa trên AI với PostgreSQL + `pgvector` trở nên đơn giản, bao gồm similarity search trên embedding được tạo trực tiếp từ string.
 

@@ -4,9 +4,9 @@
 ## Giới thiệu
 
 > [!NOTE]
-> Trước khi tìm hiểu Laravel Horizon, bạn nên làm quen với [dịch vụ queue](/docs/{{version}}/queues) cơ bản của Laravel. Horizon bổ sung thêm nhiều tính năng cho queue của Laravel; những tính năng này có thể khó hiểu nếu bạn chưa nắm các chức năng queue nền tảng mà Laravel cung cấp.
+> Trước khi tìm hiểu Laravel Horizon, bạn nên làm quen với [dịch vụ queue](/queues) cơ bản của Laravel. Horizon bổ sung thêm nhiều tính năng cho queue của Laravel; những tính năng này có thể khó hiểu nếu bạn chưa nắm các chức năng queue nền tảng mà Laravel cung cấp.
 
-[Laravel Horizon](https://github.com/laravel/horizon) cung cấp dashboard trực quan và cơ chế cấu hình bằng code cho [Redis queue](/docs/{{version}}/queues) của ứng dụng Laravel. Horizon giúp bạn dễ dàng theo dõi các metric quan trọng của hệ thống queue như thông lượng job, thời gian chạy và các job thất bại.
+[Laravel Horizon](https://github.com/laravel/horizon) cung cấp dashboard trực quan và cơ chế cấu hình bằng code cho [Redis queue](/queues) của ứng dụng Laravel. Horizon giúp bạn dễ dàng theo dõi các metric quan trọng của hệ thống queue như thông lượng job, thời gian chạy và các job thất bại.
 
 Khi sử dụng Horizon, toàn bộ cấu hình queue worker được lưu trong một file cấu hình duy nhất, đơn giản. Việc định nghĩa cấu hình worker của ứng dụng trong file được quản lý bằng version control giúp bạn dễ dàng scale hoặc thay đổi các queue worker khi triển khai ứng dụng.
 
@@ -103,10 +103,10 @@ Bạn cũng có thể định nghĩa environment wildcard (`*`), được sử d
 ],
 ```
 
-Khi khởi động Horizon, nó sẽ sử dụng các tùy chọn cấu hình worker process tương ứng với environment hiện tại của ứng dụng. Thông thường, environment được xác định bởi giá trị của [biến môi trường](/docs/{{version}}/configuration#determining-the-current-environment) `APP_ENV`. Ví dụ, environment `local` mặc định của Horizon được cấu hình để khởi động ba worker process và tự động cân bằng số worker được gán cho từng queue. Environment `production` mặc định được cấu hình để khởi động tối đa 10 worker process và tự động cân bằng số worker giữa các queue.
+Khi khởi động Horizon, nó sẽ sử dụng các tùy chọn cấu hình worker process tương ứng với environment hiện tại của ứng dụng. Thông thường, environment được xác định bởi giá trị của [biến môi trường](/configuration#determining-the-current-environment) `APP_ENV`. Ví dụ, environment `local` mặc định của Horizon được cấu hình để khởi động ba worker process và tự động cân bằng số worker được gán cho từng queue. Environment `production` mặc định được cấu hình để khởi động tối đa 10 worker process và tự động cân bằng số worker giữa các queue.
 
 > [!WARNING]
-> Hãy đảm bảo phần `environments` trong file cấu hình `horizon` có entry cho từng [environment](/docs/{{version}}/configuration#environment-configuration) mà bạn dự định chạy Horizon.
+> Hãy đảm bảo phần `environments` trong file cấu hình `horizon` có entry cho từng [environment](/configuration#environment-configuration) mà bạn dự định chạy Horizon.
 
 <a name="supervisors"></a>
 #### Supervisor
@@ -118,7 +118,7 @@ Bạn có thể thêm supervisor vào một environment nếu muốn định ngh
 <a name="maintenance-mode"></a>
 #### Maintenance Mode
 
-Khi ứng dụng ở [maintenance mode](/docs/{{version}}/configuration#maintenance-mode), Horizon sẽ không xử lý queued job trừ khi tùy chọn `force` của supervisor được đặt thành `true` trong file cấu hình Horizon:
+Khi ứng dụng ở [maintenance mode](/configuration#maintenance-mode), Horizon sẽ không xử lý queued job trừ khi tùy chọn `force` của supervisor được đặt thành `true` trong file cấu hình Horizon:
 
 ```php
 'environments' => [
@@ -139,7 +139,7 @@ Trong file cấu hình mặc định của Horizon có tùy chọn `defaults`. T
 <a name="dashboard-authorization"></a>
 ### Ủy quyền Dashboard
 
-Dashboard Horizon có thể được truy cập qua route `/horizon`. Mặc định, bạn chỉ có thể truy cập dashboard này trong environment `local`. Tuy nhiên, file `app/Providers/HorizonServiceProvider.php` có định nghĩa một [authorization gate](/docs/{{version}}/authorization#gates). Gate này kiểm soát quyền truy cập Horizon trong các environment **không phải local**. Bạn có thể sửa gate theo nhu cầu để giới hạn quyền truy cập vào Horizon:
+Dashboard Horizon có thể được truy cập qua route `/horizon`. Mặc định, bạn chỉ có thể truy cập dashboard này trong environment `local`. Tuy nhiên, file `app/Providers/HorizonServiceProvider.php` có định nghĩa một [authorization gate](/authorization#gates). Gate này kiểm soát quyền truy cập Horizon trong các environment **không phải local**. Bạn có thể sửa gate theo nhu cầu để giới hạn quyền truy cập vào Horizon:
 
 ```php
 /**
@@ -166,7 +166,7 @@ Laravel tự động inject người dùng đã xác thực vào gate closure. N
 ### Số lần thử tối đa của Job
 
 > [!NOTE]
-> Trước khi tinh chỉnh các tùy chọn này, hãy chắc chắn rằng bạn đã quen với [dịch vụ queue](/docs/{{version}}/queues#max-job-attempts-and-timeout) mặc định của Laravel và khái niệm "attempt".
+> Trước khi tinh chỉnh các tùy chọn này, hãy chắc chắn rằng bạn đã quen với [dịch vụ queue](/queues#max-job-attempts-and-timeout) mặc định của Laravel và khái niệm "attempt".
 
 Bạn có thể định nghĩa số lần thử tối đa mà một job được phép sử dụng trong cấu hình của supervisor:
 
@@ -706,7 +706,7 @@ class SendRenderNotifications implements ShouldQueue
 ## Thông báo
 
 > [!WARNING]
-> Khi cấu hình Horizon gửi thông báo qua Slack hoặc SMS, bạn nên xem lại [các điều kiện tiên quyết của notification channel tương ứng](/docs/{{version}}/notifications).
+> Khi cấu hình Horizon gửi thông báo qua Slack hoặc SMS, bạn nên xem lại [các điều kiện tiên quyết của notification channel tương ứng](/notifications).
 
 Nếu muốn nhận thông báo khi một queue có thời gian chờ quá lâu, bạn có thể sử dụng các method `Horizon::routeMailNotificationsTo`, `Horizon::routeSlackNotificationsTo` và `Horizon::routeSmsNotificationsTo`. Bạn có thể gọi các method này từ method `boot` của `App\Providers\HorizonServiceProvider` trong ứng dụng:
 

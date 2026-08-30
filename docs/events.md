@@ -86,7 +86,7 @@ php artisan event:list
 <a name="event-discovery-in-production"></a>
 #### Tự động khám phá Event trong Production
 
-Để tăng tốc ứng dụng, bạn nên cache manifest chứa toàn bộ listener của ứng dụng bằng các lệnh Artisan `optimize` hoặc `event:cache`. Thông thường, lệnh này nên được chạy như một phần của [quy trình deployment](/docs/{{version}}/deployment#optimization). Framework sẽ sử dụng manifest này để tăng tốc quá trình đăng ký event. Bạn có thể dùng lệnh `event:clear` để xóa event cache.
+Để tăng tốc ứng dụng, bạn nên cache manifest chứa toàn bộ listener của ứng dụng bằng các lệnh Artisan `optimize` hoặc `event:cache`. Thông thường, lệnh này nên được chạy như một phần của [quy trình deployment](/deployment#optimization). Framework sẽ sử dụng manifest này để tăng tốc quá trình đăng ký event. Bạn có thể dùng lệnh `event:clear` để xóa event cache.
 
 <a name="dynamic-event-discovery"></a>
 #### Tự động khám phá Event động
@@ -167,7 +167,7 @@ public function boot(): void
 <a name="queueable-anonymous-event-listeners"></a>
 #### Anonymous Event Listener có thể đưa vào Queue
 
-Khi đăng ký event listener dựa trên closure, bạn có thể bọc closure của listener bằng hàm `Illuminate\Events\queueable` để yêu cầu Laravel thực thi listener thông qua [queue](/docs/{{version}}/queues):
+Khi đăng ký event listener dựa trên closure, bạn có thể bọc closure của listener bằng hàm `Illuminate\Events\queueable` để yêu cầu Laravel thực thi listener thông qua [queue](/queues):
 
 ```php
 use App\Events\PodcastProcessed;
@@ -222,7 +222,7 @@ Event::listen('event.*', function (string $eventName, array $data) {
 <a name="defining-events"></a>
 ## Định nghĩa Event
 
-Về bản chất, event class là một container dữ liệu chứa thông tin liên quan đến event. Ví dụ, giả sử event `App\Events\OrderShipped` nhận một đối tượng [Eloquent ORM](/docs/{{version}}/eloquent):
+Về bản chất, event class là một container dữ liệu chứa thông tin liên quan đến event. Ví dụ, giả sử event `App\Events\OrderShipped` nhận một đối tượng [Eloquent ORM](/eloquent):
 
 ```php
 <?php
@@ -279,7 +279,7 @@ class SendShipmentNotification
 ```
 
 > [!NOTE]
-> Event listener cũng có thể type-hint các dependency cần thiết trong constructor. Tất cả event listener đều được resolve thông qua [service container](/docs/{{version}}/container) của Laravel, vì vậy dependency sẽ được tự động inject.
+> Event listener cũng có thể type-hint các dependency cần thiết trong constructor. Tất cả event listener đều được resolve thông qua [service container](/container) của Laravel, vì vậy dependency sẽ được tự động inject.
 
 <a name="stopping-the-propagation-of-an-event"></a>
 #### Dừng lan truyền Event
@@ -289,7 +289,7 @@ class SendShipmentNotification
 <a name="queued-event-listeners"></a>
 ## Sự kiện Listener trong Queue
 
-Đưa listener vào queue rất hữu ích nếu listener thực hiện tác vụ chậm như gửi email hoặc thực hiện HTTP request. Trước khi sử dụng queued listener, hãy đảm bảo bạn đã [cấu hình queue](/docs/{{version}}/queues) và khởi động queue worker trên server hoặc môi trường phát triển local.
+Đưa listener vào queue rất hữu ích nếu listener thực hiện tác vụ chậm như gửi email hoặc thực hiện HTTP request. Trước khi sử dụng queued listener, hãy đảm bảo bạn đã [cấu hình queue](/queues) và khởi động queue worker trên server hoặc môi trường phát triển local.
 
 Để chỉ định listener cần được đưa vào queue, hãy thêm interface `ShouldQueue` vào listener class. Các listener được tạo bởi lệnh Artisan `make:listener` đã import sẵn interface này vào namespace hiện tại để bạn có thể sử dụng ngay:
 
@@ -307,7 +307,7 @@ class SendShipmentNotification implements ShouldQueue
 }
 ```
 
-Vậy là xong. Khi một event do listener này xử lý được dispatch, event dispatcher sẽ tự động đưa listener vào [hệ thống queue](/docs/{{version}}/queues) của Laravel. Nếu không có exception nào được throw khi queue thực thi listener, queued job sẽ tự động bị xóa sau khi xử lý xong.
+Vậy là xong. Khi một event do listener này xử lý được dispatch, event dispatcher sẽ tự động đưa listener vào [hệ thống queue](/queues) của Laravel. Nếu không có exception nào được throw khi queue thực thi listener, queued job sẽ tự động bị xóa sau khi xử lý xong.
 
 <a name="customizing-the-queue-connection-queue-name"></a>
 #### Tùy chỉnh Queue Connection, tên Queue và Delay
@@ -446,12 +446,12 @@ class SendShipmentNotification implements ShouldQueueAfterCommit
 ```
 
 > [!NOTE]
-> Để tìm hiểu thêm cách xử lý các vấn đề này, hãy xem tài liệu về [queued job và database transaction](/docs/{{version}}/queues#jobs-and-database-transactions).
+> Để tìm hiểu thêm cách xử lý các vấn đề này, hãy xem tài liệu về [queued job và database transaction](/queues#jobs-and-database-transactions).
 
 <a name="queued-listener-middleware"></a>
 ### Middleware cho Queued Listener
 
-Queued listener cũng có thể sử dụng [job middleware](/docs/{{version}}/queues#job-middleware). Job middleware cho phép bọc logic tùy chỉnh quanh quá trình thực thi queued listener, giúp giảm boilerplate trong chính listener. Sau khi tạo job middleware, bạn có thể gắn chúng vào listener bằng cách trả về chúng từ phương thức `middleware` của listener:
+Queued listener cũng có thể sử dụng [job middleware](/queues#job-middleware). Job middleware cho phép bọc logic tùy chỉnh quanh quá trình thực thi queued listener, giúp giảm boilerplate trong chính listener. Sau khi tạo job middleware, bạn có thể gắn chúng vào listener bằng cách trả về chúng từ phương thức `middleware` của listener:
 
 ```php
 <?php
@@ -487,7 +487,7 @@ class SendShipmentNotification implements ShouldQueue
 <a name="encrypted-queued-listeners"></a>
 #### Mã hóa Queued Listener
 
-Laravel cho phép bảo đảm tính riêng tư và toàn vẹn của dữ liệu queued listener thông qua [mã hóa](/docs/{{version}}/encryption). Để bắt đầu, chỉ cần thêm interface `ShouldBeEncrypted` vào listener class. Khi interface này được thêm, Laravel sẽ tự động mã hóa listener trước khi đẩy nó vào queue:
+Laravel cho phép bảo đảm tính riêng tư và toàn vẹn của dữ liệu queued listener thông qua [mã hóa](/encryption). Để bắt đầu, chỉ cần thêm interface `ShouldBeEncrypted` vào listener class. Khi interface này được thêm, Laravel sẽ tự động mã hóa listener trước khi đẩy nó vào queue:
 
 ```php
 <?php
@@ -508,7 +508,7 @@ class SendShipmentNotification implements ShouldQueue, ShouldBeEncrypted
 ### Event Listener duy nhất
 
 > [!WARNING]
-> Unique listener yêu cầu cache driver hỗ trợ [lock](/docs/{{version}}/cache#atomic-locks). Hiện tại, các cache driver `memcached`, `redis`, `dynamodb`, `database`, `file` và `array` hỗ trợ atomic lock.
+> Unique listener yêu cầu cache driver hỗ trợ [lock](/cache#atomic-locks). Hiện tại, các cache driver `memcached`, `redis`, `dynamodb`, `database`, `file` và `array` hỗ trợ atomic lock.
 
 Đôi khi, bạn có thể muốn bảo đảm tại bất kỳ thời điểm nào chỉ có một instance của một listener cụ thể nằm trong queue. Bạn có thể thực hiện điều này bằng cách triển khai interface `ShouldBeUnique` trên class listener:
 
@@ -595,7 +595,7 @@ class AcquireProductKey implements ShouldQueue, ShouldBeUniqueUntilProcessing
 <a name="unique-listener-locks"></a>
 #### Lock của Unique Listener
 
-Ở phía sau, khi một listener `ShouldBeUnique` được dispatch, Laravel cố gắng lấy một [lock](/docs/{{version}}/cache#atomic-locks) bằng key `uniqueId`. Nếu lock đã được giữ, listener sẽ không được dispatch. Lock này được giải phóng khi listener xử lý xong hoặc thất bại sau tất cả lần retry. Mặc định, Laravel sử dụng cache driver mặc định để lấy lock. Nếu muốn dùng driver khác, bạn có thể định nghĩa method `uniqueVia` trả về cache driver cần sử dụng:
+Ở phía sau, khi một listener `ShouldBeUnique` được dispatch, Laravel cố gắng lấy một [lock](/cache#atomic-locks) bằng key `uniqueId`. Nếu lock đã được giữ, listener sẽ không được dispatch. Lock này được giải phóng khi listener xử lý xong hoặc thất bại sau tất cả lần retry. Mặc định, Laravel sử dụng cache driver mặc định để lấy lock. Nếu muốn dùng driver khác, bạn có thể định nghĩa method `uniqueVia` trả về cache driver cần sử dụng:
 
 ```php
 <?php
@@ -621,7 +621,7 @@ class AcquireProductKey implements ShouldQueue, ShouldBeUnique
 ```
 
 > [!NOTE]
-> Nếu bạn chỉ cần giới hạn việc xử lý đồng thời của một listener, hãy sử dụng job middleware [WithoutOverlapping](/docs/{{version}}/queues#preventing-job-overlaps).
+> Nếu bạn chỉ cần giới hạn việc xử lý đồng thời của một listener, hãy sử dụng job middleware [WithoutOverlapping](/queues#preventing-job-overlaps).
 
 <a name="debounced-event-listeners"></a>
 ### Sự kiện Listener có Debounce

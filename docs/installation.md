@@ -18,7 +18,7 @@ Có rất nhiều công cụ và framework để xây dựng ứng dụng web. T
 
 Laravel thường được mô tả là một framework "progressive" — tức framework có thể đồng hành theo mức độ trưởng thành của bạn. Nếu mới bước vào web development, hệ thống [tài liệu, hướng dẫn và video](https://laracasts.com) phong phú của Laravel giúp bạn học từng bước mà không bị quá tải.
 
-Nếu là senior developer, Laravel cung cấp những công cụ vững chắc cho [dependency injection](/docs/{{version}}/container), [unit testing](/docs/{{version}}/testing), [queue](/docs/{{version}}/queues), [sự kiện thời gian thực](/docs/{{version}}/broadcasting) và nhiều nhu cầu khác. Laravel được tinh chỉnh để xây dựng ứng dụng web chuyên nghiệp và sẵn sàng đáp ứng workload ở quy mô doanh nghiệp.
+Nếu là senior developer, Laravel cung cấp những công cụ vững chắc cho [dependency injection](/container), [unit testing](/testing), [queue](/queues), [sự kiện thời gian thực](/broadcasting) và nhiều nhu cầu khác. Laravel được tinh chỉnh để xây dựng ứng dụng web chuyên nghiệp và sẵn sàng đáp ứng workload ở quy mô doanh nghiệp.
 
 #### Một framework có khả năng mở rộng
 
@@ -28,11 +28,11 @@ Nếu cần mở rộng ở quy mô rất lớn, các nền tảng như [Laravel
 
 #### Một framework sẵn sàng cho AI Agent
 
-Các convention có chủ đích và cấu trúc rõ ràng của Laravel khiến framework đặc biệt phù hợp với [phát triển có AI hỗ trợ](/docs/{{version}}/ai) bằng những công cụ như Cursor và Claude Code. Khi yêu cầu AI agent thêm controller, nó có thể xác định chính xác vị trí cần đặt file. Khi cần migration mới, convention đặt tên và vị trí file đều có tính dự đoán. Sự nhất quán này giảm đáng kể việc phỏng đoán vốn thường gây khó khăn cho công cụ AI ở những framework linh hoạt hơn.
+Các convention có chủ đích và cấu trúc rõ ràng của Laravel khiến framework đặc biệt phù hợp với [phát triển có AI hỗ trợ](/ai) bằng những công cụ như Cursor và Claude Code. Khi yêu cầu AI agent thêm controller, nó có thể xác định chính xác vị trí cần đặt file. Khi cần migration mới, convention đặt tên và vị trí file đều có tính dự đoán. Sự nhất quán này giảm đáng kể việc phỏng đoán vốn thường gây khó khăn cho công cụ AI ở những framework linh hoạt hơn.
 
 Không chỉ có tổ chức file, cú pháp giàu tính biểu đạt và tài liệu toàn diện của Laravel còn cung cấp đủ ngữ cảnh để AI agent sinh code chính xác, đúng phong cách Laravel. Các tính năng như Eloquent relationship, form request và middleware tuân theo những pattern mà agent có thể hiểu và tái tạo một cách ổn định. Nhờ đó, code do AI tạo ra có xu hướng giống code của một Laravel developer giàu kinh nghiệm hơn là các đoạn PHP chung chung được ghép lại.
 
-Để hiểu thêm vì sao Laravel phù hợp với phát triển có AI hỗ trợ, hãy xem tài liệu về [agentic development](/docs/{{version}}/ai).
+Để hiểu thêm vì sao Laravel phù hợp với phát triển có AI hỗ trợ, hãy xem tài liệu về [agentic development](/ai).
 
 #### Một framework của cộng đồng
 
@@ -102,7 +102,7 @@ composer run dev
 Khi development server đã chạy, bạn có thể truy cập ứng dụng bằng trình duyệt tại [http://localhost:8000](http://localhost:8000). Tiếp theo, bạn đã sẵn sàng [khám phá các bước tiếp theo trong hệ sinh thái Laravel](#next-steps). Bạn cũng có thể [cấu hình cơ sở dữ liệu](#databases-and-migrations) và chạy các migration cần thiết.
 
 > [!NOTE]
-> Nếu muốn có sẵn nền tảng ban đầu khi phát triển ứng dụng, hãy cân nhắc sử dụng một trong các [starter kit](/docs/{{version}}/starter-kits). Starter kit của Laravel cung cấp scaffolding xác thực cho cả backend và frontend của ứng dụng mới.
+> Nếu muốn có sẵn nền tảng ban đầu khi phát triển ứng dụng, hãy cân nhắc sử dụng một trong các [starter kit](/starter-kits). Starter kit của Laravel cung cấp scaffolding xác thực cho cả backend và frontend của ứng dụng mới.
 
 <a name="initial-configuration"></a>
 ## Cấu hình ban đầu
@@ -119,7 +119,7 @@ Nhiều giá trị cấu hình của Laravel thay đổi tùy theo ứng dụng 
 Không nên commit file `.env` vào source control của ứng dụng, vì mỗi developer hoặc server có thể cần cấu hình môi trường khác nhau. Đây cũng là rủi ro bảo mật: nếu kẻ tấn công truy cập được repository, các thông tin xác thực nhạy cảm trong file có thể bị lộ.
 
 > [!NOTE]
-> Để tìm hiểu kỹ hơn về file `.env` và cấu hình theo môi trường, hãy xem [tài liệu cấu hình](/docs/{{version}}/configuration#environment-configuration).
+> Để tìm hiểu kỹ hơn về file `.env` và cấu hình theo môi trường, hãy xem [tài liệu cấu hình](/configuration#environment-configuration).
 
 <a name="databases-and-migrations"></a>
 ### Cơ sở dữ liệu và Migration
@@ -138,7 +138,7 @@ DB_DATABASE=laravel
 DB_USERNAME=root
 DB_PASSWORD=
 ```
-Nếu chọn cơ sở dữ liệu khác SQLite, bạn cần tự tạo database và chạy [database migration](/docs/{{version}}/migrations) của ứng dụng:
+Nếu chọn cơ sở dữ liệu khác SQLite, bạn cần tự tạo database và chạy [database migration](/migrations) của ứng dụng:
 
 ```shell
 php artisan migrate
@@ -256,12 +256,12 @@ Sau khi tạo ứng dụng Laravel, có thể bạn đang cân nhắc nên học
 
 <div class="content-list" markdown="1">
 
-- [Vòng đời Request](/docs/{{version}}/lifecycle)
-- [Cấu hình](/docs/{{version}}/configuration)
-- [Cấu trúc thư mục](/docs/{{version}}/structure)
-- [Frontend](/docs/{{version}}/frontend)
-- [Service Container](/docs/{{version}}/container)
-- [Facade](/docs/{{version}}/facades)
+- [Vòng đời Request](/lifecycle)
+- [Cấu hình](/configuration)
+- [Cấu trúc thư mục](/structure)
+- [Frontend](/frontend)
+- [Service Container](/container)
+- [Facade](/facades)
 
 </div>
 
@@ -270,18 +270,18 @@ Cách bạn dự định sử dụng Laravel cũng quyết định những bư�
 <a name="laravel-the-fullstack-framework"></a>
 ### Laravel như một framework Full Stack
 
-Laravel có thể đóng vai trò là một full-stack framework. "Full stack" ở đây có nghĩa Laravel vừa định tuyến request tới ứng dụng, vừa render frontend bằng [Blade template](/docs/{{version}}/blade) hoặc công nghệ hybrid cho single-page application như [Inertia](https://inertiajs.com). Đây là cách sử dụng Laravel phổ biến nhất và cũng là hướng mà Laravel cho là mang lại năng suất cao nhất.
+Laravel có thể đóng vai trò là một full-stack framework. "Full stack" ở đây có nghĩa Laravel vừa định tuyến request tới ứng dụng, vừa render frontend bằng [Blade template](/blade) hoặc công nghệ hybrid cho single-page application như [Inertia](https://inertiajs.com). Đây là cách sử dụng Laravel phổ biến nhất và cũng là hướng mà Laravel cho là mang lại năng suất cao nhất.
 
-Nếu dự định sử dụng Laravel theo cách này, bạn nên đọc tài liệu về [phát triển frontend](/docs/{{version}}/frontend), [routing](/docs/{{version}}/routing), [view](/docs/{{version}}/views) và [Eloquent ORM](/docs/{{version}}/eloquent). Bạn cũng có thể tìm hiểu các package cộng đồng như [Livewire](https://livewire.laravel.com) và [Inertia](https://inertiajs.com). Chúng cho phép sử dụng Laravel như một full-stack framework nhưng vẫn tận dụng nhiều lợi ích UI thường có ở JavaScript single-page application.
+Nếu dự định sử dụng Laravel theo cách này, bạn nên đọc tài liệu về [phát triển frontend](/frontend), [routing](/routing), [view](/views) và [Eloquent ORM](/eloquent). Bạn cũng có thể tìm hiểu các package cộng đồng như [Livewire](https://livewire.laravel.com) và [Inertia](https://inertiajs.com). Chúng cho phép sử dụng Laravel như một full-stack framework nhưng vẫn tận dụng nhiều lợi ích UI thường có ở JavaScript single-page application.
 
-Nếu sử dụng Laravel như full-stack framework, chúng tôi cũng đặc biệt khuyến nghị bạn tìm hiểu cách biên dịch CSS và JavaScript của ứng dụng bằng [Vite](/docs/{{version}}/vite).
+Nếu sử dụng Laravel như full-stack framework, chúng tôi cũng đặc biệt khuyến nghị bạn tìm hiểu cách biên dịch CSS và JavaScript của ứng dụng bằng [Vite](/vite).
 
 > [!NOTE]
-> Nếu muốn có nền tảng ban đầu để xây dựng ứng dụng nhanh hơn, hãy xem một trong các [starter kit chính thức](/docs/{{version}}/starter-kits).
+> Nếu muốn có nền tảng ban đầu để xây dựng ứng dụng nhanh hơn, hãy xem một trong các [starter kit chính thức](/starter-kits).
 
 <a name="laravel-the-api-backend"></a>
 ### Laravel làm API Backend
 
-Laravel cũng có thể đóng vai trò API backend cho JavaScript single-page application hoặc ứng dụng mobile. Ví dụ, bạn có thể dùng Laravel làm API backend cho ứng dụng [Next.js](https://nextjs.org). Trong mô hình này, Laravel có thể cung cấp [authentication](/docs/{{version}}/sanctum), lưu trữ và truy xuất dữ liệu, đồng thời tận dụng các dịch vụ mạnh của framework như queue, email, notification và nhiều khả năng khác.
+Laravel cũng có thể đóng vai trò API backend cho JavaScript single-page application hoặc ứng dụng mobile. Ví dụ, bạn có thể dùng Laravel làm API backend cho ứng dụng [Next.js](https://nextjs.org). Trong mô hình này, Laravel có thể cung cấp [authentication](/sanctum), lưu trữ và truy xuất dữ liệu, đồng thời tận dụng các dịch vụ mạnh của framework như queue, email, notification và nhiều khả năng khác.
 
-Nếu đây là cách bạn dự định sử dụng Laravel, hãy xem tài liệu về [routing](/docs/{{version}}/routing), [Laravel Sanctum](/docs/{{version}}/sanctum) và [Eloquent ORM](/docs/{{version}}/eloquent).
+Nếu đây là cách bạn dự định sử dụng Laravel, hãy xem tài liệu về [routing](/routing), [Laravel Sanctum](/sanctum) và [Eloquent ORM](/eloquent).

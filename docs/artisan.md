@@ -18,7 +18,7 @@ php artisan help migrate
 <a name="laravel-sail"></a>
 #### Laravel Sail
 
-Nếu bạn sử dụng [Laravel Sail](/docs/{{version}}/sail) làm môi trường phát triển local, hãy nhớ dùng command line `sail` để gọi Artisan command. Sail sẽ thực thi Artisan command bên trong các Docker container của ứng dụng:
+Nếu bạn sử dụng [Laravel Sail](/sail) làm môi trường phát triển local, hãy nhớ dùng command line `sail` để gọi Artisan command. Sail sẽ thực thi Artisan command bên trong các Docker container của ứng dụng:
 
 ```shell
 ./vendor/bin/sail artisan list
@@ -100,7 +100,7 @@ php artisan make:command SendEmails
 
 Sau khi tạo command, bạn nên định nghĩa signature và description của command bằng các attribute `Signature` và `Description`. Attribute `Signature` cũng cho phép bạn định nghĩa [input mà command mong đợi](#defining-input-expectations). Method `handle` sẽ được gọi khi command được thực thi. Bạn có thể đặt logic của command trong method này.
 
-Hãy xem một command ví dụ. Lưu ý rằng chúng ta có thể yêu cầu mọi dependency cần thiết thông qua method `handle` của command. [Service container](/docs/{{version}}/container) của Laravel sẽ tự động inject tất cả dependency được type-hint trong signature của method này:
+Hãy xem một command ví dụ. Lưu ý rằng chúng ta có thể yêu cầu mọi dependency cần thiết thông qua method `handle` của command. [Service container](/container) của Laravel sẽ tự động inject tất cả dependency được type-hint trong signature của method này:
 
 ```php
 <?php
@@ -165,7 +165,7 @@ Closure được bind vào command instance bên dưới, vì vậy bạn có to
 <a name="type-hinting-dependencies"></a>
 #### Type-hint dependency
 
-Ngoài việc nhận argument và option của command, command closure cũng có thể type-hint các dependency bổ sung mà bạn muốn resolve từ [service container](/docs/{{version}}/container):
+Ngoài việc nhận argument và option của command, command closure cũng có thể type-hint các dependency bổ sung mà bạn muốn resolve từ [service container](/container):
 
 ```php
 use App\Models\User;
@@ -467,7 +467,7 @@ return [
 ```
 
 > [!NOTE]
-> Tài liệu đầy đủ về [Laravel Prompts](/docs/{{version}}/prompts) cung cấp thêm thông tin về các prompt hiện có và cách sử dụng chúng.
+> Tài liệu đầy đủ về [Laravel Prompts](/prompts) cung cấp thêm thông tin về các prompt hiện có và cách sử dụng chúng.
 
 Nếu muốn prompt người dùng chọn hoặc nhập [option](#options), bạn có thể đặt prompt trong method `handle` của command. Tuy nhiên, nếu chỉ muốn prompt người dùng khi họ cũng đã được tự động prompt vì thiếu argument, bạn có thể implement method `afterPromptingForMissingArguments`:
 
@@ -550,7 +550,7 @@ $queue = $this->input('queue', 'default');
 ### Yêu cầu dữ liệu đầu vào
 
 > [!NOTE]
-> [Laravel Prompts](/docs/{{version}}/prompts) là package PHP giúp thêm các form đẹp mắt, thân thiện với người dùng vào ứng dụng command-line, với những tính năng tương tự trình duyệt như placeholder và validation.
+> [Laravel Prompts](/prompts) là package PHP giúp thêm các form đẹp mắt, thân thiện với người dùng vào ứng dụng command-line, với những tính năng tương tự trình duyệt như placeholder và validation.
 
 Ngoài việc hiển thị đầu ra, bạn cũng có thể yêu cầu người dùng cung cấp dữ liệu trong khi command thực thi. Method `ask` sẽ hiển thị câu hỏi, nhận dữ liệu người dùng nhập và trả dữ liệu đó về command:
 
@@ -752,7 +752,7 @@ use App\Domain\Orders\Commands\SendEmails;
 ])
 ```
 
-Khi Artisan khởi động, tất cả command trong ứng dụng sẽ được [service container](/docs/{{version}}/container) resolve và đăng ký với Artisan.
+Khi Artisan khởi động, tất cả command trong ứng dụng sẽ được [service container](/container) resolve và đăng ký với Artisan.
 
 <a name="programmatically-executing-commands"></a>
 ## Thực thi command bằng chương trình
@@ -808,7 +808,7 @@ $exitCode = Artisan::call('migrate:refresh', [
 <a name="queueing-artisan-commands"></a>
 #### Đưa Artisan command vào queue
 
-Với method `queue` trên facade `Artisan`, bạn có thể đưa Artisan command vào queue để chúng được [queue worker](/docs/{{version}}/queues) xử lý ở background. Trước khi sử dụng method này, hãy đảm bảo queue đã được cấu hình và queue listener đang chạy:
+Với method `queue` trên facade `Artisan`, bạn có thể đưa Artisan command vào queue để chúng được [queue worker](/queues) xử lý ở background. Trước khi sử dụng method này, hãy đảm bảo queue đã được cấu hình và queue listener đang chạy:
 
 ```php
 use Illuminate\Support\Facades\Artisan;
@@ -890,7 +890,7 @@ $this->trap([SIGTERM, SIGQUIT], function (int $signal) {
 <a name="the-dev-command"></a>
 ## Command Dev
 
-Artisan command `dev` khởi chạy tất cả process cần thiết cho phát triển local trong một cửa sổ terminal. Mặc định, command này chạy đồng thời PHP development server, một queue worker, theo dõi log qua [Pail](/docs/{{version}}/logging#tailing-log-messages-using-pail) và biên dịch asset bằng Vite:
+Artisan command `dev` khởi chạy tất cả process cần thiết cho phát triển local trong một cửa sổ terminal. Mặc định, command này chạy đồng thời PHP development server, một queue worker, theo dõi log qua [Pail](/logging#tailing-log-messages-using-pail) và biên dịch asset bằng Vite:
 
 ```shell
 php artisan dev

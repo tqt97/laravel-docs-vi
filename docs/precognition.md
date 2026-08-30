@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 Laravel Precognition cho phép "dự đoán" kết quả của một HTTP request trong tương lai. Use case chính là cung cấp live validation cho frontend JavaScript mà không cần viết lại validation rule của backend ở phía frontend.
-Khi Laravel nhận một "precognitive request", framework sẽ chạy toàn bộ middleware của route và resolve dependency của controller, bao gồm validate [form request](/docs/{{version}}/validation#form-request-validation), nhưng **không thực sự gọi controller method** của route.
+Khi Laravel nhận một "precognitive request", framework sẽ chạy toàn bộ middleware của route và resolve dependency của controller, bao gồm validate [form request](/validation#form-request-validation), nhưng **không thực sự gọi controller method** của route.
 > [!NOTE]
 > Từ Inertia 2.3, Precognition đã được hỗ trợ tích hợp. Xem [tài liệu Inertia Forms](https://inertiajs.com/forms) để biết thêm. Inertia phiên bản cũ hơn cần Precognition 0.x.
 <a name="live-validation"></a>
@@ -11,7 +11,7 @@ Khi Laravel nhận một "precognitive request", framework sẽ chạy toàn b�
 <a name="using-vue"></a>
 ### Dùng Vue
 Với Laravel Precognition, bạn có thể cung cấp live validation mà không phải nhân đôi validation rule trong frontend Vue. Để minh họa, ta sẽ tạo form thêm user mới.
-Trước tiên, thêm middleware `HandlePrecognitiveRequests` vào route để bật Precognition. Bạn cũng nên tạo [form request](/docs/{{version}}/validation#form-request-validation) chứa validation rule của route:
+Trước tiên, thêm middleware `HandlePrecognitiveRequests` vào route để bật Precognition. Bạn cũng nên tạo [form request](/validation#form-request-validation) chứa validation rule của route:
 ```php
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
@@ -147,7 +147,7 @@ const submit = () => form.submit()
 <a name="using-react"></a>
 ### Dùng React
 Với Laravel Precognition, bạn có thể cung cấp live validation mà không cần nhân đôi validation rule trong frontend React. Ví dụ sau xây dựng form tạo user mới.
-Trước tiên, thêm middleware `HandlePrecognitiveRequests` vào route và tạo [form request](/docs/{{version}}/validation#form-request-validation) chứa validation rule:
+Trước tiên, thêm middleware `HandlePrecognitiveRequests` vào route và tạo [form request](/validation#form-request-validation) chứa validation rule:
 ```php
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
@@ -278,7 +278,7 @@ Kiểm tra property `processing` để biết form submission đang chạy:
 <a name="using-alpine"></a>
 ### Dùng Alpine và Blade
 Với Laravel Precognition, frontend Alpine cũng có thể live validate mà không cần nhân đôi rule backend. Ví dụ sau xây dựng form tạo user mới.
-Trước tiên, thêm middleware `HandlePrecognitiveRequests` vào route và tạo [form request](/docs/{{version}}/validation#form-request-validation) chứa rule:
+Trước tiên, thêm middleware `HandlePrecognitiveRequests` vào route và tạo [form request](/validation#form-request-validation) chứa rule:
 ```php
 use App\Http\Requests\CreateUserRequest;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;

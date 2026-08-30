@@ -96,4 +96,4 @@ Khi agent cần hiểu một feature, nó có thể tìm trong Boost documentati
 <a name="agents-integration"></a>
 ### Tích hợp Agent
 
-Boost tích hợp với các IDE và AI tool phổ biến hỗ trợ Model Context Protocol. Để xem hướng dẫn cài đặt chi tiết cho Cursor, Claude Code, Codex, Gemini CLI, GitHub Copilot và Junie, hãy xem phần [Set Up Your Agents](/docs/{{version}}/boost#set-up-your-agents) trong tài liệu Boost.
+Boost tích hợp với các IDE và AI tool phổ biến hỗ trợ Model Context Protocol. Để xem hướng dẫn cài đặt chi tiết cho Cursor, Claude Code, Codex, Gemini CLI, GitHub Copilot và Junie, hãy xem phần [Set Up Your Agents](/boost#set-up-your-agents) trong tài liệu Boost.

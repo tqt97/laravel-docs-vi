@@ -48,7 +48,7 @@ php artisan schedule:list
 <a name="scheduling-artisan-commands"></a>
 ### Lập lịch lệnh Artisan
 
-Ngoài closure, bạn có thể lập lịch cho [lệnh Artisan](/docs/{{version}}/artisan) và command của hệ thống. Phương thức `command` cho phép lập lịch một Artisan command bằng tên command hoặc class của command đó.
+Ngoài closure, bạn có thể lập lịch cho [lệnh Artisan](/artisan) và command của hệ thống. Phương thức `command` cho phép lập lịch một Artisan command bằng tên command hoặc class của command đó.
 
 Khi lập lịch Artisan command bằng tên class, bạn có thể truyền thêm một mảng các đối số dòng lệnh để Laravel cung cấp cho command lúc thực thi:
 
@@ -83,7 +83,7 @@ Artisan::command('emails:send {user} {--force}', function ($user) {
 <a name="scheduling-queued-jobs"></a>
 ### Lập lịch queued job
 
-Phương thức `job` được dùng để lập lịch một [queued job](/docs/{{version}}/queues). Nhờ đó, bạn có thể đưa job vào queue theo lịch mà không cần dùng `call` để tạo một closure chỉ nhằm dispatch job:
+Phương thức `job` được dùng để lập lịch một [queued job](/queues). Nhờ đó, bạn có thể đưa job vào queue theo lịch mà không cần dùng `call` để tạo một closure chỉ nhằm dispatch job:
 
 ```php
 use App\Jobs\Heartbeat;
@@ -272,7 +272,7 @@ Khi chain nhiều `when`, command chỉ được thực thi nếu **tất cả**
 <a name="environment-constraints"></a>
 #### Ràng buộc theo môi trường
 
-Phương thức `environments` giới hạn tác vụ chỉ chạy trong các environment được chỉ định (theo [biến môi trường](/docs/{{version}}/configuration#environment-configuration) `APP_ENV`):
+Phương thức `environments` giới hạn tác vụ chỉ chạy trong các environment được chỉ định (theo [biến môi trường](/configuration#environment-configuration) `APP_ENV`):
 
 ```php
 Schedule::command('emails:send')
@@ -315,7 +315,7 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::command('emails:send')->withoutOverlapping();
 ```
 
-Trong ví dụ này, [Artisan command](/docs/{{version}}/artisan) `emails:send` sẽ chạy mỗi phút nếu chưa có một instance của chính tác vụ đó đang chạy. `withoutOverlapping` đặc biệt hữu ích với các tác vụ có thời gian xử lý biến động lớn, khiến bạn khó dự đoán chính xác mỗi lần chạy sẽ kéo dài bao lâu.
+Trong ví dụ này, [Artisan command](/artisan) `emails:send` sẽ chạy mỗi phút nếu chưa có một instance của chính tác vụ đó đang chạy. `withoutOverlapping` đặc biệt hữu ích với các tác vụ có thời gian xử lý biến động lớn, khiến bạn khó dự đoán chính xác mỗi lần chạy sẽ kéo dài bao lâu.
 
 Nếu cần, bạn có thể chỉ định số phút trước khi lock của `withoutOverlapping` hết hạn. Mặc định lock hết hạn sau 24 giờ:
 
@@ -323,7 +323,7 @@ Nếu cần, bạn có thể chỉ định số phút trước khi lock của `w
 Schedule::command('emails:send')->withoutOverlapping(10);
 ```
 
-Ở bên trong, `withoutOverlapping` sử dụng [cache](/docs/{{version}}/cache) của ứng dụng để tạo lock. Khi cần, bạn có thể xóa các lock này bằng Artisan command `schedule:clear-cache`. Thông thường thao tác này chỉ cần thiết khi tác vụ bị kẹt do sự cố server ngoài dự kiến.
+Ở bên trong, `withoutOverlapping` sử dụng [cache](/cache) của ứng dụng để tạo lock. Khi cần, bạn có thể xóa các lock này bằng Artisan command `schedule:clear-cache`. Thông thường thao tác này chỉ cần thiết khi tác vụ bị kẹt do sự cố server ngoài dự kiến.
 
 <a name="running-tasks-on-one-server"></a>
 ### Chỉ chạy tác vụ trên một server
@@ -395,7 +395,7 @@ Schedule::command('analytics:report')
 <a name="maintenance-mode"></a>
 ### Chế độ bảo trì
 
-Các tác vụ đã lập lịch sẽ không chạy khi ứng dụng ở [chế độ bảo trì](/docs/{{version}}/configuration#maintenance-mode), nhằm tránh việc tác vụ can thiệp vào quá trình bảo trì chưa hoàn tất trên server. Nếu một tác vụ vẫn phải chạy trong maintenance mode, hãy gọi `evenInMaintenanceMode` khi định nghĩa tác vụ:
+Các tác vụ đã lập lịch sẽ không chạy khi ứng dụng ở [chế độ bảo trì](/configuration#maintenance-mode), nhằm tránh việc tác vụ can thiệp vào quá trình bảo trì chưa hoàn tất trên server. Nếu một tác vụ vẫn phải chạy trong maintenance mode, hãy gọi `evenInMaintenanceMode` khi định nghĩa tác vụ:
 
 ```php
 Schedule::command('emails:send')->evenInMaintenanceMode();
@@ -518,7 +518,7 @@ Schedule::command('emails:send')
     ->appendOutputTo($filePath);
 ```
 
-Với phương thức `emailOutputTo`, bạn có thể gửi đầu ra qua email đến địa chỉ mong muốn. Trước khi gửi đầu ra của tác vụ qua email, bạn cần cấu hình [dịch vụ email](/docs/{{version}}/mail) của Laravel:
+Với phương thức `emailOutputTo`, bạn có thể gửi đầu ra qua email đến địa chỉ mong muốn. Trước khi gửi đầu ra của tác vụ qua email, bạn cần cấu hình [dịch vụ email](/mail) của Laravel:
 
 ```php
 Schedule::command('report:generate')
@@ -622,7 +622,7 @@ Schedule::command('emails:send')
 <a name="events"></a>
 ## Sự kiện
 
-Laravel dispatch nhiều [sự kiện](/docs/{{version}}/events) trong quá trình lập lịch. Bạn có thể [định nghĩa listener](/docs/{{version}}/events) cho bất kỳ sự kiện nào sau đây:
+Laravel dispatch nhiều [sự kiện](/events) trong quá trình lập lịch. Bạn có thể [định nghĩa listener](/events) cho bất kỳ sự kiện nào sau đây:
 
 <div class="overflow-auto">
 

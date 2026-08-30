@@ -47,8 +47,8 @@ Trait `Illuminate\Foundation\Testing\RefreshDatabase` không chạy migration l�
 Nếu muốn reset database hoàn toàn, bạn có thể dùng trait `Illuminate\Foundation\Testing\DatabaseMigrations` hoặc `Illuminate\Foundation\Testing\DatabaseTruncation`. Tuy nhiên, cả hai lựa chọn này đều chậm hơn đáng kể so với `RefreshDatabase`.
 <a name="model-factories"></a>
 ## Model factory
-Khi test, bạn có thể cần thêm một số record vào database trước khi thực thi test. Thay vì tự chỉ định giá trị từng column cho dữ liệu test, Laravel cho phép định nghĩa một tập attribute mặc định cho mỗi [Eloquent model](/docs/{{version}}/eloquent) bằng [model factory](/docs/{{version}}/eloquent-factories).
-Để tìm hiểu đầy đủ cách tạo và sử dụng model factory, hãy xem [tài liệu Model Factory](/docs/{{version}}/eloquent-factories). Sau khi định nghĩa factory, bạn có thể dùng nó trong test để tạo model:
+Khi test, bạn có thể cần thêm một số record vào database trước khi thực thi test. Thay vì tự chỉ định giá trị từng column cho dữ liệu test, Laravel cho phép định nghĩa một tập attribute mặc định cho mỗi [Eloquent model](/eloquent) bằng [model factory](/eloquent-factories).
+Để tìm hiểu đầy đủ cách tạo và sử dụng model factory, hãy xem [tài liệu Model Factory](/eloquent-factories). Sau khi định nghĩa factory, bạn có thể dùng nó trong test để tạo model:
 ```php tab=Pest
 use App\Models\User;
 
@@ -72,7 +72,7 @@ public function test_models_can_be_instantiated(): void
 
 <a name="running-seeders"></a>
 ## Chạy Seeders
-Nếu muốn dùng [database seeder](/docs/{{version}}/seeding) để đưa dữ liệu vào database trong feature test, bạn có thể gọi phương thức `seed`. Mặc định, `seed` sẽ chạy `DatabaseSeeder`, và seeder này nên gọi các seeder khác của ứng dụng. Ngoài ra, bạn có thể truyền trực tiếp tên class seeder cụ thể cho `seed`:
+Nếu muốn dùng [database seeder](/seeding) để đưa dữ liệu vào database trong feature test, bạn có thể gọi phương thức `seed`. Mặc định, `seed` sẽ chạy `DatabaseSeeder`, và seeder này nên gọi các seeder khác của ứng dụng. Ngoài ra, bạn có thể truyền trực tiếp tên class seeder cụ thể cho `seed`:
 ```php tab=Pest
 <?php
 

@@ -36,7 +36,7 @@ Thư mục `public` chứa file `index.php`, là entry point cho mọi request �
 <a name="the-resources-directory"></a>
 ### Thư mục Resources
 
-Thư mục `resources` chứa các [view](/docs/{{version}}/views), cùng các asset nguồn chưa được biên dịch như CSS hoặc JavaScript.
+Thư mục `resources` chứa các [view](/views), cùng các asset nguồn chưa được biên dịch như CSS hoặc JavaScript.
 
 <a name="the-routes-directory"></a>
 ### Thư mục Routes
@@ -45,13 +45,13 @@ Thư mục `routes` chứa toàn bộ định nghĩa route của ứng dụng. M
 
 File `web.php` chứa các route được Laravel đưa vào middleware group `web`, cung cấp session state, CSRF protection và cookie encryption. Nếu ứng dụng không cung cấp RESTful API dạng stateless, phần lớn route của bạn thường sẽ được định nghĩa trong file `web.php`.
 
-File `console.php` là nơi bạn có thể định nghĩa các console command dựa trên closure. Mỗi closure được bind với một command instance, nhờ đó có thể tương tác thuận tiện với các phương thức I/O của command. Mặc dù file này không định nghĩa HTTP route, nó định nghĩa các entry point dạng console vào ứng dụng. Bạn cũng có thể [lập lịch](/docs/{{version}}/scheduling) tác vụ trong file `console.php`.
+File `console.php` là nơi bạn có thể định nghĩa các console command dựa trên closure. Mỗi closure được bind với một command instance, nhờ đó có thể tương tác thuận tiện với các phương thức I/O của command. Mặc dù file này không định nghĩa HTTP route, nó định nghĩa các entry point dạng console vào ứng dụng. Bạn cũng có thể [lập lịch](/scheduling) tác vụ trong file `console.php`.
 
 Nếu cần, bạn có thể cài đặt thêm file route dành cho API (`api.php`) và broadcasting channel (`channels.php`) thông qua các lệnh Artisan `install:api` và `install:broadcasting`.
 
-File `api.php` chứa các route được thiết kế theo hướng stateless. Vì vậy, request đi vào ứng dụng qua những route này thường được xác thực [bằng token](/docs/{{version}}/sanctum) và không có quyền truy cập session state.
+File `api.php` chứa các route được thiết kế theo hướng stateless. Vì vậy, request đi vào ứng dụng qua những route này thường được xác thực [bằng token](/sanctum) và không có quyền truy cập session state.
 
-File `channels.php` là nơi đăng ký các channel [event broadcasting](/docs/{{version}}/broadcasting) mà ứng dụng hỗ trợ.
+File `channels.php` là nơi đăng ký các channel [event broadcasting](/broadcasting) mà ứng dụng hỗ trợ.
 
 <a name="the-storage-directory"></a>
 ### Thư mục Storage
@@ -85,7 +85,7 @@ Hai thư mục `Console` và `Http` được giải thích chi tiết ở các p
 <a name="the-broadcasting-directory"></a>
 ### Thư mục Broadcasting
 
-Thư mục `Broadcasting` chứa các broadcast channel class của ứng dụng. Các class này được tạo bằng lệnh `make:channel`. Thư mục này không tồn tại mặc định và sẽ được tạo khi bạn tạo channel đầu tiên. Để tìm hiểu thêm, hãy xem tài liệu về [event broadcasting](/docs/{{version}}/broadcasting).
+Thư mục `Broadcasting` chứa các broadcast channel class của ứng dụng. Các class này được tạo bằng lệnh `make:channel`. Thư mục này không tồn tại mặc định và sẽ được tạo khi bạn tạo channel đầu tiên. Để tìm hiểu thêm, hãy xem tài liệu về [event broadcasting](/broadcasting).
 
 <a name="the-console-directory"></a>
 ### Thư mục Console
@@ -95,7 +95,7 @@ Thư mục `Console` chứa các Artisan command tùy chỉnh của ứng dụng
 <a name="the-events-directory"></a>
 ### Thư mục Events
 
-Thư mục này không tồn tại mặc định, nhưng sẽ được tạo bởi các lệnh Artisan `event:generate` và `make:event`. Thư mục `Events` chứa các [event class](/docs/{{version}}/events). Event có thể dùng để thông báo cho những phần khác của ứng dụng rằng một hành động cụ thể đã xảy ra, qua đó tăng tính linh hoạt và giảm coupling giữa các thành phần.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo bởi các lệnh Artisan `event:generate` và `make:event`. Thư mục `Events` chứa các [event class](/events). Event có thể dùng để thông báo cho những phần khác của ứng dụng rằng một hành động cụ thể đã xảy ra, qua đó tăng tính linh hoạt và giảm coupling giữa các thành phần.
 
 <a name="the-exceptions-directory"></a>
 ### Thư mục Exceptions
@@ -110,41 +110,41 @@ Thư mục `Http` chứa controller, middleware và form request. Gần như to�
 <a name="the-jobs-directory"></a>
 ### Thư mục Jobs
 
-Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:job`. Thư mục `Jobs` chứa các [job có thể đưa vào queue](/docs/{{version}}/queues) của ứng dụng. Job có thể được đưa vào queue hoặc chạy đồng bộ ngay trong request lifecycle hiện tại. Các job chạy đồng bộ trong request hiện tại đôi khi được gọi là "command" vì chúng là một implementation của [Command Pattern](https://en.wikipedia.org/wiki/Command_pattern).
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:job`. Thư mục `Jobs` chứa các [job có thể đưa vào queue](/queues) của ứng dụng. Job có thể được đưa vào queue hoặc chạy đồng bộ ngay trong request lifecycle hiện tại. Các job chạy đồng bộ trong request hiện tại đôi khi được gọi là "command" vì chúng là một implementation của [Command Pattern](https://en.wikipedia.org/wiki/Command_pattern).
 
 <a name="the-listeners-directory"></a>
 ### Thư mục Listeners
 
-Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy `event:generate` hoặc `make:listener`. Thư mục `Listeners` chứa các class xử lý [event](/docs/{{version}}/events). Event listener nhận một event instance và thực thi logic để phản hồi event đó. Ví dụ, event `UserRegistered` có thể được xử lý bởi listener `SendWelcomeEmail`.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy `event:generate` hoặc `make:listener`. Thư mục `Listeners` chứa các class xử lý [event](/events). Event listener nhận một event instance và thực thi logic để phản hồi event đó. Ví dụ, event `UserRegistered` có thể được xử lý bởi listener `SendWelcomeEmail`.
 
 <a name="the-mail-directory"></a>
 ### Thư mục Mail
 
-Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:mail`. Thư mục `Mail` chứa các [class đại diện cho email](/docs/{{version}}/mail) mà ứng dụng gửi đi. Mail object cho phép đóng gói toàn bộ logic xây dựng một email trong một class đơn giản và có thể gửi bằng phương thức `Mail::send`.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:mail`. Thư mục `Mail` chứa các [class đại diện cho email](/mail) mà ứng dụng gửi đi. Mail object cho phép đóng gói toàn bộ logic xây dựng một email trong một class đơn giản và có thể gửi bằng phương thức `Mail::send`.
 
 <a name="the-models-directory"></a>
 ### Thư mục Models
 
-Thư mục `Models` chứa toàn bộ [Eloquent model class](/docs/{{version}}/eloquent). Eloquent ORM đi kèm Laravel cung cấp một implementation Active Record đơn giản và giàu tính biểu đạt để làm việc với database. Mỗi bảng database có một "Model" tương ứng dùng để tương tác với bảng đó. Model cho phép query dữ liệu cũng như chèn record mới vào bảng.
+Thư mục `Models` chứa toàn bộ [Eloquent model class](/eloquent). Eloquent ORM đi kèm Laravel cung cấp một implementation Active Record đơn giản và giàu tính biểu đạt để làm việc với database. Mỗi bảng database có một "Model" tương ứng dùng để tương tác với bảng đó. Model cho phép query dữ liệu cũng như chèn record mới vào bảng.
 
 <a name="the-notifications-directory"></a>
 ### Thư mục Notifications
 
-Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:notification`. Thư mục `Notifications` chứa các [notification](/docs/{{version}}/notifications) mang tính "transactional" mà ứng dụng gửi đi, chẳng hạn thông báo đơn giản về một sự kiện vừa xảy ra. Tính năng notification của Laravel trừu tượng hóa việc gửi thông báo qua nhiều driver như email, Slack, SMS hoặc lưu vào database.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:notification`. Thư mục `Notifications` chứa các [notification](/notifications) mang tính "transactional" mà ứng dụng gửi đi, chẳng hạn thông báo đơn giản về một sự kiện vừa xảy ra. Tính năng notification của Laravel trừu tượng hóa việc gửi thông báo qua nhiều driver như email, Slack, SMS hoặc lưu vào database.
 
 <a name="the-policies-directory"></a>
 ### Thư mục Policies
 
-Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:policy`. Thư mục `Policies` chứa các [authorization policy class](/docs/{{version}}/authorization) của ứng dụng. Policy được dùng để xác định liệu một user có được phép thực hiện một hành động cụ thể trên resource hay không.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:policy`. Thư mục `Policies` chứa các [authorization policy class](/authorization) của ứng dụng. Policy được dùng để xác định liệu một user có được phép thực hiện một hành động cụ thể trên resource hay không.
 
 <a name="the-providers-directory"></a>
 ### Thư mục Providers
 
-Thư mục `Providers` chứa toàn bộ [service provider](/docs/{{version}}/providers) của ứng dụng. Service provider tham gia bootstrap ứng dụng bằng cách bind service vào service container, đăng ký event hoặc thực hiện những tác vụ cần thiết khác để chuẩn bị ứng dụng tiếp nhận request.
+Thư mục `Providers` chứa toàn bộ [service provider](/providers) của ứng dụng. Service provider tham gia bootstrap ứng dụng bằng cách bind service vào service container, đăng ký event hoặc thực hiện những tác vụ cần thiết khác để chuẩn bị ứng dụng tiếp nhận request.
 
 Trong một ứng dụng Laravel mới, thư mục này đã có sẵn `AppServiceProvider`. Bạn có thể bổ sung các provider riêng vào đây khi cần.
 
 <a name="the-rules-directory"></a>
 ### Thư mục Rules
 
-Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:rule`. Thư mục `Rules` chứa các object đại diện cho custom validation rule của ứng dụng. Rule giúp đóng gói validation logic phức tạp trong một object đơn giản. Để tìm hiểu thêm, hãy xem [tài liệu Validation](/docs/{{version}}/validation).
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:rule`. Thư mục `Rules` chứa các object đại diện cho custom validation rule của ứng dụng. Rule giúp đóng gói validation logic phức tạp trong một object đơn giản. Để tìm hiểu thêm, hãy xem [tài liệu Validation](/validation).

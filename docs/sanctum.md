@@ -173,7 +173,7 @@ Route::get('/orders', function () {
 
 Để thuận tiện, method `tokenCan` sẽ luôn trả về `true` nếu request đã xác thực đến từ SPA first-party của bạn và bạn đang sử dụng cơ chế [xác thực SPA](#spa-authentication) tích hợp sẵn của Sanctum.
 
-Tuy nhiên, điều này không có nghĩa ứng dụng bắt buộc phải cho phép người dùng thực hiện hành động đó. Thông thường, [policy phân quyền](/docs/{{version}}/authorization#creating-policies) của ứng dụng sẽ xác định token có được cấp quyền thực hiện ability hay không, đồng thời kiểm tra chính instance người dùng có được phép thực hiện hành động đó hay không.
+Tuy nhiên, điều này không có nghĩa ứng dụng bắt buộc phải cho phép người dùng thực hiện hành động đó. Thông thường, [policy phân quyền](/authorization#creating-policies) của ứng dụng sẽ xác định token có được cấp quyền thực hiện ability hay không, đồng thời kiểm tra chính instance người dùng có được phép thực hiện hành động đó hay không.
 
 Ví dụ, với một ứng dụng quản lý server, điều này có thể đồng nghĩa với việc kiểm tra token được phép cập nhật server **và** server đó thuộc về người dùng:
 
@@ -232,7 +232,7 @@ return $user->createToken(
 )->plainTextToken;
 ```
 
-Nếu đã cấu hình thời gian hết hạn token cho ứng dụng, bạn cũng có thể [lên lịch một tác vụ](/docs/{{version}}/scheduling) để dọn dẹp các token đã hết hạn. Sanctum cung cấp Artisan command `sanctum:prune-expired` cho mục đích này. Ví dụ, bạn có thể cấu hình một tác vụ được lên lịch để xóa tất cả bản ghi token đã hết hạn ít nhất 24 giờ:
+Nếu đã cấu hình thời gian hết hạn token cho ứng dụng, bạn cũng có thể [lên lịch một tác vụ](/scheduling) để dọn dẹp các token đã hết hạn. Sanctum cung cấp Artisan command `sanctum:prune-expired` cho mục đích này. Ví dụ, bạn có thể cấu hình một tác vụ được lên lịch để xóa tất cả bản ghi token đã hết hạn ít nhất 24 giờ:
 
 ```php
 use Illuminate\Support\Facades\Schedule;
@@ -319,16 +319,16 @@ Trong request này, Laravel sẽ thiết lập cookie `XSRF-TOKEN` chứa CSRF t
 <a name="logging-in"></a>
 #### Đăng nhập
 
-Sau khi cơ chế bảo vệ CSRF được khởi tạo, hãy gửi request `POST` tới route `/login` của ứng dụng Laravel. Route `/login` có thể được [tự triển khai](/docs/{{version}}/authentication#authenticating-users) hoặc cung cấp bởi một package xác thực headless như [Laravel Fortify](/docs/{{version}}/fortify).
+Sau khi cơ chế bảo vệ CSRF được khởi tạo, hãy gửi request `POST` tới route `/login` của ứng dụng Laravel. Route `/login` có thể được [tự triển khai](/authentication#authenticating-users) hoặc cung cấp bởi một package xác thực headless như [Laravel Fortify](/fortify).
 
 Nếu request đăng nhập thành công, bạn sẽ được xác thực và các request tiếp theo tới route của ứng dụng sẽ tự động được xác thực bằng session cookie mà ứng dụng Laravel đã cấp cho client. Đồng thời, vì ứng dụng đã gửi request tới `/sanctum/csrf-cookie`, các request tiếp theo sẽ tự động được bảo vệ CSRF miễn là HTTP client JavaScript gửi giá trị cookie `XSRF-TOKEN` trong header `X-XSRF-TOKEN`.
 
 Nếu session của người dùng hết hạn do không hoạt động, các request tiếp theo tới ứng dụng Laravel có thể nhận HTTP response lỗi 401 hoặc 419. Trong trường hợp này, bạn nên chuyển hướng người dùng về trang đăng nhập của SPA.
 
-Vì cách xác thực SPA này dựa trên session, bạn có thể sử dụng các dịch vụ xác thực tiêu chuẩn của Laravel, bao gồm chức năng ["remember me"](/docs/{{version}}/authentication#remembering-users).
+Vì cách xác thực SPA này dựa trên session, bạn có thể sử dụng các dịch vụ xác thực tiêu chuẩn của Laravel, bao gồm chức năng ["remember me"](/authentication#remembering-users).
 
 > [!WARNING]
-> Bạn có thể tự viết endpoint `/login`; tuy nhiên, hãy bảo đảm endpoint xác thực người dùng bằng [dịch vụ xác thực dựa trên session mà Laravel cung cấp](/docs/{{version}}/authentication#authenticating-users). Thông thường, điều này có nghĩa là sử dụng guard xác thực `web`.
+> Bạn có thể tự viết endpoint `/login`; tuy nhiên, hãy bảo đảm endpoint xác thực người dùng bằng [dịch vụ xác thực dựa trên session mà Laravel cung cấp](/authentication#authenticating-users). Thông thường, điều này có nghĩa là sử dụng guard xác thực `web`.
 
 <a name="protecting-spa-routes"></a>
 ### Bảo vệ Route
@@ -346,7 +346,7 @@ Route::get('/user', function (Request $request) {
 <a name="authorizing-private-broadcast-channels"></a>
 ### Phân quyền Broadcast Channel riêng tư
 
-Nếu SPA cần xác thực với [broadcast channel private / presence](/docs/{{version}}/broadcasting#authorizing-channels), hãy xóa entry `channels` khỏi method `withRouting` trong `bootstrap/app.php`. Thay vào đó, hãy gọi `withBroadcasting` để có thể chỉ định đúng middleware cho các broadcasting route của ứng dụng:
+Nếu SPA cần xác thực với [broadcast channel private / presence](/broadcasting#authorizing-channels), hãy xóa entry `channels` khỏi method `withRouting` trong `bootstrap/app.php`. Thay vào đó, hãy gọi `withBroadcasting` để có thể chỉ định đúng middleware cho các broadcasting route của ứng dụng:
 
 ```php
 return Application::configure(basePath: dirname(__DIR__))
@@ -360,7 +360,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
 ```
 
-Tiếp theo, để các request phân quyền của Pusher thành công, bạn cần cung cấp một Pusher `authorizer` tùy chỉnh khi khởi tạo [Laravel Echo](/docs/{{version}}/broadcasting#client-side-installation). Cách này cho phép ứng dụng cấu hình Pusher sử dụng `axios` instance đã được [cấu hình đúng cho request cross-domain](#cors-and-cookies):
+Tiếp theo, để các request phân quyền của Pusher thành công, bạn cần cung cấp một Pusher `authorizer` tùy chỉnh khi khởi tạo [Laravel Echo](/broadcasting#client-side-installation). Cách này cho phép ứng dụng cấu hình Pusher sử dụng `axios` instance đã được [cấu hình đúng cho request cross-domain](#cors-and-cookies):
 
 ```js
 window.Echo = new Echo({

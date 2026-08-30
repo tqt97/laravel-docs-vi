@@ -259,7 +259,7 @@ Laravel cung cấp nhiều hàm tiện ích để thao tác với giá trị chu
 <a name="method-__"></a>
 #### `__()` {.collection-method}
 
-Hàm `__` dịch chuỗi hoặc khóa bản dịch được cung cấp bằng các [file ngôn ngữ](/docs/{{version}}/localization) của ứng dụng:
+Hàm `__` dịch chuỗi hoặc khóa bản dịch được cung cấp bằng các [file ngôn ngữ](/localization) của ứng dụng:
 
 ```php
 echo __('Welcome to our application');
@@ -1219,7 +1219,7 @@ $label = Str::counted('order', 1000);
 <a name="method-str-plural"></a>
 #### `Str::plural()` {.collection-method}
 
-Phương thức `Str::plural` chuyển một từ ở dạng số ít sang dạng số nhiều. Phương thức này hỗ trợ [mọi ngôn ngữ được pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
+Phương thức `Str::plural` chuyển một từ ở dạng số ít sang dạng số nhiều. Phương thức này hỗ trợ [mọi ngôn ngữ được pluralizer của Laravel hỗ trợ](/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -1260,7 +1260,7 @@ $label = Str::plural('car', 1000, prependCount: true);
 <a name="method-str-plural-studly"></a>
 #### `Str::pluralStudly()` {.collection-method}
 
-Phương thức `Str::pluralStudly` chuyển chuỗi từ dạng số ít được định dạng theo `StudlyCase` sang dạng số nhiều. Phương thức này hỗ trợ [mọi ngôn ngữ được pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
+Phương thức `Str::pluralStudly` chuyển chuỗi từ dạng số ít được định dạng theo `StudlyCase` sang dạng số nhiều. Phương thức này hỗ trợ [mọi ngôn ngữ được pluralizer của Laravel hỗ trợ](/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -1510,7 +1510,7 @@ $reversed = Str::reverse('Hello World');
 <a name="method-str-singular"></a>
 #### `Str::singular()` {.collection-method}
 
-Phương thức `Str::singular` chuyển chuỗi sang dạng số ít. Phương thức này hỗ trợ [mọi ngôn ngữ được pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
+Phương thức `Str::singular` chuyển chuỗi sang dạng số ít. Phương thức này hỗ trợ [mọi ngôn ngữ được pluralizer của Laravel hỗ trợ](/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -1999,7 +1999,7 @@ $snake = str()->snake('FooBar');
 <a name="method-trans"></a>
 #### `trans()` {.collection-method}
 
-Hàm `trans` dịch translation key đã cho bằng các [file ngôn ngữ](/docs/{{version}}/localization) của ứng dụng:
+Hàm `trans` dịch translation key đã cho bằng các [file ngôn ngữ](/localization) của ứng dụng:
 
 ```php
 echo trans('messages.welcome');
@@ -2307,7 +2307,7 @@ $containsAll = Str::of('This is my name')->containsAll(['MY', 'NAME'], ignoreCas
 <a name="method-fluent-str-decrypt"></a>
 #### `decrypt` {.collection-method}
 
-Phương thức `decrypt` [giải mã](/docs/{{version}}/encryption) chuỗi đã được mã hóa:
+Phương thức `decrypt` [giải mã](/encryption) chuỗi đã được mã hóa:
 
 ```php
 use Illuminate\Support\Str;
@@ -2451,7 +2451,7 @@ $result = Str::of('This is my name')->doesntStartWith(['What', 'That', 'There'])
 <a name="method-fluent-str-encrypt"></a>
 #### `encrypt` {.collection-method}
 
-Phương thức `encrypt` [mã hóa](/docs/{{version}}/encryption) chuỗi:
+Phương thức `encrypt` [mã hóa](/encryption) chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3109,7 +3109,7 @@ $label = Str::of('order')->counted(1000);
 <a name="method-fluent-str-plural"></a>
 #### `plural` {.collection-method}
 
-Phương thức `plural` chuyển chuỗi từ dạng số ít sang dạng số nhiều. Hàm này hỗ trợ [mọi ngôn ngữ được bộ pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
+Phương thức `plural` chuyển chuỗi từ dạng số ít sang dạng số nhiều. Hàm này hỗ trợ [mọi ngôn ngữ được bộ pluralizer của Laravel hỗ trợ](/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -3342,7 +3342,7 @@ $collection = Str::of('filename.jpg')->scan('%[^.].%s');
 <a name="method-fluent-str-singular"></a>
 #### `singular` {.collection-method}
 
-Phương thức `singular` chuyển chuỗi sang dạng số ít. Hàm này hỗ trợ [mọi ngôn ngữ được bộ pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
+Phương thức `singular` chuyển chuỗi sang dạng số ít. Hàm này hỗ trợ [mọi ngôn ngữ được bộ pluralizer của Laravel hỗ trợ](/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -3614,7 +3614,7 @@ $htmlString = Str::of('Nuno Maduro')->toHtmlString();
 <a name="method-fluent-str-to-uri"></a>
 #### `toUri` {.collection-method}
 
-Phương thức `toUri` chuyển chuỗi đã cho thành một instance của [Illuminate\Support\Uri](/docs/{{version}}/helpers#uri):
+Phương thức `toUri` chuyển chuỗi đã cho thành một instance của [Illuminate\Support\Uri](/helpers#uri):
 
 ```php
 use Illuminate\Support\Str;

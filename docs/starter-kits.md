@@ -3,14 +3,14 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-Để giúp bạn bắt đầu xây dựng ứng dụng Laravel mới nhanh hơn, Laravel cung cấp các [starter kit cho ứng dụng](https://laravel.com/starter-kits). Các starter kit này cung cấp sẵn những thành phần nền tảng cho ứng dụng Laravel tiếp theo của bạn, bao gồm route, controller và view cần thiết để đăng ký và xác thực người dùng. Các starter kit sử dụng [Laravel Fortify](/docs/{{version}}/fortify) để cung cấp chức năng xác thực.
+Để giúp bạn bắt đầu xây dựng ứng dụng Laravel mới nhanh hơn, Laravel cung cấp các [starter kit cho ứng dụng](https://laravel.com/starter-kits). Các starter kit này cung cấp sẵn những thành phần nền tảng cho ứng dụng Laravel tiếp theo của bạn, bao gồm route, controller và view cần thiết để đăng ký và xác thực người dùng. Các starter kit sử dụng [Laravel Fortify](/fortify) để cung cấp chức năng xác thực.
 
 Bạn có thể sử dụng các starter kit này, nhưng chúng không bắt buộc. Bạn hoàn toàn có thể xây dựng ứng dụng từ đầu bằng cách cài đặt một bản Laravel mới. Dù chọn cách nào, bạn vẫn có toàn quyền xây dựng ứng dụng theo nhu cầu của mình.
 
 <a name="creating-an-application"></a>
 ## Tạo ứng dụng bằng Starter Kit
 
-Để tạo ứng dụng Laravel mới bằng một trong các starter kit, trước tiên bạn nên [cài đặt PHP và công cụ Laravel CLI](/docs/{{version}}/installation#installing-php). Nếu đã cài PHP và Composer, bạn có thể cài Laravel installer CLI thông qua Composer:
+Để tạo ứng dụng Laravel mới bằng một trong các starter kit, trước tiên bạn nên [cài đặt PHP và công cụ Laravel CLI](/installation#installing-php). Nếu đã cài PHP và Composer, bạn có thể cài Laravel installer CLI thông qua Composer:
 
 ```shell
 composer global require laravel/installer
@@ -327,7 +327,7 @@ Các trang xác thực trong Livewire starter kit, chẳng hạn trang đăng nh
 <a name="authentication"></a>
 ## Xác thực
 
-Tất cả starter kit đều sử dụng [Laravel Fortify](/docs/{{version}}/fortify) để xử lý xác thực. Fortify cung cấp route, controller và logic cho đăng nhập, đăng ký, đặt lại mật khẩu, xác minh email và nhiều chức năng khác.
+Tất cả starter kit đều sử dụng [Laravel Fortify](/fortify) để xử lý xác thực. Fortify cung cấp route, controller và logic cho đăng nhập, đăng ký, đặt lại mật khẩu, xác minh email và nhiều chức năng khác.
 
 Fortify tự động đăng ký các route xác thực sau dựa trên những tính năng được bật trong file cấu hình `config/fortify.php` của ứng dụng:
 
@@ -420,7 +420,7 @@ public function create(array $input): User
 
 Các starter kit tích hợp sẵn xác thực hai yếu tố (2FA), cho phép người dùng bảo vệ tài khoản bằng bất kỳ ứng dụng xác thực nào tương thích TOTP. 2FA được bật mặc định thông qua `Features::twoFactorAuthentication()` trong file cấu hình `config/fortify.php` của ứng dụng.
 
-Tùy chọn `confirm` yêu cầu người dùng xác minh một mã trước khi 2FA được bật hoàn toàn, còn `confirmPassword` yêu cầu xác nhận mật khẩu trước khi bật hoặc tắt 2FA. Để biết thêm chi tiết, hãy xem [tài liệu xác thực hai yếu tố của Fortify](/docs/{{version}}/fortify#two-factor-authentication).
+Tùy chọn `confirm` yêu cầu người dùng xác minh một mã trước khi 2FA được bật hoàn toàn, còn `confirmPassword` yêu cầu xác nhận mật khẩu trước khi bật hoặc tắt 2FA. Để biết thêm chi tiết, hãy xem [tài liệu xác thực hai yếu tố của Fortify](/fortify#two-factor-authentication).
 
 <a name="rate-limiting"></a>
 ### Giới hạn tần suất

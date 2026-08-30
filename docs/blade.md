@@ -5,7 +5,7 @@
 
 Blade là template engine đơn giản nhưng mạnh mẽ được tích hợp sẵn trong Laravel. Không giống một số PHP template engine khác, Blade không hạn chế bạn sử dụng mã PHP thuần trong template. Trên thực tế, mọi Blade template đều được biên dịch thành mã PHP thuần và được cache cho đến khi chúng thay đổi, vì vậy Blade hầu như không tạo thêm overhead cho ứng dụng. Các file Blade template sử dụng phần mở rộng `.blade.php` và thường được lưu trong thư mục `resources/views`.
 
-Blade view có thể được trả về từ route hoặc controller bằng helper toàn cục `view`. Như đã đề cập trong tài liệu về [view](/docs/{{version}}/views), bạn có thể truyền dữ liệu vào Blade view thông qua đối số thứ hai của helper `view`:
+Blade view có thể được trả về từ route hoặc controller bằng helper toàn cục `view`. Như đã đề cập trong tài liệu về [view](/views), bạn có thể truyền dữ liệu vào Blade view thông qua đối số thứ hai của helper `view`:
 
 ```php
 Route::get('/', function () {
@@ -190,7 +190,7 @@ Ngoài các directive điều kiện đã đề cập, `@isset` và `@empty` có
 <a name="authentication-directives"></a>
 #### Directive xác thực
 
-Các directive `@auth` và `@guest` có thể được dùng để nhanh chóng xác định người dùng hiện tại đã [xác thực](/docs/{{version}}/authentication) hay đang là khách:
+Các directive `@auth` và `@guest` có thể được dùng để nhanh chóng xác định người dùng hiện tại đã [xác thực](/authentication) hay đang là khách:
 
 ```blade
 @auth
@@ -265,7 +265,7 @@ Bạn có thể sử dụng directive `sectionMissing` để xác định một 
 <a name="session-directives"></a>
 #### Directive session
 
-Directive `@session` có thể được dùng để xác định một giá trị [session](/docs/{{version}}/session) có tồn tại hay không. Nếu giá trị session tồn tại, nội dung template nằm giữa `@session` và `@endsession` sẽ được thực thi. Bên trong nội dung của directive `@session`, bạn có thể echo biến `$value` để hiển thị giá trị session:
+Directive `@session` có thể được dùng để xác định một giá trị [session](/session) có tồn tại hay không. Nếu giá trị session tồn tại, nội dung template nằm giữa `@session` và `@endsession` sẽ được thực thi. Bên trong nội dung của directive `@session`, bạn có thể echo biến `$value` để hiển thị giá trị session:
 
 ```blade
 @session('status')
@@ -278,7 +278,7 @@ Directive `@session` có thể được dùng để xác định một giá tr�
 <a name="context-directives"></a>
 #### Directive context
 
-Directive `@context` có thể được dùng để xác định một giá trị [context](/docs/{{version}}/context) có tồn tại hay không. Nếu giá trị context tồn tại, nội dung template nằm giữa `@context` và `@endcontext` sẽ được thực thi. Bên trong nội dung của directive `@context`, bạn có thể echo biến `$value` để hiển thị giá trị context:
+Directive `@context` có thể được dùng để xác định một giá trị [context](/context) có tồn tại hay không. Nếu giá trị context tồn tại, nội dung template nằm giữa `@context` và `@endcontext` sẽ được thực thi. Bên trong nội dung của directive `@context`, bạn có thể echo biến `$value` để hiển thị giá trị context:
 
 ```blade
 @context('canonical')
@@ -667,7 +667,7 @@ Import theo nhóm cũng được hỗ trợ với cả modifier `function` và `
 <a name="fonts"></a>
 ### Font
 
-Khi sử dụng [tính năng tối ưu font của Laravel với Vite](/docs/{{version}}/vite#working-with-fonts), bạn có thể dùng directive `@fonts` để render các liên kết preload font đã cấu hình và CSS font inline trong layout của ứng dụng:
+Khi sử dụng [tính năng tối ưu font của Laravel với Vite](/vite#working-with-fonts), bạn có thể dùng directive `@fonts` để render các liên kết preload font đã cấu hình và CSS font inline trong layout của ứng dụng:
 
 ```blade
 <!doctype html>
@@ -989,7 +989,7 @@ Closure phải trả về một chuỗi. Nếu chuỗi trả về tương ứng 
 <a name="additional-dependencies"></a>
 #### Dependency bổ sung
 
-Nếu component cần các dependency từ [service container](/docs/{{version}}/container) của Laravel, bạn có thể khai báo chúng trước các data attribute của component và container sẽ tự động inject chúng:
+Nếu component cần các dependency từ [service container](/container) của Laravel, bạn có thể khai báo chúng trước các data attribute của component và container sẽ tự động inject chúng:
 
 ```php
 use App\Services\AlertCreator;
@@ -1557,7 +1557,7 @@ Vì prop `color` chỉ được truyền vào component cha (`<x-menu>`), nó s�
 
 Như đã đề cập, component ẩn danh thường được định nghĩa bằng cách đặt Blade template trong thư mục `resources/views/components`. Tuy nhiên, đôi khi bạn có thể muốn đăng ký thêm các đường dẫn component ẩn danh khác với Laravel bên cạnh đường dẫn mặc định.
 
-Phương thức `anonymousComponentPath` nhận "path" đến vị trí component ẩn danh làm đối số thứ nhất và một "namespace" tùy chọn cho các component làm đối số thứ hai. Thông thường, phương thức này nên được gọi từ `boot` của một [service provider](/docs/{{version}}/providers) trong ứng dụng:
+Phương thức `anonymousComponentPath` nhận "path" đến vị trí component ẩn danh làm đối số thứ nhất và một "namespace" tùy chọn cho các component làm đối số thứ hai. Thông thường, phương thức này nên được gọi từ `boot` của một [service provider](/providers) trong ứng dụng:
 
 ```php
 /**
@@ -1729,7 +1729,7 @@ Directive `@yield` cũng nhận giá trị mặc định làm tham số thứ ha
 <a name="csrf-field"></a>
 ### Trường CSRF
 
-Mỗi khi định nghĩa một HTML form trong ứng dụng, bạn nên thêm trường CSRF token ẩn để middleware [bảo vệ CSRF](/docs/{{version}}/csrf) có thể xác thực request. Bạn có thể dùng directive Blade `@csrf` để tạo trường token:
+Mỗi khi định nghĩa một HTML form trong ứng dụng, bạn nên thêm trường CSRF token ẩn để middleware [bảo vệ CSRF](/csrf) có thể xác thực request. Bạn có thể dùng directive Blade `@csrf` để tạo trường token:
 
 ```blade
 <form method="POST" action="/profile">
@@ -1755,7 +1755,7 @@ Vì HTML form không thể gửi trực tiếp request `PUT`, `PATCH` hoặc `DE
 <a name="validation-errors"></a>
 ### Lỗi validation
 
-Directive `@error` có thể được dùng để nhanh chóng kiểm tra xem một attribute có [thông báo lỗi validation](/docs/{{version}}/validation#quick-displaying-the-validation-errors) hay không. Bên trong `@error`, bạn có thể xuất biến `$message` để hiển thị thông báo lỗi:
+Directive `@error` có thể được dùng để nhanh chóng kiểm tra xem một attribute có [thông báo lỗi validation](/validation#quick-displaying-the-validation-errors) hay không. Bên trong `@error`, bạn có thể xuất biến `$message` để hiển thị thông báo lỗi:
 
 ```blade
 <!-- /resources/views/post/create.blade.php -->
@@ -1787,7 +1787,7 @@ Vì directive `@error` được biên dịch thành câu lệnh "if", bạn có 
 />
 ```
 
-Bạn có thể truyền [tên của một error bag cụ thể](/docs/{{version}}/validation#named-error-bags) làm tham số thứ hai cho directive `@error` để lấy thông báo lỗi validation trên các trang chứa nhiều form:
+Bạn có thể truyền [tên của một error bag cụ thể](/validation#named-error-bags) làm tham số thứ hai cho directive `@error` để lấy thông báo lỗi validation trên các trang chứa nhiều form:
 
 ```blade
 <!-- /resources/views/auth.blade.php -->
@@ -1861,7 +1861,7 @@ Directive `@hasstack` có thể được dùng để xác định một stack c�
 <a name="service-injection"></a>
 ## Inject service
 
-Directive `@inject` có thể được dùng để lấy một service từ [service container](/docs/{{version}}/container) của Laravel. Đối số thứ nhất truyền vào `@inject` là tên biến sẽ chứa service, còn đối số thứ hai là tên class hoặc interface của service bạn muốn resolve:
+Directive `@inject` có thể được dùng để lấy một service từ [service container](/container) của Laravel. Đối số thứ nhất truyền vào `@inject` là tên biến sẽ chứa service, còn đối số thứ hai là tên class hoặc interface của service bạn muốn resolve:
 
 ```blade
 @inject('metrics', 'App\Services\MetricsService')

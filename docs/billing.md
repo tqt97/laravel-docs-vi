@@ -324,7 +324,7 @@ Chúng ta cũng có thể dễ dàng xác định user có đăng ký một sả
 <a name="quickstart-building-a-subscribed-middleware"></a>
 #### Xây dựng middleware kiểm tra đăng ký
 
-Để thuận tiện, bạn có thể tạo một [middleware](/docs/{{version}}/middleware) để xác định request gửi đến có thuộc về user đã đăng ký hay không. Sau khi định nghĩa middleware, bạn có thể gán nó cho route để ngăn user chưa đăng ký truy cập route đó:
+Để thuận tiện, bạn có thể tạo một [middleware](/middleware) để xác định request gửi đến có thuộc về user đã đăng ký hay không. Sau khi định nghĩa middleware, bạn có thể gán nó cho route để ngăn user chưa đăng ký truy cập route đó:
 
 ```php
 <?php
@@ -1026,7 +1026,7 @@ if ($user->subscribed('default')) {
 }
 ```
 
-Phương thức `subscribed` cũng rất phù hợp để sử dụng trong [route middleware](/docs/{{version}}/middleware), cho phép bạn lọc quyền truy cập vào route và controller dựa trên trạng thái gói đăng ký của người dùng:
+Phương thức `subscribed` cũng rất phù hợp để sử dụng trong [route middleware](/middleware), cho phép bạn lọc quyền truy cập vào route và controller dựa trên trạng thái gói đăng ký của người dùng:
 
 ```php
 <?php
@@ -1774,7 +1774,7 @@ $user = User::create([
 ```
 
 > [!WARNING]
-Hãy đảm bảo thêm [date cast](/docs/{{version}}/eloquent-mutators#date-casting) cho thuộc tính `trial_ends_at` trong định nghĩa class của billable model.
+Hãy đảm bảo thêm [date cast](/eloquent-mutators#date-casting) cho thuộc tính `trial_ends_at` trong định nghĩa class của billable model.
 
 Cashier gọi kiểu dùng thử này là "generic trial" vì nó không gắn với bất kỳ gói đăng ký hiện có nào. Phương thức `onTrial` trên instance của billable model sẽ trả về `true` nếu ngày hiện tại chưa vượt quá giá trị `trial_ends_at`:
 
@@ -1880,7 +1880,7 @@ php artisan cashier:webhook --disabled
 <a name="webhooks-csrf-protection"></a>
 #### Webhook và bảo vệ CSRF
 
-Vì Stripe webhook cần bỏ qua [cơ chế bảo vệ CSRF](/docs/{{version}}/csrf) của Laravel, bạn cần bảo đảm Laravel không cố xác thực CSRF token đối với các Stripe webhook gửi đến. Để thực hiện điều này, hãy loại trừ `stripe/*` khỏi bảo vệ CSRF trong file `bootstrap/app.php` của ứng dụng:
+Vì Stripe webhook cần bỏ qua [cơ chế bảo vệ CSRF](/csrf) của Laravel, bạn cần bảo đảm Laravel không cố xác thực CSRF token đối với các Stripe webhook gửi đến. Để thực hiện điều này, hãy loại trừ `stripe/*` khỏi bảo vệ CSRF trong file `bootstrap/app.php` của ứng dụng:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -1898,7 +1898,7 @@ Cashier tự động xử lý việc hủy gói đăng ký do thanh toán thất
 - `Laravel\Cashier\Events\WebhookReceived`
 - `Laravel\Cashier\Events\WebhookHandled`
 
-Cả hai sự kiện đều chứa toàn bộ payload của Stripe webhook. Ví dụ, nếu muốn xử lý webhook `invoice.payment_succeeded`, bạn có thể đăng ký một [listener](/docs/{{version}}/events#defining-listeners) để xử lý sự kiện:
+Cả hai sự kiện đều chứa toàn bộ payload của Stripe webhook. Ví dụ, nếu muốn xử lý webhook `invoice.payment_succeeded`, bạn có thể đăng ký một [listener](/events#defining-listeners) để xử lý sự kiện:
 
 ```php
 <?php

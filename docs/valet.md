@@ -8,7 +8,7 @@
 
 [Laravel Valet](https://github.com/laravel/valet) là môi trường phát triển dành cho những người dùng macOS yêu thích sự tối giản. Laravel Valet cấu hình máy Mac của bạn để luôn chạy [Nginx](https://www.nginx.com/) ở chế độ nền khi máy khởi động. Sau đó, bằng [DnsMasq](https://en.wikipedia.org/wiki/Dnsmasq), Valet proxy mọi request trên domain `*.test` tới các site được cài đặt trên máy local của bạn.
 
-Nói cách khác, Valet là một môi trường phát triển Laravel cực kỳ nhanh, chỉ sử dụng khoảng 7 MB RAM. Valet không thay thế hoàn toàn [Sail](/docs/{{version}}/sail) hoặc [Homestead](/docs/{{version}}/homestead), nhưng là một lựa chọn thay thế tuyệt vời nếu bạn cần những thành phần cơ bản linh hoạt, ưu tiên tốc độ tối đa hoặc đang làm việc trên máy có lượng RAM hạn chế.
+Nói cách khác, Valet là một môi trường phát triển Laravel cực kỳ nhanh, chỉ sử dụng khoảng 7 MB RAM. Valet không thay thế hoàn toàn [Sail](/sail) hoặc [Homestead](/homestead), nhưng là một lựa chọn thay thế tuyệt vời nếu bạn cần những thành phần cơ bản linh hoạt, ưu tiên tốc độ tối đa hoặc đang làm việc trên máy có lượng RAM hạn chế.
 
 Ngay khi cài đặt, Valet hỗ trợ nhiều nền tảng, bao gồm nhưng không giới hạn ở:
 

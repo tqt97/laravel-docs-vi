@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-Bên cạnh việc đơn giản hóa HTTP testing, Laravel còn cung cấp một API gọn gàng để kiểm thử các [console command tùy chỉnh](/docs/{{version}}/artisan) của ứng dụng.
+Bên cạnh việc đơn giản hóa HTTP testing, Laravel còn cung cấp một API gọn gàng để kiểm thử các [console command tùy chỉnh](/artisan) của ứng dụng.
 
 <a name="success-failure-expectations"></a>
 ## Kỳ vọng thành công / thất bại
@@ -87,7 +87,7 @@ public function test_console_command(): void
 }
 ```
 
-Nếu đang sử dụng function `search` hoặc `multisearch` của [Laravel Prompts](/docs/{{version}}/prompts), bạn có thể dùng assertion `expectsSearch` để mock đầu vào của người dùng, kết quả tìm kiếm và lựa chọn cuối cùng:
+Nếu đang sử dụng function `search` hoặc `multisearch` của [Laravel Prompts](/prompts), bạn có thể dùng assertion `expectsSearch` để mock đầu vào của người dùng, kết quả tìm kiếm và lựa chọn cuối cùng:
 
 ```php tab=Pest
 test('console command', function () {

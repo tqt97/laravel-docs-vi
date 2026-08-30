@@ -122,7 +122,7 @@ $instance = Feature::instance(NewApi::class);
 ```
 
 > [!NOTE]
-> Feature class được resolve thông qua [container](/docs/{{version}}/container), vì vậy bạn có thể inject dependency vào constructor của feature class khi cần.
+> Feature class được resolve thông qua [container](/container), vì vậy bạn có thể inject dependency vào constructor của feature class khi cần.
 
 #### Tùy chỉnh tên feature được lưu trữ
 
@@ -351,7 +351,7 @@ $user->features()->unless('new-api',
 <a name="middleware"></a>
 ### Middleware
 
-Pennant cũng cung cấp một [middleware](/docs/{{version}}/middleware) có thể dùng để xác minh người dùng hiện đang được xác thực có quyền truy cập một feature trước cả khi route được thực thi. Bạn có thể gán middleware này cho một route và chỉ định các feature bắt buộc để truy cập route đó. Nếu bất kỳ feature nào được chỉ định đang inactive đối với người dùng hiện tại, route sẽ trả về HTTP response `400 Bad Request`. Có thể truyền nhiều feature vào phương thức static `using`.
+Pennant cũng cung cấp một [middleware](/middleware) có thể dùng để xác minh người dùng hiện đang được xác thực có quyền truy cập một feature trước cả khi route được thực thi. Bạn có thể gán middleware này cho một route và chỉ định các feature bắt buộc để truy cập route đó. Nếu bất kỳ feature nào được chỉ định đang inactive đối với người dùng hiện tại, route sẽ trả về HTTP response `400 Bad Request`. Có thể truyền nhiều feature vào phương thức static `using`.
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -623,7 +623,7 @@ class User extends Model implements FeatureScopeable
 <a name="serializing-scope"></a>
 ### Serialize scope
 
-Theo mặc định, Pennant sẽ sử dụng fully qualified class name khi lưu một feature gắn với Eloquent model. Nếu bạn đã sử dụng [Eloquent morph map](/docs/{{version}}/eloquent-relationships#custom-polymorphic-types), bạn có thể cho Pennant sử dụng morph map để tách feature đã lưu khỏi cấu trúc ứng dụng.
+Theo mặc định, Pennant sẽ sử dụng fully qualified class name khi lưu một feature gắn với Eloquent model. Nếu bạn đã sử dụng [Eloquent morph map](/eloquent-relationships#custom-polymorphic-types), bạn có thể cho Pennant sử dụng morph map để tách feature đã lưu khỏi cấu trúc ứng dụng.
 
 Để thực hiện điều này, sau khi định nghĩa Eloquent morph map trong service provider, bạn có thể gọi phương thức `useMorphMap` của facade `Feature`:
 
@@ -963,7 +963,7 @@ public function test_it_can_control_feature_values()
 }
 ```
 
-Nếu feature trả về một instance `Lottery`, Laravel cung cấp một số [testing helper hữu ích](/docs/{{version}}/helpers#testing-lotteries).
+Nếu feature trả về một instance `Lottery`, Laravel cung cấp một số [testing helper hữu ích](/helpers#testing-lotteries).
 
 <a name="store-configuration"></a>
 #### Cấu hình store
@@ -1017,7 +1017,7 @@ Bây giờ, chúng ta chỉ cần triển khai từng phương thức bằng k�
 <a name="registering-the-driver"></a>
 #### Đăng ký driver
 
-Sau khi triển khai driver, bạn có thể đăng ký nó với Laravel. Để thêm driver vào Pennant, hãy dùng phương thức `extend` do facade `Feature` cung cấp. Bạn nên gọi `extend` từ phương thức `boot` của một [service provider](/docs/{{version}}/providers) trong ứng dụng:
+Sau khi triển khai driver, bạn có thể đăng ký nó với Laravel. Để thêm driver vào Pennant, hãy dùng phương thức `extend` do facade `Feature` cung cấp. Bạn nên gọi `extend` từ phương thức `boot` của một [service provider](/providers) trong ứng dụng:
 
 ```php
 <?php

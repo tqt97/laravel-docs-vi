@@ -6,18 +6,18 @@
 Laravel cho phép bạn đưa dữ liệu mẫu hoặc dữ liệu khởi tạo vào database thông qua các seed class. Tất cả seed class được lưu trong thư mục `database/seeders`. Mặc định, Laravel tạo sẵn class `DatabaseSeeder`. Từ class này, bạn có thể dùng method `call` để chạy các seed class khác và chủ động kiểm soát thứ tự seeding.
 
 > [!NOTE]
-> Cơ chế [bảo vệ mass assignment](/docs/{{version}}/eloquent#mass-assignment) tự động được tắt trong quá trình database seeding.
+> Cơ chế [bảo vệ mass assignment](/eloquent#mass-assignment) tự động được tắt trong quá trình database seeding.
 
 <a name="writing-seeders"></a>
 ## Viết Seeder
 
-Để tạo một seeder, hãy chạy [Artisan command](/docs/{{version}}/artisan) `make:seeder`. Mọi seeder do framework tạo sẽ nằm trong thư mục `database/seeders`:
+Để tạo một seeder, hãy chạy [Artisan command](/artisan) `make:seeder`. Mọi seeder do framework tạo sẽ nằm trong thư mục `database/seeders`:
 
 ```shell
 php artisan make:seeder UserSeeder
 ```
 
-Mặc định, một seeder class chỉ có một method là `run`. Method này được gọi khi [Artisan command](/docs/{{version}}/artisan) `db:seed` được thực thi. Bên trong `run`, bạn có thể insert dữ liệu vào database theo bất kỳ cách nào phù hợp. Bạn có thể dùng [query builder](/docs/{{version}}/queries) để insert thủ công hoặc dùng [Eloquent model factories](/docs/{{version}}/eloquent-factories).
+Mặc định, một seeder class chỉ có một method là `run`. Method này được gọi khi [Artisan command](/artisan) `db:seed` được thực thi. Bên trong `run`, bạn có thể insert dữ liệu vào database theo bất kỳ cách nào phù hợp. Bạn có thể dùng [query builder](/queries) để insert thủ công hoặc dùng [Eloquent model factories](/eloquent-factories).
 
 Ví dụ, ta có thể sửa class `DatabaseSeeder` mặc định và thêm một câu lệnh insert vào method `run`:
 
@@ -48,12 +48,12 @@ class DatabaseSeeder extends Seeder
 ```
 
 > [!NOTE]
-> Bạn có thể type-hint bất kỳ dependency nào cần dùng trong signature của method `run`. Laravel sẽ tự động resolve chúng thông qua [service container](/docs/{{version}}/container).
+> Bạn có thể type-hint bất kỳ dependency nào cần dùng trong signature của method `run`. Laravel sẽ tự động resolve chúng thông qua [service container](/container).
 
 <a name="using-model-factories"></a>
 ### Sử dụng Model Factory
 
-Việc khai báo thủ công attribute cho từng model cần seed sẽ nhanh chóng trở nên rườm rà. Thay vào đó, bạn có thể dùng [model factories](/docs/{{version}}/eloquent-factories) để tạo lượng lớn record một cách thuận tiện. Trước tiên, hãy xem [tài liệu model factory](/docs/{{version}}/eloquent-factories) để biết cách định nghĩa factory.
+Việc khai báo thủ công attribute cho từng model cần seed sẽ nhanh chóng trở nên rườm rà. Thay vào đó, bạn có thể dùng [model factories](/eloquent-factories) để tạo lượng lớn record một cách thuận tiện. Trước tiên, hãy xem [tài liệu model factory](/eloquent-factories) để biết cách định nghĩa factory.
 
 Ví dụ, đoạn code sau tạo 50 user và mỗi user có một post liên quan:
 

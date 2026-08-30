@@ -5,9 +5,9 @@
 
 Trong nhiều ứng dụng web hiện đại, WebSocket được sử dụng để xây dựng giao diện người dùng realtime và tự động cập nhật. Khi dữ liệu trên server thay đổi, một thông điệp thường được gửi qua kết nối WebSocket để client xử lý. WebSocket là giải pháp hiệu quả hơn so với việc liên tục polling server của ứng dụng để kiểm tra những thay đổi dữ liệu cần phản ánh lên giao diện.
 
-Ví dụ, giả sử ứng dụng có thể xuất dữ liệu của người dùng thành file CSV và gửi file đó qua email. Tuy nhiên, việc tạo file CSV mất vài phút, vì vậy bạn chọn tạo và gửi CSV trong một [queued job](/docs/{{version}}/queues). Khi CSV đã được tạo và gửi cho người dùng, chúng ta có thể sử dụng event broadcasting để phát một event `App\Events\UserDataExported` cho JavaScript của ứng dụng nhận. Sau khi nhận event, ứng dụng có thể hiển thị thông báo rằng CSV đã được gửi qua email mà người dùng không cần tải lại trang.
+Ví dụ, giả sử ứng dụng có thể xuất dữ liệu của người dùng thành file CSV và gửi file đó qua email. Tuy nhiên, việc tạo file CSV mất vài phút, vì vậy bạn chọn tạo và gửi CSV trong một [queued job](/queues). Khi CSV đã được tạo và gửi cho người dùng, chúng ta có thể sử dụng event broadcasting để phát một event `App\Events\UserDataExported` cho JavaScript của ứng dụng nhận. Sau khi nhận event, ứng dụng có thể hiển thị thông báo rằng CSV đã được gửi qua email mà người dùng không cần tải lại trang.
 
-Để hỗ trợ xây dựng các tính năng như vậy, Laravel giúp bạn dễ dàng "broadcast" các [event](/docs/{{version}}/events) phía server qua kết nối WebSocket. Broadcasting event của Laravel cho phép ứng dụng Laravel phía server và ứng dụng JavaScript phía client dùng chung tên event và dữ liệu.
+Để hỗ trợ xây dựng các tính năng như vậy, Laravel giúp bạn dễ dàng "broadcast" các [event](/events) phía server qua kết nối WebSocket. Broadcasting event của Laravel cho phép ứng dụng Laravel phía server và ứng dụng JavaScript phía client dùng chung tên event và dữ liệu.
 
 Các khái niệm cốt lõi của broadcasting khá đơn giản: client kết nối tới các channel có tên ở frontend, trong khi ứng dụng Laravel broadcast event tới các channel đó ở backend. Các event này có thể chứa bất kỳ dữ liệu bổ sung nào bạn muốn cung cấp cho frontend.
 
@@ -17,7 +17,7 @@ Các khái niệm cốt lõi của broadcasting khá đơn giản: client kết 
 Mặc định, Laravel cung cấp ba broadcasting driver phía server để bạn lựa chọn: [Laravel Reverb](https://reverb.laravel.com), [Pusher Channels](https://pusher.com/channels) và [Ably](https://ably.com).
 
 > [!NOTE]
-> Trước khi tìm hiểu sâu về event broadcasting, hãy chắc chắn rằng bạn đã đọc tài liệu Laravel về [event và listener](/docs/{{version}}/events).
+> Trước khi tìm hiểu sâu về event broadcasting, hãy chắc chắn rằng bạn đã đọc tài liệu Laravel về [event và listener](/events).
 
 <a name="quickstart"></a>
 ## Bắt đầu nhanh
@@ -30,17 +30,17 @@ php artisan install:broadcasting
 
 Lệnh `install:broadcasting` sẽ hỏi bạn muốn sử dụng dịch vụ event broadcasting nào. Ngoài ra, lệnh sẽ tạo file cấu hình `config/broadcasting.php` và file `routes/channels.php`, nơi bạn có thể đăng ký các route và callback dùng để authorization broadcast của ứng dụng.
 
-Laravel hỗ trợ sẵn nhiều broadcast driver: [Laravel Reverb](/docs/{{version}}/reverb), [Pusher Channels](https://pusher.com/channels), [Ably](https://ably.com), cùng driver `log` dành cho phát triển local và debug. Ngoài ra còn có driver `null`, cho phép tắt broadcasting trong quá trình test. File cấu hình `config/broadcasting.php` có sẵn ví dụ cấu hình cho từng driver này.
+Laravel hỗ trợ sẵn nhiều broadcast driver: [Laravel Reverb](/reverb), [Pusher Channels](https://pusher.com/channels), [Ably](https://ably.com), cùng driver `log` dành cho phát triển local và debug. Ngoài ra còn có driver `null`, cho phép tắt broadcasting trong quá trình test. File cấu hình `config/broadcasting.php` có sẵn ví dụ cấu hình cho từng driver này.
 
 Toàn bộ cấu hình event broadcasting của ứng dụng được lưu trong file `config/broadcasting.php`. Nếu file này chưa tồn tại trong ứng dụng thì cũng không cần lo lắng; nó sẽ được tạo khi bạn chạy lệnh Artisan `install:broadcasting`.
 
 <a name="quickstart-next-steps"></a>
 #### Bước tiếp theo
 
-Sau khi bật event broadcasting, bạn có thể tìm hiểu thêm về [định nghĩa broadcast event](#defining-broadcast-events) và [lắng nghe event](#listening-for-events). Nếu đang sử dụng [starter kit](/docs/{{version}}/starter-kits) React, Vue hoặc Svelte của Laravel, bạn có thể lắng nghe event bằng [hook useEcho](#using-react-or-vue) của Echo.
+Sau khi bật event broadcasting, bạn có thể tìm hiểu thêm về [định nghĩa broadcast event](#defining-broadcast-events) và [lắng nghe event](#listening-for-events). Nếu đang sử dụng [starter kit](/starter-kits) React, Vue hoặc Svelte của Laravel, bạn có thể lắng nghe event bằng [hook useEcho](#using-react-or-vue) của Echo.
 
 > [!NOTE]
-> Trước khi broadcast bất kỳ event nào, trước tiên bạn nên cấu hình và chạy một [queue worker](/docs/{{version}}/queues). Toàn bộ event broadcasting được thực hiện thông qua queued job để thời gian phản hồi của ứng dụng không bị ảnh hưởng đáng kể bởi quá trình broadcast event.
+> Trước khi broadcast bất kỳ event nào, trước tiên bạn nên cấu hình và chạy một [queue worker](/queues). Toàn bộ event broadcasting được thực hiện thông qua queued job để thời gian phản hồi của ứng dụng không bị ảnh hưởng đáng kể bởi quá trình broadcast event.
 
 <a name="server-side-installation"></a>
 ## Cài đặt phía server
@@ -61,7 +61,7 @@ php artisan install:broadcasting --reverb
 <a name="reverb-manual-installation"></a>
 #### Cài đặt thủ công
 
-Khi chạy lệnh `install:broadcasting`, bạn sẽ được hỏi có muốn cài [Laravel Reverb](/docs/{{version}}/reverb) hay không. Bạn cũng có thể cài Reverb thủ công bằng Composer:
+Khi chạy lệnh `install:broadcasting`, bạn sẽ được hỏi có muốn cài [Laravel Reverb](/reverb) hay không. Bạn cũng có thể cài Reverb thủ công bằng Composer:
 
 ```shell
 composer require laravel/reverb
@@ -73,7 +73,7 @@ Sau khi package được cài đặt, bạn có thể chạy lệnh cài đặt 
 php artisan reverb:install
 ```
 
-Bạn có thể xem hướng dẫn chi tiết về cài đặt và sử dụng Reverb trong [tài liệu Reverb](/docs/{{version}}/reverb).
+Bạn có thể xem hướng dẫn chi tiết về cài đặt và sử dụng Reverb trong [tài liệu Reverb](/reverb).
 
 <a name="pusher-channels"></a>
 ### Pusher Channels
@@ -138,7 +138,7 @@ php artisan install:broadcasting --ably
 composer require ably/ably-php
 ```
 
-Tiếp theo, bạn nên cấu hình thông tin xác thực Ably trong file cấu hình `config/broadcasting.php`. File này đã bao gồm sẵn một cấu hình Ably mẫu, cho phép bạn nhanh chóng chỉ định key. Thông thường, giá trị này nên được thiết lập thông qua [biến môi trường](/docs/{{version}}/configuration#environment-configuration) `ABLY_KEY`:
+Tiếp theo, bạn nên cấu hình thông tin xác thực Ably trong file cấu hình `config/broadcasting.php`. File này đã bao gồm sẵn một cấu hình Ably mẫu, cho phép bạn nhanh chóng chỉ định key. Thông thường, giá trị này nên được thiết lập thông qua [biến môi trường](/configuration#environment-configuration) `ABLY_KEY`:
 
 ```ini
 ABLY_KEY=your-ably-key
@@ -344,7 +344,7 @@ npm run build
 ```
 
 > [!NOTE]
-> Để tìm hiểu thêm về cách biên dịch JavaScript asset của ứng dụng, hãy tham khảo tài liệu về [Vite](/docs/{{version}}/vite).
+> Để tìm hiểu thêm về cách biên dịch JavaScript asset của ứng dụng, hãy tham khảo tài liệu về [Vite](/vite).
 
 <a name="using-an-existing-client-instance"></a>
 #### Sử dụng client instance hiện có
@@ -453,7 +453,7 @@ npm run dev
 ```
 
 > [!NOTE]
-> Để tìm hiểu thêm về cách biên dịch JavaScript asset của ứng dụng, hãy tham khảo tài liệu về [Vite](/docs/{{version}}/vite).
+> Để tìm hiểu thêm về cách biên dịch JavaScript asset của ứng dụng, hãy tham khảo tài liệu về [Vite](/vite).
 
 <a name="concept-overview"></a>
 ## Tổng quan khái niệm
@@ -645,7 +645,7 @@ class ServerCreated implements ShouldBroadcast
 }
 ```
 
-Sau khi triển khai interface `ShouldBroadcast`, bạn chỉ cần [phát sự kiện](/docs/{{version}}/events) như bình thường. Khi sự kiện đã được phát, một [queued job](/docs/{{version}}/queues) sẽ tự động broadcast sự kiện bằng broadcast driver mà bạn đã cấu hình.
+Sau khi triển khai interface `ShouldBroadcast`, bạn chỉ cần [phát sự kiện](/events) như bình thường. Khi sự kiện đã được phát, một [queued job](/queues) sẽ tự động broadcast sự kiện bằng broadcast driver mà bạn đã cấu hình.
 
 <a name="broadcast-name"></a>
 ### Tên broadcast
@@ -781,7 +781,7 @@ class ServerCreated implements ShouldBroadcast, ShouldDispatchAfterCommit
 ```
 
 > [!NOTE]
-> Để tìm hiểu thêm về cách xử lý các vấn đề này, hãy xem tài liệu về [queued job và database transaction](/docs/{{version}}/queues#jobs-and-database-transactions).
+> Để tìm hiểu thêm về cách xử lý các vấn đề này, hãy xem tài liệu về [queued job và database transaction](/queues#jobs-and-database-transactions).
 
 <a name="authorizing-channels"></a>
 ## Ủy quyền channel
@@ -824,7 +824,7 @@ php artisan channel:list
 <a name="authorization-callback-model-binding"></a>
 #### Authorization Callback Model Binding
 
-Tương tự HTTP route, channel route cũng có thể tận dụng [route model binding](/docs/{{version}}/routing#route-model-binding) implicit và explicit. Ví dụ, thay vì nhận order ID dạng chuỗi hoặc số, bạn có thể yêu cầu trực tiếp một instance của model `Order`:
+Tương tự HTTP route, channel route cũng có thể tận dụng [route model binding](/routing#route-model-binding) implicit và explicit. Ví dụ, thay vì nhận order ID dạng chuỗi hoặc số, bạn có thể yêu cầu trực tiếp một instance của model `Order`:
 
 ```php
 use App\Models\Order;
@@ -836,7 +836,7 @@ Broadcast::channel('orders.{order}', function (User $user, Order $order) {
 ```
 
 > [!WARNING]
-> Không giống HTTP route model binding, channel model binding không hỗ trợ tự động [giới hạn phạm vi implicit model binding](/docs/{{version}}/routing#implicit-model-binding-scoping). Tuy nhiên, điều này hiếm khi gây vấn đề vì hầu hết channel có thể được giới hạn phạm vi dựa trên primary key duy nhất của một model.
+> Không giống HTTP route model binding, channel model binding không hỗ trợ tự động [giới hạn phạm vi implicit model binding](/routing#implicit-model-binding-scoping). Tuy nhiên, điều này hiếm khi gây vấn đề vì hầu hết channel có thể được giới hạn phạm vi dựa trên primary key duy nhất của một model.
 
 <a name="authorization-callback-authentication"></a>
 #### Authorization Callback Authentication
@@ -894,7 +894,7 @@ class OrderChannel
 ```
 
 > [!NOTE]
-> Tương tự nhiều class khác trong Laravel, channel class sẽ tự động được resolve bởi [service container](/docs/{{version}}/container). Vì vậy, bạn có thể type-hint bất kỳ dependency nào mà channel cần trong constructor.
+> Tương tự nhiều class khác trong Laravel, channel class sẽ tự động được resolve bởi [service container](/container). Vì vậy, bạn có thể type-hint bất kỳ dependency nào mà channel cần trong constructor.
 
 <a name="broadcasting-events"></a>
 ## Broadcast sự kiện
@@ -1028,7 +1028,7 @@ Broadcast::private('orders.'.$order->id)->send();
 Broadcast::presence('channels.'.$channel->id)->send();
 ```
 
-Khi broadcast anonymous event bằng phương thức `send`, event sẽ được dispatch tới [queue](/docs/{{version}}/queues) của ứng dụng để xử lý. Tuy nhiên, nếu muốn broadcast event ngay lập tức, bạn có thể sử dụng phương thức `sendNow`:
+Khi broadcast anonymous event bằng phương thức `send`, event sẽ được dispatch tới [queue](/queues) của ứng dụng để xử lý. Tuy nhiên, nếu muốn broadcast event ngay lập tức, bạn có thể sử dụng phương thức `sendNow`:
 
 ```php
 Broadcast::on('orders.'.$order->id)->sendNow();
@@ -1047,7 +1047,7 @@ Broadcast::on('orders.'.$order->id)
 
 Khi queue server của ứng dụng không khả dụng hoặc Laravel gặp lỗi trong lúc broadcast event, một exception sẽ được ném ra và thường khiến người dùng cuối nhìn thấy lỗi ứng dụng. Vì event broadcasting thường chỉ bổ trợ cho chức năng cốt lõi, bạn có thể ngăn các exception này làm gián đoạn trải nghiệm người dùng bằng cách triển khai interface `ShouldRescue` trên event.
 
-Các event triển khai interface `ShouldRescue` sẽ tự động sử dụng [helper `rescue`](/docs/{{version}}/helpers#method-rescue) của Laravel trong quá trình broadcast. Helper này bắt mọi exception, báo cáo chúng tới exception handler của ứng dụng để ghi log và cho phép ứng dụng tiếp tục thực thi bình thường mà không làm gián đoạn luồng thao tác của người dùng:
+Các event triển khai interface `ShouldRescue` sẽ tự động sử dụng [helper `rescue`](/helpers#method-rescue) của Laravel trong quá trình broadcast. Helper này bắt mọi exception, báo cáo chúng tới exception handler của ứng dụng để ghi log và cho phép ứng dụng tiếp tục thực thi bình thường mà không làm gián đoạn luồng thao tác của người dùng:
 
 ```php
 <?php
@@ -1530,7 +1530,7 @@ Echo.join(`chat.${roomId}`)
 > [!WARNING]
 > Trước khi đọc phần tài liệu về broadcast model bên dưới, bạn nên làm quen với các khái niệm tổng quát về dịch vụ broadcast model của Laravel, cũng như cách tạo và lắng nghe broadcast event theo cách thủ công.
 
-Việc broadcast event khi [Eloquent model](/docs/{{version}}/eloquent) của ứng dụng được tạo, cập nhật hoặc xóa là nhu cầu phổ biến. Bạn có thể thực hiện điều này bằng cách tự [định nghĩa custom event cho các thay đổi trạng thái của Eloquent model](/docs/{{version}}/eloquent#events) và đánh dấu các event đó bằng interface `ShouldBroadcast`.
+Việc broadcast event khi [Eloquent model](/eloquent) của ứng dụng được tạo, cập nhật hoặc xóa là nhu cầu phổ biến. Bạn có thể thực hiện điều này bằng cách tự [định nghĩa custom event cho các thay đổi trạng thái của Eloquent model](/eloquent#events) và đánh dấu các event đó bằng interface `ShouldBroadcast`.
 
 Tuy nhiên, nếu các event này không được dùng cho mục đích nào khác trong ứng dụng, việc tạo riêng các event class chỉ để broadcast có thể khá rườm rà. Để giải quyết vấn đề này, Laravel cho phép bạn chỉ định để Eloquent model tự động broadcast các thay đổi trạng thái của nó.
 
@@ -1864,7 +1864,7 @@ channel().listenForWhisper('typing', (e) => {
 <a name="notifications"></a>
 ## Notification
 
-Bằng cách kết hợp event broadcasting với [notification](/docs/{{version}}/notifications), ứng dụng JavaScript có thể nhận notification mới ngay khi chúng xuất hiện mà không cần tải lại trang. Trước khi bắt đầu, hãy đọc tài liệu về cách sử dụng [broadcast notification channel](/docs/{{version}}/notifications#broadcast-notifications).
+Bằng cách kết hợp event broadcasting với [notification](/notifications), ứng dụng JavaScript có thể nhận notification mới ngay khi chúng xuất hiện mà không cần tải lại trang. Trước khi bắt đầu, hãy đọc tài liệu về cách sử dụng [broadcast notification channel](/notifications#broadcast-notifications).
 
 Sau khi cấu hình notification sử dụng broadcast channel, bạn có thể lắng nghe các broadcast event bằng phương thức `notification` của Echo. Hãy nhớ rằng tên channel phải khớp với tên class của entity nhận notification:
 

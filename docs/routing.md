@@ -16,7 +16,7 @@ Route::get('/greeting', function () {
 <a name="the-default-route-files"></a>
 ### Các file route mặc định
 
-Tất cả route của Laravel được định nghĩa trong các file route nằm trong thư mục `routes`. Laravel tự động nạp các file này dựa trên cấu hình được khai báo trong file `bootstrap/app.php` của ứng dụng. File `routes/web.php` định nghĩa các route dành cho giao diện web. Những route này được gán [nhóm middleware](/docs/{{version}}/middleware#laravels-default-middleware-groups) `web`, cung cấp các tính năng như trạng thái session và bảo vệ CSRF.
+Tất cả route của Laravel được định nghĩa trong các file route nằm trong thư mục `routes`. Laravel tự động nạp các file này dựa trên cấu hình được khai báo trong file `bootstrap/app.php` của ứng dụng. File `routes/web.php` định nghĩa các route dành cho giao diện web. Những route này được gán [nhóm middleware](/middleware#laravels-default-middleware-groups) `web`, cung cấp các tính năng như trạng thái session và bảo vệ CSRF.
 
 Với phần lớn ứng dụng, bạn sẽ bắt đầu bằng việc định nghĩa route trong file `routes/web.php`. Có thể truy cập các route được định nghĩa tại đây bằng cách nhập URL tương ứng vào trình duyệt. Ví dụ, route sau có thể được truy cập tại `http://example.com/user`:
 
@@ -35,7 +35,7 @@ Nếu ứng dụng cũng cung cấp API stateless, bạn có thể bật định
 php artisan install:api
 ```
 
-Lệnh `install:api` cài đặt [Laravel Sanctum](/docs/{{version}}/sanctum), cung cấp một authentication guard dựa trên API token vừa mạnh mẽ vừa đơn giản, có thể dùng để xác thực các client API bên thứ ba, SPA hoặc ứng dụng di động. Đồng thời, lệnh `install:api` cũng tạo file `routes/api.php`:
+Lệnh `install:api` cài đặt [Laravel Sanctum](/sanctum), cung cấp một authentication guard dựa trên API token vừa mạnh mẽ vừa đơn giản, có thể dùng để xác thực các client API bên thứ ba, SPA hoặc ứng dụng di động. Đồng thời, lệnh `install:api` cũng tạo file `routes/api.php`:
 
 ```php
 Route::get('/user', function (Request $request) {
@@ -45,7 +45,7 @@ Route::get('/user', function (Request $request) {
 
 Tất nhiên, với những route cần được truy cập công khai, bạn có thể không sử dụng middleware `auth:sanctum`.
 
-Các route trong `routes/api.php` là stateless và được gán vào [nhóm middleware](/docs/{{version}}/middleware#laravels-default-middleware-groups) `api`. Ngoài ra, tiền tố URI `/api` được tự động áp dụng cho các route này, vì vậy bạn không cần thêm thủ công vào từng route trong file. Có thể thay đổi tiền tố bằng cách chỉnh file `bootstrap/app.php` của ứng dụng:
+Các route trong `routes/api.php` là stateless và được gán vào [nhóm middleware](/middleware#laravels-default-middleware-groups) `api`. Ngoài ra, tiền tố URI `/api` được tự động áp dụng cho các route này, vì vậy bạn không cần thêm thủ công vào từng route trong file. Có thể thay đổi tiền tố bằng cách chỉnh file `bootstrap/app.php` của ứng dụng:
 
 ```php
 ->withRouting(
@@ -87,7 +87,7 @@ Route::any('/', function () {
 <a name="dependency-injection"></a>
 #### Dependency Injection
 
-Bạn có thể type-hint bất kỳ dependency nào mà route cần ngay trong signature của callback. Các dependency đã khai báo sẽ được [service container](/docs/{{version}}/container) của Laravel tự động resolve và inject vào callback. Ví dụ, có thể type-hint class `Illuminate\Http\Request` để HTTP request hiện tại được tự động inject vào callback của route:
+Bạn có thể type-hint bất kỳ dependency nào mà route cần ngay trong signature của callback. Các dependency đã khai báo sẽ được [service container](/container) của Laravel tự động resolve và inject vào callback. Ví dụ, có thể type-hint class `Illuminate\Http\Request` để HTTP request hiện tại được tự động inject vào callback của route:
 
 ```php
 use Illuminate\Http\Request;
@@ -100,7 +100,7 @@ Route::get('/users', function (Request $request) {
 <a name="csrf-protection"></a>
 #### Bảo vệ CSRF
 
-Hãy nhớ rằng mọi HTML form gửi tới route `POST`, `PUT`, `PATCH` hoặc `DELETE` được định nghĩa trong file route `web` đều cần chứa trường CSRF token. Nếu không, request sẽ bị từ chối. Bạn có thể tìm hiểu thêm trong [tài liệu CSRF](/docs/{{version}}/csrf):
+Hãy nhớ rằng mọi HTML form gửi tới route `POST`, `PUT`, `PATCH` hoặc `DELETE` được định nghĩa trong file route `web` đều cần chứa trường CSRF token. Nếu không, request sẽ bị từ chối. Bạn có thể tìm hiểu thêm trong [tài liệu CSRF](/csrf):
 
 ```blade
 <form method="POST" action="/profile">
@@ -136,7 +136,7 @@ Route::permanentRedirect('/here', '/there');
 <a name="view-routes"></a>
 ### Route trả về view
 
-Nếu route chỉ cần trả về một [view](/docs/{{version}}/views), bạn có thể dùng method `Route::view`. Tương tự `redirect`, method này là cách viết tắt giúp bạn không phải định nghĩa đầy đủ route hoặc controller. `view` nhận URI làm đối số thứ nhất và tên view làm đối số thứ hai. Ngoài ra, bạn có thể truyền một mảng dữ liệu cho view thông qua đối số thứ ba tùy chọn:
+Nếu route chỉ cần trả về một [view](/views), bạn có thể dùng method `Route::view`. Tương tự `redirect`, method này là cách viết tắt giúp bạn không phải định nghĩa đầy đủ route hoặc controller. `view` nhận URI làm đối số thứ nhất và tên view làm đối số thứ hai. Ngoài ra, bạn có thể truyền một mảng dữ liệu cho view thông qua đối số thứ ba tùy chọn:
 
 ```php
 Route::view('/welcome', 'welcome');
@@ -438,7 +438,7 @@ $url = route('profile', ['id' => 1, 'photos' => 'yes']);
 ```
 
 > [!NOTE]
-> Đôi khi bạn có thể muốn chỉ định giá trị mặc định cho tham số URL trên toàn bộ request, chẳng hạn locale hiện tại. Khi đó, bạn có thể sử dụng [method URL::defaults](/docs/{{version}}/urls#default-values).
+> Đôi khi bạn có thể muốn chỉ định giá trị mặc định cho tham số URL trên toàn bộ request, chẳng hạn locale hiện tại. Khi đó, bạn có thể sử dụng [method URL::defaults](/urls#default-values).
 
 <a name="inspecting-the-current-route"></a>
 #### Kiểm tra route hiện tại
@@ -475,7 +475,7 @@ Các group lồng nhau sẽ cố gắng "merge" thuộc tính với group cha m�
 <a name="route-group-middleware"></a>
 ### Middleware
 
-Để gán [middleware](/docs/{{version}}/middleware) cho tất cả route trong một group, hãy dùng method `middleware` trước khi định nghĩa group. Middleware được thực thi theo thứ tự xuất hiện trong mảng:
+Để gán [middleware](/middleware) cho tất cả route trong một group, hãy dùng method `middleware` trước khi định nghĩa group. Middleware được thực thi theo thứ tự xuất hiện trong mảng:
 
 ```php
 Route::middleware(['first', 'second'])->group(function () {
@@ -492,7 +492,7 @@ Route::middleware(['first', 'second'])->group(function () {
 <a name="route-group-controllers"></a>
 ### Controller
 
-Nếu một nhóm route đều sử dụng cùng một [controller](/docs/{{version}}/controllers), bạn có thể dùng method `controller` để xác định controller chung cho cả group. Sau đó, khi định nghĩa route, bạn chỉ cần chỉ định method của controller cần gọi:
+Nếu một nhóm route đều sử dụng cùng một [controller](/controllers), bạn có thể dùng method `controller` để xác định controller chung cho cả group. Sau đó, khi định nghĩa route, bạn chỉ cần chỉ định method của controller cần gọi:
 
 ```php
 use App\Http\Controllers\OrderController;
@@ -581,7 +581,7 @@ public function show(User $user)
 <a name="implicit-soft-deleted-models"></a>
 #### Model đã soft delete
 
-Thông thường, implicit model binding sẽ không lấy các model đã được [soft delete](/docs/{{version}}/eloquent#soft-deleting). Tuy nhiên, bạn có thể yêu cầu implicit binding lấy cả các model này bằng cách chain method `withTrashed` vào định nghĩa route:
+Thông thường, implicit model binding sẽ không lấy các model đã được [soft delete](/eloquent#soft-deleting). Tuy nhiên, bạn có thể yêu cầu implicit binding lấy cả các model này bằng cách chain method `withTrashed` vào định nghĩa route:
 
 ```php
 use App\Models\User;
@@ -941,7 +941,7 @@ RateLimiter::for('resource-not-found', function (Request $request) {
 <a name="attaching-rate-limiters-to-routes"></a>
 ### Gắn Rate Limiter vào route
 
-Rate limiter có thể được gắn vào route hoặc nhóm route bằng [middleware](/docs/{{version}}/middleware) `throttle`. Middleware này nhận tên rate limiter bạn muốn gán cho route:
+Rate limiter có thể được gắn vào route hoặc nhóm route bằng [middleware](/middleware) `throttle`. Middleware này nhận tên rate limiter bạn muốn gán cho route:
 
 ```php
 Route::middleware(['throttle:uploads'])->group(function () {
@@ -979,7 +979,7 @@ HTML form không hỗ trợ trực tiếp các action `PUT`, `PATCH` hoặc `DEL
 </form>
 ```
 
-Để thuận tiện, bạn có thể dùng [Blade directive](/docs/{{version}}/blade) `@method` để tạo input `_method`:
+Để thuận tiện, bạn có thể dùng [Blade directive](/blade) `@method` để tạo input `_method`:
 
 ```blade
 <form action="/example" method="POST">
@@ -1001,12 +1001,12 @@ $name = Route::currentRouteName(); // string
 $action = Route::currentRouteAction(); // string
 ```
 
-Bạn có thể tham khảo tài liệu API của [class nền bên dưới facade Route](https://api.laravel.com/docs/{{version}}/Illuminate/Routing/Router.html) và [Route instance](https://api.laravel.com/docs/{{version}}/Illuminate/Routing/Route.html) để xem toàn bộ method có trên router và route class.
+Bạn có thể tham khảo tài liệu API của [class nền bên dưới facade Route](https://api.laravel.com/docs/13.x/Illuminate/Routing/Router.html) và [Route instance](https://api.laravel.com/docs/13.x/Illuminate/Routing/Route.html) để xem toàn bộ method có trên router và route class.
 
 <a name="cors"></a>
 ## Cross-Origin Resource Sharing (CORS)
 
-Laravel có thể tự động phản hồi các HTTP request CORS `OPTIONS` bằng các giá trị bạn cấu hình. Request `OPTIONS` được xử lý tự động bởi [middleware](/docs/{{version}}/middleware) `HandleCors`, vốn được đưa sẵn vào global middleware stack của ứng dụng.
+Laravel có thể tự động phản hồi các HTTP request CORS `OPTIONS` bằng các giá trị bạn cấu hình. Request `OPTIONS` được xử lý tự động bởi [middleware](/middleware) `HandleCors`, vốn được đưa sẵn vào global middleware stack của ứng dụng.
 
 Đôi khi bạn cần tùy chỉnh cấu hình CORS của ứng dụng. Bạn có thể publish file cấu hình `cors` bằng lệnh Artisan `config:publish`:
 

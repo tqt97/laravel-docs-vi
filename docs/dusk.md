@@ -29,7 +29,7 @@ php artisan dusk:install
 Tiếp theo, hãy thiết lập biến môi trường `APP_URL` trong file `.env` của ứng dụng. Giá trị này phải khớp với URL mà bạn sử dụng để truy cập ứng dụng trong trình duyệt.
 
 > [!NOTE]
-> Nếu bạn đang sử dụng [Laravel Sail](/docs/{{version}}/sail) để quản lý môi trường phát triển cục bộ, hãy tham khảo thêm tài liệu Sail về [cấu hình và chạy Dusk test](/docs/{{version}}/sail#laravel-dusk).
+> Nếu bạn đang sử dụng [Laravel Sail](/sail) để quản lý môi trường phát triển cục bộ, hãy tham khảo thêm tài liệu Sail về [cấu hình và chạy Dusk test](/sail#laravel-dusk).
 
 <a name="managing-chromedriver-installations"></a>
 ### Quản lý cài đặt ChromeDriver
@@ -251,7 +251,7 @@ php artisan dusk --group=foo
 ```
 
 > [!NOTE]
-> Nếu bạn đang sử dụng [Laravel Sail](/docs/{{version}}/sail) để quản lý môi trường phát triển cục bộ, hãy tham khảo tài liệu Sail về [cấu hình và chạy Dusk test](/docs/{{version}}/sail#laravel-dusk).
+> Nếu bạn đang sử dụng [Laravel Sail](/sail) để quản lý môi trường phát triển cục bộ, hãy tham khảo tài liệu Sail về [cấu hình và chạy Dusk test](/sail#laravel-dusk).
 
 <a name="manually-starting-chromedriver"></a>
 #### Khởi động ChromeDriver thủ công
@@ -391,7 +391,7 @@ Phương thức `visit` có thể được dùng để điều hướng đến m
 $browser->visit('/login');
 ```
 
-Bạn có thể sử dụng phương thức `visitRoute` để điều hướng đến một [named route](/docs/{{version}}/routing#named-routes):
+Bạn có thể sử dụng phương thức `visitRoute` để điều hướng đến một [named route](/routing#named-routes):
 
 ```php
 $browser->visitRoute($routeName, $parameters);
@@ -447,7 +447,7 @@ $browser->move($x = 100, $y = 100);
 <a name="browser-macros"></a>
 ### Browser Macro
 
-Nếu muốn định nghĩa một phương thức browser tùy chỉnh có thể tái sử dụng trong nhiều test, bạn có thể dùng phương thức `macro` trên class `Browser`. Thông thường, bạn nên gọi phương thức này từ phương thức `boot` của một [service provider](/docs/{{version}}/providers):
+Nếu muốn định nghĩa một phương thức browser tùy chỉnh có thể tái sử dụng trong nhiều test, bạn có thể dùng phương thức `macro` trên class `Browser`. Thông thường, bạn nên gọi phương thức này từ phương thức `boot` của một [service provider](/providers):
 
 ```php
 <?php
@@ -838,7 +838,7 @@ $browser->withKeyboard(function (Keyboard $keyboard) {
 <a name="keyboard-macros"></a>
 #### Macro bàn phím
 
-Nếu muốn định nghĩa các tương tác bàn phím tùy chỉnh để dễ dàng tái sử dụng trong toàn bộ test suite, bạn có thể dùng phương thức `macro` của lớp `Keyboard`. Thông thường, phương thức này nên được gọi từ `boot` của một [service provider](/docs/{{version}}/providers):
+Nếu muốn định nghĩa các tương tác bàn phím tùy chỉnh để dễ dàng tái sử dụng trong toàn bộ test suite, bạn có thể dùng phương thức `macro` của lớp `Keyboard`. Thông thường, phương thức này nên được gọi từ `boot` của một [service provider](/providers):
 
 ```php
 <?php
@@ -1211,7 +1211,7 @@ $browser->waitForLocation('/secret');
 $browser->waitForLocation('https://example.com/path');
 ```
 
-Bạn cũng có thể chờ location của một [named route](/docs/{{version}}/routing#named-routes):
+Bạn cũng có thể chờ location của một [named route](/routing#named-routes):
 
 ```php
 $browser->waitForRoute($routeName, $parameters);
@@ -1550,7 +1550,7 @@ $browser->assertPathIsNot('/home');
 <a name="assert-route-is"></a>
 #### assertRouteIs
 
-Xác nhận URL hiện tại khớp với URL của [named route](/docs/{{version}}/routing#named-routes) đã cho:
+Xác nhận URL hiện tại khớp với URL của [named route](/routing#named-routes) đã cho:
 
 ```php
 $browser->assertRouteIs($name, $parameters);

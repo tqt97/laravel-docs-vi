@@ -4,12 +4,12 @@
 ## Giới thiệu
 Khi xây dựng API bằng Laravel, bạn thường cần chuyển model và relationship thành array hoặc JSON. Eloquent cung cấp các phương thức thuận tiện cho những chuyển đổi này, đồng thời cho phép kiểm soát attribute nào được đưa vào biểu diễn đã tuần tự hóa của model.
 > [!NOTE]
-> Nếu cần cách mạnh mẽ hơn để xử lý việc serialize Eloquent model và collection thành JSON, hãy xem tài liệu [Eloquent API Resources](/docs/{{version}}/eloquent-resources).
+> Nếu cần cách mạnh mẽ hơn để xử lý việc serialize Eloquent model và collection thành JSON, hãy xem tài liệu [Eloquent API Resources](/eloquent-resources).
 <a name="serializing-models-and-collections"></a>
 ## Tuần tự hóa Model và Collection
 <a name="serializing-to-arrays"></a>
 ### Tuần tự hóa thành Array
-Để chuyển một model cùng các [relationship](/docs/{{version}}/eloquent-relationships) đã load thành array, hãy dùng phương thức `toArray`. Phương thức này chạy đệ quy, vì vậy mọi attribute và relation — bao gồm relation của relation — đều được chuyển thành array:
+Để chuyển một model cùng các [relationship](/eloquent-relationships) đã load thành array, hãy dùng phương thức `toArray`. Phương thức này chạy đệ quy, vì vậy mọi attribute và relation — bao gồm relation của relation — đều được chuyển thành array:
 ```php
 use App\Models\User;
 
@@ -23,7 +23,7 @@ $user = User::first();
 
 return $user->attributesToArray();
 ```
-Bạn cũng có thể chuyển toàn bộ [collection](/docs/{{version}}/eloquent-collections) model thành array bằng cách gọi `toArray` trên collection instance:
+Bạn cũng có thể chuyển toàn bộ [collection](/eloquent-collections) model thành array bằng cách gọi `toArray` trên collection instance:
 ```php
 $users = User::all();
 
@@ -116,7 +116,7 @@ return $user->setHidden(['email', 'password', 'remember_token'])->toArray();
 
 <a name="appending-values-to-json"></a>
 ## Bổ sung giá trị vào JSON
-Đôi khi khi chuyển model thành array hoặc JSON, bạn muốn bổ sung những attribute không có column tương ứng trong database. Trước tiên, hãy định nghĩa một [accessor](/docs/{{version}}/eloquent-mutators) cho value đó:
+Đôi khi khi chuyển model thành array hoặc JSON, bạn muốn bổ sung những attribute không có column tương ứng trong database. Trước tiên, hãy định nghĩa một [accessor](/eloquent-mutators) cho value đó:
 ```php
 <?php
 
@@ -186,7 +186,7 @@ protected function serializeDate(DateTimeInterface $date): string
 
 <a name="customizing-the-date-format-per-attribute"></a>
 #### Tùy chỉnh định dạng Date theo từng Attribute
-Bạn có thể tùy chỉnh định dạng tuần tự hóa của từng Eloquent date attribute bằng cách chỉ định định dạng date trong [khai báo cast](/docs/{{version}}/eloquent-mutators#attribute-casting) của model:
+Bạn có thể tùy chỉnh định dạng tuần tự hóa của từng Eloquent date attribute bằng cách chỉ định định dạng date trong [khai báo cast](/eloquent-mutators#attribute-casting) của model:
 ```php
 protected function casts(): array
 {

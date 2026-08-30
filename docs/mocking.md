@@ -6,7 +6,7 @@ Khi kiểm thử ứng dụng Laravel, đôi lúc bạn cần "mock" một số 
 Laravel cung cấp sẵn các phương thức hữu ích để mock event, job và các facade khác. Các helper này chủ yếu là một lớp tiện ích trên Mockery, giúp bạn tránh phải tự viết những lời gọi Mockery phức tạp.
 <a name="mocking-objects"></a>
 ## Mocking đối tượng
-Khi mock một object sẽ được inject vào ứng dụng thông qua [service container](/docs/{{version}}/container), bạn cần bind instance mock vào container dưới dạng binding `instance`. Điều này yêu cầu container sử dụng object mock của bạn thay vì tự khởi tạo object thật:
+Khi mock một object sẽ được inject vào ứng dụng thông qua [service container](/container), bạn cần bind instance mock vào container dưới dạng binding `instance`. Điều này yêu cầu container sử dụng object mock của bạn thay vì tự khởi tạo object thật:
 ```php tab=Pest
 use App\Service;
 use Mockery;
@@ -68,7 +68,7 @@ $spy->shouldHaveReceived('process');
 
 <a name="mocking-facades"></a>
 ## Mocking facade
-Khác với lời gọi static method truyền thống, [facade](/docs/{{version}}/facades) — bao gồm cả [real-time facade](/docs/{{version}}/facades#real-time-facades) — có thể được mock. Đây là lợi thế lớn so với static method thông thường và mang lại khả năng kiểm thử tương tự dependency injection truyền thống. Khi test, bạn thường có thể muốn mock lời gọi tới một Laravel facade xuất hiện trong controller. Ví dụ, hãy xem action controller sau:
+Khác với lời gọi static method truyền thống, [facade](/facades) — bao gồm cả [real-time facade](/facades#real-time-facades) — có thể được mock. Đây là lợi thế lớn so với static method thông thường và mang lại khả năng kiểm thử tương tự dependency injection truyền thống. Khi test, bạn thường có thể muốn mock lời gọi tới một Laravel facade xuất hiện trong controller. Ví dụ, hãy xem action controller sau:
 ```php
 <?php
 
@@ -91,7 +91,7 @@ class UserController extends Controller
     }
 }
 ```
-Bạn có thể mock lời gọi tới facade `Cache` bằng phương thức `expects`, phương thức này trả về một instance mock của [Mockery](https://github.com/padraic/mockery). Vì facade thực chất được resolve và quản lý bởi [service container](/docs/{{version}}/container), chúng dễ kiểm thử hơn nhiều so với một static class thông thường. Ví dụ, hãy mock lời gọi tới phương thức `get` của facade `Cache`:
+Bạn có thể mock lời gọi tới facade `Cache` bằng phương thức `expects`, phương thức này trả về một instance mock của [Mockery](https://github.com/padraic/mockery). Vì facade thực chất được resolve và quản lý bởi [service container](/container), chúng dễ kiểm thử hơn nhiều so với một static class thông thường. Ví dụ, hãy mock lời gọi tới phương thức `get` của facade `Cache`:
 ```php tab=Pest
 <?php
 
@@ -131,7 +131,7 @@ class UserControllerTest extends TestCase
 }
 ```
 > [!WARNING]
-> Bạn không nên mock facade `Request`. Thay vào đó, hãy truyền input mong muốn vào các [HTTP testing method](/docs/{{version}}/http-tests) như `get` và `post` khi chạy test. Tương tự, thay vì mock facade `Config`, hãy gọi `Config::set` trong test.
+> Bạn không nên mock facade `Request`. Thay vào đó, hãy truyền input mong muốn vào các [HTTP testing method](/http-tests) như `get` và `post` khi chạy test. Tương tự, thay vì mock facade `Config`, hãy gọi `Config::set` trong test.
 <a name="facade-spies"></a>
 ### Spy facade
 Nếu muốn [spy](http://docs.mockery.io/en/latest/reference/spies.html) một facade, bạn có thể gọi phương thức `spy` trên facade tương ứng. Spy tương tự mock, nhưng nó ghi lại mọi tương tác giữa spy và code đang được test, cho phép bạn thực hiện assertion sau khi code đã chạy:

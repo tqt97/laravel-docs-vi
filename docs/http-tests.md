@@ -197,7 +197,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-Session của Laravel thường được dùng để duy trì trạng thái cho người dùng hiện đang được xác thực. Vì vậy, helper `actingAs` cung cấp một cách đơn giản để xác thực một user cụ thể làm user hiện tại. Ví dụ, chúng ta có thể sử dụng [model factory](/docs/{{version}}/eloquent-factories) để tạo và xác thực một user:
+Session của Laravel thường được dùng để duy trì trạng thái cho người dùng hiện đang được xác thực. Vì vậy, helper `actingAs` cung cấp một cách đơn giản để xác thực một user cụ thể làm user hiện tại. Ví dụ, chúng ta có thể sử dụng [model factory](/eloquent-factories) để tạo và xác thực một user:
 
 ```php tab=Pest
 <?php
@@ -924,7 +924,7 @@ $contents = (string) $this->view('welcome');
 <a name="sharing-errors"></a>
 #### Chia sẻ lỗi
 
-Một số view có thể phụ thuộc vào các lỗi được chia sẻ trong [global error bag do Laravel cung cấp](/docs/{{version}}/validation#quick-displaying-the-validation-errors). Để nạp các error message vào error bag, bạn có thể dùng phương thức `withViewErrors`:
+Một số view có thể phụ thuộc vào các lỗi được chia sẻ trong [global error bag do Laravel cung cấp](/validation#quick-displaying-the-validation-errors). Để nạp các error message vào error bag, bạn có thể dùng phương thức `withViewErrors`:
 
 ```php
 $view = $this->withViewErrors([
@@ -937,7 +937,7 @@ $view->assertSee('Please provide a valid name.');
 <a name="rendering-blade-and-components"></a>
 ### Render Blade và Component
 
-Nếu cần, bạn có thể dùng phương thức `blade` để evaluate và render một chuỗi [Blade](/docs/{{version}}/blade) thô. Tương tự phương thức `view`, phương thức `blade` trả về một instance của `Illuminate\Testing\TestView`:
+Nếu cần, bạn có thể dùng phương thức `blade` để evaluate và render một chuỗi [Blade](/blade) thô. Tương tự phương thức `view`, phương thức `blade` trả về một instance của `Illuminate\Testing\TestView`:
 
 ```php
 $view = $this->blade(
@@ -948,7 +948,7 @@ $view = $this->blade(
 $view->assertSee('Taylor');
 ```
 
-Bạn có thể dùng phương thức `component` để evaluate và render một [Blade component](/docs/{{version}}/blade#components). Phương thức `component` trả về một instance của `Illuminate\Testing\TestComponent`:
+Bạn có thể dùng phương thức `component` để evaluate và render một [Blade component](/blade#components). Phương thức `component` trả về một instance của `Illuminate\Testing\TestComponent`:
 
 ```php
 $view = $this->component(Profile::class, ['name' => 'Taylor']);
@@ -1719,7 +1719,7 @@ $response->assertRedirectContains($string);
 <a name="assert-redirect-to-route"></a>
 #### assertRedirectToRoute
 
-Xác nhận response redirect đến [named route](/docs/{{version}}/routing#named-routes) đã cho:
+Xác nhận response redirect đến [named route](/routing#named-routes) đã cho:
 
 ```php
 $response->assertRedirectToRoute($name, $parameters = []);
@@ -1728,7 +1728,7 @@ $response->assertRedirectToRoute($name, $parameters = []);
 <a name="assert-redirect-to-signed-route"></a>
 #### assertRedirectToSignedRoute
 
-Xác nhận response redirect đến [signed route](/docs/{{version}}/urls#signed-urls) đã cho:
+Xác nhận response redirect đến [signed route](/urls#signed-urls) đã cho:
 
 ```php
 $response->assertRedirectToSignedRoute($name = null, $parameters = []);
@@ -1817,7 +1817,7 @@ $response->assertSessionHas($key, function (User $value) {
 <a name="assert-session-has-input"></a>
 #### assertSessionHasInput
 
-Xác nhận session có giá trị đã cho trong [mảng input được flash](/docs/{{version}}/responses#redirecting-with-flashed-session-data):
+Xác nhận session có giá trị đã cho trong [mảng input được flash](/responses#redirecting-with-flashed-session-data):
 
 ```php
 $response->assertSessionHasInput($key, $value = null);
@@ -1882,7 +1882,7 @@ $response->assertSessionHasErrors([
 <a name="assert-session-has-errors-in"></a>
 #### assertSessionHasErrorsIn
 
-Xác nhận session chứa lỗi đối với `$keys` đã cho trong một [error bag](/docs/{{version}}/validation#named-error-bags) cụ thể. Nếu `$keys` là associative array, xác nhận session chứa thông báo lỗi cụ thể (value) cho từng field (key) trong error bag:
+Xác nhận session chứa lỗi đối với `$keys` đã cho trong một [error bag](/validation#named-error-bags) cụ thể. Nếu `$keys` là associative array, xác nhận session chứa thông báo lỗi cụ thể (value) cho từng field (key) trong error bag:
 
 ```php
 $response->assertSessionHasErrorsIn($errorBag, $keys = [], $format = null);

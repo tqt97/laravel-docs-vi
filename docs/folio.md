@@ -263,4 +263,4 @@ Folio::path(resource_path('views/pages'))->middleware([
 
 <a name="route-caching"></a>
 ## Route Caching
-Khi dùng Folio, bạn nên tận dụng [route caching của Laravel](/docs/{{version}}/routing#route-caching). Folio lắng nghe command Artisan `route:cache` để đảm bảo định nghĩa page và route name của Folio được cache đúng cách, đạt hiệu năng tốt nhất.
+Khi dùng Folio, bạn nên tận dụng [route caching của Laravel](/routing#route-caching). Folio lắng nghe command Artisan `route:cache` để đảm bảo định nghĩa page và route name của Folio được cache đúng cách, đạt hiệu năng tốt nhất.

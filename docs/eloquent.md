@@ -6,18 +6,18 @@
 Laravel cung cấp Eloquent, một trình ánh xạ đối tượng-quan hệ (ORM) giúp việc tương tác với cơ sở dữ liệu trở nên thuận tiện. Khi sử dụng Eloquent, mỗi bảng trong cơ sở dữ liệu có một "Model" tương ứng dùng để tương tác với bảng đó. Ngoài việc truy xuất các bản ghi từ bảng, Eloquent model còn cho phép bạn thêm, cập nhật và xóa các bản ghi.
 
 > [!NOTE]
-> Trước khi bắt đầu, hãy đảm bảo bạn đã cấu hình kết nối cơ sở dữ liệu trong file cấu hình `config/database.php` của ứng dụng. Để biết thêm thông tin, hãy xem [tài liệu cấu hình cơ sở dữ liệu](/docs/{{version}}/database#configuration).
+> Trước khi bắt đầu, hãy đảm bảo bạn đã cấu hình kết nối cơ sở dữ liệu trong file cấu hình `config/database.php` của ứng dụng. Để biết thêm thông tin, hãy xem [tài liệu cấu hình cơ sở dữ liệu](/database#configuration).
 
 <a name="generating-model-classes"></a>
 ## Tạo các lớp Model
 
-Để bắt đầu, hãy tạo một Eloquent model. Model thường nằm trong thư mục `app\Models` và kế thừa lớp `Illuminate\Database\Eloquent\Model`. Bạn có thể sử dụng [lệnh Artisan](/docs/{{version}}/artisan) `make:model` để tạo model mới:
+Để bắt đầu, hãy tạo một Eloquent model. Model thường nằm trong thư mục `app\Models` và kế thừa lớp `Illuminate\Database\Eloquent\Model`. Bạn có thể sử dụng [lệnh Artisan](/artisan) `make:model` để tạo model mới:
 
 ```shell
 php artisan make:model Flight
 ```
 
-Nếu muốn tạo luôn một [database migration](/docs/{{version}}/migrations) khi tạo model, bạn có thể sử dụng tùy chọn `--migration` hoặc `-m`:
+Nếu muốn tạo luôn một [database migration](/migrations) khi tạo model, bạn có thể sử dụng tùy chọn `--migration` hoặc `-m`:
 
 ```shell
 php artisan make:model Flight --migration
@@ -171,7 +171,7 @@ Eloquent yêu cầu mỗi model phải có ít nhất một "ID" định danh du
 
 Thay vì sử dụng số nguyên tự tăng làm khóa chính cho Eloquent model, bạn có thể chọn UUID. UUID là định danh chữ-số duy nhất trên phạm vi toàn cầu, có độ dài 36 ký tự.
 
-Nếu muốn model sử dụng khóa UUID thay cho khóa số nguyên tự tăng, bạn có thể dùng trait `Illuminate\Database\Eloquent\Concerns\HasUuids` trên model. Tất nhiên, bạn cần đảm bảo model có [cột khóa chính kiểu UUID tương ứng](/docs/{{version}}/migrations#column-method-uuid):
+Nếu muốn model sử dụng khóa UUID thay cho khóa số nguyên tự tăng, bạn có thể dùng trait `Illuminate\Database\Eloquent\Concerns\HasUuids` trên model. Tất nhiên, bạn cần đảm bảo model có [cột khóa chính kiểu UUID tương ứng](/migrations#column-method-uuid):
 
 ```php
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -189,7 +189,7 @@ $article = Article::create(['title' => 'Traveling to Europe']);
 $article->id; // "018f2b5c-6a7f-7b12-9d6f-2f8a4e0c9c11"
 ```
 
-Theo mặc định, trait `HasUuids` sẽ tạo các định danh [UUIDv7](/docs/{{version}}/strings#method-str-uuid7) cho model. Các UUID này hiệu quả hơn khi lưu trữ trong index của cơ sở dữ liệu vì có thể được sắp xếp theo thứ tự từ điển.
+Theo mặc định, trait `HasUuids` sẽ tạo các định danh [UUIDv7](/strings#method-str-uuid7) cho model. Các UUID này hiệu quả hơn khi lưu trữ trong index của cơ sở dữ liệu vì có thể được sắp xếp theo thứ tự từ điển.
 
 Bạn có thể ghi đè quá trình tạo UUID cho một model bằng cách định nghĩa phương thức `newUniqueId` trên model. Ngoài ra, bạn có thể chỉ định những cột sẽ nhận UUID bằng cách định nghĩa phương thức `uniqueIds` trên model:
 
@@ -215,7 +215,7 @@ public function uniqueIds(): array
 }
 ```
 
-Nếu muốn, bạn có thể sử dụng "ULID" thay cho UUID. ULID tương tự UUID nhưng chỉ dài 26 ký tự. Giống UUID có thứ tự, ULID có thể sắp xếp theo thứ tự từ điển, giúp việc lập index cơ sở dữ liệu hiệu quả. Để sử dụng ULID, hãy dùng trait `Illuminate\Database\Eloquent\Concerns\HasUlids` trên model. Đồng thời, hãy đảm bảo model có [cột khóa chính kiểu ULID tương ứng](/docs/{{version}}/migrations#column-method-ulid):
+Nếu muốn, bạn có thể sử dụng "ULID" thay cho UUID. ULID tương tự UUID nhưng chỉ dài 26 ký tự. Giống UUID có thứ tự, ULID có thể sắp xếp theo thứ tự từ điển, giúp việc lập index cơ sở dữ liệu hiệu quả. Để sử dụng ULID, hãy dùng trait `Illuminate\Database\Eloquent\Concerns\HasUlids` trên model. Đồng thời, hãy đảm bảo model có [cột khóa chính kiểu ULID tương ứng](/migrations#column-method-ulid):
 
 ```php
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -407,7 +407,7 @@ Model::preventSilentlyDiscardingAttributes(! $this->app->isProduction());
 <a name="retrieving-models"></a>
 ## Truy xuất Model
 
-Sau khi đã tạo model và [bảng cơ sở dữ liệu tương ứng](/docs/{{version}}/migrations#generating-migrations), bạn có thể bắt đầu truy xuất dữ liệu từ cơ sở dữ liệu. Có thể xem mỗi Eloquent model như một [query builder](/docs/{{version}}/queries) mạnh mẽ, cho phép bạn xây dựng truy vấn một cách fluent trên bảng tương ứng với model. Phương thức `all` của model sẽ truy xuất tất cả bản ghi từ bảng tương ứng:
+Sau khi đã tạo model và [bảng cơ sở dữ liệu tương ứng](/migrations#generating-migrations), bạn có thể bắt đầu truy xuất dữ liệu từ cơ sở dữ liệu. Có thể xem mỗi Eloquent model như một [query builder](/queries) mạnh mẽ, cho phép bạn xây dựng truy vấn một cách fluent trên bảng tương ứng với model. Phương thức `all` của model sẽ truy xuất tất cả bản ghi từ bảng tương ứng:
 
 ```php
 use App\Models\Flight;
@@ -420,7 +420,7 @@ foreach (Flight::all() as $flight) {
 <a name="building-queries"></a>
 #### Xây dựng truy vấn
 
-Phương thức `all` của Eloquent trả về toàn bộ kết quả trong bảng của model. Tuy nhiên, vì mỗi Eloquent model hoạt động như một [query builder](/docs/{{version}}/queries), bạn có thể thêm các điều kiện ràng buộc vào truy vấn rồi gọi phương thức `get` để lấy kết quả:
+Phương thức `all` của Eloquent trả về toàn bộ kết quả trong bảng của model. Tuy nhiên, vì mỗi Eloquent model hoạt động như một [query builder](/queries), bạn có thể thêm các điều kiện ràng buộc vào truy vấn rồi gọi phương thức `get` để lấy kết quả:
 
 ```php
 $flights = Flight::where('active', 1)
@@ -430,7 +430,7 @@ $flights = Flight::where('active', 1)
 ```
 
 > [!NOTE]
-> Vì Eloquent model cũng là query builder, bạn nên xem toàn bộ các phương thức mà [query builder](/docs/{{version}}/queries) của Laravel cung cấp. Bạn có thể sử dụng bất kỳ phương thức nào trong số đó khi viết truy vấn Eloquent.
+> Vì Eloquent model cũng là query builder, bạn nên xem toàn bộ các phương thức mà [query builder](/queries) của Laravel cung cấp. Bạn có thể sử dụng bất kỳ phương thức nào trong số đó khi viết truy vấn Eloquent.
 
 <a name="refreshing-models"></a>
 #### Làm mới Model
@@ -470,7 +470,7 @@ DB::transaction(function () use ($flight) {
 
 Như đã thấy, các phương thức Eloquent như `all` và `get` truy xuất nhiều bản ghi từ cơ sở dữ liệu. Tuy nhiên, các phương thức này không trả về một PHP array thông thường mà trả về một instance của `Illuminate\Database\Eloquent\Collection`.
 
-Class `Collection` của Eloquent kế thừa class nền `Illuminate\Support\Collection` của Laravel, cung cấp [nhiều phương thức hữu ích](/docs/{{version}}/collections#available-methods) để làm việc với tập dữ liệu. Ví dụ, phương thức `reject` có thể loại các model khỏi collection dựa trên kết quả của closure được gọi:
+Class `Collection` của Eloquent kế thừa class nền `Illuminate\Support\Collection` của Laravel, cung cấp [nhiều phương thức hữu ích](/collections#available-methods) để làm việc với tập dữ liệu. Ví dụ, phương thức `reject` có thể loại các model khỏi collection dựa trên kết quả của closure được gọi:
 
 ```php
 $flights = Flight::where('destination', 'Paris')->get();
@@ -480,7 +480,7 @@ $flights = $flights->reject(function (Flight $flight) {
 });
 ```
 
-Ngoài các phương thức do class collection nền của Laravel cung cấp, Eloquent collection còn có [một số phương thức bổ sung](/docs/{{version}}/eloquent-collections#available-methods) dành riêng cho việc làm việc với collection của các Eloquent model.
+Ngoài các phương thức do class collection nền của Laravel cung cấp, Eloquent collection còn có [một số phương thức bổ sung](/eloquent-collections#available-methods) dành riêng cho việc làm việc với collection của các Eloquent model.
 
 Vì tất cả collection của Laravel đều implement các iterable interface của PHP, bạn có thể lặp qua collection giống như với array:
 
@@ -519,7 +519,7 @@ Flight::where('departed', true)
     }, column: 'id');
 ```
 
-Vì `chunkById` và `lazyById` tự thêm các điều kiện `where` vào truy vấn đang thực thi, thông thường bạn nên [nhóm logic](/docs/{{version}}/queries#logical-grouping) các điều kiện của mình bên trong một closure:
+Vì `chunkById` và `lazyById` tự thêm các điều kiện `where` vào truy vấn đang thực thi, thông thường bạn nên [nhóm logic](/queries#logical-grouping) các điều kiện của mình bên trong một closure:
 
 ```php
 Flight::where(function ($query) {
@@ -535,7 +535,7 @@ Flight::where(function ($query) {
 <a name="chunking-using-lazy-collections"></a>
 ### Chia nhỏ bằng Lazy Collection
 
-Phương thức `lazy` hoạt động tương tự [phương thức `chunk`](#chunking-results): ở bên trong, truy vấn được thực thi theo từng chunk. Tuy nhiên, thay vì truyền trực tiếp từng chunk vào callback, `lazy` trả về một [LazyCollection](/docs/{{version}}/collections#lazy-collections) phẳng gồm các Eloquent model, cho phép bạn làm việc với kết quả như một luồng duy nhất:
+Phương thức `lazy` hoạt động tương tự [phương thức `chunk`](#chunking-results): ở bên trong, truy vấn được thực thi theo từng chunk. Tuy nhiên, thay vì truyền trực tiếp từng chunk vào callback, `lazy` trả về một [LazyCollection](/collections#lazy-collections) phẳng gồm các Eloquent model, cho phép bạn làm việc với kết quả như một luồng duy nhất:
 
 ```php
 use App\Models\Flight;
@@ -575,7 +575,7 @@ foreach (Flight::where('destination', 'Zurich')->cursor() as $flight) {
 }
 ```
 
-`cursor` trả về một instance `Illuminate\Support\LazyCollection`. [Lazy collection](/docs/{{version}}/collections#lazy-collections) cho phép bạn sử dụng nhiều phương thức collection quen thuộc của Laravel trong khi mỗi thời điểm chỉ tải một model vào bộ nhớ:
+`cursor` trả về một instance `Illuminate\Support\LazyCollection`. [Lazy collection](/collections#lazy-collections) cho phép bạn sử dụng nhiều phương thức collection quen thuộc của Laravel trong khi mỗi thời điểm chỉ tải một model vào bộ nhớ:
 
 ```php
 use App\Models\User;
@@ -713,7 +713,7 @@ $flight = Flight::firstOrNew(
 <a name="retrieving-aggregates"></a>
 ### Truy xuất giá trị tổng hợp
 
-Khi làm việc với Eloquent model, bạn cũng có thể sử dụng `count`, `sum`, `max` và các [phương thức tổng hợp](/docs/{{version}}/queries#aggregates) khác do [query builder](/docs/{{version}}/queries) của Laravel cung cấp. Các phương thức này trả về một giá trị scalar thay vì một instance Eloquent model:
+Khi làm việc với Eloquent model, bạn cũng có thể sử dụng `count`, `sum`, `max` và các [phương thức tổng hợp](/queries#aggregates) khác do [query builder](/queries) của Laravel cung cấp. Các phương thức này trả về một giá trị scalar thay vì một instance Eloquent model:
 
 ```php
 $count = Flight::where('active', 1)->count();
@@ -1076,7 +1076,7 @@ $flight->deleteOrFail();
 <a name="deleting-an-existing-model-by-its-primary-key"></a>
 #### Xóa Model hiện có bằng Primary Key
 
-Trong ví dụ trên, model được truy xuất từ database trước khi gọi `delete`. Tuy nhiên, nếu biết primary key của model, bạn có thể xóa model mà không cần tự truy xuất trước bằng cách gọi `destroy`. Ngoài một primary key đơn lẻ, `destroy` còn chấp nhận nhiều primary key, một mảng primary key hoặc một [collection](/docs/{{version}}/collections) các primary key:
+Trong ví dụ trên, model được truy xuất từ database trước khi gọi `delete`. Tuy nhiên, nếu biết primary key của model, bạn có thể xóa model mà không cần tự truy xuất trước bằng cách gọi `destroy`. Ngoài một primary key đơn lẻ, `destroy` còn chấp nhận nhiều primary key, một mảng primary key hoặc một [collection](/collections) các primary key:
 
 ```php
 Flight::destroy(1);
@@ -1137,7 +1137,7 @@ class Flight extends Model
 > [!NOTE]
 > Trait `SoftDeletes` sẽ tự động cast attribute `deleted_at` thành instance `DateTime` / `Carbon`.
 
-Bạn cũng cần thêm cột `deleted_at` vào bảng database. [Schema builder](/docs/{{version}}/migrations) của Laravel cung cấp helper để tạo cột này:
+Bạn cũng cần thêm cột `deleted_at` vào bảng database. [Schema builder](/migrations) của Laravel cung cấp helper để tạo cột này:
 
 ```php
 use Illuminate\Database\Schema\Blueprint;
@@ -1179,7 +1179,7 @@ Flight::withTrashed()
     ->restore();
 ```
 
-`restore` cũng có thể được dùng khi xây dựng query [relationship](/docs/{{version}}/eloquent-relationships):
+`restore` cũng có thể được dùng khi xây dựng query [relationship](/eloquent-relationships):
 
 ```php
 $flight->history()->restore();
@@ -1216,7 +1216,7 @@ $flights = Flight::withTrashed()
     ->get();
 ```
 
-`withTrashed` cũng có thể được gọi khi xây dựng query [relationship](/docs/{{version}}/eloquent-relationships):
+`withTrashed` cũng có thể được gọi khi xây dựng query [relationship](/eloquent-relationships):
 
 ```php
 $flight->history()->withTrashed()->get();
@@ -1575,7 +1575,7 @@ use App\Models\User;
 $users = User::popular()->active()->orderBy('created_at')->get();
 ```
 
-Khi kết hợp nhiều Eloquent model scope bằng toán tử query `or`, bạn có thể cần dùng closure để đạt được [logical grouping](/docs/{{version}}/queries#logical-grouping) chính xác:
+Khi kết hợp nhiều Eloquent model scope bằng toán tử query `or`, bạn có thể cần dùng closure để đạt được [logical grouping](/queries#logical-grouping) chính xác:
 
 ```php
 $users = User::popular()->orWhere(function (Builder $query) {
@@ -1684,7 +1684,7 @@ if ($post->isNot($anotherPost)) {
 }
 ```
 
-Các phương thức `is` và `isNot` cũng khả dụng khi sử dụng các [relationship](/docs/{{version}}/eloquent-relationships) `belongsTo`, `hasOne`, `morphTo` và `morphOne`. Cách này đặc biệt hữu ích khi bạn muốn so sánh một model liên quan mà không cần thực hiện query để truy xuất model đó:
+Các phương thức `is` và `isNot` cũng khả dụng khi sử dụng các [relationship](/eloquent-relationships) `belongsTo`, `hasOne`, `morphTo` và `morphOne`. Cách này đặc biệt hữu ích khi bạn muốn so sánh một model liên quan mà không cần thực hiện query để truy xuất model đó:
 
 ```php
 if ($post->author()->is($user)) {
@@ -1696,13 +1696,13 @@ if ($post->author()->is($user)) {
 ## Event
 
 > [!NOTE]
-> Bạn muốn broadcast Eloquent event trực tiếp đến ứng dụng phía client? Hãy xem [broadcast model event](/docs/{{version}}/broadcasting#model-broadcasting) của Laravel.
+> Bạn muốn broadcast Eloquent event trực tiếp đến ứng dụng phía client? Hãy xem [broadcast model event](/broadcasting#model-broadcasting) của Laravel.
 
 Eloquent model dispatch nhiều event, cho phép bạn hook vào các thời điểm sau trong vòng đời model: `retrieved`, `creating`, `created`, `updating`, `updated`, `saving`, `saved`, `deleting`, `deleted`, `trashed`, `forceDeleting`, `forceDeleted`, `restoring`, `restored` và `replicating`.
 
 Event `retrieved` được dispatch khi một model hiện có được truy xuất từ cơ sở dữ liệu. Khi model mới được lưu lần đầu, các event `creating` và `created` sẽ được dispatch. Các event `updating` / `updated` được dispatch khi model hiện có bị thay đổi và phương thức `save` được gọi. Các event `saving` / `saved` được dispatch khi model được tạo hoặc cập nhật, kể cả khi attribute của model không thay đổi. Event có tên kết thúc bằng `-ing` được dispatch trước khi thay đổi được persist vào model, còn event kết thúc bằng `-ed` được dispatch sau khi thay đổi đã được persist.
 
-Để bắt đầu lắng nghe model event, hãy định nghĩa property `$dispatchesEvents` trên Eloquent model. Property này ánh xạ các thời điểm khác nhau trong vòng đời Eloquent model tới các [event class](/docs/{{version}}/events) của bạn. Mỗi model event class nên nhận một instance của model bị tác động thông qua constructor:
+Để bắt đầu lắng nghe model event, hãy định nghĩa property `$dispatchesEvents` trên Eloquent model. Property này ánh xạ các thời điểm khác nhau trong vòng đời Eloquent model tới các [event class](/events) của bạn. Mỗi model event class nên nhận một instance của model bị tác động thông qua constructor:
 
 ```php
 <?php
@@ -1730,7 +1730,7 @@ class User extends Authenticatable
 }
 ```
 
-Sau khi định nghĩa và ánh xạ Eloquent event, bạn có thể dùng [event listener](/docs/{{version}}/events#defining-listeners) để xử lý các event.
+Sau khi định nghĩa và ánh xạ Eloquent event, bạn có thể dùng [event listener](/events#defining-listeners) để xử lý các event.
 
 > [!WARNING]
 > Khi thực hiện query cập nhật hoặc xóa hàng loạt qua Eloquent, các model event `saved`, `updated`, `deleting` và `deleted` sẽ không được dispatch cho các model bị tác động. Nguyên nhân là các model không thực sự được truy xuất khi thực hiện cập nhật hoặc xóa hàng loạt.
@@ -1761,7 +1761,7 @@ class User extends Model
 }
 ```
 
-Nếu cần, bạn có thể sử dụng [queueable anonymous event listener](/docs/{{version}}/events#queueable-anonymous-event-listeners) khi đăng ký model event. Điều này yêu cầu Laravel thực thi model event listener ở background bằng [queue](/docs/{{version}}/queues) của ứng dụng:
+Nếu cần, bạn có thể sử dụng [queueable anonymous event listener](/events#queueable-anonymous-event-listeners) khi đăng ký model event. Điều này yêu cầu Laravel thực thi model event listener ở background bằng [queue](/queues) của ứng dụng:
 
 ```php
 use function Illuminate\Events\queueable;

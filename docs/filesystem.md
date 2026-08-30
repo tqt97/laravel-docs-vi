@@ -658,7 +658,7 @@ $path = $request->file('avatar')->storePubliclyAs(
 <a name="image-manipulation"></a>
 ### Xử lý ảnh
 
-Nếu cần thay đổi kích thước, cắt hoặc chuyển đổi ảnh đã upload trước khi lưu, bạn có thể dùng [tính năng xử lý ảnh](/docs/{{version}}/images) của Laravel:
+Nếu cần thay đổi kích thước, cắt hoặc chuyển đổi ảnh đã upload trước khi lưu, bạn có thể dùng [tính năng xử lý ảnh](/images) của Laravel:
 
 ```php
 $path = $request->image('avatar')
@@ -840,7 +840,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-Mặc định, `fake` sẽ xóa toàn bộ file trong thư mục tạm. Nếu muốn giữ lại các file này, bạn có thể dùng `persistentFake`. Để biết thêm về kiểm thử upload file, hãy tham khảo [phần upload file trong tài liệu HTTP testing](/docs/{{version}}/http-tests#testing-file-uploads).
+Mặc định, `fake` sẽ xóa toàn bộ file trong thư mục tạm. Nếu muốn giữ lại các file này, bạn có thể dùng `persistentFake`. Để biết thêm về kiểm thử upload file, hãy tham khảo [phần upload file trong tài liệu HTTP testing](/http-tests#testing-file-uploads).
 
 > [!WARNING]
 > Phương thức `image` yêu cầu [extension GD](https://www.php.net/manual/en/book.image.php).
@@ -856,7 +856,7 @@ Tích hợp Flysystem của Laravel hỗ trợ sẵn một số driver; tuy nhi�
 composer require spatie/flysystem-dropbox
 ```
 
-Tiếp theo, bạn có thể đăng ký driver trong phương thức `boot` của một [service provider](/docs/{{version}}/providers) trong ứng dụng. Để thực hiện, hãy dùng phương thức `extend` của facade `Storage`:
+Tiếp theo, bạn có thể đăng ký driver trong phương thức `boot` của một [service provider](/providers) trong ứng dụng. Để thực hiện, hãy dùng phương thức `extend` của facade `Storage`:
 
 ```php
 <?php

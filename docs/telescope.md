@@ -84,7 +84,7 @@ Sau khi publish asset, file cấu hình chính của Telescope nằm tại `conf
 
 <a name="data-pruning"></a>
 ### Dọn dữ liệu
-Nếu không dọn định kỳ, table `telescope_entries` có thể tăng rất nhanh. Để kiểm soát dung lượng, hãy [schedule](/docs/{{version}}/scheduling) lệnh Artisan `telescope:prune` chạy hằng ngày:
+Nếu không dọn định kỳ, table `telescope_entries` có thể tăng rất nhanh. Để kiểm soát dung lượng, hãy [schedule](/scheduling) lệnh Artisan `telescope:prune` chạy hằng ngày:
 ```php
 use Illuminate\Support\Facades\Schedule;
 
@@ -99,7 +99,7 @@ Schedule::command('telescope:prune --hours=48')->daily();
 Bạn có thể thêm middleware này vào option `middleware` trong `config/telescope.php`:
 <a name="dashboard-authorization"></a>
 ### Phân quyền dashboard
-Dashboard Telescope được truy cập qua route `/telescope`. Mặc định, dashboard chỉ có thể truy cập trong environment `local`. File `app/Providers/TelescopeServiceProvider.php` chứa định nghĩa [authorization gate](/docs/{{version}}/authorization#gates) kiểm soát quyền truy cập Telescope ở environment **không phải local**. Bạn có thể sửa gate này để giới hạn quyền truy cập phù hợp với ứng dụng:
+Dashboard Telescope được truy cập qua route `/telescope`. Mặc định, dashboard chỉ có thể truy cập trong environment `local`. File `app/Providers/TelescopeServiceProvider.php` chứa định nghĩa [authorization gate](/authorization#gates) kiểm soát quyền truy cập Telescope ở environment **không phải local**. Bạn có thể sửa gate này để giới hạn quyền truy cập phù hợp với ứng dụng:
 ```php
 use App\Models\User;
 
@@ -137,7 +137,7 @@ php artisan telescope:publish
 ```
 
 <a name="filtering"></a>
-Dashboard Telescope được truy cập qua route `/telescope`. Mặc định, dashboard chỉ có thể truy cập trong environment `local`. File `app/Providers/TelescopeServiceProvider.php` chứa định nghĩa [authorization gate](/docs/{{version}}/authorization#gates) kiểm soát quyền truy cập Telescope ở environment **không phải local**. Bạn có thể sửa gate này để giới hạn quyền truy cập phù hợp với ứng dụng:
+Dashboard Telescope được truy cập qua route `/telescope`. Mặc định, dashboard chỉ có thể truy cập trong environment `local`. File `app/Providers/TelescopeServiceProvider.php` chứa định nghĩa [authorization gate](/authorization#gates) kiểm soát quyền truy cập Telescope ở environment **không phải local**. Bạn có thể sửa gate này để giới hạn quyền truy cập phù hợp với ứng dụng:
 <a name="filtering-entries"></a>
 > [!WARNING]
 > Hãy đảm bảo biến môi trường `APP_ENV` được đặt thành `production` trên production. Nếu không, Telescope có thể bị public ra ngoài.
@@ -265,7 +265,7 @@ Dump watcher ghi và hiển thị variable dump trong Telescope. Với Laravel, 
 Một số watcher còn hỗ trợ các option tùy chỉnh bổ sung:
 <a name="gate-watcher"></a>
 ### Gate Watcher
-Gate watcher ghi dữ liệu và kết quả của các lần kiểm tra [gate và policy](/docs/{{version}}/authorization). Nếu muốn loại trừ một số ability, hãy thêm chúng vào option `ignore_abilities` trong `config/telescope.php`:
+Gate watcher ghi dữ liệu và kết quả của các lần kiểm tra [gate và policy](/authorization). Nếu muốn loại trừ một số ability, hãy thêm chúng vào option `ignore_abilities` trong `config/telescope.php`:
 ```php
 'watchers' => [
     Watchers\GateWatcher::class => [
@@ -278,7 +278,7 @@ Gate watcher ghi dữ liệu và kết quả của các lần kiểm tra [gate v
 ### Batch Watcher
 <a name="http-client-watcher"></a>
 ### HTTP Client Watcher
-HTTP client watcher ghi các [HTTP client request](/docs/{{version}}/http-client) đi ra ngoài do ứng dụng thực hiện.
+HTTP client watcher ghi các [HTTP client request](/http-client) đi ra ngoài do ứng dụng thực hiện.
 <a name="job-watcher"></a>
 Cache watcher ghi dữ liệu khi cache key được hit, miss, cập nhật hoặc bị xóa.
 <a name="log-watcher"></a>
@@ -296,7 +296,7 @@ Cache watcher ghi dữ liệu khi cache key được hit, miss, cập nhật ho�
 
 <a name="mail-watcher"></a>
 ### Mail Watcher
-Mail watcher cho phép preview [email](/docs/{{version}}/mail) đã gửi ngay trong trình duyệt cùng dữ liệu liên quan. Bạn cũng có thể tải email dưới dạng file `.eml`.
+Mail watcher cho phép preview [email](/mail) đã gửi ngay trong trình duyệt cùng dữ liệu liên quan. Bạn cũng có thể tải email dưới dạng file `.eml`.
 <a name="model-watcher"></a>
 Dump watcher ghi và hiển thị variable dump trong Telescope. Với Laravel, bạn có thể dump biến bằng global function `dump`. Tab dump watcher phải đang mở trong trình duyệt thì dump mới được ghi; nếu không, các dump sẽ bị watcher bỏ qua.
 ```php
@@ -336,9 +336,9 @@ Exception watcher ghi dữ liệu và stack trace của mọi reportable excepti
 
 <a name="redis-watcher"></a>
 ### Redis Watcher
-Redis watcher ghi mọi command [Redis](/docs/{{version}}/redis) mà ứng dụng thực thi. Nếu dùng Redis làm cache, cache command cũng được Redis watcher ghi lại.
+Redis watcher ghi mọi command [Redis](/redis) mà ứng dụng thực thi. Nếu dùng Redis làm cache, cache command cũng được Redis watcher ghi lại.
 <a name="request-watcher"></a>
-HTTP client watcher ghi các [HTTP client request](/docs/{{version}}/http-client) đi ra ngoài do ứng dụng thực hiện.
+HTTP client watcher ghi các [HTTP client request](/http-client) đi ra ngoài do ứng dụng thực hiện.
 ```php
 'watchers' => [
     Watchers\RequestWatcher::class => [
@@ -351,9 +351,9 @@ HTTP client watcher ghi các [HTTP client request](/docs/{{version}}/http-client
 ### Job Watcher
 <a name="schedule-watcher"></a>
 ### Schedule Watcher
-Schedule watcher ghi command và output của mọi [scheduled task](/docs/{{version}}/scheduling) được ứng dụng chạy.
+Schedule watcher ghi command và output của mọi [scheduled task](/scheduling) được ứng dụng chạy.
 <a name="view-watcher"></a>
-Log watcher ghi [log data](/docs/{{version}}/logging) cho các log do ứng dụng tạo.
+Log watcher ghi [log data](/logging) cho các log do ứng dụng tạo.
 <a name="displaying-user-avatars"></a>
 ## Hiển thị avatar người dùng
 Dashboard Telescope hiển thị avatar của user đã được authenticate tại thời điểm entry được lưu. Mặc định, Telescope lấy avatar từ dịch vụ Gravatar. Bạn có thể tùy biến URL avatar bằng cách đăng ký callback trong `App\Providers\TelescopeServiceProvider`. Callback nhận user ID và email, sau đó phải trả về URL ảnh avatar của user:

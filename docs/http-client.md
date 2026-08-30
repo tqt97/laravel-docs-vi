@@ -950,7 +950,7 @@ Http::get('https://laravel.com');
 
 Laravel phát ba event trong quá trình gửi HTTP request. Event `RequestSending` được phát trước khi gửi request, `ResponseReceived` được phát sau khi nhận response của request, và `ConnectionFailed` được phát nếu không nhận được response cho request.
 
-Event `RequestSending` và `ConnectionFailed` đều chứa public property `$request` để bạn inspect instance `Illuminate\Http\Client\Request`. Tương tự, event `ResponseReceived` chứa property `$request` cùng property `$response` để inspect instance `Illuminate\Http\Client\Response`. Bạn có thể tạo [event listener](/docs/{{version}}/events) cho các event này trong ứng dụng:
+Event `RequestSending` và `ConnectionFailed` đều chứa public property `$request` để bạn inspect instance `Illuminate\Http\Client\Request`. Tương tự, event `ResponseReceived` chứa property `$request` cùng property `$response` để inspect instance `Illuminate\Http\Client\Response`. Bạn có thể tạo [event listener](/events) cho các event này trong ứng dụng:
 
 ```php
 use Illuminate\Http\Client\Events\RequestSending;

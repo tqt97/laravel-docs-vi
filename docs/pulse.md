@@ -5,7 +5,7 @@
 
 [Laravel Pulse](https://github.com/laravel/pulse) cung cấp cái nhìn tổng quan nhanh về hiệu năng và mức sử dụng của ứng dụng. Với Pulse, bạn có thể xác định các điểm nghẽn như job và endpoint chậm, tìm những người dùng hoạt động tích cực nhất và nhiều thông tin khác.
 
-Để debug chuyên sâu từng event riêng lẻ, hãy tham khảo [Laravel Telescope](/docs/{{version}}/telescope).
+Để debug chuyên sâu từng event riêng lẻ, hãy tham khảo [Laravel Telescope](/telescope).
 
 <a name="installation"></a>
 ## Cài đặt
@@ -137,7 +137,7 @@ public function boot(): void
 ```
 
 > [!NOTE]
-> Bạn có thể tùy biến hoàn toàn cách người dùng đã xác thực được thu thập và truy xuất bằng cách implement contract `Laravel\Pulse\Contracts\ResolvesUsers` và bind nó trong [service container](/docs/{{version}}/container#binding-a-singleton) của Laravel.
+> Bạn có thể tùy biến hoàn toàn cách người dùng đã xác thực được thu thập và truy xuất bằng cách implement contract `Laravel\Pulse\Contracts\ResolvesUsers` và bind nó trong [service container](/container#binding-a-singleton) của Laravel.
 
 <a name="dashboard-cards"></a>
 ### Các card
@@ -209,7 +209,7 @@ Xem tài liệu [slow queries recorder](#slow-queries-recorder) để biết th�
 <a name="slow-outgoing-requests-card"></a>
 #### Request gửi đi chậm
 
-Card `<livewire:pulse.slow-outgoing-requests />` hiển thị các request gửi đi được thực hiện bằng [HTTP client](/docs/{{version}}/http-client) của Laravel và vượt quá threshold đã cấu hình, mặc định là 1.000ms.
+Card `<livewire:pulse.slow-outgoing-requests />` hiển thị các request gửi đi được thực hiện bằng [HTTP client](/http-client) của Laravel và vượt quá threshold đã cấu hình, mặc định là 1.000ms.
 
 Theo mặc định, các entry được nhóm theo URL đầy đủ. Tuy nhiên, bạn có thể muốn chuẩn hóa hoặc nhóm các request gửi đi tương tự nhau bằng regular expression. Xem tài liệu [slow outgoing requests recorder](#slow-outgoing-requests-recorder) để biết thêm thông tin.
 
@@ -239,7 +239,7 @@ php artisan pulse:restart
 ```
 
 > [!NOTE]
-> Pulse sử dụng [cache](/docs/{{version}}/cache) để lưu các tín hiệu restart, vì vậy bạn nên xác minh rằng một cache driver đã được cấu hình đúng cho ứng dụng trước khi sử dụng tính năng này.
+> Pulse sử dụng [cache](/cache) để lưu các tín hiệu restart, vì vậy bạn nên xác minh rằng một cache driver đã được cấu hình đúng cho ứng dụng trước khi sử dụng tính năng này.
 
 <a name="recorders"></a>
 ### Recorder
@@ -249,7 +249,7 @@ Recorder chịu trách nhiệm thu thập các entry từ ứng dụng để ghi
 <a name="cache-interactions-recorder"></a>
 #### Tương tác cache
 
-Recorder `CacheInteractions` thu thập thông tin về các lần [cache](/docs/{{version}}/cache) hit và miss xảy ra trong ứng dụng để hiển thị trên card [Cache](#cache-card).
+Recorder `CacheInteractions` thu thập thông tin về các lần [cache](/cache) hit và miss xảy ra trong ứng dụng để hiển thị trên card [Cache](#cache-card).
 
 Bạn có thể tùy chọn điều chỉnh [tỷ lệ lấy mẫu](#sampling) và các pattern key cần bỏ qua.
 
@@ -304,7 +304,7 @@ Nếu không có pattern regular expression nào khớp với classname của jo
 <a name="slow-outgoing-requests-recorder"></a>
 #### Request gửi đi chậm
 
-Recorder `SlowOutgoingRequests` thu thập thông tin về các HTTP request gửi đi bằng [HTTP client](/docs/{{version}}/http-client) của Laravel vượt quá ngưỡng đã cấu hình để hiển thị trên card [Slow Outgoing Requests](#slow-outgoing-requests-card).
+Recorder `SlowOutgoingRequests` thu thập thông tin về các HTTP request gửi đi bằng [HTTP client](/http-client) của Laravel vượt quá ngưỡng đã cấu hình để hiển thị trên card [Slow Outgoing Requests](#slow-outgoing-requests-card).
 
 Bạn có thể tùy chọn điều chỉnh ngưỡng request gửi đi chậm, [tỷ lệ lấy mẫu](#sampling) và các pattern URL cần bỏ qua.
 
@@ -440,7 +440,7 @@ Pulse được thiết kế để có thể tích hợp vào một ứng dụng 
 
 Đối với các ứng dụng có lưu lượng truy cập cao, bạn có thể muốn sử dụng một kết nối cơ sở dữ liệu chuyên dụng cho Pulse để tránh ảnh hưởng đến cơ sở dữ liệu của ứng dụng.
 
-Bạn có thể tùy biến [kết nối cơ sở dữ liệu](/docs/{{version}}/database#configuration) mà Pulse sử dụng bằng cách đặt biến môi trường `PULSE_DB_CONNECTION`.
+Bạn có thể tùy biến [kết nối cơ sở dữ liệu](/database#configuration) mà Pulse sử dụng bằng cách đặt biến môi trường `PULSE_DB_CONNECTION`.
 
 ```env
 PULSE_DB_CONNECTION=pulse
@@ -458,7 +458,7 @@ Theo mặc định, Pulse sẽ lưu entry trực tiếp vào [kết nối cơ s�
 PULSE_INGEST_DRIVER=redis
 ```
 
-Theo mặc định, Pulse sẽ sử dụng [kết nối Redis](/docs/{{version}}/redis#configuration) mặc định của bạn, nhưng bạn có thể tùy biến thông qua biến môi trường `PULSE_REDIS_CONNECTION`:
+Theo mặc định, Pulse sẽ sử dụng [kết nối Redis](/redis#configuration) mặc định của bạn, nhưng bạn có thể tùy biến thông qua biến môi trường `PULSE_REDIS_CONNECTION`:
 
 ```ini
 PULSE_REDIS_CONNECTION=pulse
@@ -483,7 +483,7 @@ php artisan pulse:restart
 ```
 
 > [!NOTE]
-> Pulse sử dụng [cache](/docs/{{version}}/cache) để lưu các tín hiệu restart, vì vậy bạn nên xác minh rằng một cache driver đã được cấu hình đúng cho ứng dụng trước khi sử dụng tính năng này.
+> Pulse sử dụng [cache](/cache) để lưu các tín hiệu restart, vì vậy bạn nên xác minh rằng một cache driver đã được cấu hình đúng cho ứng dụng trước khi sử dụng tính năng này.
 
 <a name="sampling"></a>
 ### Lấy mẫu
@@ -585,7 +585,7 @@ Nếu card cần thêm style ngoài các class và component có sẵn trong Pul
 <a name="custom-card-styling-vite"></a>
 #### Tích hợp Laravel Vite
 
-Nếu card tùy chỉnh nằm trong codebase của ứng dụng và bạn đang sử dụng [tích hợp Vite](/docs/{{version}}/vite) của Laravel, bạn có thể cập nhật file `vite.config.js` để thêm một CSS entry point riêng cho card:
+Nếu card tùy chỉnh nằm trong codebase của ứng dụng và bạn đang sử dụng [tích hợp Vite](/vite) của Laravel, bạn có thể cập nhật file `vite.config.js` để thêm một CSS entry point riêng cho card:
 
 ```js
 laravel({

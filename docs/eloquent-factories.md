@@ -2,7 +2,7 @@
 
 <a name="introduction"></a>
 ## Giới thiệu
-Khi test ứng dụng hoặc seed database, bạn thường cần chèn một số record mẫu. Thay vì tự chỉ định giá trị cho từng column, Laravel cho phép định nghĩa tập attribute mặc định cho mỗi [Eloquent model](/docs/{{version}}/eloquent) bằng model factory.
+Khi test ứng dụng hoặc seed database, bạn thường cần chèn một số record mẫu. Thay vì tự chỉ định giá trị cho từng column, Laravel cho phép định nghĩa tập attribute mặc định cho mỗi [Eloquent model](/eloquent) bằng model factory.
 Để xem ví dụ về factory, hãy mở file `database/factories/UserFactory.php` trong ứng dụng. Factory này có sẵn trong mọi ứng dụng Laravel mới và chứa định nghĩa tương tự sau:
 ```php
 namespace Database\Factories;
@@ -56,7 +56,7 @@ Thông qua helper `fake`, factory có quyền truy cập thư viện PHP [Faker]
 ## Định nghĩa model factory
 <a name="generating-factories"></a>
 ### Tạo factory
-Để tạo factory, hãy chạy [Artisan command](/docs/{{version}}/artisan) `make:factory`:
+Để tạo factory, hãy chạy [Artisan command](/artisan) `make:factory`:
 ```shell
 php artisan make:factory PostFactory
 ```
@@ -122,7 +122,7 @@ public function suspended(): Factory
 
 <a name="trashed-state"></a>
 #### State "Trashed"
-Nếu Eloquent model hỗ trợ [soft delete](/docs/{{version}}/eloquent#soft-deleting), bạn có thể gọi state tích hợp `trashed` để model được tạo sẵn ở trạng thái "soft deleted". Không cần tự định nghĩa state này vì nó có sẵn cho mọi factory:
+Nếu Eloquent model hỗ trợ [soft delete](/eloquent#soft-deleting), bạn có thể gọi state tích hợp `trashed` để model được tạo sẵn ở trạng thái "soft deleted". Không cần tự định nghĩa state này vì nó có sẵn cho mọi factory:
 ```php
 use App\Models\User;
 
@@ -214,7 +214,7 @@ $user = User::factory()->state([
 ])->make();
 ```
 > [!NOTE]
-> [Mass assignment protection](/docs/{{version}}/eloquent#mass-assignment) tự động được tắt khi tạo model bằng factory.
+> [Mass assignment protection](/eloquent#mass-assignment) tự động được tắt khi tạo model bằng factory.
 <a name="persisting-models"></a>
 ### Lưu model
 Method `create` khởi tạo model instance và persist vào database bằng method `save` của Eloquent:
@@ -458,7 +458,7 @@ $user = User::factory()
 
 <a name="polymorphic-relationships"></a>
 ### Polymorphic relationship
-[Polymorphic relationship](/docs/{{version}}/eloquent-relationships#polymorphic-relationships) cũng có thể được tạo bằng factory. Polymorphic `morphMany` được tạo tương tự `hasMany`. Ví dụ nếu `Post` có relationship `morphMany` với `Comment`:
+[Polymorphic relationship](/eloquent-relationships#polymorphic-relationships) cũng có thể được tạo bằng factory. Polymorphic `morphMany` được tạo tương tự `hasMany`. Ví dụ nếu `Post` có relationship `morphMany` với `Comment`:
 ```php
 use App\Models\Post;
 

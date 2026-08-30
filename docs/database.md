@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-Hầu hết mọi ứng dụng web hiện đại đều tương tác với cơ sở dữ liệu. Laravel giúp việc làm việc với nhiều hệ quản trị cơ sở dữ liệu được hỗ trợ trở nên rất đơn giản thông qua SQL thuần, [Query Builder với API fluent](/docs/{{version}}/queries) và [Eloquent ORM](/docs/{{version}}/eloquent). Hiện tại, Laravel cung cấp hỗ trợ first-party cho năm hệ cơ sở dữ liệu:
+Hầu hết mọi ứng dụng web hiện đại đều tương tác với cơ sở dữ liệu. Laravel giúp việc làm việc với nhiều hệ quản trị cơ sở dữ liệu được hỗ trợ trở nên rất đơn giản thông qua SQL thuần, [Query Builder với API fluent](/queries) và [Eloquent ORM](/eloquent). Hiện tại, Laravel cung cấp hỗ trợ first-party cho năm hệ cơ sở dữ liệu:
 
 <div class="content-list" markdown="1">
 
@@ -22,7 +22,7 @@ Ngoài ra, MongoDB được hỗ trợ thông qua package `mongodb/laravel-mongo
 
 Cấu hình cho các dịch vụ cơ sở dữ liệu của Laravel nằm trong file `config/database.php` của ứng dụng. Tại đây, bạn có thể định nghĩa toàn bộ kết nối cơ sở dữ liệu và chỉ định kết nối nào được sử dụng mặc định. Phần lớn tùy chọn trong file này lấy giá trị từ các biến môi trường của ứng dụng. Laravel cũng cung cấp sẵn cấu hình mẫu cho hầu hết các hệ cơ sở dữ liệu được hỗ trợ.
 
-Mặc định, [cấu hình môi trường](/docs/{{version}}/configuration#environment-configuration) mẫu của Laravel đã sẵn sàng để sử dụng với [Laravel Sail](/docs/{{version}}/sail), môi trường Docker dành cho việc phát triển ứng dụng Laravel trên máy local. Tuy nhiên, bạn hoàn toàn có thể điều chỉnh cấu hình cơ sở dữ liệu để phù hợp với cơ sở dữ liệu đang chạy trên môi trường phát triển của mình.
+Mặc định, [cấu hình môi trường](/configuration#environment-configuration) mẫu của Laravel đã sẵn sàng để sử dụng với [Laravel Sail](/sail), môi trường Docker dành cho việc phát triển ứng dụng Laravel trên máy local. Tuy nhiên, bạn hoàn toàn có thể điều chỉnh cấu hình cơ sở dữ liệu để phù hợp với cơ sở dữ liệu đang chạy trên môi trường phát triển của mình.
 
 <a name="sqlite-configuration"></a>
 #### Cấu hình SQLite
@@ -41,7 +41,7 @@ DB_FOREIGN_KEYS=false
 ```
 
 > [!NOTE]
-> Nếu sử dụng [Laravel installer](/docs/{{version}}/installation#creating-a-laravel-project) để tạo ứng dụng và chọn SQLite làm cơ sở dữ liệu, Laravel sẽ tự động tạo file `database/database.sqlite` và chạy các [database migration](/docs/{{version}}/migrations) mặc định cho bạn.
+> Nếu sử dụng [Laravel installer](/installation#creating-a-laravel-project) để tạo ứng dụng và chọn SQLite làm cơ sở dữ liệu, Laravel sẽ tự động tạo file `database/database.sqlite` và chạy các [database migration](/migrations) mặc định cho bạn.
 
 <a name="mssql-configuration"></a>
 #### Cấu hình Microsoft SQL Server
@@ -318,7 +318,7 @@ $pdo = DB::connection()->getPdo();
 <a name="listening-for-query-events"></a>
 ### Lắng nghe sự kiện truy vấn
 
-Nếu muốn một closure được gọi mỗi khi ứng dụng thực thi một truy vấn SQL, bạn có thể sử dụng method `listen` của facade `DB`. Cơ chế này hữu ích khi ghi log truy vấn hoặc debug. Bạn có thể đăng ký closure lắng nghe truy vấn trong method `boot` của một [service provider](/docs/{{version}}/providers):
+Nếu muốn một closure được gọi mỗi khi ứng dụng thực thi một truy vấn SQL, bạn có thể sử dụng method `listen` của facade `DB`. Cơ chế này hữu ích khi ghi log truy vấn hoặc debug. Bạn có thể đăng ký closure lắng nghe truy vấn trong method `boot` của một [service provider](/providers):
 
 ```php
 <?php
@@ -357,7 +357,7 @@ class AppServiceProvider extends ServiceProvider
 <a name="monitoring-cumulative-query-time"></a>
 ### Theo dõi tổng thời gian truy vấn
 
-Một nút thắt hiệu năng phổ biến của các ứng dụng web hiện đại là tổng thời gian dành cho việc truy vấn cơ sở dữ liệu. Laravel có thể gọi closure hoặc callback do bạn chỉ định khi tổng thời gian truy vấn database trong một request vượt quá ngưỡng cho phép. Để sử dụng, hãy truyền ngưỡng thời gian truy vấn (tính bằng mili giây) cùng closure vào method `whenQueryingForLongerThan`. Bạn có thể gọi method này trong `boot` của một [service provider](/docs/{{version}}/providers):
+Một nút thắt hiệu năng phổ biến của các ứng dụng web hiện đại là tổng thời gian dành cho việc truy vấn cơ sở dữ liệu. Laravel có thể gọi closure hoặc callback do bạn chỉ định khi tổng thời gian truy vấn database trong một request vượt quá ngưỡng cho phép. Để sử dụng, hãy truyền ngưỡng thời gian truy vấn (tính bằng mili giây) cùng closure vào method `whenQueryingForLongerThan`. Bạn có thể gọi method này trong `boot` của một [service provider](/providers):
 
 ```php
 <?php
@@ -445,7 +445,7 @@ DB::commit();
 ```
 
 > [!NOTE]
-> Các method transaction của facade `DB` kiểm soát transaction cho cả [Query Builder](/docs/{{version}}/queries) và [Eloquent ORM](/docs/{{version}}/eloquent).
+> Các method transaction của facade `DB` kiểm soát transaction cho cả [Query Builder](/queries) và [Eloquent ORM](/eloquent).
 
 <a name="connecting-to-the-database-cli"></a>
 ## Kết nối tới CLI của cơ sở dữ liệu
@@ -515,7 +515,7 @@ php artisan db:table users
 
 Với Artisan command `db:monitor`, bạn có thể yêu cầu Laravel dispatch event `Illuminate\Database\Events\DatabaseBusy` khi database đang quản lý số lượng connection mở vượt quá ngưỡng được chỉ định.
 
-Để bắt đầu, bạn nên lên lịch cho command `db:monitor` [chạy mỗi phút](/docs/{{version}}/scheduling). Command nhận danh sách tên các database connection cần theo dõi cùng số connection mở tối đa được chấp nhận trước khi dispatch event:
+Để bắt đầu, bạn nên lên lịch cho command `db:monitor` [chạy mỗi phút](/scheduling). Command nhận danh sách tên các database connection cần theo dõi cùng số connection mở tối đa được chấp nhận trước khi dispatch event:
 
 ```shell
 php artisan db:monitor --databases=mysql,pgsql --max=100

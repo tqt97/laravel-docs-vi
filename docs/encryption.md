@@ -8,7 +8,7 @@ Các dịch vụ mã hóa của Laravel cung cấp một interface đơn giản 
 <a name="configuration"></a>
 ## Cấu hình
 
-Trước khi sử dụng encrypter của Laravel, bạn phải thiết lập tùy chọn `key` trong file cấu hình `config/app.php`. Giá trị này được lấy từ biến môi trường `APP_KEY`. Bạn nên dùng lệnh `php artisan key:generate` để tạo khóa vì lệnh này sử dụng bộ sinh byte ngẫu nhiên an toàn của PHP nhằm tạo ra một khóa đủ mạnh về mặt mật mã cho ứng dụng. Thông thường, biến `APP_KEY` sẽ được tạo sẵn trong quá trình [cài đặt Laravel](/docs/{{version}}/installation).
+Trước khi sử dụng encrypter của Laravel, bạn phải thiết lập tùy chọn `key` trong file cấu hình `config/app.php`. Giá trị này được lấy từ biến môi trường `APP_KEY`. Bạn nên dùng lệnh `php artisan key:generate` để tạo khóa vì lệnh này sử dụng bộ sinh byte ngẫu nhiên an toàn của PHP nhằm tạo ra một khóa đủ mạnh về mặt mật mã cho ứng dụng. Thông thường, biến `APP_KEY` sẽ được tạo sẵn trong quá trình [cài đặt Laravel](/installation).
 
 <a name="gracefully-rotating-encryption-keys"></a>
 ### Luân chuyển khóa mã hóa an toàn

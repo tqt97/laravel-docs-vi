@@ -6,7 +6,7 @@
 Laravel cung cấp một abstraction rate limiting dễ sử dụng. Khi kết hợp với [cache](cache) của ứng dụng, abstraction này cho phép bạn giới hạn số lần một hành động bất kỳ được thực hiện trong một khoảng thời gian xác định.
 
 > [!NOTE]
-> Nếu bạn muốn giới hạn tần suất các HTTP request đi vào ứng dụng, hãy xem [tài liệu rate limiter middleware](/docs/{{version}}/routing#rate-limiting).
+> Nếu bạn muốn giới hạn tần suất các HTTP request đi vào ứng dụng, hãy xem [tài liệu rate limiter middleware](/routing#rate-limiting).
 
 <a name="cache-configuration"></a>
 ### Cấu hình cache

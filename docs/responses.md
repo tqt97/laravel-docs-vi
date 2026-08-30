@@ -23,12 +23,12 @@ Route::get('/', function () {
 ```
 
 > [!NOTE]
-> Bạn cũng có thể trả về [Eloquent collection](/docs/{{version}}/eloquent-collections) trực tiếp từ route hoặc controller. Laravel sẽ tự động chuyển chúng thành JSON.
+> Bạn cũng có thể trả về [Eloquent collection](/eloquent-collections) trực tiếp từ route hoặc controller. Laravel sẽ tự động chuyển chúng thành JSON.
 
 <a name="response-objects"></a>
 #### Đối tượng Response
 
-Thông thường, action của route không chỉ trả về chuỗi hoặc mảng đơn giản. Thay vào đó, bạn sẽ trả về một đối tượng `Illuminate\Http\Response` hoàn chỉnh hoặc một [view](/docs/{{version}}/views).
+Thông thường, action của route không chỉ trả về chuỗi hoặc mảng đơn giản. Thay vào đó, bạn sẽ trả về một đối tượng `Illuminate\Http\Response` hoàn chỉnh hoặc một [view](/views).
 
 Việc trả về một đối tượng `Response` hoàn chỉnh cho phép bạn tùy chỉnh HTTP status code và header của response. `Response` kế thừa lớp `Symfony\Component\HttpFoundation\Response`, lớp này cung cấp nhiều phương thức để xây dựng HTTP response:
 
@@ -42,7 +42,7 @@ Route::get('/home', function () {
 <a name="eloquent-models-and-collections"></a>
 #### Model và collection Eloquent
 
-Bạn cũng có thể trả về trực tiếp model và collection của [Eloquent ORM](/docs/{{version}}/eloquent) từ route và controller. Khi đó, Laravel tự động chuyển model và collection thành JSON response, đồng thời vẫn tôn trọng các [thuộc tính bị ẩn](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) của model:
+Bạn cũng có thể trả về trực tiếp model và collection của [Eloquent ORM](/eloquent) từ route và controller. Khi đó, Laravel tự động chuyển model và collection thành JSON response, đồng thời vẫn tôn trọng các [thuộc tính bị ẩn](/eloquent-serialization#hiding-attributes-from-json) của model:
 
 ```php
 use App\Models\User;
@@ -186,7 +186,7 @@ Route::get('/dashboard', function () {
 });
 ```
 
-Đôi khi bạn cần chuyển người dùng về vị trí trước đó, chẳng hạn khi form được gửi lên không hợp lệ. Bạn có thể dùng helper toàn cục `back`. Vì cơ chế này sử dụng [session](/docs/{{version}}/session), hãy bảo đảm route gọi `back` sử dụng middleware group `web`:
+Đôi khi bạn cần chuyển người dùng về vị trí trước đó, chẳng hạn khi form được gửi lên không hợp lệ. Bạn có thể dùng helper toàn cục `back`. Vì cơ chế này sử dụng [session](/session), hãy bảo đảm route gọi `back` sử dụng middleware group `web`:
 
 ```php
 Route::post('/user/profile', function () {
@@ -239,7 +239,7 @@ public function getRouteKey(): mixed
 <a name="redirecting-controller-actions"></a>
 ### Chuyển hướng đến action của controller
 
-Bạn cũng có thể tạo redirect tới [action của controller](/docs/{{version}}/controllers). Hãy truyền controller và tên action vào phương thức `action`:
+Bạn cũng có thể tạo redirect tới [action của controller](/controllers). Hãy truyền controller và tên action vào phương thức `action`:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -267,7 +267,7 @@ return redirect()->away('https://www.google.com');
 <a name="redirecting-with-flashed-session-data"></a>
 ### Chuyển hướng kèm dữ liệu flash trong session
 
-Chuyển hướng tới URL mới và [flash dữ liệu vào session](/docs/{{version}}/session#flash-data) thường được thực hiện cùng lúc. Trường hợp phổ biến là sau khi một thao tác thành công, ứng dụng flash thông báo thành công vào session. Laravel cho phép tạo `RedirectResponse` và flash dữ liệu trong cùng một chuỗi fluent call:
+Chuyển hướng tới URL mới và [flash dữ liệu vào session](/session#flash-data) thường được thực hiện cùng lúc. Trường hợp phổ biến là sau khi một thao tác thành công, ứng dụng flash thông báo thành công vào session. Laravel cho phép tạo `RedirectResponse` và flash dữ liệu trong cùng một chuỗi fluent call:
 
 ```php
 Route::post('/user/profile', function () {
@@ -277,7 +277,7 @@ Route::post('/user/profile', function () {
 });
 ```
 
-Sau khi người dùng được chuyển hướng, bạn có thể hiển thị thông báo đã flash từ [session](/docs/{{version}}/session). Ví dụ với [cú pháp Blade](/docs/{{version}}/blade):
+Sau khi người dùng được chuyển hướng, bạn có thể hiển thị thông báo đã flash từ [session](/session). Ví dụ với [cú pháp Blade](/blade):
 
 ```blade
 @if (session('status'))
@@ -290,7 +290,7 @@ Sau khi người dùng được chuyển hướng, bạn có thể hiển thị 
 <a name="redirecting-with-input"></a>
 #### Chuyển hướng kèm input
 
-Bạn có thể dùng `withInput` của `RedirectResponse` để flash dữ liệu input của request hiện tại vào session trước khi chuyển hướng. Cách này thường được dùng khi validation thất bại. Sau khi input được flash vào session, request kế tiếp có thể dễ dàng [lấy lại dữ liệu đó](/docs/{{version}}/requests#retrieving-old-input) để điền lại form:
+Bạn có thể dùng `withInput` của `RedirectResponse` để flash dữ liệu input của request hiện tại vào session trước khi chuyển hướng. Cách này thường được dùng khi validation thất bại. Sau khi input được flash vào session, request kế tiếp có thể dễ dàng [lấy lại dữ liệu đó](/requests#retrieving-old-input) để điền lại form:
 
 ```php
 return back()->withInput();
@@ -299,12 +299,12 @@ return back()->withInput();
 <a name="other-response-types"></a>
 ## Các loại response khác
 
-Helper `response` có thể tạo nhiều loại response khác. Khi gọi `response` không có đối số, Laravel trả về một implementation của [contract](/docs/{{version}}/contracts) `Illuminate\Contracts\Routing\ResponseFactory`. Contract này cung cấp nhiều phương thức hữu ích để tạo response.
+Helper `response` có thể tạo nhiều loại response khác. Khi gọi `response` không có đối số, Laravel trả về một implementation của [contract](/contracts) `Illuminate\Contracts\Routing\ResponseFactory`. Contract này cung cấp nhiều phương thức hữu ích để tạo response.
 
 <a name="view-responses"></a>
 ### View response
 
-Nếu cần kiểm soát status code và header của response, đồng thời muốn dùng một [view](/docs/{{version}}/views) làm nội dung response, hãy sử dụng phương thức `view`:
+Nếu cần kiểm soát status code và header của response, đồng thời muốn dùng một [view](/views) làm nội dung response, hãy sử dụng phương thức `view`:
 
 ```php
 return response()
@@ -484,7 +484,7 @@ const sendMessage = () => {
 Khi gửi dữ liệu trở lại stream qua `send`, kết nối stream đang hoạt động sẽ bị hủy trước khi dữ liệu mới được gửi. Tất cả request đều được gửi dưới dạng JSON `POST`.
 
 > [!WARNING]
-> Vì hook `useStream` gửi `POST` request tới ứng dụng, request cần CSRF token hợp lệ. Cách đơn giản nhất là [khai báo token qua meta tag trong phần head của layout ứng dụng](/docs/{{version}}/csrf#csrf-x-csrf-token).
+> Vì hook `useStream` gửi `POST` request tới ứng dụng, request cần CSRF token hợp lệ. Cách đơn giản nhất là [khai báo token qua meta tag trong phần head của layout ứng dụng](/csrf#csrf-x-csrf-token).
 
 Đối số thứ hai của `useStream` là một object tùy chọn để điều chỉnh hành vi tiêu thụ stream. Các giá trị mặc định của object này như sau:
 
@@ -1038,7 +1038,7 @@ return response()->streamDownload(function () {
 <a name="response-macros"></a>
 ## Response macro
 
-Nếu muốn định nghĩa một response tùy chỉnh có thể tái sử dụng trong nhiều route và controller, bạn có thể dùng phương thức `macro` trên facade `Response`. Thông thường, phương thức này nên được gọi trong `boot` của một [service provider](/docs/{{version}}/providers), chẳng hạn `App\Providers\AppServiceProvider`:
+Nếu muốn định nghĩa một response tùy chỉnh có thể tái sử dụng trong nhiều route và controller, bạn có thể dùng phương thức `macro` trên facade `Response`. Thông thường, phương thức này nên được gọi trong `boot` của một [service provider](/providers), chẳng hạn `App\Providers\AppServiceProvider`:
 
 ```php
 <?php

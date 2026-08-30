@@ -5,7 +5,7 @@
 Khả năng "context" của Laravel cho phép bạn ghi nhận, truy xuất và chia sẻ thông tin xuyên suốt các request, job và command đang chạy trong ứng dụng. Thông tin này cũng được đính kèm vào log do ứng dụng ghi ra, giúp bạn hiểu rõ hơn lịch sử thực thi xảy ra trước một log entry và truy vết luồng xử lý trong hệ thống phân tán.
 <a name="how-it-works"></a>
 ### Cơ chế hoạt động
-Cách dễ nhất để hiểu context của Laravel là quan sát nó hoạt động cùng hệ thống logging tích hợp sẵn. Trước tiên, bạn có thể [thêm thông tin vào context](#capturing-context) bằng facade `Context`. Trong ví dụ này, một [middleware](/docs/{{version}}/middleware) sẽ thêm URL của request và một trace ID duy nhất vào context cho mỗi request đi vào ứng dụng:
+Cách dễ nhất để hiểu context của Laravel là quan sát nó hoạt động cùng hệ thống logging tích hợp sẵn. Trước tiên, bạn có thể [thêm thông tin vào context](#capturing-context) bằng facade `Context`. Trong ví dụ này, một [middleware](/middleware) sẽ thêm URL của request và một trace ID duy nhất vào context cho mỗi request đi vào ứng dụng:
 ```php
 <?php
 
@@ -31,7 +31,7 @@ class AddContext
     }
 }
 ```
-Thông tin được thêm vào context sẽ tự động được đính kèm dưới dạng metadata cho mọi [log entry](/docs/{{version}}/logging) được ghi trong request. Việc tách context thành metadata giúp phân biệt dữ liệu được truyền trực tiếp cho từng log entry với dữ liệu dùng chung qua `Context`. Ví dụ, giả sử ứng dụng ghi log như sau:
+Thông tin được thêm vào context sẽ tự động được đính kèm dưới dạng metadata cho mọi [log entry](/logging) được ghi trong request. Việc tách context thành metadata giúp phân biệt dữ liệu được truyền trực tiếp cho từng log entry với dữ liệu dùng chung qua `Context`. Ví dụ, giả sử ứng dụng ghi log như sau:
 ```php
 Log::info('User authenticated.', ['auth_id' => Auth::id()]);
 ```

@@ -11,7 +11,7 @@ Class `Illuminate\Http\Request` của Laravel cung cấp cách tiếp cận hư�
 <a name="accessing-the-request"></a>
 ### Truy cập Request
 
-Để nhận instance của HTTP request hiện tại thông qua dependency injection, hãy type-hint class `Illuminate\Http\Request` trong route closure hoặc controller method. Laravel [service container](/docs/{{version}}/container) sẽ tự động inject instance của request đến:
+Để nhận instance của HTTP request hiện tại thông qua dependency injection, hãy type-hint class `Illuminate\Http\Request` trong route closure hoặc controller method. Laravel [service container](/container) sẽ tự động inject instance của request đến:
 
 ```php
 <?php
@@ -107,7 +107,7 @@ if ($request->is('admin/*')) {
 }
 ```
 
-Với method `routeIs`, bạn có thể xác định request đến có khớp với một [named route](/docs/{{version}}/routing#named-routes) hay không:
+Với method `routeIs`, bạn có thể xác định request đến có khớp với một [named route](/routing#named-routes) hay không:
 
 ```php
 if ($request->routeIs('admin.*')) {
@@ -286,7 +286,7 @@ Bạn có thể lấy toàn bộ dữ liệu đầu vào của request dưới d
 $input = $request->all();
 ```
 
-Với method `collect`, bạn có thể lấy toàn bộ dữ liệu đầu vào của request dưới dạng [collection](/docs/{{version}}/collections):
+Với method `collect`, bạn có thể lấy toàn bộ dữ liệu đầu vào của request dưới dạng [collection](/collections):
 
 ```php
 $input = $request->collect();
@@ -362,7 +362,7 @@ $name = $request->input('user.name');
 <a name="retrieving-stringable-input-values"></a>
 #### Lấy giá trị đầu vào dạng Stringable
 
-Thay vì lấy dữ liệu đầu vào của request dưới dạng `string` nguyên thủy, bạn có thể dùng method `string` để nhận dữ liệu dưới dạng instance [Illuminate\Support\Stringable](/docs/{{version}}/strings):
+Thay vì lấy dữ liệu đầu vào của request dưới dạng `string` nguyên thủy, bạn có thể dùng method `string` để nhận dữ liệu dưới dạng instance [Illuminate\Support\Stringable](/strings):
 
 ```php
 $name = $request->string('name')->trim();
@@ -614,12 +614,12 @@ $request->mergeIfMissing(['votes' => 0]);
 <a name="old-input"></a>
 ### Dữ liệu đầu vào cũ
 
-Laravel cho phép giữ lại dữ liệu đầu vào của một request để sử dụng trong request kế tiếp. Tính năng này đặc biệt hữu ích khi cần điền lại form sau khi phát hiện lỗi validation. Tuy nhiên, nếu đang sử dụng [các tính năng validation](/docs/{{version}}/validation) có sẵn của Laravel, bạn có thể không cần gọi trực tiếp các method flash input vào session vì một số cơ chế validation tích hợp sẵn sẽ tự động thực hiện việc này.
+Laravel cho phép giữ lại dữ liệu đầu vào của một request để sử dụng trong request kế tiếp. Tính năng này đặc biệt hữu ích khi cần điền lại form sau khi phát hiện lỗi validation. Tuy nhiên, nếu đang sử dụng [các tính năng validation](/validation) có sẵn của Laravel, bạn có thể không cần gọi trực tiếp các method flash input vào session vì một số cơ chế validation tích hợp sẵn sẽ tự động thực hiện việc này.
 
 <a name="flashing-input-to-the-session"></a>
 #### Flash dữ liệu đầu vào vào Session
 
-Method `flash` trên class `Illuminate\Http\Request` sẽ flash dữ liệu đầu vào hiện tại vào [session](/docs/{{version}}/session), nhờ đó dữ liệu có thể được sử dụng trong request kế tiếp của người dùng:
+Method `flash` trên class `Illuminate\Http\Request` sẽ flash dữ liệu đầu vào hiện tại vào [session](/session), nhờ đó dữ liệu có thể được sử dụng trong request kế tiếp của người dùng:
 
 ```php
 $request->flash();
@@ -651,13 +651,13 @@ return redirect('/form')->withInput(
 <a name="retrieving-old-input"></a>
 #### Lấy dữ liệu đầu vào cũ
 
-Để lấy dữ liệu đầu vào đã được flash từ request trước, hãy gọi method `old` trên instance `Illuminate\Http\Request`. Method `old` sẽ lấy dữ liệu đã flash trước đó từ [session](/docs/{{version}}/session):
+Để lấy dữ liệu đầu vào đã được flash từ request trước, hãy gọi method `old` trên instance `Illuminate\Http\Request`. Method `old` sẽ lấy dữ liệu đã flash trước đó từ [session](/session):
 
 ```php
 $username = $request->old('username');
 ```
 
-Laravel cũng cung cấp helper global `old`. Khi hiển thị dữ liệu đầu vào cũ trong [Blade template](/docs/{{version}}/blade), sử dụng helper `old` sẽ thuận tiện hơn để điền lại form. Nếu field không có dữ liệu cũ, `null` sẽ được trả về:
+Laravel cũng cung cấp helper global `old`. Khi hiển thị dữ liệu đầu vào cũ trong [Blade template](/blade), sử dụng helper `old` sẽ thuận tiện hơn để điền lại form. Nếu field không có dữ liệu cũ, `null` sẽ được trả về:
 
 ```blade
 <input type="text" name="username" value="{{ old('username') }}">
@@ -738,7 +738,7 @@ Nếu file upload là hình ảnh cần xử lý trước khi lưu, bạn có th
 $image = $request->image('photo');
 ```
 
-Để biết thêm về xử lý hình ảnh, hãy xem [tài liệu xử lý hình ảnh](/docs/{{version}}/images) đầy đủ.
+Để biết thêm về xử lý hình ảnh, hãy xem [tài liệu xử lý hình ảnh](/images) đầy đủ.
 
 <a name="validating-successful-uploads"></a>
 #### Kiểm tra upload thành công
@@ -770,7 +770,7 @@ Instance `UploadedFile` còn cung cấp nhiều method khác. Hãy xem [tài li�
 <a name="storing-uploaded-files"></a>
 ### Lưu file đã upload
 
-Để lưu file đã upload, thông thường bạn sẽ sử dụng một trong các [filesystem](/docs/{{version}}/filesystem) đã cấu hình. Class `UploadedFile` có method `store` để chuyển file upload vào một disk; disk này có thể nằm trên filesystem cục bộ hoặc cloud storage như Amazon S3.
+Để lưu file đã upload, thông thường bạn sẽ sử dụng một trong các [filesystem](/filesystem) đã cấu hình. Class `UploadedFile` có method `store` để chuyển file upload vào một disk; disk này có thể nằm trên filesystem cục bộ hoặc cloud storage như Amazon S3.
 
 Method `store` nhận path nơi file sẽ được lưu, tính tương đối từ root directory đã cấu hình của filesystem. Path này không nên chứa filename vì Laravel sẽ tự động tạo một ID duy nhất làm filename.
 
@@ -791,7 +791,7 @@ $path = $request->photo->storeAs('images', 'filename.jpg', 's3');
 ```
 
 > [!NOTE]
-> Để biết thêm về lưu trữ file trong Laravel, hãy xem [tài liệu filesystem](/docs/{{version}}/filesystem) đầy đủ.
+> Để biết thêm về lưu trữ file trong Laravel, hãy xem [tài liệu filesystem](/filesystem) đầy đủ.
 
 <a name="configuring-trusted-proxies"></a>
 ## Cấu hình Trusted Proxy

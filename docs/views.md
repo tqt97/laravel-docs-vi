@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-Dĩ nhiên, việc trả trực tiếp toàn bộ chuỗi tài liệu HTML từ route và controller là không thực tế. May mắn thay, view cung cấp một cách thuận tiện để đặt toàn bộ HTML vào các file riêng biệt. View tách logic controller / ứng dụng khỏi logic trình bày và được lưu trong thư mục `resources/views`. Khi sử dụng Laravel, template view thường được viết bằng [ngôn ngữ template Blade](/docs/{{version}}/blade). Một view đơn giản có thể trông như sau:
+Dĩ nhiên, việc trả trực tiếp toàn bộ chuỗi tài liệu HTML từ route và controller là không thực tế. May mắn thay, view cung cấp một cách thuận tiện để đặt toàn bộ HTML vào các file riêng biệt. View tách logic controller / ứng dụng khỏi logic trình bày và được lưu trong thư mục `resources/views`. Khi sử dụng Laravel, template view thường được viết bằng [ngôn ngữ template Blade](/blade). Một view đơn giản có thể trông như sau:
 
 ```blade
 <!-- View stored in resources/views/greeting.blade.php -->
@@ -24,14 +24,14 @@ Route::get('/', function () {
 ```
 
 > [!NOTE]
-> Bạn muốn tìm hiểu thêm về cách viết Blade template? Hãy xem đầy đủ [tài liệu Blade](/docs/{{version}}/blade) để bắt đầu.
+> Bạn muốn tìm hiểu thêm về cách viết Blade template? Hãy xem đầy đủ [tài liệu Blade](/blade) để bắt đầu.
 
 <a name="writing-views-in-react-svelte-or-vue"></a>
 ### Viết view bằng React / Svelte / Vue
 
 Thay vì viết template frontend bằng PHP thông qua Blade, nhiều developer hiện thích viết template bằng React, Svelte hoặc Vue. Laravel giúp việc này trở nên đơn giản nhờ [Inertia](https://inertiajs.com/), một thư viện giúp kết nối frontend React / Svelte / Vue với backend Laravel mà không phải xử lý những phức tạp thường gặp khi xây dựng SPA.
 
-Các [starter kit ứng dụng React, Svelte và Vue](/docs/{{version}}/starter-kits) cung cấp điểm khởi đầu tốt cho ứng dụng Laravel tiếp theo sử dụng Inertia.
+Các [starter kit ứng dụng React, Svelte và Vue](/starter-kits) cung cấp điểm khởi đầu tốt cho ứng dụng Laravel tiếp theo sử dụng Inertia.
 
 <a name="creating-and-rendering-views"></a>
 ## Tạo và render view
@@ -42,7 +42,7 @@ Bạn có thể tạo view bằng cách đặt file có phần mở rộng `.bla
 php artisan make:view greeting
 ```
 
-Phần mở rộng `.blade.php` cho framework biết file chứa một [Blade template](/docs/{{version}}/blade). Blade template gồm HTML cùng các Blade directive cho phép bạn dễ dàng hiển thị giá trị, tạo câu lệnh `if`, lặp qua dữ liệu và nhiều thao tác khác.
+Phần mở rộng `.blade.php` cho framework biết file chứa một [Blade template](/blade). Blade template gồm HTML cùng các Blade directive cho phép bạn dễ dàng hiển thị giá trị, tạo câu lệnh `if`, lặp qua dữ liệu và nhiều thao tác khác.
 
 Sau khi tạo view, bạn có thể trả view từ một route hoặc controller của ứng dụng bằng helper `view` toàn cục:
 
@@ -60,7 +60,7 @@ use Illuminate\Support\Facades\View;
 return View::make('greeting', ['name' => 'James']);
 ```
 
-Như bạn thấy, đối số đầu tiên truyền vào helper `view` tương ứng với tên file view trong thư mục `resources/views`. Đối số thứ hai là một mảng dữ liệu cần được cung cấp cho view. Trong trường hợp này, chúng ta truyền biến `name`, biến này được hiển thị trong view bằng [cú pháp Blade](/docs/{{version}}/blade).
+Như bạn thấy, đối số đầu tiên truyền vào helper `view` tương ứng với tên file view trong thư mục `resources/views`. Đối số thứ hai là một mảng dữ liệu cần được cung cấp cho view. Trong trường hợp này, chúng ta truyền biến `name`, biến này được hiển thị trong view bằng [cú pháp Blade](/blade).
 
 <a name="nested-view-directories"></a>
 ### Thư mục view lồng nhau
@@ -154,7 +154,7 @@ class AppServiceProvider extends ServiceProvider
 
 View composer là callback hoặc phương thức của class được gọi khi một view được render. Nếu có dữ liệu cần được bind vào một view mỗi lần view đó được render, view composer giúp bạn tổ chức logic này tại một nơi duy nhất. View composer đặc biệt hữu ích nếu cùng một view được nhiều route hoặc controller trong ứng dụng trả về và luôn cần một phần dữ liệu cụ thể.
 
-Thông thường, view composer được đăng ký trong một [service provider](/docs/{{version}}/providers) của ứng dụng. Trong ví dụ này, chúng ta giả sử `App\Providers\AppServiceProvider` sẽ chứa logic đó. Chúng ta sử dụng phương thức `composer` của facade `View` để đăng ký view composer. Laravel không cung cấp thư mục mặc định cho class-based view composer, vì vậy bạn có thể tổ chức chúng theo cách mình muốn. Ví dụ, bạn có thể tạo thư mục `app/View/Composers` để chứa tất cả view composer của ứng dụng:
+Thông thường, view composer được đăng ký trong một [service provider](/providers) của ứng dụng. Trong ví dụ này, chúng ta giả sử `App\Providers\AppServiceProvider` sẽ chứa logic đó. Chúng ta sử dụng phương thức `composer` của facade `View` để đăng ký view composer. Laravel không cung cấp thư mục mặc định cho class-based view composer, vì vậy bạn có thể tổ chức chúng theo cách mình muốn. Ví dụ, bạn có thể tạo thư mục `app/View/Composers` để chứa tất cả view composer của ứng dụng:
 
 ```php
 <?php
@@ -225,7 +225,7 @@ class ProfileComposer
 }
 ```
 
-Như bạn thấy, tất cả view composer đều được resolve thông qua [service container](/docs/{{version}}/container), vì vậy bạn có thể type-hint bất kỳ dependency nào cần thiết trong constructor của composer.
+Như bạn thấy, tất cả view composer đều được resolve thông qua [service container](/container), vì vậy bạn có thể type-hint bất kỳ dependency nào cần thiết trong constructor của composer.
 
 <a name="attaching-a-composer-to-multiple-views"></a>
 #### Gắn composer vào nhiều view

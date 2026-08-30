@@ -76,7 +76,7 @@ server {
 ```shell
 frankenphp php-server -r public/
 ```
-Để tận dụng các tính năng mạnh hơn của FrankenPHP như tích hợp [Laravel Octane](/docs/{{version}}/octane), HTTP/3, compression hiện đại hoặc đóng gói ứng dụng Laravel thành standalone binary, hãy xem [tài liệu Laravel của FrankenPHP](https://frankenphp.dev/docs/laravel/).
+Để tận dụng các tính năng mạnh hơn của FrankenPHP như tích hợp [Laravel Octane](/octane), HTTP/3, compression hiện đại hoặc đóng gói ứng dụng Laravel thành standalone binary, hãy xem [tài liệu Laravel của FrankenPHP](https://frankenphp.dev/docs/laravel/).
 <a name="directory-permissions"></a>
 ### Quyền thư mục
 Laravel cần ghi dữ liệu vào các directory `bootstrap/cache` và `storage`, vì vậy hãy đảm bảo user chạy web server process có quyền ghi vào các directory này.
@@ -147,7 +147,7 @@ Mặc định health check route nằm tại `/up` và trả HTTP `200` nếu ap
     health: '/status', // [tl! add]
 )
 ```
-Khi có HTTP request tới route này, Laravel cũng dispatch event `Illuminate\Foundation\Events\DiagnosingHealth`, cho phép thực hiện health check bổ sung phù hợp với ứng dụng. Trong [listener](/docs/{{version}}/events), bạn có thể kiểm tra database hoặc cache. Nếu phát hiện vấn đề, chỉ cần throw exception từ listener.
+Khi có HTTP request tới route này, Laravel cũng dispatch event `Illuminate\Foundation\Events\DiagnosingHealth`, cho phép thực hiện health check bổ sung phù hợp với ứng dụng. Trong [listener](/events), bạn có thể kiểm tra database hoặc cache. Nếu phát hiện vấn đề, chỉ cần throw exception từ listener.
 <a name="deploying-with-cloud-or-forge"></a>
 ## Deploy bằng Laravel Cloud hoặc Forge
 <a name="laravel-cloud"></a>

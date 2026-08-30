@@ -4,7 +4,7 @@
 ## Giới thiệu
 
 > [!WARNING]
-> Laravel Homestead là một package cũ (legacy) không còn được duy trì tích cực. Bạn có thể sử dụng [Laravel Sail](/docs/{{version}}/sail) như một giải pháp thay thế hiện đại.
+> Laravel Homestead là một package cũ (legacy) không còn được duy trì tích cực. Bạn có thể sử dụng [Laravel Sail](/sail) như một giải pháp thay thế hiện đại.
 
 Laravel luôn hướng tới việc mang lại trải nghiệm phát triển PHP dễ chịu trong mọi khía cạnh, bao gồm cả môi trường phát triển cục bộ. [Laravel Homestead](https://github.com/laravel/homestead) là một Vagrant box chính thức, được đóng gói sẵn, cung cấp môi trường phát triển hoàn chỉnh mà không yêu cầu bạn cài PHP, web server hay bất kỳ phần mềm máy chủ nào khác trực tiếp trên máy cục bộ.
 
@@ -599,7 +599,7 @@ Sau khi cấu hình, Homestead sẽ export database vào các thư mục `.backu
 <a name="configuring-cron-schedules"></a>
 ### Cấu hình lịch Cron
 
-Laravel cung cấp cách thuận tiện để [lập lịch cron job](/docs/{{version}}/scheduling) bằng cách lên lịch một lệnh Artisan `schedule:run` duy nhất chạy mỗi phút. Lệnh `schedule:run` sẽ kiểm tra lịch job được định nghĩa trong file `routes/console.php` để xác định các tác vụ đã lên lịch cần chạy.
+Laravel cung cấp cách thuận tiện để [lập lịch cron job](/scheduling) bằng cách lên lịch một lệnh Artisan `schedule:run` duy nhất chạy mỗi phút. Lệnh `schedule:run` sẽ kiểm tra lịch job được định nghĩa trong file `routes/console.php` để xác định các tác vụ đã lên lịch cần chạy.
 
 Nếu muốn lệnh `schedule:run` được chạy cho một site Homestead, bạn có thể đặt tùy chọn `schedule` thành `true` khi định nghĩa site:
 
@@ -662,7 +662,7 @@ Các giá trị `policy` được hỗ trợ gồm: `none`, `download`, `upload`
 <a name="laravel-dusk"></a>
 ### Laravel Dusk
 
-Để chạy test [Laravel Dusk](/docs/{{version}}/dusk) bên trong Homestead, bạn nên bật [tính năng webdriver](#installing-optional-features) trong cấu hình Homestead:
+Để chạy test [Laravel Dusk](/dusk) bên trong Homestead, bạn nên bật [tính năng webdriver](#installing-optional-features) trong cấu hình Homestead:
 
 ```yaml
 features:

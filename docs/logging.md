@@ -166,7 +166,7 @@ Log::emergency('The system is down!');
 <a name="writing-log-messages"></a>
 ## Ghi thông điệp log
 
-Bạn có thể ghi thông tin vào log bằng [facade](/docs/{{version}}/facades) `Log`. Như đã đề cập, logger cung cấp tám mức logging được định nghĩa trong [đặc tả RFC 5424](https://tools.ietf.org/html/rfc5424): **emergency**, **alert**, **critical**, **error**, **warning**, **notice**, **info** và **debug**:
+Bạn có thể ghi thông tin vào log bằng [facade](/facades) `Log`. Như đã đề cập, logger cung cấp tám mức logging được định nghĩa trong [đặc tả RFC 5424](https://tools.ietf.org/html/rfc5424): **emergency**, **alert**, **critical**, **error**, **warning**, **notice**, **info** và **debug**:
 
 ```php
 use Illuminate\Support\Facades\Log;
@@ -290,7 +290,7 @@ class AssignRequestId
 ```
 
 > [!NOTE]
-> Nếu cần chia sẻ ngữ cảnh log khi xử lý queued job, bạn có thể sử dụng [job middleware](/docs/{{version}}/queues#job-middleware).
+> Nếu cần chia sẻ ngữ cảnh log khi xử lý queued job, bạn có thể sử dụng [job middleware](/queues#job-middleware).
 
 <a name="writing-to-specific-channels"></a>
 ### Ghi vào channel cụ thể
@@ -383,7 +383,7 @@ class CustomizeFormatter
 ```
 
 > [!NOTE]
-> Tất cả class "tap" được resolve bởi [service container](/docs/{{version}}/container), vì vậy mọi dependency trong constructor mà chúng yêu cầu sẽ tự động được inject.
+> Tất cả class "tap" được resolve bởi [service container](/container), vì vậy mọi dependency trong constructor mà chúng yêu cầu sẽ tự động được inject.
 
 <a name="creating-monolog-handler-channels"></a>
 ### Tạo channel dùng Monolog handler

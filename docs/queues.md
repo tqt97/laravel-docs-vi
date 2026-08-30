@@ -10,7 +10,7 @@ Queue của Laravel cung cấp một API thống nhất cho nhiều queue backen
 Các tùy chọn cấu hình queue của Laravel được lưu trong file `config/queue.php` của ứng dụng. Trong file này, bạn sẽ thấy cấu hình connection cho từng queue driver đi kèm framework, bao gồm database, [Amazon SQS](https://aws.amazon.com/sqs/), [Redis](https://redis.io), [Beanstalkd](https://beanstalkd.github.io/), cùng một synchronous driver thực thi job ngay lập tức (dùng trong quá trình phát triển hoặc kiểm thử). Laravel cũng cung cấp queue driver `null`, driver này sẽ loại bỏ các job được đưa vào queue.
 
 > [!NOTE]
-> Laravel Horizon là dashboard và hệ thống cấu hình dành cho queue sử dụng Redis. Xem đầy đủ [tài liệu Horizon](/docs/{{version}}/horizon) để biết thêm thông tin.
+> Laravel Horizon là dashboard và hệ thống cấu hình dành cho queue sử dụng Redis. Xem đầy đủ [tài liệu Horizon](/horizon) để biết thêm thông tin.
 
 <a name="connections-vs-queues"></a>
 ### Connection và queue
@@ -41,7 +41,7 @@ php artisan queue:work --queue=high,default
 <a name="database"></a>
 #### Cơ sở dữ liệu
 
-Để sử dụng queue driver `database`, bạn cần một bảng cơ sở dữ liệu để lưu các job. Thông thường bảng này được tạo bởi [database migration](/docs/{{version}}/migrations) mặc định `0001_01_01_000002_create_jobs_table.php` của Laravel; tuy nhiên, nếu ứng dụng không có migration này, bạn có thể dùng lệnh Artisan `make:queue-table` để tạo:
+Để sử dụng queue driver `database`, bạn cần một bảng cơ sở dữ liệu để lưu các job. Thông thường bảng này được tạo bởi [database migration](/migrations) mặc định `0001_01_01_000002_create_jobs_table.php` của Laravel; tuy nhiên, nếu ứng dụng không có migration này, bạn có thể dùng lệnh Artisan `make:queue-table` để tạo:
 
 ```shell
 php artisan make:queue-table
@@ -152,7 +152,7 @@ php artisan make:job ProcessPodcast
 Class được tạo sẽ implement interface `Illuminate\Contracts\Queue\ShouldQueue`, qua đó cho Laravel biết job cần được đưa vào queue để chạy bất đồng bộ.
 
 > [!NOTE]
-> Có thể tùy chỉnh stub của job bằng [stub publishing](/docs/{{version}}/artisan#stub-customization).
+> Có thể tùy chỉnh stub của job bằng [stub publishing](/artisan#stub-customization).
 
 <a name="class-structure"></a>
 ### Cấu trúc class
@@ -190,16 +190,16 @@ class ProcessPodcast implements ShouldQueue
 }
 ```
 
-Trong ví dụ này, chúng ta có thể truyền trực tiếp một [Eloquent model](/docs/{{version}}/eloquent) vào constructor của job. Nhờ trait `Queueable` mà job sử dụng, Eloquent model và các relationship đã load sẽ được serialize và unserialize phù hợp khi job được xử lý.
+Trong ví dụ này, chúng ta có thể truyền trực tiếp một [Eloquent model](/eloquent) vào constructor của job. Nhờ trait `Queueable` mà job sử dụng, Eloquent model và các relationship đã load sẽ được serialize và unserialize phù hợp khi job được xử lý.
 
 Nếu constructor của job nhận một Eloquent model, chỉ identifier của model được serialize vào queue. Khi job thực sự được xử lý, hệ thống queue sẽ tự động lấy lại đầy đủ model instance cùng các relationship đã load từ cơ sở dữ liệu. Cách serialize model này giúp payload job gửi đến queue driver nhỏ hơn đáng kể.
 
 <a name="handle-method-dependency-injection"></a>
 #### Dependency injection cho phương thức `handle`
 
-Phương thức `handle` được gọi khi job được queue xử lý. Bạn có thể type-hint các dependency trên phương thức `handle` của job. [Service container](/docs/{{version}}/container) của Laravel sẽ tự động inject các dependency này.
+Phương thức `handle` được gọi khi job được queue xử lý. Bạn có thể type-hint các dependency trên phương thức `handle` của job. [Service container](/container) của Laravel sẽ tự động inject các dependency này.
 
-Nếu muốn kiểm soát hoàn toàn cách container inject dependency vào phương thức `handle`, bạn có thể dùng phương thức `bindMethod` của container. `bindMethod` nhận một callback với job và container. Bên trong callback, bạn có thể gọi phương thức `handle` theo cách mong muốn. Thông thường, nên gọi phương thức này từ `boot` của [service provider](/docs/{{version}}/providers) `App\Providers\AppServiceProvider`:
+Nếu muốn kiểm soát hoàn toàn cách container inject dependency vào phương thức `handle`, bạn có thể dùng phương thức `bindMethod` của container. `bindMethod` nhận một callback với job và container. Bên trong callback, bạn có thể gọi phương thức `handle` theo cách mong muốn. Thông thường, nên gọi phương thức này từ `boot` của [service provider](/providers) `App\Providers\AppServiceProvider`:
 
 ```php
 use App\Jobs\ProcessPodcast;
@@ -286,7 +286,7 @@ Nếu job nhận một collection hoặc array các Eloquent model thay vì mộ
 ### Job duy nhất
 
 > [!WARNING]
-> Job duy nhất yêu cầu cache driver hỗ trợ [lock](/docs/{{version}}/cache#atomic-locks). Hiện tại các cache driver `memcached`, `redis`, `dynamodb`, `database`, `file` và `array` hỗ trợ atomic lock.
+> Job duy nhất yêu cầu cache driver hỗ trợ [lock](/cache#atomic-locks). Hiện tại các cache driver `memcached`, `redis`, `dynamodb`, `database`, `file` và `array` hỗ trợ atomic lock.
 
 > [!WARNING]
 > Constraint của job duy nhất không áp dụng cho các job nằm trong batch.
@@ -362,7 +362,7 @@ class UpdateSearchIndex implements ShouldQueue, ShouldBeUniqueUntilProcessing
 <a name="unique-job-locks"></a>
 #### Lock cho job duy nhất
 
-Bên trong, khi một job `ShouldBeUnique` được dispatch, Laravel cố gắng lấy [lock](/docs/{{version}}/cache#atomic-locks) bằng key `uniqueId`. Nếu lock đã được giữ, job sẽ không được dispatch. Lock được giải phóng khi job xử lý xong hoặc thất bại sau tất cả lần retry. Mặc định, Laravel sử dụng cache driver mặc định để lấy lock. Nếu muốn dùng driver khác, bạn có thể định nghĩa phương thức `uniqueVia` trả về cache driver cần sử dụng:
+Bên trong, khi một job `ShouldBeUnique` được dispatch, Laravel cố gắng lấy [lock](/cache#atomic-locks) bằng key `uniqueId`. Nếu lock đã được giữ, job sẽ không được dispatch. Lock được giải phóng khi job xử lý xong hoặc thất bại sau tất cả lần retry. Mặc định, Laravel sử dụng cache driver mặc định để lấy lock. Nếu muốn dùng driver khác, bạn có thể định nghĩa phương thức `uniqueVia` trả về cache driver cần sử dụng:
 
 ```php
 use Illuminate\Contracts\Cache\Repository;
@@ -383,7 +383,7 @@ class UpdateSearchIndex implements ShouldQueue, ShouldBeUnique
 ```
 
 > [!NOTE]
-> Nếu chỉ cần giới hạn việc xử lý đồng thời một job, hãy dùng job middleware [WithoutOverlapping](/docs/{{version}}/queues#preventing-job-overlaps).
+> Nếu chỉ cần giới hạn việc xử lý đồng thời một job, hãy dùng job middleware [WithoutOverlapping](/queues#preventing-job-overlaps).
 
 <a name="debounced-jobs"></a>
 ### Job debounce
@@ -458,7 +458,7 @@ Nếu một debounced job bị thay thế bởi lần dispatch mới hơn, Larav
 <a name="encrypted-jobs"></a>
 ### Job được mã hóa
 
-Laravel cho phép bạn bảo đảm tính riêng tư và toàn vẹn của dữ liệu job thông qua [mã hóa](/docs/{{version}}/encryption). Để bắt đầu, chỉ cần thêm interface `ShouldBeEncrypted` vào lớp job. Sau khi interface này được thêm vào lớp, Laravel sẽ tự động mã hóa job trước khi đẩy nó vào queue:
+Laravel cho phép bạn bảo đảm tính riêng tư và toàn vẹn của dữ liệu job thông qua [mã hóa](/encryption). Để bắt đầu, chỉ cần thêm interface `ShouldBeEncrypted` vào lớp job. Sau khi interface này được thêm vào lớp, Laravel sẽ tự động mã hóa job trước khi đẩy nó vào queue:
 
 ```php
 <?php
@@ -531,7 +531,7 @@ class RateLimited
 }
 ```
 
-Như bạn có thể thấy, tương tự [route middleware](/docs/{{version}}/middleware), middleware cho job nhận job đang được xử lý và một callback cần được gọi để tiếp tục xử lý job.
+Như bạn có thể thấy, tương tự [route middleware](/middleware), middleware cho job nhận job đang được xử lý và một callback cần được gọi để tiếp tục xử lý job.
 
 Bạn có thể tạo một lớp middleware mới cho job bằng lệnh Artisan `make:job-middleware`. Sau khi tạo middleware, bạn có thể gắn nó vào job bằng cách trả về middleware từ phương thức `middleware` của job. Phương thức này không có sẵn trong các job được scaffold bởi lệnh Artisan `make:job`, vì vậy bạn cần tự thêm nó vào lớp job:
 
@@ -550,12 +550,12 @@ public function middleware(): array
 ```
 
 > [!NOTE]
-> Middleware cho job cũng có thể được gán cho [event listener có thể đưa vào queue](/docs/{{version}}/events#queued-event-listeners), [mailable](/docs/{{version}}/mail#queueing-mail) và [notification](/docs/{{version}}/notifications#queueing-notifications).
+> Middleware cho job cũng có thể được gán cho [event listener có thể đưa vào queue](/events#queued-event-listeners), [mailable](/mail#queueing-mail) và [notification](/notifications#queueing-notifications).
 
 <a name="rate-limiting"></a>
 ### Giới hạn tốc độ
 
-Mặc dù chúng ta vừa minh họa cách tự viết middleware rate limiting cho job, Laravel thực tế đã cung cấp middleware rate limiting mà bạn có thể dùng để giới hạn tốc độ job. Tương tự [route rate limiter](/docs/{{version}}/routing#defining-rate-limiters), rate limiter cho job được định nghĩa bằng phương thức `for` của facade `RateLimiter`.
+Mặc dù chúng ta vừa minh họa cách tự viết middleware rate limiting cho job, Laravel thực tế đã cung cấp middleware rate limiting mà bạn có thể dùng để giới hạn tốc độ job. Tương tự [route rate limiter](/routing#defining-rate-limiters), rate limiter cho job được định nghĩa bằng phương thức `for` của facade `RateLimiter`.
 
 Ví dụ, bạn có thể muốn cho phép người dùng sao lưu dữ liệu một lần mỗi giờ nhưng không áp dụng giới hạn này cho khách hàng premium. Để thực hiện, bạn có thể định nghĩa một `RateLimiter` trong phương thức `boot` của `AppServiceProvider`:
 
@@ -714,7 +714,7 @@ public function middleware(): array
 ```
 
 > [!WARNING]
-> Middleware `WithoutOverlapping` yêu cầu cache driver hỗ trợ [lock](/docs/{{version}}/cache#atomic-locks). Hiện tại, các cache driver `memcached`, `redis`, `dynamodb`, `database`, `file` và `array` hỗ trợ atomic lock.
+> Middleware `WithoutOverlapping` yêu cầu cache driver hỗ trợ [lock](/cache#atomic-locks). Hiện tại, các cache driver `memcached`, `redis`, `dynamodb`, `database`, `file` và `array` hỗ trợ atomic lock.
 
 <a name="sharing-lock-keys"></a>
 #### Chia sẻ lock key giữa các lớp job
@@ -1571,7 +1571,7 @@ public function retryUntil(): DateTime
 Nếu cả `retryUntil` và `tries` đều được định nghĩa, Laravel ưu tiên phương thức `retryUntil`.
 
 > [!NOTE]
-> Bạn cũng có thể định nghĩa attribute `Tries` hoặc method `retryUntil` trên [queued event listener](/docs/{{version}}/events#queued-event-listeners) và [queued notification](/docs/{{version}}/notifications#queueing-notifications).
+> Bạn cũng có thể định nghĩa attribute `Tries` hoặc method `retryUntil` trên [queued event listener](/events#queued-event-listeners) và [queued notification](/notifications#queueing-notifications).
 
 <a name="max-exceptions"></a>
 #### Số exception tối đa
@@ -1773,7 +1773,7 @@ class ProcessOrder implements ShouldQueue
 
 Khi sử dụng queue FIFO, bạn cũng cần định nghĩa message group cho listener, mail và notification. Hoặc bạn có thể dispatch các instance được queue của những đối tượng này sang một queue không phải FIFO.
 
-Để định nghĩa message group cho một [queued event listener](/docs/{{version}}/events#queued-event-listeners), hãy định nghĩa phương thức `messageGroup` trên listener. Bạn cũng có thể tùy chọn định nghĩa phương thức `deduplicationId`:
+Để định nghĩa message group cho một [queued event listener](/events#queued-event-listeners), hãy định nghĩa phương thức `messageGroup` trên listener. Bạn cũng có thể tùy chọn định nghĩa phương thức `deduplicationId`:
 
 ```php
 <?php
@@ -1802,7 +1802,7 @@ class SendShipmentNotification
 }
 ```
 
-Khi gửi một [mail message](/docs/{{version}}/mail) sẽ được đưa vào queue FIFO, bạn nên gọi phương thức `onGroup` và tùy chọn phương thức `withDeduplicator` khi gửi:
+Khi gửi một [mail message](/mail) sẽ được đưa vào queue FIFO, bạn nên gọi phương thức `onGroup` và tùy chọn phương thức `withDeduplicator` khi gửi:
 
 ```php
 use App\Mail\InvoicePaid;
@@ -1815,7 +1815,7 @@ $invoicePaid = (new InvoicePaid($invoice))
 Mail::to($request->user())->send($invoicePaid);
 ```
 
-Khi gửi một [notification](/docs/{{version}}/notifications) sẽ được đưa vào queue FIFO, bạn nên gọi phương thức `onGroup` và tùy chọn phương thức `withDeduplicator` khi gửi notification:
+Khi gửi một [notification](/notifications) sẽ được đưa vào queue FIFO, bạn nên gọi phương thức `onGroup` và tùy chọn phương thức `withDeduplicator` khi gửi notification:
 
 ```php
 use App\Notifications\InvoicePaid;
@@ -2071,7 +2071,7 @@ ID của batch, có thể truy cập qua property `$batch->id`, có thể đư�
 <a name="naming-batches"></a>
 #### Đặt tên cho batch
 
-Một số tool như [Laravel Horizon](/docs/{{version}}/horizon) và [Laravel Telescope](/docs/{{version}}/telescope) có thể cung cấp thông tin debug thân thiện hơn nếu batch được đặt tên. Để gán một tên tùy ý cho batch, bạn có thể gọi method `name` khi định nghĩa batch:
+Một số tool như [Laravel Horizon](/horizon) và [Laravel Telescope](/telescope) có thể cung cấp thông tin debug thân thiện hơn nếu batch được đặt tên. Để gán một tên tùy ý cho batch, bạn có thể gọi method `name` khi định nghĩa batch:
 
 ```php
 $batch = Bus::batch([
@@ -2309,7 +2309,7 @@ php artisan queue:retry-batch 32dbc76c-4f82-4749-b610-a639fe0099b5
 <a name="pruning-batches"></a>
 ### Pruning Batches
 
-Nếu không prune, table `job_batches` có thể tích lũy record rất nhanh. Để hạn chế điều này, bạn nên [schedule](/docs/{{version}}/scheduling) command Artisan `queue:prune-batches` chạy hằng ngày:
+Nếu không prune, table `job_batches` có thể tích lũy record rất nhanh. Để hạn chế điều này, bạn nên [schedule](/scheduling) command Artisan `queue:prune-batches` chạy hằng ngày:
 
 ```php
 use Illuminate\Support\Facades\Schedule;
@@ -2528,7 +2528,7 @@ php artisan queue:work --sleep=3
 <a name="maintenance-mode-queues"></a>
 #### Maintenance Mode và Queue
 
-Trong khi ứng dụng ở [maintenance mode](/docs/{{version}}/configuration#maintenance-mode), các queued job sẽ không được xử lý. Khi ứng dụng thoát maintenance mode, các job sẽ tiếp tục được xử lý bình thường.
+Trong khi ứng dụng ở [maintenance mode](/configuration#maintenance-mode), các queued job sẽ không được xử lý. Khi ứng dụng thoát maintenance mode, các job sẽ tiếp tục được xử lý bình thường.
 
 Để buộc queue worker xử lý job ngay cả khi maintenance mode đang bật, bạn có thể dùng tùy chọn `--force`:
 
@@ -2539,7 +2539,7 @@ php artisan queue:work --force
 <a name="resource-considerations"></a>
 #### Lưu ý về tài nguyên
 
-Queue worker dạng daemon không "reboot" framework trước khi xử lý từng job. Vì vậy, bạn nên giải phóng các tài nguyên nặng sau khi mỗi job hoàn tất. Ví dụ, nếu đang [xử lý ảnh](/docs/{{version}}/images) bằng [thư viện GD](https://www.php.net/manual/en/book.image.php), bạn nên giải phóng bộ nhớ bằng `imagedestroy` sau khi xử lý ảnh xong.
+Queue worker dạng daemon không "reboot" framework trước khi xử lý từng job. Vì vậy, bạn nên giải phóng các tài nguyên nặng sau khi mỗi job hoàn tất. Ví dụ, nếu đang [xử lý ảnh](/images) bằng [thư viện GD](https://www.php.net/manual/en/book.image.php), bạn nên giải phóng bộ nhớ bằng `imagedestroy` sau khi xử lý ảnh xong.
 
 <a name="queue-priorities"></a>
 ### Độ ưu tiên của Queue
@@ -2568,7 +2568,7 @@ php artisan queue:restart
 Lệnh này yêu cầu toàn bộ queue worker thoát an toàn sau khi xử lý xong job hiện tại để không làm mất job đang có. Vì worker sẽ thoát khi `queue:restart` được thực thi, bạn nên chạy một process manager như [Supervisor](#supervisor-configuration) để tự động khởi động lại queue worker.
 
 > [!NOTE]
-> Queue dùng [cache](/docs/{{version}}/cache) để lưu restart signal, vì vậy hãy kiểm tra cache driver đã được cấu hình đúng cho ứng dụng trước khi dùng tính năng này.
+> Queue dùng [cache](/cache) để lưu restart signal, vì vậy hãy kiểm tra cache driver đã được cấu hình đúng cho ứng dụng trước khi dùng tính năng này.
 
 <a name="reacting-to-worker-signals"></a>
 ### Phản ứng với tín hiệu của Worker
@@ -2785,7 +2785,7 @@ sudo supervisorctl start "laravel-worker:*"
 <a name="dealing-with-failed-jobs"></a>
 ## Xử lý Job thất bại
 
-Đôi khi các job trong queue sẽ thất bại. Laravel cung cấp một cách thuận tiện để [chỉ định số lần tối đa một job được phép thử](#max-job-attempts-and-timeout). Sau khi một job bất đồng bộ vượt quá số lần thử này, nó sẽ được ghi vào bảng `failed_jobs` trong cơ sở dữ liệu. Các [job được dispatch đồng bộ](/docs/{{version}}/queues#synchronous-dispatching) bị lỗi sẽ không được lưu trong bảng này và exception của chúng được ứng dụng xử lý ngay lập tức.
+Đôi khi các job trong queue sẽ thất bại. Laravel cung cấp một cách thuận tiện để [chỉ định số lần tối đa một job được phép thử](#max-job-attempts-and-timeout). Sau khi một job bất đồng bộ vượt quá số lần thử này, nó sẽ được ghi vào bảng `failed_jobs` trong cơ sở dữ liệu. Các [job được dispatch đồng bộ](/queues#synchronous-dispatching) bị lỗi sẽ không được lưu trong bảng này và exception của chúng được ứng dụng xử lý ngay lập tức.
 
 Migration để tạo bảng `failed_jobs` thường đã có sẵn trong các ứng dụng Laravel mới. Tuy nhiên, nếu ứng dụng của bạn chưa có migration cho bảng này, bạn có thể dùng lệnh `make:queue-failed-table` để tạo migration:
 
@@ -2951,7 +2951,7 @@ php artisan queue:forget 91401d2c-0784-4f43-824c-34f94a33c24d
 ```
 
 > [!NOTE]
-> Khi dùng [Horizon](/docs/{{version}}/horizon), bạn nên dùng command `horizon:forget` để xóa failed job thay vì command `queue:forget`.
+> Khi dùng [Horizon](/horizon), bạn nên dùng command `horizon:forget` để xóa failed job thay vì command `queue:forget`.
 
 Để xóa tất cả job thất bại khỏi bảng `failed_jobs`, bạn có thể dùng lệnh `queue:flush`:
 
@@ -3077,7 +3077,7 @@ class AppServiceProvider extends ServiceProvider
 ## Xóa Job khỏi Queue
 
 > [!NOTE]
-> Khi dùng [Horizon](/docs/{{version}}/horizon), bạn nên dùng command `horizon:clear` để xóa job khỏi queue thay vì command `queue:clear`.
+> Khi dùng [Horizon](/horizon), bạn nên dùng command `horizon:clear` để xóa job khỏi queue thay vì command `queue:clear`.
 
 Nếu muốn xóa tất cả job khỏi queue mặc định của connection mặc định, bạn có thể dùng lệnh Artisan `queue:clear`:
 
@@ -3099,7 +3099,7 @@ php artisan queue:clear redis --queue=emails
 
 Nếu queue đột ngột nhận một lượng lớn job, nó có thể bị quá tải và khiến thời gian chờ job hoàn thành kéo dài. Nếu muốn, Laravel có thể cảnh báo khi số lượng job trong queue vượt quá một ngưỡng đã chỉ định.
 
-Để bắt đầu, bạn nên lên lịch cho lệnh `queue:monitor` [chạy mỗi phút](/docs/{{version}}/scheduling). Lệnh nhận tên các queue bạn muốn giám sát cùng ngưỡng số lượng job mong muốn:
+Để bắt đầu, bạn nên lên lịch cho lệnh `queue:monitor` [chạy mỗi phút](/scheduling). Lệnh nhận tên các queue bạn muốn giám sát cùng ngưỡng số lượng job mong muốn:
 
 ```shell
 php artisan queue:monitor redis:default,redis:deployments --max=100
@@ -3282,7 +3282,7 @@ Queue::fake()->except([
 <a name="testing-job-chains"></a>
 ### Kiểm thử Job Chains
 
-Để kiểm thử job chain, bạn cần sử dụng khả năng fake của facade `Bus`. Phương thức `assertChained` của facade `Bus` có thể dùng để assert rằng một [chuỗi job](/docs/{{version}}/queues#job-chaining) đã được dispatch. `assertChained` nhận một mảng các chained job làm đối số đầu tiên:
+Để kiểm thử job chain, bạn cần sử dụng khả năng fake của facade `Bus`. Phương thức `assertChained` của facade `Bus` có thể dùng để assert rằng một [chuỗi job](/queues#job-chaining) đã được dispatch. `assertChained` nhận một mảng các chained job làm đối số đầu tiên:
 
 ```php
 use App\Jobs\RecordShipment;
@@ -3363,7 +3363,7 @@ Bus::assertChained([
 <a name="testing-job-batches"></a>
 ### Kiểm thử Job Batches
 
-Phương thức `assertBatched` của facade `Bus` có thể dùng để assert rằng một [batch job](/docs/{{version}}/queues#job-batching) đã được dispatch. Closure truyền cho `assertBatched` nhận một instance `Illuminate\Bus\PendingBatch`, có thể dùng để kiểm tra các job trong batch:
+Phương thức `assertBatched` của facade `Bus` có thể dùng để assert rằng một [batch job](/queues#job-batching) đã được dispatch. Closure truyền cho `assertBatched` nhận một instance `Illuminate\Bus\PendingBatch`, có thể dùng để kiểm tra các job trong batch:
 
 ```php
 use Illuminate\Bus\PendingBatch;
@@ -3455,7 +3455,7 @@ $job->assertNotFailed();
 <a name="job-events"></a>
 ## Event của Job
 
-Bằng method `before` và `after` trên [facade](/docs/{{version}}/facades) `Queue`, bạn có thể khai báo callback được thực thi trước hoặc sau khi queued job được xử lý. Các callback này phù hợp để thực hiện logging bổ sung hoặc tăng statistic cho dashboard. Thông thường, bạn nên gọi các method này từ method `boot` của một [service provider](/docs/{{version}}/providers). Ví dụ, chúng ta có thể dùng `AppServiceProvider` đi kèm Laravel:
+Bằng method `before` và `after` trên [facade](/facades) `Queue`, bạn có thể khai báo callback được thực thi trước hoặc sau khi queued job được xử lý. Các callback này phù hợp để thực hiện logging bổ sung hoặc tăng statistic cho dashboard. Thông thường, bạn nên gọi các method này từ method `boot` của một [service provider](/providers). Ví dụ, chúng ta có thể dùng `AppServiceProvider` đi kèm Laravel:
 
 ```php
 <?php
@@ -3497,7 +3497,7 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-Bằng method `looping` trên [facade](/docs/{{version}}/facades) `Queue`, bạn có thể khai báo callback chạy trước khi worker cố lấy một job từ queue. Ví dụ, bạn có thể đăng ký một closure để rollback bất kỳ transaction nào bị để mở bởi job đã fail trước đó:
+Bằng method `looping` trên [facade](/facades) `Queue`, bạn có thể khai báo callback chạy trước khi worker cố lấy một job từ queue. Ví dụ, bạn có thể đăng ký một closure để rollback bất kỳ transaction nào bị để mở bởi job đã fail trước đó:
 
 ```php
 use Illuminate\Support\Facades\DB;

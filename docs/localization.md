@@ -87,7 +87,7 @@ public function boot(): void
 }
 ```
 > [!WARNING]
-> Nếu tùy biến ngôn ngữ dùng để biến đổi số ít / số nhiều, bạn nên khai báo rõ [tên bảng](/docs/{{version}}/eloquent#table-names) cho các Eloquent model.
+> Nếu tùy biến ngôn ngữ dùng để biến đổi số ít / số nhiều, bạn nên khai báo rõ [tên bảng](/eloquent#table-names) cho các Eloquent model.
 <a name="defining-translation-strings"></a>
 ## Định nghĩa chuỗi dịch
 <a name="using-short-keys"></a>
@@ -135,7 +135,7 @@ Nếu bạn dùng [chuỗi dịch mặc định làm key](#using-translation-str
 echo __('I love programming.');
 ```
 Tương tự, nếu chuỗi dịch không tồn tại, hàm `__` sẽ trả về key đã được truyền vào.
-Nếu sử dụng [Blade templating engine](/docs/{{version}}/blade), bạn có thể dùng cú pháp echo `{{ }}` để hiển thị chuỗi dịch:
+Nếu sử dụng [Blade templating engine](/blade), bạn có thể dùng cú pháp echo `{{ }}` để hiển thị chuỗi dịch:
 ```blade
 {{ __('messages.welcome') }}
 ```

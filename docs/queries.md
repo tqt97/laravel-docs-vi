@@ -53,7 +53,7 @@ foreach ($users as $user) {
 ```
 
 > [!NOTE]
-> Laravel Collection cung cấp nhiều method mạnh mẽ để biến đổi và tổng hợp dữ liệu. Để biết thêm thông tin, hãy xem [tài liệu Collection](/docs/{{version}}/collections).
+> Laravel Collection cung cấp nhiều method mạnh mẽ để biến đổi và tổng hợp dữ liệu. Để biết thêm thông tin, hãy xem [tài liệu Collection](/collections).
 
 <a name="retrieving-a-single-row-column-from-a-table"></a>
 #### Lấy một dòng / cột từ bảng
@@ -168,7 +168,7 @@ DB::table('users')->where(function ($query) {
 <a name="streaming-results-lazily"></a>
 ### Duyệt kết quả theo kiểu lazy
 
-Method `lazy` hoạt động tương tự [method `chunk`](#chunking-results) ở chỗ truy vấn được thực thi theo từng khối. Tuy nhiên, thay vì truyền từng khối vào callback, `lazy()` trả về một [LazyCollection](/docs/{{version}}/collections#lazy-collections), cho phép bạn làm việc với kết quả như một stream duy nhất:
+Method `lazy` hoạt động tương tự [method `chunk`](#chunking-results) ở chỗ truy vấn được thực thi theo từng khối. Tuy nhiên, thay vì truyền từng khối vào callback, `lazy()` trả về một [LazyCollection](/collections#lazy-collections), cho phép bạn làm việc với kết quả như một stream duy nhất:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -1115,7 +1115,7 @@ $incomes = Income::where('amount', '<', function (Builder $query) {
 > [!WARNING]
 > Các mệnh đề where full text hiện được MariaDB, MySQL và PostgreSQL hỗ trợ.
 
-Các method `whereFullText` và `orWhereFullText` có thể được sử dụng để thêm mệnh đề "where" full text vào truy vấn đối với các cột có [full text index](/docs/{{version}}/migrations#available-index-types). Laravel sẽ chuyển các method này thành SQL phù hợp với hệ quản trị cơ sở dữ liệu bên dưới. Ví dụ, mệnh đề `MATCH AGAINST` sẽ được tạo cho các ứng dụng sử dụng MariaDB hoặc MySQL:
+Các method `whereFullText` và `orWhereFullText` có thể được sử dụng để thêm mệnh đề "where" full text vào truy vấn đối với các cột có [full text index](/migrations#available-index-types). Laravel sẽ chuyển các method này thành SQL phù hợp với hệ quản trị cơ sở dữ liệu bên dưới. Ví dụ, mệnh đề `MATCH AGAINST` sẽ được tạo cho các ứng dụng sử dụng MariaDB hoặc MySQL:
 
 ```php
 $users = DB::table('users')
@@ -1127,7 +1127,7 @@ $users = DB::table('users')
 ### Mệnh đề Vector Similarity
 
 > [!NOTE]
-> Các mệnh đề vector similarity hiện được hỗ trợ trên kết nối PostgreSQL sử dụng extension `pgvector` và MariaDB 11.7 trở lên. Để biết cách định nghĩa cột vector và index, hãy tham khảo [tài liệu migration](/docs/{{version}}/migrations#available-column-types).
+> Các mệnh đề vector similarity hiện được hỗ trợ trên kết nối PostgreSQL sử dụng extension `pgvector` và MariaDB 11.7 trở lên. Để biết cách định nghĩa cột vector và index, hãy tham khảo [tài liệu migration](/migrations#available-column-types).
 
 Method `whereVectorSimilarTo` lọc kết quả theo độ tương đồng cosine với một vector được cung cấp và sắp xếp kết quả theo mức độ liên quan. Ngưỡng `minSimilarity` phải là giá trị từ `0.0` đến `1.0`, trong đó `1.0` biểu thị giống hệt nhau:
 
@@ -1138,7 +1138,7 @@ $documents = DB::table('documents')
     ->get();
 ```
 
-Khi đối số vector được truyền dưới dạng chuỗi thông thường, Laravel sẽ tự động tạo embedding cho chuỗi đó bằng [Laravel AI SDK](/docs/{{version}}/ai-sdk#embeddings):
+Khi đối số vector được truyền dưới dạng chuỗi thông thường, Laravel sẽ tự động tạo embedding cho chuỗi đó bằng [Laravel AI SDK](/ai-sdk#embeddings):
 
 ```php
 $documents = DB::table('documents')
@@ -1536,7 +1536,7 @@ DB::table('users')
     ->get();
 ```
 
-Dù không bắt buộc, bạn nên đặt pessimistic lock bên trong một [transaction](/docs/{{version}}/database#database-transactions). Điều này đảm bảo dữ liệu được lấy ra không bị thay đổi trong cơ sở dữ liệu cho đến khi toàn bộ thao tác hoàn tất. Nếu xảy ra lỗi, transaction sẽ rollback mọi thay đổi và tự động giải phóng lock:
+Dù không bắt buộc, bạn nên đặt pessimistic lock bên trong một [transaction](/database#database-transactions). Điều này đảm bảo dữ liệu được lấy ra không bị thay đổi trong cơ sở dữ liệu cho đến khi toàn bộ thao tác hoàn tất. Nếu xảy ra lỗi, transaction sẽ rollback mọi thay đổi và tự động giải phóng lock:
 
 ```php
 DB::transaction(function () {
@@ -1655,7 +1655,7 @@ DB::table('flights')
 
 Method `tap` luôn trả về query builder. Nếu muốn tách thành một object thực thi truy vấn và trả về một giá trị khác, bạn có thể sử dụng method `pipe` thay thế.
 
-Hãy xem query object sau, chứa logic [phân trang](/docs/{{version}}/pagination) dùng chung trong toàn ứng dụng. Khác với `DestinationFilter` chỉ áp dụng điều kiện lên truy vấn, object `Paginate` thực thi truy vấn và trả về một paginator instance:
+Hãy xem query object sau, chứa logic [phân trang](/pagination) dùng chung trong toàn ứng dụng. Khác với `DestinationFilter` chỉ áp dụng điều kiện lên truy vấn, object `Paginate` thực thi truy vấn và trả về một paginator instance:
 
 ```php
 <?php

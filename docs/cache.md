@@ -20,7 +20,7 @@ File cấu hình cache cũng chứa nhiều tùy chọn khác mà bạn có th�
 <a name="prerequisites-database"></a>
 #### Database
 
-Khi sử dụng cache driver `database`, bạn cần một bảng cơ sở dữ liệu để chứa dữ liệu cache. Thông thường bảng này được tạo bởi [database migration](/docs/{{version}}/migrations) mặc định `0001_01_01_000001_create_cache_table.php` của Laravel. Tuy nhiên, nếu ứng dụng không có migration này, bạn có thể dùng lệnh Artisan `make:cache-table` để tạo:
+Khi sử dụng cache driver `database`, bạn cần một bảng cơ sở dữ liệu để chứa dữ liệu cache. Thông thường bảng này được tạo bởi [database migration](/migrations) mặc định `0001_01_01_000001_create_cache_table.php` của Laravel. Tuy nhiên, nếu ứng dụng không có migration này, bạn có thể dùng lệnh Artisan `make:cache-table` để tạo:
 
 ```shell
 php artisan make:cache-table
@@ -66,14 +66,14 @@ Nếu cần, bạn có thể đặt tùy chọn `host` thành đường dẫn UN
 <a name="redis"></a>
 #### Redis
 
-Trước khi sử dụng Redis cache với Laravel, bạn cần cài extension PHP PhpRedis thông qua PECL hoặc cài package `predis/predis` bằng Composer. [Laravel Sail](/docs/{{version}}/sail) đã bao gồm extension này. Ngoài ra, các nền tảng ứng dụng Laravel chính thức như [Laravel Cloud](https://cloud.laravel.com) và [Laravel Forge](https://forge.laravel.com) cũng cài sẵn extension PhpRedis theo mặc định.
+Trước khi sử dụng Redis cache với Laravel, bạn cần cài extension PHP PhpRedis thông qua PECL hoặc cài package `predis/predis` bằng Composer. [Laravel Sail](/sail) đã bao gồm extension này. Ngoài ra, các nền tảng ứng dụng Laravel chính thức như [Laravel Cloud](https://cloud.laravel.com) và [Laravel Forge](https://forge.laravel.com) cũng cài sẵn extension PhpRedis theo mặc định.
 
-Để biết thêm thông tin về cấu hình Redis, hãy xem [trang tài liệu Redis của Laravel](/docs/{{version}}/redis#configuration).
+Để biết thêm thông tin về cấu hình Redis, hãy xem [trang tài liệu Redis của Laravel](/redis#configuration).
 
 <a name="storage"></a>
 #### Storage
 
-Driver cache `storage` cho phép bạn lưu các giá trị cache trên bất kỳ [filesystem disk](/docs/{{version}}/filesystem) nào đã được cấu hình cho ứng dụng. Điều này hữu ích khi bạn muốn dùng một disk hiện có, chẳng hạn S3 disk, làm cache store dạng key / value:
+Driver cache `storage` cho phép bạn lưu các giá trị cache trên bất kỳ [filesystem disk](/filesystem) nào đã được cấu hình cho ứng dụng. Điều này hữu ích khi bạn muốn dùng một disk hiện có, chẳng hạn S3 disk, làm cache store dạng key / value:
 
 ```php
 'storage' => [
@@ -242,7 +242,7 @@ Khi sử dụng `Cache::remember`, một số request có thể phản hồi ch�
 
 Phương thức `flexible` nhận một mảng xác định khoảng thời gian giá trị cache được xem là "fresh" và khi nào nó trở thành "stale". Giá trị đầu tiên trong mảng là số giây cache được xem là fresh; giá trị thứ hai xác định khoảng thời gian dữ liệu stale vẫn có thể được phục vụ trước khi bắt buộc phải tính lại.
 
-Nếu request đến trong giai đoạn fresh (trước mốc đầu tiên), giá trị cache được trả về ngay mà không cần tính lại. Nếu request đến trong giai đoạn stale (giữa hai mốc), giá trị stale được trả cho người dùng và một [deferred function](/docs/{{version}}/helpers#deferred-functions) được đăng ký để làm mới cache sau khi response đã gửi đi. Nếu request đến sau mốc thứ hai, cache được xem là đã hết hạn và giá trị sẽ được tính lại ngay lập tức, vì vậy response có thể chậm hơn:
+Nếu request đến trong giai đoạn fresh (trước mốc đầu tiên), giá trị cache được trả về ngay mà không cần tính lại. Nếu request đến trong giai đoạn stale (giữa hai mốc), giá trị stale được trả cho người dùng và một [deferred function](/helpers#deferred-functions) được đăng ký để làm mới cache sau khi response đã gửi đi. Nếu request đến sau mốc thứ hai, cache được xem là đã hết hạn và giá trị sẽ được tính lại ngay lập tức, vì vậy response có thể chậm hơn:
 
 ```php
 $value = Cache::flexible('users', [5, 10], function () {
@@ -420,7 +420,7 @@ cache()->remember('users', $seconds, function () {
 ```
 
 > [!NOTE]
-> Khi kiểm thử các lời gọi đến hàm `cache` toàn cục, bạn có thể sử dụng phương thức `Cache::shouldReceive` tương tự như khi [kiểm thử facade](/docs/{{version}}/mocking#mocking-facades).
+> Khi kiểm thử các lời gọi đến hàm `cache` toàn cục, bạn có thể sử dụng phương thức `Cache::shouldReceive` tương tự như khi [kiểm thử facade](/mocking#mocking-facades).
 
 <a name="cache-tags"></a>
 ## Cache tag
@@ -672,7 +672,7 @@ Khi một thao tác cache store thất bại và failover được kích hoạt,
 <a name="writing-the-driver"></a>
 ### Viết driver
 
-Để tạo cache driver tùy chỉnh, trước tiên chúng ta cần implement [contract](/docs/{{version}}/contracts) `Illuminate\Contracts\Cache\Store`. Vì vậy, một implementation cache bằng MongoDB có thể trông như sau:
+Để tạo cache driver tùy chỉnh, trước tiên chúng ta cần implement [contract](/contracts) `Illuminate\Contracts\Cache\Store`. Vì vậy, một implementation cache bằng MongoDB có thể trông như sau:
 
 ```php
 <?php
@@ -746,14 +746,14 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-Đối số đầu tiên truyền vào phương thức `extend` là tên driver. Tên này tương ứng với option `driver` trong file cấu hình `config/cache.php`. Đối số thứ hai là một closure phải trả về instance `Illuminate\Cache\Repository`. Closure nhận `$app`, là một instance của [service container](/docs/{{version}}/container).
+Đối số đầu tiên truyền vào phương thức `extend` là tên driver. Tên này tương ứng với option `driver` trong file cấu hình `config/cache.php`. Đối số thứ hai là một closure phải trả về instance `Illuminate\Cache\Repository`. Closure nhận `$app`, là một instance của [service container](/container).
 
 Sau khi extension được đăng ký, hãy cập nhật biến môi trường `CACHE_STORE` hoặc option `default` trong file `config/cache.php` thành tên extension của bạn.
 
 <a name="events"></a>
 ## Event
 
-Để thực thi code trên mọi thao tác cache, bạn có thể lắng nghe các [event](/docs/{{version}}/events) khác nhau do cache dispatch:
+Để thực thi code trên mọi thao tác cache, bạn có thể lắng nghe các [event](/events) khác nhau do cache dispatch:
 
 <div class="overflow-auto">
 

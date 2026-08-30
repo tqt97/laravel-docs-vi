@@ -60,7 +60,7 @@ Route::get('/', function (Service $service) {
 
 Trong ví dụ này, khi truy cập route `/` của ứng dụng, Laravel sẽ tự động phân giải class `Service` và inject instance tương ứng vào handler của route. Đây là một khả năng rất quan trọng: bạn có thể tận dụng dependency injection trong quá trình phát triển mà không phải duy trì những file cấu hình binding cồng kềnh.
 
-Trong ứng dụng Laravel, rất nhiều class bạn viết sẽ tự động nhận dependency thông qua container, bao gồm [controller](/docs/{{version}}/controllers), [event listener](/docs/{{version}}/events), [middleware](/docs/{{version}}/middleware) và nhiều thành phần khác. Bạn cũng có thể type-hint dependency trong phương thức `handle` của [queued job](/docs/{{version}}/queues). Khi đã quen với khả năng dependency injection tự động và không cần cấu hình này, nó sẽ trở thành một phần tự nhiên trong cách bạn phát triển ứng dụng Laravel.
+Trong ứng dụng Laravel, rất nhiều class bạn viết sẽ tự động nhận dependency thông qua container, bao gồm [controller](/controllers), [event listener](/events), [middleware](/middleware) và nhiều thành phần khác. Bạn cũng có thể type-hint dependency trong phương thức `handle` của [queued job](/queues). Khi đã quen với khả năng dependency injection tự động và không cần cấu hình này, nó sẽ trở thành một phần tự nhiên trong cách bạn phát triển ứng dụng Laravel.
 
 <a name="when-to-use-the-container"></a>
 ### Khi nào nên sử dụng Container
@@ -75,9 +75,9 @@ Route::get('/', function (Request $request) {
 });
 ```
 
-Trong nhiều trường hợp, nhờ dependency injection tự động và [facade](/docs/{{version}}/facades), bạn có thể xây dựng ứng dụng Laravel mà **không bao giờ** phải tự binding hoặc phân giải dependency từ container. **Vậy khi nào chúng ta thực sự cần thao tác trực tiếp với container?** Có hai tình huống chính.
+Trong nhiều trường hợp, nhờ dependency injection tự động và [facade](/facades), bạn có thể xây dựng ứng dụng Laravel mà **không bao giờ** phải tự binding hoặc phân giải dependency từ container. **Vậy khi nào chúng ta thực sự cần thao tác trực tiếp với container?** Có hai tình huống chính.
 
-Thứ nhất, nếu bạn viết một class triển khai một interface và muốn type-hint interface đó trong route hoặc constructor của class, bạn phải [chỉ cho container cách phân giải interface đó](#binding-interfaces-to-implementations). Thứ hai, nếu bạn đang [phát triển một Laravel package](/docs/{{version}}/packages) để chia sẻ cho các Laravel developer khác, bạn có thể cần binding các service của package vào container.
+Thứ nhất, nếu bạn viết một class triển khai một interface và muốn type-hint interface đó trong route hoặc constructor của class, bạn phải [chỉ cho container cách phân giải interface đó](#binding-interfaces-to-implementations). Thứ hai, nếu bạn đang [phát triển một Laravel package](/packages) để chia sẻ cho các Laravel developer khác, bạn có thể cần binding các service của package vào container.
 
 <a name="binding"></a>
 ## Binding
@@ -88,7 +88,7 @@ Thứ nhất, nếu bạn viết một class triển khai một interface và mu
 <a name="simple-bindings"></a>
 #### Binding cơ bản
 
-Hầu hết binding của Service Container sẽ được đăng ký trong [service provider](/docs/{{version}}/providers), vì vậy phần lớn ví dụ trong tài liệu này sẽ minh họa việc sử dụng container trong ngữ cảnh đó.
+Hầu hết binding của Service Container sẽ được đăng ký trong [service provider](/providers), vì vậy phần lớn ví dụ trong tài liệu này sẽ minh họa việc sử dụng container trong ngữ cảnh đó.
 
 Bên trong service provider, bạn luôn có thể truy cập container thông qua property `$this->app`. Để đăng ký một binding, hãy gọi phương thức `bind`, truyền vào tên class hoặc interface cần đăng ký cùng một closure trả về instance của class:
 
@@ -104,7 +104,7 @@ $this->app->bind(Transistor::class, function (Application $app) {
 
 Lưu ý rằng resolver nhận chính container làm tham số. Từ đó, chúng ta có thể dùng container để phân giải các dependency con của đối tượng đang được khởi tạo.
 
-Như đã đề cập, thông thường bạn sẽ thao tác với container bên trong service provider. Tuy nhiên, nếu cần sử dụng container bên ngoài service provider, bạn có thể thực hiện thông qua [facade](/docs/{{version}}/facades) `App`:
+Như đã đề cập, thông thường bạn sẽ thao tác với container bên trong service provider. Tuy nhiên, nếu cần sử dụng container bên ngoài service provider, bạn có thể thực hiện thông qua [facade](/facades) `App`:
 
 ```php
 use App\Services\Transistor;
@@ -180,7 +180,7 @@ class Transistor
 <a name="binding-scoped"></a>
 #### Binding Scoped Singleton
 
-Phương thức `scoped` binding một class hoặc interface vào container sao cho type đó chỉ được phân giải một lần trong một lifecycle request / job cụ thể của Laravel. Cách hoạt động này tương tự `singleton`, nhưng instance đăng ký bằng `scoped` sẽ được loại bỏ mỗi khi ứng dụng Laravel bắt đầu một "lifecycle" mới, chẳng hạn khi worker của [Laravel Octane](/docs/{{version}}/octane) xử lý request mới hoặc khi [queue worker](/docs/{{version}}/queues) của Laravel xử lý job mới:
+Phương thức `scoped` binding một class hoặc interface vào container sao cho type đó chỉ được phân giải một lần trong một lifecycle request / job cụ thể của Laravel. Cách hoạt động này tương tự `singleton`, nhưng instance đăng ký bằng `scoped` sẽ được loại bỏ mỗi khi ứng dụng Laravel bắt đầu một "lifecycle" mới, chẳng hạn khi worker của [Laravel Octane](/octane) xử lý request mới hoặc khi [queue worker](/queues) của Laravel xử lý job mới:
 
 ```php
 use App\Services\Transistor;
@@ -317,7 +317,7 @@ interface EventPusher
 <a name="contextual-binding"></a>
 ### Contextual Binding
 
-Đôi khi hai class cùng sử dụng một interface nhưng bạn muốn inject implementation khác nhau cho từng class. Ví dụ, hai controller có thể phụ thuộc vào các implementation khác nhau của [contract](/docs/{{version}}/contracts) `Illuminate\Contracts\Filesystem\Filesystem`. Laravel cung cấp một fluent interface đơn giản để định nghĩa hành vi này:
+Đôi khi hai class cùng sử dụng một interface nhưng bạn muốn inject implementation khác nhau cho từng class. Ví dụ, hai controller có thể phụ thuộc vào các implementation khác nhau của [contract](/contracts) `Illuminate\Contracts\Filesystem\Filesystem`. Laravel cung cấp một fluent interface đơn giản để định nghĩa hành vi này:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -344,7 +344,7 @@ $this->app->when([VideoController::class, UploadController::class])
 
 Vì contextual binding thường được dùng để inject implementation của driver hoặc các giá trị cấu hình, Laravel cung cấp nhiều contextual binding attribute cho phép inject trực tiếp các loại giá trị này mà không phải tự định nghĩa contextual binding trong service provider.
 
-Ví dụ, attribute `Storage` có thể được dùng để inject một [storage disk](/docs/{{version}}/filesystem) cụ thể:
+Ví dụ, attribute `Storage` có thể được dùng để inject một [storage disk](/filesystem) cụ thể:
 
 ```php
 <?php
@@ -629,7 +629,7 @@ if ($this->app->bound(Transistor::class)) {
 }
 ```
 
-Nếu đang ở bên ngoài service provider, tại một vị trí trong code không thể truy cập biến `$app`, bạn có thể sử dụng [facade](/docs/{{version}}/facades) `App` hoặc [helper](/docs/{{version}}/helpers#method-app) `app` để phân giải một instance của class từ container:
+Nếu đang ở bên ngoài service provider, tại một vị trí trong code không thể truy cập biến `$app`, bạn có thể sử dụng [facade](/facades) `App` hoặc [helper](/helpers#method-app) `app` để phân giải một instance của class từ container:
 
 ```php
 use App\Services\Transistor;
@@ -656,7 +656,7 @@ public function __construct(
 <a name="automatic-injection"></a>
 ### Tự động inject dependency
 
-Một cách khác — và cũng là cách quan trọng nhất trong thực tế — là type-hint dependency trong constructor của class được container phân giải, chẳng hạn [controller](/docs/{{version}}/controllers), [event listener](/docs/{{version}}/events), [middleware](/docs/{{version}}/middleware) và nhiều loại class khác. Bạn cũng có thể type-hint dependency trong phương thức `handle` của [queued job](/docs/{{version}}/queues). Trong thực tế, đây là cách phần lớn object trong ứng dụng nên được container phân giải.
+Một cách khác — và cũng là cách quan trọng nhất trong thực tế — là type-hint dependency trong constructor của class được container phân giải, chẳng hạn [controller](/controllers), [event listener](/events), [middleware](/middleware) và nhiều loại class khác. Bạn cũng có thể type-hint dependency trong phương thức `handle` của [queued job](/queues). Trong thực tế, đây là cách phần lớn object trong ứng dụng nên được container phân giải.
 
 Ví dụ, bạn có thể type-hint một service do ứng dụng định nghĩa trong constructor của controller. Service đó sẽ được container tự động phân giải và inject vào class:
 

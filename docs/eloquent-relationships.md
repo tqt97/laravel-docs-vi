@@ -21,7 +21,7 @@ Các bảng trong cơ sở dữ liệu thường có quan hệ với nhau. Ví d
 <a name="defining-relationships"></a>
 ## Định nghĩa quan hệ
 
-Các quan hệ Eloquent được định nghĩa dưới dạng phương thức trên các lớp model Eloquent. Vì quan hệ cũng hoạt động như những [query builder](/docs/{{version}}/queries) mạnh mẽ, việc định nghĩa quan hệ dưới dạng phương thức mang lại khả năng nối chuỗi phương thức và truy vấn linh hoạt. Ví dụ, ta có thể nối thêm các điều kiện truy vấn vào quan hệ `posts` này:
+Các quan hệ Eloquent được định nghĩa dưới dạng phương thức trên các lớp model Eloquent. Vì quan hệ cũng hoạt động như những [query builder](/queries) mạnh mẽ, việc định nghĩa quan hệ dưới dạng phương thức mang lại khả năng nối chuỗi phương thức và truy vấn linh hoạt. Ví dụ, ta có thể nối thêm các điều kiện truy vấn vào quan hệ `posts` này:
 
 ```php
 $user->posts()->where('active', 1)->get();
@@ -150,7 +150,7 @@ class Post extends Model
 
 Eloquent sẽ tự động xác định cột khóa ngoại phù hợp cho model `Comment`. Theo quy ước, Eloquent lấy tên model cha ở dạng "snake case" rồi thêm hậu tố `_id`. Vì vậy, trong ví dụ này Eloquent giả định cột khóa ngoại trên model `Comment` là `post_id`.
 
-Sau khi phương thức quan hệ được định nghĩa, ta có thể truy cập [collection](/docs/{{version}}/eloquent-collections) các bình luận liên quan thông qua thuộc tính `comments`. Vì Eloquent cung cấp "thuộc tính quan hệ động", ta có thể truy cập phương thức quan hệ như thể đó là thuộc tính được định nghĩa trên model:
+Sau khi phương thức quan hệ được định nghĩa, ta có thể truy cập [collection](/eloquent-collections) các bình luận liên quan thông qua thuộc tính `comments`. Vì Eloquent cung cấp "thuộc tính quan hệ động", ta có thể truy cập phương thức quan hệ như thể đó là thuộc tính được định nghĩa trên model:
 
 ```php
 use App\Models\Post;
@@ -346,7 +346,7 @@ Tuy nhiên, sử dụng `whereBelongsTo` thường thuận tiện hơn vì phư�
 $posts = Post::whereBelongsTo($user)->get();
 ```
 
-Bạn cũng có thể truyền một instance [collection](/docs/{{version}}/eloquent-collections) vào `whereBelongsTo`. Khi đó, Laravel sẽ lấy các model thuộc về bất kỳ model cha nào trong collection:
+Bạn cũng có thể truyền một instance [collection](/eloquent-collections) vào `whereBelongsTo`. Khi đó, Laravel sẽ lấy các model thuộc về bất kỳ model cha nào trong collection:
 
 ```php
 $users = User::where('vip', true)->get();
@@ -1447,7 +1447,7 @@ $class = Relation::getMorphedModel($alias);
 
 Bạn có thể dùng method `resolveRelationUsing` để định nghĩa relation giữa các Eloquent model tại runtime. Dù thường không được khuyến nghị cho việc phát triển ứng dụng thông thường, cách này đôi khi hữu ích khi phát triển package Laravel.
 
-Method `resolveRelationUsing` nhận tên relationship mong muốn làm argument đầu tiên. Argument thứ hai phải là một closure nhận model instance và trả về một định nghĩa Eloquent relationship hợp lệ. Thông thường, bạn nên cấu hình dynamic relationship trong method `boot` của một [service provider](/docs/{{version}}/providers):
+Method `resolveRelationUsing` nhận tên relationship mong muốn làm argument đầu tiên. Argument thứ hai phải là một closure nhận model instance và trả về một định nghĩa Eloquent relationship hợp lệ. Thông thường, bạn nên cấu hình dynamic relationship trong method `boot` của một [service provider](/providers):
 
 ```php
 use App\Models\Order;
@@ -1464,7 +1464,7 @@ Order::resolveRelationUsing('customer', function (Order $orderModel) {
 <a name="querying-relations"></a>
 ## Truy vấn quan hệ
 
-Vì mọi Eloquent relationship đều được định nghĩa thông qua method, bạn có thể gọi các method đó để lấy instance của relationship mà không thực sự chạy query để load related model. Ngoài ra, mọi loại Eloquent relationship cũng hoạt động như [query builder](/docs/{{version}}/queries), cho phép bạn tiếp tục chain constraint vào relationship query trước khi cuối cùng thực thi SQL query với database.
+Vì mọi Eloquent relationship đều được định nghĩa thông qua method, bạn có thể gọi các method đó để lấy instance của relationship mà không thực sự chạy query để load related model. Ngoài ra, mọi loại Eloquent relationship cũng hoạt động như [query builder](/queries), cho phép bạn tiếp tục chain constraint vào relationship query trước khi cuối cùng thực thi SQL query với database.
 
 Ví dụ, hãy tưởng tượng một ứng dụng blog trong đó model `User` có nhiều model `Post` liên kết:
 
@@ -1498,7 +1498,7 @@ $user = User::find(1);
 $user->posts()->where('active', 1)->get();
 ```
 
-Bạn có thể dùng bất kỳ method nào của [query builder](/docs/{{version}}/queries) Laravel trên relationship, vì vậy hãy tham khảo tài liệu query builder để nắm toàn bộ method khả dụng.
+Bạn có thể dùng bất kỳ method nào của [query builder](/queries) Laravel trên relationship, vì vậy hãy tham khảo tài liệu query builder để nắm toàn bộ method khả dụng.
 
 <a name="chaining-orwhere-clauses-after-relationships"></a>
 #### Nối các mệnh đề `orWhere` sau quan hệ
@@ -1520,7 +1520,7 @@ from posts
 where user_id = ? and active = 1 or votes >= 100
 ```
 
-Trong hầu hết trường hợp, bạn nên dùng [logical group](/docs/{{version}}/queries#logical-grouping) để nhóm các điều kiện trong cặp dấu ngoặc đơn:
+Trong hầu hết trường hợp, bạn nên dùng [logical group](/queries#logical-grouping) để nhóm các điều kiện trong cặp dấu ngoặc đơn:
 
 ```php
 use Illuminate\Database\Eloquent\Builder;
@@ -1612,7 +1612,7 @@ Phương thức `whereAttachedTo` có thể được dùng để truy vấn các
 $users = User::whereAttachedTo($role)->get();
 ```
 
-Bạn cũng có thể truyền một instance [collection](/docs/{{version}}/eloquent-collections) vào phương thức `whereAttachedTo`. Khi đó, Laravel sẽ lấy các model được liên kết với bất kỳ model nào trong collection:
+Bạn cũng có thể truyền một instance [collection](/eloquent-collections) vào phương thức `whereAttachedTo`. Khi đó, Laravel sẽ lấy các model được liên kết với bất kỳ model nào trong collection:
 
 ```php
 $tags = Tag::whereLike('name', '%laravel%')->get();
@@ -2093,7 +2093,7 @@ $users = User::with(['posts' => function ($query) {
 }])->get();
 ```
 
-Trong ví dụ này, Eloquent chỉ eager load các post có cột `title` chứa từ `code`. Bạn có thể gọi thêm các phương thức của [query builder](/docs/{{version}}/queries) để tùy chỉnh thao tác eager loading:
+Trong ví dụ này, Eloquent chỉ eager load các post có cột `title` chứa từ `code`. Bạn có thể gọi thêm các phương thức của [query builder](/queries) để tùy chỉnh thao tác eager loading:
 
 ```php
 $users = User::with(['posts' => function ($query) {
@@ -2382,10 +2382,10 @@ $user->posts()->createManyQuietly([
 ]);
 ```
 
-Bạn cũng có thể dùng các phương thức `findOrNew`, `firstOrNew`, `firstOrCreate` và `updateOrCreate` để [tạo và cập nhật model thông qua quan hệ](/docs/{{version}}/eloquent#upserts).
+Bạn cũng có thể dùng các phương thức `findOrNew`, `firstOrNew`, `firstOrCreate` và `updateOrCreate` để [tạo và cập nhật model thông qua quan hệ](/eloquent#upserts).
 
 > [!NOTE]
-> Trước khi dùng phương thức `create`, hãy đọc tài liệu về [mass assignment](/docs/{{version}}/eloquent#mass-assignment).
+> Trước khi dùng phương thức `create`, hãy đọc tài liệu về [mass assignment](/eloquent#mass-assignment).
 
 <a name="updating-belongs-to-relationships"></a>
 ### Quan hệ Belongs To

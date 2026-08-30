@@ -221,14 +221,14 @@ Nếu chọn cài Valkey cùng Sail, file `compose.yaml` sẽ có service cho [V
 <a name="meilisearch"></a>
 ### Meilisearch
 
-Nếu chọn cài [Meilisearch](https://www.meilisearch.com) cùng Sail, file `compose.yaml` sẽ có service cho search engine này, vốn được tích hợp với [Laravel Scout](/docs/{{version}}/scout). Sau khi khởi động container, hãy đặt `MEILISEARCH_HOST` thành `http://meilisearch:7700` để ứng dụng kết nối tới Meilisearch.
+Nếu chọn cài [Meilisearch](https://www.meilisearch.com) cùng Sail, file `compose.yaml` sẽ có service cho search engine này, vốn được tích hợp với [Laravel Scout](/scout). Sau khi khởi động container, hãy đặt `MEILISEARCH_HOST` thành `http://meilisearch:7700` để ứng dụng kết nối tới Meilisearch.
 
 Từ máy local, bạn có thể truy cập giao diện quản trị web của Meilisearch tại `http://localhost:7700`.
 
 <a name="typesense"></a>
 ### Typesense
 
-Nếu chọn cài [Typesense](https://typesense.org) cùng Sail, file `compose.yaml` sẽ có service cho search engine mã nguồn mở có tốc độ cao này, được tích hợp trực tiếp với [Laravel Scout](/docs/{{version}}/scout#typesense). Sau khi khởi động container, bạn có thể kết nối ứng dụng tới Typesense bằng các biến môi trường sau:
+Nếu chọn cài [Typesense](https://typesense.org) cùng Sail, file `compose.yaml` sẽ có service cho search engine mã nguồn mở có tốc độ cao này, được tích hợp trực tiếp với [Laravel Scout](/scout#typesense). Sau khi khởi động container, bạn có thể kết nối ứng dụng tới Typesense bằng các biến môi trường sau:
 
 ```ini
 TYPESENSE_HOST=typesense
@@ -259,7 +259,7 @@ AWS_USE_PATH_STYLE_ENDPOINT=true
 <a name="running-tests"></a>
 ## Chạy test
 
-Laravel cung cấp sẵn khả năng testing mạnh mẽ và bạn có thể dùng lệnh `test` của Sail để chạy [feature test và unit test](/docs/{{version}}/testing) của ứng dụng. Mọi tùy chọn CLI được Pest / PHPUnit chấp nhận cũng có thể truyền cho lệnh `test`:
+Laravel cung cấp sẵn khả năng testing mạnh mẽ và bạn có thể dùng lệnh `test` của Sail để chạy [feature test và unit test](/testing) của ứng dụng. Mọi tùy chọn CLI được Pest / PHPUnit chấp nhận cũng có thể truyền cho lệnh `test`:
 
 ```shell
 sail test
@@ -282,7 +282,7 @@ Theo mặc định, Sail tạo database `testing` riêng để test không ảnh
 <a name="laravel-dusk"></a>
 ### Laravel Dusk
 
-[Laravel Dusk](/docs/{{version}}/dusk) cung cấp API trực quan, dễ sử dụng cho browser automation và testing. Nhờ Sail, bạn có thể chạy các test này mà không cần cài Selenium hoặc công cụ liên quan trên máy local. Để bắt đầu, hãy bỏ comment service Selenium trong file `compose.yaml`:
+[Laravel Dusk](/dusk) cung cấp API trực quan, dễ sử dụng cho browser automation và testing. Nhờ Sail, bạn có thể chạy các test này mà không cần cài Selenium hoặc công cụ liên quan trên máy local. Để bắt đầu, hãy bỏ comment service Selenium trong file `compose.yaml`:
 
 ```yaml
 selenium:

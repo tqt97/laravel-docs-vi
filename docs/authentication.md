@@ -1,6 +1,6 @@
 # Xác thực
 
-- [Social Authentication](/docs/{{version}}/socialite)
+- [Social Authentication](/socialite)
 - [Events](#events)
 
 <a name="introduction"></a>
@@ -10,24 +10,24 @@ Nhiều ứng dụng web cung cấp cách để người dùng xác thực với
 
 Về cốt lõi, cơ chế xác thực của Laravel được cấu thành từ "guard" và "provider". Guard xác định cách người dùng được xác thực cho mỗi request. Ví dụ, Laravel đi kèm guard `session`, guard này duy trì trạng thái bằng session storage và cookie.
 
-Provider xác định cách lấy người dùng từ nơi lưu trữ bền vững của ứng dụng. Laravel hỗ trợ sẵn việc lấy người dùng bằng [Eloquent](/docs/{{version}}/eloquent) và database query builder. Tuy nhiên, bạn có thể tự định nghĩa thêm provider theo nhu cầu của ứng dụng.
+Provider xác định cách lấy người dùng từ nơi lưu trữ bền vững của ứng dụng. Laravel hỗ trợ sẵn việc lấy người dùng bằng [Eloquent](/eloquent) và database query builder. Tuy nhiên, bạn có thể tự định nghĩa thêm provider theo nhu cầu của ứng dụng.
 
 File cấu hình xác thực của ứng dụng nằm tại `config/auth.php`. File này chứa nhiều tùy chọn được tài liệu hóa đầy đủ để điều chỉnh hành vi của các dịch vụ xác thực Laravel.
 
 > [!NOTE]
-> Không nên nhầm guard và provider với "role" và "permission". Để tìm hiểu thêm về việc phân quyền hành động của người dùng thông qua permission, hãy tham khảo tài liệu [phân quyền](/docs/{{version}}/authorization).
+> Không nên nhầm guard và provider với "role" và "permission". Để tìm hiểu thêm về việc phân quyền hành động của người dùng thông qua permission, hãy tham khảo tài liệu [phân quyền](/authorization).
 
 <a name="starter-kits"></a>
 ### Starter Kit
 
-Muốn bắt đầu nhanh? Hãy cài đặt một [Laravel application starter kit](/docs/{{version}}/starter-kits) trong ứng dụng Laravel mới. Sau khi migrate cơ sở dữ liệu, truy cập `/register` hoặc URL khác được gán cho ứng dụng. Starter kit sẽ đảm nhiệm việc scaffold toàn bộ hệ thống xác thực cho bạn!
+Muốn bắt đầu nhanh? Hãy cài đặt một [Laravel application starter kit](/starter-kits) trong ứng dụng Laravel mới. Sau khi migrate cơ sở dữ liệu, truy cập `/register` hoặc URL khác được gán cho ứng dụng. Starter kit sẽ đảm nhiệm việc scaffold toàn bộ hệ thống xác thực cho bạn!
 
-**Ngay cả khi bạn quyết định không dùng starter kit trong ứng dụng Laravel cuối cùng, việc cài đặt một [starter kit](/docs/{{version}}/starter-kits) vẫn là cơ hội rất tốt để học cách triển khai toàn bộ chức năng xác thực của Laravel trong một dự án Laravel thực tế.** Vì các Laravel starter kit đã cung cấp controller, route và view phục vụ xác thực, bạn có thể xem mã nguồn trong các file này để tìm hiểu cách triển khai các tính năng xác thực của Laravel.
+**Ngay cả khi bạn quyết định không dùng starter kit trong ứng dụng Laravel cuối cùng, việc cài đặt một [starter kit](/starter-kits) vẫn là cơ hội rất tốt để học cách triển khai toàn bộ chức năng xác thực của Laravel trong một dự án Laravel thực tế.** Vì các Laravel starter kit đã cung cấp controller, route và view phục vụ xác thực, bạn có thể xem mã nguồn trong các file này để tìm hiểu cách triển khai các tính năng xác thực của Laravel.
 
 <a name="introduction-database-considerations"></a>
 ### Các lưu ý về cơ sở dữ liệu
 
-Theo mặc định, Laravel cung cấp [Eloquent model](/docs/{{version}}/eloquent) `App\Models\User` trong thư mục `app/Models`. Model này có thể được sử dụng với Eloquent authentication driver mặc định.
+Theo mặc định, Laravel cung cấp [Eloquent model](/eloquent) `App\Models\User` trong thư mục `app/Models`. Model này có thể được sử dụng với Eloquent authentication driver mặc định.
 
 Nếu ứng dụng không sử dụng Eloquent, bạn có thể dùng authentication provider `database`, vốn sử dụng Laravel query builder. Nếu ứng dụng sử dụng MongoDB, hãy xem [tài liệu xác thực người dùng Laravel](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/user-authentication/) chính thức của MongoDB.
 
@@ -40,7 +40,7 @@ Bạn cũng nên xác minh bảng `users` (hoặc bảng tương đương) có c
 
 Laravel cung cấp một số package liên quan đến xác thực. Trước khi tiếp tục, chúng ta sẽ xem tổng quan hệ sinh thái xác thực của Laravel và mục đích sử dụng của từng package.
 
-Trước tiên, hãy xem cách xác thực hoạt động. Khi sử dụng trình duyệt web, người dùng cung cấp tên đăng nhập và mật khẩu qua form đăng nhập. Nếu thông tin xác thực chính xác, ứng dụng sẽ lưu thông tin về người dùng đã xác thực trong [session](/docs/{{version}}/session) của họ. Cookie được gửi tới trình duyệt chứa session ID để các request tiếp theo tới ứng dụng có thể được liên kết với đúng session. Khi nhận được session cookie, ứng dụng lấy dữ liệu session dựa trên session ID, nhận biết thông tin xác thực đã được lưu trong session và xem người dùng là "đã xác thực".
+Trước tiên, hãy xem cách xác thực hoạt động. Khi sử dụng trình duyệt web, người dùng cung cấp tên đăng nhập và mật khẩu qua form đăng nhập. Nếu thông tin xác thực chính xác, ứng dụng sẽ lưu thông tin về người dùng đã xác thực trong [session](/session) của họ. Cookie được gửi tới trình duyệt chứa session ID để các request tiếp theo tới ứng dụng có thể được liên kết với đúng session. Khi nhận được session cookie, ứng dụng lấy dữ liệu session dựa trên session ID, nhận biết thông tin xác thực đã được lưu trong session và xem người dùng là "đã xác thực".
 
 Khi một dịch vụ từ xa cần xác thực để truy cập API, cookie thường không được dùng vì không có trình duyệt web. Thay vào đó, dịch vụ từ xa gửi API token tới API trong mỗi request. Ứng dụng có thể đối chiếu token nhận được với bảng API token hợp lệ và "xác thực" request là do người dùng gắn với API token đó thực hiện.
 
@@ -51,12 +51,12 @@ Laravel cung cấp sẵn các dịch vụ xác thực và session, thường đ�
 
 **Application Starter Kit**
 
-Như đã trình bày trong tài liệu này, bạn có thể tương tác thủ công với các dịch vụ xác thực để xây dựng lớp xác thực riêng cho ứng dụng. Tuy nhiên, để giúp bạn bắt đầu nhanh hơn, chúng tôi cung cấp các [starter kit miễn phí](/docs/{{version}}/starter-kits) với scaffold hiện đại và đầy đủ cho toàn bộ lớp xác thực.
+Như đã trình bày trong tài liệu này, bạn có thể tương tác thủ công với các dịch vụ xác thực để xây dựng lớp xác thực riêng cho ứng dụng. Tuy nhiên, để giúp bạn bắt đầu nhanh hơn, chúng tôi cung cấp các [starter kit miễn phí](/starter-kits) với scaffold hiện đại và đầy đủ cho toàn bộ lớp xác thực.
 
 <a name="laravels-api-authentication-services"></a>
 #### Các dịch vụ xác thực API của Laravel
 
-Laravel cung cấp hai package tùy chọn giúp quản lý API token và xác thực các request sử dụng API token: [Passport](/docs/{{version}}/passport) và [Sanctum](/docs/{{version}}/sanctum). Lưu ý rằng các thư viện này và cơ chế xác thực dựa trên cookie tích hợp sẵn của Laravel không loại trừ lẫn nhau. Các thư viện này chủ yếu tập trung vào xác thực bằng API token, trong khi dịch vụ xác thực tích hợp tập trung vào xác thực trình duyệt dựa trên cookie. Nhiều ứng dụng sẽ sử dụng đồng thời dịch vụ xác thực cookie tích hợp của Laravel và một package xác thực API của Laravel.
+Laravel cung cấp hai package tùy chọn giúp quản lý API token và xác thực các request sử dụng API token: [Passport](/passport) và [Sanctum](/sanctum). Lưu ý rằng các thư viện này và cơ chế xác thực dựa trên cookie tích hợp sẵn của Laravel không loại trừ lẫn nhau. Các thư viện này chủ yếu tập trung vào xác thực bằng API token, trong khi dịch vụ xác thực tích hợp tập trung vào xác thực trình duyệt dựa trên cookie. Nhiều ứng dụng sẽ sử dụng đồng thời dịch vụ xác thực cookie tích hợp của Laravel và một package xác thực API của Laravel.
 
 **Passport**
 
@@ -64,33 +64,33 @@ Passport là authentication provider OAuth2, cung cấp nhiều "grant type" OAu
 
 **Sanctum**
 
-Để giải quyết sự phức tạp của OAuth2 và những nhầm lẫn mà developer thường gặp, chúng tôi xây dựng một package xác thực đơn giản và tinh gọn hơn, có thể xử lý cả request web first-party từ trình duyệt lẫn request API thông qua token. Mục tiêu này được hiện thực hóa với [Laravel Sanctum](/docs/{{version}}/sanctum), package xác thực nên được ưu tiên và khuyến nghị cho ứng dụng vừa cung cấp giao diện web first-party vừa có API, ứng dụng single-page application (SPA) tách biệt với backend Laravel, hoặc ứng dụng có mobile client.
+Để giải quyết sự phức tạp của OAuth2 và những nhầm lẫn mà developer thường gặp, chúng tôi xây dựng một package xác thực đơn giản và tinh gọn hơn, có thể xử lý cả request web first-party từ trình duyệt lẫn request API thông qua token. Mục tiêu này được hiện thực hóa với [Laravel Sanctum](/sanctum), package xác thực nên được ưu tiên và khuyến nghị cho ứng dụng vừa cung cấp giao diện web first-party vừa có API, ứng dụng single-page application (SPA) tách biệt với backend Laravel, hoặc ứng dụng có mobile client.
 
-Laravel Sanctum là package xác thực lai web / API có thể quản lý toàn bộ quy trình xác thực của ứng dụng. Khi ứng dụng dùng Sanctum nhận một request, Sanctum trước tiên xác định request có chứa session cookie tham chiếu đến một session đã xác thực hay không. Sanctum thực hiện việc này bằng cách gọi các dịch vụ xác thực tích hợp của Laravel đã đề cập ở trên. Nếu request không được xác thực qua session cookie, Sanctum sẽ kiểm tra API token. Nếu có API token, Sanctum sẽ xác thực request bằng token đó. Để tìm hiểu thêm về quy trình này, hãy tham khảo tài liệu ["cách hoạt động"](/docs/{{version}}/sanctum#how-it-works) của Sanctum.
+Laravel Sanctum là package xác thực lai web / API có thể quản lý toàn bộ quy trình xác thực của ứng dụng. Khi ứng dụng dùng Sanctum nhận một request, Sanctum trước tiên xác định request có chứa session cookie tham chiếu đến một session đã xác thực hay không. Sanctum thực hiện việc này bằng cách gọi các dịch vụ xác thực tích hợp của Laravel đã đề cập ở trên. Nếu request không được xác thực qua session cookie, Sanctum sẽ kiểm tra API token. Nếu có API token, Sanctum sẽ xác thực request bằng token đó. Để tìm hiểu thêm về quy trình này, hãy tham khảo tài liệu ["cách hoạt động"](/sanctum#how-it-works) của Sanctum.
 
 <a name="summary-choosing-your-stack"></a>
 #### Tổng kết và lựa chọn stack
 
 Tóm lại, nếu ứng dụng được truy cập bằng trình duyệt và bạn đang xây dựng một ứng dụng Laravel monolith, ứng dụng sẽ sử dụng các dịch vụ xác thực tích hợp sẵn của Laravel.
 
-Tiếp theo, nếu ứng dụng cung cấp API cho bên thứ ba sử dụng, bạn sẽ chọn [Passport](/docs/{{version}}/passport) hoặc [Sanctum](/docs/{{version}}/sanctum) để cung cấp xác thực API token. Nhìn chung nên ưu tiên Sanctum khi có thể vì đây là giải pháp đơn giản, đầy đủ cho xác thực API, SPA và mobile, bao gồm hỗ trợ "scope" hoặc "ability".
+Tiếp theo, nếu ứng dụng cung cấp API cho bên thứ ba sử dụng, bạn sẽ chọn [Passport](/passport) hoặc [Sanctum](/sanctum) để cung cấp xác thực API token. Nhìn chung nên ưu tiên Sanctum khi có thể vì đây là giải pháp đơn giản, đầy đủ cho xác thực API, SPA và mobile, bao gồm hỗ trợ "scope" hoặc "ability".
 
-Nếu đang xây dựng single-page application (SPA) dùng Laravel làm backend, bạn nên sử dụng [Laravel Sanctum](/docs/{{version}}/sanctum). Khi dùng Sanctum, bạn cần [tự triển khai các route xác thực backend](#authenticating-users) hoặc sử dụng [Laravel Fortify](/docs/{{version}}/fortify) làm dịch vụ backend xác thực headless, cung cấp route và controller cho các tính năng như đăng ký, đặt lại mật khẩu, xác minh email và nhiều tính năng khác.
+Nếu đang xây dựng single-page application (SPA) dùng Laravel làm backend, bạn nên sử dụng [Laravel Sanctum](/sanctum). Khi dùng Sanctum, bạn cần [tự triển khai các route xác thực backend](#authenticating-users) hoặc sử dụng [Laravel Fortify](/fortify) làm dịch vụ backend xác thực headless, cung cấp route và controller cho các tính năng như đăng ký, đặt lại mật khẩu, xác minh email và nhiều tính năng khác.
 
-Có thể chọn Passport khi ứng dụng thực sự cần toàn bộ tính năng mà đặc tả OAuth2 cung cấp. Ngoài ra, nếu đang xây dựng [MCP server](/docs/{{version}}/mcp) để các AI client truy cập, bạn nên dùng Passport vì MCP client thường kỳ vọng [xác thực bằng OAuth](/docs/{{version}}/mcp#oauth).
+Có thể chọn Passport khi ứng dụng thực sự cần toàn bộ tính năng mà đặc tả OAuth2 cung cấp. Ngoài ra, nếu đang xây dựng [MCP server](/mcp) để các AI client truy cập, bạn nên dùng Passport vì MCP client thường kỳ vọng [xác thực bằng OAuth](/mcp#oauth).
 
-Nếu muốn bắt đầu nhanh, chúng tôi khuyến nghị [application starter kit](/docs/{{version}}/starter-kits) như một cách nhanh chóng để tạo ứng dụng Laravel mới đã sử dụng stack xác thực được khuyến nghị dựa trên các dịch vụ xác thực tích hợp của Laravel.
+Nếu muốn bắt đầu nhanh, chúng tôi khuyến nghị [application starter kit](/starter-kits) như một cách nhanh chóng để tạo ứng dụng Laravel mới đã sử dụng stack xác thực được khuyến nghị dựa trên các dịch vụ xác thực tích hợp của Laravel.
 
 <a name="authentication-quickstart"></a>
 ## Bắt đầu nhanh với xác thực
 
 > [!WARNING]
-> Phần tài liệu này trình bày việc xác thực người dùng thông qua [Laravel application starter kit](/docs/{{version}}/starter-kits), bao gồm UI scaffold giúp bạn bắt đầu nhanh chóng. Nếu muốn tích hợp trực tiếp với hệ thống xác thực của Laravel, hãy xem tài liệu về [xác thực người dùng thủ công](#authenticating-users).
+> Phần tài liệu này trình bày việc xác thực người dùng thông qua [Laravel application starter kit](/starter-kits), bao gồm UI scaffold giúp bạn bắt đầu nhanh chóng. Nếu muốn tích hợp trực tiếp với hệ thống xác thực của Laravel, hãy xem tài liệu về [xác thực người dùng thủ công](#authenticating-users).
 
 <a name="install-a-starter-kit"></a>
 ### Cài đặt Starter Kit
 
-Trước tiên, bạn nên [cài đặt Laravel application starter kit](/docs/{{version}}/starter-kits). Các starter kit cung cấp điểm khởi đầu được thiết kế hoàn chỉnh để tích hợp xác thực vào ứng dụng Laravel mới.
+Trước tiên, bạn nên [cài đặt Laravel application starter kit](/starter-kits). Các starter kit cung cấp điểm khởi đầu được thiết kế hoàn chỉnh để tích hợp xác thực vào ứng dụng Laravel mới.
 
 <a name="retrieving-the-authenticated-user"></a>
 ### Lấy người dùng đã xác thực
@@ -147,12 +147,12 @@ if (Auth::check()) {
 ```
 
 > [!NOTE]
-> Mặc dù có thể dùng phương thức `check` để xác định người dùng đã được xác thực hay chưa, thông thường bạn sẽ dùng middleware để xác minh người dùng đã xác thực trước khi cho phép truy cập một số route / controller. Để tìm hiểu thêm, hãy xem tài liệu về [bảo vệ route](/docs/{{version}}/authentication#protecting-routes).
+> Mặc dù có thể dùng phương thức `check` để xác định người dùng đã được xác thực hay chưa, thông thường bạn sẽ dùng middleware để xác minh người dùng đã xác thực trước khi cho phép truy cập một số route / controller. Để tìm hiểu thêm, hãy xem tài liệu về [bảo vệ route](/authentication#protecting-routes).
 
 <a name="protecting-routes"></a>
 ### Bảo vệ route
 
-Bạn có thể sử dụng [route middleware](/docs/{{version}}/middleware) để chỉ cho phép người dùng đã xác thực truy cập một route nhất định. Laravel cung cấp sẵn middleware `auth`, đây là một [middleware alias](/docs/{{version}}/middleware#middleware-aliases) cho class `Illuminate\Auth\Middleware\Authenticate`. Vì middleware này đã được Laravel đăng ký alias nội bộ, bạn chỉ cần gắn middleware vào định nghĩa route:
+Bạn có thể sử dụng [route middleware](/middleware) để chỉ cho phép người dùng đã xác thực truy cập một route nhất định. Laravel cung cấp sẵn middleware `auth`, đây là một [middleware alias](/middleware#middleware-aliases) cho class `Illuminate\Auth\Middleware\Authenticate`. Vì middleware này đã được Laravel đăng ký alias nội bộ, bạn chỉ cần gắn middleware vào định nghĩa route:
 
 ```php
 Route::get('/flights', function () {
@@ -163,7 +163,7 @@ Route::get('/flights', function () {
 <a name="redirecting-unauthenticated-users"></a>
 #### Chuyển hướng người dùng chưa xác thực
 
-Khi middleware `auth` phát hiện người dùng chưa xác thực, nó sẽ chuyển hướng người dùng đến [named route](/docs/{{version}}/routing#named-routes) `login`. Bạn có thể thay đổi hành vi này bằng phương thức `redirectGuestsTo` trong file `bootstrap/app.php` của ứng dụng:
+Khi middleware `auth` phát hiện người dùng chưa xác thực, nó sẽ chuyển hướng người dùng đến [named route](/routing#named-routes) `login`. Bạn có thể thay đổi hành vi này bằng phương thức `redirectGuestsTo` trong file `bootstrap/app.php` của ứng dụng:
 
 ```php
 use Illuminate\Http\Request;
@@ -206,17 +206,17 @@ Route::get('/flights', function () {
 <a name="login-throttling"></a>
 ### Giới hạn tần suất đăng nhập
 
-Nếu đang sử dụng một trong các [application starter kit](/docs/{{version}}/starter-kits), rate limiting sẽ tự động được áp dụng cho các lần thử đăng nhập. Theo mặc định, người dùng sẽ không thể đăng nhập trong một phút nếu nhập sai thông tin xác thực sau nhiều lần thử. Cơ chế throttling được xác định riêng theo username / địa chỉ email và địa chỉ IP của người dùng.
+Nếu đang sử dụng một trong các [application starter kit](/starter-kits), rate limiting sẽ tự động được áp dụng cho các lần thử đăng nhập. Theo mặc định, người dùng sẽ không thể đăng nhập trong một phút nếu nhập sai thông tin xác thực sau nhiều lần thử. Cơ chế throttling được xác định riêng theo username / địa chỉ email và địa chỉ IP của người dùng.
 
 > [!NOTE]
-> Nếu muốn áp dụng rate limit cho các route khác trong ứng dụng, hãy xem [tài liệu rate limiting](/docs/{{version}}/routing#rate-limiting).
+> Nếu muốn áp dụng rate limit cho các route khác trong ứng dụng, hãy xem [tài liệu rate limiting](/routing#rate-limiting).
 
 <a name="authenticating-users"></a>
 ## Xác thực người dùng thủ công
 
-Bạn không bắt buộc phải sử dụng phần khung xác thực đi kèm với [application starter kit](/docs/{{version}}/starter-kits) của Laravel. Nếu không sử dụng phần khung này, bạn sẽ cần quản lý việc xác thực người dùng trực tiếp bằng các lớp xác thực của Laravel. Việc này khá đơn giản.
+Bạn không bắt buộc phải sử dụng phần khung xác thực đi kèm với [application starter kit](/starter-kits) của Laravel. Nếu không sử dụng phần khung này, bạn sẽ cần quản lý việc xác thực người dùng trực tiếp bằng các lớp xác thực của Laravel. Việc này khá đơn giản.
 
-Chúng ta sẽ truy cập các dịch vụ xác thực của Laravel thông qua [facade](/docs/{{version}}/facades) `Auth`, vì vậy hãy đảm bảo import facade `Auth` ở đầu lớp. Tiếp theo, hãy xem phương thức `attempt`. Phương thức `attempt` thường được dùng để xử lý các lần thử xác thực từ form "đăng nhập" của ứng dụng. Nếu xác thực thành công, bạn nên tạo lại [session](/docs/{{version}}/session) của người dùng để ngăn chặn [session fixation](https://en.wikipedia.org/wiki/Session_fixation):
+Chúng ta sẽ truy cập các dịch vụ xác thực của Laravel thông qua [facade](/facades) `Auth`, vì vậy hãy đảm bảo import facade `Auth` ở đầu lớp. Tiếp theo, hãy xem phương thức `attempt`. Phương thức `attempt` thường được dùng để xử lý các lần thử xác thực từ form "đăng nhập" của ứng dụng. Nếu xác thực thành công, bạn nên tạo lại [session](/session) của người dùng để ngăn chặn [session fixation](https://en.wikipedia.org/wiki/Session_fixation):
 
 ```php
 <?php
@@ -345,7 +345,7 @@ if (Auth::viaRemember()) {
 <a name="authenticate-a-user-instance"></a>
 #### Xác thực một user instance
 
-Nếu cần đặt một user instance hiện có làm người dùng đang được xác thực, bạn có thể truyền user instance đó vào phương thức `login` của facade `Auth`. User instance được truyền vào phải triển khai [contract](/docs/{{version}}/contracts) `Illuminate\Contracts\Auth\Authenticatable`. Model `App\Models\User` đi kèm Laravel đã triển khai interface này. Cách xác thực này hữu ích khi bạn đã có một user instance hợp lệ, chẳng hạn ngay sau khi người dùng đăng ký ứng dụng:
+Nếu cần đặt một user instance hiện có làm người dùng đang được xác thực, bạn có thể truyền user instance đó vào phương thức `login` của facade `Auth`. User instance được truyền vào phải triển khai [contract](/contracts) `Illuminate\Contracts\Auth\Authenticatable`. Model `App\Models\User` đi kèm Laravel đã triển khai interface này. Cách xác thực này hữu ích khi bạn đã có một user instance hợp lệ, chẳng hạn ngay sau khi người dùng đăng ký ứng dụng:
 
 ```php
 use Illuminate\Support\Facades\Auth;
@@ -394,7 +394,7 @@ if (Auth::once($credentials)) {
 <a name="http-basic-authentication"></a>
 ## Xác thực HTTP Basic
 
-[HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) cung cấp một cách nhanh chóng để xác thực người dùng của ứng dụng mà không cần thiết lập trang "đăng nhập" riêng. Để bắt đầu, hãy gắn [middleware](/docs/{{version}}/middleware) `auth.basic` vào một route. Middleware `auth.basic` đã được tích hợp trong Laravel framework nên bạn không cần tự định nghĩa:
+[HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) cung cấp một cách nhanh chóng để xác thực người dùng của ứng dụng mà không cần thiết lập trang "đăng nhập" riêng. Để bắt đầu, hãy gắn [middleware](/middleware) `auth.basic` vào một route. Middleware `auth.basic` đã được tích hợp trong Laravel framework nên bạn không cần tự định nghĩa:
 
 ```php
 Route::get('/profile', function () {
@@ -417,7 +417,7 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 <a name="stateless-http-basic-authentication"></a>
 ### Xác thực HTTP Basic không trạng thái
 
-Bạn cũng có thể sử dụng HTTP Basic Authentication mà không đặt cookie định danh người dùng trong session. Cách này đặc biệt hữu ích nếu bạn chọn HTTP Authentication để xác thực các request tới API của ứng dụng. Để thực hiện, hãy [định nghĩa một middleware](/docs/{{version}}/middleware) gọi phương thức `onceBasic`. Nếu phương thức `onceBasic` không trả về response, request có thể tiếp tục được chuyển sâu hơn vào ứng dụng:
+Bạn cũng có thể sử dụng HTTP Basic Authentication mà không đặt cookie định danh người dùng trong session. Cách này đặc biệt hữu ích nếu bạn chọn HTTP Authentication để xác thực các request tới API của ứng dụng. Để thực hiện, hãy [định nghĩa một middleware](/middleware) gọi phương thức `onceBasic`. Nếu phương thức `onceBasic` không trả về response, request có thể tiếp tục được chuyển sâu hơn vào ứng dụng:
 
 ```php
 <?php
@@ -457,7 +457,7 @@ Route::get('/api/user', function () {
 
 Để đăng xuất người dùng khỏi ứng dụng theo cách thủ công, bạn có thể dùng phương thức `logout` do facade `Auth` cung cấp. Thao tác này sẽ xóa thông tin xác thực khỏi session của người dùng để các request tiếp theo không còn được xác thực.
 
-Ngoài việc gọi phương thức `logout`, bạn nên vô hiệu hóa session của người dùng và tạo lại [CSRF token](/docs/{{version}}/csrf). Sau khi đăng xuất người dùng, thông thường bạn sẽ chuyển hướng họ về trang gốc của ứng dụng:
+Ngoài việc gọi phương thức `logout`, bạn nên vô hiệu hóa session của người dùng và tạo lại [CSRF token](/csrf). Sau khi đăng xuất người dùng, thông thường bạn sẽ chuyển hướng họ về trang gốc của ứng dụng:
 
 ```php
 use Illuminate\Http\Request;
@@ -484,7 +484,7 @@ public function logout(Request $request): RedirectResponse
 
 Laravel cũng cung cấp cơ chế để vô hiệu hóa và "đăng xuất" các session của người dùng đang hoạt động trên những thiết bị khác mà không vô hiệu hóa session trên thiết bị hiện tại. Tính năng này thường được sử dụng khi người dùng thay đổi hoặc cập nhật mật khẩu và bạn muốn vô hiệu hóa session trên các thiết bị khác nhưng vẫn giữ thiết bị hiện tại ở trạng thái đã xác thực.
 
-Trước khi bắt đầu, hãy đảm bảo middleware `Illuminate\Session\Middleware\AuthenticateSession` được áp dụng cho các route cần xác thực bằng session. Thông thường, bạn nên đặt middleware này trên một route group để có thể áp dụng cho phần lớn route của ứng dụng. Theo mặc định, middleware `AuthenticateSession` có thể được gắn vào route bằng [middleware alias](/docs/{{version}}/middleware#middleware-aliases) `auth.session`:
+Trước khi bắt đầu, hãy đảm bảo middleware `Illuminate\Session\Middleware\AuthenticateSession` được áp dụng cho các route cần xác thực bằng session. Thông thường, bạn nên đặt middleware này trên một route group để có thể áp dụng cho phần lớn route của ứng dụng. Theo mặc định, middleware `AuthenticateSession` có thể được gắn vào route bằng [middleware alias](/middleware#middleware-aliases) `auth.session`:
 
 ```php
 Route::middleware(['auth', 'auth.session'])->group(function () {
@@ -510,7 +510,7 @@ Khi phương thức `logoutOtherDevices` được gọi, các session khác củ
 Trong quá trình xây dựng ứng dụng, đôi khi bạn sẽ có những hành động yêu cầu người dùng xác nhận mật khẩu trước khi hành động được thực hiện hoặc trước khi người dùng được chuyển hướng đến một khu vực nhạy cảm của ứng dụng. Laravel cung cấp sẵn middleware để giúp quá trình này trở nên đơn giản. Để triển khai tính năng này, bạn cần định nghĩa hai route: một route hiển thị view yêu cầu người dùng xác nhận mật khẩu và một route khác để xác nhận mật khẩu hợp lệ rồi chuyển hướng người dùng đến đích mà họ dự định truy cập.
 
 > [!NOTE]
-> Phần tài liệu sau trình bày cách tích hợp trực tiếp với các tính năng xác nhận mật khẩu của Laravel; tuy nhiên, nếu muốn bắt đầu nhanh hơn, các [starter kit ứng dụng Laravel](/docs/{{version}}/starter-kits) đã hỗ trợ sẵn tính năng này!
+> Phần tài liệu sau trình bày cách tích hợp trực tiếp với các tính năng xác nhận mật khẩu của Laravel; tuy nhiên, nếu muốn bắt đầu nhanh hơn, các [starter kit ứng dụng Laravel](/starter-kits) đã hỗ trợ sẵn tính năng này!
 
 <a name="password-confirmation-configuration"></a>
 ### Cấu hình
@@ -560,7 +560,7 @@ Trước khi tiếp tục, hãy xem xét route này chi tiết hơn. Trước ti
 <a name="password-confirmation-protecting-routes"></a>
 ### Bảo vệ route
 
-Bạn nên đảm bảo mọi route thực hiện hành động yêu cầu xác nhận mật khẩu gần đây đều được gán middleware `password.confirm`. Middleware này được bao gồm trong cài đặt mặc định của Laravel và sẽ tự động lưu đích mà người dùng dự định truy cập vào session để có thể chuyển hướng họ trở lại vị trí đó sau khi xác nhận mật khẩu. Sau khi lưu đích dự định vào session, middleware sẽ chuyển hướng người dùng đến [named route](/docs/{{version}}/routing#named-routes) `password.confirm`:
+Bạn nên đảm bảo mọi route thực hiện hành động yêu cầu xác nhận mật khẩu gần đây đều được gán middleware `password.confirm`. Middleware này được bao gồm trong cài đặt mặc định của Laravel và sẽ tự động lưu đích mà người dùng dự định truy cập vào session để có thể chuyển hướng họ trở lại vị trí đó sau khi xác nhận mật khẩu. Sau khi lưu đích dự định vào session, middleware sẽ chuyển hướng người dùng đến [named route](/routing#named-routes) `password.confirm`:
 
 ```php
 Route::get('/settings', function () {
@@ -575,7 +575,7 @@ Route::post('/settings', function () {
 <a name="adding-custom-guards"></a>
 ## Thêm guard tùy chỉnh
 
-Bạn có thể định nghĩa các authentication guard của riêng mình bằng phương thức `extend` trên facade `Auth`. Bạn nên đặt lời gọi phương thức `extend` trong một [service provider](/docs/{{version}}/providers). Vì Laravel đã cung cấp sẵn `AppServiceProvider`, chúng ta có thể đặt đoạn mã trong provider này:
+Bạn có thể định nghĩa các authentication guard của riêng mình bằng phương thức `extend` trên facade `Auth`. Bạn nên đặt lời gọi phương thức `extend` trong một [service provider](/providers). Vì Laravel đã cung cấp sẵn `AppServiceProvider`, chúng ta có thể đặt đoạn mã trong provider này:
 
 ```php
 <?php
@@ -794,7 +794,7 @@ Sau khi file cấu hình được publish, bạn có thể đặt giá trị c�
 <a name="events"></a>
 ## Events
 
-Laravel dispatch nhiều [event](/docs/{{version}}/events) trong quá trình xác thực. Bạn có thể [định nghĩa listener](/docs/{{version}}/events) cho bất kỳ event nào sau đây:
+Laravel dispatch nhiều [event](/events) trong quá trình xác thực. Bạn có thể [định nghĩa listener](/events) cho bất kỳ event nào sau đây:
 
 <div class="overflow-auto">
 

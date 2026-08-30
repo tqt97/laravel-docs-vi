@@ -7,7 +7,7 @@
 
 <img src="https://laravel.com/img/docs/prompts-example.png">
 
-Laravel Prompts rất phù hợp để nhận dữ liệu đầu vào từ người dùng trong các [lệnh Artisan console](/docs/{{version}}/artisan#writing-commands), nhưng cũng có thể được sử dụng trong bất kỳ dự án PHP dòng lệnh nào.
+Laravel Prompts rất phù hợp để nhận dữ liệu đầu vào từ người dùng trong các [lệnh Artisan console](/artisan#writing-commands), nhưng cũng có thể được sử dụng trong bất kỳ dự án PHP dòng lệnh nào.
 
 > [!NOTE]
 > Laravel Prompts hỗ trợ macOS, Linux và Windows với WSL. Để biết thêm thông tin, hãy xem tài liệu về [môi trường không được hỗ trợ và cơ chế fallback](#fallbacks).
@@ -87,7 +87,7 @@ $name = text(
 
 Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
+Ngoài ra, bạn có thể tận dụng [validator](/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $name = text(
@@ -156,7 +156,7 @@ $story = textarea(
 
 Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
+Ngoài ra, bạn có thể tận dụng [validator](/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $story = textarea(
@@ -226,7 +226,7 @@ $copies = number(
 
 Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
+Ngoài ra, bạn có thể tận dụng [validator](/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $copies = number(
@@ -294,7 +294,7 @@ $password = password(
 
 Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
+Ngoài ra, bạn có thể tận dụng [validator](/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $password = password(
@@ -663,7 +663,7 @@ $name = suggest(
 
 Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
+Ngoài ra, bạn có thể tận dụng [validator](/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $name = suggest(

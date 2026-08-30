@@ -4,7 +4,7 @@
 ## Giới thiệu
 
 > [!WARNING]
-> Laravel Mix là một package cũ (legacy) và không còn được duy trì tích cực. Bạn nên sử dụng [Vite](/docs/{{version}}/vite) như một lựa chọn hiện đại thay thế.
+> Laravel Mix là một package cũ (legacy) và không còn được duy trì tích cực. Bạn nên sử dụng [Vite](/vite) như một lựa chọn hiện đại thay thế.
 
 [Laravel Mix](https://github.com/laravel-mix/laravel-mix), package được phát triển bởi Jeffrey Way — tác giả của [Laracasts](https://laracasts.com) — cung cấp một API mạch lạc để định nghĩa các bước build bằng [webpack](https://webpack.js.org) cho ứng dụng Laravel, đồng thời hỗ trợ nhiều CSS và JavaScript pre-processor phổ biến.
 

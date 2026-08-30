@@ -27,7 +27,7 @@ $collection = collect([1, 2, 3]);
 Bạn cũng có thể tạo collection bằng các method [make](#method-make) và [fromJson](#method-fromjson).
 
 > [!NOTE]
-> Kết quả của các truy vấn [Eloquent](/docs/{{version}}/eloquent) luôn được trả về dưới dạng instance `Collection`.
+> Kết quả của các truy vấn [Eloquent](/eloquent) luôn được trả về dưới dạng instance `Collection`.
 
 <a name="extending-collections"></a>
 ### Mở rộng Collection
@@ -51,7 +51,7 @@ $upper = $collection->toUpper();
 // ['FIRST', 'SECOND']
 ```
 
-Thông thường, bạn nên khai báo các collection macro trong method `boot` của một [service provider](/docs/{{version}}/providers).
+Thông thường, bạn nên khai báo các collection macro trong method `boot` của một [service provider](/providers).
 
 <a name="macro-arguments"></a>
 #### Tham số của Macro
@@ -380,7 +380,7 @@ $chunks->all();
 // [[1, 2, 3, 4], [5, 6, 7]]
 ```
 
-Method này đặc biệt hữu ích trong [view](/docs/{{version}}/views) khi làm việc với hệ thống grid như [Bootstrap](https://getbootstrap.com/docs/5.3/layout/grid/). Ví dụ, giả sử bạn có một collection các model [Eloquent](/docs/{{version}}/eloquent) và muốn hiển thị chúng theo dạng grid:
+Method này đặc biệt hữu ích trong [view](/views) khi làm việc với hệ thống grid như [Bootstrap](https://getbootstrap.com/docs/5.3/layout/grid/). Ví dụ, giả sử bạn có một collection các model [Eloquent](/eloquent) và muốn hiển thị chúng theo dạng grid:
 
 ```blade
 @foreach ($products->chunk(3) as $chunk)
@@ -573,7 +573,7 @@ Method `contains` sử dụng phép so sánh "loose" khi kiểm tra value, nghĩ
 Method này có cùng signature với method [contains](#method-contains); tuy nhiên, tất cả value đều được so sánh bằng phép so sánh "strict".
 
 > [!NOTE]
-Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-contains).
+Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/eloquent-collections#method-contains).
 
 <a name="method-count"></a>
 #### `count()` {.collection-method}
@@ -694,7 +694,7 @@ $diff->all();
 ```
 
 > [!NOTE]
-Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-diff).
+Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/eloquent-collections#method-diff).
 
 <a name="method-diffassoc"></a>
 #### `diffAssoc()` {.collection-method}
@@ -994,7 +994,7 @@ $filtered->all();
 Để thực hiện phép ngược lại với `except`, hãy xem method [only](#method-only).
 
 > [!NOTE]
-Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-except).
+Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/eloquent-collections#method-except).
 
 <a name="method-filter"></a>
 #### `filter()` {.collection-method}
@@ -1500,7 +1500,7 @@ $intersect->all();
 ```
 
 > [!NOTE]
-> Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-intersect).
+> Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/eloquent-collections#method-intersect).
 
 <a name="method-intersectusing"></a>
 #### `intersectUsing()` {.collection-method}
@@ -2074,7 +2074,7 @@ $filtered->all();
 Để thực hiện thao tác ngược với `only`, hãy xem phương thức [except](#method-except).
 
 > [!NOTE]
-> Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-only).
+> Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/eloquent-collections#method-only).
 
 <a name="method-pad"></a>
 #### `pad()` {.collection-method}
@@ -2121,7 +2121,7 @@ $equalOrAboveThree->all();
 ```
 
 > [!NOTE]
-> Hành vi của method này được thay đổi khi làm việc với [Eloquent collections](/docs/{{version}}/eloquent-collections#method-partition).
+> Hành vi của method này được thay đổi khi làm việc với [Eloquent collections](/eloquent-collections#method-partition).
 
 <a name="method-percentage"></a>
 #### `percentage()` {.collection-method}
@@ -3365,7 +3365,7 @@ $collection->all();
 <a name="method-toarray"></a>
 #### `toArray()` {.collection-method}
 
-Method `toArray` chuyển collection thành một PHP `array` thuần. Nếu các giá trị trong collection là model [Eloquent](/docs/{{version}}/eloquent), các model cũng sẽ được chuyển thành array:
+Method `toArray` chuyển collection thành một PHP `array` thuần. Nếu các giá trị trong collection là model [Eloquent](/eloquent), các model cũng sẽ được chuyển thành array:
 
 ```php
 $collection = collect(['name' => 'Desk', 'price' => 200]);
@@ -3538,7 +3538,7 @@ $unique->values()->all();
 Method `unique` sử dụng phép so sánh "loose" khi kiểm tra giá trị phần tử, nghĩa là một chuỗi biểu diễn số nguyên sẽ được xem là bằng với số nguyên có cùng giá trị. Hãy sử dụng method [uniqueStrict](#method-uniquestrict) để lọc bằng phép so sánh "strict".
 
 > [!NOTE]
-> Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-unique).
+> Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/eloquent-collections#method-unique).
 
 <a name="method-uniquestrict"></a>
 #### `uniqueStrict()` {.collection-method}
@@ -4331,7 +4331,7 @@ $lazyCollection->each(function (int $number) {
 // 59
 ```
 
-Để minh họa cách sử dụng method này, hãy tưởng tượng một ứng dụng gửi invoice từ database bằng cursor. Bạn có thể định nghĩa một [scheduled task](/docs/{{version}}/scheduling) chạy mỗi 15 phút và chỉ xử lý invoice trong tối đa 14 phút:
+Để minh họa cách sử dụng method này, hãy tưởng tượng một ứng dụng gửi invoice từ database bằng cursor. Bạn có thể định nghĩa một [scheduled task](/scheduling) chạy mỗi 15 phút và chỉ xử lý invoice trong tối đa 14 phút:
 
 ```php
 use App\Models\Invoice;

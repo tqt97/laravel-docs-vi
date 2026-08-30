@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-Ngoài khả năng [gửi email](/docs/{{version}}/mail), Laravel còn hỗ trợ gửi thông báo qua nhiều kênh khác nhau, bao gồm email, SMS (thông qua [Vonage](https://www.vonage.com/communications-apis/), trước đây được gọi là Nexmo) và [Slack](https://slack.com). Ngoài ra, cộng đồng đã xây dựng nhiều [kênh thông báo](https://laravel-notification-channels.com/about/#suggesting-a-new-channel) để gửi thông báo qua hàng chục kênh khác nhau. Thông báo cũng có thể được lưu trong cơ sở dữ liệu để hiển thị trên giao diện web của ứng dụng.
+Ngoài khả năng [gửi email](/mail), Laravel còn hỗ trợ gửi thông báo qua nhiều kênh khác nhau, bao gồm email, SMS (thông qua [Vonage](https://www.vonage.com/communications-apis/), trước đây được gọi là Nexmo) và [Slack](https://slack.com). Ngoài ra, cộng đồng đã xây dựng nhiều [kênh thông báo](https://laravel-notification-channels.com/about/#suggesting-a-new-channel) để gửi thông báo qua hàng chục kênh khác nhau. Thông báo cũng có thể được lưu trong cơ sở dữ liệu để hiển thị trên giao diện web của ứng dụng.
 
 Thông thường, thông báo nên là những thông điệp ngắn gọn, cung cấp thông tin về một sự kiện đã xảy ra trong ứng dụng. Ví dụ, nếu đang xây dựng ứng dụng thanh toán, bạn có thể gửi thông báo "Invoice Paid" cho người dùng qua email và SMS.
 
@@ -24,7 +24,7 @@ Lệnh này sẽ tạo một class thông báo mới trong thư mục `app/Notif
 <a name="using-the-notifiable-trait"></a>
 ### Sử dụng trait Notifiable
 
-Có hai cách để gửi thông báo: sử dụng phương thức `notify` của trait `Notifiable`, hoặc sử dụng [facade](/docs/{{version}}/facades) `Notification`. Theo mặc định, trait `Notifiable` đã được dùng trong model `App\Models\User` của ứng dụng:
+Có hai cách để gửi thông báo: sử dụng phương thức `notify` của trait `Notifiable`, hoặc sử dụng [facade](/facades) `Notification`. Theo mặc định, trait `Notifiable` đã được dùng trong model `App\Models\User` của ứng dụng:
 
 ```php
 <?php
@@ -54,7 +54,7 @@ $user->notify(new InvoicePaid($invoice));
 <a name="using-the-notification-facade"></a>
 ### Sử dụng facade Notification
 
-Ngoài ra, bạn có thể gửi thông báo thông qua [facade](/docs/{{version}}/facades) `Notification`. Cách này hữu ích khi cần gửi một thông báo cho nhiều đối tượng có thể nhận thông báo, chẳng hạn một collection người dùng. Để gửi bằng facade, truyền tất cả đối tượng nhận thông báo và instance thông báo vào phương thức `send`:
+Ngoài ra, bạn có thể gửi thông báo thông qua [facade](/facades) `Notification`. Cách này hữu ích khi cần gửi một thông báo cho nhiều đối tượng có thể nhận thông báo, chẳng hạn một collection người dùng. Để gửi bằng facade, truyền tất cả đối tượng nhận thông báo và instance thông báo vào phương thức `send`:
 
 ```php
 use Illuminate\Support\Facades\Notification;
@@ -94,7 +94,7 @@ public function via(object $notifiable): array
 ### Đưa thông báo vào hàng đợi
 
 > [!WARNING]
-> Trước khi đưa thông báo vào hàng đợi, bạn nên cấu hình queue và [khởi động worker](/docs/{{version}}/queues#running-the-queue-worker).
+> Trước khi đưa thông báo vào hàng đợi, bạn nên cấu hình queue và [khởi động worker](/queues#running-the-queue-worker).
 
 Việc gửi thông báo có thể mất thời gian, đặc biệt khi kênh gửi cần gọi API bên ngoài. Để cải thiện thời gian phản hồi của ứng dụng, hãy đưa thông báo vào hàng đợi bằng cách thêm interface `ShouldQueue` và trait `Queueable` vào class. Interface và trait này đã được import trong các notification được tạo bằng lệnh `make:notification`, vì vậy bạn có thể sử dụng ngay:
 
@@ -255,7 +255,7 @@ class InvoicePaid extends Notification implements ShouldQueue
 }
 ```
 
-Nếu muốn bảo đảm tính riêng tư và toàn vẹn của dữ liệu notification trong hàng đợi bằng [mã hóa](/docs/{{version}}/encryption), hãy thêm interface `ShouldBeEncrypted` vào class notification:
+Nếu muốn bảo đảm tính riêng tư và toàn vẹn của dữ liệu notification trong hàng đợi bằng [mã hóa](/encryption), hãy thêm interface `ShouldBeEncrypted` vào class notification:
 
 ```php
 <?php
@@ -298,12 +298,12 @@ public function retryUntil(): DateTime
 ```
 
 > [!NOTE]
-> Để biết thêm về các attribute và phương thức của job, hãy xem tài liệu về [queued job](/docs/{{version}}/queues#max-job-attempts-and-timeout).
+> Để biết thêm về các attribute và phương thức của job, hãy xem tài liệu về [queued job](/queues#max-job-attempts-and-timeout).
 
 <a name="queued-notification-middleware"></a>
 #### Middleware cho thông báo trong hàng đợi
 
-Notification trong hàng đợi có thể định nghĩa middleware [tương tự queued job](/docs/{{version}}/queues#job-middleware). Để bắt đầu, hãy định nghĩa phương thức `middleware` trên class notification. Phương thức này nhận các biến `$notifiable` và `$channel`, cho phép tùy chỉnh middleware trả về dựa trên đích gửi của notification:
+Notification trong hàng đợi có thể định nghĩa middleware [tương tự queued job](/queues#job-middleware). Để bắt đầu, hãy định nghĩa phương thức `middleware` trên class notification. Phương thức này nhận các biến `$notifiable` và `$channel`, cho phép tùy chỉnh middleware trả về dựa trên đích gửi của notification:
 
 ```php
 use Illuminate\Queue\Middleware\RateLimited;
@@ -362,7 +362,7 @@ class InvoicePaid extends Notification implements ShouldQueue
 ```
 
 > [!NOTE]
-> Để tìm hiểu thêm cách xử lý các vấn đề này, hãy xem tài liệu về [queued job và transaction cơ sở dữ liệu](/docs/{{version}}/queues#jobs-and-database-transactions).
+> Để tìm hiểu thêm cách xử lý các vấn đề này, hãy xem tài liệu về [queued job và transaction cơ sở dữ liệu](/queues#jobs-and-database-transactions).
 
 <a name="determining-if-the-queued-notification-should-be-sent"></a>
 #### Xác định có nên gửi thông báo trong hàng đợi hay không
@@ -642,7 +642,7 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 > [!NOTE]
-> Phương thức `attach` của notification mail message cũng chấp nhận [đối tượng có thể đính kèm](/docs/{{version}}/mail#attachable-objects). Hãy tham khảo [tài liệu đầy đủ về đối tượng có thể đính kèm](/docs/{{version}}/mail#attachable-objects) để tìm hiểu thêm.
+> Phương thức `attach` của notification mail message cũng chấp nhận [đối tượng có thể đính kèm](/mail#attachable-objects). Hãy tham khảo [tài liệu đầy đủ về đối tượng có thể đính kèm](/mail#attachable-objects) để tìm hiểu thêm.
 
 Khi đính kèm file vào message, bạn cũng có thể chỉ định tên hiển thị và / hoặc MIME type bằng cách truyền một `array` làm đối số thứ hai cho phương thức `attach`:
 
@@ -681,7 +681,7 @@ public function toMail(object $notifiable): MailMessage
 }
 ```
 
-Bạn có thể dùng phương thức `attachFromStorageDisk` để đính kèm file tồn tại trên một [filesystem disk](/docs/{{version}}/filesystem) cụ thể. Phương thức này nhận tên disk và đường dẫn tới file trên disk đó:
+Bạn có thể dùng phương thức `attachFromStorageDisk` để đính kèm file tồn tại trên một [filesystem disk](/filesystem) cụ thể. Phương thức này nhận tên disk và đường dẫn tới file trên disk đó:
 
 ```php
 use App\Mail\InvoicePaid as InvoicePaidMailable;
@@ -765,7 +765,7 @@ public function toMail(object $notifiable): MailMessage
 <a name="using-mailables"></a>
 ### Sử dụng Mailable
 
-Nếu cần, bạn có thể trả về một [đối tượng mailable](/docs/{{version}}/mail) đầy đủ từ phương thức `toMail` của notification. Khi trả về `Mailable` thay cho `MailMessage`, bạn cần chỉ định người nhận message bằng phương thức `to` của đối tượng mailable:
+Nếu cần, bạn có thể trả về một [đối tượng mailable](/mail) đầy đủ từ phương thức `toMail` của notification. Khi trả về `Mailable` thay cho `MailMessage`, bạn cần chỉ định người nhận message bằng phương thức `to` của đối tượng mailable:
 
 ```php
 use App\Mail\InvoicePaid as InvoicePaidMailable;
@@ -952,7 +952,7 @@ public function toMail(object $notifiable): MailMessage
 
 Channel notification `database` lưu thông tin notification trong một bảng database. Bảng này chứa các thông tin như loại notification cùng cấu trúc dữ liệu JSON mô tả notification.
 
-Bạn có thể truy vấn bảng này để hiển thị notification trong giao diện người dùng của ứng dụng. Tuy nhiên, trước đó bạn cần tạo bảng database để lưu các notification. Bạn có thể dùng lệnh `make:notifications-table` để tạo một [migration](/docs/{{version}}/migrations) với schema phù hợp:
+Bạn có thể truy vấn bảng này để hiển thị notification trong giao diện người dùng của ứng dụng. Tuy nhiên, trước đó bạn cần tạo bảng database để lưu các notification. Bạn có thể dùng lệnh `make:notifications-table` để tạo một [migration](/migrations) với schema phù hợp:
 
 ```shell
 php artisan make:notifications-table
@@ -961,7 +961,7 @@ php artisan migrate
 ```
 
 > [!NOTE]
-> Nếu các model có thể nhận notification của bạn sử dụng [UUID hoặc ULID làm khóa chính](/docs/{{version}}/eloquent#uuid-and-ulid-keys), bạn nên thay phương thức `morphs` bằng [uuidMorphs](/docs/{{version}}/migrations#column-method-uuidMorphs) hoặc [ulidMorphs](/docs/{{version}}/migrations#column-method-ulidMorphs) trong migration của bảng notification.
+> Nếu các model có thể nhận notification của bạn sử dụng [UUID hoặc ULID làm khóa chính](/eloquent#uuid-and-ulid-keys), bạn nên thay phương thức `morphs` bằng [uuidMorphs](/migrations#column-method-uuidMorphs) hoặc [ulidMorphs](/migrations#column-method-ulidMorphs) trong migration của bảng notification.
 
 <a name="formatting-database-notifications"></a>
 ### Định dạng Database Notification
@@ -1013,7 +1013,7 @@ Phương thức `toArray` cũng được channel `broadcast` sử dụng để x
 <a name="accessing-the-notifications"></a>
 ### Truy cập Notification
 
-Sau khi notification được lưu trong database, bạn cần một cách thuận tiện để truy cập chúng từ các entity có thể nhận notification. Trait `Illuminate\Notifications\Notifiable`, được tích hợp trong model `App\Models\User` mặc định của Laravel, cung cấp [Eloquent relationship](/docs/{{version}}/eloquent-relationships) `notifications` trả về các notification của entity. Bạn có thể truy cập relationship này như bất kỳ Eloquent relationship nào khác. Mặc định, notification được sắp xếp theo timestamp `created_at`, với notification mới nhất nằm đầu collection:
+Sau khi notification được lưu trong database, bạn cần một cách thuận tiện để truy cập chúng từ các entity có thể nhận notification. Trait `Illuminate\Notifications\Notifiable`, được tích hợp trong model `App\Models\User` mặc định của Laravel, cung cấp [Eloquent relationship](/eloquent-relationships) `notifications` trả về các notification của entity. Bạn có thể truy cập relationship này như bất kỳ Eloquent relationship nào khác. Mặc định, notification được sắp xếp theo timestamp `created_at`, với notification mới nhất nằm đầu collection:
 
 ```php
 $user = App\Models\User::find(1);
@@ -1085,12 +1085,12 @@ $user->notifications()->delete();
 <a name="broadcast-prerequisites"></a>
 ### Điều kiện tiên quyết
 
-Trước khi broadcast notification, bạn nên cấu hình và làm quen với dịch vụ [event broadcasting](/docs/{{version}}/broadcasting) của Laravel. Event broadcasting cho phép frontend JavaScript phản ứng với các event Laravel phía server.
+Trước khi broadcast notification, bạn nên cấu hình và làm quen với dịch vụ [event broadcasting](/broadcasting) của Laravel. Event broadcasting cho phép frontend JavaScript phản ứng với các event Laravel phía server.
 
 <a name="formatting-broadcast-notifications"></a>
 ### Định dạng Broadcast Notification
 
-Channel `broadcast` phát notification bằng dịch vụ [event broadcasting](/docs/{{version}}/broadcasting) của Laravel, cho phép frontend JavaScript nhận notification theo thời gian thực. Nếu notification hỗ trợ broadcasting, bạn có thể định nghĩa phương thức `toBroadcast` trên class notification. Phương thức này nhận entity `$notifiable` và trả về một instance `BroadcastMessage`. Nếu không có phương thức `toBroadcast`, phương thức `toArray` sẽ được dùng để lấy dữ liệu cần broadcast. Dữ liệu trả về được mã hóa thành JSON và broadcast tới frontend JavaScript. Ví dụ với phương thức `toBroadcast`:
+Channel `broadcast` phát notification bằng dịch vụ [event broadcasting](/broadcasting) của Laravel, cho phép frontend JavaScript nhận notification theo thời gian thực. Nếu notification hỗ trợ broadcasting, bạn có thể định nghĩa phương thức `toBroadcast` trên class notification. Phương thức này nhận entity `$notifiable` và trả về một instance `BroadcastMessage`. Nếu không có phương thức `toBroadcast`, phương thức `toArray` sẽ được dùng để lấy dữ liệu cần broadcast. Dữ liệu trả về được mã hóa thành JSON và broadcast tới frontend JavaScript. Ví dụ với phương thức `toBroadcast`:
 
 ```php
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -1136,7 +1136,7 @@ public function broadcastType(): string
 <a name="listening-for-notifications"></a>
 ### Lắng nghe Notification
 
-Notification sẽ được broadcast trên private channel theo quy ước `{notifiable}.{id}`. Vì vậy, nếu bạn gửi notification tới instance `App\Models\User` có ID `1`, notification sẽ được broadcast trên private channel `App.Models.User.1`. Khi sử dụng [Laravel Echo](/docs/{{version}}/broadcasting#client-side-installation), bạn có thể dễ dàng lắng nghe notification trên channel bằng phương thức `notification`:
+Notification sẽ được broadcast trên private channel theo quy ước `{notifiable}.{id}`. Vì vậy, nếu bạn gửi notification tới instance `App\Models\User` có ID `1`, notification sẽ được broadcast trên private channel `App.Models.User.1`. Khi sử dụng [Laravel Echo](/broadcasting#client-side-installation), bạn có thể dễ dàng lắng nghe notification trên channel bằng phương thức `notification`:
 
 ```js
 Echo.private('App.Models.User.' + userId)
@@ -1429,7 +1429,7 @@ Tiếp theo, sao chép "Bot User OAuth Token" của App và đặt token đó v�
 <a name="slack-app-distribution"></a>
 #### Phân phối ứng dụng
 
-Nếu ứng dụng sẽ gửi notification đến các Slack workspace bên ngoài thuộc sở hữu của người dùng ứng dụng, bạn cần "phân phối" App thông qua Slack. Việc phân phối App có thể được quản lý từ tab "Manage Distribution" của App trong Slack. Sau khi App được phân phối, bạn có thể dùng [Socialite](/docs/{{version}}/socialite) để [lấy Slack Bot token](/docs/{{version}}/socialite#slack-bot-scopes) thay mặt người dùng ứng dụng.
+Nếu ứng dụng sẽ gửi notification đến các Slack workspace bên ngoài thuộc sở hữu của người dùng ứng dụng, bạn cần "phân phối" App thông qua Slack. Việc phân phối App có thể được quản lý từ tab "Manage Distribution" của App trong Slack. Sau khi App được phân phối, bạn có thể dùng [Socialite](/socialite) để [lấy Slack Bot token](/socialite#slack-bot-scopes) thay mặt người dùng ứng dụng.
 
 <a name="formatting-slack-notifications"></a>
 ### Định dạng Notification Slack
@@ -1633,7 +1633,7 @@ class User extends Authenticatable
 > [!NOTE]
 > Trước khi gửi notification đến Slack workspace bên ngoài, Slack App của bạn phải được [phân phối](#slack-app-distribution).
 
-Thông thường, bạn sẽ muốn gửi notification tới các Slack workspace thuộc sở hữu của người dùng ứng dụng. Để làm điều đó, trước tiên bạn cần lấy Slack OAuth token của người dùng. May mắn là [Laravel Socialite](/docs/{{version}}/socialite) có Slack driver giúp bạn dễ dàng xác thực người dùng ứng dụng với Slack và [lấy bot token](/docs/{{version}}/socialite#slack-bot-scopes).
+Thông thường, bạn sẽ muốn gửi notification tới các Slack workspace thuộc sở hữu của người dùng ứng dụng. Để làm điều đó, trước tiên bạn cần lấy Slack OAuth token của người dùng. May mắn là [Laravel Socialite](/socialite) có Slack driver giúp bạn dễ dàng xác thực người dùng ứng dụng với Slack và [lấy bot token](/socialite#slack-bot-scopes).
 
 Sau khi lấy bot token và lưu vào database của ứng dụng, bạn có thể sử dụng phương thức `SlackRoute::make` để định tuyến notification đến workspace của người dùng. Ngoài ra, ứng dụng thường cần cho phép người dùng chỉ định channel mà notification sẽ được gửi đến:
 
@@ -1821,7 +1821,7 @@ Notification::assertSentOnDemand(
 <a name="notification-sending-event"></a>
 #### Event Notification Sending
 
-Khi một notification đang được gửi, hệ thống notification sẽ dispatch event `Illuminate\Notifications\Events\NotificationSending`. Event này chứa entity "notifiable" và chính instance notification. Bạn có thể tạo [event listener](/docs/{{version}}/events) cho event này trong ứng dụng:
+Khi một notification đang được gửi, hệ thống notification sẽ dispatch event `Illuminate\Notifications\Events\NotificationSending`. Event này chứa entity "notifiable" và chính instance notification. Bạn có thể tạo [event listener](/events) cho event này trong ứng dụng:
 
 ```php
 use Illuminate\Notifications\Events\NotificationSending;
@@ -1867,7 +1867,7 @@ public function handle(NotificationSending $event): void
 <a name="notification-sent-event"></a>
 #### Event Notification Sent
 
-Khi một notification được gửi, hệ thống notification sẽ dispatch [event](/docs/{{version}}/events) `Illuminate\Notifications\Events\NotificationSent`. Event này chứa entity "notifiable" và chính instance notification. Bạn có thể tạo [event listener](/docs/{{version}}/events) cho event này trong ứng dụng:
+Khi một notification được gửi, hệ thống notification sẽ dispatch [event](/events) `Illuminate\Notifications\Events\NotificationSent`. Event này chứa entity "notifiable" và chính instance notification. Bạn có thể tạo [event listener](/events) cho event này trong ứng dụng:
 
 ```php
 use Illuminate\Notifications\Events\NotificationSent;

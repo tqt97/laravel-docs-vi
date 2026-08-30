@@ -477,7 +477,7 @@ $conversations = $team->conversations;
 $participant = $conversation->participant;
 ```
 
-Nếu ứng dụng sử dụng nhiều loại model participant, bạn nên cân nhắc định nghĩa [Eloquent morph map](/docs/{{version}}/eloquent-relationships#custom-polymorphic-types) để loại participant được lưu không bị phụ thuộc vào tên class model.
+Nếu ứng dụng sử dụng nhiều loại model participant, bạn nên cân nhắc định nghĩa [Eloquent morph map](/eloquent-relationships#custom-polymorphic-types) để loại participant được lưu không bị phụ thuộc vào tên class model.
 
 > [!WARNING]
 > Phương thức `continue` không xác minh participant được truyền vào có sở hữu hội thoại hay không. Ứng dụng của bạn nên phân quyền truy cập hội thoại trước khi tiếp tục.
@@ -962,7 +962,7 @@ Khi sử dụng Anthropic, các tùy chọn bổ sung dành riêng cho provider 
 <a name="file-storage-tools"></a>
 ### Tool lưu trữ file
 
-Factory tool `FileStorage` cho phép bạn cấp cho agent quyền truy cập một [filesystem disk](/docs/{{version}}/filesystem) của Laravel. Phương thức `all` trả về các tool cho phép agent liệt kê, đọc, kiểm tra, tạo URL, ghi, xóa và sao chép file trên disk đã cho:
+Factory tool `FileStorage` cho phép bạn cấp cho agent quyền truy cập một [filesystem disk](/filesystem) của Laravel. Phương thức `all` trả về các tool cho phép agent liệt kê, đọc, kiểm tra, tạo URL, ghi, xóa và sao chép file trên disk đã cho:
 
 ```php
 use Laravel\Ai\Tools\FileStorage;
@@ -991,10 +991,10 @@ return FileStorage::all('s3')
 <a name="mcp-tools"></a>
 ### MCP Tools
 
-Nếu ứng dụng sử dụng [Laravel MCP](/docs/{{version}}/mcp), bạn có thể cung cấp cho agent các tool được expose bởi server [Model Context Protocol](https://modelcontextprotocol.io). Với [Laravel MCP client](/docs/{{version}}/mcp#client), bạn có thể kết nối tới MCP server từ xa hoặc cục bộ và truyền trực tiếp các tool của server cho agent.
+Nếu ứng dụng sử dụng [Laravel MCP](/mcp), bạn có thể cung cấp cho agent các tool được expose bởi server [Model Context Protocol](https://modelcontextprotocol.io). Với [Laravel MCP client](/mcp#client), bạn có thể kết nối tới MCP server từ xa hoặc cục bộ và truyền trực tiếp các tool của server cho agent.
 
 > [!NOTE]
-> MCP tools yêu cầu package [Laravel MCP](/docs/{{version}}/mcp) được cài đặt trong ứng dụng.
+> MCP tools yêu cầu package [Laravel MCP](/mcp) được cài đặt trong ứng dụng.
 
 Vì phương thức `tools` của MCP client trả về một collection, hãy trải collection này vào mảng `tools` của agent bằng toán tử `...`:
 
@@ -1019,7 +1019,7 @@ public function tools(): iterable
 }
 ```
 
-AI SDK tự động bọc từng MCP tool để agent có thể gọi nó giống như bất kỳ tool nào khác. Bạn cũng có thể sử dụng một [named MCP client](/docs/{{version}}/mcp#named-clients):
+AI SDK tự động bọc từng MCP tool để agent có thể gọi nó giống như bất kỳ tool nào khác. Bạn cũng có thể sử dụng một [named MCP client](/mcp#named-clients):
 
 ```php
 use Laravel\Mcp\Facades\Mcp;
@@ -1032,7 +1032,7 @@ public function tools(): iterable
 }
 ```
 
-Hoặc kết nối tới một [MCP server cục bộ](/docs/{{version}}/mcp#client-connecting):
+Hoặc kết nối tới một [MCP server cục bộ](/mcp#client-connecting):
 
 ```php
 use Laravel\Mcp\Client;
@@ -1045,7 +1045,7 @@ public function tools(): iterable
 }
 ```
 
-Để biết thêm thông tin về việc tạo và xác thực MCP client, bao gồm bearer token và OAuth, hãy xem [tài liệu MCP client](/docs/{{version}}/mcp#client).
+Để biết thêm thông tin về việc tạo và xác thực MCP client, bao gồm bearer token và OAuth, hãy xem [tài liệu MCP client](/mcp#client).
 
 <a name="provider-tools"></a>
 ### Provider Tools
@@ -2920,7 +2920,7 @@ $store->assertAdded(fn (StorableFile $file) => $file->content() === 'Hello, Worl
 <a name="events"></a>
 ## Events
 
-Laravel AI SDK dispatch nhiều [event](/docs/{{version}}/events), bao gồm:
+Laravel AI SDK dispatch nhiều [event](/events), bao gồm:
 
 - `AddingFileToStore`
 - `AgentFailed`

@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-Accessor, mutator và attribute casting cho phép bạn biến đổi giá trị thuộc tính Eloquent khi đọc hoặc gán chúng trên các instance của model. Ví dụ, bạn có thể sử dụng [cơ chế mã hóa của Laravel](/docs/{{version}}/encryption) để mã hóa một giá trị khi lưu trong cơ sở dữ liệu, sau đó tự động giải mã thuộc tính khi truy cập nó trên Eloquent model. Hoặc, bạn có thể chuyển một chuỗi JSON đang lưu trong cơ sở dữ liệu thành mảng khi truy cập thông qua Eloquent model.
+Accessor, mutator và attribute casting cho phép bạn biến đổi giá trị thuộc tính Eloquent khi đọc hoặc gán chúng trên các instance của model. Ví dụ, bạn có thể sử dụng [cơ chế mã hóa của Laravel](/encryption) để mã hóa một giá trị khi lưu trong cơ sở dữ liệu, sau đó tự động giải mã thuộc tính khi truy cập nó trên Eloquent model. Hoặc, bạn có thể chuyển một chuỗi JSON đang lưu trong cơ sở dữ liệu thành mảng khi truy cập thông qua Eloquent model.
 
 <a name="accessors-and-mutators"></a>
 ## Accessor và Mutator
@@ -50,7 +50,7 @@ $firstName = $user->first_name;
 ```
 
 > [!NOTE]
-> Nếu muốn các giá trị được tính toán này xuất hiện trong biểu diễn array / JSON của model, [bạn cần append chúng](/docs/{{version}}/eloquent-serialization#appending-values-to-json).
+> Nếu muốn các giá trị được tính toán này xuất hiện trong biểu diễn array / JSON của model, [bạn cần append chúng](/eloquent-serialization#appending-values-to-json).
 
 <a name="building-value-objects-from-multiple-attributes"></a>
 #### Tạo Value Object từ nhiều thuộc tính
@@ -272,7 +272,7 @@ $user->mergeCasts([
 <a name="stringable-casting"></a>
 #### Ép kiểu Stringable
 
-Bạn có thể sử dụng cast class `Illuminate\Database\Eloquent\Casts\AsStringable` để cast một thuộc tính model thành [object `Illuminate\Support\Stringable` dạng fluent](/docs/{{version}}/strings#fluent-strings-method-list):
+Bạn có thể sử dụng cast class `Illuminate\Database\Eloquent\Casts\AsStringable` để cast một thuộc tính model thành [object `Illuminate\Support\Stringable` dạng fluent](/strings#fluent-strings-method-list):
 
 ```php
 <?php
@@ -342,7 +342,7 @@ $user->options = $options;
 $user->save();
 ```
 
-Để cập nhật một field riêng lẻ của thuộc tính JSON bằng cú pháp ngắn gọn hơn, bạn có thể [cho phép mass assignment đối với thuộc tính](/docs/{{version}}/eloquent#mass-assignment-json-columns) và sử dụng toán tử `->` khi gọi method `update`:
+Để cập nhật một field riêng lẻ của thuộc tính JSON bằng cú pháp ngắn gọn hơn, bạn có thể [cho phép mass assignment đối với thuộc tính](/eloquent#mass-assignment-json-columns) và sử dụng toán tử `->` khi gọi method `update`:
 
 ```php
 $user = User::find(1);
@@ -398,7 +398,7 @@ protected function casts(): array
 }
 ```
 
-Tương tự, Laravel cung cấp cast `AsCollection` để chuyển thuộc tính JSON thành một instance [Collection](/docs/{{version}}/collections) của Laravel:
+Tương tự, Laravel cung cấp cast `AsCollection` để chuyển thuộc tính JSON thành một instance [Collection](/collections) của Laravel:
 
 ```php
 use Illuminate\Database\Eloquent\Casts\AsCollection;
@@ -435,7 +435,7 @@ protected function casts(): array
 }
 ```
 
-Method `of` có thể được dùng để chỉ định rằng các phần tử của collection phải được map sang một class cụ thể thông qua [method `mapInto`](/docs/{{version}}/collections#method-mapinto) của collection:
+Method `of` có thể được dùng để chỉ định rằng các phần tử của collection phải được map sang một class cụ thể thông qua [method `mapInto`](/collections#method-mapinto) của collection:
 
 ```php
 use App\ValueObjects\Option;
@@ -532,7 +532,7 @@ Khi gán thuộc tính, cast chấp nhận mảng PHP hoặc instance `Arrayable
 <a name="binary-casting"></a>
 ### Ép kiểu Binary
 
-Nếu Eloquent model có cột `uuid` hoặc `ulid` dạng [binary](/docs/{{version}}/migrations#column-method-binary) bên cạnh cột ID tự tăng, bạn có thể dùng cast `AsBinary` để tự động chuyển đổi hai chiều giữa giá trị và biểu diễn binary của nó:
+Nếu Eloquent model có cột `uuid` hoặc `ulid` dạng [binary](/migrations#column-method-binary) bên cạnh cột ID tự tăng, bạn có thể dùng cast `AsBinary` để tự động chuyển đổi hai chiều giữa giá trị và biểu diễn binary của nó:
 
 ```php
 use Illuminate\Database\Eloquent\Casts\AsBinary;
@@ -568,7 +568,7 @@ return $user->uuid;
 
 Mặc định, Eloquent cast các cột `created_at` và `updated_at` thành instance của [Carbon](https://github.com/briannesbitt/Carbon), class mở rộng `DateTime` của PHP và cung cấp nhiều method hữu ích. Bạn có thể cast thêm các thuộc tính ngày tháng bằng cách khai báo thêm date cast trong method `casts` của model. Thông thường, ngày tháng nên sử dụng kiểu cast `datetime` hoặc `immutable_datetime`.
 
-Khi định nghĩa cast `date` hoặc `datetime`, bạn cũng có thể chỉ định format của ngày. Format này được sử dụng khi [model được serialize thành array hoặc JSON](/docs/{{version}}/eloquent-serialization):
+Khi định nghĩa cast `date` hoặc `datetime`, bạn cũng có thể chỉ định format của ngày. Format này được sử dụng khi [model được serialize thành array hoặc JSON](/eloquent-serialization):
 
 ```php
 /**
@@ -673,14 +673,14 @@ protected function casts(): array
 <a name="encrypted-casting"></a>
 ### Ép kiểu mã hóa
 
-Cast `encrypted` mã hóa giá trị thuộc tính của model bằng tính năng [mã hóa](/docs/{{version}}/encryption) tích hợp sẵn của Laravel. Ngoài ra, các cast `encrypted:array`, `encrypted:collection`, `encrypted:object`, `AsEncryptedArrayObject` và `AsEncryptedCollection` hoạt động tương tự phiên bản không mã hóa tương ứng; tuy nhiên, giá trị bên dưới sẽ được mã hóa khi lưu vào cơ sở dữ liệu.
+Cast `encrypted` mã hóa giá trị thuộc tính của model bằng tính năng [mã hóa](/encryption) tích hợp sẵn của Laravel. Ngoài ra, các cast `encrypted:array`, `encrypted:collection`, `encrypted:object`, `AsEncryptedArrayObject` và `AsEncryptedCollection` hoạt động tương tự phiên bản không mã hóa tương ứng; tuy nhiên, giá trị bên dưới sẽ được mã hóa khi lưu vào cơ sở dữ liệu.
 
 Do độ dài cuối cùng của dữ liệu đã mã hóa không thể dự đoán và dài hơn plain text tương ứng, hãy bảo đảm cột cơ sở dữ liệu liên quan có kiểu `TEXT` hoặc lớn hơn. Ngoài ra, vì giá trị được mã hóa trong cơ sở dữ liệu, bạn sẽ không thể query hoặc tìm kiếm theo các giá trị thuộc tính đã mã hóa.
 
 <a name="key-rotation"></a>
 #### Xoay vòng khóa
 
-Laravel mã hóa string bằng giá trị cấu hình `key` trong file cấu hình `app` của ứng dụng. Thông thường, giá trị này tương ứng với biến môi trường `APP_KEY`. Nếu cần xoay vòng khóa mã hóa của ứng dụng, bạn có thể [thực hiện an toàn](/docs/{{version}}/encryption#gracefully-rotating-encryption-keys).
+Laravel mã hóa string bằng giá trị cấu hình `key` trong file cấu hình `app` của ứng dụng. Thông thường, giá trị này tương ứng với biến môi trường `APP_KEY`. Nếu cần xoay vòng khóa mã hóa của ứng dụng, bạn có thể [thực hiện an toàn](/encryption#gracefully-rotating-encryption-keys).
 
 <a name="query-time-casting"></a>
 ### Ép kiểu tại thời điểm truy vấn

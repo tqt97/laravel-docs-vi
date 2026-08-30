@@ -14,7 +14,7 @@ File `ExampleTest.php` được cung cấp trong cả directory test `Feature` v
 <a name="environment"></a>
 ## Môi trường
 
-Khi chạy test, Laravel sẽ tự động đặt [configuration environment](/docs/{{version}}/configuration#environment-configuration) thành `testing` dựa trên các environment variable được định nghĩa trong file `phpunit.xml`. Laravel cũng tự động cấu hình session và cache sử dụng driver `array`, nhờ đó dữ liệu session hoặc cache sẽ không được persist trong quá trình test.
+Khi chạy test, Laravel sẽ tự động đặt [configuration environment](/configuration#environment-configuration) thành `testing` dựa trên các environment variable được định nghĩa trong file `phpunit.xml`. Laravel cũng tự động cấu hình session và cache sử dụng driver `array`, nhờ đó dữ liệu session hoặc cache sẽ không được persist trong quá trình test.
 
 Bạn có thể tự do định nghĩa thêm các giá trị cấu hình dành cho môi trường testing khi cần. Các environment variable của môi trường `testing` có thể được cấu hình trong file `phpunit.xml` của ứng dụng, nhưng hãy nhớ xóa configuration cache bằng command Artisan `config:clear` trước khi chạy test.
 
@@ -64,7 +64,7 @@ class LocationServiceTest extends TestCase
 ```
 
 > [!NOTE]
-> Các test stub có thể được tùy chỉnh bằng tính năng [publish stub](/docs/{{version}}/artisan#stub-customization).
+> Các test stub có thể được tùy chỉnh bằng tính năng [publish stub](/artisan#stub-customization).
 
 Sau khi test được tạo, bạn có thể định nghĩa test như bình thường bằng Pest hoặc PHPUnit:
 

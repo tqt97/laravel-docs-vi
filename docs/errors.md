@@ -14,7 +14,7 @@ Trong local development, bạn nên đặt `APP_DEBUG=true`.
 ## Xử lý exception
 <a name="reporting-exceptions"></a>
 ### Report exception
-Trong Laravel, report exception được dùng để ghi exception vào log hoặc gửi tới dịch vụ bên ngoài như [Laravel Nightwatch](https://nightwatch.laravel.com), [Sentry](https://github.com/getsentry/sentry-laravel) hay [Flare](https://flareapp.io). Mặc định, exception được log dựa trên cấu hình [logging](/docs/{{version}}/logging), nhưng bạn có thể tùy biến cách report theo nhu cầu.
+Trong Laravel, report exception được dùng để ghi exception vào log hoặc gửi tới dịch vụ bên ngoài như [Laravel Nightwatch](https://nightwatch.laravel.com), [Sentry](https://github.com/getsentry/sentry-laravel) hay [Flare](https://flareapp.io). Mặc định, exception được log dựa trên cấu hình [logging](/logging), nhưng bạn có thể tùy biến cách report theo nhu cầu.
 Nếu cần report từng loại exception theo cách khác nhau, hãy dùng method exception `report` trong `bootstrap/app.php` để đăng ký closure chạy khi một exception tương ứng cần được report. Laravel xác định loại exception bằng type-hint của closure:
 ```php
 use App\Exceptions\InvalidOrderException;
@@ -40,7 +40,7 @@ use App\Exceptions\InvalidOrderException;
 })
 ```
 > [!NOTE]
-> Để tùy biến cách report cho một exception cụ thể, bạn cũng có thể dùng [reportable exception](/docs/{{version}}/errors#renderable-exceptions).
+> Để tùy biến cách report cho một exception cụ thể, bạn cũng có thể dùng [reportable exception](/errors#renderable-exceptions).
 <a name="global-log-context"></a>
 #### Context log toàn cục
 Khi có thể, Laravel tự động thêm ID của user hiện tại vào log message của exception dưới dạng context data. Bạn có thể định nghĩa global context riêng bằng method exception `context` trong `bootstrap/app.php`; dữ liệu này sẽ được đưa vào mọi exception log message do ứng dụng ghi:
@@ -121,7 +121,7 @@ report($caught); // ignored
 
 <a name="exception-log-levels"></a>
 ### Log level cho exception
-Khi message được ghi vào [log](/docs/{{version}}/logging), mỗi message có một [log level](/docs/{{version}}/logging#log-levels) thể hiện mức độ nghiêm trọng hoặc tầm quan trọng.
+Khi message được ghi vào [log](/logging), mỗi message có một [log level](/logging#log-levels) thể hiện mức độ nghiêm trọng hoặc tầm quan trọng.
 Như đã nói ở trên, ngay cả khi bạn đăng ký callback report tùy chỉnh bằng `report`, Laravel vẫn log exception theo cấu hình mặc định. Vì log level có thể ảnh hưởng tới channel nhận message, đôi khi bạn cần cấu hình level riêng cho một số exception.
 Để làm điều này, dùng method exception `level` trong `bootstrap/app.php`. Method nhận exception type làm đối số thứ nhất và log level làm đối số thứ hai:
 ```php
@@ -311,7 +311,7 @@ public function report(): bool
 }
 ```
 > [!NOTE]
-> Bạn có thể type-hint dependency cần thiết trong method `report`; Laravel sẽ tự động inject chúng thông qua [service container](/docs/{{version}}/container).
+> Bạn có thể type-hint dependency cần thiết trong method `report`; Laravel sẽ tự động inject chúng thông qua [service container](/container).
 <a name="throttling-reported-exceptions"></a>
 ### Giới hạn exception được report
 Nếu ứng dụng phát sinh số lượng exception rất lớn, bạn có thể cần giới hạn số exception thực sự được ghi log hoặc gửi tới dịch vụ error tracking bên ngoài.

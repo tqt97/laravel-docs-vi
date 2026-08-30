@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-Ở các framework khác, việc phân trang có thể khá phức tạp. Laravel hướng tới một cách tiếp cận đơn giản hơn. Paginator của Laravel được tích hợp với [query builder](/docs/{{version}}/queries) và [Eloquent ORM](/docs/{{version}}/eloquent), cung cấp khả năng phân trang bản ghi cơ sở dữ liệu thuận tiện, dễ sử dụng mà không cần cấu hình.
+Ở các framework khác, việc phân trang có thể khá phức tạp. Laravel hướng tới một cách tiếp cận đơn giản hơn. Paginator của Laravel được tích hợp với [query builder](/queries) và [Eloquent ORM](/eloquent), cung cấp khả năng phân trang bản ghi cơ sở dữ liệu thuận tiện, dễ sử dụng mà không cần cấu hình.
 
 Theo mặc định, HTML do paginator tạo ra tương thích với [Tailwind CSS](https://tailwindcss.com/); tuy nhiên, Laravel cũng hỗ trợ phân trang bằng Bootstrap.
 
@@ -24,7 +24,7 @@ Nếu bạn sử dụng các view phân trang Tailwind mặc định của Larav
 <a name="paginating-query-builder-results"></a>
 ### Phân trang kết quả Query Builder
 
-Có nhiều cách để phân trang dữ liệu. Cách đơn giản nhất là sử dụng phương thức `paginate` trên [query builder](/docs/{{version}}/queries) hoặc một [Eloquent query](/docs/{{version}}/eloquent). Phương thức `paginate` tự động thiết lập `limit` và `offset` của query dựa trên trang hiện tại mà người dùng đang xem. Theo mặc định, trang hiện tại được xác định từ giá trị của tham số query string `page` trong HTTP request. Laravel tự động nhận diện giá trị này và cũng tự động chèn nó vào các liên kết do paginator tạo ra.
+Có nhiều cách để phân trang dữ liệu. Cách đơn giản nhất là sử dụng phương thức `paginate` trên [query builder](/queries) hoặc một [Eloquent query](/eloquent). Phương thức `paginate` tự động thiết lập `limit` và `offset` của query dựa trên trang hiện tại mà người dùng đang xem. Theo mặc định, trang hiện tại được xác định từ giá trị của tham số query string `page` trong HTTP request. Laravel tự động nhận diện giá trị này và cũng tự động chèn nó vào các liên kết do paginator tạo ra.
 
 Trong ví dụ này, đối số duy nhất được truyền cho phương thức `paginate` là số lượng phần tử muốn hiển thị trên mỗi trang. Ở đây, chúng ta chỉ định hiển thị `15` phần tử mỗi trang:
 
@@ -64,7 +64,7 @@ $users = DB::table('users')->simplePaginate(15);
 <a name="paginating-eloquent-results"></a>
 ### Phân trang kết quả Eloquent
 
-Bạn cũng có thể phân trang các [Eloquent](/docs/{{version}}/eloquent) query. Trong ví dụ này, chúng ta sẽ phân trang model `App\Models\User` và chỉ định hiển thị 15 bản ghi mỗi trang. Như bạn có thể thấy, cú pháp gần như giống hệt khi phân trang kết quả query builder:
+Bạn cũng có thể phân trang các [Eloquent](/eloquent) query. Trong ví dụ này, chúng ta sẽ phân trang model `App\Models\User` và chỉ định hiển thị 15 bản ghi mỗi trang. Như bạn có thể thấy, cú pháp gần như giống hệt khi phân trang kết quả query builder:
 
 ```php
 use App\Models\User;
@@ -216,7 +216,7 @@ $users = User::paginate(15)->fragment('users');
 
 Khi gọi phương thức `paginate`, bạn sẽ nhận được một instance của `Illuminate\Pagination\LengthAwarePaginator`, trong khi `simplePaginate` trả về một instance của `Illuminate\Pagination\Paginator`. Cuối cùng, `cursorPaginate` trả về một instance của `Illuminate\Pagination\CursorPaginator`.
 
-Các object này cung cấp nhiều phương thức mô tả tập kết quả. Ngoài các phương thức hỗ trợ đó, các instance paginator còn là iterator và có thể được lặp như một mảng. Vì vậy, sau khi lấy kết quả, bạn có thể hiển thị dữ liệu và render các liên kết trang bằng [Blade](/docs/{{version}}/blade):
+Các object này cung cấp nhiều phương thức mô tả tập kết quả. Ngoài các phương thức hỗ trợ đó, các instance paginator còn là iterator và có thể được lặp như một mảng. Vì vậy, sau khi lấy kết quả, bạn có thể hiển thị dữ liệu và render các liên kết trang bằng [Blade](/blade):
 
 ```blade
 <div class="container">

@@ -8,34 +8,34 @@
 Vì Fortify không cung cấp giao diện người dùng riêng, nó được thiết kế để kết hợp với giao diện người dùng của chính bạn, giao diện này sẽ gửi request đến các route mà Fortify đăng ký. Trong phần còn lại của tài liệu này, chúng ta sẽ trình bày chính xác cách gửi request đến các route đó.
 
 > [!NOTE]
-> Hãy nhớ rằng Fortify là package giúp bạn có điểm khởi đầu nhanh khi triển khai các tính năng xác thực của Laravel. **Bạn không bắt buộc phải sử dụng Fortify.** Bạn luôn có thể tương tác thủ công với các dịch vụ xác thực của Laravel bằng cách làm theo tài liệu về [xác thực](/docs/{{version}}/authentication), [đặt lại mật khẩu](/docs/{{version}}/passwords) và [xác minh email](/docs/{{version}}/verification).
+> Hãy nhớ rằng Fortify là package giúp bạn có điểm khởi đầu nhanh khi triển khai các tính năng xác thực của Laravel. **Bạn không bắt buộc phải sử dụng Fortify.** Bạn luôn có thể tương tác thủ công với các dịch vụ xác thực của Laravel bằng cách làm theo tài liệu về [xác thực](/authentication), [đặt lại mật khẩu](/passwords) và [xác minh email](/verification).
 
 <a name="what-is-fortify"></a>
 ### Fortify là gì?
 
 Như đã đề cập, Laravel Fortify là một triển khai backend xác thực không phụ thuộc frontend dành cho Laravel. Fortify đăng ký các route và controller cần thiết để triển khai toàn bộ tính năng xác thực của Laravel, bao gồm đăng nhập, đăng ký, đặt lại mật khẩu, xác minh email và nhiều tính năng khác.
 
-**Bạn không bắt buộc phải sử dụng Fortify để dùng các tính năng xác thực của Laravel.** Bạn luôn có thể tương tác thủ công với các dịch vụ xác thực của Laravel bằng cách làm theo tài liệu về [xác thực](/docs/{{version}}/authentication), [đặt lại mật khẩu](/docs/{{version}}/passwords) và [xác minh email](/docs/{{version}}/verification).
+**Bạn không bắt buộc phải sử dụng Fortify để dùng các tính năng xác thực của Laravel.** Bạn luôn có thể tương tác thủ công với các dịch vụ xác thực của Laravel bằng cách làm theo tài liệu về [xác thực](/authentication), [đặt lại mật khẩu](/passwords) và [xác minh email](/verification).
 
-Nếu bạn mới làm quen với Laravel, bạn có thể tìm hiểu [các application starter kit](/docs/{{version}}/starter-kits). Các starter kit của Laravel sử dụng Fortify bên trong để cung cấp scaffolding xác thực cho ứng dụng, bao gồm giao diện người dùng được xây dựng bằng [Tailwind CSS](https://tailwindcss.com). Nhờ đó, bạn có thể nghiên cứu và làm quen với các tính năng xác thực của Laravel.
+Nếu bạn mới làm quen với Laravel, bạn có thể tìm hiểu [các application starter kit](/starter-kits). Các starter kit của Laravel sử dụng Fortify bên trong để cung cấp scaffolding xác thực cho ứng dụng, bao gồm giao diện người dùng được xây dựng bằng [Tailwind CSS](https://tailwindcss.com). Nhờ đó, bạn có thể nghiên cứu và làm quen với các tính năng xác thực của Laravel.
 
 Về cơ bản, Laravel Fortify lấy các route và controller từ application starter kit và cung cấp chúng dưới dạng một package không kèm giao diện người dùng. Điều này cho phép bạn nhanh chóng dựng phần backend cho lớp xác thực của ứng dụng mà không bị ràng buộc vào một lựa chọn frontend cụ thể.
 
 <a name="when-should-i-use-fortify"></a>
 ### Khi nào nên sử dụng Fortify?
 
-Bạn có thể đang tự hỏi khi nào nên sử dụng Laravel Fortify. Trước hết, nếu đang dùng một trong các [application starter kit](/docs/{{version}}/starter-kits) của Laravel, bạn không cần cài Laravel Fortify vì tất cả starter kit của Laravel đều sử dụng Fortify và đã cung cấp sẵn một triển khai xác thực đầy đủ.
+Bạn có thể đang tự hỏi khi nào nên sử dụng Laravel Fortify. Trước hết, nếu đang dùng một trong các [application starter kit](/starter-kits) của Laravel, bạn không cần cài Laravel Fortify vì tất cả starter kit của Laravel đều sử dụng Fortify và đã cung cấp sẵn một triển khai xác thực đầy đủ.
 
 Nếu không sử dụng application starter kit và ứng dụng cần các tính năng xác thực, bạn có hai lựa chọn: tự triển khai thủ công các tính năng xác thực hoặc sử dụng Laravel Fortify để cung cấp phần triển khai backend cho các tính năng này.
 
 Nếu chọn cài Fortify, giao diện người dùng của bạn sẽ gửi request đến các route xác thực của Fortify được mô tả trong tài liệu này để xác thực và đăng ký người dùng.
 
-Nếu chọn tương tác thủ công với các dịch vụ xác thực của Laravel thay vì sử dụng Fortify, bạn có thể làm theo tài liệu về [xác thực](/docs/{{version}}/authentication), [đặt lại mật khẩu](/docs/{{version}}/passwords) và [xác minh email](/docs/{{version}}/verification).
+Nếu chọn tương tác thủ công với các dịch vụ xác thực của Laravel thay vì sử dụng Fortify, bạn có thể làm theo tài liệu về [xác thực](/authentication), [đặt lại mật khẩu](/passwords) và [xác minh email](/verification).
 
 <a name="laravel-fortify-and-laravel-sanctum"></a>
 #### Laravel Fortify và Laravel Sanctum
 
-Một số lập trình viên nhầm lẫn về sự khác biệt giữa [Laravel Sanctum](/docs/{{version}}/sanctum) và Laravel Fortify. Vì hai package giải quyết hai vấn đề khác nhau nhưng có liên quan, Laravel Fortify và Laravel Sanctum không loại trừ lẫn nhau và cũng không phải các package cạnh tranh.
+Một số lập trình viên nhầm lẫn về sự khác biệt giữa [Laravel Sanctum](/sanctum) và Laravel Fortify. Vì hai package giải quyết hai vấn đề khác nhau nhưng có liên quan, Laravel Fortify và Laravel Sanctum không loại trừ lẫn nhau và cũng không phải các package cạnh tranh.
 
 Laravel Sanctum chỉ tập trung vào việc quản lý API token và xác thực người dùng hiện có bằng session cookie hoặc token. Sanctum không cung cấp các route xử lý đăng ký người dùng, đặt lại mật khẩu, v.v.
 
@@ -94,7 +94,7 @@ Nếu bạn vô hiệu hóa các view của Fortify nhưng vẫn triển khai t�
 <a name="authentication"></a>
 ## Xác thực
 
-Để bắt đầu, chúng ta cần chỉ cho Fortify cách trả về view "đăng nhập". Hãy nhớ rằng Fortify là một thư viện xác thực headless. Nếu bạn muốn có sẵn phần triển khai frontend cho các tính năng xác thực của Laravel, bạn nên sử dụng một [application starter kit](/docs/{{version}}/starter-kits).
+Để bắt đầu, chúng ta cần chỉ cho Fortify cách trả về view "đăng nhập". Hãy nhớ rằng Fortify là một thư viện xác thực headless. Nếu bạn muốn có sẵn phần triển khai frontend cho các tính năng xác thực của Laravel, bạn nên sử dụng một [application starter kit](/starter-kits).
 
 Toàn bộ logic render view xác thực có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider`. Fortify sẽ tự định nghĩa route `/login` trả về view này:
 
@@ -118,7 +118,7 @@ Template đăng nhập nên chứa form gửi POST request đến `/login`. Endp
 
 Nếu đăng nhập thành công, Fortify sẽ redirect đến URI được cấu hình bằng option `home` trong file cấu hình `fortify` của ứng dụng. Nếu request đăng nhập là XHR request, HTTP response 200 sẽ được trả về.
 
-Nếu request không thành công, người dùng sẽ được redirect trở lại màn hình đăng nhập và validation error có thể được truy cập qua [biến template Blade](/docs/{{version}}/validation#quick-displaying-the-validation-errors) `$errors` dùng chung. Với XHR request, validation error sẽ được trả về cùng HTTP response 422.
+Nếu request không thành công, người dùng sẽ được redirect trở lại màn hình đăng nhập và validation error có thể được truy cập qua [biến template Blade](/validation#quick-displaying-the-validation-errors) `$errors` dùng chung. Với XHR request, validation error sẽ được trả về cùng HTTP response 422.
 
 <a name="customizing-user-authentication"></a>
 ### Tùy biến xác thực người dùng
@@ -159,7 +159,7 @@ Bạn có thể tùy biến authentication guard mà Fortify sử dụng trong f
 <a name="customizing-the-authentication-pipeline"></a>
 ### Tùy biến pipeline xác thực
 
-Laravel Fortify xác thực các request đăng nhập thông qua một pipeline gồm các invokable class. Nếu muốn, bạn có thể định nghĩa pipeline class tùy chỉnh mà request đăng nhập sẽ đi qua. Mỗi class nên có method `__invoke` nhận instance `Illuminate\Http\Request` đầu vào và, tương tự [middleware](/docs/{{version}}/middleware), biến `$next` được gọi để chuyển request sang class tiếp theo trong pipeline.
+Laravel Fortify xác thực các request đăng nhập thông qua một pipeline gồm các invokable class. Nếu muốn, bạn có thể định nghĩa pipeline class tùy chỉnh mà request đăng nhập sẽ đi qua. Mỗi class nên có method `__invoke` nhận instance `Illuminate\Http\Request` đầu vào và, tương tự [middleware](/middleware), biến `$next` được gọi để chuyển request sang class tiếp theo trong pipeline.
 
 Để định nghĩa pipeline tùy chỉnh, bạn có thể dùng method `Fortify::authenticateThrough`. Method này nhận một closure trả về mảng class mà request đăng nhập sẽ đi qua. Thông thường, method này nên được gọi từ method `boot` của class `App\Providers\FortifyServiceProvider`.
 
@@ -190,17 +190,17 @@ Fortify::authenticateThrough(function (Request $request) {
 
 Theo mặc định, Fortify giới hạn tần suất các lần xác thực bằng middleware `EnsureLoginIsNotThrottled`. Middleware này giới hạn các lần thử theo tổ hợp username và địa chỉ IP.
 
-Một số ứng dụng có thể cần cách giới hạn lần xác thực khác, chẳng hạn chỉ giới hạn theo địa chỉ IP. Vì vậy, Fortify cho phép bạn chỉ định [rate limiter](/docs/{{version}}/routing#rate-limiting) riêng thông qua option cấu hình `fortify.limiters.login`. Option này nằm trong file cấu hình `config/fortify.php` của ứng dụng.
+Một số ứng dụng có thể cần cách giới hạn lần xác thực khác, chẳng hạn chỉ giới hạn theo địa chỉ IP. Vì vậy, Fortify cho phép bạn chỉ định [rate limiter](/routing#rate-limiting) riêng thông qua option cấu hình `fortify.limiters.login`. Option này nằm trong file cấu hình `config/fortify.php` của ứng dụng.
 
 > [!NOTE]
-> Kết hợp throttling, [xác thực hai yếu tố](/docs/{{version}}/fortify#two-factor-authentication) và web application firewall (WAF) bên ngoài sẽ mang lại lớp phòng vệ mạnh mẽ nhất cho người dùng hợp lệ của ứng dụng.
+> Kết hợp throttling, [xác thực hai yếu tố](/fortify#two-factor-authentication) và web application firewall (WAF) bên ngoài sẽ mang lại lớp phòng vệ mạnh mẽ nhất cho người dùng hợp lệ của ứng dụng.
 
 <a name="customizing-authentication-redirects"></a>
 ### Tùy biến chuyển hướng
 
 Nếu đăng nhập thành công, Fortify sẽ redirect đến URI được cấu hình bằng option `home` trong file cấu hình `fortify` của ứng dụng. Nếu request đăng nhập là XHR request, HTTP response 200 sẽ được trả về. Sau khi người dùng đăng xuất khỏi ứng dụng, họ sẽ được chuyển hướng đến URI `/`.
 
-Nếu cần tùy biến nâng cao hành vi này, bạn có thể bind các implementation của contract `LoginResponse` và `LogoutResponse` vào [service container](/docs/{{version}}/container) của Laravel. Thông thường, việc này nên được thực hiện trong method `register` của class `App\Providers\FortifyServiceProvider`:
+Nếu cần tùy biến nâng cao hành vi này, bạn có thể bind các implementation của contract `LoginResponse` và `LogoutResponse` vào [service container](/container) của Laravel. Thông thường, việc này nên được thực hiện trong method `register` của class `App\Providers\FortifyServiceProvider`:
 
 ```php
 use Laravel\Fortify\Contracts\LogoutResponse;
@@ -325,7 +325,7 @@ Fortify sẽ đảm nhiệm việc định nghĩa route `/two-factor-challenge` 
 
 Nếu lần đăng nhập thành công, Fortify sẽ chuyển hướng người dùng đến URI được cấu hình thông qua tùy chọn `home` trong file cấu hình `fortify` của ứng dụng. Nếu request đăng nhập là request XHR, response HTTP 204 sẽ được trả về.
 
-Nếu request không thành công, người dùng sẽ được chuyển hướng trở lại màn hình thử thách xác thực hai yếu tố và các lỗi validation sẽ có sẵn thông qua [biến template Blade `$errors`](/docs/{{version}}/validation#quick-displaying-the-validation-errors) được chia sẻ. Với request XHR, các lỗi validation sẽ được trả về cùng response HTTP 422.
+Nếu request không thành công, người dùng sẽ được chuyển hướng trở lại màn hình thử thách xác thực hai yếu tố và các lỗi validation sẽ có sẵn thông qua [biến template Blade `$errors`](/validation#quick-displaying-the-validation-errors) được chia sẻ. Với request XHR, các lỗi validation sẽ được trả về cùng response HTTP 422.
 
 <a name="disabling-two-factor-authentication"></a>
 ### Vô hiệu hóa xác thực hai yếu tố
@@ -499,7 +499,7 @@ Nếu request thành công, Fortify sẽ trả về một trong các response sa
 <a name="registration"></a>
 ## Đăng ký
 
-Để bắt đầu triển khai chức năng đăng ký của ứng dụng, chúng ta cần chỉ cho Fortify cách trả về view "register". Hãy nhớ rằng Fortify là thư viện xác thực headless. Nếu muốn dùng một frontend đã triển khai sẵn các tính năng xác thực của Laravel, bạn nên sử dụng [application starter kit](/docs/{{version}}/starter-kits).
+Để bắt đầu triển khai chức năng đăng ký của ứng dụng, chúng ta cần chỉ cho Fortify cách trả về view "register". Hãy nhớ rằng Fortify là thư viện xác thực headless. Nếu muốn dùng một frontend đã triển khai sẵn các tính năng xác thực của Laravel, bạn nên sử dụng [application starter kit](/starter-kits).
 
 Toàn bộ logic render view của Fortify có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider`:
 
@@ -525,7 +525,7 @@ Endpoint `/register` yêu cầu các field `name` dạng string, địa chỉ em
 
 Nếu đăng ký thành công, Fortify sẽ redirect người dùng đến URI được cấu hình qua option `home` trong file cấu hình `fortify`. Nếu request là XHR, HTTP response 201 sẽ được trả về.
 
-Nếu request không thành công, người dùng sẽ được redirect trở lại màn hình đăng ký và validation error có thể được truy cập qua [biến template Blade](/docs/{{version}}/validation#quick-displaying-the-validation-errors) `$errors` dùng chung. Với XHR request, validation error sẽ được trả về cùng HTTP response 422.
+Nếu request không thành công, người dùng sẽ được redirect trở lại màn hình đăng ký và validation error có thể được truy cập qua [biến template Blade](/validation#quick-displaying-the-validation-errors) `$errors` dùng chung. Với XHR request, validation error sẽ được trả về cùng HTTP response 422.
 
 <a name="customizing-registration"></a>
 ### Tùy biến đăng ký
@@ -538,7 +538,7 @@ Quy trình validate và tạo user có thể được tùy biến bằng cách s
 <a name="requesting-a-password-reset-link"></a>
 ### Yêu cầu liên kết đặt lại mật khẩu
 
-Để bắt đầu triển khai chức năng đặt lại mật khẩu, chúng ta cần chỉ cho Fortify cách trả về view "forgot password". Fortify là thư viện xác thực headless; nếu muốn dùng frontend đã triển khai sẵn các tính năng xác thực Laravel, bạn nên sử dụng [application starter kit](/docs/{{version}}/starter-kits).
+Để bắt đầu triển khai chức năng đặt lại mật khẩu, chúng ta cần chỉ cho Fortify cách trả về view "forgot password". Fortify là thư viện xác thực headless; nếu muốn dùng frontend đã triển khai sẵn các tính năng xác thực Laravel, bạn nên sử dụng [application starter kit](/starter-kits).
 
 Toàn bộ logic render view của Fortify có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider` của ứng dụng:
 
@@ -569,7 +569,7 @@ Nếu yêu cầu liên kết đặt lại mật khẩu thành công, Fortify s�
 
 Sau khi request thành công và được redirect về endpoint `/forgot-password`, biến session `status` có thể được dùng để hiển thị trạng thái của yêu cầu liên kết đặt lại mật khẩu.
 
-Giá trị biến session `$status` sẽ khớp với một trong các chuỗi dịch được định nghĩa trong [language file](/docs/{{version}}/localization) `passwords` của ứng dụng. Nếu muốn tùy biến giá trị này và chưa publish language file của Laravel, bạn có thể dùng Artisan command `lang:publish`:
+Giá trị biến session `$status` sẽ khớp với một trong các chuỗi dịch được định nghĩa trong [language file](/localization) `passwords` của ứng dụng. Nếu muốn tùy biến giá trị này và chưa publish language file của Laravel, bạn có thể dùng Artisan command `lang:publish`:
 
 ```html
 @if (session('status'))
@@ -579,7 +579,7 @@ Giá trị biến session `$status` sẽ khớp với một trong các chuỗi d
 @endif
 ```
 
-Nếu request không thành công, người dùng sẽ được redirect về màn hình yêu cầu liên kết đặt lại mật khẩu và validation error có thể truy cập qua [biến template Blade](/docs/{{version}}/validation#quick-displaying-the-validation-errors) `$errors`. Với XHR request, validation error được trả về cùng HTTP response 422.
+Nếu request không thành công, người dùng sẽ được redirect về màn hình yêu cầu liên kết đặt lại mật khẩu và validation error có thể truy cập qua [biến template Blade](/validation#quick-displaying-the-validation-errors) `$errors`. Với XHR request, validation error được trả về cùng HTTP response 422.
 
 <a name="resetting-the-password"></a>
 ### Đặt lại mật khẩu
@@ -624,7 +624,7 @@ Nếu request đặt lại mật khẩu thành công, Fortify sẽ redirect về
 
 Nếu request là XHR, HTTP response 200 sẽ được trả về.
 
-Nếu request không thành công, người dùng sẽ được redirect về màn hình đặt lại mật khẩu và validation error có thể truy cập qua [biến template Blade](/docs/{{version}}/validation#quick-displaying-the-validation-errors) `$errors`. Với XHR request, validation error được trả về cùng HTTP response 422.
+Nếu request không thành công, người dùng sẽ được redirect về màn hình đặt lại mật khẩu và validation error có thể truy cập qua [biến template Blade](/validation#quick-displaying-the-validation-errors) `$errors`. Với XHR request, validation error được trả về cùng HTTP response 422.
 
 <a name="customizing-password-resets"></a>
 ### Tùy biến việc đặt lại mật khẩu
@@ -691,7 +691,7 @@ Route::get('/dashboard', function () {
 
 Khi xây dựng ứng dụng, đôi lúc bạn có các action cần yêu cầu user xác nhận mật khẩu trước khi thực thi. Thông thường, các route này được bảo vệ bằng middleware `password.confirm` tích hợp sẵn của Laravel.
 
-Để bắt đầu triển khai chức năng xác nhận mật khẩu, chúng ta cần chỉ cho Fortify cách trả về view "password confirmation" của ứng dụng. Fortify là thư viện xác thực headless; nếu muốn dùng frontend đã triển khai sẵn các tính năng xác thực Laravel, bạn nên sử dụng [application starter kit](/docs/{{version}}/starter-kits).
+Để bắt đầu triển khai chức năng xác nhận mật khẩu, chúng ta cần chỉ cho Fortify cách trả về view "password confirmation" của ứng dụng. Fortify là thư viện xác thực headless; nếu muốn dùng frontend đã triển khai sẵn các tính năng xác thực Laravel, bạn nên sử dụng [application starter kit](/starter-kits).
 
 Toàn bộ logic render view của Fortify có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider` của ứng dụng:
 

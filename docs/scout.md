@@ -3,9 +3,9 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-[Laravel Scout](https://github.com/laravel/scout) cung cấp một giải pháp đơn giản dựa trên driver để bổ sung tìm kiếm full-text cho [Eloquent model](/docs/{{version}}/eloquent). Bằng cách sử dụng model observer, Scout sẽ tự động giữ các search index đồng bộ với các bản ghi Eloquent của bạn.
+[Laravel Scout](https://github.com/laravel/scout) cung cấp một giải pháp đơn giản dựa trên driver để bổ sung tìm kiếm full-text cho [Eloquent model](/eloquent). Bằng cách sử dụng model observer, Scout sẽ tự động giữ các search index đồng bộ với các bản ghi Eloquent của bạn.
 
-Scout đi kèm `database` engine tích hợp sẵn, sử dụng full-text index của MySQL / PostgreSQL và các mệnh đề `LIKE` để tìm kiếm trực tiếp trong database hiện có — không cần dịch vụ bên ngoài. Với phần lớn ứng dụng, đây là tất cả những gì bạn cần. Để xem tổng quan về các lựa chọn tìm kiếm có sẵn trong Laravel, hãy tham khảo [tài liệu search](/docs/{{version}}/search).
+Scout đi kèm `database` engine tích hợp sẵn, sử dụng full-text index của MySQL / PostgreSQL và các mệnh đề `LIKE` để tìm kiếm trực tiếp trong database hiện có — không cần dịch vụ bên ngoài. Với phần lớn ứng dụng, đây là tất cả những gì bạn cần. Để xem tổng quan về các lựa chọn tìm kiếm có sẵn trong Laravel, hãy tham khảo [tài liệu search](/search).
 
 Scout cũng bao gồm các driver cho [Algolia](https://www.algolia.com/), [Meilisearch](https://www.meilisearch.com), [Typesense](https://typesense.org) và [Turbopuffer](https://turbopuffer.com) khi bạn cần các tính năng như chịu lỗi chính tả, lọc theo facet, vector search hoặc geo-search ở quy mô rất lớn. Driver `collection` cũng có sẵn cho phát triển local, và bạn cũng có thể tự viết [custom engine](#custom-engines).
 
@@ -43,7 +43,7 @@ class Post extends Model
 <a name="queueing"></a>
 ### Đưa vào hàng đợi
 
-Khi sử dụng engine không phải `database` hoặc `collection`, bạn nên cân nhắc nghiêm túc việc cấu hình một [queue driver](/docs/{{version}}/queues) trước khi dùng thư viện. Chạy queue worker cho phép Scout đưa vào hàng đợi mọi thao tác đồng bộ thông tin model với search index, nhờ đó cải thiện đáng kể thời gian phản hồi của giao diện web.
+Khi sử dụng engine không phải `database` hoặc `collection`, bạn nên cân nhắc nghiêm túc việc cấu hình một [queue driver](/queues) trước khi dùng thư viện. Chạy queue worker cho phép Scout đưa vào hàng đợi mọi thao tác đồng bộ thông tin model với search index, nhờ đó cải thiện đáng kể thời gian phản hồi của giao diện web.
 
 Sau khi cấu hình queue driver, hãy đặt giá trị tùy chọn `queue` trong file `config/scout.php` thành `true`:
 
@@ -82,7 +82,7 @@ Scout::makeSearchableUsing(MakeSearchableUniquely::class);
 Scout::removeFromSearchUsing(RemoveFromSearchUniquely::class);
 ```
 
-Các job này sử dụng [unique job lock](/docs/{{version}}/queues#unique-jobs) của Laravel để tránh dispatch các thao tác indexing trùng lặp cho cùng bản ghi model có thể tìm kiếm trong khi một job tương ứng đã nằm trong queue.
+Các job này sử dụng [unique job lock](/queues#unique-jobs) của Laravel để tránh dispatch các thao tác indexing trùng lặp cho cùng bản ghi model có thể tìm kiếm trong khi một job tương ứng đã nằm trong queue.
 
 <a name="driver-prerequisites"></a>
 ## Điều kiện tiên quyết của driver
@@ -99,7 +99,7 @@ composer require algolia/algoliasearch-client-php
 <a name="meilisearch"></a>
 ### Meilisearch
 
-[Meilisearch](https://www.meilisearch.com) là một search engine mã nguồn mở, tốc độ cao. Nếu chưa chắc cách cài Meilisearch trên máy local, bạn có thể sử dụng [Laravel Sail](/docs/{{version}}/sail#meilisearch), môi trường phát triển Docker được Laravel hỗ trợ chính thức.
+[Meilisearch](https://www.meilisearch.com) là một search engine mã nguồn mở, tốc độ cao. Nếu chưa chắc cách cài Meilisearch trên máy local, bạn có thể sử dụng [Laravel Sail](/sail#meilisearch), môi trường phát triển Docker được Laravel hỗ trợ chính thức.
 
 Khi sử dụng Meilisearch driver, bạn cần cài Meilisearch PHP SDK thông qua Composer:
 
@@ -143,7 +143,7 @@ TYPESENSE_API_KEY=masterKey
 TYPESENSE_HOST=localhost
 ```
 
-Nếu đang sử dụng [Laravel Sail](/docs/{{version}}/sail), bạn có thể cần điều chỉnh biến môi trường `TYPESENSE_HOST` để khớp với tên Docker container. Bạn cũng có thể tùy chọn chỉ định port, path và protocol của bản cài đặt:
+Nếu đang sử dụng [Laravel Sail](/sail), bạn có thể cần điều chỉnh biến môi trường `TYPESENSE_HOST` để khớp với tên Docker container. Bạn cũng có thể tùy chọn chỉ định port, path và protocol của bản cài đặt:
 
 ```ini
 TYPESENSE_PORT=8108
@@ -298,7 +298,7 @@ public function toSearchableArray(): array
 ```
 
 > [!WARNING]
-> Trước khi chỉ định một cột sử dụng ràng buộc truy vấn full-text, hãy bảo đảm cột đó đã được gán [full-text index](/docs/{{version}}/migrations#available-index-types).
+> Trước khi chỉ định một cột sử dụng ràng buộc truy vấn full-text, hãy bảo đảm cột đó đã được gán [full-text index](/migrations#available-index-types).
 
 <a name="collection-engine"></a>
 ### Collection Engine
@@ -521,7 +521,7 @@ php artisan scout:sync-index-settings
 ],
 ```
 
-Phương thức `toSearchableEmbedding` của model có thể trả về văn bản nguồn để Scout tạo embedding bằng [Laravel AI SDK](/docs/{{version}}/ai-sdk), hoặc trả về một mảng embedding đã được tính trước. Sau khi cập nhật cấu hình, hãy chạy lệnh `scout:sync-index-settings`.
+Phương thức `toSearchableEmbedding` của model có thể trả về văn bản nguồn để Scout tạo embedding bằng [Laravel AI SDK](/ai-sdk), hoặc trả về một mảng embedding đã được tính trước. Sau khi cập nhật cấu hình, hãy chạy lệnh `scout:sync-index-settings`.
 
 <a name="meilisearch-data-types"></a>
 #### Kiểu dữ liệu có thể tìm kiếm
@@ -649,7 +649,7 @@ Các giá trị số gán cho `searchable-attributes` là trọng số BM25 tư�
 ],
 ```
 
-Phương thức `toSearchableEmbedding` của model nên trả về văn bản nguồn mà Scout cần tạo embedding hoặc một mảng embedding đã được tính trước. Scout tạo embedding từ văn bản nguồn bằng [Laravel AI SDK](/docs/{{version}}/ai-sdk).
+Phương thức `toSearchableEmbedding` của model nên trả về văn bản nguồn mà Scout cần tạo embedding hoặc một mảng embedding đã được tính trước. Scout tạo embedding từ văn bản nguồn bằng [Laravel AI SDK](/ai-sdk).
 
 Ngoài ra, bạn có thể sử dụng embedding native của Turbopuffer mà không cần cài Laravel AI SDK hoặc định nghĩa phương thức `toSearchableEmbedding`. Hãy đặt embedding driver thành `turbopuffer` và cấu hình schema `embed` trên thuộc tính nguồn có thể tìm kiếm:
 
@@ -689,7 +689,7 @@ Nếu cài Scout vào một project hiện có, bạn có thể đã có các b�
 php artisan scout:import "App\Models\Post"
 ```
 
-Lệnh `scout:queue-import` có thể được dùng để import toàn bộ bản ghi hiện có bằng [queued job](/docs/{{version}}/queues):
+Lệnh `scout:queue-import` có thể được dùng để import toàn bộ bản ghi hiện có bằng [queued job](/queues):
 
 ```shell
 php artisan scout:queue-import "App\Models\Post" --chunk=500
@@ -719,7 +719,7 @@ protected function makeAllSearchableUsing(Builder $query): Builder
 ```
 
 > [!WARNING]
-> Phương thức `makeAllSearchableUsing` có thể không áp dụng khi sử dụng queue để import model hàng loạt. Các relationship [không được khôi phục](/docs/{{version}}/queues#handling-relationships) khi collection model được xử lý bởi job.
+> Phương thức `makeAllSearchableUsing` có thể không áp dụng khi sử dụng queue để import model hàng loạt. Các relationship [không được khôi phục](/queues#handling-relationships) khi collection model được xử lý bởi job.
 
 <a name="adding-records"></a>
 ### Thêm bản ghi
@@ -739,7 +739,7 @@ $order->save();
 <a name="adding-records-via-query"></a>
 #### Thêm bản ghi via Query
 
-Nếu muốn thêm một collection model vào search index thông qua Eloquent query, bạn có thể chain phương thức `searchable` vào query. Phương thức `searchable` sẽ [chia kết quả thành các chunk](/docs/{{version}}/eloquent#chunking-results) và thêm các bản ghi vào search index. Nếu đã cấu hình Scout dùng queue, toàn bộ chunk sẽ được các queue worker import ở background:
+Nếu muốn thêm một collection model vào search index thông qua Eloquent query, bạn có thể chain phương thức `searchable` vào query. Phương thức `searchable` sẽ [chia kết quả thành các chunk](/eloquent#chunking-results) và thêm các bản ghi vào search index. Nếu đã cấu hình Scout dùng queue, toàn bộ chunk sẽ được các queue worker import ở background:
 
 ```php
 use App\Models\Order;
@@ -830,7 +830,7 @@ public function searchIndexShouldBeUpdated(): bool
 <a name="removing-records"></a>
 ### Xóa bản ghi
 
-Để xóa một bản ghi khỏi index, bạn chỉ cần `delete` model khỏi database. Điều này vẫn có thể thực hiện khi sử dụng model [soft delete](/docs/{{version}}/eloquent#soft-deleting):
+Để xóa một bản ghi khỏi index, bạn chỉ cần `delete` model khỏi database. Điều này vẫn có thể thực hiện khi sử dụng model [soft delete](/eloquent#soft-deleting):
 
 ```php
 use App\Models\Order;
@@ -928,7 +928,7 @@ $orders = Order::search('Star Trek')->raw();
 <a name="semantic-search"></a>
 ### Tìm kiếm semantic
 
-Các engine database, Meilisearch và Turbopuffer hỗ trợ tìm kiếm semantic, cho phép khớp bản ghi dựa trên ý nghĩa của truy vấn. Khi Scout tạo embeddings, tìm kiếm semantic và hybrid yêu cầu [Laravel AI SDK](/docs/{{version}}/ai-sdk). [Native embeddings](#turbopuffer-configuration) của Turbopuffer và các query vector được tính toán trước không yêu cầu Laravel AI SDK.
+Các engine database, Meilisearch và Turbopuffer hỗ trợ tìm kiếm semantic, cho phép khớp bản ghi dựa trên ý nghĩa của truy vấn. Khi Scout tạo embeddings, tìm kiếm semantic và hybrid yêu cầu [Laravel AI SDK](/ai-sdk). [Native embeddings](#turbopuffer-configuration) của Turbopuffer và các query vector được tính toán trước không yêu cầu Laravel AI SDK.
 
 Sau khi cấu hình embeddings cho engine đã chọn, hãy gọi phương thức `semantic` trên truy vấn tìm kiếm:
 
@@ -1027,7 +1027,7 @@ Khi sử dụng engine bên thứ ba, callback này được gọi sau khi các 
 <a name="pagination"></a>
 ### Phân trang
 
-Ngoài việc truy xuất một collection các model, bạn có thể phân trang kết quả tìm kiếm bằng phương thức `paginate`. Phương thức này trả về một instance `Illuminate\Pagination\LengthAwarePaginator`, tương tự như khi bạn [phân trang một truy vấn Eloquent thông thường](/docs/{{version}}/pagination):
+Ngoài việc truy xuất một collection các model, bạn có thể phân trang kết quả tìm kiếm bằng phương thức `paginate`. Phương thức này trả về một instance `Illuminate\Pagination\LengthAwarePaginator`, tương tự như khi bạn [phân trang một truy vấn Eloquent thông thường](/pagination):
 
 ```php
 use App\Models\Order;
@@ -1047,7 +1047,7 @@ Khi sử dụng database engine, bạn cũng có thể dùng phương thức `si
 $orders = Order::search('Star Trek')->simplePaginate(15);
 ```
 
-Sau khi truy xuất kết quả, bạn có thể hiển thị chúng và render các liên kết phân trang bằng [Blade](/docs/{{version}}/blade), giống như khi phân trang một truy vấn Eloquent thông thường:
+Sau khi truy xuất kết quả, bạn có thể hiển thị chúng và render các liên kết phân trang bằng [Blade](/blade), giống như khi phân trang một truy vấn Eloquent thông thường:
 
 ```html
 <div class="container">
@@ -1076,7 +1076,7 @@ Route::get('/orders', function (Request $request) {
 <a name="soft-deleting"></a>
 ### Soft Delete
 
-Nếu các model đã được index của bạn sử dụng [soft delete](/docs/{{version}}/eloquent#soft-deleting) và bạn cần tìm kiếm cả các model đã soft delete, hãy đặt tùy chọn `soft_delete` trong file cấu hình `config/scout.php` thành `true`:
+Nếu các model đã được index của bạn sử dụng [soft delete](/eloquent#soft-deleting) và bạn cần tìm kiếm cả các model đã soft delete, hãy đặt tùy chọn `soft_delete` trong file cấu hình `config/scout.php` thành `true`:
 
 ```php
 'soft_delete' => true,

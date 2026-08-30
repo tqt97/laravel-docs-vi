@@ -23,7 +23,7 @@ Nếu website độc hại tự động submit form khi trang được load, k�
 Middleware `Illuminate\Foundation\Http\Middleware\PreventRequestForgery`, mặc định nằm trong nhóm middleware `web`, bảo vệ ứng dụng khỏi cross-site request forgery bằng cơ chế hai lớp.
 Đầu tiên, middleware kiểm tra header `Sec-Fetch-Site` của trình duyệt. Trình duyệt hiện đại tự động gửi header này trên mỗi request để cho biết request bắt nguồn từ cùng origin, cùng site hay từ một nguồn cross-site. Nếu header cho thấy request đến từ cùng origin, request được chấp nhận ngay mà không cần xác minh token.
 Nếu bước xác minh origin không thành công — chẳng hạn request đến từ trình duyệt cũ không gửi `Sec-Fetch-Site` hoặc kết nối không bảo mật — middleware sẽ fallback sang cơ chế kiểm tra CSRF token truyền thống.
-Laravel tự động tạo một CSRF "token" cho mỗi [user session](/docs/{{version}}/session) đang hoạt động do ứng dụng quản lý. Token này được dùng để xác minh chính người dùng đã xác thực là người thực sự gửi request tới ứng dụng. Vì token được lưu trong session và thay đổi mỗi khi session được regenerate, ứng dụng độc hại không thể truy cập token này.
+Laravel tự động tạo một CSRF "token" cho mỗi [user session](/session) đang hoạt động do ứng dụng quản lý. Token này được dùng để xác minh chính người dùng đã xác thực là người thực sự gửi request tới ứng dụng. Vì token được lưu trong session và thay đổi mỗi khi session được regenerate, ứng dụng độc hại không thể truy cập token này.
 CSRF token của session hiện tại có thể được truy cập qua session của request hoặc helper `csrf_token`:
 ```php
 use Illuminate\Http\Request;
@@ -48,7 +48,7 @@ Bất cứ khi nào bạn định nghĩa form HTML gửi `POST`, `PUT`, `PATCH` 
 
 <a name="csrf-tokens-and-spas"></a>
 #### CSRF Token và SPA
-Nếu bạn đang xây dựng SPA sử dụng Laravel làm API backend, hãy xem [tài liệu Laravel Sanctum](/docs/{{version}}/sanctum) để tìm hiểu cách xác thực với API và bảo vệ khỏi lỗ hổng CSRF.
+Nếu bạn đang xây dựng SPA sử dụng Laravel làm API backend, hãy xem [tài liệu Laravel Sanctum](/sanctum) để tìm hiểu cách xác thực với API và bảo vệ khỏi lỗ hổng CSRF.
 <a name="origin-verification"></a>
 ### Xác minh Origin
 Như đã trình bày, middleware chống giả mạo request của Laravel trước tiên kiểm tra header `Sec-Fetch-Site` để xác định request có đến từ cùng origin hay không. Mặc định, nếu bước kiểm tra này không đạt, middleware sẽ fallback sang xác minh CSRF token.
@@ -82,7 +82,7 @@ Thông thường, các route kiểu này nên nằm ngoài nhóm middleware `web
 })
 ```
 > [!NOTE]
-> Để thuận tiện, middleware CSRF được tự động tắt cho mọi route khi [chạy test](/docs/{{version}}/testing).
+> Để thuận tiện, middleware CSRF được tự động tắt cho mọi route khi [chạy test](/testing).
 <a name="csrf-x-csrf-token"></a>
 ## X-CSRF-TOKEN
 Bên cạnh việc kiểm tra CSRF token dưới dạng POST parameter, middleware `PreventRequestForgery` còn kiểm tra request header `X-CSRF-TOKEN`. Ví dụ, bạn có thể lưu token trong thẻ HTML `meta`:

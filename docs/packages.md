@@ -7,7 +7,7 @@ Có nhiều loại package khác nhau. Một số package hoạt động độc 
 Ngược lại, một số package được thiết kế riêng cho Laravel. Chúng có thể cung cấp route, controller, view và configuration để mở rộng ứng dụng Laravel. Phần hướng dẫn này chủ yếu tập trung vào loại package dành riêng cho Laravel.
 <a name="creating-a-package"></a>
 ### Tạo package
-Cách đơn giản nhất để bắt đầu package Laravel mới là dùng [Laravel package skeleton](https://github.com/laravel/package-skeleton) chính thức. Skeleton cung cấp sẵn service provider, test bằng Pest, static analysis bằng Larastan, format code bằng Pint và một workbench application để phát triển package end-to-end. Bạn có thể tạo package mới bằng command `package` của [Laravel installer CLI](/docs/{{version}}/installation#creating-a-laravel-project):
+Cách đơn giản nhất để bắt đầu package Laravel mới là dùng [Laravel package skeleton](https://github.com/laravel/package-skeleton) chính thức. Skeleton cung cấp sẵn service provider, test bằng Pest, static analysis bằng Larastan, format code bằng Pint và một workbench application để phát triển package end-to-end. Bạn có thể tạo package mới bằng command `package` của [Laravel installer CLI](/installation#creating-a-laravel-project):
 ```shell
 laravel package my-package
 ```
@@ -17,7 +17,7 @@ Một script cấu hình tương tác sẽ cá nhân hóa skeleton cho package, 
 Khi viết ứng dụng Laravel, việc dùng contract hay facade thường không tạo khác biệt lớn về khả năng test vì cả hai đều hỗ trợ test tốt. Tuy nhiên, khi viết package, package thường không có quyền truy cập toàn bộ testing helper của Laravel. Nếu muốn test package như thể nó được cài trong một ứng dụng Laravel thông thường, bạn có thể dùng package [Orchestral Testbench](https://github.com/orchestral/testbench).
 <a name="package-discovery"></a>
 ## Tự động khám phá package
-File `bootstrap/providers.php` của ứng dụng Laravel chứa danh sách service provider Laravel cần load. Thay vì yêu cầu người dùng tự thêm service provider của package vào danh sách, bạn có thể khai báo provider trong phần `extra` của `composer.json` của package để Laravel tự load. Ngoài service provider, bạn cũng có thể khai báo các [facade](/docs/{{version}}/facades) cần đăng ký:
+File `bootstrap/providers.php` của ứng dụng Laravel chứa danh sách service provider Laravel cần load. Thay vì yêu cầu người dùng tự thêm service provider của package vào danh sách, bạn có thể khai báo provider trong phần `extra` của `composer.json` của package để Laravel tự load. Ngoài service provider, bạn cũng có thể khai báo các [facade](/facades) cần đăng ký:
 ```json
 "extra": {
     "laravel": {
@@ -56,8 +56,8 @@ Bạn có thể tắt package discovery cho toàn bộ package bằng ký tự `
 
 <a name="service-providers"></a>
 ## Service provider
-[Service provider](/docs/{{version}}/providers) là điểm kết nối giữa package và Laravel. Service provider chịu trách nhiệm bind các thành phần vào [service container](/docs/{{version}}/container), đồng thời cho Laravel biết nơi load resource của package như view, configuration và file ngôn ngữ.
-Service provider extends class `Illuminate\Support\ServiceProvider` và chứa hai method `register` và `boot`. Class `ServiceProvider` cơ sở nằm trong Composer package `illuminate/support`, vì vậy package của bạn nên khai báo dependency này. Xem [tài liệu service provider](/docs/{{version}}/providers) để hiểu thêm cấu trúc và mục đích.
+[Service provider](/providers) là điểm kết nối giữa package và Laravel. Service provider chịu trách nhiệm bind các thành phần vào [service container](/container), đồng thời cho Laravel biết nơi load resource của package như view, configuration và file ngôn ngữ.
+Service provider extends class `Illuminate\Support\ServiceProvider` và chứa hai method `register` và `boot`. Class `ServiceProvider` cơ sở nằm trong Composer package `illuminate/support`, vì vậy package của bạn nên khai báo dependency này. Xem [tài liệu service provider](/providers) để hiểu thêm cấu trúc và mục đích.
 <a name="resources"></a>
 ## Tài nguyên
 <a name="configuration"></a>
@@ -112,7 +112,7 @@ public function boot(): void
 
 <a name="migrations"></a>
 ### Migrations
-Nếu package có [database migration](/docs/{{version}}/migrations), bạn có thể dùng method `publishesMigrations` để cho Laravel biết thư mục hoặc file nào chứa migration. Khi publish, Laravel tự cập nhật timestamp trong tên migration theo thời điểm hiện tại:
+Nếu package có [database migration](/migrations), bạn có thể dùng method `publishesMigrations` để cho Laravel biết thư mục hoặc file nào chứa migration. Khi publish, Laravel tự cập nhật timestamp trong tên migration theo thời điểm hiện tại:
 ```php
 /**
  * Bootstrap any package services.
@@ -127,7 +127,7 @@ public function boot(): void
 
 <a name="language-files"></a>
 ### File ngôn ngữ
-Nếu package có [file ngôn ngữ](/docs/{{version}}/localization), dùng method `loadTranslationsFrom` để cho Laravel biết nơi load chúng. Ví dụ, nếu package tên `courier`, thêm cấu hình sau vào `boot` của service provider:
+Nếu package có [file ngôn ngữ](/localization), dùng method `loadTranslationsFrom` để cho Laravel biết nơi load chúng. Ví dụ, nếu package tên `courier`, thêm cấu hình sau vào `boot` của service provider:
 ```php
 /**
  * Bootstrap any package services.
@@ -171,7 +171,7 @@ public function boot(): void
 Sau đó, khi người dùng chạy lệnh Artisan `vendor:publish`, các file ngôn ngữ của package sẽ được publish tới vị trí đã cấu hình.
 <a name="views"></a>
 ### Views
-Để đăng ký [view](/docs/{{version}}/views) của package với Laravel, bạn cần cho Laravel biết chúng nằm ở đâu bằng method `loadViewsFrom` của service provider. Method nhận hai đối số: path tới view template và tên package. Ví dụ, với package `courier`, thêm cấu hình sau vào `boot`:
+Để đăng ký [view](/views) của package với Laravel, bạn cần cho Laravel biết chúng nằm ở đâu bằng method `loadViewsFrom` của service provider. Method nhận hai đối số: path tới view template và tên package. Ví dụ, với package `courier`, thêm cấu hình sau vào `boot`:
 ```php
 /**
  * Bootstrap any package services.
@@ -272,7 +272,7 @@ public function boot(): void
 
 <a name="commands"></a>
 ## Commands
-Để đăng ký Artisan command của package với Laravel, dùng method `commands` và truyền mảng tên command class. Sau khi đăng ký, command có thể được chạy qua [Artisan CLI](/docs/{{version}}/artisan):
+Để đăng ký Artisan command của package với Laravel, dùng method `commands` và truyền mảng tên command class. Sau khi đăng ký, command có thể được chạy qua [Artisan CLI](/artisan):
 ```php
 use Courier\Console\Commands\InstallCommand;
 use Courier\Console\Commands\NetworkCommand;
@@ -293,7 +293,7 @@ public function boot(): void
 
 <a name="optimize-commands"></a>
 ### Optimize commands
-[Command optimize](/docs/{{version}}/deployment#optimization) của Laravel cache configuration, event, route và view. Với method `optimizes`, package có thể đăng ký command riêng sẽ được gọi khi `optimize` và `optimize:clear` được thực thi:
+[Command optimize](/deployment#optimization) của Laravel cache configuration, event, route và view. Với method `optimizes`, package có thể đăng ký command riêng sẽ được gọi khi `optimize` và `optimize:clear` được thực thi:
 ```php
 /**
  * Bootstrap any package services.
@@ -311,7 +311,7 @@ public function boot(): void
 
 <a name="reload-commands"></a>
 ### Reload commands
-[Command reload](/docs/{{version}}/deployment#reloading-services) của Laravel kết thúc các service đang chạy để system process monitor có thể tự khởi động lại. Với method `reloads`, package có thể đăng ký command riêng được gọi khi `reload` chạy:
+[Command reload](/deployment#reloading-services) của Laravel kết thúc các service đang chạy để system process monitor có thể tự khởi động lại. Với method `reloads`, package có thể đăng ký command riêng được gọi khi `reload` chạy:
 ```php
 /**
  * Bootstrap any package services.

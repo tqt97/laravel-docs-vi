@@ -9,23 +9,23 @@ Mục tiêu của tài liệu này là cung cấp cái nhìn tổng quan ở m�
 <a name="first-steps"></a>
 ### Các bước đầu tiên
 Entry point cho mọi request gửi tới ứng dụng Laravel là file `public/index.php`. Cấu hình web server (Apache / Nginx) sẽ chuyển toàn bộ request tới file này. `index.php` không chứa nhiều code; nó chủ yếu đóng vai trò điểm bắt đầu để load phần còn lại của framework.
-File `index.php` load autoloader do Composer sinh ra, sau đó lấy instance ứng dụng Laravel từ `bootstrap/app.php`. Hành động đầu tiên của chính Laravel là tạo instance application / [service container](/docs/{{version}}/container).
+File `index.php` load autoloader do Composer sinh ra, sau đó lấy instance ứng dụng Laravel từ `bootstrap/app.php`. Hành động đầu tiên của chính Laravel là tạo instance application / [service container](/container).
 <a name="http-console-kernels"></a>
 ### HTTP / Console Kernels
 Tiếp theo, request được gửi tới HTTP kernel hoặc console kernel thông qua phương thức `handleRequest` hoặc `handleCommand` của application instance, tùy loại request đi vào ứng dụng. Hai kernel là điểm trung tâm mà mọi request đi qua. Trong phần này, ta tập trung vào HTTP kernel, một instance của `Illuminate\Foundation\Http\Kernel`.
-HTTP kernel định nghĩa một array `bootstrappers` được chạy trước khi request được xử lý. Các bootstrapper cấu hình error handling, logging, [xác định environment của ứng dụng](/docs/{{version}}/configuration#environment-configuration) và thực hiện những tác vụ khác cần hoàn tất trước khi xử lý request. Thông thường đây là cấu hình nội bộ của Laravel mà bạn không cần can thiệp.
-HTTP kernel cũng chịu trách nhiệm đưa request đi qua middleware stack của ứng dụng. Các middleware này xử lý việc đọc / ghi [HTTP session](/docs/{{version}}/session), xác định ứng dụng có ở maintenance mode hay không, [xác minh CSRF token](/docs/{{version}}/csrf) và nhiều công việc khác.
+HTTP kernel định nghĩa một array `bootstrappers` được chạy trước khi request được xử lý. Các bootstrapper cấu hình error handling, logging, [xác định environment của ứng dụng](/configuration#environment-configuration) và thực hiện những tác vụ khác cần hoàn tất trước khi xử lý request. Thông thường đây là cấu hình nội bộ của Laravel mà bạn không cần can thiệp.
+HTTP kernel cũng chịu trách nhiệm đưa request đi qua middleware stack của ứng dụng. Các middleware này xử lý việc đọc / ghi [HTTP session](/session), xác định ứng dụng có ở maintenance mode hay không, [xác minh CSRF token](/csrf) và nhiều công việc khác.
 Signature của phương thức `handle` trên HTTP kernel rất đơn giản: nhận một `Request` và trả về `Response`. Có thể hình dung kernel như một "hộp đen" lớn đại diện cho toàn bộ ứng dụng: đưa HTTP request vào và nhận HTTP response ở đầu ra.
 <a name="service-providers"></a>
 ### Service provider
-Một trong những bước bootstrap quan trọng nhất của kernel là load các [service provider](/docs/{{version}}/providers) của ứng dụng. Service provider chịu trách nhiệm bootstrap nhiều component của framework như database, queue, validation và routing.
+Một trong những bước bootstrap quan trọng nhất của kernel là load các [service provider](/providers) của ứng dụng. Service provider chịu trách nhiệm bootstrap nhiều component của framework như database, queue, validation và routing.
 Laravel duyệt qua danh sách provider và khởi tạo từng provider. Sau đó, phương thức `register` được gọi trên tất cả provider. Khi toàn bộ provider đã được đăng ký, Laravel mới gọi `boot` trên từng provider. Trình tự này đảm bảo khi `boot` chạy, mọi container binding cần thiết đã được đăng ký và sẵn sàng để provider phụ thuộc vào.
 Gần như mọi feature lớn của Laravel đều được bootstrap và cấu hình bởi service provider. Vì chịu trách nhiệm khởi tạo và cấu hình rất nhiều feature, service provider là một trong những phần quan trọng nhất của toàn bộ quá trình Laravel bootstrap.
 Framework sử dụng hàng chục service provider nội bộ, đồng thời bạn cũng có thể tạo provider riêng. Danh sách service provider do ứng dụng hoặc package third-party đăng ký nằm trong file `bootstrap/providers.php`.
 <a name="routing"></a>
 ### Định tuyến
 Sau khi application đã bootstrap và toàn bộ service provider được đăng ký, `Request` được chuyển cho router để dispatch. Router sẽ dispatch request tới route hoặc controller phù hợp, đồng thời chạy các route-specific middleware.
-Middleware cung cấp cơ chế thuận tiện để lọc hoặc kiểm tra HTTP request đi vào ứng dụng. Ví dụ, Laravel có middleware kiểm tra người dùng đã xác thực hay chưa. Nếu chưa, middleware redirect người dùng tới màn hình login; nếu đã xác thực, request được phép tiếp tục đi sâu hơn vào ứng dụng. Một số middleware như `PreventRequestsDuringMaintenance` áp dụng cho toàn bộ route, trong khi những middleware khác chỉ gắn với route hoặc route group cụ thể. Để tìm hiểu đầy đủ, hãy xem [tài liệu Middleware](/docs/{{version}}/middleware).
+Middleware cung cấp cơ chế thuận tiện để lọc hoặc kiểm tra HTTP request đi vào ứng dụng. Ví dụ, Laravel có middleware kiểm tra người dùng đã xác thực hay chưa. Nếu chưa, middleware redirect người dùng tới màn hình login; nếu đã xác thực, request được phép tiếp tục đi sâu hơn vào ứng dụng. Một số middleware như `PreventRequestsDuringMaintenance` áp dụng cho toàn bộ route, trong khi những middleware khác chỉ gắn với route hoặc route group cụ thể. Để tìm hiểu đầy đủ, hãy xem [tài liệu Middleware](/middleware).
 Nếu request đi qua toàn bộ middleware của route thành công, route hoặc controller method sẽ được thực thi. Response do route / controller trả về sau đó được gửi ngược trở lại qua chuỗi middleware của route.
 <a name="finishing-up"></a>
 ### Hoàn tất request

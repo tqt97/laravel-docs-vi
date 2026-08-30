@@ -140,7 +140,7 @@ $request->validate([
 <a name="quick-displaying-the-validation-errors"></a>
 ### Hiển thị lỗi validation
 
-Vậy điều gì xảy ra nếu các field trong request đầu vào không vượt qua những validation rule đã cho? Như đã đề cập, Laravel sẽ tự động chuyển hướng người dùng về vị trí trước đó. Đồng thời, toàn bộ lỗi validation và [input của request](/docs/{{version}}/requests#retrieving-old-input) sẽ tự động được [flash vào session](/docs/{{version}}/session#flash-data).
+Vậy điều gì xảy ra nếu các field trong request đầu vào không vượt qua những validation rule đã cho? Như đã đề cập, Laravel sẽ tự động chuyển hướng người dùng về vị trí trước đó. Đồng thời, toàn bộ lỗi validation và [input của request](/requests#retrieving-old-input) sẽ tự động được [flash vào session](/session#flash-data).
 
 Middleware `Illuminate\View\Middleware\ShareErrorsFromSession`, thuộc middleware group `web`, chia sẻ biến `$errors` với tất cả view của ứng dụng. Khi middleware này được áp dụng, `$errors` luôn khả dụng trong view, vì vậy bạn có thể xem biến này là luôn được định nghĩa và sử dụng an toàn. `$errors` là một instance của `Illuminate\Support\MessageBag`. Để biết thêm về cách làm việc với object này, hãy xem [phần tài liệu tương ứng](#working-with-error-messages).
 
@@ -171,7 +171,7 @@ Mỗi validation rule tích hợp sẵn của Laravel đều có một thông b�
 
 Trong file `lang/en/validation.php`, bạn sẽ thấy một translation entry cho từng validation rule. Bạn có thể thay đổi các thông báo này theo nhu cầu của ứng dụng.
 
-Ngoài ra, bạn có thể sao chép file này sang thư mục ngôn ngữ khác để dịch thông báo theo ngôn ngữ của ứng dụng. Để tìm hiểu thêm về localization trong Laravel, hãy xem đầy đủ [tài liệu localization](/docs/{{version}}/localization).
+Ngoài ra, bạn có thể sao chép file này sang thư mục ngôn ngữ khác để dịch thông báo theo ngôn ngữ của ứng dụng. Để tìm hiểu thêm về localization trong Laravel, hãy xem đầy đủ [tài liệu localization](/localization).
 
 > [!WARNING]
 > Theo mặc định, bộ khung ứng dụng Laravel không bao gồm thư mục `lang`. Nếu muốn tùy chỉnh các file ngôn ngữ của Laravel, bạn có thể publish chúng bằng Artisan command `lang:publish`.
@@ -184,7 +184,7 @@ Trong ví dụ này, chúng ta sử dụng form truyền thống để gửi d�
 <a name="the-at-error-directive"></a>
 #### Directive `@error`
 
-Bạn có thể sử dụng directive `@error` của [Blade](/docs/{{version}}/blade) để nhanh chóng xác định một attribute có thông báo lỗi validation hay không. Bên trong directive `@error`, bạn có thể xuất biến `$message` để hiển thị thông báo lỗi:
+Bạn có thể sử dụng directive `@error` của [Blade](/blade) để nhanh chóng xác định một attribute có thông báo lỗi validation hay không. Bên trong directive `@error`, bạn có thể xuất biến `$message` để hiển thị thông báo lỗi:
 
 ```blade
 <!-- /resources/views/post/create.blade.php -->
@@ -212,15 +212,15 @@ Nếu đang sử dụng [error bag có tên](#named-error-bags), bạn có thể
 <a name="repopulating-forms"></a>
 ### Điền lại dữ liệu cho form
 
-Khi Laravel tạo redirect response do lỗi validation, framework sẽ tự động [flash toàn bộ input của request vào session](/docs/{{version}}/session#flash-data). Nhờ đó, bạn có thể thuận tiện truy cập lại input trong request tiếp theo và điền lại form mà người dùng đã cố gắng gửi.
+Khi Laravel tạo redirect response do lỗi validation, framework sẽ tự động [flash toàn bộ input của request vào session](/session#flash-data). Nhờ đó, bạn có thể thuận tiện truy cập lại input trong request tiếp theo và điền lại form mà người dùng đã cố gắng gửi.
 
-Để lấy input đã được flash từ request trước, hãy gọi method `old` trên một instance của `Illuminate\Http\Request`. Method `old` sẽ lấy dữ liệu input đã được flash trước đó từ [session](/docs/{{version}}/session):
+Để lấy input đã được flash từ request trước, hãy gọi method `old` trên một instance của `Illuminate\Http\Request`. Method `old` sẽ lấy dữ liệu input đã được flash trước đó từ [session](/session):
 
 ```php
 $title = $request->old('title');
 ```
 
-Laravel cũng cung cấp helper global `old`. Nếu hiển thị old input trong một [Blade template](/docs/{{version}}/blade), sử dụng helper `old` sẽ thuận tiện hơn để điền lại form. Nếu field tương ứng không có old input, `null` sẽ được trả về:
+Laravel cũng cung cấp helper global `old`. Nếu hiển thị old input trong một [Blade template](/blade), sử dụng helper `old` sẽ thuận tiện hơn để điền lại form. Nếu field tương ứng không có old input, `null` sẽ được trả về:
 
 ```blade
 <input type="text" name="title" value="{{ old('title') }}">
@@ -301,7 +301,7 @@ public function rules(): array
 ```
 
 > [!NOTE]
-> Bạn có thể type-hint bất kỳ dependency nào cần thiết trong signature của method `rules`. Laravel sẽ tự động resolve chúng thông qua [service container](/docs/{{version}}/container).
+> Bạn có thể type-hint bất kỳ dependency nào cần thiết trong signature của method `rules`. Laravel sẽ tự động resolve chúng thông qua [service container](/container).
 
 Vậy các validation rule được đánh giá như thế nào? Bạn chỉ cần type-hint request trong controller method. Form request đầu vào sẽ được validation trước khi controller method được gọi, vì vậy bạn không cần đưa thêm logic validation vào controller:
 
@@ -329,7 +329,7 @@ public function store(StorePostRequest $request): RedirectResponse
 Nếu validation thất bại, Laravel sẽ tạo redirect response để đưa người dùng trở lại vị trí trước đó. Các lỗi cũng được flash vào session để có thể hiển thị. Nếu request là XHR request, Laravel sẽ trả về HTTP response có status code 422, kèm theo [biểu diễn JSON của các lỗi validation](#validation-error-response-format).
 
 > [!NOTE]
-> Cần bổ sung validation Form Request theo thời gian thực cho frontend Laravel sử dụng Inertia? Hãy xem [Laravel Precognition](/docs/{{version}}/precognition).
+> Cần bổ sung validation Form Request theo thời gian thực cho frontend Laravel sử dụng Inertia? Hãy xem [Laravel Precognition](/precognition).
 
 <a name="performing-additional-validation-on-form-requests"></a>
 #### Thực hiện validation bổ sung
@@ -513,7 +513,7 @@ class LoginRequest extends FormRequest
 <a name="authorizing-form-requests"></a>
 ### Phân quyền cho Form Request
 
-Form request class cũng chứa method `authorize`. Trong method này, bạn có thể xác định người dùng đã xác thực có thực sự được phép cập nhật một resource cụ thể hay không. Ví dụ, bạn có thể kiểm tra người dùng có sở hữu blog comment mà họ đang cố cập nhật hay không. Trong phần lớn trường hợp, bạn sẽ tương tác với [authorization Gate và Policy](/docs/{{version}}/authorization) trong method này:
+Form request class cũng chứa method `authorize`. Trong method này, bạn có thể xác định người dùng đã xác thực có thực sự được phép cập nhật một resource cụ thể hay không. Ví dụ, bạn có thể kiểm tra người dùng có sở hữu blog comment mà họ đang cố cập nhật hay không. Trong phần lớn trường hợp, bạn sẽ tương tác với [authorization Gate và Policy](/authorization) trong method này:
 
 ```php
 use App\Models\Comment;
@@ -535,7 +535,7 @@ Vì mọi form request đều kế thừa request class cơ sở của Laravel, 
 Route::post('/comment/{comment}');
 ```
 
-Do đó, nếu ứng dụng đang sử dụng [route model binding](/docs/{{version}}/routing#route-model-binding), bạn có thể viết code ngắn gọn hơn bằng cách truy cập model đã được resolve như một property của request:
+Do đó, nếu ứng dụng đang sử dụng [route model binding](/routing#route-model-binding), bạn có thể viết code ngắn gọn hơn bằng cách truy cập model đã được resolve như một property của request:
 
 ```php
 return $this->user()->can('update', $this->comment);
@@ -556,7 +556,7 @@ public function authorize(): bool
 ```
 
 > [!NOTE]
-> Bạn có thể type-hint bất kỳ dependency nào cần thiết trong signature của method `authorize`. Laravel sẽ tự động resolve chúng thông qua [service container](/docs/{{version}}/container).
+> Bạn có thể type-hint bất kỳ dependency nào cần thiết trong signature của method `authorize`. Laravel sẽ tự động resolve chúng thông qua [service container](/container).
 
 <a name="customizing-the-error-messages"></a>
 ### Tùy chỉnh thông báo lỗi
@@ -631,7 +631,7 @@ protected function passedValidation(): void
 <a name="manually-creating-validators"></a>
 ## Tạo Validator thủ công
 
-Nếu không muốn sử dụng method `validate` trên request, bạn có thể tạo thủ công một validator instance bằng [facade](/docs/{{version}}/facades) `Validator`. Method `make` trên facade sẽ tạo một validator instance mới:
+Nếu không muốn sử dụng method `validate` trên request, bạn có thể tạo thủ công một validator instance bằng [facade](/facades) `Validator`. Method `make` trên facade sẽ tạo một validator instance mới:
 
 ```php
 <?php
@@ -847,7 +847,7 @@ Nếu muốn thêm field vào dữ liệu đã được validation, bạn có th
 $validated = $request->safe()->merge(['name' => 'Taylor Otwell']);
 ```
 
-Nếu muốn lấy dữ liệu đã được validation dưới dạng một instance [collection](/docs/{{version}}/collections), bạn có thể gọi method `collect`:
+Nếu muốn lấy dữ liệu đã được validation dưới dạng một instance [collection](/collections), bạn có thể gọi method `collect`:
 
 ```php
 $collection = $request->safe()->collect();
@@ -917,7 +917,7 @@ Mỗi validation rule tích hợp sẵn của Laravel đều có một thông b�
 
 Trong file `lang/en/validation.php`, bạn sẽ thấy một translation entry cho từng validation rule. Bạn có thể thay đổi các thông báo này theo nhu cầu của ứng dụng.
 
-Ngoài ra, bạn có thể sao chép file này sang thư mục ngôn ngữ khác để dịch thông báo theo ngôn ngữ của ứng dụng. Để tìm hiểu thêm về localization trong Laravel, hãy xem đầy đủ [tài liệu localization](/docs/{{version}}/localization).
+Ngoài ra, bạn có thể sao chép file này sang thư mục ngôn ngữ khác để dịch thông báo theo ngôn ngữ của ứng dụng. Để tìm hiểu thêm về localization trong Laravel, hãy xem đầy đủ [tài liệu localization](/localization).
 
 > [!WARNING]
 > Theo mặc định, bộ khung ứng dụng Laravel không bao gồm thư mục `lang`. Nếu muốn tùy chỉnh các file ngôn ngữ của Laravel, bạn có thể publish chúng bằng Artisan command `lang:publish`.
@@ -1470,7 +1470,7 @@ Validator::make($data, [
 <a name="rule-current-password"></a>
 #### current_password
 
-Field đang được validation phải khớp với mật khẩu của user đã xác thực. Bạn có thể chỉ định một [authentication guard](/docs/{{version}}/authentication) thông qua parameter đầu tiên của rule:
+Field đang được validation phải khớp với mật khẩu của user đã xác thực. Bạn có thể chỉ định một [authentication guard](/authentication) thông qua parameter đầu tiên của rule:
 
 ```php
 'password' => ['current_password:api']
@@ -3001,7 +3001,7 @@ $request->validate([
 
 #### Dịch validation message
 
-Thay vì truyền error message trực tiếp cho closure `$fail`, bạn có thể truyền [translation string key](/docs/{{version}}/localization) và yêu cầu Laravel dịch error message:
+Thay vì truyền error message trực tiếp cho closure `$fail`, bạn có thể truyền [translation string key](/localization) và yêu cầu Laravel dịch error message:
 
 ```php
 if (strtoupper($value) !== $value) {

@@ -2,7 +2,7 @@
 
 <a name="introduction"></a>
 ## Giới thiệu
-[Laravel Envoy](https://github.com/laravel/envoy) là công cụ giúp thực thi các tác vụ thường gặp trên máy chủ từ xa. Bằng cú pháp theo phong cách [Blade](/docs/{{version}}/blade), bạn có thể dễ dàng thiết lập các tác vụ triển khai, lệnh Artisan và nhiều công việc khác. Hiện tại, Envoy chỉ hỗ trợ macOS và Linux. Tuy nhiên, trên Windows bạn vẫn có thể sử dụng Envoy thông qua [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+[Laravel Envoy](https://github.com/laravel/envoy) là công cụ giúp thực thi các tác vụ thường gặp trên máy chủ từ xa. Bằng cú pháp theo phong cách [Blade](/blade), bạn có thể dễ dàng thiết lập các tác vụ triển khai, lệnh Artisan và nhiều công việc khác. Hiện tại, Envoy chỉ hỗ trợ macOS và Linux. Tuy nhiên, trên Windows bạn vẫn có thể sử dụng Envoy thông qua [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 <a name="installation"></a>
 ## Cài đặt
 Trước tiên, cài Envoy vào dự án bằng Composer:

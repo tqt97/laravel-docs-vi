@@ -2,7 +2,7 @@
 
 <a name="introduction"></a>
 ## Giới thiệu
-Mọi phương thức Eloquent trả về nhiều model đều trả về một instance của class `Illuminate\Database\Eloquent\Collection`, bao gồm kết quả được lấy bằng phương thức `get` hoặc thông qua relationship. Eloquent collection kế thừa [collection cơ sở](/docs/{{version}}/collections) của Laravel, vì vậy nó tự động cung cấp hàng chục phương thức để xử lý linh hoạt tập hợp model Eloquent bên trong. Hãy xem tài liệu Collection của Laravel để tìm hiểu đầy đủ các phương thức hữu ích này.
+Mọi phương thức Eloquent trả về nhiều model đều trả về một instance của class `Illuminate\Database\Eloquent\Collection`, bao gồm kết quả được lấy bằng phương thức `get` hoặc thông qua relationship. Eloquent collection kế thừa [collection cơ sở](/collections) của Laravel, vì vậy nó tự động cung cấp hàng chục phương thức để xử lý linh hoạt tập hợp model Eloquent bên trong. Hãy xem tài liệu Collection của Laravel để tìm hiểu đầy đủ các phương thức hữu ích này.
 Mọi collection cũng hoạt động như một iterator, vì vậy bạn có thể lặp qua chúng tương tự như với một array PHP thông thường:
 ```php
 use App\Models\User;
@@ -24,10 +24,10 @@ $names = User::all()->reject(function (User $user) {
 
 <a name="eloquent-collection-conversion"></a>
 #### Chuyển đổi Eloquent collection
-Trong khi phần lớn phương thức của Eloquent collection trả về một Eloquent collection mới, các phương thức `collapse`, `flatten`, `flip`, `keys`, `pluck` và `zip` trả về một instance [collection cơ sở](/docs/{{version}}/collections). Tương tự, nếu thao tác `map` tạo ra một collection không còn chứa bất kỳ Eloquent model nào, kết quả sẽ được chuyển thành collection cơ sở.
+Trong khi phần lớn phương thức của Eloquent collection trả về một Eloquent collection mới, các phương thức `collapse`, `flatten`, `flip`, `keys`, `pluck` và `zip` trả về một instance [collection cơ sở](/collections). Tương tự, nếu thao tác `map` tạo ra một collection không còn chứa bất kỳ Eloquent model nào, kết quả sẽ được chuyển thành collection cơ sở.
 <a name="available-methods"></a>
 ## Các phương thức có sẵn
-Mọi Eloquent collection đều kế thừa [collection cơ sở của Laravel](/docs/{{version}}/collections#available-methods), vì vậy chúng có toàn bộ các phương thức mạnh mẽ của class collection cơ sở.
+Mọi Eloquent collection đều kế thừa [collection cơ sở của Laravel](/collections#available-methods), vì vậy chúng có toàn bộ các phương thức mạnh mẽ của class collection cơ sở.
 Ngoài ra, class `Illuminate\Database\Eloquent\Collection` cung cấp thêm một tập hợp phương thức chuyên biệt để quản lý collection model. Phần lớn các phương thức trả về instance `Illuminate\Database\Eloquent\Collection`; tuy nhiên, một số phương thức như `modelKeys` trả về `Illuminate\Support\Collection`.
 <style>
     .collection-method-list > p {
@@ -81,7 +81,7 @@ Ngoài ra, class `Illuminate\Database\Eloquent\Collection` cung cấp thêm mộ
 <a name="method-append"></a>
 #### `append($attributes)` {.collection-method .first-collection-method}
 
-Phương thức `append` dùng để chỉ định một attribute cần được [append](/docs/{{version}}/eloquent-serialization#appending-values-to-json) vào mọi model trong collection. Phương thức nhận một array attribute hoặc một attribute đơn:
+Phương thức `append` dùng để chỉ định một attribute cần được [append](/eloquent-serialization#appending-values-to-json) vào mọi model trong collection. Phương thức nhận một array attribute hoặc một attribute đơn:
 ```php
 $users->append('team');
 
@@ -193,7 +193,7 @@ $users->modelKeys();
 <a name="method-makeVisible"></a>
 #### `makeVisible($attributes)` {.collection-method}
 
-Phương thức `makeVisible` làm cho các attribute vốn thường bị "ẩn" trên từng model trong collection trở nên [hiển thị](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json):
+Phương thức `makeVisible` làm cho các attribute vốn thường bị "ẩn" trên từng model trong collection trở nên [hiển thị](/eloquent-serialization#hiding-attributes-from-json):
 ```php
 $users = $users->makeVisible(['address', 'phone_number']);
 ```
@@ -201,7 +201,7 @@ $users = $users->makeVisible(['address', 'phone_number']);
 <a name="method-makeHidden"></a>
 #### `makeHidden($attributes)` {.collection-method}
 
-Phương thức `makeHidden` [ẩn các attribute](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) vốn thường đang hiển thị trên từng model trong collection:
+Phương thức `makeHidden` [ẩn các attribute](/eloquent-serialization#hiding-attributes-from-json) vốn thường đang hiển thị trên từng model trong collection:
 ```php
 $users = $users->makeHidden(['address', 'phone_number']);
 ```
@@ -209,7 +209,7 @@ $users = $users->makeHidden(['address', 'phone_number']);
 <a name="method-mergeVisible"></a>
 #### `mergeVisible($attributes)` {.collection-method}
 
-Phương thức `mergeVisible` [bổ sung các attribute hiển thị](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) mà vẫn giữ lại danh sách visible hiện tại:
+Phương thức `mergeVisible` [bổ sung các attribute hiển thị](/eloquent-serialization#hiding-attributes-from-json) mà vẫn giữ lại danh sách visible hiện tại:
 ```php
 $users = $users->mergeVisible(['middle_name']);
 ```
@@ -217,7 +217,7 @@ $users = $users->mergeVisible(['middle_name']);
 <a name="method-mergeHidden"></a>
 #### `mergeHidden($attributes)` {.collection-method}
 
-Phương thức `mergeHidden` [bổ sung các attribute bị ẩn](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) mà vẫn giữ lại danh sách hidden hiện tại:
+Phương thức `mergeHidden` [bổ sung các attribute bị ẩn](/eloquent-serialization#hiding-attributes-from-json) mà vẫn giữ lại danh sách hidden hiện tại:
 ```php
 $users = $users->mergeHidden(['last_login_at']);
 ```
@@ -245,7 +245,7 @@ dump($partition[1]::class); // Illuminate\Database\Eloquent\Collection
 <a name="method-setAppends"></a>
 #### `setAppends($attributes)` {.collection-method}
 
-Phương thức `setAppends` tạm thời ghi đè toàn bộ [attribute được append](/docs/{{version}}/eloquent-serialization#appending-values-to-json) trên từng model trong collection:
+Phương thức `setAppends` tạm thời ghi đè toàn bộ [attribute được append](/eloquent-serialization#appending-values-to-json) trên từng model trong collection:
 ```php
 $users = $users->setAppends(['is_admin']);
 ```
@@ -253,7 +253,7 @@ $users = $users->setAppends(['is_admin']);
 <a name="method-setVisible"></a>
 #### `setVisible($attributes)` {.collection-method}
 
-Phương thức `setVisible` [tạm thời ghi đè](/docs/{{version}}/eloquent-serialization#temporarily-modifying-attribute-visibility) toàn bộ attribute hiển thị trên từng model trong collection:
+Phương thức `setVisible` [tạm thời ghi đè](/eloquent-serialization#temporarily-modifying-attribute-visibility) toàn bộ attribute hiển thị trên từng model trong collection:
 ```php
 $users = $users->setVisible(['id', 'name']);
 ```
@@ -261,7 +261,7 @@ $users = $users->setVisible(['id', 'name']);
 <a name="method-setHidden"></a>
 #### `setHidden($attributes)` {.collection-method}
 
-Phương thức `setHidden` [tạm thời ghi đè](/docs/{{version}}/eloquent-serialization#temporarily-modifying-attribute-visibility) toàn bộ attribute bị ẩn trên từng model trong collection:
+Phương thức `setHidden` [tạm thời ghi đè](/eloquent-serialization#temporarily-modifying-attribute-visibility) toàn bộ attribute bị ẩn trên từng model trong collection:
 ```php
 $users = $users->setHidden(['email', 'password', 'remember_token']);
 ```
@@ -291,7 +291,7 @@ $users = $users->unique();
 <a name="method-withoutAppends"></a>
 #### `withoutAppends()` {.collection-method}
 
-Phương thức `withoutAppends` tạm thời loại bỏ toàn bộ [appended attribute](/docs/{{version}}/eloquent-serialization#appending-values-to-json) khỏi từng model trong collection:
+Phương thức `withoutAppends` tạm thời loại bỏ toàn bộ [appended attribute](/eloquent-serialization#appending-values-to-json) khỏi từng model trong collection:
 ```php
 $users = $users->withoutAppends();
 ```

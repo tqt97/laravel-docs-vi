@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 
-[Facade](/docs/{{version}}/facades) `Hash` của Laravel cung cấp khả năng hash an toàn bằng Bcrypt và Argon2 để lưu mật khẩu người dùng. Nếu bạn sử dụng một trong các [Laravel application starter kit](/docs/{{version}}/starter-kits), Bcrypt được dùng mặc định cho quá trình đăng ký và xác thực.
+[Facade](/facades) `Hash` của Laravel cung cấp khả năng hash an toàn bằng Bcrypt và Argon2 để lưu mật khẩu người dùng. Nếu bạn sử dụng một trong các [Laravel application starter kit](/starter-kits), Bcrypt được dùng mặc định cho quá trình đăng ký và xác thực.
 
 Bcrypt là lựa chọn phù hợp để hash mật khẩu vì "work factor" của nó có thể điều chỉnh. Điều này có nghĩa thời gian cần để tạo hash có thể được tăng lên khi sức mạnh phần cứng ngày càng lớn. Với việc hash mật khẩu, xử lý chậm có chủ đích là điều tốt: thuật toán càng mất nhiều thời gian để hash một mật khẩu, kẻ tấn công càng phải tốn nhiều thời gian để tạo các "rainbow table" chứa những giá trị hash có thể dùng cho tấn công brute-force vào ứng dụng.
 

@@ -7,10 +7,10 @@ Vậy "bootstrap" ở đây nghĩa là gì? Nhìn chung, đó là quá trình **
 Laravel sử dụng hàng chục service provider nội bộ để bootstrap các dịch vụ cốt lõi như mailer, queue, cache và nhiều thành phần khác. Nhiều provider trong số này là provider "deferred", nghĩa là chúng không được load ở mọi request mà chỉ được load khi dịch vụ do chúng cung cấp thực sự cần được sử dụng.
 Tất cả service provider do ứng dụng định nghĩa đều được đăng ký trong file `bootstrap/providers.php`. Trong phần tài liệu dưới đây, bạn sẽ học cách viết service provider riêng và đăng ký chúng với ứng dụng Laravel.
 > [!NOTE]
-> Nếu muốn hiểu sâu hơn cách Laravel xử lý request và hoạt động bên trong, hãy xem tài liệu về [request lifecycle](/docs/{{version}}/lifecycle) của Laravel.
+> Nếu muốn hiểu sâu hơn cách Laravel xử lý request và hoạt động bên trong, hãy xem tài liệu về [request lifecycle](/lifecycle) của Laravel.
 <a name="writing-service-providers"></a>
 ## Viết Service Provider
-Tất cả service provider đều kế thừa class `Illuminate\Support\ServiceProvider`. Phần lớn provider có hai phương thức `register` và `boot`. Trong `register`, bạn **chỉ nên bind dependency vào [service container](/docs/{{version}}/container)**. Không nên đăng ký event listener, route hay bất kỳ chức năng nào khác trong `register`.
+Tất cả service provider đều kế thừa class `Illuminate\Support\ServiceProvider`. Phần lớn provider có hai phương thức `register` và `boot`. Trong `register`, bạn **chỉ nên bind dependency vào [service container](/container)**. Không nên đăng ký event listener, route hay bất kỳ chức năng nào khác trong `register`.
 Artisan CLI có thể tạo provider mới bằng command `make:provider`. Laravel sẽ tự động đăng ký provider mới vào file `bootstrap/providers.php` của ứng dụng:
 ```shell
 php artisan make:provider RiakServiceProvider
@@ -18,7 +18,7 @@ php artisan make:provider RiakServiceProvider
 
 <a name="the-register-method"></a>
 ### Phương thức Register
-Như đã đề cập, trong phương thức `register` bạn chỉ nên bind dependency vào [service container](/docs/{{version}}/container). Không nên đăng ký event listener, route hoặc chức năng khác tại đây. Nếu làm vậy, bạn có thể vô tình sử dụng một service do service provider khác cung cấp trong khi provider đó chưa được load.
+Như đã đề cập, trong phương thức `register` bạn chỉ nên bind dependency vào [service container](/container). Không nên đăng ký event listener, route hoặc chức năng khác tại đây. Nếu làm vậy, bạn có thể vô tình sử dụng một service do service provider khác cung cấp trong khi provider đó chưa được load.
 Hãy xem một service provider cơ bản. Trong bất kỳ phương thức nào của service provider, bạn luôn có thể truy cập property `$app`, qua đó truy cập service container:
 ```php
 <?php
@@ -42,7 +42,7 @@ class RiakServiceProvider extends ServiceProvider
     }
 }
 ```
-Service provider này chỉ định nghĩa phương thức `register` và sử dụng nó để khai báo implementation của `App\Services\Riak\Connection` trong service container. Nếu bạn chưa quen với service container của Laravel, hãy xem [tài liệu Service Container](/docs/{{version}}/container).
+Service provider này chỉ định nghĩa phương thức `register` và sử dụng nó để khai báo implementation của `App\Services\Riak\Connection` trong service container. Nếu bạn chưa quen với service container của Laravel, hãy xem [tài liệu Service Container](/container).
 <a name="the-bindings-and-singletons-properties"></a>
 #### Các property `bindings` và `singletons`
 Nếu service provider đăng ký nhiều binding đơn giản, bạn có thể dùng các property `bindings` và `singletons` thay vì tự đăng ký từng container binding. Khi provider được framework load, Laravel sẽ tự động kiểm tra các property này và đăng ký những binding tương ứng:
@@ -83,7 +83,7 @@ class AppServiceProvider extends ServiceProvider
 
 <a name="the-boot-method"></a>
 ### Phương thức Boot
-Nếu cần đăng ký một [view composer](/docs/{{version}}/views#view-composers) trong service provider thì sao? Việc này nên được thực hiện trong phương thức `boot`. **Phương thức này được gọi sau khi tất cả service provider khác đã được đăng ký**, vì vậy tại thời điểm đó bạn có thể truy cập toàn bộ service mà framework đã đăng ký:
+Nếu cần đăng ký một [view composer](/views#view-composers) trong service provider thì sao? Việc này nên được thực hiện trong phương thức `boot`. **Phương thức này được gọi sau khi tất cả service provider khác đã được đăng ký**, vì vậy tại thời điểm đó bạn có thể truy cập toàn bộ service mà framework đã đăng ký:
 ```php
 <?php
 
@@ -108,7 +108,7 @@ class ComposerServiceProvider extends ServiceProvider
 
 <a name="boot-method-dependency-injection"></a>
 #### Dependency Injection cho phương thức Boot
-Bạn có thể type-hint dependency cho phương thức `boot` của service provider. [Service container](/docs/{{version}}/container) sẽ tự động inject các dependency cần thiết:
+Bạn có thể type-hint dependency cho phương thức `boot` của service provider. [Service container](/container) sẽ tự động inject các dependency cần thiết:
 ```php
 use Illuminate\Contracts\Routing\ResponseFactory;
 
@@ -145,7 +145,7 @@ return [
 
 <a name="deferred-providers"></a>
 ## Deferred Providers
-Nếu provider của bạn **chỉ** đăng ký binding trong [service container](/docs/{{version}}/container), bạn có thể trì hoãn việc đăng ký provider cho đến khi một trong các binding đó thực sự được cần đến. Cách này có thể cải thiện hiệu năng vì provider không phải được load từ filesystem trên mọi request.
+Nếu provider của bạn **chỉ** đăng ký binding trong [service container](/container), bạn có thể trì hoãn việc đăng ký provider cho đến khi một trong các binding đó thực sự được cần đến. Cách này có thể cải thiện hiệu năng vì provider không phải được load từ filesystem trên mọi request.
 Laravel biên dịch và lưu danh sách toàn bộ service do deferred service provider cung cấp cùng tên class provider tương ứng. Chỉ khi bạn cố resolve một service trong danh sách đó, Laravel mới load service provider cần thiết.
 Để trì hoãn việc load provider, hãy implement interface `\Illuminate\Contracts\Support\DeferrableProvider` và định nghĩa phương thức `provides`. Phương thức `provides` phải trả về các service container binding mà provider đăng ký:
 ```php

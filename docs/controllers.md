@@ -91,12 +91,12 @@ php artisan make:controller ProvisionServer --invokable
 ```
 
 > [!NOTE]
-> Bạn có thể tùy biến stub của controller thông qua [cơ chế publish stub](/docs/{{version}}/artisan#stub-customization).
+> Bạn có thể tùy biến stub của controller thông qua [cơ chế publish stub](/artisan#stub-customization).
 
 <a name="controller-middleware"></a>
 ## Middleware của Controller
 
-[Middleware](/docs/{{version}}/middleware) có thể được gán cho các route của controller ngay trong file route:
+[Middleware](/middleware) có thể được gán cho các route của controller ngay trong file route:
 
 ```php
 Route::get('/profile', [UserController::class, 'show'])->middleware('auth');
@@ -229,7 +229,7 @@ class UserController
 }
 ```
 
-Attribute `WithoutMiddleware` ở cấp lớp được các controller con kế thừa. Attribute này chỉ có thể loại bỏ route middleware và không áp dụng cho [global middleware](/docs/{{version}}/middleware#global-middleware).
+Attribute `WithoutMiddleware` ở cấp lớp được các controller con kế thừa. Attribute này chỉ có thể loại bỏ route middleware và không áp dụng cho [global middleware](/middleware#global-middleware).
 
 <a name="authorization-attributes"></a>
 ### Attribute phân quyền
@@ -338,7 +338,7 @@ Route::resource('photos', PhotoController::class)
 <a name="soft-deleted-models"></a>
 #### Model đã Soft Delete
 
-Theo mặc định, implicit model binding sẽ không truy xuất các model đã được [soft delete](/docs/{{version}}/eloquent#soft-deleting) mà sẽ trả về HTTP response 404. Tuy nhiên, bạn có thể yêu cầu framework cho phép lấy cả model đã soft delete bằng cách gọi `withTrashed` khi định nghĩa resource route:
+Theo mặc định, implicit model binding sẽ không truy xuất các model đã được [soft delete](/eloquent#soft-deleting) mà sẽ trả về HTTP response 404. Tuy nhiên, bạn có thể yêu cầu framework cho phép lấy cả model đã soft delete bằng cách gọi `withTrashed` khi định nghĩa resource route:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -355,7 +355,7 @@ Route::resource('photos', PhotoController::class)->withTrashed(['show']);
 <a name="specifying-the-resource-model"></a>
 #### Chỉ định Resource Model
 
-Nếu đang sử dụng [route model binding](/docs/{{version}}/routing#route-model-binding) và muốn các phương thức của resource controller type-hint một model instance, bạn có thể dùng option `--model` khi tạo controller:
+Nếu đang sử dụng [route model binding](/routing#route-model-binding) và muốn các phương thức của resource controller type-hint một model instance, bạn có thể dùng option `--model` khi tạo controller:
 
 ```shell
 php artisan make:controller PhotoController --model=Photo --resource
@@ -364,7 +364,7 @@ php artisan make:controller PhotoController --model=Photo --resource
 <a name="generating-form-requests"></a>
 #### Tạo Form Request
 
-Bạn có thể truyền option `--requests` khi tạo resource controller để yêu cầu Artisan tạo các [lớp form request](/docs/{{version}}/validation#form-request-validation) cho phương thức lưu mới và cập nhật của controller:
+Bạn có thể truyền option `--requests` khi tạo resource controller để yêu cầu Artisan tạo các [lớp form request](/validation#form-request-validation) cho phương thức lưu mới và cập nhật của controller:
 
 ```shell
 php artisan make:controller PhotoController --model=Photo --resource --requests
@@ -436,7 +436,7 @@ Route này sẽ đăng ký một resource lồng nhau có thể được truy c�
 <a name="scoping-nested-resources"></a>
 #### Giới hạn phạm vi Resource lồng nhau
 
-Tính năng [implicit model binding](/docs/{{version}}/routing#implicit-model-binding-scoping) của Laravel có thể tự động giới hạn phạm vi của binding lồng nhau, nhờ đó model con sau khi được resolve sẽ được xác nhận là thuộc model cha. Khi dùng phương thức `scoped` lúc định nghĩa nested resource, bạn vừa có thể bật cơ chế scoping tự động, vừa chỉ định field mà Laravel dùng để truy xuất resource con. Xem thêm phần [giới hạn phạm vi resource route](#restful-scoping-resource-routes).
+Tính năng [implicit model binding](/routing#implicit-model-binding-scoping) của Laravel có thể tự động giới hạn phạm vi của binding lồng nhau, nhờ đó model con sau khi được resolve sẽ được xác nhận là thuộc model cha. Khi dùng phương thức `scoped` lúc định nghĩa nested resource, bạn vừa có thể bật cơ chế scoping tự động, vừa chỉ định field mà Laravel dùng để truy xuất resource con. Xem thêm phần [giới hạn phạm vi resource route](#restful-scoping-resource-routes).
 
 <a name="shallow-nesting"></a>
 #### Lồng nông (Shallow Nesting)
@@ -500,7 +500,7 @@ Ví dụ trên tạo URI sau cho route `show` của resource:
 <a name="restful-scoping-resource-routes"></a>
 ### Giới hạn phạm vi Resource Route
 
-Tính năng [giới hạn phạm vi implicit model binding](/docs/{{version}}/routing#implicit-model-binding-scoping) của Laravel có thể tự động giới hạn các binding lồng nhau để bảo đảm model con được phân giải thực sự thuộc model cha. Khi dùng phương thức `scoped` để định nghĩa resource lồng nhau, bạn vừa có thể bật cơ chế giới hạn phạm vi tự động, vừa chỉ định trường mà Laravel phải dùng để truy xuất resource con:
+Tính năng [giới hạn phạm vi implicit model binding](/routing#implicit-model-binding-scoping) của Laravel có thể tự động giới hạn các binding lồng nhau để bảo đảm model con được phân giải thực sự thuộc model cha. Khi dùng phương thức `scoped` để định nghĩa resource lồng nhau, bạn vừa có thể bật cơ chế giới hạn phạm vi tự động, vừa chỉ định trường mà Laravel phải dùng để truy xuất resource con:
 
 ```php
 use App\Http\Controllers\PhotoCommentController;
@@ -536,7 +536,7 @@ public function boot(): void
 }
 ```
 
-Bộ chuyển đổi số nhiều của Laravel hỗ trợ [nhiều ngôn ngữ khác nhau và bạn có thể cấu hình theo nhu cầu](/docs/{{version}}/localization#pluralization-language). Sau khi tùy chỉnh các động từ và ngôn ngữ dùng cho quy tắc số nhiều, một khai báo resource route như `Route::resource('publicacion', PublicacionController::class)` sẽ tạo các URI sau:
+Bộ chuyển đổi số nhiều của Laravel hỗ trợ [nhiều ngôn ngữ khác nhau và bạn có thể cấu hình theo nhu cầu](/localization#pluralization-language). Sau khi tùy chỉnh các động từ và ngôn ngữ dùng cho quy tắc số nhiều, một khai báo resource route như `Route::resource('publicacion', PublicacionController::class)` sẽ tạo các URI sau:
 
 ```text
 /publicacion/crear
@@ -710,7 +710,7 @@ Route::middleware(['auth', 'verified', 'subscribed'])->group(function () {
 <a name="constructor-injection"></a>
 #### Injection qua Constructor
 
-Laravel sử dụng [service container](/docs/{{version}}/container) để phân giải tất cả controller. Vì vậy, bạn có thể type-hint mọi dependency mà controller cần trong constructor. Các dependency đã khai báo sẽ tự động được container phân giải và inject vào instance của controller:
+Laravel sử dụng [service container](/container) để phân giải tất cả controller. Vì vậy, bạn có thể type-hint mọi dependency mà controller cần trong constructor. Các dependency đã khai báo sẽ tự động được container phân giải và inject vào instance của controller:
 
 ```php
 <?php

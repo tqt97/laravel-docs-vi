@@ -66,7 +66,7 @@ echo url()->current();
 echo url()->full();
 ```
 
-Mỗi phương thức này cũng có thể được truy cập thông qua [facade](/docs/{{version}}/facades) `URL`:
+Mỗi phương thức này cũng có thể được truy cập thông qua [facade](/facades) `URL`:
 
 ```php
 use Illuminate\Support\Facades\URL;
@@ -87,7 +87,7 @@ echo url()->previous();
 echo url()->previousPath();
 ```
 
-Hoặc thông qua [session](/docs/{{version}}/session), bạn có thể lấy URL trước đó dưới dạng instance [fluent URI](#fluent-uri-objects):
+Hoặc thông qua [session](/session), bạn có thể lấy URL trước đó dưới dạng instance [fluent URI](#fluent-uri-objects):
 
 ```php
 use Illuminate\Http\Request;
@@ -108,7 +108,7 @@ $previousRoute = $request->session()->previousRoute();
 <a name="urls-for-named-routes"></a>
 ## URL cho named route
 
-Helper `route` có thể được dùng để tạo URL tới [named route](/docs/{{version}}/routing#named-routes). Named route cho phép tạo URL mà không phụ thuộc trực tiếp vào URL thực tế được định nghĩa trên route. Vì vậy, nếu URL của route thay đổi, các lời gọi tới hàm `route` không cần thay đổi. Ví dụ, giả sử ứng dụng có route sau:
+Helper `route` có thể được dùng để tạo URL tới [named route](/routing#named-routes). Named route cho phép tạo URL mà không phụ thuộc trực tiếp vào URL thực tế được định nghĩa trên route. Vì vậy, nếu URL của route thay đổi, các lời gọi tới hàm `route` không cần thay đổi. Ví dụ, giả sử ứng dụng có route sau:
 
 ```php
 Route::get('/post/{post}', function (Post $post) {
@@ -147,7 +147,7 @@ echo route('post.show', ['post' => 1, 'search' => 'rocket']);
 <a name="eloquent-models"></a>
 #### Eloquent Model
 
-Bạn thường sẽ tạo URL bằng route key (thường là primary key) của [Eloquent model](/docs/{{version}}/eloquent). Vì vậy, bạn có thể truyền trực tiếp Eloquent model làm giá trị parameter. Helper `route` sẽ tự động lấy route key của model:
+Bạn thường sẽ tạo URL bằng route key (thường là primary key) của [Eloquent model](/eloquent). Vì vậy, bạn có thể truyền trực tiếp Eloquent model làm giá trị parameter. Helper `route` sẽ tự động lấy route key của model:
 
 ```php
 echo route('post.show', ['post' => $post]);
@@ -207,7 +207,7 @@ if (! $request->hasValidSignatureWhileIgnoring(['page', 'order'])) {
 }
 ```
 
-Thay vì xác thực signed URL trực tiếp trên request instance, bạn có thể gán [middleware](/docs/{{version}}/middleware) `signed` (`Illuminate\Routing\Middleware\ValidateSignature`) cho route. Nếu request gửi đến không có signature hợp lệ, middleware sẽ tự động trả về HTTP response `403`:
+Thay vì xác thực signed URL trực tiếp trên request instance, bạn có thể gán [middleware](/middleware) `signed` (`Illuminate\Routing\Middleware\ValidateSignature`) cho route. Nếu request gửi đến không có signature hợp lệ, middleware sẽ tự động trả về HTTP response `403`:
 
 ```php
 Route::post('/unsubscribe/{user}', function (Request $request) {
@@ -297,7 +297,7 @@ $uri = Uri::of('https://example.com')
     ->withFragment('section-1');
 ```
 
-Để tìm hiểu thêm về fluent URI object, hãy xem [tài liệu URI](/docs/{{version}}/helpers#uri).
+Để tìm hiểu thêm về fluent URI object, hãy xem [tài liệu URI](/helpers#uri).
 
 <a name="default-values"></a>
 ## Giá trị mặc định
@@ -310,7 +310,7 @@ Route::get('/{locale}/posts', function () {
 })->name('post.index');
 ```
 
-Việc luôn phải truyền `locale` mỗi khi gọi helper `route` khá bất tiện. Vì vậy, bạn có thể sử dụng phương thức `URL::defaults` để định nghĩa giá trị mặc định cho parameter này và giá trị đó sẽ luôn được áp dụng trong request hiện tại. Bạn có thể gọi phương thức này từ [route middleware](/docs/{{version}}/middleware#assigning-middleware-to-routes) để có quyền truy cập request hiện tại:
+Việc luôn phải truyền `locale` mỗi khi gọi helper `route` khá bất tiện. Vì vậy, bạn có thể sử dụng phương thức `URL::defaults` để định nghĩa giá trị mặc định cho parameter này và giá trị đó sẽ luôn được áp dụng trong request hiện tại. Bạn có thể gọi phương thức này từ [route middleware](/middleware#assigning-middleware-to-routes) để có quyền truy cập request hiện tại:
 
 ```php
 <?php
@@ -343,7 +343,7 @@ Sau khi đã đặt giá trị mặc định cho parameter `locale`, bạn khôn
 <a name="url-defaults-middleware-priority"></a>
 ### Giá trị URL mặc định và độ ưu tiên middleware
 
-Việc đặt giá trị URL mặc định có thể ảnh hưởng đến cách Laravel xử lý implicit model binding. Vì vậy, bạn nên [ưu tiên middleware](/docs/{{version}}/middleware#sorting-middleware) thiết lập URL mặc định để middleware đó chạy trước middleware `SubstituteBindings` của Laravel.
+Việc đặt giá trị URL mặc định có thể ảnh hưởng đến cách Laravel xử lý implicit model binding. Vì vậy, bạn nên [ưu tiên middleware](/middleware#sorting-middleware) thiết lập URL mặc định để middleware đó chạy trước middleware `SubstituteBindings` của Laravel.
 
 Bạn có thể thực hiện điều này bằng phương thức middleware `priority` trong file `bootstrap/app.php` của ứng dụng:
 

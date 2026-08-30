@@ -1352,7 +1352,7 @@ $classes = Arr::toCssStyles($array);
 */
 ```
 
-Phương thức này là nền tảng cho khả năng [merge class với attribute bag của Blade component](/docs/{{version}}/blade#conditionally-merge-classes), cũng như [Blade directive](/docs/{{version}}/blade#conditional-classes) `@class` của Laravel.
+Phương thức này là nền tảng cho khả năng [merge class với attribute bag của Blade component](/blade#conditionally-merge-classes), cũng như [Blade directive](/blade#conditional-classes) `@class` của Laravel.
 
 <a name="method-array-undot"></a>
 #### `Arr::undot()` {.collection-method}
@@ -2177,7 +2177,7 @@ $url = asset('img/photo.jpg'); // http://example.com/assets/img/photo.jpg
 <a name="method-route"></a>
 #### `route()` {.collection-method}
 
-Hàm `route` tạo URL cho một [named route](/docs/{{version}}/routing#named-routes) đã cho:
+Hàm `route` tạo URL cho một [named route](/routing#named-routes) đã cho:
 
 ```php
 $url = route('route.name');
@@ -2218,7 +2218,7 @@ $url = secure_url('user/profile', [1]);
 <a name="method-to-action"></a>
 #### `to_action()` {.collection-method}
 
-Hàm `to_action` tạo [HTTP redirect response](/docs/{{version}}/responses#redirects) cho controller action đã cho:
+Hàm `to_action` tạo [HTTP redirect response](/responses#redirects) cho controller action đã cho:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -2240,7 +2240,7 @@ return to_action(
 <a name="method-to-route"></a>
 #### `to_route()` {.collection-method}
 
-Hàm `to_route` tạo [HTTP redirect response](/docs/{{version}}/responses#redirects) cho một [named route](/docs/{{version}}/routing#named-routes) đã cho:
+Hàm `to_route` tạo [HTTP redirect response](/responses#redirects) cho một [named route](/routing#named-routes) đã cho:
 
 ```php
 return to_route('users.show', ['user' => 1]);
@@ -2279,7 +2279,7 @@ use App\Http\Controllers\UserIndexController;
 $uri = uri(UserIndexController::class);
 ```
 
-Nếu giá trị truyền cho hàm `uri` khớp với tên của một [named route](/docs/{{version}}/routing#named-routes), instance `Uri` sẽ được tạo cho path của route đó:
+Nếu giá trị truyền cho hàm `uri` khớp với tên của một [named route](/routing#named-routes), instance `Uri` sẽ được tạo cho path của route đó:
 
 ```php
 $uri = uri('users.show', ['user' => $user]);
@@ -2306,7 +2306,7 @@ $full = url()->full();
 $previous = url()->previous();
 ```
 
-Để biết thêm thông tin về cách làm việc với hàm `url`, hãy tham khảo [tài liệu tạo URL](/docs/{{version}}/urls#generating-urls).
+Để biết thêm thông tin về cách làm việc với hàm `url`, hãy tham khảo [tài liệu tạo URL](/urls#generating-urls).
 
 <a name="miscellaneous"></a>
 ## Miscellaneous
@@ -2314,7 +2314,7 @@ $previous = url()->previous();
 <a name="method-abort"></a>
 #### `abort()` {.collection-method}
 
-Hàm `abort` ném ra [HTTP exception](/docs/{{version}}/errors#http-exceptions), exception này sẽ được render bởi [exception handler](/docs/{{version}}/errors#handling-exceptions):
+Hàm `abort` ném ra [HTTP exception](/errors#http-exceptions), exception này sẽ được render bởi [exception handler](/errors#handling-exceptions):
 
 ```php
 abort(403);
@@ -2351,7 +2351,7 @@ Tương tự method `abort`, bạn cũng có thể cung cấp nội dung respons
 <a name="method-app"></a>
 #### `app()` {.collection-method}
 
-Hàm `app` trả về instance [service container](/docs/{{version}}/container):
+Hàm `app` trả về instance [service container](/container):
 
 ```php
 $container = app();
@@ -2366,7 +2366,7 @@ $api = app('HelpSpot\API');
 <a name="method-auth"></a>
 #### `auth()` {.collection-method}
 
-Hàm `auth` trả về một instance [authenticator](/docs/{{version}}/authentication). Bạn có thể dùng hàm này thay cho facade `Auth`:
+Hàm `auth` trả về một instance [authenticator](/authentication). Bạn có thể dùng hàm này thay cho facade `Auth`:
 
 ```php
 $user = auth()->user();
@@ -2381,7 +2381,7 @@ $user = auth('admin')->user();
 <a name="method-back"></a>
 #### `back()` {.collection-method}
 
-Hàm `back` tạo [HTTP redirect response](/docs/{{version}}/responses#redirects) về vị trí trước đó của người dùng:
+Hàm `back` tạo [HTTP redirect response](/responses#redirects) về vị trí trước đó của người dùng:
 
 ```php
 return back($status = 302, $headers = [], $fallback = '/');
@@ -2392,7 +2392,7 @@ return back();
 <a name="method-bcrypt"></a>
 #### `bcrypt()` {.collection-method}
 
-Hàm `bcrypt` [hash](/docs/{{version}}/hashing) giá trị đã cho bằng Bcrypt. Bạn có thể dùng hàm này thay cho facade `Hash`:
+Hàm `bcrypt` [hash](/hashing) giá trị đã cho bằng Bcrypt. Bạn có thể dùng hàm này thay cho facade `Hash`:
 
 ```php
 $password = bcrypt('my-secret-password');
@@ -2423,7 +2423,7 @@ blank(false);
 <a name="method-broadcast"></a>
 #### `broadcast()` {.collection-method}
 
-Hàm `broadcast` [broadcast](/docs/{{version}}/broadcasting) [event](/docs/{{version}}/events) đã cho đến các listener của nó:
+Hàm `broadcast` [broadcast](/broadcasting) [event](/events) đã cho đến các listener của nó:
 
 ```php
 broadcast(new UserRegistered($user));
@@ -2434,7 +2434,7 @@ broadcast(new UserRegistered($user))->toOthers();
 <a name="method-broadcast-if"></a>
 #### `broadcast_if()` {.collection-method}
 
-Hàm `broadcast_if` [broadcast](/docs/{{version}}/broadcasting) [event](/docs/{{version}}/events) đã cho đến các listener nếu biểu thức boolean được đánh giá là `true`:
+Hàm `broadcast_if` [broadcast](/broadcasting) [event](/events) đã cho đến các listener nếu biểu thức boolean được đánh giá là `true`:
 
 ```php
 broadcast_if($user->isActive(), new UserRegistered($user));
@@ -2445,7 +2445,7 @@ broadcast_if($user->isActive(), new UserRegistered($user))->toOthers();
 <a name="method-broadcast-unless"></a>
 #### `broadcast_unless()` {.collection-method}
 
-Hàm `broadcast_unless` [broadcast](/docs/{{version}}/broadcasting) [event](/docs/{{version}}/events) đã cho đến các listener nếu biểu thức boolean được đánh giá là `false`:
+Hàm `broadcast_unless` [broadcast](/broadcasting) [event](/events) đã cho đến các listener nếu biểu thức boolean được đánh giá là `false`:
 
 ```php
 broadcast_unless($user->isBanned(), new UserRegistered($user));
@@ -2456,7 +2456,7 @@ broadcast_unless($user->isBanned(), new UserRegistered($user))->toOthers();
 <a name="method-cache"></a>
 #### `cache()` {.collection-method}
 
-Hàm `cache` có thể được dùng để lấy giá trị từ [cache](/docs/{{version}}/cache). Nếu key đã cho không tồn tại trong cache, giá trị mặc định tùy chọn sẽ được trả về:
+Hàm `cache` có thể được dùng để lấy giá trị từ [cache](/cache). Nếu key đã cho không tồn tại trong cache, giá trị mặc định tùy chọn sẽ được trả về:
 
 ```php
 $value = cache('key');
@@ -2484,7 +2484,7 @@ $traits = class_uses_recursive(App\Models\User::class);
 <a name="method-collect"></a>
 #### `collect()` {.collection-method}
 
-Hàm `collect` tạo một instance [collection](/docs/{{version}}/collections) từ giá trị đã cho:
+Hàm `collect` tạo một instance [collection](/collections) từ giá trị đã cho:
 
 ```php
 $collection = collect(['Taylor', 'Abigail']);
@@ -2493,7 +2493,7 @@ $collection = collect(['Taylor', 'Abigail']);
 <a name="method-config"></a>
 #### `config()` {.collection-method}
 
-Hàm `config` lấy giá trị của một biến [configuration](/docs/{{version}}/configuration). Có thể truy cập giá trị cấu hình bằng cú pháp "dot", gồm tên file và option muốn truy cập. Bạn cũng có thể cung cấp giá trị mặc định để trả về nếu option cấu hình không tồn tại:
+Hàm `config` lấy giá trị của một biến [configuration](/configuration). Có thể truy cập giá trị cấu hình bằng cú pháp "dot", gồm tên file và option muốn truy cập. Bạn cũng có thể cung cấp giá trị mặc định để trả về nếu option cấu hình không tồn tại:
 
 ```php
 $value = config('app.timezone');
@@ -2510,7 +2510,7 @@ config(['app.debug' => true]);
 <a name="method-context"></a>
 #### `context()` {.collection-method}
 
-Hàm `context` lấy giá trị từ [context](/docs/{{version}}/context) hiện tại. Bạn cũng có thể cung cấp giá trị mặc định để trả về nếu context key không tồn tại:
+Hàm `context` lấy giá trị từ [context](/context) hiện tại. Bạn cũng có thể cung cấp giá trị mặc định để trả về nếu context key không tồn tại:
 
 ```php
 $value = context('trace_id');
@@ -2529,7 +2529,7 @@ context(['trace_id' => Str::uuid()->toString()]);
 <a name="method-cookie"></a>
 #### `cookie()` {.collection-method}
 
-Hàm `cookie` tạo một instance [cookie](/docs/{{version}}/requests#cookies) mới:
+Hàm `cookie` tạo một instance [cookie](/requests#cookies) mới:
 
 ```php
 $cookie = cookie('name', 'value', $minutes);
@@ -2538,7 +2538,7 @@ $cookie = cookie('name', 'value', $minutes);
 <a name="method-csrf-field"></a>
 #### `csrf_field()` {.collection-method}
 
-Hàm `csrf_field` tạo một input HTML `hidden` chứa giá trị CSRF token. Ví dụ, khi dùng [cú pháp Blade](/docs/{{version}}/blade):
+Hàm `csrf_field` tạo một input HTML `hidden` chứa giá trị CSRF token. Ví dụ, khi dùng [cú pháp Blade](/blade):
 
 ```blade
 {{ csrf_field() }}
@@ -2556,7 +2556,7 @@ $token = csrf_token();
 <a name="method-decrypt"></a>
 #### `decrypt()` {.collection-method}
 
-Hàm `decrypt` [giải mã](/docs/{{version}}/encryption) giá trị đã cho. Bạn có thể dùng hàm này thay cho facade `Crypt`:
+Hàm `decrypt` [giải mã](/encryption) giá trị đã cho. Bạn có thể dùng hàm này thay cho facade `Crypt`:
 
 ```php
 $password = decrypt($value);
@@ -2580,7 +2580,7 @@ Nếu không muốn dừng việc thực thi script, hãy dùng hàm [dump](#met
 <a name="method-dispatch"></a>
 #### `dispatch()` {.collection-method}
 
-Hàm `dispatch` đẩy [job](/docs/{{version}}/queues#creating-jobs) đã cho vào [job queue](/docs/{{version}}/queues) của Laravel:
+Hàm `dispatch` đẩy [job](/queues#creating-jobs) đã cho vào [job queue](/queues) của Laravel:
 
 ```php
 dispatch(new App\Jobs\SendEmails);
@@ -2589,7 +2589,7 @@ dispatch(new App\Jobs\SendEmails);
 <a name="method-dispatch-sync"></a>
 #### `dispatch_sync()` {.collection-method}
 
-Hàm `dispatch_sync` đẩy job đã cho vào queue [sync](/docs/{{version}}/queues#synchronous-dispatching) để được xử lý ngay lập tức:
+Hàm `dispatch_sync` đẩy job đã cho vào queue [sync](/queues#synchronous-dispatching) để được xử lý ngay lập tức:
 
 ```php
 dispatch_sync(new App\Jobs\SendEmails);
@@ -2611,7 +2611,7 @@ Nếu muốn dừng thực thi script sau khi dump các biến, hãy dùng hàm 
 <a name="method-encrypt"></a>
 #### `encrypt()` {.collection-method}
 
-Hàm `encrypt` [mã hóa](/docs/{{version}}/encryption) giá trị đã cho. Bạn có thể dùng hàm này thay cho facade `Crypt`:
+Hàm `encrypt` [mã hóa](/encryption) giá trị đã cho. Bạn có thể dùng hàm này thay cho facade `Crypt`:
 
 ```php
 $secret = encrypt('my-secret-value');
@@ -2622,7 +2622,7 @@ $secret = encrypt('my-secret-value');
 <a name="method-env"></a>
 #### `env()` {.collection-method}
 
-Hàm `env` lấy giá trị của một [biến môi trường](/docs/{{version}}/configuration#environment-configuration) hoặc trả về giá trị mặc định:
+Hàm `env` lấy giá trị của một [biến môi trường](/configuration#environment-configuration) hoặc trả về giá trị mặc định:
 
 ```php
 $env = env('APP_ENV');
@@ -2636,7 +2636,7 @@ $env = env('APP_ENV', 'production');
 <a name="method-event"></a>
 #### `event()` {.collection-method}
 
-Hàm `event` dispatch [event](/docs/{{version}}/events) đã cho đến các listener của nó:
+Hàm `event` dispatch [event](/events) đã cho đến các listener của nó:
 
 ```php
 event(new UserRegistered($user));
@@ -2690,7 +2690,7 @@ filled(collect());
 <a name="method-info"></a>
 #### `info()` {.collection-method}
 
-Hàm `info` sẽ ghi thông tin vào [log](/docs/{{version}}/logging) của ứng dụng:
+Hàm `info` sẽ ghi thông tin vào [log](/logging) của ứng dụng:
 
 ```php
 info('Some helpful information!');
@@ -2720,7 +2720,7 @@ $obj->languages; // ['PHP', 'Ruby']
 <a name="method-logger"></a>
 #### `logger()` {.collection-method}
 
-Hàm `logger` có thể được dùng để ghi message ở level `debug` vào [log](/docs/{{version}}/logging):
+Hàm `logger` có thể được dùng để ghi message ở level `debug` vào [log](/logging):
 
 ```php
 logger('Debug message');
@@ -2732,7 +2732,7 @@ Bạn cũng có thể truyền một mảng dữ liệu ngữ cảnh vào hàm:
 logger('User has logged in.', ['id' => $user->id]);
 ```
 
-Nếu không truyền giá trị vào hàm, một instance [logger](/docs/{{version}}/logging) sẽ được trả về:
+Nếu không truyền giá trị vào hàm, một instance [logger](/logging) sẽ được trả về:
 
 ```php
 logger()->error('You are not allowed here.');
@@ -2741,7 +2741,7 @@ logger()->error('You are not allowed here.');
 <a name="method-method-field"></a>
 #### `method_field()` {.collection-method}
 
-Hàm `method_field` tạo một input HTML `hidden` chứa giá trị giả lập HTTP verb của form. Ví dụ, khi dùng [cú pháp Blade](/docs/{{version}}/blade):
+Hàm `method_field` tạo một input HTML `hidden` chứa giá trị giả lập HTTP verb của form. Ví dụ, khi dùng [cú pháp Blade](/blade):
 
 ```blade
 <form method="POST">
@@ -2761,7 +2761,7 @@ $now = now();
 <a name="method-old"></a>
 #### `old()` {.collection-method}
 
-Hàm `old` [lấy](/docs/{{version}}/requests#retrieving-input) một giá trị [old input](/docs/{{version}}/requests#old-input) đã được flash vào session:
+Hàm `old` [lấy](/requests#retrieving-input) một giá trị [old input](/requests#old-input) đã được flash vào session:
 
 ```php
 $value = old('value');
@@ -2842,7 +2842,7 @@ return optional(User::find($id), function (User $user) {
 <a name="method-policy"></a>
 #### `policy()` {.collection-method}
 
-Hàm `policy` lấy instance [policy](/docs/{{version}}/authorization#creating-policies) cho class được chỉ định:
+Hàm `policy` lấy instance [policy](/authorization#creating-policies) cho class được chỉ định:
 
 ```php
 $policy = policy(App\Models\User::class);
@@ -2851,7 +2851,7 @@ $policy = policy(App\Models\User::class);
 <a name="method-redirect"></a>
 #### `redirect()` {.collection-method}
 
-Hàm `redirect` trả về một [HTTP redirect response](/docs/{{version}}/responses#redirects), hoặc trả về redirector instance nếu được gọi không có đối số:
+Hàm `redirect` trả về một [HTTP redirect response](/responses#redirects), hoặc trả về redirector instance nếu được gọi không có đối số:
 
 ```php
 return redirect($to = null, $status = 302, $headers = [], $secure = null);
@@ -2864,7 +2864,7 @@ return redirect()->route('route.name');
 <a name="method-report"></a>
 #### `report()` {.collection-method}
 
-Hàm `report` báo cáo exception thông qua [exception handler](/docs/{{version}}/errors#handling-exceptions) của ứng dụng:
+Hàm `report` báo cáo exception thông qua [exception handler](/errors#handling-exceptions) của ứng dụng:
 
 ```php
 report($e);
@@ -2879,7 +2879,7 @@ report('Something went wrong.');
 <a name="method-report-if"></a>
 #### `report_if()` {.collection-method}
 
-Hàm `report_if` sẽ báo cáo exception qua [exception handler](/docs/{{version}}/errors#handling-exceptions) nếu biểu thức boolean được cung cấp cho kết quả `true`:
+Hàm `report_if` sẽ báo cáo exception qua [exception handler](/errors#handling-exceptions) nếu biểu thức boolean được cung cấp cho kết quả `true`:
 
 ```php
 report_if($shouldReport, $e);
@@ -2890,7 +2890,7 @@ report_if($shouldReport, 'Something went wrong.');
 <a name="method-report-unless"></a>
 #### `report_unless()` {.collection-method}
 
-Hàm `report_unless` sẽ báo cáo exception qua [exception handler](/docs/{{version}}/errors#handling-exceptions) nếu biểu thức boolean được cung cấp cho kết quả `false`:
+Hàm `report_unless` sẽ báo cáo exception qua [exception handler](/errors#handling-exceptions) nếu biểu thức boolean được cung cấp cho kết quả `false`:
 
 ```php
 report_unless($reportingDisabled, $e);
@@ -2901,7 +2901,7 @@ report_unless($reportingDisabled, 'Something went wrong.');
 <a name="method-request"></a>
 #### `request()` {.collection-method}
 
-Hàm `request` trả về instance [request](/docs/{{version}}/requests) hiện tại hoặc lấy giá trị một input field từ request hiện tại:
+Hàm `request` trả về instance [request](/requests) hiện tại hoặc lấy giá trị một input field từ request hiện tại:
 
 ```php
 $request = request();
@@ -2912,7 +2912,7 @@ $value = request('key', $default);
 <a name="method-rescue"></a>
 #### `rescue()` {.collection-method}
 
-Hàm `rescue` thực thi closure được cung cấp và bắt mọi exception phát sinh trong quá trình thực thi. Tất cả exception bị bắt sẽ được gửi tới [exception handler](/docs/{{version}}/errors#handling-exceptions); tuy nhiên request vẫn tiếp tục được xử lý:
+Hàm `rescue` thực thi closure được cung cấp và bắt mọi exception phát sinh trong quá trình thực thi. Tất cả exception bị bắt sẽ được gửi tới [exception handler](/errors#handling-exceptions); tuy nhiên request vẫn tiếp tục được xử lý:
 
 ```php
 return rescue(function () {
@@ -2947,7 +2947,7 @@ return rescue(function () {
 <a name="method-resolve"></a>
 #### `resolve()` {.collection-method}
 
-Hàm `resolve` phân giải tên class hoặc interface thành một instance bằng [service container](/docs/{{version}}/container):
+Hàm `resolve` phân giải tên class hoặc interface thành một instance bằng [service container](/container):
 
 ```php
 $api = resolve('HelpSpot\API');
@@ -2956,7 +2956,7 @@ $api = resolve('HelpSpot\API');
 <a name="method-response"></a>
 #### `response()` {.collection-method}
 
-Hàm `response` tạo một instance [response](/docs/{{version}}/responses) hoặc lấy instance của response factory:
+Hàm `response` tạo một instance [response](/responses) hoặc lấy instance của response factory:
 
 ```php
 return response('Hello World', 200, $headers);
@@ -3021,7 +3021,7 @@ return retry(5, function () {
 <a name="method-session"></a>
 #### `session()` {.collection-method}
 
-Hàm `session` có thể được dùng để lấy hoặc thiết lập các giá trị [session](/docs/{{version}}/session):
+Hàm `session` có thể được dùng để lấy hoặc thiết lập các giá trị [session](/session):
 
 ```php
 $value = session('key');
@@ -3145,7 +3145,7 @@ $result = transform(null, $callback, 'The value is blank');
 <a name="method-validator"></a>
 #### `validator()` {.collection-method}
 
-Hàm `validator` tạo một instance [validator](/docs/{{version}}/validation) mới với các đối số được cung cấp. Bạn có thể dùng hàm này thay cho facade `Validator`:
+Hàm `validator` tạo một instance [validator](/validation) mới với các đối số được cung cấp. Bạn có thể dùng hàm này thay cho facade `Validator`:
 
 ```php
 $validator = validator($data, $rules, $messages);
@@ -3181,7 +3181,7 @@ $result = value(function (string $name) {
 <a name="method-view"></a>
 #### `view()` {.collection-method}
 
-Hàm `view` lấy một instance [view](/docs/{{version}}/views):
+Hàm `view` lấy một instance [view](/views):
 
 ```php
 return view('auth.login');
@@ -3312,7 +3312,7 @@ Cache::put('metrics', $metrics, minutes(10));
 <a name="deferred-functions"></a>
 ### Deferred Functions
 
-Mặc dù [queued job](/docs/{{version}}/queues) của Laravel cho phép đưa tác vụ vào queue để xử lý nền, đôi khi bạn chỉ có các tác vụ đơn giản cần trì hoãn mà không muốn cấu hình hoặc duy trì một queue worker chạy lâu dài.
+Mặc dù [queued job](/queues) của Laravel cho phép đưa tác vụ vào queue để xử lý nền, đôi khi bạn chỉ có các tác vụ đơn giản cần trì hoãn mà không muốn cấu hình hoặc duy trì một queue worker chạy lâu dài.
 
 Deferred function cho phép trì hoãn việc thực thi một closure cho tới sau khi HTTP response đã được gửi về người dùng, giúp ứng dụng luôn phản hồi nhanh và mượt. Để trì hoãn một closure, chỉ cần truyền closure đó vào function `Illuminate\Support\defer`:
 
@@ -3470,11 +3470,11 @@ $user = Pipeline::send($user)
     ->then(fn (User $user) => $user);
 ```
 
-Như bạn thấy, mỗi invokable class hoặc closure trong pipeline nhận input và một closure `$next`. Khi gọi closure `$next`, callable tiếp theo trong pipeline sẽ được thực thi. Cơ chế này rất giống [middleware](/docs/{{version}}/middleware).
+Như bạn thấy, mỗi invokable class hoặc closure trong pipeline nhận input và một closure `$next`. Khi gọi closure `$next`, callable tiếp theo trong pipeline sẽ được thực thi. Cơ chế này rất giống [middleware](/middleware).
 
 Khi callable cuối cùng trong pipeline gọi closure `$next`, callable được truyền cho method `then` sẽ được thực thi. Thông thường, callable này chỉ trả về input đã nhận. Nếu chỉ muốn trả về input sau khi đã được xử lý, bạn có thể dùng method `thenReturn`.
 
-Dĩ nhiên, như đã đề cập, bạn không bị giới hạn ở closure khi cung cấp các bước cho pipeline. Bạn cũng có thể truyền invokable class. Nếu truyền tên class, class đó sẽ được khởi tạo thông qua [service container](/docs/{{version}}/container) của Laravel, vì vậy dependency có thể được inject vào invokable class:
+Dĩ nhiên, như đã đề cập, bạn không bị giới hạn ở closure khi cung cấp các bước cho pipeline. Bạn cũng có thể truyền invokable class. Nếu truyền tên class, class đó sẽ được khởi tạo thông qua [service container](/container) của Laravel, vì vậy dependency có thể được inject vào invokable class:
 
 ```php
 $user = Pipeline::send($user)
@@ -3643,7 +3643,7 @@ Sleep::assertNeverSlept();
 Sleep::assertInsomniac();
 ```
 
-Đôi khi bạn cần thực hiện một hành động mỗi khi fake sleep xảy ra. Để làm điều này, bạn có thể truyền callback cho method `whenFakingSleep`. Trong ví dụ sau, ta dùng [helper thao tác thời gian](/docs/{{version}}/mocking#interacting-with-time) của Laravel để lập tức tiến thời gian thêm đúng khoảng thời lượng của mỗi lần sleep:
+Đôi khi bạn cần thực hiện một hành động mỗi khi fake sleep xảy ra. Để làm điều này, bạn có thể truyền callback cho method `whenFakingSleep`. Trong ví dụ sau, ta dùng [helper thao tác thời gian](/mocking#interacting-with-time) của Laravel để lập tức tiến thời gian thêm đúng khoảng thời lượng của mỗi lần sleep:
 
 ```php
 use Carbon\CarbonInterval as Duration;

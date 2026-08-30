@@ -31,7 +31,7 @@ php artisan octane:install
 <a name="frankenphp-via-laravel-sail"></a>
 #### FrankenPHP qua Laravel Sail
 
-Nếu dự định phát triển ứng dụng bằng [Laravel Sail](/docs/{{version}}/sail), bạn nên chạy các lệnh sau để cài đặt Octane và FrankenPHP:
+Nếu dự định phát triển ứng dụng bằng [Laravel Sail](/sail), bạn nên chạy các lệnh sau để cài đặt Octane và FrankenPHP:
 
 ```shell
 ./vendor/bin/sail up
@@ -131,7 +131,7 @@ php artisan octane:start --server=frankenphp --caddyfile=/path/to/your/Caddyfile
 <a name="roadrunner-via-laravel-sail"></a>
 #### RoadRunner qua Laravel Sail
 
-Nếu dự định phát triển ứng dụng bằng [Laravel Sail](/docs/{{version}}/sail), bạn nên chạy các lệnh sau để cài đặt Octane và RoadRunner:
+Nếu dự định phát triển ứng dụng bằng [Laravel Sail](/sail), bạn nên chạy các lệnh sau để cài đặt Octane và RoadRunner:
 
 ```shell
 ./vendor/bin/sail up
@@ -191,7 +191,7 @@ Sử dụng Laravel Octane với Open Swoole cung cấp cùng các chức năng 
 > [!WARNING]
 > Trước khi phục vụ ứng dụng Octane qua Sail, hãy đảm bảo bạn đang dùng phiên bản Laravel Sail mới nhất và chạy `./vendor/bin/sail build --no-cache` trong thư mục gốc của ứng dụng.
 
-Ngoài ra, bạn có thể phát triển ứng dụng Octane dựa trên Swoole bằng [Laravel Sail](/docs/{{version}}/sail), môi trường phát triển dựa trên Docker chính thức của Laravel. Laravel Sail mặc định đã bao gồm extension Swoole. Tuy nhiên, bạn vẫn cần điều chỉnh file `docker-compose.yml` mà Sail sử dụng.
+Ngoài ra, bạn có thể phát triển ứng dụng Octane dựa trên Swoole bằng [Laravel Sail](/sail), môi trường phát triển dựa trên Docker chính thức của Laravel. Laravel Sail mặc định đã bao gồm extension Swoole. Tuy nhiên, bạn vẫn cần điều chỉnh file `docker-compose.yml` mà Sail sử dụng.
 
 Để bắt đầu, hãy thêm biến môi trường `SUPERVISOR_PHP_COMMAND` vào định nghĩa service `laravel.test` trong file `docker-compose.yml` của ứng dụng. Biến này chứa lệnh mà Sail sẽ dùng để phục vụ ứng dụng bằng Octane thay cho PHP development server:
 

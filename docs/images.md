@@ -3,7 +3,7 @@
 <a name="introduction"></a>
 ## Giới thiệu
 Laravel cung cấp API fluent để xử lý image, cho phép resize, crop, encode và lưu ảnh theo cùng convention biểu đạt quen thuộc của framework. Khả năng xử lý ảnh của Laravel được xây trên [Intervention Image](https://image.intervention.io/) và hỗ trợ PHP extension GD cùng Imagick.
-Image API hữu ích khi làm việc với file upload, file lưu trên [filesystem disk](/docs/{{version}}/filesystem), local file, remote URL hoặc raw image bytes:
+Image API hữu ích khi làm việc với file upload, file lưu trên [filesystem disk](/filesystem), local file, remote URL hoặc raw image bytes:
 ```php
 use Illuminate\Support\Facades\Image;
 
@@ -14,7 +14,7 @@ $path = Image::fromStorage('avatars/photo.jpg', 'public')
     ->storePublicly('avatars', 'public');
 ```
 > [!WARNING]
-> Xử lý image có thể tiêu tốn nhiều CPU và memory. Với workload xử lý ảnh lớn, hãy cân nhắc thực hiện trong [queued job](/docs/{{version}}/queues) thay vì ngay trong HTTP request nhận file upload.
+> Xử lý image có thể tiêu tốn nhiều CPU và memory. Với workload xử lý ảnh lớn, hãy cân nhắc thực hiện trong [queued job](/queues) thay vì ngay trong HTTP request nhận file upload.
 <a name="installation"></a>
 ## Cài đặt
 Trước khi dùng chức năng xử lý ảnh của Laravel, hãy cài package Intervention Image qua Composer:
@@ -66,7 +66,7 @@ $file = $image->file();
 
 <a name="storage-files"></a>
 ### Storage Files
-Bạn có thể tạo image instance từ file lưu trên một [filesystem disk](/docs/{{version}}/filesystem) bằng phương thức `fromStorage`. Argument đầu là path, argument thứ hai là tên disk:
+Bạn có thể tạo image instance từ file lưu trên một [filesystem disk](/filesystem) bằng phương thức `fromStorage`. Argument đầu là path, argument thứ hai là tên disk:
 ```php
 use Illuminate\Support\Facades\Image;
 
