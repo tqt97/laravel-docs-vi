@@ -1,10 +1,5 @@
 # Service Providers
-- [Giới thiệu](#introduction)
-- [Viết Service Provider](#writing-service-providers)
-    - [Phương thức Register](#the-register-method)
-    - [Phương thức Boot](#the-boot-method)
-- [Đăng ký Provider](#registering-providers)
-- [Deferred Providers](#deferred-providers)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Service provider là nơi trung tâm thực hiện quá trình bootstrap cho ứng dụng Laravel. Chính ứng dụng của bạn cũng như toàn bộ dịch vụ cốt lõi của Laravel đều được bootstrap thông qua service provider.
@@ -186,7 +181,3 @@ class RiakServiceProvider extends ServiceProvider implements DeferrableProvider
     }
 }
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/providers). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

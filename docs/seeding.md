@@ -1,12 +1,5 @@
 # Database: Seeding
 
-- [Giới thiệu](#introduction)
-- [Viết Seeder](#writing-seeders)
-    - [Sử dụng Model Factory](#using-model-factories)
-    - [Gọi thêm Seeder](#calling-additional-seeders)
-    - [Tắt Model Event khi seed](#muting-model-events)
-- [Chạy Seeder](#running-seeders)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -154,9 +147,3 @@ Một số thao tác seeding có thể làm thay đổi hoặc mất dữ liệu
 ```shell
 php artisan db:seed --force
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/seeding). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

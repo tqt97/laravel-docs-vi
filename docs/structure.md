@@ -1,32 +1,5 @@
 # Cấu trúc thư mục
 
-- [Giới thiệu](#introduction)
-- [Thư mục gốc](#the-root-directory)
-    - [Thư mục `app`](#the-root-app-directory)
-    - [Thư mục `bootstrap`](#the-bootstrap-directory)
-    - [Thư mục `config`](#the-config-directory)
-    - [Thư mục `database`](#the-database-directory)
-    - [Thư mục `public`](#the-public-directory)
-    - [Thư mục `resources`](#the-resources-directory)
-    - [Thư mục `routes`](#the-routes-directory)
-    - [Thư mục `storage`](#the-storage-directory)
-    - [Thư mục `tests`](#the-tests-directory)
-    - [Thư mục `vendor`](#the-vendor-directory)
-- [Thư mục App](#the-app-directory)
-    - [Thư mục `Broadcasting`](#the-broadcasting-directory)
-    - [Thư mục `Console`](#the-console-directory)
-    - [Thư mục `Events`](#the-events-directory)
-    - [Thư mục `Exceptions`](#the-exceptions-directory)
-    - [Thư mục `Http`](#the-http-directory)
-    - [Thư mục `Jobs`](#the-jobs-directory)
-    - [Thư mục `Listeners`](#the-listeners-directory)
-    - [Thư mục `Mail`](#the-mail-directory)
-    - [Thư mục `Models`](#the-models-directory)
-    - [Thư mục `Notifications`](#the-notifications-directory)
-    - [Thư mục `Policies`](#the-policies-directory)
-    - [Thư mục `Providers`](#the-providers-directory)
-    - [Thư mục `Rules`](#the-rules-directory)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -175,7 +148,3 @@ Trong một ứng dụng Laravel mới, thư mục này đã có sẵn `AppServi
 ### Thư mục Rules
 
 Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:rule`. Thư mục `Rules` chứa các object đại diện cho custom validation rule của ứng dụng. Rule giúp đóng gói validation logic phức tạp trong một object đơn giản. Để tìm hiểu thêm, hãy xem [tài liệu Validation](/docs/{{version}}/validation).
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/structure). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

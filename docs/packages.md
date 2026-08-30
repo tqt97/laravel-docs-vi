@@ -1,22 +1,5 @@
 # Phát triển package
-- [Giới thiệu](#introduction)
-    - [Tạo package](#creating-a-package)
-    - [Lưu ý về facade](#a-note-on-facades)
-- [Package discovery](#package-discovery)
-- [Service provider](#service-providers)
-- [Resources](#resources)
-    - [Cấu hình](#configuration)
-    - [Routes](#routes)
-    - [Migrations](#migrations)
-    - [File ngôn ngữ](#language-files)
-    - [Views](#views)
-    - [View components](#view-components)
-    - [Artisan command "About"](#about-artisan-command)
-- [Commands](#commands)
-    - [Optimize commands](#optimize-commands)
-    - [Reload commands](#reload-commands)
-- [Public assets](#public-assets)
-- [Publish theo nhóm file](#publishing-file-groups)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Package là cách chính để bổ sung chức năng cho Laravel. Package có thể là thư viện xử lý ngày giờ như [Carbon](https://github.com/briannesbitt/Carbon), hoặc package cho phép gắn file với Eloquent model như [Laravel Media Library](https://github.com/spatie/laravel-medialibrary) của Spatie.
@@ -386,7 +369,3 @@ Người dùng cũng có thể publish toàn bộ file do service provider của
 ```shell
 php artisan vendor:publish --provider="Your\Package\ServiceProvider"
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/packages). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

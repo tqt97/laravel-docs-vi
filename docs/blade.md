@@ -1,52 +1,5 @@
 # Blade Template
 
-- [Giới thiệu](#introduction)
-    - [Tăng sức mạnh cho Blade với Livewire](#supercharging-blade-with-livewire)
-- [Hiển thị dữ liệu](#displaying-data)
-    - [Mã hóa HTML entity](#html-entity-encoding)
-    - [Blade và các JavaScript framework](#blade-and-javascript-frameworks)
-- [Blade Directives](#blade-directives)
-    - [Câu lệnh If](#if-statements)
-    - [Câu lệnh Switch](#switch-statements)
-    - [Vòng lặp](#loops)
-    - [Biến vòng lặp](#the-loop-variable)
-    - [Class theo điều kiện](#conditional-classes)
-    - [Các attribute bổ sung](#additional-attributes)
-    - [Include subview](#including-subviews)
-    - [Directive `@once`](#the-once-directive)
-    - [PHP thuần](#raw-php)
-    - [Font](#fonts)
-    - [Comment](#comments)
-- [Component](#components)
-    - [Render component](#rendering-components)
-    - [Index component](#index-components)
-    - [Truyền dữ liệu vào component](#passing-data-to-components)
-    - [Attribute của component](#component-attributes)
-    - [Từ khóa dành riêng](#reserved-keywords)
-    - [Slot](#slots)
-    - [Inline component view](#inline-component-views)
-    - [Dynamic component](#dynamic-components)
-    - [Đăng ký component thủ công](#manually-registering-components)
-- [Component ẩn danh](#anonymous-components)
-    - [Anonymous index component](#anonymous-index-components)
-    - [Data property / attribute](#data-properties-attributes)
-    - [Truy cập dữ liệu của component cha](#accessing-parent-data)
-    - [Đường dẫn component ẩn danh](#anonymous-component-paths)
-- [Xây dựng layout](#building-layouts)
-    - [Layout sử dụng component](#layouts-using-components)
-    - [Layout sử dụng kế thừa template](#layouts-using-template-inheritance)
-- [Form](#forms)
-    - [Trường CSRF](#csrf-field)
-    - [Trường method](#method-field)
-    - [Lỗi validation](#validation-errors)
-- [Stack](#stacks)
-- [Inject service](#service-injection)
-- [Render Blade template inline](#rendering-inline-blade-templates)
-- [Render Blade fragment](#rendering-blade-fragments)
-- [Mở rộng Blade](#extending-blade)
-    - [Tùy chỉnh echo handler](#custom-echo-handlers)
-    - [Tùy chỉnh câu lệnh If](#custom-if-statements)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -2088,9 +2041,3 @@ Sau khi điều kiện tùy chỉnh được định nghĩa, bạn có thể s�
     <!-- The application is not using the local disk... -->
 @enddisk
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/blade). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

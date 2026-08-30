@@ -1,37 +1,5 @@
 # Laravel Pennant
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-- [Cấu hình](#configuration)
-- [Định nghĩa feature](#defining-features)
-    - [Feature dựa trên class](#class-based-features)
-- [Kiểm tra feature](#checking-features)
-    - [Thực thi có điều kiện](#conditional-execution)
-    - [Trait `HasFeatures`](#the-has-features-trait)
-    - [Blade Directive](#blade-directive)
-    - [Middleware](#middleware)
-    - [Chặn quá trình kiểm tra feature](#intercepting-feature-checks)
-    - [Cache in-memory](#in-memory-cache)
-- [Scope](#scope)
-    - [Chỉ định scope](#specifying-the-scope)
-    - [Scope toàn cục](#global-scope)
-    - [Scope mặc định](#default-scope)
-    - [Scope có thể null](#nullable-scope)
-    - [Định danh scope](#identifying-scope)
-    - [Serialize scope](#serializing-scope)
-- [Giá trị feature phong phú](#rich-feature-values)
-- [Lấy nhiều feature](#retrieving-multiple-features)
-- [Eager Loading](#eager-loading)
-- [Cập nhật giá trị](#updating-values)
-    - [Cập nhật hàng loạt](#bulk-updates)
-    - [Xóa sạch feature](#purging-features)
-- [Testing](#testing)
-- [Thêm Pennant driver tùy chỉnh](#adding-custom-pennant-drivers)
-    - [Triển khai driver](#implementing-the-driver)
-    - [Đăng ký driver](#registering-the-driver)
-    - [Định nghĩa feature bên ngoài](#defining-features-externally)
-- [Events](#events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -492,7 +460,7 @@ class NewApi
 ```
 
 <a name="in-memory-cache"></a>
-### Cache in-memory
+### Cache trong bộ nhớ
 
 Khi kiểm tra một feature, Pennant sẽ tạo cache in-memory cho kết quả. Nếu đang sử dụng driver `database`, điều này có nghĩa việc kiểm tra lại cùng một feature flag trong một request sẽ không kích hoạt thêm database query. Cơ chế này cũng đảm bảo feature có kết quả nhất quán trong suốt request.
 
@@ -1207,9 +1175,3 @@ Event này được dispatch khi purge các feature cụ thể.
 ### `Laravel\Pennant\Events\AllFeaturesPurged`
 
 Event này được dispatch khi purge tất cả feature.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/pennant). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

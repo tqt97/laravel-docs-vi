@@ -1,39 +1,5 @@
 # Laravel Scout
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Đưa vào hàng đợi](#queueing)
-- [Điều kiện tiên quyết của driver](#driver-prerequisites)
-    - [Algolia](#algolia)
-    - [Meilisearch](#meilisearch)
-    - [Typesense](#typesense)
-    - [Turbopuffer](#turbopuffer)
-- [Cấu hình](#configuration)
-    - [Cấu hình dữ liệu có thể tìm kiếm](#configuring-searchable-data)
-- [Engine Database / Collection](#database-and-collection-engines)
-    - [Database Engine](#database-engine)
-    - [Collection Engine](#collection-engine)
-- [Cấu hình engine bên thứ ba](#third-party-engine-configuration)
-    - [Cấu hình index của model](#configuring-model-indexes)
-    - [Algolia](#algolia-configuration)
-    - [Meilisearch](#meilisearch-configuration)
-    - [Typesense](#typesense-configuration)
-    - [Turbopuffer](#turbopuffer-configuration)
-- [Lập chỉ mục với engine bên thứ ba](#indexing)
-    - [Batch Import](#batch-import)
-    - [Thêm record](#adding-records)
-    - [Cập nhật record](#updating-records)
-    - [Xóa record](#removing-records)
-    - [Tạm dừng lập chỉ mục](#pausing-indexing)
-    - [Model instance có thể tìm kiếm theo điều kiện](#conditionally-searchable-model-instances)
-- [Tìm kiếm](#searching)
-    - [Mệnh đề Where](#where-clauses)
-    - [Tìm kiếm semantic](#semantic-search)
-    - [Phân trang](#pagination)
-    - [Soft delete](#soft-deleting)
-    - [Tùy biến tìm kiếm của engine](#customizing-engine-searches)
-- [Engine tùy chỉnh](#custom-engines)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1201,9 +1167,3 @@ Sau khi engine được đăng ký, bạn có thể chỉ định nó làm `driv
 ```php
 'driver' => 'mysql',
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/scout). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

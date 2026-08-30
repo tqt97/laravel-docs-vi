@@ -1,13 +1,5 @@
 # Redis
-- [Giới thiệu](#introduction)
-- [Cấu hình](#configuration)
-    - [Clusters](#clusters)
-    - [Predis](#predis)
-    - [PhpRedis](#phpredis)
-- [Tương tác với Redis](#interacting-with-redis)
-    - [Transactions](#transactions)
-    - [Pipeline command](#pipelining-commands)
-- [Pub / Sub](#pubsub)
+
 <a name="introduction"></a>
 ## Giới thiệu
 [Redis](https://redis.io) là một key-value store mã nguồn mở với nhiều khả năng nâng cao. Redis thường được gọi là một data structure server vì mỗi key có thể chứa [string](https://redis.io/docs/latest/develop/data-types/strings/), [hash](https://redis.io/docs/latest/develop/data-types/hashes/), [list](https://redis.io/docs/latest/develop/data-types/lists/), [set](https://redis.io/docs/latest/develop/data-types/sets/) và [sorted set](https://redis.io/docs/latest/develop/data-types/sorted-sets/).
@@ -431,7 +423,3 @@ Redis::psubscribe(['users.*'], function (string $message, string $channel) {
     echo $message;
 });
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/redis). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

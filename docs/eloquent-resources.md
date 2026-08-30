@@ -1,24 +1,5 @@
 # Eloquent: API Resource
 
-- [Giới thiệu](#introduction)
-- [Tạo Resource](#generating-resources)
-- [Tổng quan khái niệm](#concept-overview)
-    - [Resource Collection](#resource-collections)
-- [Xây dựng Resource](#writing-resources)
-    - [Bao bọc dữ liệu](#data-wrapping)
-    - [Phân trang](#pagination)
-    - [Thuộc tính có điều kiện](#conditional-attributes)
-    - [Quan hệ có điều kiện](#conditional-relationships)
-    - [Thêm metadata](#adding-meta-data)
-- [JSON:API Resources](#jsonapi-resources)
-    - [Generating JSON:API Resources](#generating-jsonapi-resources)
-    - [Defining Attributes](#defining-jsonapi-attributes)
-    - [Defining Relationships](#defining-jsonapi-relationships)
-    - [Resource Type and ID](#jsonapi-resource-type-and-id)
-    - [Sparse Fieldsets and Includes](#jsonapi-sparse-fieldsets-and-includes)
-    - [Links and Meta](#jsonapi-links-and-meta)
-- [Response của Resource](#resource-responses)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1306,9 +1287,3 @@ class UserResource extends JsonResource
     }
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/eloquent-resources). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

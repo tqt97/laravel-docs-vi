@@ -1,47 +1,5 @@
 # Eloquent: Quan hệ
 
-- [Giới thiệu](#introduction)
-- [Định nghĩa quan hệ](#defining-relationships)
-    - [Một-một / Has One](#one-to-one)
-    - [Một-nhiều / Has Many](#one-to-many)
-    - [Một-nhiều (nghịch đảo) / Belongs To](#one-to-many-inverse)
-    - [Một trong nhiều](#has-one-of-many)
-    - [Một qua trung gian](#has-one-through)
-    - [Nhiều qua trung gian](#has-many-through)
-- [Quan hệ có scope](#scoped-relationships)
-- [Quan hệ nhiều-nhiều](#many-to-many)
-    - [Truy xuất các cột của bảng trung gian](#retrieving-intermediate-table-columns)
-    - [Lọc truy vấn qua các cột của bảng trung gian](#filtering-queries-via-intermediate-table-columns)
-    - [Sắp xếp truy vấn qua các cột của bảng trung gian](#ordering-queries-via-intermediate-table-columns)
-    - [Định nghĩa model bảng trung gian tùy chỉnh](#defining-custom-intermediate-table-models)
-- [Quan hệ đa hình](#polymorphic-relationships)
-    - [Một-một](#one-to-one-polymorphic-relations)
-    - [Một-nhiều](#one-to-many-polymorphic-relations)
-    - [Một trong nhiều](#one-of-many-polymorphic-relations)
-    - [Nhiều-nhiều](#many-to-many-polymorphic-relations)
-    - [Kiểu đa hình tùy chỉnh](#custom-polymorphic-types)
-- [Quan hệ động](#dynamic-relationships)
-- [Truy vấn quan hệ](#querying-relations)
-    - [Phương thức quan hệ và thuộc tính động](#relationship-methods-vs-dynamic-properties)
-    - [Truy vấn sự tồn tại của quan hệ](#querying-relationship-existence)
-    - [Truy vấn sự vắng mặt của quan hệ](#querying-relationship-absence)
-    - [Truy vấn quan hệ Morph To](#querying-morph-to-relationships)
-- [Tổng hợp các model liên quan](#aggregating-related-models)
-    - [Đếm các model liên quan](#counting-related-models)
-    - [Các hàm tổng hợp khác](#other-aggregate-functions)
-    - [Đếm model liên quan trên quan hệ Morph To](#counting-related-models-on-morph-to-relationships)
-- [Eager Loading](#eager-loading)
-    - [Giới hạn Eager Load](#constraining-eager-loads)
-    - [Lazy Eager Loading](#lazy-eager-loading)
-    - [Eager Loading tự động](#automatic-eager-loading)
-    - [Ngăn Lazy Loading](#preventing-lazy-loading)
-- [Thêm và cập nhật các model liên quan](#inserting-and-updating-related-models)
-    - [Phương thức `save`](#the-save-method)
-    - [Phương thức `create`](#the-create-method)
-    - [Quan hệ Belongs To](#updating-belongs-to-relationships)
-    - [Quan hệ nhiều-nhiều](#updating-many-to-many-relationships)
-- [Cập nhật timestamp của model cha](#touching-parent-timestamps)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1020,7 +978,7 @@ class RoleUser extends Pivot
 Quan hệ polymorphic cho phép model con thuộc về nhiều loại model khác nhau thông qua một liên kết duy nhất. Ví dụ, hãy hình dung bạn đang xây dựng ứng dụng cho phép user chia sẻ bài blog và video. Trong ứng dụng như vậy, model `Comment` có thể thuộc cả model `Post` lẫn `Video`.
 
 <a name="one-to-one-polymorphic-relations"></a>
-### One to One (Polymorphic)
+### Một-một đa hình (Polymorphic)
 
 <a name="one-to-one-polymorphic-table-structure"></a>
 #### Cấu trúc bảng
@@ -1139,7 +1097,7 @@ public function imageable(): MorphTo
 ```
 
 <a name="one-to-many-polymorphic-relations"></a>
-### One to Many (Polymorphic)
+### Một-nhiều đa hình (Polymorphic)
 
 <a name="one-to-many-polymorphic-table-structure"></a>
 #### Cấu trúc bảng
@@ -1287,7 +1245,7 @@ $posts = Post::with([
 ```
 
 <a name="one-of-many-polymorphic-relations"></a>
-### One of Many (Polymorphic)
+### Một trong nhiều đa hình (Polymorphic)
 
 Đôi khi một model có nhiều model liên quan nhưng bạn muốn dễ dàng lấy model liên quan "mới nhất" hoặc "cũ nhất" của quan hệ. Ví dụ, model `User` có thể liên kết với nhiều model `Image`, nhưng bạn muốn có cách thuận tiện để làm việc với image gần đây nhất mà user đã tải lên. Bạn có thể thực hiện điều này bằng loại quan hệ `morphOne` kết hợp với các phương thức `ofMany`:
 
@@ -1331,7 +1289,7 @@ public function bestImage(): MorphOne
 > Có thể xây dựng các quan hệ "one of many" nâng cao hơn. Để biết thêm thông tin, hãy xem [tài liệu has one of many](#advanced-has-one-of-many-relationships).
 
 <a name="many-to-many-polymorphic-relations"></a>
-### Many to Many (Polymorphic)
+### Nhiều-nhiều đa hình (Polymorphic)
 
 <a name="many-to-many-polymorphic-table-structure"></a>
 #### Cấu trúc bảng
@@ -2597,9 +2555,3 @@ class Comment extends Model
 
 > [!WARNING]
 > Timestamp của model cha chỉ được cập nhật nếu model con được cập nhật bằng phương thức `save` của Eloquent.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/eloquent-relationships). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

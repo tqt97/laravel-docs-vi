@@ -1,60 +1,5 @@
 # Laravel MCP
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Publish route](#publishing-routes)
-- [Tạo server](#creating-servers)
-    - [Đăng ký server](#server-registration)
-    - [Web server](#web-servers)
-    - [Local server](#local-servers)
-- [Tool](#tools)
-    - [Tạo tool](#creating-tools)
-    - [Schema đầu vào của tool](#tool-input-schemas)
-    - [Schema đầu ra của tool](#tool-output-schemas)
-    - [Xác thực đối số của tool](#validating-tool-arguments)
-    - [Dependency Injection cho tool](#tool-dependency-injection)
-    - [Annotation của tool](#tool-annotations)
-    - [Đăng ký tool có điều kiện](#conditional-tool-registration)
-    - [Response của tool](#tool-responses)
-- [Prompt](#prompts)
-    - [Tạo prompt](#creating-prompts)
-    - [Đối số của prompt](#prompt-arguments)
-    - [Xác thực đối số của prompt](#validating-prompt-arguments)
-    - [Dependency Injection cho prompt](#prompt-dependency-injection)
-    - [Đăng ký prompt có điều kiện](#conditional-prompt-registration)
-    - [Response của prompt](#prompt-responses)
-- [Resource](#resources)
-    - [Tạo resource](#creating-resources)
-    - [Resource template](#resource-templates)
-    - [URI và MIME type của resource](#resource-uri-and-mime-type)
-    - [Request của resource](#resource-request)
-    - [Dependency Injection cho resource](#resource-dependency-injection)
-    - [Annotation của resource](#resource-annotations)
-    - [Đăng ký resource có điều kiện](#conditional-resource-registration)
-    - [Response của resource](#resource-responses)
-- [Apps](#apps)
-    - [Tạo app resource](#creating-app-resources)
-    - [Render app từ tool](#rendering-apps-from-tools)
-    - [Khả năng hiển thị của app tool](#app-tool-visibility)
-    - [Cấu hình app](#app-configuration)
-    - [Xây dựng app với Boost](#building-apps-with-boost)
-- [Metadata](#metadata)
-- [Icons](#icons)
-- [Xác thực](#authentication)
-    - [OAuth 2.1](#oauth)
-    - [Sanctum](#sanctum)
-- [Phân quyền](#authorization)
-- [MCP client](#client)
-    - [Kết nối đến server](#client-connecting)
-    - [Client được đặt tên](#named-clients)
-    - [Xác thực client](#client-authentication)
-    - [Tool](#client-tools)
-    - [Prompt](#client-prompts)
-    - [Resource](#client-resources)
-- [Kiểm thử server](#testing-servers)
-    - [MCP Inspector](#mcp-inspector)
-    - [Unit test](#unit-tests)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -2112,9 +2057,3 @@ Cuối cùng, nếu muốn kiểm tra nội dung response thô, bạn có thể 
 $response->dd();
 $response->dump();
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/mcp). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

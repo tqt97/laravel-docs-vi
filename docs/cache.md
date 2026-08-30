@@ -1,31 +1,5 @@
 # Cache
 
-- [Giới thiệu](#introduction)
-- [Cấu hình](#configuration)
-    - [Điều kiện tiên quyết của driver](#driver-prerequisites)
-- [Sử dụng cache](#cache-usage)
-    - [Lấy một cache instance](#obtaining-a-cache-instance)
-    - [Lấy item từ cache](#retrieving-items-from-the-cache)
-    - [Lưu item vào cache](#storing-items-in-the-cache)
-    - [Gia hạn thời gian tồn tại của item](#extending-item-lifetime)
-    - [Xóa item khỏi cache](#removing-items-from-the-cache)
-    - [Memoization cache](#cache-memoization)
-    - [Helper cache](#the-cache-helper)
-- [Cache tag](#cache-tags)
-    - [Lưu item cache có tag](#storing-tagged-cache-items)
-    - [Truy cập item cache có tag](#accessing-tagged-cache-items)
-    - [Xóa item cache có tag](#removing-tagged-cache-items)
-- [Atomic lock](#atomic-locks)
-    - [Quản lý lock](#managing-locks)
-    - [Quản lý lock giữa nhiều process](#managing-locks-across-processes)
-    - [Gia hạn lock](#refreshing-locks)
-    - [Giới hạn concurrency](#concurrency-limiting)
-- [Cache failover](#cache-failover)
-- [Thêm cache driver tùy chỉnh](#adding-custom-cache-drivers)
-    - [Viết driver](#writing-the-driver)
-    - [Đăng ký driver](#registering-the-driver)
-- [Sự kiện](#events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -814,9 +788,3 @@ Sau khi extension được đăng ký, hãy cập nhật biến môi trường `
     'events' => false,
 ],
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/cache). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

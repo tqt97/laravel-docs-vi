@@ -1,15 +1,5 @@
 # Context
-- [Giới thiệu](#introduction)
-    - [Cơ chế hoạt động](#how-it-works)
-- [Ghi dữ liệu vào context](#capturing-context)
-    - [Stacks](#stacks)
-- [Lấy dữ liệu từ context](#retrieving-context)
-    - [Kiểm tra sự tồn tại của dữ liệu](#determining-item-existence)
-- [Xóa dữ liệu khỏi context](#removing-context)
-- [Hidden Context](#hidden-context)
-- [Events](#events)
-    - [Dehydrating](#dehydrating)
-    - [Hydrated](#hydrated)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Khả năng "context" của Laravel cho phép bạn ghi nhận, truy xuất và chia sẻ thông tin xuyên suốt các request, job và command đang chạy trong ứng dụng. Thông tin này cũng được đính kèm vào log do ứng dụng ghi ra, giúp bạn hiểu rõ hơn lịch sử thực thi xảy ra trước một log entry và truy vết luồng xử lý trong hệ thống phân tán.
@@ -375,6 +365,3 @@ public function boot(): void
 ```
 > [!NOTE]
 > Không nên dùng facade `Context` bên trong callback `hydrated`; thay vào đó, chỉ thao tác với repository được truyền vào callback.
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/context). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

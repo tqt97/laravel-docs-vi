@@ -1,31 +1,5 @@
 # Laravel Boost
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Thiết lập agent](#set-up-your-agents)
-    - [Luôn cập nhật tài nguyên Boost](#keeping-boost-resources-updated)
-- [MCP Server](#mcp-server)
-    - [Các MCP tool có sẵn](#available-mcp-tools)
-    - [Đăng ký MCP server thủ công](#manually-registering-the-mcp-server)
-- [AI Guideline](#ai-guidelines)
-    - [AI guideline có sẵn](#available-ai-guidelines)
-    - [Thêm AI guideline tùy chỉnh](#adding-custom-ai-guidelines)
-    - [Ghi đè AI guideline của Boost](#overriding-boost-ai-guidelines)
-    - [AI guideline cho package bên thứ ba](#third-party-package-ai-guidelines)
-- [Agent Skill](#agent-skills)
-    - [Skill có sẵn](#available-skills)
-    - [Skill tùy chỉnh](#custom-skills)
-    - [Ghi đè skill](#overriding-skills)
-    - [Skill cho package bên thứ ba](#third-party-package-skills)
-- [Guideline và Skill](#guidelines-vs-skills)
-- [Quy tắc dự án](#project-rules)
-    - [Ghi lại quy tắc](#recording-rules)
-    - [Suy luận convention của ứng dụng](#inferring-your-applications-conventions)
-    - [Tắt quy tắc dự án](#disabling-project-rules)
-- [API tài liệu](#documentation-api)
-- [Extending Boost](#extending-boost)
-    - [Thêm hỗ trợ cho IDE / AI agent khác](#adding-support-for-other-ides-ai-agents)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -313,7 +287,7 @@ description: Build and work with PackageName features, including components and 
 
 # Package Name Development
 
-## When to use this skill
+## Khi nào nên sử dụng skill này
 Use this skill when working with PackageName features...
 
 ## Features
@@ -370,7 +344,7 @@ paths:
 
 # Http Controllers
 
-## Extend BaseController for tenant scoping
+## Mở rộng BaseController để giới hạn theo tenant
 
 All controllers must extend `App\Http\Controllers\BaseController`, which applies the
 current tenant's query scope. Extending Laravel's base controller directly will leak
@@ -502,9 +476,3 @@ public function boot(): void
 ```
 
 Sau khi đăng ký, agent sẽ xuất hiện để bạn lựa chọn khi chạy `php artisan boost:install`.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/boost). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

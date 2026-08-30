@@ -1,14 +1,5 @@
 # Middleware
-- [Giới thiệu](#introduction)
-- [Định nghĩa middleware](#defining-middleware)
-- [Đăng ký middleware](#registering-middleware)
-    - [Global middleware](#global-middleware)
-    - [Gán middleware cho route](#assigning-middleware-to-routes)
-    - [Nhóm middleware](#middleware-groups)
-    - [Alias middleware](#middleware-aliases)
-    - [Sắp xếp middleware](#sorting-middleware)
-- [Tham số middleware](#middleware-parameters)
-- [Terminable middleware](#terminable-middleware)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Middleware cung cấp một cơ chế thuận tiện để kiểm tra và lọc các HTTP request đi vào ứng dụng. Ví dụ, Laravel có middleware dùng để xác minh người dùng đã được xác thực. Nếu chưa đăng nhập, middleware sẽ chuyển hướng người dùng tới màn hình đăng nhập; nếu đã xác thực, middleware cho phép request tiếp tục đi sâu vào ứng dụng.
@@ -441,7 +432,3 @@ public function register(): void
     $this->app->singleton(TerminatingMiddleware::class);
 }
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/middleware). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

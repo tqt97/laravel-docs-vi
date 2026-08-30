@@ -1,20 +1,5 @@
 # Eloquent: Factories
-- [Giới thiệu](#introduction)
-- [Định nghĩa model factory](#defining-model-factories)
-    - [Tạo factory](#generating-factories)
-    - [Factory state](#factory-states)
-    - [Factory callback](#factory-callbacks)
-- [Tạo model bằng factory](#creating-models-using-factories)
-    - [Khởi tạo model](#instantiating-models)
-    - [Lưu model](#persisting-models)
-    - [Sequences](#sequences)
-- [Relationship trong factory](#factory-relationships)
-    - [Has Many](#has-many-relationships)
-    - [Belongs To](#belongs-to-relationships)
-    - [Nhiều - nhiều](#many-to-many-relationships)
-    - [Polymorphic relationship](#polymorphic-relationships)
-    - [Định nghĩa relationship trong factory](#defining-relationships-within-factories)
-    - [Tái sử dụng model có sẵn cho relationship](#recycling-an-existing-model-for-relationships)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Khi test ứng dụng hoặc seed database, bạn thường cần chèn một số record mẫu. Thay vì tự chỉ định giá trị cho từng column, Laravel cho phép định nghĩa tập attribute mặc định cho mỗi [Eloquent model](/docs/{{version}}/eloquent) bằng model factory.
@@ -299,7 +284,7 @@ $users = User::factory()
 <a name="factory-relationships"></a>
 ## Relationship trong factory
 <a name="has-many-relationships"></a>
-### Has Many
+### Quan hệ Has Many
 Tiếp theo, hãy xây dựng Eloquent relationship bằng fluent factory API. Giả sử ứng dụng có model `App\Models\User` và `App\Models\Post`, trong đó `User` định nghĩa relationship `hasMany` với `Post`. Ta có thể tạo một user có ba post bằng method `has`; method này nhận một factory instance:
 ```php
 use App\Models\Post;
@@ -364,7 +349,7 @@ $user = User::factory()
 ```
 
 <a name="belongs-to-relationships"></a>
-### Belongs To
+### Quan hệ Belongs To
 Sau khi xem cách tạo "has many", hãy xem chiều ngược lại. Method `for` định nghĩa parent model mà các model được factory tạo thuộc về. Ví dụ, ta có thể tạo ba `Post` cùng thuộc một user:
 ```php
 use App\Models\Post;
@@ -481,7 +466,7 @@ $post = Post::factory()->hasComments(3)->create();
 ```
 
 <a name="morph-to-relationships"></a>
-#### Morph To
+#### Quan hệ Morph To
 Magic method không thể dùng để tạo relationship `morphTo`. Thay vào đó, bạn phải gọi trực tiếp `for` và chỉ định rõ tên relationship. Ví dụ, nếu `Comment` có method `commentable` định nghĩa `morphTo`, ta có thể tạo ba comment thuộc một post bằng cách gọi `for` trực tiếp:
 ```php
 $comments = Comment::factory()->count(3)->for(
@@ -566,7 +551,3 @@ Ticket::factory()
     ->recycle($airlines)
     ->create();
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/eloquent-factories). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

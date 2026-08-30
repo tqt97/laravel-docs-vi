@@ -1,55 +1,5 @@
 # Laravel AI SDK
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Cấu hình](#configuration)
-    - [Base URL tùy chỉnh](#custom-base-urls)
-    - [Provider tương thích OpenAI](#openai-compatible-providers)
-    - [Hỗ trợ provider](#provider-support)
-- [Agent](#agents)
-    - [Gửi prompt](#prompting)
-    - [Ngữ cảnh hội thoại](#conversation-context)
-    - [Đầu ra có cấu trúc](#structured-output)
-    - [Tệp đính kèm](#attachments)
-    - [Streaming](#streaming)
-    - [Broadcasting](#broadcasting)
-    - [Queueing](#queueing)
-    - [Tools](#tools)
-    - [Deferred Tool Loading](#deferred-tool-loading)
-    - [File Storage Tools](#file-storage-tools)
-    - [MCP Tools](#mcp-tools)
-    - [Provider Tools](#provider-tools)
-    - [Sub-Agents](#sub-agents)
-    - [Middleware](#middleware)
-    - [Anonymous Agents](#anonymous-agents)
-    - [Agent Configuration](#agent-configuration)
-    - [Provider Options](#provider-options)
-- [Human Tool Approval](#human-tool-approval)
-    - [Complete Approval Flow](#complete-approval-flow)
-- [Images](#images)
-- [Audio (TTS)](#audio)
-- [Transcription (STT)](#transcription)
-- [Text Summarization](#text-summarization)
-- [Embeddings](#embeddings)
-    - [Multimodal Embeddings](#multimodal-embeddings)
-    - [Querying Embeddings](#querying-embeddings)
-    - [Caching Embeddings](#caching-embeddings)
-- [Reranking](#reranking)
-- [Files](#files)
-- [Vector Stores](#vector-stores)
-    - [Adding Files to Stores](#adding-files-to-stores)
-- [Failover](#failover)
-- [Testing](#testing)
-    - [Agents](#testing-agents)
-    - [Images](#testing-images)
-    - [Audio](#testing-audio)
-    - [Transcriptions](#testing-transcriptions)
-    - [Embeddings](#testing-embeddings)
-    - [Reranking](#testing-reranking)
-    - [Files](#testing-files)
-    - [Vector Stores](#testing-vector-stores)
-- [Events](#events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -3009,7 +2959,3 @@ Laravel AI SDK dispatch nhiều [event](/docs/{{version}}/events), bao gồm:
 - `TranscriptionGenerated`
 
 Bạn có thể lắng nghe bất kỳ event nào trong số này để ghi log hoặc lưu trữ thông tin sử dụng AI SDK.
-
-## Tài liệu chính thức
-
-- [Laravel 13.x — AI SDK](https://laravel.com/docs/13.x/ai-sdk)

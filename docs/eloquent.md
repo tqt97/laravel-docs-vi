@@ -1,44 +1,5 @@
 # Eloquent: Bắt đầu
 
-- [Giới thiệu](#introduction)
-- [Tạo các lớp Model](#generating-model-classes)
-- [Các quy ước của Eloquent Model](#eloquent-model-conventions)
-    - [Tên bảng](#table-names)
-    - [Khóa chính](#primary-keys)
-    - [Khóa UUID và ULID](#uuid-and-ulid-keys)
-    - [Timestamp](#timestamps)
-    - [Kết nối cơ sở dữ liệu](#database-connections)
-    - [Giá trị thuộc tính mặc định](#default-attribute-values)
-    - [Cấu hình chế độ nghiêm ngặt của Eloquent](#configuring-eloquent-strictness)
-- [Truy xuất Model](#retrieving-models)
-    - [Collection](#collections)
-    - [Chia nhỏ kết quả](#chunking-results)
-    - [Chia nhỏ bằng Lazy Collection](#chunking-using-lazy-collections)
-    - [Cursor](#cursors)
-    - [Subquery nâng cao](#advanced-subqueries)
-- [Retrieving Single Models / Aggregates](#retrieving-single-models)
-    - [Retrieving or Creating Models](#retrieving-or-creating-models)
-    - [Retrieving Aggregates](#retrieving-aggregates)
-- [Inserting and Updating Models](#inserting-and-updating-models)
-    - [Inserts](#inserts)
-    - [Updates](#updates)
-    - [Mass Assignment](#mass-assignment)
-    - [Upserts](#upserts)
-- [Deleting Models](#deleting-models)
-    - [Soft Deleting](#soft-deleting)
-    - [Querying Soft Deleted Models](#querying-soft-deleted-models)
-- [Pruning Models](#pruning-models)
-- [Replicating Models](#replicating-models)
-- [Query Scopes](#query-scopes)
-    - [Global Scopes](#global-scopes)
-    - [Local Scopes](#local-scopes)
-    - [Pending Attributes](#pending-attributes)
-- [Comparing Models](#comparing-models)
-- [Events](#events)
-    - [Using Closures](#events-using-closures)
-    - [Observers](#observers)
-    - [Muting Events](#muting-events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1966,9 +1927,3 @@ $user->deleteQuietly();
 $user->forceDeleteQuietly();
 $user->restoreQuietly();
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/eloquent). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

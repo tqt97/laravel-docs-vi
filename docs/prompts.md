@@ -1,35 +1,5 @@
 # Prompts
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-- [Các prompt có sẵn](#available-prompts)
-    - [Text](#text)
-    - [Textarea](#textarea)
-    - [Number](#number)
-    - [Password](#password)
-    - [Confirm](#confirm)
-    - [Select](#select)
-    - [Multi-select](#multiselect)
-    - [Suggest](#suggest)
-    - [Search](#search)
-    - [Multi-search](#multisearch)
-    - [Pause](#pause)
-    - [Autocomplete](#autocomplete)
-- [Biến đổi dữ liệu đầu vào trước khi validation](#transforming-input-before-validation)
-- [Form](#forms)
-- [Thông báo thông tin](#informational-messages)
-- [Callout](#callouts)
-- [Bảng](#tables)
-- [Spinner](#spin)
-- [Thanh tiến trình](#progress)
-- [Task](#task)
-- [Stream](#stream)
-- [Tiêu đề terminal](#terminal-title)
-- [Xóa nội dung terminal](#clear)
-- [Các lưu ý về terminal](#terminal-considerations)
-- [Môi trường không được hỗ trợ và fallback](#fallbacks)
-- [Kiểm thử](#testing)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1602,9 +1572,3 @@ public function test_report_generation(): void
         ->assertExitCode(0);
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/prompts). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,17 +1,5 @@
 # Cấu hình
 
-- [Giới thiệu](#introduction)
-- [Cấu hình môi trường](#environment-configuration)
-    - [Kiểu dữ liệu của biến môi trường](#environment-variable-types)
-    - [Truy xuất cấu hình môi trường](#retrieving-environment-configuration)
-    - [Xác định môi trường hiện tại](#determining-the-current-environment)
-    - [Mã hóa file môi trường](#encrypting-environment-files)
-- [Truy cập giá trị cấu hình](#accessing-configuration-values)
-- [Cache cấu hình](#configuration-caching)
-- [Publish cấu hình](#configuration-publishing)
-- [Chế độ debug](#debug-mode)
-- [Chế độ bảo trì](#maintenance-mode)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -397,9 +385,3 @@ Khi ứng dụng đang ở chế độ bảo trì, không có [queued job](/docs
 #### Giải pháp thay thế chế độ bảo trì
 
 Vì chế độ bảo trì khiến ứng dụng phải ngừng hoạt động trong vài giây, bạn có thể cân nhắc chạy ứng dụng trên một nền tảng được quản lý toàn diện như [Laravel Cloud](https://cloud.laravel.com) để triển khai zero-downtime với Laravel.
-
----
-
-## Tài liệu chính thức
-
-- [Laravel 13.x — configuration](https://laravel.com/docs/13.x/configuration)

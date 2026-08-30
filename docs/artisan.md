@@ -1,32 +1,5 @@
 # Artisan Console
 
-- [Giới thiệu](#introduction)
-- [Tinker (REPL)](#tinker)
-- [Viết command](#writing-commands)
-    - [Tạo command](#generating-commands)
-    - [Cấu trúc command](#command-structure)
-    - [Closure command](#closure-commands)
-    - [Command có thể cô lập](#isolatable-commands)
-- [Định nghĩa input mong đợi](#defining-input-expectations)
-    - [Argument](#arguments)
-    - [Option](#options)
-    - [Mảng input](#input-arrays)
-    - [Mô tả input](#input-descriptions)
-    - [Prompt khi thiếu input](#prompting-for-missing-input)
-- [I/O của command](#command-io)
-    - [Lấy input](#retrieving-input)
-    - [Prompt input](#prompting-for-input)
-    - [Ghi output](#writing-output)
-- [Đăng ký command](#registering-commands)
-- [Thực thi command bằng code](#programmatically-executing-commands)
-    - [Gọi command từ command khác](#calling-commands-from-other-commands)
-- [Xử lý signal](#signal-handling)
-- [Dev Command](#the-dev-command)
-    - [Tùy chỉnh process phát triển](#customizing-dev-processes)
-    - [Lọc process phát triển](#filtering-dev-processes)
-- [Tùy chỉnh stub](#stub-customization)
-- [Event](#events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1036,9 +1009,3 @@ Các stub đã publish nằm trong thư mục `stubs` ở root của ứng dụn
 ## Event
 
 Artisan dispatch ba event khi chạy command: `Illuminate\Console\Events\ArtisanStarting`, `Illuminate\Console\Events\CommandStarting` và `Illuminate\Console\Events\CommandFinished`. Event `ArtisanStarting` được dispatch ngay khi Artisan bắt đầu chạy. Tiếp theo, `CommandStarting` được dispatch ngay trước khi một command chạy. Cuối cùng, `CommandFinished` được dispatch sau khi command thực thi xong.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/artisan). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

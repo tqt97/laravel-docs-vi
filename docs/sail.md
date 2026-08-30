@@ -1,36 +1,5 @@
 # Laravel Sail
 
-- [Giới thiệu](#introduction)
-- [Cài đặt và thiết lập](#installation)
-    - [Build lại image của Sail](#rebuilding-sail-images)
-    - [Cấu hình alias cho shell](#configuring-a-shell-alias)
-- [Khởi động và dừng Sail](#starting-and-stopping-sail)
-- [Thực thi lệnh](#executing-sail-commands)
-    - [Thực thi lệnh PHP](#executing-php-commands)
-    - [Thực thi lệnh Composer](#executing-composer-commands)
-    - [Thực thi lệnh Artisan](#executing-artisan-commands)
-    - [Thực thi lệnh Node / NPM](#executing-node-npm-commands)
-- [Làm việc với cơ sở dữ liệu](#interacting-with-sail-databases)
-    - [MySQL](#mysql)
-    - [MongoDB](#mongodb)
-    - [Redis](#redis)
-    - [Valkey](#valkey)
-    - [Meilisearch](#meilisearch)
-    - [Typesense](#typesense)
-- [Lưu trữ file](#file-storage)
-- [Chạy test](#running-tests)
-    - [Laravel Dusk](#laravel-dusk)
-- [Xem trước email](#previewing-emails)
-- [CLI của container](#sail-container-cli)
-- [Phiên bản PHP](#sail-php-versions)
-    - [PHP extension bổ sung](#sail-php-extensions)
-- [Phiên bản Node](#sail-node-versions)
-- [Chia sẻ website](#sharing-your-site)
-- [Debug với Xdebug](#debugging-with-xdebug)
-    - [Sử dụng Xdebug trên CLI](#xdebug-cli-usage)
-    - [Sử dụng Xdebug trên trình duyệt](#xdebug-browser-usage)
-- [Tùy biến](#sail-customization)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -571,9 +540,3 @@ Sau khi chạy lệnh này, Dockerfile và các file cấu hình khác của Lar
 ```shell
 sail build --no-cache
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/sail). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

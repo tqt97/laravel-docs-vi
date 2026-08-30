@@ -1,55 +1,5 @@
 # Laravel Cashier (Paddle)
 
-- [Giới thiệu](#introduction)
-- [Nâng cấp Cashier](#upgrading-cashier)
-- [Cài đặt](#installation)
-    - [Paddle Sandbox](#paddle-sandbox)
-- [Cấu hình](#configuration)
-    - [Model có thể thanh toán](#billable-model)
-    - [API key](#api-keys)
-    - [Paddle JS](#paddle-js)
-    - [Cấu hình tiền tệ](#currency-configuration)
-    - [Ghi đè model mặc định](#overriding-default-models)
-- [Bắt đầu nhanh](#quickstart)
-    - [Bán sản phẩm](#quickstart-selling-products)
-    - [Bán subscription](#quickstart-selling-subscriptions)
-- [Phiên checkout](#checkout-sessions)
-    - [Overlay Checkout](#overlay-checkout)
-    - [Inline Checkout](#inline-checkout)
-    - [Checkout cho khách](#guest-checkouts)
-- [Price Previews](#price-previews)
-    - [Customer Price Previews](#customer-price-previews)
-    - [Discounts](#price-discounts)
-- [Customers](#customers)
-    - [Customer Defaults](#customer-defaults)
-    - [Retrieving Customers](#retrieving-customers)
-    - [Creating Customers](#creating-customers)
-- [Subscriptions](#subscriptions)
-    - [Creating Subscriptions](#creating-subscriptions)
-    - [Checking Subscription Status](#checking-subscription-status)
-    - [Subscription Single Charges](#subscription-single-charges)
-    - [Updating Payment Information](#updating-payment-information)
-    - [Changing Plans](#changing-plans)
-    - [Subscription Quantity](#subscription-quantity)
-    - [Subscriptions With Multiple Products](#subscriptions-with-multiple-products)
-    - [Multiple Subscriptions](#multiple-subscriptions)
-    - [Pausing Subscriptions](#pausing-subscriptions)
-    - [Canceling Subscriptions](#canceling-subscriptions)
-- [Subscription Trials](#subscription-trials)
-    - [With Payment Method Up Front](#with-payment-method-up-front)
-    - [Without Payment Method Up Front](#without-payment-method-up-front)
-    - [Extend or Activate a Trial](#extend-or-activate-a-trial)
-- [Handling Paddle Webhooks](#handling-paddle-webhooks)
-    - [Defining Webhook Event Handlers](#defining-webhook-event-handlers)
-    - [Verifying Webhook Signatures](#verifying-webhook-signatures)
-- [Single Charges](#single-charges)
-    - [Charging for Products](#charging-for-products)
-    - [Refunding Transactions](#refunding-transactions)
-    - [Crediting Transactions](#crediting-transactions)
-- [Transactions](#transactions)
-    - [Past and Upcoming Payments](#past-and-upcoming-payments)
-- [Testing](#testing)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1581,9 +1531,3 @@ Next payment: {{ $nextPayment->amount() }} due on {{ $nextPayment->date()->forma
 Khi kiểm thử, bạn nên kiểm tra thủ công billing flow để đảm bảo integration hoạt động như mong đợi.
 
 Đối với automated test, bao gồm các test được chạy trong môi trường CI, bạn có thể sử dụng [HTTP Client của Laravel](/docs/{{version}}/http-client#testing) để giả lập các HTTP call gửi đến Paddle. Mặc dù cách này không kiểm thử response thực tế từ Paddle, nó cung cấp một phương thức để kiểm thử ứng dụng mà không thực sự gọi Paddle API.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/cashier-paddle). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,29 +1,5 @@
 # Starter Kit
 
-- [Giới thiệu](#introduction)
-- [Tạo ứng dụng bằng Starter Kit](#creating-an-application)
-- [Các Starter Kit hiện có](#available-starter-kits)
-    - [React](#react)
-    - [Svelte](#svelte)
-    - [Vue](#vue)
-    - [Livewire](#livewire)
-- [Tùy chỉnh Starter Kit](#starter-kit-customization)
-    - [React](#react-customization)
-    - [Svelte](#svelte-customization)
-    - [Vue](#vue-customization)
-    - [Livewire](#livewire-customization)
-- [Xác thực](#authentication)
-    - [Bật và tắt tính năng](#enabling-and-disabling-features)
-    - [Tùy chỉnh tạo người dùng và đặt lại mật khẩu](#customizing-actions)
-    - [Xác thực hai yếu tố](#two-factor-authentication)
-    - [Giới hạn tần suất](#rate-limiting)
-- [Team](#teams)
-- [Xác thực bằng WorkOS AuthKit](#workos)
-    - [Cấu hình WorkOS Starter Kit](#configuring-your-workos-starter-kit)
-- [Inertia SSR](#inertia-ssr)
-- [Starter Kit do cộng đồng duy trì](#community-maintained-starter-kits)
-- [Câu hỏi thường gặp](#faqs)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -591,9 +567,3 @@ php artisan vendor:publish --tag=laravel-mail
 ```
 
 Lệnh này sẽ tạo một số file trong `resources/views/vendor/mail`. Bạn có thể sửa bất kỳ file nào trong số đó, cũng như file `resources/views/vendor/mail/themes/default.css`, để thay đổi giao diện của mẫu email mặc định.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/starter-kits). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

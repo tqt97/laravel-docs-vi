@@ -1,15 +1,5 @@
 # Đa ngôn ngữ
-- [Giới thiệu](#introduction)
-    - [Xuất bản các file ngôn ngữ](#publishing-the-language-files)
-    - [Cấu hình locale](#configuring-the-locale)
-    - [Ngôn ngữ dùng để biến đổi số ít / số nhiều](#pluralization-language)
-- [Định nghĩa chuỗi dịch](#defining-translation-strings)
-    - [Dùng key ngắn](#using-short-keys)
-    - [Dùng chính chuỗi dịch làm key](#using-translation-strings-as-keys)
-- [Lấy chuỗi dịch](#retrieving-translation-strings)
-    - [Thay thế tham số trong chuỗi dịch](#replacing-parameters-in-translation-strings)
-    - [Xử lý số ít / số nhiều](#pluralization)
-- [Ghi đè file ngôn ngữ của package](#overriding-package-language-files)
+
 <a name="introduction"></a>
 ## Giới thiệu
 > [!NOTE]
@@ -220,7 +210,3 @@ Nếu muốn hiển thị giá trị số nguyên được truyền vào `trans_
 ## Ghi đè file ngôn ngữ của package
 Một số package đi kèm file ngôn ngữ riêng. Thay vì sửa trực tiếp các file lõi của package, bạn có thể ghi đè chúng bằng cách đặt file tương ứng trong thư mục `lang/vendor/{package}/{locale}`.
 Ví dụ, nếu cần ghi đè các chuỗi tiếng Anh trong `messages.php` của package `skyrim/hearthfire`, hãy tạo file tại `lang/vendor/hearthfire/en/messages.php`. Trong file này, chỉ cần định nghĩa những chuỗi bạn muốn ghi đè; các chuỗi còn lại vẫn được nạp từ file ngôn ngữ gốc của package.
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/localization). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

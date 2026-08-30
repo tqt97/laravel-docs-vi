@@ -1,23 +1,5 @@
 # Laravel Reverb
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-- [Cấu hình](#configuration)
-    - [Thông tin xác thực ứng dụng](#application-credentials)
-    - [Origin được phép](#allowed-origins)
-    - [Nhiều ứng dụng](#additional-applications)
-    - [SSL](#ssl)
-- [Chạy server](#running-server)
-    - [Gỡ lỗi](#debugging)
-    - [Khởi động lại](#restarting)
-- [Giám sát](#monitoring)
-- [Chạy Reverb trong production](#production)
-    - [Số file đang mở](#open-files)
-    - [Vòng lặp sự kiện](#event-loop)
-    - [Web server](#web-server)
-    - [Cổng](#ports)
-    - [Quản lý process](#process-management)
-    - [Mở rộng hệ thống](#scaling)
-- [Sự kiện](#events)
+
 <a name="introduction"></a>
 ## Giới thiệu
 [Laravel Reverb](https://github.com/laravel/reverb) mang khả năng giao tiếp WebSocket real-time nhanh và có thể mở rộng trực tiếp vào ứng dụng Laravel, đồng thời tích hợp liền mạch với bộ công cụ [event broadcasting](/docs/{{version}}/broadcasting) hiện có của Laravel.
@@ -265,7 +247,3 @@ Các sự kiện sau được Reverb dispatch:
 #### `Laravel\Reverb\Events\MessageSent`
 
 Được dispatch khi thông điệp được gửi tới kết nối client. Sự kiện nhận instance `Laravel\Reverb\Contracts\Connection` và chuỗi thô `$message`.
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/reverb). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

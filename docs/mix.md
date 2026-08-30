@@ -1,7 +1,5 @@
 # Laravel Mix
 
-- [Giới thiệu](#introduction)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -21,9 +19,3 @@ Nếu bạn từng thấy webpack và quy trình biên dịch asset khó tiếp 
 
 > [!NOTE]
 > Vite đã thay thế Laravel Mix trong các bản cài đặt Laravel mới. Để đọc tài liệu Mix, hãy truy cập website [Laravel Mix chính thức](https://laravel-mix.com/). Nếu muốn chuyển sang Vite, hãy xem [hướng dẫn migration sang Vite](https://github.com/laravel/vite-plugin/blob/main/UPGRADE.md#migrating-from-laravel-mix-to-vite).
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/mix). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

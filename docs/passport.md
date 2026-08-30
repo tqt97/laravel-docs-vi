@@ -1,53 +1,5 @@
 # Laravel Passport
 
-- [Giới thiệu](#introduction)
-    - [Passport hay Sanctum?](#passport-or-sanctum)
-- [Cài đặt](#installation)
-    - [Triển khai Passport](#deploying-passport)
-    - [Nâng cấp Passport](#upgrading-passport)
-- [Cấu hình](#configuration)
-    - [Thời hạn token](#token-lifetimes)
-    - [Ghi đè model mặc định](#overriding-default-models)
-    - [Ghi đè route](#overriding-routes)
-- [Authorization Code Grant](#authorization-code-grant)
-    - [Quản lý client](#managing-clients)
-    - [Yêu cầu token](#requesting-tokens)
-    - [Quản lý token](#managing-tokens)
-    - [Làm mới token](#refreshing-tokens)
-    - [Thu hồi token](#revoking-tokens)
-    - [Dọn dẹp token](#purging-tokens)
-- [Authorization Code Grant với PKCE](#code-grant-pkce)
-    - [Tạo client](#creating-a-auth-pkce-grant-client)
-    - [Yêu cầu token](#requesting-auth-pkce-grant-tokens)
-- [Device Authorization Grant](#device-authorization-grant)
-    - [Tạo Device Code Grant Client](#creating-a-device-authorization-grant-client)
-    - [Yêu cầu token](#requesting-device-authorization-grant-tokens)
-- [Password Grant](#password-grant)
-    - [Tạo Password Grant Client](#creating-a-password-grant-client)
-    - [Yêu cầu token](#requesting-password-grant-tokens)
-    - [Yêu cầu tất cả scope](#requesting-all-scopes)
-    - [Tùy chỉnh User Provider](#customizing-the-user-provider)
-    - [Tùy chỉnh trường Username](#customizing-the-username-field)
-    - [Tùy chỉnh xác thực Password](#customizing-the-password-validation)
-- [Implicit Grant](#implicit-grant)
-- [Client Credentials Grant](#client-credentials-grant)
-    - [Lấy token](#retrieving-tokens)
-- [Personal Access Token](#personal-access-tokens)
-    - [Tạo Personal Access Client](#creating-a-personal-access-client)
-    - [Tùy chỉnh User Provider](#customizing-the-user-provider-for-pat)
-    - [Quản lý Personal Access Token](#managing-personal-access-tokens)
-- [Bảo vệ route](#protecting-routes)
-    - [Qua middleware](#via-middleware)
-    - [Truyền Access Token](#passing-the-access-token)
-- [Token Scope](#token-scopes)
-    - [Định nghĩa scope](#defining-scopes)
-    - [Scope mặc định](#default-scope)
-    - [Gán scope cho token](#assigning-scopes-to-tokens)
-    - [Kiểm tra scope](#checking-scopes)
-- [Xác thực SPA](#spa-authentication)
-- [Sự kiện](#events)
-- [Kiểm thử](#testing)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1429,9 +1381,3 @@ public function test_servers_can_be_retrieved(): void
     $response->assertStatus(200);
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/passport). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

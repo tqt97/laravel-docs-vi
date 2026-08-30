@@ -1,26 +1,5 @@
 # HTTP Request
 
-- [Giới thiệu](#introduction)
-- [Tương tác với Request](#interacting-with-the-request)
-    - [Truy cập Request](#accessing-the-request)
-    - [Path, Host và Method của Request](#request-path-and-method)
-    - [Header của Request](#request-headers)
-    - [Địa chỉ IP của Request](#request-ip-address)
-    - [Content Negotiation](#content-negotiation)
-    - [PSR-7 Requests](#psr7-requests)
-- [Dữ liệu đầu vào](#input)
-    - [Lấy dữ liệu đầu vào](#retrieving-input)
-    - [Kiểm tra sự tồn tại của dữ liệu đầu vào](#input-presence)
-    - [Gộp thêm dữ liệu đầu vào](#merging-additional-input)
-    - [Dữ liệu đầu vào cũ](#old-input)
-    - [Cookies](#cookies)
-    - [Cắt khoảng trắng và chuẩn hóa dữ liệu đầu vào](#input-trimming-and-normalization)
-- [File](#files)
-    - [Lấy file đã upload](#retrieving-uploaded-files)
-    - [Lưu file đã upload](#storing-uploaded-files)
-- [Cấu hình Trusted Proxy](#configuring-trusted-proxies)
-- [Cấu hình Trusted Host](#configuring-trusted-hosts)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -887,9 +866,3 @@ Nếu cần truy cập file cấu hình hoặc database của ứng dụng để
     $middleware->trustHosts(at: fn () => config('app.trusted_hosts'));
 })
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/requests). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

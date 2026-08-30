@@ -1,26 +1,5 @@
 # HTTP Responses (Phản hồi HTTP)
 
-- [Tạo response](#creating-responses)
-    - [Gắn header vào response](#attaching-headers-to-responses)
-    - [Gắn cookie vào response](#attaching-cookies-to-responses)
-    - [Cookie và mã hóa](#cookies-and-encryption)
-- [Chuyển hướng](#redirects)
-    - [Chuyển hướng đến route có tên](#redirecting-named-routes)
-    - [Chuyển hướng đến action của controller](#redirecting-controller-actions)
-    - [Chuyển hướng đến domain bên ngoài](#redirecting-external-domains)
-    - [Chuyển hướng kèm dữ liệu flash trong session](#redirecting-with-flashed-session-data)
-- [Các loại response khác](#other-response-types)
-    - [View response](#view-responses)
-    - [JSON response](#json-responses)
-    - [Tải file](#file-downloads)
-    - [File response](#file-responses)
-- [Streamed response](#streamed-responses)
-    - [Tiêu thụ streamed response](#consuming-streamed-responses)
-    - [Streamed JSON response](#streamed-json-responses)
-    - [Event stream (SSE)](#event-streams)
-    - [Tải xuống dạng stream](#streamed-downloads)
-- [Response macro](#response-macros)
-
 <a name="creating-responses"></a>
 ## Tạo response
 
@@ -1088,9 +1067,3 @@ Hàm `macro` nhận tên macro làm đối số thứ nhất và closure làm đ
 ```php
 return response()->caps('foo');
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/responses). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

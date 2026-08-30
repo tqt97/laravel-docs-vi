@@ -1,25 +1,5 @@
 # Eloquent: Mutator và Ép kiểu
 
-- [Giới thiệu](#introduction)
-- [Accessor và Mutator](#accessors-and-mutators)
-    - [Định nghĩa Accessor](#defining-an-accessor)
-    - [Định nghĩa Mutator](#defining-a-mutator)
-- [Ép kiểu thuộc tính](#attribute-casting)
-    - [Ép kiểu Array và JSON](#array-and-json-casting)
-    - [Ép kiểu Vector](#vector-casting)
-    - [Ép kiểu Binary](#binary-casting)
-    - [Ép kiểu Date](#date-casting)
-    - [Ép kiểu Enum](#enum-casting)
-    - [Ép kiểu mã hóa](#encrypted-casting)
-    - [Ép kiểu tại thời điểm truy vấn](#query-time-casting)
-- [Custom Cast](#custom-casts)
-    - [Ép kiểu Value Object](#value-object-casting)
-    - [Tuần tự hóa Array / JSON](#array-json-serialization)
-    - [Inbound Casting](#inbound-casting)
-    - [Tham số của Cast](#cast-parameters)
-    - [So sánh giá trị Cast](#comparing-cast-values)
-    - [Castable](#castables)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1122,9 +1102,3 @@ class Address implements Castable
     }
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/eloquent-mutators). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

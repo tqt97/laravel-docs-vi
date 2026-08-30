@@ -1,29 +1,5 @@
 # Database: Migration
 
-- [Giới thiệu](#introduction)
-- [Tạo migration](#generating-migrations)
-    - [Gộp migration](#squashing-migrations)
-- [Cấu trúc migration](#migration-structure)
-- [Chạy migration](#running-migrations)
-    - [Rollback migration](#rolling-back-migrations)
-- [Bảng](#tables)
-    - [Tạo bảng](#creating-tables)
-    - [Cập nhật bảng](#updating-tables)
-    - [Đổi tên / Xóa bảng](#renaming-and-dropping-tables)
-- [Cột](#columns)
-    - [Tạo cột](#creating-columns)
-    - [Các kiểu cột khả dụng](#available-column-types)
-    - [Các modifier của cột](#column-modifiers)
-    - [Thay đổi cột](#modifying-columns)
-    - [Đổi tên cột](#renaming-columns)
-    - [Xóa cột](#dropping-columns)
-- [Index](#indexes)
-    - [Tạo index](#creating-indexes)
-    - [Đổi tên index](#renaming-indexes)
-    - [Xóa index](#dropping-indexes)
-    - [Ràng buộc khóa ngoại](#foreign-key-constraints)
-- [Event](#events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1635,9 +1611,3 @@ Schema::withoutForeignKeyConstraints(function () {
 | `Illuminate\Database\Events\SchemaLoaded`        | Một bản dump schema hiện có đã được nạp.          |
 
 </div>
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/migrations). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,25 +1,5 @@
 # HTTP Client
 
-- [Giới thiệu](#introduction)
-- [Thực hiện request](#making-requests)
-    - [Dữ liệu request](#request-data)
-    - [Header](#headers)
-    - [Xác thực](#authentication)
-    - [Timeout](#timeout)
-    - [Thử lại](#retries)
-    - [Xử lý lỗi](#error-handling)
-    - [Guzzle Middleware](#guzzle-middleware)
-    - [Guzzle Options](#guzzle-options)
-- [Request đồng thời](#concurrent-requests)
-    - [Gom request theo pool](#request-pooling)
-    - [Gom request theo batch](#request-batching)
-- [Macros](#macros)
-- [Kiểm thử](#testing)
-    - [Giả lập response](#faking-responses)
-    - [Kiểm tra request](#inspecting-requests)
-    - [Ngăn request ngoài dự kiến](#preventing-stray-requests)
-- [Event](#events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -986,9 +966,3 @@ class LogRequest
     }
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/http-client). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,23 +1,5 @@
 # Kiểm thử HTTP
 
-- [Giới thiệu](#introduction)
-- [Thực hiện request](#making-requests)
-    - [Tùy chỉnh header của request](#customizing-request-headers)
-    - [Cookie](#cookies)
-    - [Session / Xác thực](#session-and-authentication)
-    - [Debug response](#debugging-responses)
-    - [Xử lý exception](#exception-handling)
-- [Kiểm thử JSON API](#testing-json-apis)
-    - [Kiểm thử JSON theo Fluent API](#fluent-json-testing)
-- [Kiểm thử upload file](#testing-file-uploads)
-- [Kiểm thử View](#testing-views)
-    - [Rendering Blade and Components](#rendering-blade-and-components)
-- [Caching Routes](#caching-routes)
-- [Các assertion khả dụng](#available-assertions)
-    - [Response Assertions](#response-assertions)
-    - [Authentication Assertions](#authentication-assertions)
-    - [Validation Assertions](#validation-assertions)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -2175,9 +2157,3 @@ $response->assertInvalid([
     'email' => 'valid email address',
 ]);
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/http-tests). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

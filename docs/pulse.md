@@ -1,27 +1,5 @@
 # Laravel Pulse
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Cấu hình](#configuration)
-- [Dashboard](#dashboard)
-    - [Phân quyền](#dashboard-authorization)
-    - [Tùy biến](#dashboard-customization)
-    - [Phân giải người dùng](#dashboard-resolving-users)
-    - [Các card](#dashboard-cards)
-- [Thu thập entry](#capturing-entries)
-    - [Recorders](#recorders)
-    - [Filtering](#filtering)
-- [Performance](#performance)
-    - [Using a Different Database](#using-a-different-database)
-    - [Redis Ingest](#ingest)
-    - [Sampling](#sampling)
-    - [Trimming](#trimming)
-    - [Handling Pulse Exceptions](#pulse-exceptions)
-- [Custom Cards](#custom-cards)
-    - [Card Components](#custom-card-components)
-    - [Styling](#custom-card-styling)
-    - [Data Capture and Aggregation](#custom-card-data)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -821,9 +799,3 @@ class Deployments
     }
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/pulse). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

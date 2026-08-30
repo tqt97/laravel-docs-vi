@@ -1,25 +1,5 @@
 # Process
 
-- [Giới thiệu](#introduction)
-- [Gọi process](#invoking-processes)
-    - [Tùy chọn process](#process-options)
-    - [Đầu ra của process](#process-output)
-    - [Pipeline](#process-pipelines)
-- [Process bất đồng bộ](#asynchronous-processes)
-    - [Process ID và signal](#process-ids-and-signals)
-    - [Đầu ra của process bất đồng bộ](#asynchronous-process-output)
-    - [Timeout của process bất đồng bộ](#asynchronous-process-timeouts)
-- [Process đồng thời](#concurrent-processes)
-    - [Đặt tên process trong pool](#naming-pool-processes)
-    - [Process ID và signal trong pool](#pool-process-ids-and-signals)
-- [Testing](#testing)
-    - [Fake process](#faking-processes)
-    - [Fake process cụ thể](#faking-specific-processes)
-    - [Fake chuỗi process](#faking-process-sequences)
-    - [Fake vòng đời process bất đồng bộ](#faking-asynchronous-process-lifecycles)
-    - [Các assertion có sẵn](#available-assertions)
-    - [Ngăn process ngoài dự kiến](#preventing-stray-processes)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -685,9 +665,3 @@ Process::run('ls -la');
 // An exception is thrown...
 Process::run('bash import.sh');
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/processes). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

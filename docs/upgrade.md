@@ -1,8 +1,5 @@
 # Hướng dẫn nâng cấp
 
-- [Nâng cấp từ 12.x lên 13.0](#upgrade-13.0)
-    - [Nâng cấp bằng AI](#upgrading-using-ai)
-
 <a name="high-impact-changes"></a>
 ## Thay đổi có mức ảnh hưởng cao
 
@@ -491,7 +488,3 @@ Nếu ứng dụng tham chiếu trực tiếp tên pagination view cũ, hãy c�
 Laravel cũng khuyến nghị bạn xem các thay đổi trong [repository `laravel/laravel`](https://github.com/laravel/laravel). Nhiều thay đổi không bắt buộc nhưng bạn có thể muốn giữ các file này đồng bộ với ứng dụng. Một số thay đổi được đề cập trong upgrade guide, nhưng các thay đổi khác như file cấu hình hoặc comment sẽ không được ghi lại.
 
 Bạn có thể dễ dàng xem các thay đổi bằng [GitHub comparison tool](https://github.com/laravel/laravel/compare/12.x...13.x) và chọn những update quan trọng với ứng dụng của mình.
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/upgrade). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

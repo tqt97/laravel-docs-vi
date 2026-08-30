@@ -1,41 +1,5 @@
 # Đóng gói Asset (Vite)
 
-- [Giới thiệu](#introduction)
-- [Cài đặt & Thiết lập](#installation)
-  - [Cài đặt Node](#installing-node)
-  - [Cài đặt Vite và Laravel Plugin](#installing-vite-and-laravel-plugin)
-  - [Cấu hình Vite](#configuring-vite)
-  - [Nạp Script và Style](#loading-your-scripts-and-styles)
-- [Chạy Vite](#running-vite)
-- [Làm việc với JavaScript](#working-with-scripts)
-  - [Alias](#aliases)
-  - [Vue](#vue)
-  - [React](#react)
-  - [Svelte](#svelte)
-  - [Inertia](#inertia)
-  - [URL Processing](#url-processing)
-- [Làm việc với Stylesheet](#working-with-stylesheets)
-- [Làm việc với Font](#working-with-fonts)
-  - [Font Providers](#font-providers)
-  - [Local Fonts](#local-fonts)
-  - [Font Options](#font-options)
-- [Làm việc với Blade và Route](#working-with-blade-and-routes)
-  - [Processing Static Assets With Vite](#blade-processing-static-assets)
-  - [Refreshing on Save](#blade-refreshing-on-save)
-  - [Aliases](#blade-aliases)
-- [Prefetch Asset](#asset-prefetching)
-- [Base URL tùy chỉnh](#custom-base-urls)
-- [Biến môi trường](#environment-variables)
-- [Tắt Vite trong Test](#disabling-vite-in-tests)
-- [Server-Side Rendering (SSR)](#ssr)
-- [Attribute của thẻ Script và Style](#script-and-style-attributes)
-  - [Content Security Policy (CSP) Nonce](#content-security-policy-csp-nonce)
-  - [Subresource Integrity (SRI)](#subresource-integrity-sri)
-  - [Arbitrary Attributes](#arbitrary-attributes)
-- [Tùy chỉnh nâng cao](#advanced-customization)
-  - [Dev Server Cross-Origin Resource Sharing (CORS)](#cors)
-  - [Correcting Dev Server URLs](#correcting-dev-server-urls)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1178,9 +1142,3 @@ Khi Vite đang phục vụ asset, URL đầu ra lúc này sẽ trỏ đến Vite
 - <img src="/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520"><!-- [tl! remove] -->
 + <img src="http://[::1]:5173/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520"><!-- [tl! add] -->
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/vite). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

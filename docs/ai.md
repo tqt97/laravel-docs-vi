@@ -1,15 +1,5 @@
 # Phát triển với sự hỗ trợ của AI
 
-- [Giới thiệu](#introduction)
-    - [Vì sao Laravel phù hợp cho phát triển với AI?](#why-laravel-for-ai-development)
-- [Laravel Boost](#laravel-boost)
-    - [Cài đặt](#installation)
-    - [Các công cụ có sẵn](#available-tools)
-    - [AI Guidelines](#ai-guidelines)
-    - [Agent Skills](#agent-skills)
-    - [Tìm kiếm tài liệu](#documentation-search)
-    - [Tích hợp Agent](#agents-integration)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -107,9 +97,3 @@ Khi agent cần hiểu một feature, nó có thể tìm trong Boost documentati
 ### Tích hợp Agent
 
 Boost tích hợp với các IDE và AI tool phổ biến hỗ trợ Model Context Protocol. Để xem hướng dẫn cài đặt chi tiết cho Cursor, Claude Code, Codex, Gemini CLI, GitHub Copilot và Junie, hãy xem phần [Set Up Your Agents](/docs/{{version}}/boost#set-up-your-agents) trong tài liệu Boost.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/ai). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

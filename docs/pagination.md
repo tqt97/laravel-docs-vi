@@ -1,20 +1,5 @@
 # Cơ sở dữ liệu: Phân trang
 
-- [Giới thiệu](#introduction)
-- [Cách sử dụng cơ bản](#basic-usage)
-    - [Phân trang kết quả Query Builder](#paginating-query-builder-results)
-    - [Phân trang kết quả Eloquent](#paginating-eloquent-results)
-    - [Phân trang bằng cursor](#cursor-pagination)
-    - [Tạo paginator thủ công](#manually-creating-a-paginator)
-    - [Tùy chỉnh URL phân trang](#customizing-pagination-urls)
-- [Hiển thị kết quả phân trang](#displaying-pagination-results)
-    - [Điều chỉnh cửa sổ liên kết phân trang](#adjusting-the-pagination-link-window)
-    - [Chuyển kết quả sang JSON](#converting-results-to-json)
-- [Tùy chỉnh view phân trang](#customizing-the-pagination-view)
-    - [Sử dụng Bootstrap](#using-bootstrap)
-- [Các phương thức của instance Paginator và LengthAwarePaginator](#paginator-instance-methods)
-- [Các phương thức của Cursor Paginator](#cursor-paginator-instance-methods)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -415,9 +400,3 @@ Mỗi cursor paginator instance cung cấp thêm thông tin phân trang thông q
 | `$paginator->url($cursor)`      | Lấy URL cho một cursor instance cụ thể.                          |
 
 </div>
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/pagination). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

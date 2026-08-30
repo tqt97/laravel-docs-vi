@@ -1,18 +1,5 @@
 # View
 
-- [Giới thiệu](#introduction)
-    - [Viết view bằng React / Svelte / Vue](#writing-views-in-react-svelte-or-vue)
-- [Tạo và render view](#creating-and-rendering-views)
-    - [Thư mục view lồng nhau](#nested-view-directories)
-    - [Tạo view khả dụng đầu tiên](#creating-the-first-available-view)
-    - [Kiểm tra view có tồn tại](#determining-if-a-view-exists)
-- [Truyền dữ liệu vào view](#passing-data-to-views)
-    - [Chia sẻ dữ liệu với tất cả view](#sharing-data-with-all-views)
-- [View Composer](#view-composers)
-    - [Gắn composer vào nhiều view](#attaching-a-composer-to-multiple-views)
-- [View Creator](#view-creators)
-- [Tối ưu view](#optimizing-views)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -294,7 +281,3 @@ Bạn có thể sử dụng lệnh `view:clear` để xóa view cache:
 ```shell
 php artisan view:clear
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/views). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

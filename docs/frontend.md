@@ -1,13 +1,5 @@
 # Frontend
-- [Giới thiệu](#introduction)
-- [Sử dụng PHP](#using-php)
-    - [PHP và Blade](#php-and-blade)
-    - [Livewire](#livewire)
-    - [Starter Kit](#php-starter-kits)
-- [Sử dụng React, Svelte hoặc Vue](#using-react-svelte-or-vue)
-    - [Inertia](#inertia)
-    - [Starter Kit](#inertia-starter-kits)
-- [Đóng gói tài nguyên](#bundling-assets)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Laravel là framework backend cung cấp đầy đủ tính năng cần thiết để xây dựng ứng dụng web hiện đại như [routing](/docs/{{version}}/routing), [validation](/docs/{{version}}/validation), [caching](/docs/{{version}}/cache), [queues](/docs/{{version}}/queues), [file storage](/docs/{{version}}/filesystem) và nhiều hơn nữa. Tuy nhiên, Laravel cũng hướng tới trải nghiệm full-stack hoàn chỉnh, bao gồm các cách mạnh mẽ để xây dựng frontend.
@@ -129,7 +121,3 @@ Mặc định Laravel dùng [Vite](https://vitejs.dev) để đóng gói tài ng
 Cách nhanh nhất để bắt đầu Laravel + Vite là dùng [application starter kit](/docs/{{version}}/starter-kits), vốn đã cung cấp scaffolding authentication cho frontend và backend.
 > [!NOTE]
 > Để tìm hiểu chi tiết cách dùng Vite với Laravel, hãy xem [tài liệu Vite dành riêng cho asset bundling](/docs/{{version}}/vite).
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/frontend). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

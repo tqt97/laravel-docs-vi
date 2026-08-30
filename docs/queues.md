@@ -1,68 +1,5 @@
 # Hàng đợi
 
-- [Introduction](#introduction)
-    - [Connections vs. Queues](#connections-vs-queues)
-    - [Driver Notes and Prerequisites](#driver-prerequisites)
-- [Creating Jobs](#creating-jobs)
-    - [Generating Job Classes](#generating-job-classes)
-    - [Class Structure](#class-structure)
-    - [Unique Jobs](#unique-jobs)
-    - [Debounced Jobs](#debounced-jobs)
-    - [Encrypted Jobs](#encrypted-jobs)
-- [Job Middleware](#job-middleware)
-    - [Rate Limiting](#rate-limiting)
-    - [Preventing Job Overlaps](#preventing-job-overlaps)
-    - [Throttling Exceptions](#throttling-exceptions)
-    - [Releasing Jobs](#releasing-jobs)
-    - [Skipping Jobs](#skipping-jobs)
-- [Dispatching Jobs](#dispatching-jobs)
-    - [Delayed Dispatching](#delayed-dispatching)
-    - [Synchronous Dispatching](#synchronous-dispatching)
-    - [Bulk Dispatching](#bulk-dispatching)
-    - [Preparing Jobs Before Dispatch](#preparing-jobs-before-dispatch)
-    - [Jobs & Database Transactions](#jobs-and-database-transactions)
-    - [Job Chaining](#job-chaining)
-    - [Customizing The Queue and Connection](#customizing-the-queue-and-connection)
-    - [Specifying Max Job Attempts / Timeout Values](#max-job-attempts-and-timeout)
-    - [SQS FIFO và Fair Queue](#sqs-fifo-and-fair-queues)
-    - [Queue Failover](#queue-failover)
-    - [Error Handling](#error-handling)
-- [Job Batching](#job-batching)
-    - [Defining Batchable Jobs](#defining-batchable-jobs)
-    - [Dispatching Batches](#dispatching-batches)
-    - [Chains and Batches](#chains-and-batches)
-    - [Adding Jobs to Batches](#adding-jobs-to-batches)
-    - [Inspecting Batches](#inspecting-batches)
-    - [Cancelling Batches](#cancelling-batches)
-    - [Batch Failures](#batch-failures)
-    - [Pruning Batches](#pruning-batches)
-    - [Lưu batch trong DynamoDB](#storing-batches-in-dynamodb)
-- [Queueing Closures](#queueing-closures)
-- [Running the Queue Worker](#running-the-queue-worker)
-    - [The `queue:work` Command](#the-queue-work-command)
-    - [Queue Priorities](#queue-priorities)
-    - [Queue Workers and Deployment](#queue-workers-and-deployment)
-    - [Reacting to Worker Signals](#reacting-to-worker-signals)
-    - [Job Expirations and Timeouts](#job-expirations-and-timeouts)
-    - [Pausing and Resuming Queue Workers](#pausing-and-resuming-queue-workers)
-- [Supervisor Configuration](#supervisor-configuration)
-- [Dealing With Failed Jobs](#dealing-with-failed-jobs)
-    - [Cleaning Up After Failed Jobs](#cleaning-up-after-failed-jobs)
-    - [Retrying Failed Jobs](#retrying-failed-jobs)
-    - [Ignoring Missing Models](#ignoring-missing-models)
-    - [Pruning Failed Jobs](#pruning-failed-jobs)
-    - [Storing Failed Jobs in DynamoDB](#storing-failed-jobs-in-dynamodb)
-    - [Disabling Failed Job Storage](#disabling-failed-job-storage)
-    - [Failed Job Events](#failed-job-events)
-- [Clearing Jobs From Queues](#clearing-jobs-from-queues)
-- [Monitoring Your Queues](#monitoring-your-queues)
-- [Testing](#testing)
-    - [Faking a Subset of Jobs](#faking-a-subset-of-jobs)
-    - [Testing Job Chains](#testing-job-chains)
-    - [Testing Job Batches](#testing-job-batches)
-    - [Testing Job / Queue Interactions](#testing-job-queue-interactions)
-- [Job Events](#job-events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1832,7 +1769,7 @@ class ProcessOrder implements ShouldQueue
 ```
 
 <a name="fifo-listeners-mail-and-notifications"></a>
-#### FIFO Listeners, Mail, and Notifications
+#### Listener, Mail và Notification theo FIFO
 
 Khi sử dụng queue FIFO, bạn cũng cần định nghĩa message group cho listener, mail và notification. Hoặc bạn có thể dispatch các instance được queue của những đối tượng này sang một queue không phải FIFO.
 
@@ -1935,7 +1872,7 @@ Khi thao tác trên queue connection thất bại và failover được kích ho
 Nếu một exception được ném ra trong khi job đang được xử lý, job sẽ tự động được release trở lại queue để có thể thử lại. Job tiếp tục được release cho đến khi đạt số lần thử tối đa mà ứng dụng cho phép. Số lần thử tối đa được định nghĩa bởi tùy chọn `--tries` của lệnh Artisan `queue:work`. Ngoài ra, số lần thử tối đa cũng có thể được định nghĩa ngay trên class job. Thông tin chi tiết về cách chạy queue worker [được trình bày bên dưới](#running-the-queue-worker).
 
 <a name="manually-releasing-a-job"></a>
-#### Manually Releasing a Job
+#### Giải phóng job thủ công
 
 Đôi khi bạn có thể muốn tự đưa job trở lại queue để thử lại vào thời điểm sau. Bạn có thể thực hiện việc này bằng cách gọi phương thức `release`:
 
@@ -1960,7 +1897,7 @@ $this->release(now()->plus(seconds: 10));
 ```
 
 <a name="manually-failing-a-job"></a>
-#### Manually Failing a Job
+#### Đánh dấu job thất bại thủ công
 
 Đôi khi bạn cần tự đánh dấu một job là "failed". Để làm điều đó, bạn có thể gọi method `fail`:
 
@@ -3585,9 +3522,3 @@ Event::listen(function (WorkerIdle $event) {
     // $event->workerOptions
 });
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/queues). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

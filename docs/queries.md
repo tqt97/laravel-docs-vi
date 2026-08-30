@@ -1,42 +1,5 @@
 # Cơ sở dữ liệu: Query Builder
 
-- [Giới thiệu](#introduction)
-- [Thực thi truy vấn cơ sở dữ liệu](#running-database-queries)
-    - [Chia kết quả thành từng khối](#chunking-results)
-    - [Duyệt kết quả theo kiểu lazy](#streaming-results-lazily)
-    - [Các hàm tổng hợp](#aggregates)
-- [Câu lệnh Select](#select-statements)
-- [Biểu thức Raw](#raw-expressions)
-- [Join](#joins)
-- [Union](#unions)
-- [Các mệnh đề Where cơ bản](#basic-where-clauses)
-    - [Where Clauses](#where-clauses)
-    - [Or Where Clauses](#or-where-clauses)
-    - [Where Not Clauses](#where-not-clauses)
-    - [Where Any / All / None Clauses](#where-any-all-none-clauses)
-    - [JSON Where Clauses](#json-where-clauses)
-    - [Additional Where Clauses](#additional-where-clauses)
-    - [Logical Grouping](#logical-grouping)
-- [Các mệnh đề Where nâng cao](#advanced-where-clauses)
-    - [Where Exists Clauses](#where-exists-clauses)
-    - [Subquery Where Clauses](#subquery-where-clauses)
-    - [Full Text Where Clauses](#full-text-where-clauses)
-    - [Vector Similarity Clauses](#vector-similarity-clauses)
-- [Sắp xếp, nhóm, giới hạn và offset](#ordering-grouping-limit-and-offset)
-    - [Ordering](#ordering)
-    - [Grouping](#grouping)
-    - [Limit and Offset](#limit-and-offset)
-- [Mệnh đề có điều kiện](#conditional-clauses)
-- [Câu lệnh Insert](#insert-statements)
-    - [Upserts](#upserts)
-- [Câu lệnh Update](#update-statements)
-    - [Updating JSON Columns](#updating-json-columns)
-    - [Increment and Decrement](#increment-and-decrement)
-- [Câu lệnh Delete](#delete-statements)
-- [Pessimistic Locking](#pessimistic-locking)
-- [Thành phần truy vấn có thể tái sử dụng](#reusable-query-components)
-- [Debug](#debugging)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1746,9 +1709,3 @@ DB::table('users')->where('votes', '>', 100)->dumpRawSql();
 
 DB::table('users')->where('votes', '>', 100)->ddRawSql();
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/queries). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

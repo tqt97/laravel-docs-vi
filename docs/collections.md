@@ -1,16 +1,5 @@
 # Collection
 
-- [Giới thiệu](#introduction)
-    - [Tạo Collection](#creating-collections)
-    - [Mở rộng Collection](#extending-collections)
-- [Các method khả dụng](#available-methods)
-- [Higher Order Messages](#higher-order-messages)
-- [Lazy Collection](#lazy-collections)
-    - [Giới thiệu](#lazy-collection-introduction)
-    - [Tạo Lazy Collection](#creating-lazy-collections)
-    - [Contract Enumerable](#the-enumerable-contract)
-    - [Các method của Lazy Collection](#lazy-collection-methods)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -4433,9 +4422,3 @@ if ($lock->get()) {
     }
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/collections). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

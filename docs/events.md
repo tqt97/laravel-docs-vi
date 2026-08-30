@@ -1,33 +1,5 @@
 # Sự kiện
 
-- [Giới thiệu](#introduction)
-- [Tạo Event và Listener](#generating-events-and-listeners)
-- [Đăng ký Event và Listener](#registering-events-and-listeners)
-    - [Tự động khám phá Event](#event-discovery)
-    - [Đăng ký Event thủ công](#manually-registering-events)
-    - [Closure Listener](#closure-listeners)
-- [Định nghĩa Event](#defining-events)
-- [Định nghĩa Listener](#defining-listeners)
-- [Event Listener trong Queue](#queued-event-listeners)
-    - [Tương tác thủ công với Queue](#manually-interacting-with-the-queue)
-    - [Queued Event Listener và Database Transaction](#queued-event-listeners-and-database-transactions)
-    - [Middleware cho Queued Listener](#queued-listener-middleware)
-    - [Encrypted Queued Listeners](#encrypted-queued-listeners)
-    - [Event Listener duy nhất](#unique-event-listeners)
-        - [Giữ Listener duy nhất cho đến khi bắt đầu xử lý](#keeping-listeners-unique-until-processing-begins)
-        - [Lock của Unique Listener](#unique-listener-locks)
-    - [Debounced Event Listener](#debounced-event-listeners)
-    - [Handling Failed Jobs](#handling-failed-jobs)
-- [Dispatch Event](#dispatching-events)
-    - [Dispatch Event sau Database Transaction](#dispatching-events-after-database-transactions)
-    - [Deferring Events](#deferring-events)
-- [Event Subscriber](#event-subscribers)
-    - [Viết Event Subscriber](#writing-event-subscribers)
-    - [Đăng ký Event Subscriber](#registering-event-subscribers)
-- [Kiểm thử](#testing)
-    - [Fake một tập con event](#faking-a-subset-of-events)
-    - [Fake Event theo phạm vi](#scoped-event-fakes)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1338,9 +1310,3 @@ class ExampleTest extends TestCase
     }
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/events). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

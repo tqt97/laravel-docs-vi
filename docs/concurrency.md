@@ -1,11 +1,5 @@
 # Thực thi đồng thời (Concurrency)
 
-- [Giới thiệu](#introduction)
-- [Chạy các tác vụ đồng thời](#running-concurrent-tasks)
-    - [Kết quả có tên](#named-results)
-    - [Thời gian chờ của tác vụ](#task-timeouts)
-- [Trì hoãn các tác vụ đồng thời](#deferring-concurrent-tasks)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -110,9 +104,3 @@ Concurrency::defer([
     fn () => Metrics::report('orders'),
 ]);
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/concurrency). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,20 +1,5 @@
 # Xử lý hình ảnh
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Cấu hình](#configuration)
-- [Đọc Image](#reading-images)
-    - [Uploaded Files](#uploaded-files)
-    - [Storage Files](#storage-files)
-    - [Nguồn khác](#other-sources)
-- [Biến đổi Image](#manipulating-images)
-    - [Resize Image](#resizing-images)
-    - [Các Transformation khác](#other-transformations)
-- [Encode Image](#encoding-images)
-- [Lưu Image](#storing-images)
-- [Đọc thông tin Image](#inspecting-images)
-- [Image Drivers](#image-drivers)
-    - [Custom Image Drivers](#custom-image-drivers)
-    - [Custom Transformations](#custom-transformations)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Laravel cung cấp API fluent để xử lý image, cho phép resize, crop, encode và lưu ảnh theo cùng convention biểu đạt quen thuộc của framework. Khả năng xử lý ảnh của Laravel được xây trên [Intervention Image](https://image.intervention.io/) và hỗ trợ PHP extension GD cùng Imagick.
@@ -350,7 +335,3 @@ $image = $request->image('avatar')
     ->transform(new Pixelate(12))
     ->store('avatars');
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/images). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

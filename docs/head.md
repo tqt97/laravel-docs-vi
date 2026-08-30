@@ -1,30 +1,5 @@
 # Laravel Head
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-- [Bắt đầu nhanh](#quickstart)
-- [Thứ tự ưu tiên khi phân giải](#resolution-precedence)
-- [Định nghĩa metadata](#defining-metadata)
-    - [Giá trị mặc định](#defaults)
-    - [Metadata của route](#route-metadata)
-    - [Metadata tại runtime](#runtime-metadata)
-    - [Trang lỗi](#error-pages)
-- [Open Graph](#open-graph)
-    - [X / Twitter Cards](#twitter-cards)
-- [Theme Colors](#theme-colors)
-- [Application Metadata and Icons](#app-metadata-and-icons)
-- [Progressive Web Apps](#progressive-web-apps)
-- [Hiệu năng và khả năng khám phá](#performance-and-discovery)
-- [Custom tag](#custom-tags)
-- [Schema](#schemas)
-    - [Breadcrumb](#breadcrumbs)
-    - [FAQ](#faqs)
-    - [Schema tùy chỉnh](#custom-schemas)
-- [Render](#rendering)
-    - [Blade](#blade)
-    - [Livewire](#livewire)
-    - [Inertia](#inertia)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -760,9 +735,3 @@ Head::inertiaGlobals(function (HeadBuilder $head) {
 Inertia globals không được đưa vào prop `head`, được render mà không có attribute ownership `data-inertia`, và không bao giờ được cập nhật sau response đầu tiên. Các global này phù hợp với những browser hint ổn định như viewport, color scheme, favicon, touch icon và manifest. Nếu một tag dành riêng cho từng trang, liên quan đến SEO hoặc có thể bị ghi đè về sau, hãy đặt nó trong `defaults`, metadata của route hoặc metadata tại runtime.
 
 Các ứng dụng cần metadata đã phân giải dưới dạng dữ liệu có cấu trúc thay vì các tag đã render có thể gọi `Head::toArray()`. Dữ liệu trả về bao gồm title, giá trị Open Graph, schema JSON-LD và các metadata đã phân giải khác.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/head). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

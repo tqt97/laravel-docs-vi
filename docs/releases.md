@@ -1,9 +1,5 @@
 # Ghi chú phát hành
 
-- [Quy tắc phiên bản](#versioning-scheme)
-- [Chính sách hỗ trợ](#support-policy)
-- [Laravel 13](#laravel-13)
-
 <a name="versioning-scheme"></a>
 ## Quy tắc phiên bản
 
@@ -182,7 +178,3 @@ $documents = DB::table('documents')
     ->limit(10)
     ->get();
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/releases). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

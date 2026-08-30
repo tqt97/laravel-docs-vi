@@ -1,7 +1,5 @@
 # Eloquent: Collection
-- [Giới thiệu](#introduction)
-- [Các phương thức có sẵn](#available-methods)
-- [Collection tùy chỉnh](#custom-collections)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Mọi phương thức Eloquent trả về nhiều model đều trả về một instance của class `Illuminate\Database\Eloquent\Collection`, bao gồm kết quả được lấy bằng phương thức `get` hoặc thông qua relationship. Eloquent collection kế thừa [collection cơ sở](/docs/{{version}}/collections) của Laravel, vì vậy nó tự động cung cấp hàng chục phương thức để xử lý linh hoạt tập hợp model Eloquent bên trong. Hãy xem tài liệu Collection của Laravel để tìm hiểu đầy đủ các phương thức hữu ích này.
@@ -348,6 +346,3 @@ class User extends Model
 ```
 Sau khi định nghĩa `newCollection` hoặc thêm attribute `CollectedBy`, bất cứ khi nào Eloquent thông thường trả về `Illuminate\Database\Eloquent\Collection`, bạn sẽ nhận được một instance của collection tùy chỉnh.
 Nếu muốn sử dụng collection tùy chỉnh cho mọi model trong ứng dụng, hãy định nghĩa `newCollection` trên class model cơ sở mà tất cả model của ứng dụng kế thừa.
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/eloquent-collections). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

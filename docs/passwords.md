@@ -1,14 +1,5 @@
 # Đặt lại mật khẩu
-- [Giới thiệu](#introduction)
-    - [Cấu hình](#configuration)
-    - [Điều kiện của driver](#driver-prerequisites)
-    - [Chuẩn bị model](#model-preparation)
-    - [Cấu hình trusted hosts](#configuring-trusted-hosts)
-- [Routing](#routing)
-    - [Yêu cầu link đặt lại mật khẩu](#requesting-the-password-reset-link)
-    - [Đặt lại mật khẩu](#resetting-the-password)
-- [Xóa token hết hạn](#deleting-expired-tokens)
-- [Tùy biến](#password-customization)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Hầu hết ứng dụng web đều cho phép người dùng đặt lại mật khẩu đã quên. Thay vì phải tự xây lại chức năng này cho từng ứng dụng, Laravel cung cấp các service thuận tiện để gửi link đặt lại mật khẩu và thực hiện quá trình đổi mật khẩu một cách an toàn.
@@ -193,7 +184,3 @@ public function sendPasswordResetNotification($token): void
     $this->notify(new ResetPasswordNotification($url));
 }
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/passwords). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

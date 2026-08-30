@@ -18,8 +18,8 @@ features:
     details: Nội dung được dịch từ source Laravel Documentation 13.x, giữ nguyên API, code, command và technical identifiers.
   - title: Dễ đọc bằng tiếng Việt
     details: Văn phong kỹ thuật tự nhiên, ưu tiên giải thích rõ ý thay vì dịch máy từng từ.
-  - title: Đối chiếu nguồn gốc
-    details: Cuối mỗi bài đều có link trực tiếp tới trang Laravel Documentation chính thức tương ứng.
+  - title: Minh bạch nguồn tham khảo
+    details: Mỗi bài đều có lưu ý cộng đồng ở cuối trang và liên kết tới Laravel Documentation chính thức khi cần xác minh.
   - title: Open source
     details: Hoan nghênh Issue và Pull Request để sửa lỗi dịch, cập nhật upstream và cải thiện trải nghiệm đọc.
 ---
@@ -27,9 +27,3 @@ features:
 ## Lưu ý
 
 Đây là dự án cộng đồng phục vụ **học tập và tham khảo**, không phải tài liệu chính thức của Laravel. Khi xây dựng hệ thống production hoặc cần xác minh một API/behavior cụ thể, hãy kiểm tra lại [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x).
-
----
-
-## Tài liệu chính thức
-
-- [Laravel 13.x — index](https://laravel.com/docs/13.x)

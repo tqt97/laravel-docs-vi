@@ -1,25 +1,5 @@
 # Service Container
 
-- [Giới thiệu](#introduction)
-    - [Phân giải không cần cấu hình](#zero-configuration-resolution)
-    - [Khi nào nên sử dụng Container](#when-to-use-the-container)
-- [Binding](#binding)
-    - [Kiến thức cơ bản về Binding](#binding-basics)
-    - [Binding Interface với Implementation](#binding-interfaces-to-implementations)
-    - [Contextual Binding](#contextual-binding)
-    - [Contextual Attribute](#contextual-attributes)
-    - [Binding giá trị primitive](#binding-primitives)
-    - [Binding tham số variadic có kiểu](#binding-typed-variadics)
-    - [Gắn tag](#tagging)
-    - [Mở rộng Binding](#extending-bindings)
-- [Phân giải](#resolving)
-    - [Phương thức `make`](#the-make-method)
-    - [Tự động inject dependency](#automatic-injection)
-- [Gọi phương thức và inject dependency](#method-invocation-and-injection)
-- [Sự kiện của Container](#container-events)
-    - [Rebinding](#rebinding)
-- [PSR-11](#psr-11)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -813,9 +793,3 @@ Route::get('/', function (ContainerInterface $container) {
 ```
 
 Một exception sẽ được ném ra nếu identifier được cung cấp không thể phân giải. Nếu identifier chưa từng được bind, exception sẽ là một instance của `Psr\Container\NotFoundExceptionInterface`. Nếu identifier đã được bind nhưng quá trình phân giải thất bại, Laravel sẽ ném một instance của `Psr\Container\ContainerExceptionInterface`.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/container). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

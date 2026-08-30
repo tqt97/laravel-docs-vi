@@ -1,19 +1,5 @@
 # Triển khai ứng dụng
-- [Giới thiệu](#introduction)
-- [Yêu cầu Server](#server-requirements)
-- [Cấu hình Server](#server-configuration)
-    - [Nginx](#nginx)
-    - [FrankenPHP](#frankenphp)
-    - [Quyền Directory](#directory-permissions)
-- [Tối ưu](#optimization)
-    - [Cache Configuration](#optimizing-configuration-loading)
-    - [Cache Events](#caching-events)
-    - [Cache Routes](#optimizing-route-loading)
-    - [Cache Views](#optimizing-view-loading)
-- [Reload Services](#reloading-services)
-- [Debug Mode](#debug-mode)
-- [Health Route](#the-health-route)
-- [Deploy bằng Laravel Cloud hoặc Forge](#deploying-with-cloud-or-forge)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Khi chuẩn bị deploy ứng dụng Laravel lên production, có một số việc quan trọng giúp đảm bảo ứng dụng vận hành hiệu quả nhất có thể. Phần này trình bày các điểm khởi đầu cần thiết để triển khai Laravel đúng cách.
@@ -172,6 +158,3 @@ Bạn có thể đưa ứng dụng Laravel lên Cloud mà vẫn tiếp tục vi�
 #### Laravel Forge
 Nếu muốn tự quản server nhưng không muốn tự cấu hình tất cả service cần thiết để chạy Laravel ổn định, [Laravel Forge](https://forge.laravel.com) là nền tảng quản lý VPS dành cho ứng dụng Laravel.
 Laravel Forge có thể tạo server trên nhiều hạ tầng như DigitalOcean, Linode, AWS và các provider khác. Forge cũng cài đặt, quản lý những công cụ cần thiết cho Laravel như Nginx, MySQL, Redis, Memcached, Beanstalk và nhiều service khác.
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/deployment). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,25 +1,5 @@
 # Lập lịch tác vụ
 
-- [Giới thiệu](#introduction)
-- [Định nghĩa lịch chạy](#defining-schedules)
-    - [Lập lịch lệnh Artisan](#scheduling-artisan-commands)
-    - [Lập lịch queued job](#scheduling-queued-jobs)
-    - [Lập lịch lệnh shell](#scheduling-shell-commands)
-    - [Các tùy chọn tần suất](#schedule-frequency-options)
-    - [Múi giờ](#timezones)
-    - [Ngăn tác vụ chạy chồng lấn](#preventing-task-overlaps)
-    - [Chỉ chạy tác vụ trên một server](#running-tasks-on-one-server)
-    - [Tác vụ nền](#background-tasks)
-    - [Chế độ bảo trì](#maintenance-mode)
-    - [Tạm dừng tác vụ đã lập lịch](#pausing-scheduled-tasks)
-    - [Nhóm lịch chạy](#schedule-groups)
-- [Chạy scheduler](#running-the-scheduler)
-    - [Tác vụ có chu kỳ dưới một phút](#sub-minute-scheduled-tasks)
-    - [Chạy scheduler ở môi trường local](#running-the-scheduler-locally)
-- [Output của tác vụ](#task-output)
-- [Hook của tác vụ](#task-hooks)
-- [Sự kiện](#events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -655,9 +635,3 @@ Laravel dispatch nhiều [sự kiện](/docs/{{version}}/events) trong quá trì
 | `Illuminate\Console\Events\ScheduledTaskFailed`             |
 
 </div>
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/scheduling). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

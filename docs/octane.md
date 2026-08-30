@@ -1,31 +1,5 @@
 # Laravel Octane
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-- [Yêu cầu máy chủ](#server-prerequisites)
-    - [FrankenPHP](#frankenphp)
-    - [RoadRunner](#roadrunner)
-    - [Swoole](#swoole)
-- [Phục vụ ứng dụng](#serving-your-application)
-    - [Phục vụ ứng dụng qua HTTPS](#serving-your-application-via-https)
-    - [Phục vụ ứng dụng qua Nginx](#serving-your-application-via-nginx)
-    - [Theo dõi thay đổi file](#watching-for-file-changes)
-    - [Chỉ định số lượng worker](#specifying-the-worker-count)
-    - [Chỉ định số request tối đa](#specifying-the-max-request-count)
-    - [Chỉ định thời gian thực thi tối đa](#specifying-the-max-execution-time)
-    - [Tải lại worker](#reloading-the-workers)
-    - [Dừng máy chủ](#stopping-the-server)
-- [Dependency Injection và Octane](#dependency-injection-and-octane)
-    - [Inject Container](#container-injection)
-    - [Inject Request](#request-injection)
-    - [Inject Configuration Repository](#configuration-repository-injection)
-- [Quản lý rò rỉ bộ nhớ](#managing-memory-leaks)
-- [Tác vụ đồng thời](#concurrent-tasks)
-- [Tick và khoảng thời gian](#ticks-and-intervals)
-- [Octane Cache](#the-octane-cache)
-    - [Khoảng thời gian cache](#cache-intervals)
-- [Tables](#tables)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -705,9 +679,3 @@ return Octane::table('example')->get('uuid');
 
 > [!WARNING]
 > Các kiểu column được Swoole table hỗ trợ gồm: `string`, `int` và `float`.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/octane). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

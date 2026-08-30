@@ -1,25 +1,5 @@
 # Cài đặt
 
-- [Làm quen với Laravel](#meet-laravel)
-    - [Vì sao chọn Laravel?](#why-laravel)
-- [Tạo ứng dụng Laravel](#creating-a-laravel-project)
-    - [Bắt đầu với AI](#getting-started-using-ai)
-    - [Cài đặt PHP và Laravel Installer](#installing-php)
-    - [Tạo ứng dụng](#creating-an-application)
-- [Cấu hình ban đầu](#initial-configuration)
-    - [Cấu hình theo môi trường](#environment-based-configuration)
-    - [Cơ sở dữ liệu và Migration](#databases-and-migrations)
-    - [Cấu hình thư mục](#directory-configuration)
-- [Cài đặt bằng Herd](#installation-using-herd)
-    - [Herd trên macOS](#herd-on-macos)
-    - [Herd trên Windows](#herd-on-windows)
-- [Hỗ trợ IDE](#ide-support)
-- [Laravel và AI](#laravel-and-ai)
-    - [Cài đặt Laravel Boost](#installing-laravel-boost)
-- [Bước tiếp theo](#next-steps)
-    - [Laravel như một framework Full Stack](#laravel-the-fullstack-framework)
-    - [Laravel làm API Backend](#laravel-the-api-backend)
-
 <a name="meet-laravel"></a>
 ## Làm quen với Laravel
 
@@ -305,9 +285,3 @@ Nếu sử dụng Laravel như full-stack framework, chúng tôi cũng đặc bi
 Laravel cũng có thể đóng vai trò API backend cho JavaScript single-page application hoặc ứng dụng mobile. Ví dụ, bạn có thể dùng Laravel làm API backend cho ứng dụng [Next.js](https://nextjs.org). Trong mô hình này, Laravel có thể cung cấp [authentication](/docs/{{version}}/sanctum), lưu trữ và truy xuất dữ liệu, đồng thời tận dụng các dịch vụ mạnh của framework như queue, email, notification và nhiều khả năng khác.
 
 Nếu đây là cách bạn dự định sử dụng Laravel, hãy xem tài liệu về [routing](/docs/{{version}}/routing), [Laravel Sanctum](/docs/{{version}}/sanctum) và [Eloquent ORM](/docs/{{version}}/eloquent).
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/installation). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

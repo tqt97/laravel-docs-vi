@@ -1,13 +1,5 @@
 # MongoDB
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [MongoDB Driver](#mongodb-driver)
-    - [Khởi động MongoDB Server](#starting-a-mongodb-server)
-    - [Cài Laravel MongoDB Package](#install-the-laravel-mongodb-package)
-- [Cấu hình](#configuration)
-- [Tính năng](#features)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -99,9 +91,3 @@ Sau khi cấu hình hoàn tất, bạn có thể sử dụng package `mongodb` v
 - Phần lớn package bên thứ ba sử dụng database connection hoặc Eloquent có thể hoạt động với MongoDB.
 
 Để tiếp tục tìm hiểu cách sử dụng MongoDB cùng Laravel, hãy xem [Quick Start guide](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/quick-start/) của MongoDB.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/mongodb). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

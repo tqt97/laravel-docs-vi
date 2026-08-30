@@ -1,24 +1,5 @@
 # Laravel Valet
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Nâng cấp Valet](#upgrading-valet)
-- [Phục vụ các site](#serving-sites)
-    - [Lệnh "Park"](#the-park-command)
-    - [Lệnh "Link"](#the-link-command)
-    - [Bảo mật site bằng TLS](#securing-sites)
-    - [Phục vụ site mặc định](#serving-a-default-site)
-    - [Phiên bản PHP theo từng site](#per-site-php-versions)
-- [Chia sẻ site](#sharing-sites)
-    - [Chia sẻ site trên mạng cục bộ](#sharing-sites-on-your-local-network)
-- [Biến môi trường riêng cho site](#site-specific-environment-variables)
-- [Proxy dịch vụ](#proxying-services)
-- [Driver Valet tùy chỉnh](#custom-valet-drivers)
-    - [Local Drivers](#local-drivers)
-- [Các lệnh Valet khác](#other-valet-commands)
-- [Thư mục và file của Valet](#valet-directories-and-files)
-    - [Disk Access](#disk-access)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -558,9 +539,3 @@ Thư mục này chứa các file `*.ini` cho nhiều thiết lập cấu hình P
 Kể từ macOS 10.14, [quyền truy cập một số file và thư mục bị giới hạn theo mặc định](https://manuals.info.apple.com/MANUALS/1000/MA1902/en_US/apple-platform-security-guide.pdf). Các giới hạn này bao gồm thư mục Desktop, Documents và Downloads. Ngoài ra, quyền truy cập network volume và removable volume cũng bị hạn chế. Vì vậy, Valet khuyến nghị đặt thư mục site bên ngoài các vị trí được bảo vệ này.
 
 Tuy nhiên, nếu muốn phục vụ site từ một trong các vị trí đó, bạn cần cấp cho Nginx quyền "Full Disk Access". Nếu không, bạn có thể gặp lỗi server hoặc hành vi khó dự đoán từ Nginx, đặc biệt khi phục vụ static asset. Thông thường macOS sẽ tự động yêu cầu bạn cấp quyền truy cập đầy đủ cho Nginx. Bạn cũng có thể thực hiện thủ công qua `System Preferences` > `Security & Privacy` > `Privacy`, chọn `Full Disk Access`, sau đó bật các mục `nginx` trong cửa sổ chính.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/valet). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,31 +1,5 @@
 # Lưu trữ file
 
-- [Giới thiệu](#introduction)
-- [Cấu hình](#configuration)
-    - [Driver Local](#the-local-driver)
-    - [Disk Public](#the-public-disk)
-    - [Điều kiện tiên quyết của driver](#driver-prerequisites)
-    - [Filesystem Scoped, Read-Only và Read-Through](#scoped-and-read-only-filesystems)
-    - [Filesystem tương thích Amazon S3](#amazon-s3-compatible-filesystems)
-- [Lấy instance của disk](#obtaining-disk-instances)
-    - [Disk theo yêu cầu](#on-demand-disks)
-- [Truy xuất file](#retrieving-files)
-    - [Tải file xuống](#downloading-files)
-    - [URL của file](#file-urls)
-    - [URL tạm thời](#temporary-urls)
-    - [Metadata của file](#file-metadata)
-- [Lưu file](#storing-files)
-    - [Thêm nội dung vào đầu và cuối file](#prepending-appending-to-files)
-    - [Sao chép và di chuyển file](#copying-moving-files)
-    - [Streaming tự động](#automatic-streaming)
-    - [Upload file](#file-uploads)
-    - [Khả năng truy cập file](#file-visibility)
-    - [Xử lý ảnh](#image-manipulation)
-- [Xóa file](#deleting-files)
-- [Thư mục](#directories)
-- [Kiểm thử](#testing)
-- [Filesystem tùy chỉnh](#custom-filesystems)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -930,9 +904,3 @@ class AppServiceProvider extends ServiceProvider
 Đối số đầu tiên của `extend` là tên driver; đối số thứ hai là closure nhận các biến `$app` và `$config`. Closure phải trả về một instance của `Illuminate\Filesystem\FilesystemAdapter`. Biến `$config` chứa các giá trị được định nghĩa trong `config/filesystems.php` cho disk tương ứng.
 
 Sau khi tạo và đăng ký extension trong service provider, bạn có thể sử dụng driver `dropbox` trong file cấu hình `config/filesystems.php`.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/filesystem). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

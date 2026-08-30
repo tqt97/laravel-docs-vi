@@ -1,41 +1,5 @@
 # Validation (Xác thực dữ liệu)
 
-- [Giới thiệu](#introduction)
-- [Bắt đầu nhanh với Validation](#validation-quickstart)
-    - [Định nghĩa route](#quick-defining-the-routes)
-    - [Tạo Controller](#quick-creating-the-controller)
-    - [Viết logic validation](#quick-writing-the-validation-logic)
-    - [Hiển thị lỗi validation](#quick-displaying-the-validation-errors)
-    - [Điền lại dữ liệu vào form](#repopulating-forms)
-    - [Lưu ý về các trường tùy chọn](#a-note-on-optional-fields)
-    - [Định dạng response lỗi validation](#validation-error-response-format)
-- [Validation bằng Form Request](#form-request-validation)
-    - [Tạo Form Request](#creating-form-requests)
-    - [Phân quyền Form Request](#authorizing-form-requests)
-    - [Tùy chỉnh thông báo lỗi](#customizing-the-error-messages)
-    - [Chuẩn bị input trước khi validation](#preparing-input-for-validation)
-- [Tạo Validator thủ công](#manually-creating-validators)
-    - [Tự động chuyển hướng](#automatic-redirection)
-    - [Error Bag có tên](#named-error-bags)
-    - [Customizing the Error Messages](#manual-customizing-the-error-messages)
-    - [Thực hiện validation bổ sung](#performing-additional-validation)
-- [Làm việc với input đã được validation](#working-with-validated-input)
-- [Làm việc với thông báo lỗi](#working-with-error-messages)
-    - [Specifying Custom Messages in Language Files](#specifying-custom-messages-in-language-files)
-    - [Specifying Attributes in Language Files](#specifying-attribute-in-language-files)
-    - [Specifying Values in Language Files](#specifying-values-in-language-files)
-- [Các validation rule có sẵn](#available-validation-rules)
-- [Thêm rule theo điều kiện](#conditionally-adding-rules)
-- [Validation mảng](#validating-arrays)
-    - [Validating Nested Array Input](#validating-nested-array-input)
-    - [Error Message Indexes and Positions](#error-message-indexes-and-positions)
-- [Validation file](#validating-files)
-- [Validation mật khẩu](#validating-passwords)
-- [Validation rule tùy chỉnh](#custom-validation-rules)
-    - [Using Rule Objects](#using-rule-objects)
-    - [Using Closures](#using-closures)
-    - [Implicit Rules](#implicit-rules)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -2809,14 +2773,14 @@ Validator::validate($input, [
 ```
 
 <a name="validating-files-file-types"></a>
-#### Validating File Types
+#### Xác thực loại file
 
 Mặc dù khi gọi `types` bạn chỉ cần chỉ định extension, method này thực tế validation MIME type bằng cách đọc nội dung file và suy đoán MIME type. Danh sách đầy đủ MIME type và extension tương ứng có tại:
 
 [https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types](https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types)
 
 <a name="validating-files-file-sizes"></a>
-#### Validating File Sizes
+#### Xác thực kích thước file
 
 Để thuận tiện, kích thước file tối thiểu và tối đa có thể được khai báo bằng chuỗi kèm hậu tố đơn vị. Các hậu tố `kb`, `mb`, `gb` và `tb` đều được hỗ trợ:
 
@@ -2827,7 +2791,7 @@ File::types(['mp3', 'wav'])
 ```
 
 <a name="validating-files-image-files"></a>
-#### Validating Image Files
+#### Xác thực file ảnh
 
 Nếu ứng dụng nhận ảnh do người dùng upload, bạn có thể dùng constructor `image` của rule `File` để bảo đảm file đang validation là ảnh (jpg, jpeg, png, bmp, gif hoặc webp).
 
@@ -2856,7 +2820,7 @@ Validator::validate($input, [
 > Mặc định, rule `image` không cho phép file SVG do nguy cơ lỗ hổng XSS. Nếu cần cho phép SVG, hãy truyền `allowSvg: true` vào rule `image`: `File::image(allowSvg: true)`.
 
 <a name="validating-files-image-dimensions"></a>
-#### Validating Image Dimensions
+#### Xác thực kích thước ảnh
 
 Bạn cũng có thể validation kích thước ảnh. Ví dụ, để yêu cầu ảnh upload rộng ít nhất 1000 pixel và cao 500 pixel, hãy dùng rule `dimensions`:
 
@@ -3147,7 +3111,7 @@ $validator = Validator::make($request->all(), [
 ```
 
 <a name="implicit-rules"></a>
-### Implicit Rule
+### Rule ngầm định
 
 Mặc định, khi attribute đang validation không tồn tại hoặc chứa chuỗi rỗng, các validation rule thông thường, kể cả custom rule, sẽ không chạy. Ví dụ, rule [unique](#rule-unique) sẽ không chạy với chuỗi rỗng:
 
@@ -3169,9 +3133,3 @@ php artisan make:rule Uppercase --implicit
 
 > [!WARNING]
 > Một rule "implicit" chỉ _ngụ ý_ rằng attribute là bắt buộc. Việc rule có thực sự coi attribute bị thiếu hoặc rỗng là không hợp lệ hay không phụ thuộc vào cách bạn triển khai rule.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/validation). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

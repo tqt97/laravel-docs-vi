@@ -1,10 +1,5 @@
 # Mã hóa (Encryption)
 
-- [Giới thiệu](#introduction)
-- [Cấu hình](#configuration)
-    - [Luân chuyển khóa mã hóa an toàn](#gracefully-rotating-encryption-keys)
-- [Sử dụng Encrypter](#using-the-encrypter)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -79,9 +74,3 @@ try {
     // ...
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/encryption). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

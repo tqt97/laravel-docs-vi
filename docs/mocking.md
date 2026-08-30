@@ -1,10 +1,5 @@
 # Mocking
 
-- [Giới thiệu](#introduction)
-- [Mocking đối tượng](#mocking-objects)
-- [Mocking facade](#mocking-facades)
-    - [Spy facade](#facade-spies)
-- [Tương tác với thời gian](#interacting-with-time)
 <a name="introduction"></a>
 ## Giới thiệu
 Khi kiểm thử ứng dụng Laravel, đôi lúc bạn cần "mock" một số phần để chúng không thực sự được thực thi trong test. Ví dụ, khi kiểm thử controller có dispatch event, bạn có thể muốn mock event listener để chúng không thực sự được thực thi trong quá trình test. Nhờ đó, bạn chỉ cần kiểm thử HTTP response của controller mà không phải bận tâm đến việc thực thi các event listener, bởi các listener có thể được kiểm thử trong test case riêng.
@@ -267,7 +262,3 @@ public function test_forum_threads_lock_after_one_week_of_inactivity()
     $this->assertTrue($thread->isLockedByInactivity());
 }
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/mocking). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

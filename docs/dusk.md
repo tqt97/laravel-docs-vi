@@ -1,55 +1,5 @@
 # Laravel Dusk
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Quản lý cài đặt ChromeDriver](#managing-chromedriver-installations)
-    - [Sử dụng trình duyệt khác](#using-other-browsers)
-- [Bắt đầu](#getting-started)
-    - [Tạo test](#generating-tests)
-    - [Đặt lại cơ sở dữ liệu sau mỗi test](#resetting-the-database-after-each-test)
-    - [Chạy test](#running-tests)
-    - [Xử lý môi trường](#environment-handling)
-- [Browser Basics](#browser-basics)
-    - [Creating Browsers](#creating-browsers)
-    - [Navigation](#navigation)
-    - [Resizing Browser Windows](#resizing-browser-windows)
-    - [Browser Macros](#browser-macros)
-    - [Authentication](#authentication)
-    - [Cookies](#cookies)
-    - [Executing JavaScript](#executing-javascript)
-    - [Taking a Screenshot](#taking-a-screenshot)
-    - [Storing Console Output to Disk](#storing-console-output-to-disk)
-    - [Storing Page Source to Disk](#storing-page-source-to-disk)
-- [Interacting With Elements](#interacting-with-elements)
-    - [Dusk Selectors](#dusk-selectors)
-    - [Text, Values, and Attributes](#text-values-and-attributes)
-    - [Interacting With Forms](#interacting-with-forms)
-    - [Attaching Files](#attaching-files)
-    - [Pressing Buttons](#pressing-buttons)
-    - [Clicking Links](#clicking-links)
-    - [Using the Keyboard](#using-the-keyboard)
-    - [Using the Mouse](#using-the-mouse)
-    - [JavaScript Dialogs](#javascript-dialogs)
-    - [Interacting With Inline Frames](#interacting-with-iframes)
-    - [Scoping Selectors](#scoping-selectors)
-    - [Waiting for Elements](#waiting-for-elements)
-    - [Scrolling an Element Into View](#scrolling-an-element-into-view)
-- [Available Assertions](#available-assertions)
-- [Pages](#pages)
-    - [Generating Pages](#generating-pages)
-    - [Configuring Pages](#configuring-pages)
-    - [Navigating to Pages](#navigating-to-pages)
-    - [Shorthand Selectors](#shorthand-selectors)
-    - [Page Methods](#page-methods)
-- [Components](#components)
-    - [Generating Components](#generating-components)
-    - [Using Components](#using-components)
-- [Continuous Integration](#continuous-integration)
-    - [Heroku CI](#running-tests-on-heroku-ci)
-    - [Travis CI](#running-tests-on-travis-ci)
-    - [GitHub Actions](#running-tests-on-github-actions)
-    - [Chipper CI](#running-tests-on-chipper-ci)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -2685,9 +2635,3 @@ pipeline:
 ```
 
 Để tìm hiểu thêm về cách chạy các bài kiểm thử Dusk trên Chipper CI, bao gồm cách sử dụng database, hãy tham khảo [tài liệu Chipper CI chính thức](https://chipperci.com/docs/testing/laravel-dusk-new/).
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/dusk). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,16 +1,5 @@
 # Xác minh Email
 
-- [Giới thiệu](#introduction)
-- [Chuẩn bị Model](#model-preparation)
-- [Chuẩn bị Database](#database-preparation)
-- [Routing](#verification-routing)
-    - [Thông báo xác minh Email](#the-email-verification-notice)
-    - [Xử lý xác minh Email](#the-email-verification-handler)
-    - [Gửi lại Email xác minh](#resending-the-verification-email)
-- [Bảo vệ Route](#protecting-routes)
-- [Tùy biến](#customization)
-- [Events](#events)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -167,7 +156,3 @@ public function boot(): void
 ## Events
 
 Khi sử dụng [Laravel application starter kit](/docs/{{version}}/starter-kits), Laravel sẽ dispatch [event](/docs/{{version}}/events) `Illuminate\Auth\Events\Verified` trong quá trình xác minh email. Nếu bạn tự xử lý việc xác minh email cho ứng dụng, bạn có thể muốn tự dispatch event này sau khi quá trình xác minh hoàn tất.
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/verification). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

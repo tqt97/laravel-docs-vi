@@ -1,20 +1,5 @@
 # Laravel Envoy
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-- [Viết tác vụ](#writing-tasks)
-    - [Định nghĩa tác vụ](#defining-tasks)
-    - [Nhiều máy chủ](#multiple-servers)
-    - [Thiết lập](#setup)
-    - [Biến](#variables)
-    - [Stories](#stories)
-    - [Hooks](#completion-hooks)
-- [Chạy tác vụ](#running-tasks)
-    - [Xác nhận thực thi tác vụ](#confirming-task-execution)
-- [Thông báo](#notifications)
-    - [Slack](#slack)
-    - [Discord](#discord)
-    - [Telegram](#telegram)
-    - [Microsoft Teams](#microsoft-teams)
+
 <a name="introduction"></a>
 ## Giới thiệu
 [Laravel Envoy](https://github.com/laravel/envoy) là công cụ giúp thực thi các tác vụ thường gặp trên máy chủ từ xa. Bằng cú pháp theo phong cách [Blade](/docs/{{version}}/blade), bạn có thể dễ dàng thiết lập các tác vụ triển khai, lệnh Artisan và nhiều công việc khác. Hiện tại, Envoy chỉ hỗ trợ macOS và Linux. Tuy nhiên, trên Windows bạn vẫn có thể sử dụng Envoy thông qua [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
@@ -272,7 +257,3 @@ Envoy cũng hỗ trợ gửi notification tới [Microsoft Teams](https://www.mi
     @microsoftTeams('webhook-url')
 @endfinished
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/envoy). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

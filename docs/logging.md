@@ -1,23 +1,5 @@
 # Ghi log
 
-- [Giới thiệu](#introduction)
-- [Cấu hình](#configuration)
-    - [Các driver channel có sẵn](#available-channel-drivers)
-    - [Điều kiện tiên quyết của channel](#channel-prerequisites)
-    - [Ghi log cảnh báo deprecated](#logging-deprecation-warnings)
-- [Xây dựng log stack](#building-log-stacks)
-- [Ghi thông điệp log](#writing-log-messages)
-    - [Thông tin ngữ cảnh](#contextual-information)
-    - [Ghi vào channel cụ thể](#writing-to-specific-channels)
-- [Tùy chỉnh channel Monolog](#monolog-channel-customization)
-    - [Tùy chỉnh Monolog cho channel](#customizing-monolog-for-channels)
-    - [Tạo channel dùng Monolog handler](#creating-monolog-handler-channels)
-    - [Tạo channel tùy chỉnh bằng factory](#creating-custom-channels-via-factories)
-- [Theo dõi log theo thời gian thực bằng Pail](#tailing-log-messages-using-pail)
-    - [Cài đặt](#pail-installation)
-    - [Cách sử dụng](#pail-usage)
-    - [Lọc log](#pail-filtering-logs)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -591,9 +573,3 @@ php artisan pail --level=error
 ```shell
 php artisan pail --user=1
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/logging). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

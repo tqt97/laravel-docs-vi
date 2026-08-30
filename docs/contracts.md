@@ -1,9 +1,5 @@
 # Contracts
-- [Giới thiệu](#introduction)
-    - [Contracts và Facades](#contracts-vs-facades)
-- [Khi nào nên dùng Contracts](#when-to-use-contracts)
-- [Cách sử dụng Contracts](#how-to-use-contracts)
-- [Danh sách Contracts](#contract-reference)
+
 <a name="introduction"></a>
 ## Giới thiệu
 "Contracts" của Laravel là tập hợp các interface định nghĩa những dịch vụ cốt lõi mà framework cung cấp. Ví dụ, contract `Illuminate\Contracts\Queue\Queue` định nghĩa các phương thức cần thiết để đưa job vào queue, còn contract `Illuminate\Contracts\Mail\Mailer` định nghĩa các phương thức cần thiết để gửi email.
@@ -137,7 +133,3 @@ Bảng dưới đây giúp bạn tra cứu nhanh các contract của Laravel và
 | [Illuminate\Contracts\View\View](https://github.com/illuminate/contracts/blob/{{version}}/View/View.php) | `View::make()` |
 
 </div>
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/contracts). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

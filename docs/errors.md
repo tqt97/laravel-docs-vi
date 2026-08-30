@@ -1,15 +1,5 @@
 # Xử lý lỗi
-- [Giới thiệu](#introduction)
-- [Cấu hình](#configuration)
-- [Xử lý exception](#handling-exceptions)
-    - [Report exception](#reporting-exceptions)
-    - [Log level cho exception](#exception-log-levels)
-    - [Bỏ qua exception theo type](#ignoring-exceptions-by-type)
-    - [Render exception](#rendering-exceptions)
-    - [Reportable và renderable exception](#renderable-exceptions)
-- [Giới hạn exception được report](#throttling-reported-exceptions)
-- [HTTP exception](#http-exceptions)
-    - [Trang lỗi HTTP tùy chỉnh](#custom-http-error-pages)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Khi tạo dự án Laravel mới, cơ chế xử lý error và exception đã được cấu hình sẵn. Khi cần tùy chỉnh, bạn có thể dùng method `withExceptions` trong `bootstrap/app.php` để quản lý cách ứng dụng report và render exception.
@@ -419,6 +409,3 @@ php artisan vendor:publish --tag=laravel-errors
 #### Trang lỗi HTTP fallback
 Bạn cũng có thể định nghĩa error page "fallback" cho một nhóm HTTP status code. Page này được render khi không có page riêng cho status code cụ thể. Để làm vậy, tạo template `4xx.blade.php` và `5xx.blade.php` trong `resources/views/errors`.
 Fallback page không ảnh hưởng tới response `404`, `500` và `503` vì Laravel có page nội bộ riêng cho các status code này. Muốn tùy biến chúng, hãy tạo page riêng tương ứng cho từng status code.
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/errors). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

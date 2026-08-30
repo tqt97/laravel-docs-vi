@@ -1,18 +1,5 @@
 # Laravel Folio
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Page Path / URI](#page-paths-uris)
-    - [Routing theo Subdomain](#subdomain-routing)
-- [Tạo Route](#creating-routes)
-    - [Nested Routes](#nested-routes)
-    - [Index Routes](#index-routes)
-- [Route Parameters](#route-parameters)
-- [Route Model Binding](#route-model-binding)
-    - [Soft Deleted Models](#soft-deleted-models)
-- [Render Hooks](#render-hooks)
-- [Named Routes](#named-routes)
-- [Middleware](#middleware)
-- [Route Caching](#route-caching)
+
 <a name="introduction"></a>
 ## Giới thiệu
 [Laravel Folio](https://github.com/laravel/folio) là page-based router mạnh mẽ được thiết kế để đơn giản hóa routing trong ứng dụng Laravel. Với Folio, việc tạo route gần như chỉ đơn giản là tạo một Blade template trong thư mục `resources/views/pages` của ứng dụng.
@@ -277,6 +264,3 @@ Folio::path(resource_path('views/pages'))->middleware([
 <a name="route-caching"></a>
 ## Route Caching
 Khi dùng Folio, bạn nên tận dụng [route caching của Laravel](/docs/{{version}}/routing#route-caching). Folio lắng nghe command Artisan `route:cache` để đảm bảo định nghĩa page và route name của Folio được cache đúng cách, đạt hiệu năng tốt nhất.
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/folio). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

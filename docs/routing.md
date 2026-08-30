@@ -1,35 +1,5 @@
 # Định tuyến
 
-- [Định tuyến cơ bản](#basic-routing)
-    - [Các file route mặc định](#the-default-route-files)
-    - [Route chuyển hướng](#redirect-routes)
-    - [Route trả về view](#view-routes)
-    - [Liệt kê các route](#listing-your-routes)
-    - [Tùy biến định tuyến](#routing-customization)
-- [Tham số route](#route-parameters)
-    - [Tham số bắt buộc](#required-parameters)
-    - [Tham số tùy chọn](#parameters-optional-parameters)
-    - [Ràng buộc bằng biểu thức chính quy](#parameters-regular-expression-constraints)
-- [Route có tên](#named-routes)
-- [Nhóm route](#route-groups)
-    - [Middleware](#route-group-middleware)
-    - [Controller](#route-group-controllers)
-    - [Định tuyến theo subdomain](#route-group-subdomain-routing)
-    - [Tiền tố route](#route-group-prefixes)
-    - [Tiền tố tên route](#route-group-name-prefixes)
-- [Route Model Binding](#route-model-binding)
-    - [Binding ngầm định](#implicit-binding)
-    - [Binding Enum ngầm định](#implicit-enum-binding)
-    - [Binding tường minh](#explicit-binding)
-- [Route dự phòng](#fallback-routes)
-- [Giới hạn tần suất](#rate-limiting)
-    - [Định nghĩa rate limiter](#defining-rate-limiters)
-    - [Gắn rate limiter vào route](#attaching-rate-limiters-to-routes)
-- [Giả lập HTTP method trong form](#form-method-spoofing)
-- [Truy cập route hiện tại](#accessing-the-current-route)
-- [Cross-Origin Resource Sharing (CORS)](#cors)
-- [Cache route](#route-caching)
-
 <a name="basic-routing"></a>
 ## Định tuyến cơ bản
 
@@ -1065,9 +1035,3 @@ Bạn có thể dùng lệnh `route:clear` để xóa route cache:
 ```shell
 php artisan route:clear
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/routing). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

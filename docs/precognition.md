@@ -1,15 +1,5 @@
 # Precognition
-- [Giới thiệu](#introduction)
-- [Live validation](#live-validation)
-    - [Dùng Vue](#using-vue)
-    - [Dùng React](#using-react)
-    - [Dùng Alpine và Blade](#using-alpine)
-    - [Cấu hình Axios](#configuring-axios)
-- [Validate array](#validating-arrays)
-- [Tùy biến validation rule](#customizing-validation-rules)
-- [Xử lý file upload](#handling-file-uploads)
-- [Quản lý side effect](#managing-side-effects)
-- [Testing](#testing)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Laravel Precognition cho phép "dự đoán" kết quả của một HTTP request trong tương lai. Use case chính là cung cấp live validation cho frontend JavaScript mà không cần viết lại validation rule của backend ở phía frontend.
@@ -589,7 +579,3 @@ public function test_it_validates_registration_form_with_precognition()
     $this->assertSame(0, User::count());
 }
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/precognition). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

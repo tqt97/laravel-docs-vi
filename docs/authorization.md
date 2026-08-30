@@ -1,29 +1,5 @@
 # Phân quyền
 
-- [Giới thiệu](#introduction)
-- [Gate](#gates)
-    - [Định nghĩa Gate](#writing-gates)
-    - [Phân quyền hành động](#authorizing-actions-via-gates)
-    - [Phản hồi của Gate](#gate-responses)
-    - [Can thiệp quá trình kiểm tra Gate](#intercepting-gate-checks)
-    - [Phân quyền trực tiếp](#inline-authorization)
-- [Tạo Policy](#creating-policies)
-    - [Sinh Policy](#generating-policies)
-    - [Đăng ký Policy](#registering-policies)
-- [Xây dựng Policy](#writing-policies)
-    - [Các phương thức Policy](#policy-methods)
-    - [Phản hồi của Policy](#policy-responses)
-    - [Phương thức không cần Model](#methods-without-models)
-    - [Người dùng chưa xác thực](#guest-users)
-    - [Bộ lọc Policy](#policy-filters)
-- [Phân quyền hành động bằng Policy](#authorizing-actions-using-policies)
-    - [Thông qua User Model](#via-the-user-model)
-    - [Thông qua Gate Facade](#via-the-gate-facade)
-    - [Thông qua Middleware](#via-middleware)
-    - [Thông qua Blade Template](#via-blade-templates)
-    - [Cung cấp ngữ cảnh bổ sung](#supplying-additional-context)
-- [Phân quyền & Inertia](#authorization-and-inertia)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -867,9 +843,3 @@ class HandleInertiaRequests extends Middleware
     }
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/authorization). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

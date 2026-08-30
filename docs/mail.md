@@ -1,38 +1,5 @@
 # Mail
 
-- [Giới thiệu](#introduction)
-    - [Cấu hình](#configuration)
-    - [Điều kiện tiên quyết của driver](#driver-prerequisites)
-    - [Cấu hình failover](#failover-configuration)
-    - [Cấu hình Round Robin](#round-robin-configuration)
-- [Tạo Mailable](#generating-mailables)
-- [Viết Mailable](#writing-mailables)
-    - [Cấu hình người gửi](#configuring-the-sender)
-    - [Cấu hình view](#configuring-the-view)
-    - [Dữ liệu view](#view-data)
-    - [Tệp đính kèm](#attachments)
-    - [Tệp đính kèm nội tuyến](#inline-attachments)
-    - [Đối tượng có thể đính kèm](#attachable-objects)
-    - [Header](#headers)
-    - [Tag và metadata](#tags-and-metadata)
-    - [Tùy chỉnh Symfony Message](#customizing-the-symfony-message)
-- [Markdown Mailable](#markdown-mailables)
-    - [Tạo Markdown Mailable](#generating-markdown-mailables)
-    - [Viết Markdown Message](#writing-markdown-messages)
-    - [Tùy chỉnh component](#customizing-the-components)
-- [Gửi mail](#sending-mail)
-    - [Đưa mail vào queue](#queueing-mail)
-- [Render Mailable](#rendering-mailables)
-    - [Xem trước Mailable trong trình duyệt](#previewing-mailables-in-the-browser)
-- [Bản địa hóa Mailable](#localizing-mailables)
-- [Kiểm thử](#testing-mailables)
-    - [Kiểm thử nội dung Mailable](#testing-mailable-content)
-    - [Kiểm thử việc gửi Mailable](#testing-mailable-sending)
-- [Mail và môi trường phát triển local](#mail-and-local-development)
-- [Event](#events)
-- [Transport tùy chỉnh](#custom-transports)
-    - [Các Symfony Transport bổ sung](#additional-symfony-transports)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1641,9 +1608,3 @@ Sau khi transport được đăng ký, bạn có thể tạo cấu hình mailer 
     // ...
 ],
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/mail). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

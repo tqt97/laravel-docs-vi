@@ -1,12 +1,5 @@
 # Vòng đời request
-- [Giới thiệu](#introduction)
-- [Tổng quan Lifecycle](#lifecycle-overview)
-    - [Các bước đầu tiên](#first-steps)
-    - [HTTP / Console Kernels](#http-console-kernels)
-    - [Service Providers](#service-providers)
-    - [Routing](#routing)
-    - [Hoàn tất Request](#finishing-up)
-- [Tập trung vào Service Providers](#focus-on-service-providers)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Khi sử dụng bất kỳ công cụ nào trong thực tế, bạn sẽ tự tin hơn nếu hiểu công cụ đó hoạt động như thế nào. Phát triển ứng dụng cũng vậy. Khi hiểu cách công cụ phát triển vận hành, bạn sẽ thoải mái và chủ động hơn khi sử dụng chúng.
@@ -43,7 +36,3 @@ Cuối cùng, sau khi response đi ngược qua middleware, phương thức `han
 Service provider thực sự là chìa khóa của quá trình bootstrap ứng dụng Laravel. Application instance được tạo, service provider được đăng ký, rồi request được đưa vào application đã bootstrap. Về bản chất, luồng chính chỉ đơn giản như vậy.
 Nắm chắc cách ứng dụng Laravel được xây dựng và bootstrap qua service provider rất có giá trị. Các service provider do ứng dụng tự định nghĩa được lưu trong thư mục `app/Providers`.
 Mặc định, `AppServiceProvider` khá trống. Đây là nơi phù hợp để thêm logic bootstrap và service container binding riêng của ứng dụng. Với ứng dụng lớn, bạn có thể tạo nhiều service provider, mỗi provider phụ trách bootstrap chi tiết cho một nhóm service cụ thể.
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/lifecycle). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

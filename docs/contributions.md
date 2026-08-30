@@ -1,15 +1,5 @@
 # Hướng dẫn đóng góp
-- [Báo lỗi](#bug-reports)
-- [Câu hỏi hỗ trợ](#support-questions)
-- [Thảo luận phát triển Core](#core-development-discussion)
-- [Nên gửi vào Branch nào?](#which-branch)
-- [Compiled Assets](#compiled-assets)
-- [Đóng góp có sử dụng AI](#ai-generated-contributions)
-- [Lỗ hổng bảo mật](#security-vulnerabilities)
-- [Coding Style](#coding-style)
-    - [PHPDoc](#phpdoc)
-    - [StyleCI](#styleci)
-- [Quy tắc ứng xử](#code-of-conduct)
+
 <a name="bug-reports"></a>
 ## Báo lỗi
 Để khuyến khích cộng tác chủ động, Laravel ưu tiên pull request chứ không chỉ bug report. Pull request chỉ được review khi đã được đánh dấu "ready for review" — không còn ở trạng thái "draft" — và toàn bộ test cho feature mới đều pass. Pull request ở trạng thái draft nhưng không còn hoạt động trong vài ngày có thể bị đóng.
@@ -148,7 +138,3 @@ Code of conduct của Laravel được phát triển dựa trên Ruby code of co
 - Khi diễn giải lời nói và hành động của người khác, hãy mặc định rằng họ có thiện chí.
 - Những hành vi có thể được xem là quấy rối sẽ không được chấp nhận.
 </div>
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/contributions). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

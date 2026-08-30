@@ -1,10 +1,5 @@
 # Bảo vệ CSRF
-- [Giới thiệu](#csrf-introduction)
-- [Ngăn chặn Request CSRF](#preventing-csrf-requests)
-    - [Xác minh Origin](#origin-verification)
-    - [Loại trừ URI](#csrf-excluding-uris)
-- [X-CSRF-Token](#csrf-x-csrf-token)
-- [X-XSRF-Token](#csrf-x-xsrf-token)
+
 <a name="csrf-introduction"></a>
 ## Giới thiệu
 Cross-site request forgery là một dạng tấn công trong đó lệnh trái phép được thực hiện thay mặt cho một người dùng đã xác thực. Laravel cung cấp sẵn cơ chế thuận tiện để bảo vệ ứng dụng khỏi các cuộc tấn công [cross-site request forgery](https://en.wikipedia.org/wiki/Cross-site_request_forgery) (CSRF).
@@ -107,6 +102,3 @@ $.ajaxSetup({
 ## X-XSRF-TOKEN
 Laravel lưu CSRF token hiện tại trong cookie được mã hóa `XSRF-TOKEN`, cookie này được gửi kèm mỗi response do framework tạo. Bạn có thể dùng value của cookie để thiết lập request header `X-XSRF-TOKEN`.
 Cookie này chủ yếu được gửi để thuận tiện cho developer, vì một số JavaScript framework và library như Angular hay Axios tự động đưa value của nó vào header `X-XSRF-TOKEN` trên các request cùng origin.
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/csrf). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,36 +1,5 @@
 # Laravel Fortify
 
-- [Giới thiệu](#introduction)
-    - [Fortify là gì?](#what-is-fortify)
-    - [Khi nào nên sử dụng Fortify?](#when-should-i-use-fortify)
-- [Cài đặt](#installation)
-    - [Các tính năng của Fortify](#fortify-features)
-    - [Vô hiệu hóa view](#disabling-views)
-- [Xác thực](#authentication)
-    - [Tùy biến xác thực người dùng](#customizing-user-authentication)
-    - [Tùy biến pipeline xác thực](#customizing-the-authentication-pipeline)
-    - [Tùy biến chuyển hướng](#customizing-authentication-redirects)
-- [Xác thực hai yếu tố](#two-factor-authentication)
-    - [Bật xác thực hai yếu tố](#enabling-two-factor-authentication)
-    - [Xác thực bằng xác thực hai yếu tố](#authenticating-with-two-factor-authentication)
-    - [Vô hiệu hóa xác thực hai yếu tố](#disabling-two-factor-authentication)
-- [Passkeys](#passkeys)
-    - [Bật Passkey](#enabling-passkeys)
-    - [JavaScript Client](#passkeys-javascript-client)
-    - [Xác thực bằng Passkey](#authenticating-with-passkeys)
-    - [Xác nhận mật khẩu bằng Passkey](#confirming-password-with-passkeys)
-    - [Đăng ký Passkey](#registering-passkeys)
-    - [Xóa Passkey](#deleting-passkeys)
-- [Đăng ký](#registration)
-    - [Tùy biến đăng ký](#customizing-registration)
-- [Đặt lại mật khẩu](#password-reset)
-    - [Yêu cầu liên kết đặt lại mật khẩu](#requesting-a-password-reset-link)
-    - [Đặt lại mật khẩu](#resetting-the-password)
-    - [Tùy biến việc đặt lại mật khẩu](#customizing-password-resets)
-- [Xác minh email](#email-verification)
-    - [Bảo vệ route](#protecting-routes)
-- [Xác nhận mật khẩu](#password-confirmation)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -747,9 +716,3 @@ Fortify sẽ tự định nghĩa endpoint `/user/confirm-password` trả về vi
 Nếu mật khẩu khớp với mật khẩu hiện tại của user, Fortify sẽ redirect user đến route họ đang cố truy cập. Với XHR request, HTTP response 201 sẽ được trả về.
 
 Nếu request không thành công, user sẽ được redirect về màn hình xác nhận mật khẩu và validation error có thể truy cập qua biến template Blade `$errors`. Với XHR request, validation error được trả về cùng HTTP response 422.
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/fortify). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

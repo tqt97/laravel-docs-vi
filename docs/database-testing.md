@@ -1,9 +1,5 @@
 # Kiểm thử cơ sở dữ liệu
-- [Giới thiệu](#introduction)
-    - [Đặt lại cơ sở dữ liệu sau mỗi test](#resetting-the-database-after-each-test)
-- [Model factory](#model-factories)
-- [Chạy Seeders](#running-seeders)
-- [Các Assertion có sẵn](#available-assertions)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Laravel cung cấp nhiều công cụ và assertion hữu ích giúp việc kiểm thử ứng dụng sử dụng database trở nên thuận tiện hơn. Bên cạnh đó, model factory và seeder của Laravel giúp bạn dễ dàng tạo dữ liệu test bằng chính Eloquent model và relationship của ứng dụng. Phần dưới đây sẽ trình bày các khả năng này.
@@ -264,7 +260,3 @@ $this->expectsDatabaseQueryCount(5);
 
 // Test...
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/database-testing). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

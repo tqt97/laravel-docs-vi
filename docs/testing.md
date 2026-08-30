@@ -1,14 +1,5 @@
 # Testing: Bắt đầu
 
-- [Giới thiệu](#introduction)
-- [Môi trường](#environment)
-- [Tạo test](#creating-tests)
-- [Chạy test](#running-tests)
-- [Chạy test song song](#running-tests-in-parallel)
-- [Báo cáo độ bao phủ test](#reporting-test-coverage)
-- [Phân tích hiệu năng test](#profiling-tests)
-- [Cache cấu hình](#configuration-caching)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -284,7 +275,3 @@ class ConfigTest extends TestCase
     // ...
 }
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/testing). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

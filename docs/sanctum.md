@@ -1,27 +1,5 @@
 # Laravel Sanctum
 
-- [Giới thiệu](#introduction)
-    - [Cách hoạt động](#how-it-works)
-- [Cài đặt](#installation)
-- [Cấu hình](#configuration)
-    - [Ghi đè Model mặc định](#overriding-default-models)
-- [Xác thực bằng API Token](#api-token-authentication)
-    - [Cấp API Token](#issuing-api-tokens)
-    - [Khả năng của Token](#token-abilities)
-    - [Bảo vệ Route](#protecting-routes)
-    - [Thu hồi Token](#revoking-tokens)
-    - [Thời hạn Token](#token-expiration)
-- [Xác thực SPA](#spa-authentication)
-    - [Cấu hình](#spa-configuration)
-    - [Xác thực](#spa-authenticating)
-    - [Bảo vệ Route](#protecting-spa-routes)
-    - [Phân quyền Broadcast Channel riêng tư](#authorizing-private-broadcast-channels)
-- [Xác thực ứng dụng di động](#mobile-application-authentication)
-    - [Cấp API Token](#issuing-mobile-api-tokens)
-    - [Bảo vệ Route](#protecting-mobile-api-routes)
-    - [Thu hồi Token](#revoking-mobile-api-tokens)
-- [Kiểm thử](#testing)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -521,9 +499,3 @@ Sanctum::actingAs(
     ['*']
 );
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/sanctum). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

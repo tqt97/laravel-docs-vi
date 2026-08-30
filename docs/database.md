@@ -1,18 +1,5 @@
 # Cơ sở dữ liệu: Bắt đầu
 
-- [Giới thiệu](#introduction)
-    - [Cấu hình](#configuration)
-    - [Kết nối đọc và ghi](#read-and-write-connections)
-    - [Kết nối PostgreSQL qua connection pool](#pooled-postgresql-connections)
-- [Thực thi truy vấn SQL](#running-queries)
-    - [Sử dụng nhiều kết nối cơ sở dữ liệu](#using-multiple-database-connections)
-    - [Lắng nghe sự kiện truy vấn](#listening-for-query-events)
-    - [Theo dõi tổng thời gian truy vấn](#monitoring-cumulative-query-time)
-- [Transaction cơ sở dữ liệu](#database-transactions)
-- [Kết nối đến CLI của cơ sở dữ liệu](#connecting-to-the-database-cli)
-- [Kiểm tra cơ sở dữ liệu](#inspecting-your-databases)
-- [Giám sát cơ sở dữ liệu](#monitoring-your-databases)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -556,9 +543,3 @@ public function boot(): void
     });
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/database). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

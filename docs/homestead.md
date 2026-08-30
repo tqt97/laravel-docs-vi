@@ -1,38 +1,5 @@
 # Laravel Homestead
 
-- [Giới thiệu](#introduction)
-- [Cài đặt và thiết lập](#installation-and-setup)
-    - [Các bước đầu tiên](#first-steps)
-    - [Cấu hình Homestead](#configuring-homestead)
-    - [Cấu hình site Nginx](#configuring-nginx-sites)
-    - [Cấu hình dịch vụ](#configuring-services)
-    - [Khởi chạy Vagrant box](#launching-the-vagrant-box)
-    - [Cài đặt theo từng dự án](#per-project-installation)
-    - [Cài đặt các tính năng tùy chọn](#installing-optional-features)
-    - [Alias](#aliases)
-- [Cập nhật Homestead](#updating-homestead)
-- [Sử dụng hằng ngày](#daily-usage)
-    - [Kết nối qua SSH](#connecting-via-ssh)
-    - [Thêm site bổ sung](#adding-additional-sites)
-    - [Biến môi trường](#environment-variables)
-    - [Cổng](#ports)
-    - [Phiên bản PHP](#php-versions)
-    - [Kết nối tới cơ sở dữ liệu](#connecting-to-databases)
-    - [Sao lưu cơ sở dữ liệu](#database-backups)
-    - [Cấu hình lịch Cron](#configuring-cron-schedules)
-    - [Cấu hình Mailpit](#configuring-mailpit)
-    - [Cấu hình Minio](#configuring-minio)
-    - [Laravel Dusk](#laravel-dusk)
-    - [Chia sẻ môi trường](#sharing-your-environment)
-- [Debug và profiling](#debugging-and-profiling)
-    - [Debug web request bằng Xdebug](#debugging-web-requests)
-    - [Debug ứng dụng CLI](#debugging-cli-applications)
-    - [Profiling ứng dụng bằng Blackfire](#profiling-applications-with-blackfire)
-- [Giao diện mạng](#network-interfaces)
-- [Mở rộng Homestead](#extending-homestead)
-- [Thiết lập riêng theo provider](#provider-specific-settings)
-    - [VirtualBox](#provider-specific-virtualbox)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -852,9 +819,3 @@ Theo mặc định, Homestead cấu hình thiết lập `natdnshostresolver` th�
 provider: virtualbox
 natdnshostresolver: 'off'
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/homestead). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

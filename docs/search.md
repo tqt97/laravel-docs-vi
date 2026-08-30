@@ -1,23 +1,5 @@
 # Tìm kiếm
 
-- [Giới thiệu](#introduction)
-    - [Tìm kiếm toàn văn](#introduction-full-text-search)
-    - [Tìm kiếm ngữ nghĩa / vector](#introduction-semantic-vector-search)
-    - [Xếp hạng lại](#introduction-reranking)
-    - [Các công cụ tìm kiếm của Scout](#introduction-scout-search-engines)
-- [Tìm kiếm toàn văn](#full-text-search)
-    - [Thêm chỉ mục toàn văn](#adding-full-text-indexes)
-    - [Thực thi truy vấn toàn văn](#running-full-text-queries)
-- [Tìm kiếm ngữ nghĩa / vector](#semantic-vector-search)
-    - [Tạo embedding](#generating-embeddings)
-    - [Lưu trữ và lập chỉ mục vector](#storing-and-indexing-vectors)
-    - [Truy vấn theo độ tương đồng](#querying-by-similarity)
-- [Xếp hạng lại kết quả](#reranking-results)
-- [Laravel Scout](#laravel-scout)
-    - [Database Engine](#database-engine)
-    - [Các engine bên thứ ba](#third-party-engines)
-- [Kết hợp các kỹ thuật](#combining-techniques)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -317,7 +299,3 @@ $documents = Document::query()
     ->limit(10)
     ->get();
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/search). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

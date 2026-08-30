@@ -1,11 +1,5 @@
 # Eloquent: Tuần tự hóa
-- [Giới thiệu](#introduction)
-- [Tuần tự hóa Model và Collection](#serializing-models-and-collections)
-    - [Tuần tự hóa thành Array](#serializing-to-arrays)
-    - [Tuần tự hóa thành JSON](#serializing-to-json)
-- [Ẩn Attribute khỏi JSON](#hiding-attributes-from-json)
-- [Bổ sung giá trị vào JSON](#appending-values-to-json)
-- [Tuần tự hóa Date](#date-serialization)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Khi xây dựng API bằng Laravel, bạn thường cần chuyển model và relationship thành array hoặc JSON. Eloquent cung cấp các phương thức thuận tiện cho những chuyển đổi này, đồng thời cho phép kiểm soát attribute nào được đưa vào biểu diễn đã tuần tự hóa của model.
@@ -202,7 +196,3 @@ protected function casts(): array
     ];
 }
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/eloquent-serialization). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

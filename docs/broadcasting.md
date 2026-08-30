@@ -1,46 +1,5 @@
 # Broadcasting (Phát sóng sự kiện)
 
-- [Giới thiệu](#introduction)
-- [Bắt đầu nhanh](#quickstart)
-- [Cài đặt phía server](#server-side-installation)
-    - [Reverb](#reverb)
-    - [Pusher Channels](#pusher-channels)
-    - [Ably](#ably)
-- [Cài đặt phía client](#client-side-installation)
-    - [Reverb](#client-reverb)
-    - [Pusher Channels](#client-pusher-channels)
-    - [Ably](#client-ably)
-- [Tổng quan khái niệm](#concept-overview)
-        - [Sử dụng ứng dụng ví dụ](#using-example-application)
-- [Định nghĩa broadcast event](#defining-broadcast-events)
-        - [Tên broadcast](#broadcast-name)
-        - [Dữ liệu broadcast](#broadcast-data)
-        - [Broadcast queue](#broadcast-queue)
-        - [Điều kiện broadcast](#broadcast-conditions)
-        - [Broadcasting và database transaction](#broadcasting-and-database-transactions)
-- [Ủy quyền channel](#authorizing-channels)
-        - [Định nghĩa authorization callback](#defining-authorization-callbacks)
-        - [Định nghĩa channel class](#defining-channel-classes)
-- [Broadcast event](#broadcasting-events)
-        - [Chỉ broadcast tới người khác](#only-to-others)
-        - [Tùy chỉnh connection](#customizing-the-connection)
-        - [Event ẩn danh](#anonymous-events)
-        - [Xử lý lỗi khi broadcast](#rescuing-broadcasts)
-- [Nhận broadcast](#receiving-broadcasts)
-        - [Lắng nghe event](#listening-for-events)
-        - [Rời channel](#leaving-a-channel)
-        - [Namespace](#namespaces)
-        - [Sử dụng React, Vue hoặc Svelte](#using-react-or-vue)
-- [Presence channel](#presence-channels)
-        - [Ủy quyền presence channel](#authorizing-presence-channels)
-        - [Tham gia presence channel](#joining-presence-channels)
-        - [Broadcast tới presence channel](#broadcasting-to-presence-channels)
-- [Model Broadcasting](#model-broadcasting)
-        - [Quy ước Model Broadcasting](#model-broadcasting-conventions)
-        - [Lắng nghe Model Broadcast](#listening-for-model-broadcasts)
-- [Client event](#client-events)
-- [Notification](#notifications)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -1970,9 +1929,3 @@ Echo.private(`App.Models.User.${userId}`)
 Echo.private(`App.Models.User.${userId}`)
     .stopListeningForNotification(callback);
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/broadcasting). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

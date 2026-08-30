@@ -1,27 +1,5 @@
 # Laravel Horizon
 
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-    - [Cấu hình](#configuration)
-    - [Ủy quyền Dashboard](#dashboard-authorization)
-    - [Số lần thử tối đa của Job](#max-job-attempts)
-    - [Timeout của Job](#job-timeout)
-    - [Backoff của Job](#job-backoff)
-    - [Các tùy chọn Worker khác](#other-worker-options)
-    - [Ẩn Job](#silenced-jobs)
-- [Chiến lược cân bằng](#balancing-strategies)
-    - [Cân bằng tự động](#auto-balancing)
-    - [Cân bằng đơn giản](#simple-balancing)
-    - [Không cân bằng](#no-balancing)
-- [Nâng cấp Horizon](#upgrading-horizon)
-- [Chạy Horizon](#running-horizon)
-    - [Triển khai Horizon](#deploying-horizon)
-- [Tag](#tags)
-- [Thông báo](#notifications)
-- [Metric](#metrics)
-- [Xóa Job thất bại](#deleting-failed-jobs)
-- [Xóa Job khỏi Queue](#clearing-jobs-from-queues)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -818,9 +796,3 @@ Bạn có thể truyền tùy chọn `queue` để xóa job khỏi một queue c
 ```shell
 php artisan horizon:clear --queue=emails
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/horizon). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

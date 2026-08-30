@@ -1,24 +1,5 @@
 # Controller
 
-- [Giới thiệu](#introduction)
-- [Viết Controller](#writing-controllers)
-    - [Controller cơ bản](#basic-controllers)
-    - [Controller một hành động](#single-action-controllers)
-- [Middleware của Controller](#controller-middleware)
-    - [Attribute Middleware](#middleware-attributes)
-    - [Attribute phân quyền](#authorization-attributes)
-- [Resource Controller](#resource-controllers)
-    - [Partial Resource Routes](#restful-partial-resource-routes)
-    - [Nested Resources](#restful-nested-resources)
-    - [Naming Resource Routes](#restful-naming-resource-routes)
-    - [Naming Resource Route Parameters](#restful-naming-resource-route-parameters)
-    - [Scoping Resource Routes](#restful-scoping-resource-routes)
-    - [Localizing Resource URIs](#restful-localizing-resource-uris)
-    - [Supplementing Resource Controllers](#restful-supplementing-resource-controllers)
-    - [Singleton Resource Controllers](#singleton-resource-controllers)
-    - [Middleware and Resource Controllers](#middleware-and-resource-controllers)
-- [Dependency Injection và Controller](#dependency-injection-and-controllers)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -809,9 +790,3 @@ class UserController extends Controller
     }
 }
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/controllers). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

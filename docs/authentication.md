@@ -1,31 +1,5 @@
 # Xác thực
 
-- [Giới thiệu](#introduction)
-    - [Starter Kit](#starter-kits)
-    - [Các lưu ý về cơ sở dữ liệu](#introduction-database-considerations)
-    - [Tổng quan hệ sinh thái](#ecosystem-overview)
-- [Bắt đầu nhanh với xác thực](#authentication-quickstart)
-    - [Cài đặt Starter Kit](#install-a-starter-kit)
-    - [Lấy người dùng đã xác thực](#retrieving-the-authenticated-user)
-    - [Bảo vệ route](#protecting-routes)
-    - [Giới hạn tần suất đăng nhập](#login-throttling)
-- [Manually Authenticating Users](#authenticating-users)
-    - [Remembering Users](#remembering-users)
-    - [Other Authentication Methods](#other-authentication-methods)
-- [HTTP Basic Authentication](#http-basic-authentication)
-    - [Stateless HTTP Basic Authentication](#stateless-http-basic-authentication)
-- [Logging Out](#logging-out)
-    - [Invalidating Sessions on Other Devices](#invalidating-sessions-on-other-devices)
-- [Password Confirmation](#password-confirmation)
-    - [Configuration](#password-confirmation-configuration)
-    - [Routing](#password-confirmation-routing)
-    - [Protecting Routes](#password-confirmation-protecting-routes)
-- [Adding Custom Guards](#adding-custom-guards)
-    - [Closure Request Guards](#closure-request-guards)
-- [Adding Custom User Providers](#adding-custom-user-providers)
-    - [The User Provider Contract](#the-user-provider-contract)
-    - [The Authenticatable Contract](#the-authenticatable-contract)
-- [Automatic Password Rehashing](#automatic-password-rehashing)
 - [Social Authentication](/docs/{{version}}/socialite)
 - [Events](#events)
 
@@ -841,9 +815,3 @@ Laravel dispatch nhiều [event](/docs/{{version}}/events) trong quá trình xá
 | `Illuminate\Auth\Events\PasswordResetLinkSent` |
 
 </div>
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/authentication). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

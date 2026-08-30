@@ -1,18 +1,5 @@
 # Tạo URL
 
-- [Giới thiệu](#introduction)
-- [Kiến thức cơ bản](#the-basics)
-    - [Tạo URL](#generating-urls)
-    - [Truy cập URL hiện tại](#accessing-the-current-url)
-- [URL cho named route](#urls-for-named-routes)
-    - [Eloquent Model](#eloquent-models)
-- [Signed URL](#signed-urls)
-    - [Xác thực request của signed route](#validating-signed-route-requests)
-    - [Phản hồi khi signed route không hợp lệ](#responding-to-invalid-signed-routes)
-- [URL cho controller action](#urls-for-controller-actions)
-- [Fluent URI Object](#fluent-uri-objects)
-- [Giá trị mặc định](#default-values)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -368,7 +355,3 @@ Bạn có thể thực hiện điều này bằng phương thức middleware `pr
     );
 })
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/urls). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

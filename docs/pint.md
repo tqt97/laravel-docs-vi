@@ -1,13 +1,5 @@
 # Laravel Pint
-- [Giới thiệu](#introduction)
-- [Cài đặt](#installation)
-- [Chạy Pint](#running-pint)
-- [Cấu hình Pint](#configuring-pint)
-    - [Presets](#presets)
-    - [Rules](#rules)
-    - [Loại trừ File / Folder](#excluding-files-or-folders)
-- [Continuous Integration](#continuous-integration)
-    - [GitHub Actions](#running-tests-on-github-actions)
+
 <a name="introduction"></a>
 ## Giới thiệu
 [Laravel Pint](https://github.com/laravel/pint) là PHP code style fixer theo convention rõ ràng, hướng tới sự tối giản. Pint được xây trên [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer), giúp giữ code style sạch và nhất quán một cách đơn giản.
@@ -222,7 +214,3 @@ jobs:
       - name: Commit linted files
         uses: stefanzweifel/git-auto-commit-action@v6
 ```
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/pint). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

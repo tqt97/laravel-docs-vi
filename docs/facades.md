@@ -1,11 +1,5 @@
 # Facades
-- [Giới thiệu](#introduction)
-- [Khi nào nên sử dụng Facade](#when-to-use-facades)
-    - [Facades và Dependency Injection](#facades-vs-dependency-injection)
-    - [Facades và Helper Functions](#facades-vs-helper-functions)
-- [Facade hoạt động như thế nào](#how-facades-work)
-- [Real-Time Facades](#real-time-facades)
-- [Danh sách Facade Class](#facade-class-reference)
+
 <a name="introduction"></a>
 ## Giới thiệu
 Trong tài liệu Laravel, bạn sẽ thường thấy code tương tác với feature của Laravel thông qua "facade". Facade cung cấp interface dạng "static" tới các class đang có trong [service container](/docs/{{version}}/container). Laravel đi kèm nhiều facade, cho phép truy cập gần như toàn bộ feature của framework.
@@ -322,7 +316,3 @@ Bên dưới là toàn bộ facade và class nằm phía sau chúng. Đây là t
 | Vite | [Illuminate\Foundation\Vite](https://api.laravel.com/docs/{{version}}/Illuminate/Foundation/Vite.html) | &nbsp; |
 
 </div>
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/facades). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

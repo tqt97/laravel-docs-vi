@@ -1,13 +1,5 @@
 # Hashing
 
-- [Giới thiệu](#introduction)
-- [Cấu hình](#configuration)
-- [Cách sử dụng cơ bản](#basic-usage)
-    - [Hash mật khẩu](#hashing-passwords)
-    - [Xác minh mật khẩu khớp với hash](#verifying-that-a-password-matches-a-hash)
-    - [Xác định mật khẩu có cần hash lại hay không](#determining-if-a-password-needs-to-be-rehashed)
-- [Xác minh thuật toán hash](#hash-algorithm-verification)
-
 <a name="introduction"></a>
 ## Giới thiệu
 
@@ -120,9 +112,3 @@ if (Hash::needsRehash($hashed)) {
 ```ini
 HASH_VERIFY=false
 ```
-
----
-
-## Tài liệu chính thức
-
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/hashing). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.
