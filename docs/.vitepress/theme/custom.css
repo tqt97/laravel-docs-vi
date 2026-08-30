@@ -12,24 +12,82 @@ body { line-height: 1.72; }
 .vp-doc p, .vp-doc li { font-size: 16px; }
 .vp-doc h2 { border-top: 0; padding-top: 24px; }
 
-.learning-notice {
-  margin: 0 0 24px;
-  padding: 14px 16px;
-  border: 1px solid var(--vp-c-warning-2);
-  border-radius: 10px;
-  background: var(--vp-c-warning-soft);
-  font-size: 14px;
-  line-height: 1.6;
-}
-.learning-notice strong { display: block; margin-bottom: 2px; }
-.learning-notice a, .official-source a { font-weight: 600; }
 
-.official-source {
-  margin-top: 48px;
-  padding-top: 20px;
-  border-top: 1px solid var(--vp-c-divider);
+.learning-notice {
+  position: relative;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
+  margin: 52px 0 8px;
+  padding: 18px 20px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 32%, var(--vp-c-divider));
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 0 0, color-mix(in srgb, var(--vp-c-brand-1) 18%, transparent), transparent 42%),
+    color-mix(in srgb, var(--vp-c-bg-soft) 88%, var(--vp-c-brand-soft));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.65;
 }
-.official-source strong { display: block; margin-bottom: 4px; }
-.official-source a { overflow-wrap: anywhere; }
+
+.learning-notice::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--vp-c-brand-1), var(--vp-c-brand-2));
+  content: '';
+}
+
+.learning-notice__icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--vp-c-brand-soft);
+  color: var(--vp-c-brand-1);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.learning-notice__content strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--vp-c-text-1);
+  font-size: 15px;
+}
+
+.learning-notice__content p {
+  margin: 0;
+  color: var(--vp-c-text-2);
+}
+
+.learning-notice a {
+  color: var(--vp-c-brand-1);
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--vp-c-brand-1) 45%, transparent);
+  text-underline-offset: 3px;
+}
+
+.learning-notice a:hover {
+  color: var(--vp-c-brand-2);
+  text-decoration-color: currentColor;
+}
+
+@media (max-width: 640px) {
+  .learning-notice {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 10px;
+    margin-top: 40px;
+    padding: 16px;
+  }
+
+  .learning-notice__icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    font-size: 17px;
+  }
+}

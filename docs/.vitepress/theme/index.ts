@@ -1,17 +1,12 @@
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
+import { h } from 'vue'
 import LearningNotice from './components/LearningNotice.vue'
-import OfficialSource from './components/OfficialSource.vue'
 import './custom.css'
 
 export default {
   extends: DefaultTheme,
-  Layout: () => {
-    return h(DefaultTheme.Layout, null, {
-      'doc-before': () => h(LearningNotice),
-      'doc-after': () => h(OfficialSource),
-    })
-  },
+  Layout: () => h(DefaultTheme.Layout, null, {
+    'doc-after': () => h(LearningNotice),
+  }),
 } satisfies Theme
-
-import { h } from 'vue'
