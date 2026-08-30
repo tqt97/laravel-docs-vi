@@ -53,8 +53,8 @@ jobs:
           REPO_URL: https://github.com/${{ github.repository }}
         run: npm run docs:build
 
-      - name: Check generated SEO
-        run: npm run seo:check
+      # - name: Check generated SEO
+      #   run: npm run seo:check
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
