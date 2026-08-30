@@ -99,7 +99,7 @@ cd example-app
 npm install && npm run build
 composer run dev
 ```
-Khi development server đã chạy, bạn có thể truy cập ứng dụng bằng trình duyệt tại [http://localhost:8000](http://localhost:8000). Tiếp theo, bạn đã sẵn sàng [khám phá các bước tiếp theo trong hệ sinh thái Laravel](#next-steps). Bạn cũng có thể [cấu hình cơ sở dữ liệu](#databases-and-migrations) và chạy các migration cần thiết.
+Khi development server đã chạy, bạn có thể truy cập ứng dụng bằng trình duyệt tại `http://localhost:8000`. Tiếp theo, bạn đã sẵn sàng [khám phá các bước tiếp theo trong hệ sinh thái Laravel](#next-steps). Bạn cũng có thể [cấu hình cơ sở dữ liệu](#databases-and-migrations) và chạy các migration cần thiết.
 
 > [!NOTE]
 > Nếu muốn có sẵn nền tảng ban đầu khi phát triển ứng dụng, hãy cân nhắc sử dụng một trong các [starter kit](/starter-kits). Starter kit của Laravel cung cấp scaffolding xác thực cho cả backend và frontend của ứng dụng mới.

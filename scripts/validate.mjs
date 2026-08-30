@@ -100,6 +100,20 @@ for (const file of files) {
 
   if (/##\s+Tài liệu chính thức/.test(text)) pageFailures.push('còn footer “Tài liệu chính thức” trong Markdown')
   if (/Đối chiếu tài liệu gốc:/.test(text)) pageFailures.push('còn dòng “Đối chiếu tài liệu gốc”')
+  if (/\{\{version\}\}|%7B%7Bversion%7D%7D/i.test(text)) pageFailures.push('còn placeholder version trong nội dung hoặc URL')
+
+  // Laravel upstream uses /docs/{{version}}/... links. In this VitePress repo, docs live at the site root.
+  // Validate root-relative Markdown links here so CI fails before VitePress emits hundreds of dead-link errors.
+  for (const m of text.matchAll(/\[[^\]]*\]\((\/[^)\s]+)\)/g)) {
+    const url = m[1]
+    if (url.startsWith('//')) continue
+    const route = url.split('#', 1)[0].split('?', 1)[0].replace(/^\//, '')
+    if (!route) continue
+    const basename = route.split('/').pop() || ''
+    if (/\.[A-Za-z0-9]+$/.test(basename) && !basename.endsWith('.html')) continue
+    const page = basename.endsWith('.html') ? basename.slice(0, -5) : basename
+    if (!fs.existsSync(path.join(docsDir, `${page}.md`))) pageFailures.push(`internal VitePress target không tồn tại: ${url}`)
+  }
 
   const candidates = findEnglishProseCandidates(text)
   editorialCandidates.push(...candidates.map((item) => ({ file, ...item })))
@@ -122,11 +136,6 @@ for (const file of files) {
       const viAnchors = anchors(text)
       if (JSON.stringify(srcAnchors) !== JSON.stringify(viAnchors)) pageFailures.push('explicit anchor khác source')
     }
-  }
-
-  for (const m of text.matchAll(/\]\(\/docs\/\{\{version\}\}\/([^#)]+)(?:#[^)]*)?\)/g)) {
-    const target = `${m[1]}.md`
-    if (!fs.existsSync(path.join(docsDir, target))) pageFailures.push(`internal Laravel docs target không tồn tại: ${target}`)
   }
 
   if (pageFailures.length) failures.push(...pageFailures.map((x) => `${file}: ${x}`))
