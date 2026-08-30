@@ -1,8 +1,8 @@
 # Prompts
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Available Prompts](#available-prompts)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+- [Các prompt có sẵn](#available-prompts)
     - [Text](#text)
     - [Textarea](#textarea)
     - [Number](#number)
@@ -15,51 +15,51 @@
     - [Multi-search](#multisearch)
     - [Pause](#pause)
     - [Autocomplete](#autocomplete)
-- [Transforming Input Before Validation](#transforming-input-before-validation)
-- [Forms](#forms)
-- [Informational Messages](#informational-messages)
-- [Callouts](#callouts)
-- [Tables](#tables)
-- [Spin](#spin)
-- [Progress Bar](#progress)
+- [Biến đổi dữ liệu đầu vào trước khi validation](#transforming-input-before-validation)
+- [Form](#forms)
+- [Thông báo thông tin](#informational-messages)
+- [Callout](#callouts)
+- [Bảng](#tables)
+- [Spinner](#spin)
+- [Thanh tiến trình](#progress)
 - [Task](#task)
 - [Stream](#stream)
-- [Terminal Title](#terminal-title)
-- [Clearing the Terminal](#clear)
-- [Terminal Considerations](#terminal-considerations)
-- [Unsupported Environments and Fallbacks](#fallbacks)
-- [Testing](#testing)
+- [Tiêu đề terminal](#terminal-title)
+- [Xóa nội dung terminal](#clear)
+- [Các lưu ý về terminal](#terminal-considerations)
+- [Môi trường không được hỗ trợ và fallback](#fallbacks)
+- [Kiểm thử](#testing)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-[Laravel Prompts](https://github.com/laravel/prompts) is a PHP package for adding beautiful and user-friendly forms to your command-line applications, with browser-like features including placeholder text and validation.
+[Laravel Prompts](https://github.com/laravel/prompts) là một package PHP giúp bổ sung các form đẹp mắt và thân thiện với người dùng vào ứng dụng dòng lệnh, với những tính năng tương tự trình duyệt như placeholder và validation.
 
 <img src="https://laravel.com/img/docs/prompts-example.png">
 
-Laravel Prompts is perfect for accepting user input in your [Artisan console commands](/docs/{{version}}/artisan#writing-commands), but it may also be used in any command-line PHP project.
+Laravel Prompts rất phù hợp để nhận dữ liệu đầu vào từ người dùng trong các [lệnh Artisan console](/docs/{{version}}/artisan#writing-commands), nhưng cũng có thể được sử dụng trong bất kỳ dự án PHP dòng lệnh nào.
 
 > [!NOTE]
-> Laravel Prompts supports macOS, Linux, and Windows with WSL. For more information, please see our documentation on [unsupported environments & fallbacks](#fallbacks).
+> Laravel Prompts hỗ trợ macOS, Linux và Windows với WSL. Để biết thêm thông tin, hãy xem tài liệu về [môi trường không được hỗ trợ và cơ chế fallback](#fallbacks).
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
-Laravel Prompts is already included with the latest release of Laravel.
+Laravel Prompts đã được tích hợp sẵn trong phiên bản Laravel mới nhất.
 
-Laravel Prompts may also be installed in your other PHP projects by using the Composer package manager:
+Bạn cũng có thể cài Laravel Prompts vào các dự án PHP khác bằng Composer:
 
 ```shell
 composer require laravel/prompts
 ```
 
 <a name="available-prompts"></a>
-## Available Prompts
+## Các prompt có sẵn
 
 <a name="text"></a>
 ### Text
 
-The `text` function will prompt the user with the given question, accept their input, and then return it:
+Hàm `text` sẽ hiển thị câu hỏi được cung cấp cho người dùng, nhận dữ liệu họ nhập và trả về giá trị đó:
 
 ```php
 use function Laravel\Prompts\text;
@@ -67,7 +67,7 @@ use function Laravel\Prompts\text;
 $name = text('What is your name?');
 ```
 
-You may also include placeholder text, a default value, and an informational hint:
+Bạn cũng có thể cung cấp placeholder, giá trị mặc định và một gợi ý bổ sung thông tin:
 
 ```php
 $name = text(
@@ -79,9 +79,9 @@ $name = text(
 ```
 
 <a name="text-required"></a>
-#### Required Values
+#### Giá trị bắt buộc
 
-If you require a value to be entered, you may pass the `required` argument:
+Nếu bắt buộc người dùng phải nhập giá trị, bạn có thể truyền đối số `required`:
 
 ```php
 $name = text(
@@ -90,7 +90,7 @@ $name = text(
 );
 ```
 
-If you would like to customize the validation message, you may also pass a string:
+Nếu muốn tùy chỉnh thông báo validation, bạn cũng có thể truyền một chuỗi:
 
 ```php
 $name = text(
@@ -100,9 +100,9 @@ $name = text(
 ```
 
 <a name="text-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-Finally, if you would like to perform additional validation logic, you may pass a closure to the `validate` argument:
+Cuối cùng, nếu muốn thực hiện thêm logic validation, bạn có thể truyền một closure vào đối số `validate`:
 
 ```php
 $name = text(
@@ -115,9 +115,9 @@ $name = text(
 );
 ```
 
-The closure will receive the value that has been entered and may return an error message, or `null` if the validation passes.
+Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Alternatively, you may leverage the power of Laravel's [validator](/docs/{{version}}/validation). To do so, provide an array containing the name of the attribute and the desired validation rules to the `validate` argument:
+Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $name = text(
@@ -129,7 +129,7 @@ $name = text(
 <a name="textarea"></a>
 ### Textarea
 
-The `textarea` function will prompt the user with the given question, accept their input via a multi-line textarea, and then return it:
+Hàm `textarea` sẽ hiển thị câu hỏi được cung cấp, nhận dữ liệu người dùng nhập qua textarea nhiều dòng và trả về giá trị đó:
 
 ```php
 use function Laravel\Prompts\textarea;
@@ -137,7 +137,7 @@ use function Laravel\Prompts\textarea;
 $story = textarea('Tell me a story.');
 ```
 
-You may also include placeholder text, a default value, and an informational hint:
+Bạn cũng có thể cung cấp placeholder, giá trị mặc định và một gợi ý bổ sung thông tin:
 
 ```php
 $story = textarea(
@@ -148,9 +148,9 @@ $story = textarea(
 ```
 
 <a name="textarea-required"></a>
-#### Required Values
+#### Giá trị bắt buộc
 
-If you require a value to be entered, you may pass the `required` argument:
+Nếu bắt buộc người dùng phải nhập giá trị, bạn có thể truyền đối số `required`:
 
 ```php
 $story = textarea(
@@ -159,7 +159,7 @@ $story = textarea(
 );
 ```
 
-If you would like to customize the validation message, you may also pass a string:
+Nếu muốn tùy chỉnh thông báo validation, bạn cũng có thể truyền một chuỗi:
 
 ```php
 $story = textarea(
@@ -169,9 +169,9 @@ $story = textarea(
 ```
 
 <a name="textarea-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-Finally, if you would like to perform additional validation logic, you may pass a closure to the `validate` argument:
+Cuối cùng, nếu muốn thực hiện thêm logic validation, bạn có thể truyền một closure vào đối số `validate`:
 
 ```php
 $story = textarea(
@@ -184,9 +184,9 @@ $story = textarea(
 );
 ```
 
-The closure will receive the value that has been entered and may return an error message, or `null` if the validation passes.
+Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Alternatively, you may leverage the power of Laravel's [validator](/docs/{{version}}/validation). To do so, provide an array containing the name of the attribute and the desired validation rules to the `validate` argument:
+Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $story = textarea(
@@ -198,7 +198,7 @@ $story = textarea(
 <a name="number"></a>
 ### Number
 
-The `number` function will prompt the user with the given question, accept their numeric input, and then return it. The `number` function allows the user to use the up and down arrow keys to manipulate the number:
+Hàm `number` sẽ hiển thị câu hỏi được cung cấp, nhận giá trị số do người dùng nhập và trả về giá trị đó. Hàm `number` cho phép người dùng sử dụng phím mũi tên lên và xuống để điều chỉnh số:
 
 ```php
 use function Laravel\Prompts\number;
@@ -206,7 +206,7 @@ use function Laravel\Prompts\number;
 $number = number('How many copies would you like?');
 ```
 
-You may also include placeholder text, a default value, and an informational hint:
+Bạn cũng có thể cung cấp placeholder, giá trị mặc định và một gợi ý bổ sung thông tin:
 
 ```php
 $name = number(
@@ -218,9 +218,9 @@ $name = number(
 ```
 
 <a name="number-required"></a>
-#### Required Values
+#### Giá trị bắt buộc
 
-If you require a value to be entered, you may pass the `required` argument:
+Nếu bắt buộc người dùng phải nhập giá trị, bạn có thể truyền đối số `required`:
 
 ```php
 $copies = number(
@@ -229,7 +229,7 @@ $copies = number(
 );
 ```
 
-If you would like to customize the validation message, you may also pass a string:
+Nếu muốn tùy chỉnh thông báo validation, bạn cũng có thể truyền một chuỗi:
 
 ```php
 $copies = number(
@@ -239,9 +239,9 @@ $copies = number(
 ```
 
 <a name="number-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-Finally, if you would like to perform additional validation logic, you may pass a closure to the `validate` argument:
+Cuối cùng, nếu muốn thực hiện thêm logic validation, bạn có thể truyền một closure vào đối số `validate`:
 
 ```php
 $copies = number(
@@ -254,9 +254,9 @@ $copies = number(
 );
 ```
 
-The closure will receive the value that has been entered and may return an error message, or `null` if the validation passes.
+Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Alternatively, you may leverage the power of Laravel's [validator](/docs/{{version}}/validation). To do so, provide an array containing the name of the attribute and the desired validation rules to the `validate` argument:
+Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $copies = number(
@@ -268,7 +268,7 @@ $copies = number(
 <a name="password"></a>
 ### Password
 
-The `password` function is similar to the `text` function, but the user's input will be masked as they type in the console. This is useful when asking for sensitive information such as passwords:
+Hàm `password` tương tự hàm `text`, nhưng dữ liệu người dùng nhập sẽ được che khi họ gõ trong console. Điều này hữu ích khi yêu cầu thông tin nhạy cảm như mật khẩu:
 
 ```php
 use function Laravel\Prompts\password;
@@ -276,7 +276,7 @@ use function Laravel\Prompts\password;
 $password = password('What is your password?');
 ```
 
-You may also include placeholder text and an informational hint:
+Bạn cũng có thể cung cấp placeholder và một gợi ý bổ sung thông tin:
 
 ```php
 $password = password(
@@ -287,9 +287,9 @@ $password = password(
 ```
 
 <a name="password-required"></a>
-#### Required Values
+#### Giá trị bắt buộc
 
-If you require a value to be entered, you may pass the `required` argument:
+Nếu bắt buộc người dùng phải nhập giá trị, bạn có thể truyền đối số `required`:
 
 ```php
 $password = password(
@@ -298,7 +298,7 @@ $password = password(
 );
 ```
 
-If you would like to customize the validation message, you may also pass a string:
+Nếu muốn tùy chỉnh thông báo validation, bạn cũng có thể truyền một chuỗi:
 
 ```php
 $password = password(
@@ -308,9 +308,9 @@ $password = password(
 ```
 
 <a name="password-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-Finally, if you would like to perform additional validation logic, you may pass a closure to the `validate` argument:
+Cuối cùng, nếu muốn thực hiện thêm logic validation, bạn có thể truyền một closure vào đối số `validate`:
 
 ```php
 $password = password(
@@ -322,9 +322,9 @@ $password = password(
 );
 ```
 
-The closure will receive the value that has been entered and may return an error message, or `null` if the validation passes.
+Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Alternatively, you may leverage the power of Laravel's [validator](/docs/{{version}}/validation). To do so, provide an array containing the name of the attribute and the desired validation rules to the `validate` argument:
+Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $password = password(
@@ -336,7 +336,7 @@ $password = password(
 <a name="confirm"></a>
 ### Confirm
 
-If you need to ask the user for a "yes or no" confirmation, you may use the `confirm` function. Users may use the arrow keys or press `y` or `n` to select their response. This function will return either `true` or `false`.
+Nếu cần yêu cầu người dùng xác nhận "có hoặc không", bạn có thể sử dụng hàm `confirm`. Người dùng có thể dùng các phím mũi tên hoặc nhấn `y` hay `n` để chọn câu trả lời. Hàm này sẽ trả về `true` hoặc `false`.
 
 ```php
 use function Laravel\Prompts\confirm;
@@ -344,7 +344,7 @@ use function Laravel\Prompts\confirm;
 $confirmed = confirm('Do you accept the terms?');
 ```
 
-You may also include a default value, customized wording for the "Yes" and "No" labels, and an informational hint:
+Bạn cũng có thể cung cấp giá trị mặc định, tùy chỉnh nội dung cho nhãn "Yes" và "No", cùng một gợi ý bổ sung thông tin:
 
 ```php
 $confirmed = confirm(
@@ -357,9 +357,9 @@ $confirmed = confirm(
 ```
 
 <a name="confirm-required"></a>
-#### Requiring "Yes"
+#### Bắt buộc chọn "Yes"
 
-If necessary, you may require your users to select "Yes" by passing the `required` argument:
+Nếu cần, bạn có thể bắt buộc người dùng chọn "Yes" bằng cách truyền đối số `required`:
 
 ```php
 $confirmed = confirm(
@@ -368,7 +368,7 @@ $confirmed = confirm(
 );
 ```
 
-If you would like to customize the validation message, you may also pass a string:
+Nếu muốn tùy chỉnh thông báo validation, bạn cũng có thể truyền một chuỗi:
 
 ```php
 $confirmed = confirm(
@@ -380,7 +380,7 @@ $confirmed = confirm(
 <a name="select"></a>
 ### Select
 
-If you need the user to select from a predefined set of choices, you may use the `select` function:
+Nếu cần người dùng chọn từ một tập lựa chọn được định nghĩa trước, bạn có thể sử dụng hàm `select`:
 
 ```php
 use function Laravel\Prompts\select;
@@ -391,7 +391,7 @@ $role = select(
 );
 ```
 
-You may also specify the default choice and an informational hint:
+Bạn cũng có thể chỉ định lựa chọn mặc định và một gợi ý bổ sung thông tin:
 
 ```php
 $role = select(
@@ -402,7 +402,7 @@ $role = select(
 );
 ```
 
-You may also pass an associative array to the `options` argument to have the selected key returned instead of its value:
+Bạn cũng có thể truyền một associative array vào đối số `options` để nhận về key được chọn thay vì value:
 
 ```php
 $role = select(
@@ -416,7 +416,7 @@ $role = select(
 );
 ```
 
-Up to five options will be displayed before the list begins to scroll. You may customize this by passing the `scroll` argument:
+Tối đa năm lựa chọn sẽ được hiển thị trước khi danh sách bắt đầu cuộn. Bạn có thể tùy chỉnh số lượng này bằng đối số `scroll`:
 
 ```php
 $role = select(
@@ -427,9 +427,9 @@ $role = select(
 ```
 
 <a name="select-info"></a>
-#### Secondary Information
+#### Thông tin bổ sung
 
-The `info` argument may be used to display additional information about the currently highlighted option. When a closure is provided, it will receive the value of the currently highlighted option and should return a string or `null`:
+Đối số `info` có thể được dùng để hiển thị thông tin bổ sung về lựa chọn đang được highlight. Khi cung cấp một closure, closure sẽ nhận value của lựa chọn hiện tại và cần trả về một chuỗi hoặc `null`:
 
 ```php
 $role = select(
@@ -448,7 +448,7 @@ $role = select(
 );
 ```
 
-You may also pass a static string to the `info` argument if the information does not depend on the highlighted option:
+Bạn cũng có thể truyền một chuỗi tĩnh vào đối số `info` nếu thông tin không phụ thuộc vào lựa chọn đang được highlight:
 
 ```php
 $role = select(
@@ -459,9 +459,9 @@ $role = select(
 ```
 
 <a name="select-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-Unlike other prompt functions, the `select` function doesn't accept the `required` argument because it is not possible to select nothing. However, you may pass a closure to the `validate` argument if you need to present an option but prevent it from being selected:
+Không giống các hàm prompt khác, hàm `select` không nhận đối số `required` vì người dùng không thể không chọn gì. Tuy nhiên, bạn có thể truyền một closure vào đối số `validate` nếu cần hiển thị một lựa chọn nhưng không cho phép lựa chọn đó được chọn:
 
 ```php
 $role = select(
@@ -478,12 +478,12 @@ $role = select(
 );
 ```
 
-If the `options` argument is an associative array, then the closure will receive the selected key, otherwise it will receive the selected value. The closure may return an error message, or `null` if the validation passes.
+Nếu đối số `options` là associative array, closure sẽ nhận key được chọn; nếu không, closure sẽ nhận value được chọn. Closure có thể trả về thông báo lỗi hoặc `null` nếu validation thành công.
 
 <a name="multiselect"></a>
 ### Multi-select
 
-If you need the user to be able to select multiple options, you may use the `multiselect` function:
+Nếu cần cho phép người dùng chọn nhiều lựa chọn, bạn có thể sử dụng hàm `multiselect`:
 
 ```php
 use function Laravel\Prompts\multiselect;
@@ -494,7 +494,7 @@ $permissions = multiselect(
 );
 ```
 
-You may also specify default choices and an informational hint:
+Bạn cũng có thể chỉ định các lựa chọn mặc định và một gợi ý bổ sung thông tin:
 
 ```php
 use function Laravel\Prompts\multiselect;
@@ -507,7 +507,7 @@ $permissions = multiselect(
 );
 ```
 
-You may also pass an associative array to the `options` argument to return the selected options' keys instead of their values:
+Bạn cũng có thể truyền associative array vào đối số `options` để trả về các key của những lựa chọn được chọn thay vì value của chúng:
 
 ```php
 $permissions = multiselect(
@@ -522,7 +522,7 @@ $permissions = multiselect(
 );
 ```
 
-Up to five options will be displayed before the list begins to scroll. You may customize this by passing the `scroll` argument:
+Tối đa năm lựa chọn sẽ được hiển thị trước khi danh sách bắt đầu cuộn. Bạn có thể tùy chỉnh số lượng này bằng đối số `scroll`:
 
 ```php
 $categories = multiselect(
@@ -533,9 +533,9 @@ $categories = multiselect(
 ```
 
 <a name="multiselect-info"></a>
-#### Secondary Information
+#### Thông tin bổ sung
 
-The `info` argument may be used to display additional information about the currently highlighted option. When a closure is provided, it will receive the value of the currently highlighted option and should return a string or `null`:
+Đối số `info` có thể được dùng để hiển thị thông tin bổ sung về lựa chọn đang được highlight. Khi cung cấp một closure, closure sẽ nhận value của lựa chọn hiện tại và cần trả về một chuỗi hoặc `null`:
 
 ```php
 $permissions = multiselect(
@@ -557,9 +557,9 @@ $permissions = multiselect(
 ```
 
 <a name="multiselect-required"></a>
-#### Requiring a Value
+#### Bắt buộc có giá trị
 
-By default, the user may select zero or more options. You may pass the `required` argument to enforce one or more options instead:
+Mặc định, người dùng có thể chọn từ không đến nhiều lựa chọn. Bạn có thể truyền đối số `required` để bắt buộc phải chọn ít nhất một lựa chọn:
 
 ```php
 $categories = multiselect(
@@ -569,7 +569,7 @@ $categories = multiselect(
 );
 ```
 
-If you would like to customize the validation message, you may provide a string to the `required` argument:
+Nếu muốn tùy chỉnh thông báo validation, bạn có thể truyền một chuỗi vào đối số `required`:
 
 ```php
 $categories = multiselect(
@@ -580,9 +580,9 @@ $categories = multiselect(
 ```
 
 <a name="multiselect-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-You may pass a closure to the `validate` argument if you need to present an option but prevent it from being selected:
+Bạn có thể truyền một closure vào đối số `validate` nếu cần hiển thị một lựa chọn nhưng không cho phép lựa chọn đó được chọn:
 
 ```php
 $permissions = multiselect(
@@ -599,12 +599,12 @@ $permissions = multiselect(
 );
 ```
 
-If the `options` argument is an associative array then the closure will receive the selected keys, otherwise it will receive the selected values. The closure may return an error message, or `null` if the validation passes.
+Nếu đối số `options` là associative array, closure sẽ nhận các key được chọn; nếu không, closure sẽ nhận các value được chọn. Closure có thể trả về thông báo lỗi hoặc `null` nếu validation thành công.
 
 <a name="suggest"></a>
 ### Suggest
 
-The `suggest` function can be used to provide auto-completion for possible choices. The user can still provide any answer, regardless of the auto-completion hints:
+Hàm `suggest` có thể được dùng để cung cấp tính năng tự động hoàn thành cho các lựa chọn có thể có. Người dùng vẫn có thể nhập bất kỳ câu trả lời nào, bất kể các gợi ý tự động hoàn thành:
 
 ```php
 use function Laravel\Prompts\suggest;
@@ -612,7 +612,7 @@ use function Laravel\Prompts\suggest;
 $name = suggest('What is your name?', ['Taylor', 'Dayle']);
 ```
 
-Alternatively, you may pass a closure as the second argument to the `suggest` function. The closure will be called each time the user types an input character. The closure should accept a string parameter containing the user's input so far and return an array of options for auto-completion:
+Ngoài ra, bạn có thể truyền một closure làm đối số thứ hai cho hàm `suggest`. Closure sẽ được gọi mỗi khi người dùng nhập một ký tự. Closure cần nhận một tham số chuỗi chứa nội dung người dùng đã nhập đến thời điểm đó và trả về một mảng các lựa chọn để tự động hoàn thành:
 
 ```php
 $name = suggest(
@@ -622,7 +622,7 @@ $name = suggest(
 )
 ```
 
-You may also include placeholder text, a default value, and an informational hint:
+Bạn cũng có thể cung cấp placeholder, giá trị mặc định và một gợi ý bổ sung thông tin:
 
 ```php
 $name = suggest(
@@ -635,9 +635,9 @@ $name = suggest(
 ```
 
 <a name="suggest-info"></a>
-#### Secondary Information
+#### Thông tin bổ sung
 
-The `info` argument may be used to display additional information about the currently highlighted option. When a closure is provided, it will receive the value of the currently highlighted option and should return a string or `null`:
+Đối số `info` có thể được dùng để hiển thị thông tin bổ sung về lựa chọn đang được highlight. Khi cung cấp một closure, closure sẽ nhận value của lựa chọn hiện tại và cần trả về một chuỗi hoặc `null`:
 
 ```php
 $name = suggest(
@@ -652,9 +652,9 @@ $name = suggest(
 ```
 
 <a name="suggest-required"></a>
-#### Required Values
+#### Giá trị bắt buộc
 
-If you require a value to be entered, you may pass the `required` argument:
+Nếu bắt buộc người dùng phải nhập giá trị, bạn có thể truyền đối số `required`:
 
 ```php
 $name = suggest(
@@ -664,7 +664,7 @@ $name = suggest(
 );
 ```
 
-If you would like to customize the validation message, you may also pass a string:
+Nếu muốn tùy chỉnh thông báo validation, bạn cũng có thể truyền một chuỗi:
 
 ```php
 $name = suggest(
@@ -675,9 +675,9 @@ $name = suggest(
 ```
 
 <a name="suggest-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-Finally, if you would like to perform additional validation logic, you may pass a closure to the `validate` argument:
+Cuối cùng, nếu muốn thực hiện thêm logic validation, bạn có thể truyền một closure vào đối số `validate`:
 
 ```php
 $name = suggest(
@@ -691,9 +691,9 @@ $name = suggest(
 );
 ```
 
-The closure will receive the value that has been entered and may return an error message, or `null` if the validation passes.
+Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
-Alternatively, you may leverage the power of Laravel's [validator](/docs/{{version}}/validation). To do so, provide an array containing the name of the attribute and the desired validation rules to the `validate` argument:
+Ngoài ra, bạn có thể tận dụng [validator](/docs/{{version}}/validation) của Laravel. Để làm vậy, hãy truyền vào đối số `validate` một mảng chứa tên attribute và các validation rule mong muốn:
 
 ```php
 $name = suggest(
@@ -704,9 +704,9 @@ $name = suggest(
 ```
 
 <a name="search"></a>
-### Search
+### Tìm kiếm
 
-If you have a lot of options for the user to select from, the `search` function allows the user to type a search query to filter the results before using the arrow keys to select an option:
+Nếu có nhiều lựa chọn, hàm `search` cho phép người dùng nhập truy vấn tìm kiếm để lọc kết quả trước khi dùng các phím mũi tên để chọn một lựa chọn:
 
 ```php
 use function Laravel\Prompts\search;
@@ -719,9 +719,9 @@ $id = search(
 );
 ```
 
-The closure will receive the text that has been typed by the user so far and must return an array of options. If you return an associative array then the selected option's key will be returned, otherwise its value will be returned instead.
+Closure sẽ nhận phần văn bản người dùng đã nhập và phải trả về một mảng các lựa chọn. Nếu trả về mảng kết hợp, key của lựa chọn được chọn sẽ được trả về; nếu không, value của lựa chọn sẽ được trả về.
 
-When filtering an array where you intend to return the value, you should use the `array_values` function or the `values` Collection method to ensure the array doesn't become associative:
+Khi lọc một mảng mà bạn muốn trả về value, hãy dùng hàm `array_values` hoặc phương thức `values` của Collection để bảo đảm mảng không trở thành mảng kết hợp:
 
 ```php
 $names = collect(['Taylor', 'Abigail']);
@@ -735,7 +735,7 @@ $selected = search(
 );
 ```
 
-You may also include placeholder text and an informational hint:
+Bạn cũng có thể cung cấp placeholder và một gợi ý bổ sung thông tin:
 
 ```php
 $id = search(
@@ -748,7 +748,7 @@ $id = search(
 );
 ```
 
-Up to five options will be displayed before the list begins to scroll. You may customize this by passing the `scroll` argument:
+Tối đa năm lựa chọn sẽ được hiển thị trước khi danh sách bắt đầu cuộn. Bạn có thể tùy chỉnh số lượng này bằng đối số `scroll`:
 
 ```php
 $id = search(
@@ -761,9 +761,9 @@ $id = search(
 ```
 
 <a name="search-info"></a>
-#### Secondary Information
+#### Thông tin bổ sung
 
-The `info` argument may be used to display additional information about the currently highlighted option. When a closure is provided, it will receive the value of the currently highlighted option and should return a string or `null`:
+Đối số `info` có thể được dùng để hiển thị thông tin bổ sung về lựa chọn đang được highlight. Khi cung cấp một closure, closure sẽ nhận value của lựa chọn hiện tại và cần trả về một chuỗi hoặc `null`:
 
 ```php
 $id = search(
@@ -776,9 +776,9 @@ $id = search(
 ```
 
 <a name="search-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-If you would like to perform additional validation logic, you may pass a closure to the `validate` argument:
+Nếu muốn thực hiện thêm logic validation, bạn có thể truyền một closure vào đối số `validate`:
 
 ```php
 $id = search(
@@ -796,12 +796,12 @@ $id = search(
 );
 ```
 
-If the `options` closure returns an associative array, then the closure will receive the selected key, otherwise, it will receive the selected value. The closure may return an error message, or `null` if the validation passes.
+Nếu closure `options` trả về mảng kết hợp, closure validation sẽ nhận key đã chọn; nếu không, nó sẽ nhận value đã chọn. Closure có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
 <a name="multisearch"></a>
-### Multi-search
+### Tìm kiếm nhiều lựa chọn
 
-If you have a lot of searchable options and need the user to be able to select multiple items, the `multisearch` function allows the user to type a search query to filter the results before using the arrow keys and space-bar to select options:
+Nếu có nhiều lựa chọn có thể tìm kiếm và cần cho phép người dùng chọn nhiều mục, hàm `multisearch` cho phép nhập truy vấn để lọc kết quả trước khi dùng phím mũi tên và phím cách để chọn các lựa chọn:
 
 ```php
 use function Laravel\Prompts\multisearch;
@@ -814,9 +814,9 @@ $ids = multisearch(
 );
 ```
 
-The closure will receive the text that has been typed by the user so far and must return an array of options. If you return an associative array then the selected options' keys will be returned; otherwise, their values will be returned instead.
+Closure sẽ nhận phần văn bản người dùng đã nhập và phải trả về một mảng các lựa chọn. Nếu trả về mảng kết hợp, các key của những lựa chọn được chọn sẽ được trả về; nếu không, các value tương ứng sẽ được trả về.
 
-When filtering an array where you intend to return the value, you should use the `array_values` function or the `values` Collection method to ensure the array doesn't become associative:
+Khi lọc một mảng mà bạn muốn trả về value, hãy dùng hàm `array_values` hoặc phương thức `values` của Collection để bảo đảm mảng không trở thành mảng kết hợp:
 
 ```php
 $names = collect(['Taylor', 'Abigail']);
@@ -830,7 +830,7 @@ $selected = multisearch(
 );
 ```
 
-You may also include placeholder text and an informational hint:
+Bạn cũng có thể cung cấp placeholder và một gợi ý bổ sung thông tin:
 
 ```php
 $ids = multisearch(
@@ -843,7 +843,7 @@ $ids = multisearch(
 );
 ```
 
-Up to five options will be displayed before the list begins to scroll. You may customize this by providing the `scroll` argument:
+Tối đa năm lựa chọn sẽ được hiển thị trước khi danh sách bắt đầu cuộn. Bạn có thể tùy chỉnh giới hạn này bằng đối số `scroll`:
 
 ```php
 $ids = multisearch(
@@ -856,9 +856,9 @@ $ids = multisearch(
 ```
 
 <a name="multisearch-info"></a>
-#### Secondary Information
+#### Thông tin bổ sung
 
-The `info` argument may be used to display additional information about the currently highlighted option. When a closure is provided, it will receive the value of the currently highlighted option and should return a string or `null`:
+Đối số `info` có thể được dùng để hiển thị thông tin bổ sung về lựa chọn đang được highlight. Khi cung cấp một closure, closure sẽ nhận value của lựa chọn hiện tại và cần trả về một chuỗi hoặc `null`:
 
 ```php
 $ids = multisearch(
@@ -871,9 +871,9 @@ $ids = multisearch(
 ```
 
 <a name="multisearch-required"></a>
-#### Requiring a Value
+#### Bắt buộc có giá trị
 
-By default, the user may select zero or more options. You may pass the `required` argument to enforce one or more options instead:
+Mặc định, người dùng có thể chọn từ không đến nhiều lựa chọn. Bạn có thể truyền đối số `required` để bắt buộc phải chọn ít nhất một lựa chọn:
 
 ```php
 $ids = multisearch(
@@ -885,7 +885,7 @@ $ids = multisearch(
 );
 ```
 
-If you would like to customize the validation message, you may also provide a string to the `required` argument:
+Nếu muốn tùy chỉnh thông báo validation, bạn cũng có thể truyền một chuỗi vào đối số `required`:
 
 ```php
 $ids = multisearch(
@@ -898,9 +898,9 @@ $ids = multisearch(
 ```
 
 <a name="multisearch-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-If you would like to perform additional validation logic, you may pass a closure to the `validate` argument:
+Nếu muốn thực hiện thêm logic validation, bạn có thể truyền một closure vào đối số `validate`:
 
 ```php
 $ids = multisearch(
@@ -918,12 +918,12 @@ $ids = multisearch(
 );
 ```
 
-If the `options` closure returns an associative array, then the closure will receive the selected keys; otherwise, it will receive the selected values. The closure may return an error message, or `null` if the validation passes.
+Nếu closure `options` trả về mảng kết hợp, closure validation sẽ nhận các key đã chọn; nếu không, nó sẽ nhận các value đã chọn. Closure có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
 <a name="pause"></a>
-### Pause
+### Tạm dừng
 
-The `pause` function may be used to display informational text to the user and wait for them to confirm their desire to proceed by pressing the Enter / Return key:
+Hàm `pause` có thể được dùng để hiển thị thông tin cho người dùng và chờ họ xác nhận muốn tiếp tục bằng cách nhấn phím Enter / Return:
 
 ```php
 use function Laravel\Prompts\pause;
@@ -932,9 +932,9 @@ pause('Press ENTER to continue.');
 ```
 
 <a name="autocomplete"></a>
-### Autocomplete
+### Tự động hoàn thành
 
-The `autocomplete` function can be used to provide inline auto-completion for possible choices. As the user types, suggestions that match their input will appear as ghost text that can be accepted by pressing `Tab` or the right arrow key:
+Hàm `autocomplete` có thể cung cấp tính năng tự động hoàn thành ngay trong dòng cho các lựa chọn khả dụng. Khi người dùng nhập, những gợi ý khớp với dữ liệu đầu vào sẽ xuất hiện dưới dạng văn bản mờ và có thể được chấp nhận bằng phím `Tab` hoặc mũi tên phải:
 
 ```php
 use function Laravel\Prompts\autocomplete;
@@ -945,7 +945,7 @@ $name = autocomplete(
 );
 ```
 
-You may also include placeholder text, a default value, and an informational hint:
+Bạn cũng có thể cung cấp placeholder, giá trị mặc định và một gợi ý bổ sung thông tin:
 
 ```php
 $name = autocomplete(
@@ -958,9 +958,9 @@ $name = autocomplete(
 ```
 
 <a name="autocomplete-closure"></a>
-#### Dynamic Options
+#### Tùy chọn động
 
-You may also pass a closure to dynamically generate options based on the user's input. The closure will be called each time the user types a character and should return an array of options for auto-completion:
+Bạn cũng có thể truyền một closure để tạo động các lựa chọn dựa trên dữ liệu người dùng nhập. Closure được gọi mỗi khi người dùng nhập một ký tự và phải trả về một mảng lựa chọn dùng cho tự động hoàn thành:
 
 ```php
 $file = autocomplete(
@@ -973,9 +973,9 @@ $file = autocomplete(
 ```
 
 <a name="autocomplete-required"></a>
-#### Required Values
+#### Giá trị bắt buộc
 
-If you require a value to be entered, you may pass the `required` argument:
+Nếu bắt buộc người dùng phải nhập giá trị, bạn có thể truyền đối số `required`:
 
 ```php
 $name = autocomplete(
@@ -985,7 +985,7 @@ $name = autocomplete(
 );
 ```
 
-If you would like to customize the validation message, you may also pass a string:
+Nếu muốn tùy chỉnh thông báo validation, bạn cũng có thể truyền một chuỗi:
 
 ```php
 $name = autocomplete(
@@ -996,9 +996,9 @@ $name = autocomplete(
 ```
 
 <a name="autocomplete-validation"></a>
-#### Additional Validation
+#### Validation bổ sung
 
-Finally, if you would like to perform additional validation logic, you may pass a closure to the `validate` argument:
+Cuối cùng, nếu muốn thực hiện thêm logic validation, bạn có thể truyền một closure vào đối số `validate`:
 
 ```php
 $name = autocomplete(
@@ -1012,12 +1012,12 @@ $name = autocomplete(
 );
 ```
 
-The closure will receive the value that has been entered and may return an error message, or `null` if the validation passes.
+Closure sẽ nhận giá trị đã được nhập và có thể trả về thông báo lỗi, hoặc `null` nếu validation thành công.
 
 <a name="transforming-input-before-validation"></a>
-## Transforming Input Before Validation
+## Biến đổi dữ liệu đầu vào trước khi validation
 
-Sometimes you may want to transform the prompt input before validation takes place. For example, you may wish to remove white space from any provided strings. To accomplish this, many of the prompt functions provide a `transform` argument, which accepts a closure:
+Đôi khi bạn có thể muốn biến đổi dữ liệu đầu vào của prompt trước khi validation diễn ra. Ví dụ, bạn có thể muốn loại bỏ khoảng trắng khỏi các chuỗi được cung cấp. Để làm điều này, nhiều hàm prompt cung cấp đối số `transform`, nhận một closure:
 
 ```php
 $name = text(
@@ -1032,9 +1032,9 @@ $name = text(
 ```
 
 <a name="forms"></a>
-## Forms
+## Biểu mẫu
 
-Often, you will have multiple prompts that will be displayed in sequence to collect information before performing additional actions. You may use the `form` function to create a grouped set of prompts for the user to complete:
+Thông thường, bạn sẽ có nhiều prompt được hiển thị tuần tự để thu thập thông tin trước khi thực hiện các hành động tiếp theo. Bạn có thể dùng hàm `form` để tạo một nhóm prompt cho người dùng hoàn thành:
 
 ```php
 use function Laravel\Prompts\form;
@@ -1046,7 +1046,7 @@ $responses = form()
     ->submit();
 ```
 
-The `submit` method will return a numerically indexed array containing all of the responses from the form's prompts. However, you may provide a name for each prompt via the `name` argument. When a name is provided, the named prompt's response may be accessed via that name:
+Phương thức `submit` trả về một mảng đánh index bằng số chứa toàn bộ phản hồi từ các prompt trong form. Tuy nhiên, bạn có thể đặt tên cho từng prompt qua đối số `name`. Khi có tên, phản hồi của prompt có thể được truy cập bằng chính tên đó:
 
 ```php
 use App\Models\User;
@@ -1068,9 +1068,9 @@ User::create([
 ]);
 ```
 
-The primary benefit of using the `form` function is the ability for the user to return to previous prompts in the form using `CTRL + U`. This allows the user to fix mistakes or alter selections without needing to cancel and restart the entire form.
+Lợi ích chính của hàm `form` là cho phép người dùng quay lại các prompt trước đó bằng `CTRL + U`. Nhờ vậy, họ có thể sửa lỗi hoặc thay đổi lựa chọn mà không cần hủy và bắt đầu lại toàn bộ form.
 
-If you need more granular control over a prompt in a form, you may invoke the `add` method instead of calling one of the prompt functions directly. The `add` method is passed all previous responses provided by the user:
+Nếu cần kiểm soát chi tiết hơn một prompt trong form, bạn có thể gọi phương thức `add` thay vì gọi trực tiếp một hàm prompt. Phương thức `add` được truyền toàn bộ các phản hồi trước đó của người dùng:
 
 ```php
 use function Laravel\Prompts\form;
@@ -1088,9 +1088,9 @@ outro("Your name is {$responses['name']} and you are {$responses['age']} years o
 ```
 
 <a name="informational-messages"></a>
-## Informational Messages
+## Thông báo thông tin
 
-The `note`, `info`, `warning`, `error`, and `alert` functions may be used to display informational messages:
+Các hàm `note`, `info`, `warning`, `error` và `alert` có thể được dùng để hiển thị các thông báo thông tin:
 
 ```php
 use function Laravel\Prompts\info;
@@ -1099,9 +1099,9 @@ info('Package installed successfully.');
 ```
 
 <a name="callouts"></a>
-## Callouts
+## Khung thông báo
 
-The `callout` function displays a boxed message with a label and content. Callouts are useful for displaying important information that should stand out, such as deployment summaries, error details, or status updates:
+Hàm `callout` hiển thị một thông báo dạng khung với label và nội dung. Callout hữu ích khi cần làm nổi bật thông tin quan trọng như tóm tắt deployment, chi tiết lỗi hoặc cập nhật trạng thái:
 
 ```php
 use function Laravel\Prompts\callout;
@@ -1112,7 +1112,7 @@ callout(
 );
 ```
 
-You may pass `warning` or `error` as the `type` argument to change the callout's visual style:
+Bạn có thể truyền `warning` hoặc `error` vào đối số `type` để thay đổi kiểu hiển thị của callout:
 
 ```php
 callout(
@@ -1128,7 +1128,7 @@ callout(
 );
 ```
 
-The `info` argument adds a footer line to the callout, which is useful for displaying metadata like IDs or timestamps:
+Đối số `info` thêm một dòng footer vào callout, hữu ích để hiển thị metadata như ID hoặc timestamp:
 
 ```php
 callout(
@@ -1139,9 +1139,9 @@ callout(
 ```
 
 <a name="callout-rich-content"></a>
-#### Rich Content
+#### Nội dung phong phú
 
-Instead of passing a string, you may pass an array of strings and elements to build rich, structured callouts. The `Element` class provides factory methods for creating headings, bulleted lists, numbered lists, key-value lists, and links:
+Thay vì truyền một chuỗi, bạn có thể truyền một mảng gồm các chuỗi và element để xây dựng callout phong phú, có cấu trúc. Lớp `Element` cung cấp các factory method để tạo heading, danh sách bullet, danh sách đánh số, danh sách key-value và liên kết:
 
 ```php
 use Laravel\Prompts\Elements\Element;
@@ -1165,7 +1165,7 @@ callout('Deployment Summary', [
 ]);
 ```
 
-You may also use `Element::keyValueList` to display labeled data:
+Bạn cũng có thể dùng `Element::keyValueList` để hiển thị dữ liệu có label:
 
 ```php
 callout('Database Connection Failed', [
@@ -1179,7 +1179,7 @@ callout('Database Connection Failed', [
 ], type: 'error');
 ```
 
-The `Element::link` method creates a clickable hyperlink in terminals that support [OSC 8](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda). You may provide a URL alone, or a URL with a custom label:
+Phương thức `Element::link` tạo hyperlink có thể nhấp trong các terminal hỗ trợ [OSC 8](https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda). Bạn có thể chỉ cung cấp URL hoặc cung cấp URL cùng label tùy chỉnh:
 
 ```php
 callout('Server Health Check', [
@@ -1190,12 +1190,12 @@ callout('Server Health Check', [
 ]);
 ```
 
-If no label is provided, the URL itself will be displayed as the link text.
+Nếu không cung cấp label, chính URL sẽ được hiển thị làm nội dung liên kết.
 
 <a name="tables"></a>
-## Tables
+## Bảng
 
-The `table` function makes it easy to display multiple rows and columns of data. All you need to do is provide the column names and the data for the table:
+Hàm `table` giúp hiển thị dữ liệu nhiều hàng và nhiều cột một cách dễ dàng. Bạn chỉ cần cung cấp tên các cột và dữ liệu của bảng:
 
 ```php
 use function Laravel\Prompts\table;
@@ -1207,9 +1207,9 @@ table(
 ```
 
 <a name="spin"></a>
-## Spin
+## Spinner
 
-The `spin` function displays a spinner along with an optional message while executing a specified callback. It serves to indicate ongoing processes and returns the callback's results upon completion:
+Hàm `spin` hiển thị spinner cùng một thông báo tùy chọn trong khi thực thi callback được chỉ định. Nó cho biết tiến trình đang diễn ra và trả về kết quả của callback khi hoàn tất:
 
 ```php
 use function Laravel\Prompts\spin;
@@ -1221,12 +1221,12 @@ $response = spin(
 ```
 
 > [!WARNING]
-> The `spin` function requires the [PCNTL](https://www.php.net/manual/en/book.pcntl.php) PHP extension to animate the spinner. When this extension is not available, a static version of the spinner will appear instead.
+> Hàm `spin` yêu cầu PHP extension [PCNTL](https://www.php.net/manual/en/book.pcntl.php) để tạo animation cho spinner. Khi extension này không khả dụng, một phiên bản spinner tĩnh sẽ được hiển thị thay thế.
 
 <a name="progress"></a>
-## Progress Bars
+## Thanh tiến trình
 
-For long running tasks, it can be helpful to show a progress bar that informs users how complete the task is. Using the `progress` function, Laravel will display a progress bar and advance its progress for each iteration over a given iterable value:
+Với các tác vụ chạy lâu, thanh tiến trình giúp người dùng biết tác vụ đã hoàn thành đến đâu. Khi dùng hàm `progress`, Laravel sẽ hiển thị thanh tiến trình và tăng tiến độ sau mỗi lần lặp qua giá trị iterable được cung cấp:
 
 ```php
 use function Laravel\Prompts\progress;
@@ -1238,9 +1238,9 @@ $users = progress(
 );
 ```
 
-The `progress` function acts like a map function and will return an array containing the return value of each iteration of your callback.
+Hàm `progress` hoạt động tương tự hàm map và trả về một mảng chứa giá trị trả về của từng lần thực thi callback.
 
-The callback may also accept the `Laravel\Prompts\Progress` instance, allowing you to modify the label and hint on each iteration:
+Callback cũng có thể nhận instance `Laravel\Prompts\Progress`, cho phép bạn thay đổi label và hint ở mỗi lần lặp:
 
 ```php
 $users = progress(
@@ -1257,7 +1257,7 @@ $users = progress(
 );
 ```
 
-Sometimes, you may need more manual control over how a progress bar is advanced. First, define the total number of steps the process will iterate through. Then, advance the progress bar via the `advance` method after processing each item:
+Đôi khi bạn cần kiểm soát thủ công hơn cách thanh tiến trình được tăng. Trước tiên, hãy xác định tổng số bước của quá trình. Sau đó, gọi phương thức `advance` sau khi xử lý từng mục để tăng thanh tiến trình:
 
 ```php
 $progress = progress(label: 'Updating users', steps: 10);
@@ -1276,9 +1276,9 @@ $progress->finish();
 ```
 
 <a name="task"></a>
-## Task
+## Tác vụ
 
-The `task` function displays a labeled task with a spinner and a scrolling live output area while a given callback is executing. It is ideal for wrapping long-running processes such as dependency installation or deployment scripts, providing real-time visibility into what is happening:
+Hàm `task` hiển thị một tác vụ có label, spinner và vùng output trực tiếp có thể cuộn trong khi callback đang thực thi. Hàm này phù hợp để bao quanh các tiến trình chạy lâu như cài đặt dependency hoặc script deployment, giúp quan sát những gì đang diễn ra theo thời gian thực:
 
 ```php
 use function Laravel\Prompts\task;
@@ -1291,15 +1291,15 @@ task(
 );
 ```
 
-The callback receives a `Logger` instance that you may use to display log lines, status messages, and streamed text in the task's output area.
+Callback nhận một instance `Logger` mà bạn có thể dùng để hiển thị các dòng log, thông báo trạng thái và văn bản dạng stream trong vùng output của tác vụ.
 
 > [!WARNING]
-> The `task` function requires the [PCNTL](https://www.php.net/manual/en/book.pcntl.php) PHP extension to animate the spinner. When this extension is not available, a static version of the task will appear instead.
+> Hàm `task` yêu cầu PHP extension [PCNTL](https://www.php.net/manual/en/book.pcntl.php) để tạo animation cho spinner. Khi extension này không khả dụng, một phiên bản tĩnh của tác vụ sẽ được hiển thị thay thế.
 
 <a name="task-logging"></a>
-#### Logging Lines
+#### Ghi log từng dòng
 
-The `line` method writes a single log line to the task's scrolling output area:
+Phương thức `line` ghi một dòng log vào vùng output có thể cuộn của tác vụ:
 
 ```php
 task(
@@ -1314,9 +1314,9 @@ task(
 ```
 
 <a name="task-status-messages"></a>
-#### Status Messages
+#### Thông báo trạng thái
 
-You may use the `success`, `warning`, and `error` methods to display status messages. These appear as stable, highlighted messages above the scrolling log area:
+Bạn có thể dùng các phương thức `success`, `warning` và `error` để hiển thị thông báo trạng thái. Các thông báo này được giữ ổn định và làm nổi bật phía trên vùng log cuộn:
 
 ```php
 task(
@@ -1338,9 +1338,9 @@ task(
 ```
 
 <a name="task-label"></a>
-#### Updating the Label
+#### Cập nhật label
 
-The `label` method allows you to update the task's label while it is running:
+Phương thức `label` cho phép cập nhật label của tác vụ trong khi tác vụ đang chạy:
 
 ```php
 task(
@@ -1357,9 +1357,9 @@ task(
 ```
 
 <a name="task-sub-label"></a>
-#### Displaying a Sub-Label
+#### Hiển thị sub-label
 
-The `subLabel` method displays a dim line beneath the task's main label, which is useful for communicating ephemeral status such as the step currently in progress. Pass an empty string to clear the sub-label:
+Phương thức `subLabel` hiển thị một dòng mờ bên dưới label chính của tác vụ, hữu ích để truyền đạt trạng thái tạm thời như bước đang được xử lý. Truyền chuỗi rỗng để xóa sub-label:
 
 ```php
 task(
@@ -1374,7 +1374,7 @@ task(
 );
 ```
 
-You may also provide an initial sub-label via the `subLabel` argument:
+Bạn cũng có thể cung cấp sub-label ban đầu qua đối số `subLabel`:
 
 ```php
 task(
@@ -1387,9 +1387,9 @@ task(
 ```
 
 <a name="task-streaming"></a>
-#### Streaming Text
+#### Luồng văn bản văn bản
 
-For processes that produce output incrementally, such as AI-generated responses, the `partial` method allows you to stream text word-by-word or chunk-by-chunk. Once the stream is complete, call `commitPartial` to finalize the output:
+Với các tiến trình tạo output từng phần, chẳng hạn phản hồi do AI sinh ra, phương thức `partial` cho phép stream văn bản theo từng từ hoặc từng chunk. Khi stream hoàn tất, gọi `commitPartial` để chốt output:
 
 ```php
 task(
@@ -1405,9 +1405,9 @@ task(
 ```
 
 <a name="task-limit"></a>
-#### Customizing the Output Limit
+#### Tùy biến giới hạn output
 
-By default, the task displays up to 10 lines of scrolling output. You may customize this via the `limit` argument:
+Mặc định, tác vụ hiển thị tối đa 10 dòng output có thể cuộn. Bạn có thể tùy chỉnh giới hạn này qua đối số `limit`:
 
 ```php
 task(
@@ -1420,9 +1420,9 @@ task(
 ```
 
 <a name="task-keep-summary"></a>
-#### Keeping the Summary
+#### Giữ lại phần tóm tắt
 
-By default, the task's output is erased once the callback finishes. If you would like to keep the status messages on screen after the task has completed, you may pass the `keepSummary` argument:
+Mặc định, output của tác vụ sẽ bị xóa khi callback hoàn tất. Nếu muốn giữ các thông báo trạng thái trên màn hình sau khi tác vụ kết thúc, bạn có thể truyền đối số `keepSummary`:
 
 ```php
 task(
@@ -1437,9 +1437,9 @@ task(
 ```
 
 <a name="stream"></a>
-## Stream
+## Luồng văn bản
 
-The `stream` function displays text that streams into the terminal, ideal for displaying AI-generated content or any text that arrives incrementally:
+Hàm `stream` hiển thị văn bản được truyền dần vào terminal, phù hợp để hiển thị nội dung do AI sinh ra hoặc bất kỳ văn bản nào đến theo từng phần:
 
 ```php
 use function Laravel\Prompts\stream;
@@ -1454,12 +1454,12 @@ foreach ($words as $word) {
 $stream->close();
 ```
 
-The `append` method adds text to the stream, rendering it with a gradual fade-in effect. When all content has been streamed, call the `close` method to finalize the output and restore the cursor.
+Phương thức `append` thêm văn bản vào stream và render với hiệu ứng hiện dần. Khi toàn bộ nội dung đã được stream, gọi phương thức `close` để hoàn tất output và khôi phục con trỏ.
 
 <a name="terminal-title"></a>
-## Terminal Title
+## Tiêu đề terminal
 
-The `title` function updates the title of the user's terminal window or tab:
+Hàm `title` cập nhật tiêu đề cửa sổ hoặc tab terminal của người dùng:
 
 ```php
 use function Laravel\Prompts\title;
@@ -1467,16 +1467,16 @@ use function Laravel\Prompts\title;
 title('Installing Dependencies');
 ```
 
-To reset the terminal title back to its default, pass an empty string:
+Để đặt lại tiêu đề terminal về mặc định, hãy truyền một chuỗi rỗng:
 
 ```php
 title('');
 ```
 
 <a name="clear"></a>
-## Clearing the Terminal
+## Xóa nội dung terminal
 
-The `clear` function may be used to clear the user's terminal:
+Hàm `clear` có thể được dùng để xóa nội dung terminal của người dùng:
 
 ```php
 use function Laravel\Prompts\clear;
@@ -1485,32 +1485,32 @@ clear();
 ```
 
 <a name="terminal-considerations"></a>
-## Terminal Considerations
+## Các lưu ý về terminal
 
 <a name="terminal-width"></a>
-#### Terminal Width
+#### Chiều rộng terminal
 
-If the length of any label, option, or validation message exceeds the number of "columns" in the user's terminal, it will be automatically truncated to fit. Consider minimizing the length of these strings if your users may be using narrower terminals. A typically safe maximum length is 74 characters to support an 80-character terminal.
+Nếu độ dài của label, lựa chọn hoặc thông báo validation vượt quá số "cột" của terminal, nội dung sẽ tự động được cắt ngắn để vừa chiều rộng. Hãy cân nhắc giữ các chuỗi này ngắn nếu người dùng có thể sử dụng terminal hẹp. Giới hạn tối đa thường an toàn là 74 ký tự để hỗ trợ terminal rộng 80 ký tự.
 
 <a name="terminal-height"></a>
-#### Terminal Height
+#### Chiều cao terminal
 
-For any prompts that accept the `scroll` argument, the configured value will automatically be reduced to fit the height of the user's terminal, including space for a validation message.
+Với các prompt hỗ trợ đối số `scroll`, giá trị đã cấu hình sẽ tự động được giảm để vừa chiều cao terminal của người dùng, bao gồm cả không gian dành cho thông báo validation.
 
 <a name="fallbacks"></a>
-## Unsupported Environments and Fallbacks
+## Môi trường không được hỗ trợ và fallback
 
-Laravel Prompts supports macOS, Linux, and Windows with WSL. Due to limitations in the Windows version of PHP, it is not currently possible to use Laravel Prompts on Windows outside of WSL.
+Laravel Prompts hỗ trợ macOS, Linux và Windows thông qua WSL. Do các giới hạn của phiên bản PHP trên Windows, hiện không thể sử dụng Laravel Prompts trực tiếp trên Windows bên ngoài WSL.
 
-For this reason, Laravel Prompts supports falling back to an alternative implementation such as the [Symfony Console Question Helper](https://symfony.com/doc/current/components/console/helpers/questionhelper.html).
+Vì lý do này, Laravel Prompts hỗ trợ fallback sang implementation thay thế như [Symfony Console Question Helper](https://symfony.com/doc/current/components/console/helpers/questionhelper.html).
 
 > [!NOTE]
-> When using Laravel Prompts with the Laravel framework, fallbacks for each prompt have been configured for you and will be automatically enabled in unsupported environments.
+> Khi sử dụng Laravel Prompts cùng Laravel framework, fallback cho từng prompt đã được cấu hình sẵn và sẽ tự động được bật trong các môi trường không được hỗ trợ.
 
 <a name="fallback-conditions"></a>
-#### Fallback Conditions
+#### Điều kiện fallback
 
-If you are not using Laravel or need to customize when the fallback behavior is used, you may pass a boolean to the `fallbackWhen` static method on the `Prompt` class:
+Nếu không sử dụng Laravel hoặc cần tùy chỉnh thời điểm áp dụng fallback, bạn có thể truyền một giá trị boolean vào static method `fallbackWhen` của lớp `Prompt`:
 
 ```php
 use Laravel\Prompts\Prompt;
@@ -1521,9 +1521,9 @@ Prompt::fallbackWhen(
 ```
 
 <a name="fallback-behavior"></a>
-#### Fallback Behavior
+#### Hành vi fallback
 
-If you are not using Laravel or need to customize the fallback behavior, you may pass a closure to the `fallbackUsing` static method on each prompt class:
+Nếu không sử dụng Laravel hoặc cần tùy chỉnh hành vi fallback, bạn có thể truyền một closure vào static method `fallbackUsing` trên từng lớp prompt:
 
 ```php
 use Laravel\Prompts\TextPrompt;
@@ -1555,12 +1555,12 @@ TextPrompt::fallbackUsing(function (TextPrompt $prompt) use ($input, $output) {
 });
 ```
 
-Fallbacks must be configured individually for each prompt class. The closure will receive an instance of the prompt class and must return an appropriate type for the prompt.
+Fallback phải được cấu hình riêng cho từng lớp prompt. Closure sẽ nhận một instance của lớp prompt và phải trả về kiểu dữ liệu phù hợp cho prompt đó.
 
 <a name="testing"></a>
-## Testing
+## Kiểm thử
 
-Laravel provides a variety of methods for testing that your command displays the expected Prompt messages:
+Laravel cung cấp nhiều phương thức để kiểm thử rằng command của bạn hiển thị đúng các thông báo Prompt mong đợi:
 
 ```php tab=Pest
 test('report generation', function () {
@@ -1602,6 +1602,8 @@ public function test_report_generation(): void
         ->assertExitCode(0);
 }
 ```
+
+---
 
 ## Tài liệu chính thức
 

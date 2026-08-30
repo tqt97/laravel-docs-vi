@@ -1,34 +1,34 @@
-# Processes
+# Process
 
-- [Introduction](#introduction)
-- [Invoking Processes](#invoking-processes)
-    - [Process Options](#process-options)
-    - [Process Output](#process-output)
-    - [Pipelines](#process-pipelines)
-- [Asynchronous Processes](#asynchronous-processes)
-    - [Process IDs and Signals](#process-ids-and-signals)
-    - [Asynchronous Process Output](#asynchronous-process-output)
-    - [Asynchronous Process Timeouts](#asynchronous-process-timeouts)
-- [Concurrent Processes](#concurrent-processes)
-    - [Naming Pool Processes](#naming-pool-processes)
-    - [Pool Process IDs and Signals](#pool-process-ids-and-signals)
+- [Giới thiệu](#introduction)
+- [Gọi process](#invoking-processes)
+    - [Tùy chọn process](#process-options)
+    - [Đầu ra của process](#process-output)
+    - [Pipeline](#process-pipelines)
+- [Process bất đồng bộ](#asynchronous-processes)
+    - [Process ID và signal](#process-ids-and-signals)
+    - [Đầu ra của process bất đồng bộ](#asynchronous-process-output)
+    - [Timeout của process bất đồng bộ](#asynchronous-process-timeouts)
+- [Process đồng thời](#concurrent-processes)
+    - [Đặt tên process trong pool](#naming-pool-processes)
+    - [Process ID và signal trong pool](#pool-process-ids-and-signals)
 - [Testing](#testing)
-    - [Faking Processes](#faking-processes)
-    - [Faking Specific Processes](#faking-specific-processes)
-    - [Faking Process Sequences](#faking-process-sequences)
-    - [Faking Asynchronous Process Lifecycles](#faking-asynchronous-process-lifecycles)
-    - [Available Assertions](#available-assertions)
-    - [Preventing Stray Processes](#preventing-stray-processes)
+    - [Fake process](#faking-processes)
+    - [Fake process cụ thể](#faking-specific-processes)
+    - [Fake chuỗi process](#faking-process-sequences)
+    - [Fake vòng đời process bất đồng bộ](#faking-asynchronous-process-lifecycles)
+    - [Các assertion có sẵn](#available-assertions)
+    - [Ngăn process ngoài dự kiến](#preventing-stray-processes)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel provides an expressive, minimal API around the [Symfony Process component](https://symfony.com/doc/current/components/process.html), allowing you to conveniently invoke external processes from your Laravel application. Laravel's process features are focused on the most common use cases and a wonderful developer experience.
+Laravel cung cấp một API tối giản nhưng giàu khả năng biểu đạt trên [Symfony Process component](https://symfony.com/doc/current/components/process.html), cho phép bạn thuận tiện gọi các process bên ngoài từ ứng dụng Laravel. Các tính năng process của Laravel tập trung vào những use case phổ biến nhất và mang lại trải nghiệm phát triển thuận tiện.
 
 <a name="invoking-processes"></a>
-## Invoking Processes
+## Gọi process
 
-To invoke a process, you may use the `run` and `start` methods offered by the `Process` facade. The `run` method will invoke a process and wait for the process to finish executing, while the `start` method is used for asynchronous process execution. We'll examine both approaches within this documentation. First, let's examine how to invoke a basic, synchronous process and inspect its result:
+Để gọi một process, bạn có thể dùng các method `run` và `start` do facade `Process` cung cấp. Method `run` sẽ gọi process và chờ process thực thi xong, còn `start` dùng để thực thi process bất đồng bộ. Tài liệu này sẽ trình bày cả hai cách. Trước tiên, hãy xem cách gọi một process đồng bộ cơ bản và kiểm tra kết quả của nó:
 
 ```php
 use Illuminate\Support\Facades\Process;
@@ -38,7 +38,7 @@ $result = Process::run('ls -la');
 return $result->output();
 ```
 
-Of course, the `Illuminate\Contracts\Process\ProcessResult` instance returned by the `run` method offers a variety of helpful methods that may be used to inspect the process result:
+Instance `Illuminate\Contracts\Process\ProcessResult` do method `run` trả về cung cấp nhiều method hữu ích để kiểm tra kết quả của process:
 
 ```php
 $result = Process::run('ls -la');
@@ -52,9 +52,9 @@ $result->exitCode();
 ```
 
 <a name="throwing-exceptions"></a>
-#### Throwing Exceptions
+#### Ném exception
 
-If you have a process result and would like to throw an instance of `Illuminate\Process\Exceptions\ProcessFailedException` if the exit code is greater than zero (thus indicating failure), you may use the `throw` and `throwIf` methods. If the process did not fail, the `ProcessResult` instance will be returned:
+Nếu đã có kết quả process và muốn ném một instance `Illuminate\Process\Exceptions\ProcessFailedException` khi exit code lớn hơn `0` (nghĩa là process thất bại), bạn có thể dùng các method `throw` và `throwIf`. Nếu process không thất bại, instance `ProcessResult` sẽ được trả về:
 
 ```php
 $result = Process::run('ls -la')->throw();
@@ -63,14 +63,14 @@ $result = Process::run('ls -la')->throwIf($condition);
 ```
 
 <a name="process-options"></a>
-### Process Options
+### Tùy chọn process
 
-Of course, you may need to customize the behavior of a process before invoking it. Thankfully, Laravel allows you to tweak a variety of process features, such as the working directory, timeout, and environment variables.
+Bạn có thể cần tùy biến hành vi của process trước khi gọi nó. Laravel cho phép điều chỉnh nhiều đặc tính của process như working directory, timeout và biến môi trường.
 
 <a name="working-directory-path"></a>
-#### Working Directory Path
+#### Đường dẫn working directory
 
-You may use the `path` method to specify the working directory of the process. If this method is not invoked, the process will inherit the working directory of the currently executing PHP script:
+Bạn có thể dùng method `path` để chỉ định working directory của process. Nếu không gọi method này, process sẽ kế thừa working directory của PHP script đang thực thi:
 
 ```php
 $result = Process::path(__DIR__)->run('ls -la');
@@ -79,22 +79,22 @@ $result = Process::path(__DIR__)->run('ls -la');
 <a name="input"></a>
 #### Input
 
-You may provide input via the "standard input" of the process using the `input` method:
+Bạn có thể cung cấp input thông qua "standard input" của process bằng method `input`:
 
 ```php
 $result = Process::input('Hello World')->run('cat');
 ```
 
 <a name="timeouts"></a>
-#### Timeouts
+#### Timeout
 
-By default, processes will throw an instance of `Illuminate\Process\Exceptions\ProcessTimedOutException` after executing for more than 60 seconds. However, you can customize this behavior via the `timeout` method:
+Mặc định, process sẽ ném một instance `Illuminate\Process\Exceptions\ProcessTimedOutException` nếu thực thi quá 60 giây. Bạn có thể tùy biến hành vi này bằng method `timeout`:
 
 ```php
 $result = Process::timeout(120)->run('bash import.sh');
 ```
 
-The `timeout` and `idleTimeout` methods also accept `CarbonInterval` instances:
+Các method `timeout` và `idleTimeout` cũng chấp nhận instance `CarbonInterval`:
 
 ```php
 use function Illuminate\Support\minutes;
@@ -102,22 +102,22 @@ use function Illuminate\Support\minutes;
 $result = Process::timeout(minutes(2))->run('bash import.sh');
 ```
 
-Or, if you would like to disable the process timeout entirely, you may invoke the `forever` method:
+Hoặc, nếu muốn vô hiệu hóa hoàn toàn timeout của process, bạn có thể gọi method `forever`:
 
 ```php
 $result = Process::forever()->run('bash import.sh');
 ```
 
-The `idleTimeout` method may be used to specify the maximum number of seconds the process may run without returning any output:
+Method `idleTimeout` có thể dùng để chỉ định số giây tối đa process được phép chạy mà không trả về bất kỳ output nào:
 
 ```php
 $result = Process::timeout(60)->idleTimeout(30)->run('bash import.sh');
 ```
 
 <a name="environment-variables"></a>
-#### Environment Variables
+#### Biến môi trường
 
-Environment variables may be provided to the process via the `env` method. The invoked process will also inherit all of the environment variables defined by your system:
+Có thể truyền biến môi trường cho process qua method `env`. Process được gọi cũng sẽ kế thừa toàn bộ biến môi trường được định nghĩa trong hệ thống:
 
 ```php
 $result = Process::forever()
@@ -125,7 +125,7 @@ $result = Process::forever()
     ->run('bash import.sh');
 ```
 
-If you wish to remove an inherited environment variable from the invoked process, you may provide that environment variable with a value of `false`:
+Nếu muốn loại bỏ một biến môi trường được kế thừa khỏi process được gọi, hãy truyền biến môi trường đó với giá trị `false`:
 
 ```php
 $result = Process::forever()
@@ -134,21 +134,21 @@ $result = Process::forever()
 ```
 
 <a name="tty-mode"></a>
-#### TTY Mode
+#### Chế độ TTY
 
-The `tty` method may be used to enable TTY mode for your process. TTY mode connects the input and output of the process to the input and output of your program, allowing your process to open an editor like Vim or Nano as a process:
+Method `tty` có thể dùng để bật chế độ TTY cho process. Chế độ TTY kết nối input và output của process với input và output của chương trình, nhờ đó process có thể mở editor như Vim hoặc Nano:
 
 ```php
 Process::forever()->tty()->run('vim');
 ```
 
 > [!WARNING]
-> TTY mode is not supported on Windows.
+> Chế độ TTY không được hỗ trợ trên Windows.
 
 <a name="process-output"></a>
-### Process Output
+### Đầu ra của process
 
-As previously discussed, process output may be accessed using the `output` (stdout) and `errorOutput` (stderr) methods on a process result:
+Như đã đề cập, có thể truy cập output của process bằng các method `output` (stdout) và `errorOutput` (stderr) trên kết quả process:
 
 ```php
 use Illuminate\Support\Facades\Process;
@@ -159,7 +159,7 @@ echo $result->output();
 echo $result->errorOutput();
 ```
 
-However, output may also be gathered in real-time by passing a closure as the second argument to the `run` method. The closure will receive two arguments: the "type" of output (`stdout` or `stderr`) and the output string itself:
+Bạn cũng có thể thu thập output theo thời gian thực bằng cách truyền một closure làm argument thứ hai cho method `run`. Closure nhận hai argument: "loại" output (`stdout` hoặc `stderr`) và chính chuỗi output:
 
 ```php
 $result = Process::run('ls -la', function (string $type, string $output) {
@@ -167,7 +167,7 @@ $result = Process::run('ls -la', function (string $type, string $output) {
 });
 ```
 
-Laravel also offers the `seeInOutput` and `seeInErrorOutput` methods, which provide a convenient way to determine if a given string was contained in the process' output:
+Laravel cũng cung cấp các method `seeInOutput` và `seeInErrorOutput`, giúp kiểm tra thuận tiện xem một chuỗi nhất định có xuất hiện trong output của process hay không:
 
 ```php
 if (Process::run('ls -la')->seeInOutput('laravel')) {
@@ -176,9 +176,9 @@ if (Process::run('ls -la')->seeInOutput('laravel')) {
 ```
 
 <a name="disabling-process-output"></a>
-#### Disabling Process Output
+#### Vô hiệu hóa output của process
 
-If your process is writing a significant amount of output that you are not interested in, you can conserve memory by disabling output retrieval entirely. To accomplish this, invoke the `quietly` method while building the process:
+Nếu process tạo ra lượng output lớn mà bạn không cần sử dụng, có thể tiết kiệm bộ nhớ bằng cách vô hiệu hóa hoàn toàn việc thu thập output. Để thực hiện, gọi method `quietly` khi xây dựng process:
 
 ```php
 use Illuminate\Support\Facades\Process;
@@ -187,9 +187,9 @@ $result = Process::quietly()->run('bash import.sh');
 ```
 
 <a name="process-pipelines"></a>
-### Pipelines
+### Pipeline
 
-Sometimes you may want to make the output of one process the input of another process. This is often referred to as "piping" the output of a process into another. The `pipe` method provided by the `Process` facades makes this easy to accomplish. The `pipe` method will execute the piped processes synchronously and return the process result for the last process in the pipeline:
+Đôi khi bạn muốn dùng output của một process làm input cho process khác. Cách này thường được gọi là "pipe" output của process này sang process khác. Method `pipe` do facade `Process` cung cấp giúp thực hiện việc này dễ dàng. `pipe` sẽ thực thi đồng bộ các process trong pipeline và trả về kết quả của process cuối cùng:
 
 ```php
 use Illuminate\Process\Pipe;
@@ -205,7 +205,7 @@ if ($result->successful()) {
 }
 ```
 
-If you do not need to customize the individual processes that make up the pipeline, you may simply pass an array of command strings to the `pipe` method:
+Nếu không cần tùy biến từng process trong pipeline, bạn chỉ cần truyền một mảng command string cho method `pipe`:
 
 ```php
 $result = Process::pipe([
@@ -214,7 +214,7 @@ $result = Process::pipe([
 ]);
 ```
 
-The process output may be gathered in real-time by passing a closure as the second argument to the `pipe` method. The closure will receive two arguments: the "type" of output (`stdout` or `stderr`) and the output string itself:
+Có thể thu thập output của process theo thời gian thực bằng cách truyền một closure làm argument thứ hai cho method `pipe`. Closure nhận hai argument: "loại" output (`stdout` hoặc `stderr`) và chuỗi output:
 
 ```php
 $result = Process::pipe(function (Pipe $pipe) {
@@ -225,7 +225,7 @@ $result = Process::pipe(function (Pipe $pipe) {
 });
 ```
 
-Laravel also allows you to assign string keys to each process within a pipeline via the `as` method. This key will also be passed to the output closure provided to the `pipe` method, allowing you to determine which process the output belongs to:
+Laravel cũng cho phép gán string key cho từng process trong pipeline thông qua method `as`. Key này cũng được truyền vào output closure của method `pipe`, nhờ đó bạn có thể xác định output thuộc process nào:
 
 ```php
 $result = Process::pipe(function (Pipe $pipe) {
@@ -237,9 +237,9 @@ $result = Process::pipe(function (Pipe $pipe) {
 ```
 
 <a name="asynchronous-processes"></a>
-## Asynchronous Processes
+## Process bất đồng bộ
 
-While the `run` method invokes processes synchronously, the `start` method may be used to invoke a process asynchronously. This allows your application to continue performing other tasks while the process runs in the background. Once the process has been invoked, you may utilize the `running` method to determine if the process is still running:
+Trong khi method `run` gọi process theo cách đồng bộ, method `start` có thể dùng để gọi process bất đồng bộ. Điều này cho phép ứng dụng tiếp tục thực hiện công việc khác trong lúc process chạy nền. Sau khi gọi process, bạn có thể dùng method `running` để xác định process còn đang chạy hay không:
 
 ```php
 $process = Process::timeout(120)->start('bash import.sh');
@@ -251,7 +251,7 @@ while ($process->running()) {
 $result = $process->wait();
 ```
 
-As you may have noticed, you may invoke the `wait` method to wait until the process is finished executing and retrieve the `ProcessResult` instance:
+Bạn có thể gọi method `wait` để chờ đến khi process thực thi xong và lấy instance `ProcessResult`:
 
 ```php
 $process = Process::timeout(120)->start('bash import.sh');
@@ -262,9 +262,9 @@ $result = $process->wait();
 ```
 
 <a name="process-ids-and-signals"></a>
-### Process IDs and Signals
+### Process ID và signal
 
-The `id` method may be used to retrieve the operating system assigned process ID of the running process:
+Method `id` có thể dùng để lấy process ID do hệ điều hành cấp cho process đang chạy:
 
 ```php
 $process = Process::start('bash import.sh');
@@ -272,16 +272,16 @@ $process = Process::start('bash import.sh');
 return $process->id();
 ```
 
-You may use the `signal` method to send a "signal" to the running process. A list of predefined signal constants can be found within the [PHP documentation](https://www.php.net/manual/en/pcntl.constants.php):
+Bạn có thể dùng method `signal` để gửi một "signal" tới process đang chạy. Danh sách các hằng signal được định nghĩa sẵn có trong [tài liệu PHP](https://www.php.net/manual/en/pcntl.constants.php):
 
 ```php
 $process->signal(SIGUSR2);
 ```
 
 <a name="asynchronous-process-output"></a>
-### Asynchronous Process Output
+### Đầu ra của process bất đồng bộ
 
-While an asynchronous process is running, you may access its entire current output using the `output` and `errorOutput` methods; however, you may utilize the `latestOutput` and `latestErrorOutput` to access the output from the process that has occurred since the output was last retrieved:
+Khi một process bất đồng bộ đang chạy, bạn có thể truy cập toàn bộ output hiện tại bằng các method `output` và `errorOutput`. Tuy nhiên, `latestOutput` và `latestErrorOutput` cho phép chỉ lấy phần output phát sinh kể từ lần lấy output gần nhất:
 
 ```php
 $process = Process::timeout(120)->start('bash import.sh');
@@ -294,7 +294,7 @@ while ($process->running()) {
 }
 ```
 
-Like the `run` method, output may also be gathered in real-time from asynchronous processes by passing a closure as the second argument to the `start` method. The closure will receive two arguments: the "type" of output (`stdout` or `stderr`) and the output string itself:
+Tương tự method `run`, output của process bất đồng bộ cũng có thể được thu thập theo thời gian thực bằng cách truyền một closure làm argument thứ hai cho method `start`. Closure nhận hai argument: "loại" output (`stdout` hoặc `stderr`) và chuỗi output:
 
 ```php
 $process = Process::start('bash import.sh', function (string $type, string $output) {
@@ -304,7 +304,7 @@ $process = Process::start('bash import.sh', function (string $type, string $outp
 $result = $process->wait();
 ```
 
-Instead of waiting until the process has finished, you may use the `waitUntil` method to stop waiting based on the output of the process. Laravel will stop waiting for the process to finish when the closure given to the `waitUntil` method returns `true`:
+Thay vì chờ process chạy xong, bạn có thể dùng method `waitUntil` để dừng chờ dựa trên output của process. Laravel sẽ ngừng chờ process hoàn tất khi closure truyền cho `waitUntil` trả về `true`:
 
 ```php
 $process = Process::start('bash import.sh');
@@ -315,9 +315,9 @@ $process->waitUntil(function (string $type, string $output) {
 ```
 
 <a name="asynchronous-process-timeouts"></a>
-### Asynchronous Process Timeouts
+### Timeout của process bất đồng bộ
 
-While an asynchronous process is running, you may verify that the process has not timed out using the `ensureNotTimedOut` method. This method will throw a [timeout exception](#timeouts) if the process has timed out:
+Khi process bất đồng bộ đang chạy, bạn có thể dùng method `ensureNotTimedOut` để kiểm tra process chưa bị timeout. Method này sẽ ném [timeout exception](#timeouts) nếu process đã quá thời gian cho phép:
 
 ```php
 $process = Process::timeout(120)->start('bash import.sh');
@@ -332,11 +332,11 @@ while ($process->running()) {
 ```
 
 <a name="concurrent-processes"></a>
-## Concurrent Processes
+## Process đồng thời
 
-Laravel also makes it a breeze to manage a pool of concurrent, asynchronous processes, allowing you to easily execute many tasks simultaneously. To get started, invoke the `pool` method, which accepts a closure that receives an instance of `Illuminate\Process\Pool`.
+Laravel cũng giúp việc quản lý một pool gồm nhiều process bất đồng bộ chạy đồng thời trở nên đơn giản, cho phép thực thi nhiều tác vụ cùng lúc. Để bắt đầu, gọi method `pool`; method này nhận một closure, và closure nhận instance `Illuminate\Process\Pool`.
 
-Within this closure, you may define the processes that belong to the pool. Once a process pool is started via the `start` method, you may access the [collection](/docs/{{version}}/collections) of running processes via the `running` method:
+Trong closure này, bạn có thể định nghĩa các process thuộc pool. Sau khi process pool được khởi động bằng method `start`, có thể truy cập [collection](/docs/{{version}}/collections) chứa các process đang chạy thông qua method `running`:
 
 ```php
 use Illuminate\Process\Pool;
@@ -357,7 +357,7 @@ while ($pool->running()->isNotEmpty()) {
 $results = $pool->wait();
 ```
 
-As you can see, you may wait for all of the pool processes to finish executing and resolve their results via the `wait` method. The `wait` method returns an array accessible object that allows you to access the `ProcessResult` instance of each process in the pool by its key:
+Bạn có thể chờ toàn bộ process trong pool thực thi xong và lấy kết quả của chúng bằng method `wait`. Method `wait` trả về một object có thể truy cập như mảng, cho phép lấy instance `ProcessResult` của từng process trong pool theo key:
 
 ```php
 $results = $pool->wait();
@@ -365,7 +365,7 @@ $results = $pool->wait();
 echo $results[0]->output();
 ```
 
-Or, for convenience, the `concurrently` method may be used to start an asynchronous process pool and immediately wait on its results. This can provide particularly expressive syntax when combined with PHP's array destructuring capabilities:
+Hoặc, để thuận tiện, có thể dùng method `concurrently` để khởi động một process pool bất đồng bộ và ngay lập tức chờ kết quả. Cách viết này đặc biệt rõ ràng khi kết hợp với khả năng array destructuring của PHP:
 
 ```php
 [$first, $second, $third] = Process::concurrently(function (Pool $pool) {
@@ -378,9 +378,9 @@ echo $first->output();
 ```
 
 <a name="naming-pool-processes"></a>
-### Naming Pool Processes
+### Đặt tên process trong pool
 
-Accessing process pool results via a numeric key is not very expressive; therefore, Laravel allows you to assign string keys to each process within a pool via the `as` method. This key will also be passed to the closure provided to the `start` method, allowing you to determine which process the output belongs to:
+Truy cập kết quả process pool bằng numeric key không thực sự dễ đọc; vì vậy Laravel cho phép gán string key cho từng process trong pool thông qua method `as`. Key này cũng được truyền vào closure của method `start`, giúp xác định output thuộc process nào:
 
 ```php
 $pool = Process::pool(function (Pool $pool) {
@@ -397,15 +397,15 @@ return $results['first']->output();
 ```
 
 <a name="pool-process-ids-and-signals"></a>
-### Pool Process IDs and Signals
+### Process ID và signal trong pool
 
-Since the process pool's `running` method provides a collection of all invoked processes within the pool, you may easily access the underlying pool process IDs:
+Vì method `running` của process pool cung cấp collection của toàn bộ process đã được gọi trong pool, bạn có thể dễ dàng truy cập process ID tương ứng:
 
 ```php
 $processIds = $pool->running()->each->id();
 ```
 
-And, for convenience, you may invoke the `signal` method on a process pool to send a signal to every process within the pool:
+Ngoài ra, bạn có thể gọi method `signal` trên process pool để gửi signal tới mọi process trong pool:
 
 ```php
 $pool->signal(SIGUSR2);
@@ -414,12 +414,12 @@ $pool->signal(SIGUSR2);
 <a name="testing"></a>
 ## Testing
 
-Many Laravel services provide functionality to help you easily and expressively write tests, and Laravel's process service is no exception. The `Process` facade's `fake` method allows you to instruct Laravel to return stubbed / dummy results when processes are invoked.
+Nhiều service của Laravel cung cấp tính năng giúp viết test dễ dàng và rõ ràng, và process service cũng vậy. Method `fake` của facade `Process` cho phép yêu cầu Laravel trả về kết quả stub / giả lập khi process được gọi.
 
 <a name="faking-processes"></a>
-### Faking Processes
+### Fake process
 
-To explore Laravel's ability to fake processes, let's imagine a route that invokes a process:
+Để tìm hiểu khả năng fake process của Laravel, hãy giả sử có một route gọi process:
 
 ```php
 use Illuminate\Support\Facades\Process;
@@ -432,7 +432,7 @@ Route::get('/import', function () {
 });
 ```
 
-When testing this route, we can instruct Laravel to return a fake, successful process result for every invoked process by calling the `fake` method on the `Process` facade with no arguments. In addition, we can even [assert](#available-assertions) that a given process was "run":
+Khi test route này, ta có thể yêu cầu Laravel trả về một kết quả process giả lập thành công cho mọi process được gọi bằng cách gọi method `fake` trên facade `Process` mà không truyền argument. Ngoài ra, ta còn có thể [assert](#available-assertions) rằng một process cụ thể đã được "chạy":
 
 ```php tab=Pest
 <?php
@@ -487,7 +487,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-As discussed, invoking the `fake` method on the `Process` facade will instruct Laravel to always return a successful process result with no output. However, you may easily specify the output and exit code for faked processes using the `Process` facade's `result` method:
+Như đã đề cập, gọi method `fake` trên facade `Process` sẽ yêu cầu Laravel luôn trả về kết quả process thành công và không có output. Tuy nhiên, bạn có thể dễ dàng chỉ định output và exit code cho process giả lập bằng method `result` của facade `Process`:
 
 ```php
 Process::fake([
@@ -500,11 +500,11 @@ Process::fake([
 ```
 
 <a name="faking-specific-processes"></a>
-### Faking Specific Processes
+### Fake process cụ thể
 
-As you may have noticed in a previous example, the `Process` facade allows you to specify different fake results per process by passing an array to the `fake` method.
+Như ví dụ trước, facade `Process` cho phép chỉ định kết quả giả lập khác nhau cho từng process bằng cách truyền một mảng vào method `fake`.
 
-The array's keys should represent command patterns that you wish to fake and their associated results. The `*` character may be used as a wildcard character. Any process commands that have not been faked will actually be invoked. You may use the `Process` facade's `result` method to construct stub / fake results for these commands:
+Key của mảng biểu diễn các command pattern bạn muốn fake, còn value là kết quả tương ứng. Ký tự `*` có thể dùng làm wildcard. Bất kỳ process command nào chưa được fake sẽ thực sự được gọi. Bạn có thể dùng method `result` của facade `Process` để tạo kết quả stub / giả lập cho các command này:
 
 ```php
 Process::fake([
@@ -517,7 +517,7 @@ Process::fake([
 ]);
 ```
 
-If you do not need to customize the exit code or error output of a faked process, you may find it more convenient to specify the fake process results as simple strings:
+Nếu không cần tùy biến exit code hoặc error output của process giả lập, bạn có thể khai báo kết quả giả lập trực tiếp dưới dạng string:
 
 ```php
 Process::fake([
@@ -527,9 +527,9 @@ Process::fake([
 ```
 
 <a name="faking-process-sequences"></a>
-### Faking Process Sequences
+### Fake chuỗi process
 
-If the code you are testing invokes multiple processes with the same command, you may wish to assign a different fake process result to each process invocation. You may accomplish this via the `Process` facade's `sequence` method:
+Nếu code đang test gọi nhiều process với cùng một command, bạn có thể muốn gán kết quả giả lập khác nhau cho từng lần gọi. Có thể thực hiện bằng method `sequence` của facade `Process`:
 
 ```php
 Process::fake([
@@ -540,11 +540,11 @@ Process::fake([
 ```
 
 <a name="faking-asynchronous-process-lifecycles"></a>
-### Faking Asynchronous Process Lifecycles
+### Fake vòng đời process bất đồng bộ
 
-Thus far, we have primarily discussed faking processes which are invoked synchronously using the `run` method. However, if you are attempting to test code that interacts with asynchronous processes invoked via `start`, you may need a more sophisticated approach to describing your fake processes.
+Cho đến đây, chúng ta chủ yếu đề cập đến việc fake các process được gọi đồng bộ bằng method `run`. Tuy nhiên, khi test code tương tác với process bất đồng bộ được gọi qua `start`, bạn có thể cần cách mô tả process giả lập chi tiết hơn.
 
-For example, let's imagine the following route which interacts with an asynchronous process:
+Ví dụ, hãy xem route sau tương tác với một process bất đồng bộ:
 
 ```php
 use Illuminate\Support\Facades\Log;
@@ -562,7 +562,7 @@ Route::get('/import', function () {
 });
 ```
 
-To properly fake this process, we need to be able to describe how many times the `running` method should return `true`. In addition, we may want to specify multiple lines of output that should be returned in sequence. To accomplish this, we can use the `Process` facade's `describe` method:
+Để fake chính xác process này, cần mô tả số lần method `running` phải trả về `true`. Ngoài ra, ta có thể muốn chỉ định nhiều dòng output được trả về theo thứ tự. Để làm điều đó, có thể dùng method `describe` của facade `Process`:
 
 ```php
 Process::fake([
@@ -575,17 +575,17 @@ Process::fake([
 ]);
 ```
 
-Let's dig into the example above. Using the `output` and `errorOutput` methods, we may specify multiple lines of output that will be returned in sequence. The `exitCode` method may be used to specify the final exit code of the fake process. Finally, the `iterations` method may be used to specify how many times the `running` method should return `true`.
+Xét kỹ ví dụ trên: các method `output` và `errorOutput` cho phép chỉ định nhiều dòng output được trả về theo thứ tự. Method `exitCode` dùng để chỉ định exit code cuối cùng của process giả lập. Cuối cùng, method `iterations` chỉ định số lần `running` sẽ trả về `true`.
 
 <a name="available-assertions"></a>
-### Available Assertions
+### Các assertion có sẵn
 
-As [previously discussed](#faking-processes), Laravel provides several process assertions for your feature tests. We'll discuss each of these assertions below.
+Như [đã đề cập](#faking-processes), Laravel cung cấp nhiều process assertion cho feature test. Các assertion này được trình bày bên dưới.
 
 <a name="assert-process-ran"></a>
 #### assertRan
 
-Assert that a given process was invoked:
+Assert rằng một process cụ thể đã được gọi:
 
 ```php
 use Illuminate\Support\Facades\Process;
@@ -593,15 +593,15 @@ use Illuminate\Support\Facades\Process;
 Process::assertRan('ls -la');
 ```
 
-When the process was invoked with an array of arguments, you may pass the same array to the assertion:
+Khi process được gọi bằng một mảng argument, bạn có thể truyền chính mảng đó vào assertion:
 
 ```php
 Process::assertRan(['php', 'artisan', 'migrate']);
 ```
 
-The `assertRanTimes` and `assertDidntRun` methods also accept array commands.
+Các method `assertRanTimes` và `assertDidntRun` cũng chấp nhận command dạng mảng.
 
-The `assertRan` method also accepts a closure, which will receive an instance of a process and a process result, allowing you to inspect the process' configured options. If this closure returns `true`, the assertion will "pass":
+Method `assertRan` cũng chấp nhận một closure. Closure nhận instance của process và kết quả process, cho phép kiểm tra các option đã cấu hình. Nếu closure trả về `true`, assertion sẽ "pass":
 
 ```php
 Process::assertRan(fn ($process, $result) =>
@@ -611,12 +611,12 @@ Process::assertRan(fn ($process, $result) =>
 );
 ```
 
-The `$process` passed to the `assertRan` closure is an instance of `Illuminate\Process\PendingProcess`, while the `$result` is an instance of `Illuminate\Contracts\Process\ProcessResult`.
+`$process` được truyền vào closure của `assertRan` là instance `Illuminate\Process\PendingProcess`, còn `$result` là instance `Illuminate\Contracts\Process\ProcessResult`.
 
 <a name="assert-process-didnt-run"></a>
 #### assertDidntRun
 
-Assert that a given process was not invoked:
+Assert rằng một process cụ thể không được gọi:
 
 ```php
 use Illuminate\Support\Facades\Process;
@@ -624,7 +624,7 @@ use Illuminate\Support\Facades\Process;
 Process::assertDidntRun('ls -la');
 ```
 
-Like the `assertRan` method, the `assertDidntRun` method also accepts a closure, which will receive an instance of a process and a process result, allowing you to inspect the process' configured options. If this closure returns `true`, the assertion will "fail":
+Tương tự `assertRan`, method `assertDidntRun` cũng chấp nhận một closure nhận instance process và kết quả process, cho phép kiểm tra các option đã cấu hình. Nếu closure trả về `true`, assertion sẽ "fail":
 
 ```php
 Process::assertDidntRun(fn (PendingProcess $process, ProcessResult $result) =>
@@ -635,7 +635,7 @@ Process::assertDidntRun(fn (PendingProcess $process, ProcessResult $result) =>
 <a name="assert-process-ran-times"></a>
 #### assertRanTimes
 
-Assert that a given process was invoked a given number of times:
+Assert rằng một process cụ thể đã được gọi đúng số lần chỉ định:
 
 ```php
 use Illuminate\Support\Facades\Process;
@@ -643,7 +643,7 @@ use Illuminate\Support\Facades\Process;
 Process::assertRanTimes('ls -la', times: 3);
 ```
 
-The `assertRanTimes` method also accepts a closure, which will receive an instance of `PendingProcess` and `ProcessResult`, allowing you to inspect the process' configured options. If this closure returns `true` and the process was invoked the specified number of times, the assertion will "pass":
+Method `assertRanTimes` cũng chấp nhận một closure nhận instance `PendingProcess` và `ProcessResult`, cho phép kiểm tra các option đã cấu hình. Nếu closure trả về `true` và process được gọi đúng số lần chỉ định, assertion sẽ "pass":
 
 ```php
 Process::assertRanTimes(function (PendingProcess $process, ProcessResult $result) {
@@ -654,7 +654,7 @@ Process::assertRanTimes(function (PendingProcess $process, ProcessResult $result
 <a name="assert-processes-ran-in-order"></a>
 #### assertRanInOrder
 
-Assert that processes were invoked in a given order:
+Assert rằng các process được gọi theo đúng thứ tự chỉ định:
 
 ```php
 Process::assertRanInOrder([
@@ -663,12 +663,12 @@ Process::assertRanInOrder([
 ]);
 ```
 
-The `assertRanInOrder` method accepts command strings, arrays of command arguments, or closures like the other process assertions.
+Method `assertRanInOrder` chấp nhận command string, mảng command argument hoặc closure tương tự các process assertion khác.
 
 <a name="preventing-stray-processes"></a>
-### Preventing Stray Processes
+### Ngăn process ngoài dự kiến
 
-If you would like to ensure that all invoked processes have been faked throughout your individual test or complete test suite, you can call the `preventStrayProcesses` method. After calling this method, any processes that do not have a corresponding fake result will throw an exception rather than starting an actual process:
+Nếu muốn bảo đảm mọi process được gọi trong một test hoặc toàn bộ test suite đều đã được fake, bạn có thể gọi method `preventStrayProcesses`. Sau khi gọi method này, bất kỳ process nào không có kết quả fake tương ứng sẽ ném exception thay vì khởi động process thật:
 
 ```php
 use Illuminate\Support\Facades\Process;
@@ -685,6 +685,8 @@ Process::run('ls -la');
 // An exception is thrown...
 Process::run('bash import.sh');
 ```
+
+---
 
 ## Tài liệu chính thức
 

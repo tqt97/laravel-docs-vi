@@ -1,27 +1,30 @@
-# URL Generation
+# Tạo URL
 
-- [Introduction](#introduction)
-- [The Basics](#the-basics)
-    - [Generating URLs](#generating-urls)
-    - [Accessing the Current URL](#accessing-the-current-url)
-- [URLs for Named Routes](#urls-for-named-routes)
-    - [Signed URLs](#signed-urls)
-- [URLs for Controller Actions](#urls-for-controller-actions)
-- [Fluent URI Objects](#fluent-uri-objects)
-- [Default Values](#default-values)
+- [Giới thiệu](#introduction)
+- [Kiến thức cơ bản](#the-basics)
+    - [Tạo URL](#generating-urls)
+    - [Truy cập URL hiện tại](#accessing-the-current-url)
+- [URL cho named route](#urls-for-named-routes)
+    - [Eloquent Model](#eloquent-models)
+- [Signed URL](#signed-urls)
+    - [Xác thực request của signed route](#validating-signed-route-requests)
+    - [Phản hồi khi signed route không hợp lệ](#responding-to-invalid-signed-routes)
+- [URL cho controller action](#urls-for-controller-actions)
+- [Fluent URI Object](#fluent-uri-objects)
+- [Giá trị mặc định](#default-values)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel provides several helpers to assist you in generating URLs for your application. These helpers are primarily helpful when building links in your templates and API responses, or when generating redirect responses to another part of your application.
+Laravel cung cấp một số helper hỗ trợ tạo URL cho ứng dụng. Các helper này đặc biệt hữu ích khi tạo liên kết trong template và API response, hoặc khi tạo redirect response tới một phần khác của ứng dụng.
 
 <a name="the-basics"></a>
-## The Basics
+## Kiến thức cơ bản
 
 <a name="generating-urls"></a>
-### Generating URLs
+### Tạo URL
 
-The `url` helper may be used to generate arbitrary URLs for your application. The generated URL will automatically use the scheme (HTTP or HTTPS) and host from the current request being handled by the application:
+Helper `url` có thể được dùng để tạo URL bất kỳ cho ứng dụng. URL được tạo sẽ tự động sử dụng scheme (HTTP hoặc HTTPS) và host của request hiện tại mà ứng dụng đang xử lý:
 
 ```php
 $post = App\Models\Post::find(1);
@@ -31,7 +34,7 @@ echo url("/posts/{$post->id}");
 // http://example.com/posts/1
 ```
 
-To generate a URL with query string parameters, you may use the `query` method:
+Để tạo URL có query string parameter, bạn có thể sử dụng phương thức `query`:
 
 ```php
 echo url()->query('/posts', ['search' => 'Laravel']);
@@ -43,7 +46,7 @@ echo url()->query('/posts?sort=latest', ['search' => 'Laravel']);
 // http://example.com/posts?sort=latest&search=Laravel
 ```
 
-Providing query string parameters that already exist in the path will overwrite their existing value:
+Nếu query string parameter đã tồn tại trong path, giá trị mới được cung cấp sẽ ghi đè giá trị hiện có:
 
 ```php
 echo url()->query('/posts?sort=latest', ['sort' => 'oldest']);
@@ -51,7 +54,7 @@ echo url()->query('/posts?sort=latest', ['sort' => 'oldest']);
 // http://example.com/posts?sort=oldest
 ```
 
-Arrays of values may also be passed as query parameters. These values will be properly keyed and encoded in the generated URL:
+Bạn cũng có thể truyền array làm query parameter. Các giá trị này sẽ được đánh key và encode chính xác trong URL được tạo:
 
 ```php
 echo $url = url()->query('/posts', ['columns' => ['title', 'body']]);
@@ -64,9 +67,9 @@ echo urldecode($url);
 ```
 
 <a name="accessing-the-current-url"></a>
-### Accessing the Current URL
+### Truy cập URL hiện tại
 
-If no path is provided to the `url` helper, an `Illuminate\Routing\UrlGenerator` instance is returned, allowing you to access information about the current URL:
+Nếu không truyền path cho helper `url`, Laravel sẽ trả về instance `Illuminate\Routing\UrlGenerator`, cho phép bạn truy cập thông tin về URL hiện tại:
 
 ```php
 // Get the current URL without the query string...
@@ -76,7 +79,7 @@ echo url()->current();
 echo url()->full();
 ```
 
-Each of these methods may also be accessed via the `URL` [facade](/docs/{{version}}/facades):
+Mỗi phương thức này cũng có thể được truy cập thông qua [facade](/docs/{{version}}/facades) `URL`:
 
 ```php
 use Illuminate\Support\Facades\URL;
@@ -85,9 +88,9 @@ echo URL::current();
 ```
 
 <a name="accessing-the-previous-url"></a>
-#### Accessing the Previous URL
+#### Truy cập URL trước đó
 
-Sometimes it is helpful to know the previous URL that the user is visiting from. You can access the previous URL via the `url` helper's `previous` and `previousPath` methods:
+Đôi khi bạn cần biết URL trước đó mà người dùng đã truy cập. Bạn có thể lấy URL này thông qua các phương thức `previous` và `previousPath` của helper `url`:
 
 ```php
 // Get the full URL for the previous request...
@@ -97,7 +100,7 @@ echo url()->previous();
 echo url()->previousPath();
 ```
 
-Or, via the [session](/docs/{{version}}/session), you may access the previous URL as a [fluent URI](#fluent-uri-objects) instance:
+Hoặc thông qua [session](/docs/{{version}}/session), bạn có thể lấy URL trước đó dưới dạng instance [fluent URI](#fluent-uri-objects):
 
 ```php
 use Illuminate\Http\Request;
@@ -109,16 +112,16 @@ Route::post('/users', function (Request $request) {
 });
 ```
 
-It is also possible to retrieve the route name for the previously visited URL via the session:
+Bạn cũng có thể lấy tên route của URL đã truy cập trước đó thông qua session:
 
 ```php
 $previousRoute = $request->session()->previousRoute();
 ```
 
 <a name="urls-for-named-routes"></a>
-## URLs for Named Routes
+## URL cho named route
 
-The `route` helper may be used to generate URLs to [named routes](/docs/{{version}}/routing#named-routes). Named routes allow you to generate URLs without being coupled to the actual URL defined on the route. Therefore, if the route's URL changes, no changes need to be made to your calls to the `route` function. For example, imagine your application contains a route defined like the following:
+Helper `route` có thể được dùng để tạo URL tới [named route](/docs/{{version}}/routing#named-routes). Named route cho phép tạo URL mà không phụ thuộc trực tiếp vào URL thực tế được định nghĩa trên route. Vì vậy, nếu URL của route thay đổi, các lời gọi tới hàm `route` không cần thay đổi. Ví dụ, giả sử ứng dụng có route sau:
 
 ```php
 Route::get('/post/{post}', function (Post $post) {
@@ -126,7 +129,7 @@ Route::get('/post/{post}', function (Post $post) {
 })->name('post.show');
 ```
 
-To generate a URL to this route, you may use the `route` helper like so:
+Để tạo URL tới route này, bạn có thể dùng helper `route` như sau:
 
 ```php
 echo route('post.show', ['post' => 1]);
@@ -134,7 +137,7 @@ echo route('post.show', ['post' => 1]);
 // http://example.com/post/1
 ```
 
-Of course, the `route` helper may also be used to generate URLs for routes with multiple parameters:
+Tất nhiên, helper `route` cũng có thể tạo URL cho route có nhiều parameter:
 
 ```php
 Route::get('/post/{post}/comment/{comment}', function (Post $post, Comment $comment) {
@@ -146,7 +149,7 @@ echo route('comment.show', ['post' => 1, 'comment' => 3]);
 // http://example.com/post/1/comment/3
 ```
 
-Any additional array elements that do not correspond to the route's definition parameters will be added to the URL's query string:
+Mọi phần tử bổ sung trong array không tương ứng với parameter trong định nghĩa route sẽ được thêm vào query string của URL:
 
 ```php
 echo route('post.show', ['post' => 1, 'search' => 'rocket']);
@@ -155,20 +158,20 @@ echo route('post.show', ['post' => 1, 'search' => 'rocket']);
 ```
 
 <a name="eloquent-models"></a>
-#### Eloquent Models
+#### Eloquent Model
 
-You will often be generating URLs using the route key (typically the primary key) of [Eloquent models](/docs/{{version}}/eloquent). For this reason, you may pass Eloquent models as parameter values. The `route` helper will automatically extract the model's route key:
+Bạn thường sẽ tạo URL bằng route key (thường là primary key) của [Eloquent model](/docs/{{version}}/eloquent). Vì vậy, bạn có thể truyền trực tiếp Eloquent model làm giá trị parameter. Helper `route` sẽ tự động lấy route key của model:
 
 ```php
 echo route('post.show', ['post' => $post]);
 ```
 
 <a name="signed-urls"></a>
-### Signed URLs
+## Signed URL
 
-Laravel allows you to easily create "signed" URLs to named routes. These URLs have a "signature" hash appended to the query string which allows Laravel to verify that the URL has not been modified since it was created. Signed URLs are especially useful for routes that are publicly accessible yet need a layer of protection against URL manipulation.
+Laravel cho phép dễ dàng tạo "signed" URL tới named route. Các URL này có hash "signature" được thêm vào query string, nhờ đó Laravel có thể xác minh URL chưa bị thay đổi kể từ khi được tạo. Signed URL đặc biệt hữu ích cho route có thể truy cập công khai nhưng vẫn cần một lớp bảo vệ chống chỉnh sửa URL.
 
-For example, you might use signed URLs to implement a public "unsubscribe" link that is emailed to your customers. To create a signed URL to a named route, use the `signedRoute` method of the `URL` facade:
+Ví dụ, bạn có thể dùng signed URL để triển khai liên kết "unsubscribe" công khai được gửi qua email cho khách hàng. Để tạo signed URL tới named route, hãy sử dụng phương thức `signedRoute` của facade `URL`:
 
 ```php
 use Illuminate\Support\Facades\URL;
@@ -176,13 +179,13 @@ use Illuminate\Support\Facades\URL;
 return URL::signedRoute('unsubscribe', ['user' => 1]);
 ```
 
-You may exclude the domain from the signed URL hash by providing the `absolute` argument to the `signedRoute` method:
+Bạn có thể loại domain khỏi hash của signed URL bằng cách truyền argument `absolute` cho phương thức `signedRoute`:
 
 ```php
 return URL::signedRoute('unsubscribe', ['user' => 1], absolute: false);
 ```
 
-If you would like to generate a temporary signed route URL that expires after a specified amount of time, you may use the `temporarySignedRoute` method. When Laravel validates a temporary signed route URL, it will ensure that the expiration timestamp that is encoded into the signed URL has not elapsed:
+Nếu muốn tạo signed route URL tạm thời và hết hạn sau một khoảng thời gian xác định, bạn có thể dùng phương thức `temporarySignedRoute`. Khi Laravel xác thực URL signed tạm thời, framework sẽ đảm bảo timestamp hết hạn được encode trong URL chưa trôi qua:
 
 ```php
 use Illuminate\Support\Facades\URL;
@@ -193,9 +196,9 @@ return URL::temporarySignedRoute(
 ```
 
 <a name="validating-signed-route-requests"></a>
-#### Validating Signed Route Requests
+### Xác thực request của signed route
 
-To verify that an incoming request has a valid signature, you should call the `hasValidSignature` method on the incoming `Illuminate\Http\Request` instance:
+Để xác minh request gửi đến có signature hợp lệ, hãy gọi phương thức `hasValidSignature` trên instance `Illuminate\Http\Request` của request:
 
 ```php
 use Illuminate\Http\Request;
@@ -209,7 +212,7 @@ Route::get('/unsubscribe/{user}', function (Request $request) {
 })->name('unsubscribe');
 ```
 
-Sometimes, you may need to allow your application's frontend to append data to a signed URL, such as when performing client-side pagination. Therefore, you can specify request query parameters that should be ignored when validating a signed URL using the `hasValidSignatureWhileIgnoring` method. Remember, ignoring parameters allows anyone to modify those parameters on the request:
+Đôi khi frontend của ứng dụng cần thêm dữ liệu vào signed URL, chẳng hạn khi thực hiện pagination phía client. Vì vậy, bạn có thể chỉ định các query parameter cần bỏ qua khi xác thực signed URL bằng phương thức `hasValidSignatureWhileIgnoring`. Lưu ý rằng việc bỏ qua parameter đồng nghĩa bất kỳ ai cũng có thể thay đổi các parameter đó trên request:
 
 ```php
 if (! $request->hasValidSignatureWhileIgnoring(['page', 'order'])) {
@@ -217,7 +220,7 @@ if (! $request->hasValidSignatureWhileIgnoring(['page', 'order'])) {
 }
 ```
 
-Instead of validating signed URLs using the incoming request instance, you may assign the `signed` (`Illuminate\Routing\Middleware\ValidateSignature`) [middleware](/docs/{{version}}/middleware) to the route. If the incoming request does not have a valid signature, the middleware will automatically return a `403` HTTP response:
+Thay vì xác thực signed URL trực tiếp trên request instance, bạn có thể gán [middleware](/docs/{{version}}/middleware) `signed` (`Illuminate\Routing\Middleware\ValidateSignature`) cho route. Nếu request gửi đến không có signature hợp lệ, middleware sẽ tự động trả về HTTP response `403`:
 
 ```php
 Route::post('/unsubscribe/{user}', function (Request $request) {
@@ -225,7 +228,7 @@ Route::post('/unsubscribe/{user}', function (Request $request) {
 })->name('unsubscribe')->middleware('signed');
 ```
 
-If your signed URLs do not include the domain in the URL hash, you should provide the `relative` argument to the middleware:
+Nếu signed URL không bao gồm domain trong URL hash, hãy truyền argument `relative` cho middleware:
 
 ```php
 Route::post('/unsubscribe/{user}', function (Request $request) {
@@ -234,9 +237,9 @@ Route::post('/unsubscribe/{user}', function (Request $request) {
 ```
 
 <a name="responding-to-invalid-signed-routes"></a>
-#### Responding to Invalid Signed Routes
+### Phản hồi khi signed route không hợp lệ
 
-When someone visits a signed URL that has expired, they will receive a generic error page for the `403` HTTP status code. However, you can customize this behavior by defining a custom "render" closure for the `InvalidSignatureException` exception in your application's `bootstrap/app.php` file:
+Khi người dùng truy cập một signed URL đã hết hạn, họ sẽ nhận trang lỗi chung cho HTTP status code `403`. Tuy nhiên, bạn có thể tùy chỉnh hành vi này bằng cách định nghĩa closure `render` tùy chỉnh cho exception `InvalidSignatureException` trong file `bootstrap/app.php` của ứng dụng:
 
 ```php
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
@@ -249,9 +252,9 @@ use Illuminate\Routing\Exceptions\InvalidSignatureException;
 ```
 
 <a name="urls-for-controller-actions"></a>
-## URLs for Controller Actions
+## URL cho controller action
 
-The `action` function generates a URL for the given controller action:
+Hàm `action` tạo URL cho controller action được chỉ định:
 
 ```php
 use App\Http\Controllers\HomeController;
@@ -259,18 +262,18 @@ use App\Http\Controllers\HomeController;
 $url = action([HomeController::class, 'index']);
 ```
 
-If the controller method accepts route parameters, you may pass an associative array of route parameters as the second argument to the function:
+Nếu controller method nhận route parameter, bạn có thể truyền associative array chứa các route parameter làm argument thứ hai của hàm:
 
 ```php
 $url = action([UserController::class, 'profile'], ['id' => 1]);
 ```
 
 <a name="fluent-uri-objects"></a>
-## Fluent URI Objects
+## Fluent URI Object
 
-Laravel's `Uri` class provides a convenient and fluent interface for creating and manipulating URIs via objects. This class wraps the functionality provided by the underlying League URI package and integrates seamlessly with Laravel's routing system.
+Class `Uri` của Laravel cung cấp interface thuận tiện và fluent để tạo cũng như thao tác URI thông qua object. Class này bao bọc chức năng do package League URI bên dưới cung cấp và tích hợp liền mạch với hệ thống routing của Laravel.
 
-You can create a `Uri` instance easily using static methods:
+Bạn có thể dễ dàng tạo instance `Uri` bằng các static method:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -295,7 +298,7 @@ $uri = $request->uri();
 $uri = $request->session()->previousUri();
 ```
 
-Once you have a URI instance, you can fluently modify it:
+Sau khi có URI instance, bạn có thể chain method để thay đổi URI:
 
 ```php
 $uri = Uri::of('https://example.com')
@@ -307,12 +310,12 @@ $uri = Uri::of('https://example.com')
     ->withFragment('section-1');
 ```
 
-For more information on working with fluent URI objects, consult the [URI documentation](/docs/{{version}}/helpers#uri).
+Để tìm hiểu thêm về fluent URI object, hãy xem [tài liệu URI](/docs/{{version}}/helpers#uri).
 
 <a name="default-values"></a>
-## Default Values
+## Giá trị mặc định
 
-For some applications, you may wish to specify request-wide default values for certain URL parameters. For example, imagine many of your routes define a `{locale}` parameter:
+Với một số ứng dụng, bạn có thể muốn chỉ định giá trị mặc định trên toàn request cho một số URL parameter. Ví dụ, giả sử nhiều route định nghĩa parameter `{locale}`:
 
 ```php
 Route::get('/{locale}/posts', function () {
@@ -320,7 +323,7 @@ Route::get('/{locale}/posts', function () {
 })->name('post.index');
 ```
 
-It is cumbersome to always pass the `locale` every time you call the `route` helper. So, you may use the `URL::defaults` method to define a default value for this parameter that will always be applied during the current request. You may wish to call this method from a [route middleware](/docs/{{version}}/middleware#assigning-middleware-to-routes) so that you have access to the current request:
+Việc luôn phải truyền `locale` mỗi khi gọi helper `route` khá bất tiện. Vì vậy, bạn có thể sử dụng phương thức `URL::defaults` để định nghĩa giá trị mặc định cho parameter này và giá trị đó sẽ luôn được áp dụng trong request hiện tại. Bạn có thể gọi phương thức này từ [route middleware](/docs/{{version}}/middleware#assigning-middleware-to-routes) để có quyền truy cập request hiện tại:
 
 ```php
 <?php
@@ -348,12 +351,14 @@ class SetDefaultLocaleForUrls
 }
 ```
 
-Once the default value for the `locale` parameter has been set, you are no longer required to pass its value when generating URLs via the `route` helper.
+Sau khi đã đặt giá trị mặc định cho parameter `locale`, bạn không còn phải truyền giá trị này khi tạo URL thông qua helper `route`.
 
 <a name="url-defaults-middleware-priority"></a>
-#### URL Defaults and Middleware Priority
+### Giá trị URL mặc định và độ ưu tiên middleware
 
-Setting URL default values can interfere with Laravel's handling of implicit model bindings. Therefore, you should [prioritize your middleware](/docs/{{version}}/middleware#sorting-middleware) that set URL defaults to be executed before Laravel's own `SubstituteBindings` middleware. You can accomplish this using the `priority` middleware method in your application's `bootstrap/app.php` file:
+Việc đặt giá trị URL mặc định có thể ảnh hưởng đến cách Laravel xử lý implicit model binding. Vì vậy, bạn nên [ưu tiên middleware](/docs/{{version}}/middleware#sorting-middleware) thiết lập URL mặc định để middleware đó chạy trước middleware `SubstituteBindings` của Laravel.
+
+Bạn có thể thực hiện điều này bằng phương thức middleware `priority` trong file `bootstrap/app.php` của ứng dụng:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {

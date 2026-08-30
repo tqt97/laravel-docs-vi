@@ -1,23 +1,17 @@
 # Mocking
 
-- [Introduction](#introduction)
-- [Mocking Objects](#mocking-objects)
-- [Mocking Facades](#mocking-facades)
-    - [Facade Spies](#facade-spies)
-- [Interacting With Time](#interacting-with-time)
-
+- [Giới thiệu](#introduction)
+- [Mocking đối tượng](#mocking-objects)
+- [Mocking facade](#mocking-facades)
+    - [Spy facade](#facade-spies)
+- [Tương tác với thời gian](#interacting-with-time)
 <a name="introduction"></a>
-## Introduction
-
-When testing Laravel applications, you may wish to "mock" certain aspects of your application so they are not actually executed during a given test. For example, when testing a controller that dispatches an event, you may wish to mock the event listeners so they are not actually executed during the test. This allows you to only test the controller's HTTP response without worrying about the execution of the event listeners since the event listeners can be tested in their own test case.
-
-Laravel provides helpful methods for mocking events, jobs, and other facades out of the box. These helpers primarily provide a convenience layer over Mockery so you do not have to manually make complicated Mockery method calls.
-
+## Giới thiệu
+Khi kiểm thử ứng dụng Laravel, đôi lúc bạn cần "mock" một số phần để chúng không thực sự được thực thi trong test. Ví dụ, khi kiểm thử controller có dispatch event, bạn có thể muốn mock event listener để chúng không thực sự được thực thi trong quá trình test. Nhờ đó, bạn chỉ cần kiểm thử HTTP response của controller mà không phải bận tâm đến việc thực thi các event listener, bởi các listener có thể được kiểm thử trong test case riêng.
+Laravel cung cấp sẵn các phương thức hữu ích để mock event, job và các facade khác. Các helper này chủ yếu là một lớp tiện ích trên Mockery, giúp bạn tránh phải tự viết những lời gọi Mockery phức tạp.
 <a name="mocking-objects"></a>
-## Mocking Objects
-
-When mocking an object that is going to be injected into your application via Laravel's [service container](/docs/{{version}}/container), you will need to bind your mocked instance into the container as an `instance` binding. This will instruct the container to use your mocked instance of the object instead of constructing the object itself:
-
+## Mocking đối tượng
+Khi mock một object sẽ được inject vào ứng dụng thông qua [service container](/docs/{{version}}/container), bạn cần bind instance mock vào container dưới dạng binding `instance`. Điều này yêu cầu container sử dụng object mock của bạn thay vì tự khởi tạo object thật:
 ```php tab=Pest
 use App\Service;
 use Mockery;
@@ -48,9 +42,7 @@ public function test_something_can_be_mocked(): void
     );
 }
 ```
-
-In order to make this more convenient, you may use the `mock` method that is provided by Laravel's base test case class. For example, the following example is equivalent to the example above:
-
+Để thao tác thuận tiện hơn, bạn có thể dùng phương thức `mock` được cung cấp bởi base test case của Laravel. Ví dụ dưới đây tương đương với ví dụ phía trên:
 ```php
 use App\Service;
 use Mockery\MockInterface;
@@ -59,9 +51,7 @@ $mock = $this->mock(Service::class, function (MockInterface $mock) {
     $mock->expects('process');
 });
 ```
-
-You may use the `partialMock` method when you only need to mock a few methods of an object. The methods that are not mocked will be executed normally when called:
-
+Bạn có thể dùng `partialMock` khi chỉ cần mock một vài method của object. Những method không bị mock vẫn được thực thi bình thường khi được gọi:
 ```php
 use App\Service;
 use Mockery\MockInterface;
@@ -70,9 +60,7 @@ $mock = $this->partialMock(Service::class, function (MockInterface $mock) {
     $mock->expects('process');
 });
 ```
-
-Similarly, if you want to [spy](http://docs.mockery.io/en/latest/reference/spies.html) on an object, Laravel's base test case class offers a `spy` method as a convenient wrapper around the `Mockery::spy` method. Spies are similar to mocks; however, spies record any interaction between the spy and the code being tested, allowing you to make assertions after the code is executed:
-
+Tương tự, nếu muốn [spy](http://docs.mockery.io/en/latest/reference/spies.html) một object, base test case của Laravel cung cấp phương thức `spy` như một wrapper tiện lợi quanh `Mockery::spy`. Spy tương tự mock, nhưng nó ghi lại các tương tác giữa spy và code đang được test, nhờ đó bạn có thể thực hiện assertion sau khi code đã thực thi:
 ```php
 use App\Service;
 
@@ -84,10 +72,8 @@ $spy->shouldHaveReceived('process');
 ```
 
 <a name="mocking-facades"></a>
-## Mocking Facades
-
-Unlike traditional static method calls, [facades](/docs/{{version}}/facades) (including [real-time facades](/docs/{{version}}/facades#real-time-facades)) may be mocked. This provides a great advantage over traditional static methods and grants you the same testability that you would have if you were using traditional dependency injection. When testing, you may often want to mock a call to a Laravel facade that occurs in one of your controllers. For example, consider the following controller action:
-
+## Mocking facade
+Khác với lời gọi static method truyền thống, [facade](/docs/{{version}}/facades) — bao gồm cả [real-time facade](/docs/{{version}}/facades#real-time-facades) — có thể được mock. Đây là lợi thế lớn so với static method thông thường và mang lại khả năng kiểm thử tương tự dependency injection truyền thống. Khi test, bạn thường có thể muốn mock lời gọi tới một Laravel facade xuất hiện trong controller. Ví dụ, hãy xem action controller sau:
 ```php
 <?php
 
@@ -110,9 +96,7 @@ class UserController extends Controller
     }
 }
 ```
-
-We can mock the call to the `Cache` facade by using the `expects` method, which will return an instance of a [Mockery](https://github.com/padraic/mockery) mock. Since facades are actually resolved and managed by the Laravel [service container](/docs/{{version}}/container), they have much more testability than a typical static class. For example, let's mock our call to the `Cache` facade's `get` method:
-
+Bạn có thể mock lời gọi tới facade `Cache` bằng phương thức `expects`, phương thức này trả về một instance mock của [Mockery](https://github.com/padraic/mockery). Vì facade thực chất được resolve và quản lý bởi [service container](/docs/{{version}}/container), chúng dễ kiểm thử hơn nhiều so với một static class thông thường. Ví dụ, hãy mock lời gọi tới phương thức `get` của facade `Cache`:
 ```php tab=Pest
 <?php
 
@@ -151,15 +135,11 @@ class UserControllerTest extends TestCase
     }
 }
 ```
-
 > [!WARNING]
-> You should not mock the `Request` facade. Instead, pass the input you desire into the [HTTP testing methods](/docs/{{version}}/http-tests) such as `get` and `post` when running your test. Likewise, instead of mocking the `Config` facade, call the `Config::set` method in your tests.
-
+> Bạn không nên mock facade `Request`. Thay vào đó, hãy truyền input mong muốn vào các [HTTP testing method](/docs/{{version}}/http-tests) như `get` và `post` khi chạy test. Tương tự, thay vì mock facade `Config`, hãy gọi `Config::set` trong test.
 <a name="facade-spies"></a>
-### Facade Spies
-
-If you would like to [spy](http://docs.mockery.io/en/latest/reference/spies.html) on a facade, you may call the `spy` method on the corresponding facade. Spies are similar to mocks; however, spies record any interaction between the spy and the code being tested, allowing you to make assertions after the code is executed:
-
+### Spy facade
+Nếu muốn [spy](http://docs.mockery.io/en/latest/reference/spies.html) một facade, bạn có thể gọi phương thức `spy` trên facade tương ứng. Spy tương tự mock, nhưng nó ghi lại mọi tương tác giữa spy và code đang được test, cho phép bạn thực hiện assertion sau khi code đã chạy:
 ```php tab=Pest
 <?php
 
@@ -192,10 +172,8 @@ public function test_values_are_stored_in_cache(): void
 ```
 
 <a name="interacting-with-time"></a>
-## Interacting With Time
-
-When testing, you may occasionally need to modify the time returned by helpers such as `now` or `Illuminate\Support\Carbon::now()`. Thankfully, Laravel's base feature test class includes helpers that allow you to manipulate the current time:
-
+## Tương tác với thời gian
+Khi test, đôi lúc bạn cần thay đổi thời gian được trả về bởi helper như `now` hoặc `Illuminate\Support\Carbon::now()`. Base feature test class của Laravel cung cấp các helper để thao tác thời gian hiện tại:
 ```php tab=Pest
 test('time can be manipulated', function () {
     // Travel into the future...
@@ -240,9 +218,7 @@ public function test_time_can_be_manipulated(): void
     $this->travelBack();
 }
 ```
-
-You may also provide a closure to the various time travel methods. The closure will be invoked with time frozen at the specified time. Once the closure has executed, time will resume as normal:
-
+Bạn cũng có thể truyền closure cho các phương thức time travel. Closure sẽ được gọi trong khi thời gian đang bị đóng băng tại mốc chỉ định. Sau khi closure thực thi xong, thời gian tiếp tục chạy bình thường:
 ```php
 $this->travel(5)->days(function () {
     // Test something five days into the future...
@@ -252,9 +228,7 @@ $this->travelTo(now()->mins(days: 10), function () {
     // Test something during a given moment...
 });
 ```
-
-The `freezeTime` method may be used to freeze the current time. Similarly, the `freezeSecond` method will freeze the current time but at the start of the current second:
-
+Phương thức `freezeTime` có thể dùng để đóng băng thời gian hiện tại. Tương tự, `freezeSecond` cũng đóng băng thời gian nhưng tại thời điểm bắt đầu của giây hiện tại:
 ```php
 use Illuminate\Support\Carbon;
 
@@ -268,9 +242,7 @@ $this->freezeSecond(function (Carbon $time) {
     // ...
 })
 ```
-
-As you would expect, all of the methods discussed above are primarily useful for testing time sensitive application behavior, such as locking inactive posts on a discussion forum:
-
+Như bạn có thể hình dung, các phương thức trên đặc biệt hữu ích khi kiểm thử hành vi nhạy cảm với thời gian của ứng dụng, chẳng hạn việc khóa các bài viết không còn hoạt động trên diễn đàn:
 ```php tab=Pest
 use App\Models\Thread;
 

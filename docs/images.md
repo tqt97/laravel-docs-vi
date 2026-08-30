@@ -1,29 +1,24 @@
-# Image Manipulation
-
-- [Introduction](#introduction)
-- [Installation](#installation)
-    - [Configuration](#configuration)
-- [Reading Images](#reading-images)
+# Xử lý hình ảnh
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+    - [Cấu hình](#configuration)
+- [Đọc Image](#reading-images)
     - [Uploaded Files](#uploaded-files)
     - [Storage Files](#storage-files)
-    - [Other Sources](#other-sources)
-- [Manipulating Images](#manipulating-images)
-    - [Resizing Images](#resizing-images)
-    - [Other Transformations](#other-transformations)
-- [Encoding Images](#encoding-images)
-- [Storing Images](#storing-images)
-- [Inspecting Images](#inspecting-images)
+    - [Nguồn khác](#other-sources)
+- [Biến đổi Image](#manipulating-images)
+    - [Resize Image](#resizing-images)
+    - [Các Transformation khác](#other-transformations)
+- [Encode Image](#encoding-images)
+- [Lưu Image](#storing-images)
+- [Đọc thông tin Image](#inspecting-images)
 - [Image Drivers](#image-drivers)
     - [Custom Image Drivers](#custom-image-drivers)
     - [Custom Transformations](#custom-transformations)
-
 <a name="introduction"></a>
-## Introduction
-
-Laravel provides a fluent image manipulation API that allows you to resize, crop, encode, and store images using the same expressive conventions found throughout the framework. Laravel's image features are powered by [Intervention Image](https://image.intervention.io/) and support the GD and Imagick PHP extensions.
-
-The image API is useful when working with uploaded files, files stored on Laravel [filesystem disks](/docs/{{version}}/filesystem), local files, remote URLs, or raw image bytes:
-
+## Giới thiệu
+Laravel cung cấp API fluent để xử lý image, cho phép resize, crop, encode và lưu ảnh theo cùng convention biểu đạt quen thuộc của framework. Khả năng xử lý ảnh của Laravel được xây trên [Intervention Image](https://image.intervention.io/) và hỗ trợ PHP extension GD cùng Imagick.
+Image API hữu ích khi làm việc với file upload, file lưu trên [filesystem disk](/docs/{{version}}/filesystem), local file, remote URL hoặc raw image bytes:
 ```php
 use Illuminate\Support\Facades\Image;
 
@@ -33,46 +28,32 @@ $path = Image::fromStorage('avatars/photo.jpg', 'public')
     ->quality(80)
     ->storePublicly('avatars', 'public');
 ```
-
 > [!WARNING]
-> Image manipulation can be CPU and memory-intensive. Consider performing large image processing workloads on a [queued job](/docs/{{version}}/queues) instead of during the HTTP request that receives the upload.
-
+> Xử lý image có thể tiêu tốn nhiều CPU và memory. Với workload xử lý ảnh lớn, hãy cân nhắc thực hiện trong [queued job](/docs/{{version}}/queues) thay vì ngay trong HTTP request nhận file upload.
 <a name="installation"></a>
-## Installation
-
-Before using Laravel's image manipulation features, install the Intervention Image package via Composer:
-
+## Cài đặt
+Trước khi dùng chức năng xử lý ảnh của Laravel, hãy cài package Intervention Image qua Composer:
 ```shell
 composer require intervention/image:^4.0
 ```
-
-You should also ensure your PHP installation has either the GD or Imagick extension installed, depending on which driver your application will use.
-
+Hãy đảm bảo PHP đã cài extension GD hoặc Imagick tùy driver ứng dụng sử dụng.
 <a name="configuration"></a>
-### Configuration
-
-Laravel's image configuration file is located at `config/images.php`. If your application does not have an `images` configuration file, you may publish it using the `config:publish` Artisan command:
-
+### Cấu hình
+File cấu hình image của Laravel nằm tại `config/images.php`. Nếu ứng dụng chưa có file cấu hình `images`, bạn có thể publish bằng command Artisan `config:publish`:
 ```shell
 php artisan config:publish images
 ```
-
-The image configuration file allows you to specify your application's default image driver. You may also specify the default driver using the `IMAGE_DRIVER` environment variable. The supported drivers are `gd` and `imagick`:
-
+File cấu hình image cho phép chỉ định image driver mặc định. Bạn cũng có thể dùng environment variable `IMAGE_DRIVER`. Các driver được hỗ trợ gồm `gd` và `imagick`:
 ```ini
 IMAGE_DRIVER=imagick
 ```
 
 <a name="reading-images"></a>
-## Reading Images
-
-The `Image` facade provides several methods for reading images from common sources. Image contents are loaded lazily, so the source is typically not read until the image is processed or its bytes are requested.
-
+## Đọc Image
+Facade `Image` cung cấp nhiều phương thức để đọc image từ các nguồn phổ biến. Nội dung ảnh được load lazy, vì vậy source thường chưa được đọc cho tới khi image được xử lý hoặc bytes của nó được yêu cầu.
 <a name="uploaded-files"></a>
 ### Uploaded Files
-
-You may retrieve an uploaded image from an incoming request using the `image` method. This method returns an `Illuminate\Image\Image` instance for the uploaded file, or `null` if the file is not present:
-
+Bạn có thể lấy image upload từ request bằng phương thức `image`. Phương thức trả instance `Illuminate\Image\Image` cho file đã upload, hoặc `null` nếu file không tồn tại:
 ```php
 use Illuminate\Http\Request;
 
@@ -87,34 +68,26 @@ Route::post('/avatar', function (Request $request) {
     // ...
 });
 ```
-
-Alternatively, you may create an image instance from an `Illuminate\Http\UploadedFile` instance using the `fromUpload` method:
-
+Ngoài ra, bạn có thể tạo image instance từ `Illuminate\Http\UploadedFile` bằng phương thức `fromUpload`:
 ```php
 use Illuminate\Support\Facades\Image;
 
 $image = Image::fromUpload($request->file('avatar'));
 ```
-
-When an image is created from an uploaded file, you may retrieve the underlying uploaded file using the `file` method:
-
+Khi image được tạo từ uploaded file, bạn có thể lấy uploaded file bên dưới bằng phương thức `file`:
 ```php
 $file = $image->file();
 ```
 
 <a name="storage-files"></a>
 ### Storage Files
-
-You may create an image instance from a file stored on one of your application's [filesystem disks](/docs/{{version}}/filesystem) using the `fromStorage` method. The first argument is the path to the file, while the second argument is the disk name:
-
+Bạn có thể tạo image instance từ file lưu trên một [filesystem disk](/docs/{{version}}/filesystem) bằng phương thức `fromStorage`. Argument đầu là path, argument thứ hai là tên disk:
 ```php
 use Illuminate\Support\Facades\Image;
 
 $image = Image::fromStorage('avatars/photo.jpg', disk: 'public');
 ```
-
-You may also create image instances directly from a filesystem disk instance using the `image` method:
-
+Bạn cũng có thể tạo image instance trực tiếp từ filesystem disk instance bằng phương thức `image`:
 ```php
 use Illuminate\Support\Facades\Storage;
 
@@ -122,10 +95,8 @@ $image = Storage::disk('public')->image('avatars/photo.jpg');
 ```
 
 <a name="other-sources"></a>
-### Other Sources
-
-The `Image` facade also includes methods for creating image instances from raw bytes, local file paths, remote URLs, and Base64 encoded strings:
-
+### Nguồn khác
+Facade `Image` còn có các phương thức tạo image instance từ raw bytes, local file path, remote URL và string Base64 encoded:
 ```php
 use Illuminate\Support\Facades\Image;
 
@@ -136,66 +107,49 @@ $image = Image::fromUrl('https://example.com/photo.jpg');
 ```
 
 <a name="manipulating-images"></a>
-## Manipulating Images
-
-Image instances are immutable. Each manipulation method returns a new image instance with the transformation appended to its processing pipeline, allowing methods to be chained fluently:
-
+## Biến đổi Image
+Image instance là immutable. Mỗi phương thức manipulation trả về image instance mới với transformation được nối vào processing pipeline, cho phép chain method theo fluent style:
 ```php
 $image = $request->image('avatar')
     ->orient()
     ->cover(400, 400)
     ->sharpen(10);
 ```
-
-Transformations are processed in the order they are added to the image pipeline and the image is only encoded once at the end.
-
+Các transformation được xử lý theo đúng thứ tự thêm vào pipeline và image chỉ được encode một lần ở cuối.
 <a name="resizing-images"></a>
-### Resizing Images
-
-The `resize` method resizes an image to the given dimensions. You may provide both a width and height, or provide only one dimension using named arguments:
-
+### Resize Image
+Phương thức `resize` đổi kích thước image theo dimension đã cho. Bạn có thể truyền cả width và height hoặc chỉ một dimension bằng named argument:
 ```php
 $image = $image->resize(800, 600);
 $image = $image->resize(width: 800);
 $image = $image->resize(height: 600);
 ```
-
-The `scale` method proportionally scales an image down so that it fits within the given dimensions. This method will never increase the size of an image:
-
+Phương thức `scale` scale image theo tỷ lệ để vừa trong dimension đã cho. Phương thức này không bao giờ phóng lớn image:
 ```php
 $image = $image->scale(800, 600);
 $image = $image->scale(width: 800);
 $image = $image->scale(height: 600);
 ```
-
-The `cover` method resizes and crops an image to completely cover the given dimensions:
-
+Phương thức `cover` resize và crop image để phủ hoàn toàn dimension đã cho:
 ```php
 $image = $image->cover(400, 400);
 ```
-
-The `contain` method resizes an image to fit within the given dimensions while preserving the entire image. If necessary, empty space will be filled using the optional background color:
-
+Phương thức `contain` resize image để vừa trong dimension đã cho nhưng vẫn giữ toàn bộ ảnh. Nếu cần, khoảng trống được lấp bằng background color tùy chọn:
 ```php
 $image = $image->contain(400, 400);
 $image = $image->contain(400, 400, '#ffffff');
 $image = $image->contain(400, 400, 'dominant');
 ```
-
-You may specify `dominant` as the background color to fill empty space using the image's dominant color.
-
-You may crop an image using the `crop` method. The first two arguments are the desired width and height, and the optional third and fourth arguments specify the crop's `x` and `y` coordinates:
-
+Bạn có thể truyền `dominant` làm background color để lấp khoảng trống bằng màu chủ đạo của image.
+Bạn có thể crop image bằng `crop`. Hai argument đầu là width và height mong muốn; argument thứ ba và thứ tư tùy chọn là tọa độ `x`, `y` của vùng crop:
 ```php
 $image = $image->crop(300, 200);
 $image = $image->crop(300, 200, x: 50, y: 25);
 ```
 
 <a name="other-transformations"></a>
-### Other Transformations
-
-Laravel also provides a variety of additional image transformation methods:
-
+### Các Transformation khác
+Laravel còn cung cấp nhiều phương thức transformation image khác:
 ```php
 $image = $image->orient();
 $image = $image->rotate(90);
@@ -207,14 +161,10 @@ $image = $image->sharpen(10);
 $image = $image->flipVertically();
 $image = $image->flipHorizontally();
 ```
-
-The `orient` method rotates the image according to its EXIF orientation data. The `rotate` method rotates the image clockwise by the given angle and accepts an optional background color. The `blur` and `sharpen` methods accept values between `0` and `100`.
-
+`orient` xoay image theo dữ liệu EXIF orientation. `rotate` xoay theo chiều kim đồng hồ với góc đã cho và chấp nhận background color tùy chọn. `blur` và `sharpen` nhận value từ `0` tới `100`.
 <a name="conditional-transformations"></a>
-#### Conditional Transformations
-
-Image instances support Laravel's `Conditionable` trait, allowing you to conditionally apply transformations using the `when` and `unless` methods:
-
+#### Transformation có điều kiện
+Image instance hỗ trợ trait `Conditionable` của Laravel, cho phép áp transformation có điều kiện bằng `when` và `unless`:
 ```php
 $image = $request->image('avatar')
     ->when($request->boolean('crop'), fn ($image) => $image->cover(400, 400))
@@ -222,10 +172,8 @@ $image = $request->image('avatar')
 ```
 
 <a name="encoding-images"></a>
-## Encoding Images
-
-By default, processed images are encoded using their original format. However, you may convert the image to another supported format before retrieving or storing it:
-
+## Encode Image
+Mặc định, image sau xử lý được encode bằng format gốc. Tuy nhiên, bạn có thể chuyển sang format được hỗ trợ khác trước khi lấy hoặc lưu ảnh:
 ```php
 $image = $image->toWebp();
 $image = $image->toJpg();
@@ -235,40 +183,30 @@ $image = $image->toGif();
 $image = $image->toAvif();
 $image = $image->toBmp();
 ```
-
-You may use the `quality` method to set the output quality. The quality will be clamped between `1` and `100`:
-
+Dùng `quality` để đặt chất lượng output. Giá trị quality được giới hạn trong khoảng `1` đến `100`:
 ```php
 $image = $image->toWebp()->quality(80);
 ```
-
-The `optimize` method is a convenient shortcut for converting the image to a given format and setting its quality. By default, images are optimized as WebP images with a quality of `70`:
-
+`optimize` là shortcut thuận tiện để chuyển image sang format chỉ định và đặt quality. Mặc định image được optimize thành WebP với quality `70`:
 ```php
 $image = $image->optimize();
 
 $image = $image->optimize(format: 'jpg', quality: 85);
 ```
-
-You may retrieve the processed image contents as a string of bytes, base64 encoded string, or data URI:
-
+Bạn có thể lấy nội dung image đã xử lý dưới dạng byte string, Base64 encoded string hoặc data URI:
 ```php
 $bytes = $image->toBytes();
 $base64 = $image->toBase64();
 $dataUri = $image->toDataUri();
 ```
-
-An image instance may also be cast to a string to retrieve a data URI:
-
+Image instance cũng có thể cast sang string để lấy data URI:
 ```php
 $dataUri = (string) $image;
 ```
 
 <a name="storing-images"></a>
-## Storing Images
-
-The `store` method stores the processed image on one of your application's filesystem disks. Like uploaded files, Laravel will generate a unique filename and return the stored path. The second argument may be used to specify the disk:
-
+## Lưu Image
+Phương thức `store` lưu image đã xử lý trên filesystem disk của ứng dụng. Tương tự uploaded file, Laravel tạo filename duy nhất và trả về path đã lưu. Argument thứ hai có thể dùng để chỉ định disk:
 ```php
 $path = $request->image('avatar')
     ->cover(400, 400)
@@ -278,17 +216,13 @@ $path = $request->image('avatar')
     ->cover(400, 400)
     ->store(path: 'avatars', disk: 's3');
 ```
-
-You may use the `storeAs` method to specify the stored filename:
-
+Dùng `storeAs` nếu muốn chỉ định filename khi lưu:
 ```php
 $path = $request->image('avatar')
     ->cover(400, 400)
     ->storeAs(path: 'avatars', name: 'avatar.jpg', disk: 'public');
 ```
-
-The `storePublicly` and `storePubliclyAs` methods store the image with `public` visibility:
-
+`storePublicly` và `storePubliclyAs` lưu image với visibility `public`:
 ```php
 $path = $request->image('avatar')
     ->cover(400, 400)
@@ -298,14 +232,10 @@ $path = $request->image('avatar')
     ->cover(400, 400)
     ->storePubliclyAs(path: 'avatars', name: 'avatar.webp', disk: 'public');
 ```
-
-If the image could not be stored, the storage methods return `false`.
-
+Nếu không thể lưu image, các storage method trả `false`.
 <a name="inspecting-images"></a>
-## Inspecting Images
-
-You may retrieve the image's MIME type, extension, dimensions, width, height, and dominant color using the following methods:
-
+## Đọc thông tin Image
+Bạn có thể lấy MIME type, extension, dimensions, width, height và dominant color của image bằng các phương thức sau:
 ```php
 $mimeType = $image->mimeType();
 $extension = $image->extension();
@@ -316,19 +246,13 @@ $height = $image->height();
 
 $dominantColor = $image->dominantColor();
 ```
-
-These methods operate on the processed image. For example, calling `width` after `cover(400, 400)` will return `400`.
-
+Các phương thức này hoạt động trên image sau xử lý. Ví dụ, gọi `width` sau `cover(400, 400)` sẽ trả `400`.
 <a name="image-drivers"></a>
 ## Image Drivers
-
 <a name="custom-image-drivers"></a>
 ### Custom Image Drivers
-
-Laravel's image manager extends Laravel's base `Illuminate\Support\Manager` class. This means you may register custom image drivers using the `extend` method available on the image manager and `Image` facade.
-
-Custom image drivers should implement the `Illuminate\Contracts\Image\Driver` interface. The `process` method receives the original image contents and the ordered `Illuminate\Image\ImagePipeline` that should be applied to the image, and should return the processed image bytes:
-
+Image manager của Laravel kế thừa base class `Illuminate\Support\Manager`. Vì vậy bạn có thể đăng ký custom image driver bằng phương thức `extend` trên image manager và facade `Image`.
+Custom image driver nên implement interface `Illuminate\Contracts\Image\Driver`. Phương thức `process` nhận nội dung image gốc cùng `Illuminate\Image\ImagePipeline` theo đúng thứ tự cần áp dụng và phải trả về bytes của image đã xử lý:
 ```php
 <?php
 
@@ -360,12 +284,9 @@ class VipsDriver implements Driver
     }
 }
 ```
-
 > [!NOTE]
-> To better understand how to implement a custom image driver, you may review the framework's built-in `Illuminate\Image\Drivers\InterventionDriver` class.
-
-Once you have implemented your custom driver, you may register it using the `Image` facade's `extend` method. Typically, this should be done in the `boot` method of a service provider:
-
+> Để hiểu rõ hơn cách implement custom image driver, bạn có thể xem class có sẵn `Illuminate\Image\Drivers\InterventionDriver` trong framework.
+Sau khi implement custom driver, đăng ký bằng phương thức `extend` của facade `Image`. Thông thường nên làm việc này trong phương thức `boot` của service provider:
 ```php
 use App\Images\VipsDriver;
 use Illuminate\Contracts\Foundation\Application;
@@ -381,26 +302,20 @@ public function boot(): void
     });
 }
 ```
-
-After registering the driver, you may use it for a specific image using the `using` method:
-
+Sau khi đăng ký, có thể dùng driver cho một image cụ thể qua phương thức `using`:
 ```php
 $image = $request->image('avatar')
     ->using('vips')
     ->cover(400, 400);
 ```
-
-You may also configure a custom driver as your application's default image driver using the `default` option in your application's `config/images.php` configuration file or the `IMAGE_DRIVER` environment variable:
-
+Bạn cũng có thể cấu hình custom driver làm default image driver qua option `default` trong `config/images.php` hoặc environment variable `IMAGE_DRIVER`:
 ```ini
 IMAGE_DRIVER=vips
 ```
 
 <a name="custom-transformations"></a>
 ### Custom Transformations
-
-Applications and packages may define custom transformations by creating a class that implements the `Illuminate\Contracts\Image\Transformation` contract. Custom transformations can then be added to an image pipeline using the `transform` method:
-
+Ứng dụng và package có thể định nghĩa custom transformation bằng class implement contract `Illuminate\Contracts\Image\Transformation`. Sau đó transformation được thêm vào image pipeline bằng phương thức `transform`:
 ```php
 <?php
 
@@ -417,9 +332,7 @@ class Pixelate implements Transformation
     }
 }
 ```
-
-Next, register a handler for the transformation and driver using the `Image` facade's `transformUsing` method. Typically, this should be done in the `boot` method of a service provider:
-
+Tiếp theo, đăng ký handler cho transformation và driver bằng phương thức `transformUsing` của facade `Image`. Thông thường việc này nên thực hiện trong `boot` của service provider:
 ```php
 use App\Images\Transformations\Pixelate;
 use Illuminate\Support\Facades\Image;
@@ -429,9 +342,7 @@ Image::transformUsing('gd', Pixelate::class, function (ImageInterface $image, Pi
     return $image->pixelate($transformation->size);
 });
 ```
-
-Once the transformation handler has been registered, you may apply the transformation to an image:
-
+Sau khi transformation handler được đăng ký, bạn có thể áp transformation cho image:
 ```php
 use App\Images\Transformations\Pixelate;
 

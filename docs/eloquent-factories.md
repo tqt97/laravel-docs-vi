@@ -1,29 +1,24 @@
 # Eloquent: Factories
-
-- [Introduction](#introduction)
-- [Defining Model Factories](#defining-model-factories)
-    - [Generating Factories](#generating-factories)
-    - [Factory States](#factory-states)
-    - [Factory Callbacks](#factory-callbacks)
-- [Creating Models Using Factories](#creating-models-using-factories)
-    - [Instantiating Models](#instantiating-models)
-    - [Persisting Models](#persisting-models)
+- [Giới thiệu](#introduction)
+- [Định nghĩa model factory](#defining-model-factories)
+    - [Tạo factory](#generating-factories)
+    - [Factory state](#factory-states)
+    - [Factory callback](#factory-callbacks)
+- [Tạo model bằng factory](#creating-models-using-factories)
+    - [Khởi tạo model](#instantiating-models)
+    - [Lưu model](#persisting-models)
     - [Sequences](#sequences)
-- [Factory Relationships](#factory-relationships)
-    - [Has Many Relationships](#has-many-relationships)
-    - [Belongs To Relationships](#belongs-to-relationships)
-    - [Many to Many Relationships](#many-to-many-relationships)
-    - [Polymorphic Relationships](#polymorphic-relationships)
-    - [Defining Relationships Within Factories](#defining-relationships-within-factories)
-    - [Recycling an Existing Model for Relationships](#recycling-an-existing-model-for-relationships)
-
+- [Relationship trong factory](#factory-relationships)
+    - [Has Many](#has-many-relationships)
+    - [Belongs To](#belongs-to-relationships)
+    - [Nhiều - nhiều](#many-to-many-relationships)
+    - [Polymorphic relationship](#polymorphic-relationships)
+    - [Định nghĩa relationship trong factory](#defining-relationships-within-factories)
+    - [Tái sử dụng model có sẵn cho relationship](#recycling-an-existing-model-for-relationships)
 <a name="introduction"></a>
-## Introduction
-
-When testing your application or seeding your database, you may need to insert a few records into your database. Instead of manually specifying the value of each column, Laravel allows you to define a set of default attributes for each of your [Eloquent models](/docs/{{version}}/eloquent) using model factories.
-
-To see an example of how to write a factory, take a look at the `database/factories/UserFactory.php` file in your application. This factory is included with all new Laravel applications and contains the following factory definition:
-
+## Giới thiệu
+Khi test ứng dụng hoặc seed database, bạn thường cần chèn một số record mẫu. Thay vì tự chỉ định giá trị cho từng column, Laravel cho phép định nghĩa tập attribute mặc định cho mỗi [Eloquent model](/docs/{{version}}/eloquent) bằng model factory.
+Để xem ví dụ về factory, hãy mở file `database/factories/UserFactory.php` trong ứng dụng. Factory này có sẵn trong mọi ứng dụng Laravel mới và chứa định nghĩa tương tự sau:
 ```php
 namespace Database\Factories;
 
@@ -68,35 +63,23 @@ class UserFactory extends Factory
     }
 }
 ```
-
-As you can see, in their most basic form, factories are classes that extend Laravel's base factory class and define a `definition` method. The `definition` method returns the default set of attribute values that should be applied when creating a model using the factory.
-
-Via the `fake` helper, factories have access to the [Faker](https://github.com/FakerPHP/Faker) PHP library, which allows you to conveniently generate various kinds of random data for testing and seeding.
-
+Ở dạng cơ bản nhất, factory là class extends base factory class của Laravel và định nghĩa method `definition`. Method này trả về tập giá trị attribute mặc định được áp dụng khi tạo model thông qua factory.
+Thông qua helper `fake`, factory có quyền truy cập thư viện PHP [Faker](https://github.com/FakerPHP/Faker), giúp sinh nhiều loại dữ liệu ngẫu nhiên thuận tiện cho test và seeding.
 > [!NOTE]
-> You can change your application's Faker locale by updating the `faker_locale` option in your `config/app.php` configuration file.
-
+> Bạn có thể đổi locale của Faker bằng option `faker_locale` trong file `config/app.php`.
 <a name="defining-model-factories"></a>
-## Defining Model Factories
-
+## Định nghĩa model factory
 <a name="generating-factories"></a>
-### Generating Factories
-
-To create a factory, execute the `make:factory` [Artisan command](/docs/{{version}}/artisan):
-
+### Tạo factory
+Để tạo factory, hãy chạy [Artisan command](/docs/{{version}}/artisan) `make:factory`:
 ```shell
 php artisan make:factory PostFactory
 ```
-
-The new factory class will be placed in your `database/factories` directory.
-
+Factory class mới sẽ được đặt trong thư mục `database/factories`.
 <a name="factory-and-model-discovery-conventions"></a>
-#### Model and Factory Discovery Conventions
-
-Once you have defined your factories, you may use the static `factory` method provided to your models by the `Illuminate\Database\Eloquent\Factories\HasFactory` trait in order to instantiate a factory instance for that model.
-
-The `HasFactory` trait's `factory` method will use conventions to determine the proper factory for the model the trait is assigned to. Specifically, the method will look for a factory in the `Database\Factories` namespace that has a class name matching the model name and is suffixed with `Factory`. If these conventions do not apply to your particular application or factory, you may add the `UseFactory` attribute to the model to manually specify the model's factory:
-
+#### Convention khám phá model và factory
+Sau khi định nghĩa factory, bạn có thể dùng static method `factory` được trait `Illuminate\Database\Eloquent\Factories\HasFactory` cung cấp trên model để tạo factory instance tương ứng.
+Method `factory` của trait `HasFactory` dùng convention để xác định factory phù hợp. Cụ thể, Laravel tìm class trong namespace `Database\Factories` có tên khớp model và hậu tố `Factory`. Nếu convention này không phù hợp với ứng dụng, bạn có thể thêm attribute `UseFactory` vào model để chỉ định factory thủ công:
 ```php
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Database\Factories\Administration\FlightFactory;
@@ -107,9 +90,7 @@ class Flight extends Model
     // ...
 }
 ```
-
-Alternatively, you may overwrite the `newFactory` method on your model to return an instance of the model's corresponding factory directly:
-
+Ngoài ra, bạn có thể override method `newFactory` trên model để trả về trực tiếp factory instance tương ứng:
 ```php
 use Database\Factories\Administration\FlightFactory;
 
@@ -121,9 +102,7 @@ protected static function newFactory()
     return FlightFactory::new();
 }
 ```
-
-Then, use the `UseModel` attribute on the corresponding factory to specify the model:
-
+Sau đó dùng attribute `UseModel` trên factory tương ứng để chỉ định model:
 ```php
 use App\Administration\Flight;
 use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
@@ -137,12 +116,9 @@ class FlightFactory extends Factory
 ```
 
 <a name="factory-states"></a>
-### Factory States
-
-State manipulation methods allow you to define discrete modifications that can be applied to your model factories in any combination. For example, your `Database\Factories\UserFactory` factory might contain a `suspended` state method that modifies one of its default attribute values.
-
-State transformation methods typically call the `state` method provided by Laravel's base factory class. The `state` method accepts a closure which will receive the array of raw attributes defined for the factory and should return an array of attributes to modify:
-
+### Factory state
+State manipulation method cho phép định nghĩa các thay đổi độc lập có thể áp dụng lên factory theo bất kỳ tổ hợp nào. Ví dụ, `Database\Factories\UserFactory` có thể có method state `suspended` để thay đổi một attribute mặc định.
+State transformation method thường gọi method `state` của base factory class. `state` nhận closure với raw attribute array của factory và closure phải trả về mảng attribute cần thay đổi:
 ```php
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -160,10 +136,8 @@ public function suspended(): Factory
 ```
 
 <a name="trashed-state"></a>
-#### "Trashed" State
-
-If your Eloquent model can be [soft deleted](/docs/{{version}}/eloquent#soft-deleting), you may invoke the built-in `trashed` state method to indicate that the created model should already be "soft deleted". You do not need to manually define the `trashed` state as it is automatically available to all factories:
-
+#### State "Trashed"
+Nếu Eloquent model hỗ trợ [soft delete](/docs/{{version}}/eloquent#soft-deleting), bạn có thể gọi state tích hợp `trashed` để model được tạo sẵn ở trạng thái "soft deleted". Không cần tự định nghĩa state này vì nó có sẵn cho mọi factory:
 ```php
 use App\Models\User;
 
@@ -171,10 +145,8 @@ $user = User::factory()->trashed()->create();
 ```
 
 <a name="factory-callbacks"></a>
-### Factory Callbacks
-
-Factory callbacks are registered using the `afterMaking` and `afterCreating` methods and allow you to perform additional tasks after making or creating a model. You should register these callbacks by defining a `configure` method on your factory class. This method will be automatically called by Laravel when the factory is instantiated:
-
+### Factory callback
+Factory callback được đăng ký bằng `afterMaking` và `afterCreating`, cho phép chạy tác vụ bổ sung sau khi make hoặc create model. Hãy đăng ký callback trong method `configure` của factory class; Laravel tự gọi method này khi factory được instantiate:
 ```php
 namespace Database\Factories;
 
@@ -198,9 +170,7 @@ class UserFactory extends Factory
     // ...
 }
 ```
-
-You may also register factory callbacks within state methods to perform additional tasks that are specific to a given state:
-
+Bạn cũng có thể đăng ký factory callback bên trong state method để thực hiện tác vụ chỉ dành cho state đó:
 ```php
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -223,61 +193,46 @@ public function suspended(): Factory
 ```
 
 <a name="creating-models-using-factories"></a>
-## Creating Models Using Factories
-
+## Tạo model bằng factory
 <a name="instantiating-models"></a>
-### Instantiating Models
-
-Once you have defined your factories, you may use the static `factory` method provided to your models by the `Illuminate\Database\Eloquent\Factories\HasFactory` trait in order to instantiate a factory instance for that model. Let's take a look at a few examples of creating models. First, we'll use the `make` method to create models without persisting them to the database:
-
+### Khởi tạo model
+Sau khi định nghĩa factory, dùng static method `factory` từ trait `HasFactory` để tạo factory instance. Trước tiên, method `make` tạo model nhưng **không lưu vào database**:
 ```php
 use App\Models\User;
 
 $user = User::factory()->make();
 ```
-
-You may create a collection of many models using the `count` method:
-
+Bạn có thể tạo collection gồm nhiều model bằng method `count`:
 ```php
 $users = User::factory()->count(3)->make();
 ```
 
 <a name="applying-states"></a>
-#### Applying States
-
-You may also apply any of your [states](#factory-states) to the models. If you would like to apply multiple state transformations to the models, you may simply call the state transformation methods directly:
-
+#### Áp dụng state
+Bạn có thể áp dụng bất kỳ [state](#factory-states) nào lên model. Nếu cần nhiều state transformation, chỉ cần chain các state method trực tiếp:
 ```php
 $users = User::factory()->count(5)->suspended()->make();
 ```
 
 <a name="overriding-attributes"></a>
-#### Overriding Attributes
-
-If you would like to override some of the default values of your models, you may pass an array of values to the `make` method. Only the specified attributes will be replaced while the rest of the attributes remain set to their default values as specified by the factory:
-
+#### Override attribute
+Nếu muốn override một số giá trị mặc định, truyền mảng giá trị vào method `make`. Chỉ các attribute được chỉ định bị thay thế; phần còn lại vẫn dùng giá trị mặc định từ factory:
 ```php
 $user = User::factory()->make([
     'name' => 'Abigail Otwell',
 ]);
 ```
-
-Alternatively, the `state` method may be called directly on the factory instance to perform an inline state transformation:
-
+Ngoài ra, bạn có thể gọi trực tiếp method `state` trên factory instance để tạo inline state transformation:
 ```php
 $user = User::factory()->state([
     'name' => 'Abigail Otwell',
 ])->make();
 ```
-
 > [!NOTE]
-> [Mass assignment protection](/docs/{{version}}/eloquent#mass-assignment) is automatically disabled when creating models using factories.
-
+> [Mass assignment protection](/docs/{{version}}/eloquent#mass-assignment) tự động được tắt khi tạo model bằng factory.
 <a name="persisting-models"></a>
-### Persisting Models
-
-The `create` method instantiates model instances and persists them to the database using Eloquent's `save` method:
-
+### Lưu model
+Method `create` khởi tạo model instance và persist vào database bằng method `save` của Eloquent:
 ```php
 use App\Models\User;
 
@@ -287,9 +242,7 @@ $user = User::factory()->create();
 // Create three App\Models\User instances...
 $users = User::factory()->count(3)->create();
 ```
-
-You may override the factory's default model attributes by passing an array of attributes to the `create` method:
-
+Bạn có thể override attribute mặc định bằng cách truyền mảng attribute vào `create`:
 ```php
 $user = User::factory()->create([
     'name' => 'Abigail',
@@ -298,9 +251,7 @@ $user = User::factory()->create([
 
 <a name="sequences"></a>
 ### Sequences
-
-Sometimes you may wish to alternate the value of a given model attribute for each created model. You may accomplish this by defining a state transformation as a sequence. For example, you may wish to alternate the value of an `admin` column between `Y` and `N` for each created user:
-
+Đôi khi bạn muốn luân phiên giá trị một attribute cho từng model được tạo. Có thể thực hiện bằng state transformation dạng sequence. Ví dụ, luân phiên column `admin` giữa `Y` và `N` cho các user được tạo:
 ```php
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
@@ -313,11 +264,8 @@ $users = User::factory()
     ))
     ->create();
 ```
-
-In this example, five users will be created with an `admin` value of `Y` and five users will be created with an `admin` value of `N`.
-
-If necessary, you may include a closure as a sequence value. The closure will be invoked each time the sequence needs a new value:
-
+Trong ví dụ này, năm user có `admin=Y` và năm user có `admin=N`.
+Khi cần, sequence value có thể là closure. Closure được gọi mỗi khi sequence cần giá trị mới:
 ```php
 use Illuminate\Database\Eloquent\Factories\Sequence;
 
@@ -328,9 +276,7 @@ $users = User::factory()
     ))
     ->create();
 ```
-
-Within a sequence closure, you may access the `$index` property on the sequence instance that is injected into the closure. The `$index` property contains the number of iterations through the sequence that have occurred thus far:
-
+Bên trong sequence closure, bạn có thể truy cập property `$index` trên sequence instance được inject. `$index` cho biết số lần sequence đã lặp tới thời điểm hiện tại:
 ```php
 $users = User::factory()
     ->count(10)
@@ -339,9 +285,7 @@ $users = User::factory()
     ))
     ->create();
 ```
-
-For convenience, sequences may also be applied using the `sequence` method, which simply invokes the `state` method internally. The `sequence` method accepts a closure or arrays of sequenced attributes:
-
+Để thuận tiện, sequence cũng có thể áp dụng bằng method `sequence`, về bản chất gọi `state` bên trong. Method nhận closure hoặc các mảng attribute theo thứ tự:
 ```php
 $users = User::factory()
     ->count(2)
@@ -353,13 +297,10 @@ $users = User::factory()
 ```
 
 <a name="factory-relationships"></a>
-## Factory Relationships
-
+## Relationship trong factory
 <a name="has-many-relationships"></a>
-### Has Many Relationships
-
-Next, let's explore building Eloquent model relationships using Laravel's fluent factory methods. First, let's assume our application has an `App\Models\User` model and an `App\Models\Post` model. Also, let's assume that the `User` model defines a `hasMany` relationship with `Post`. We can create a user that has three posts using the `has` method provided by the Laravel's factories. The `has` method accepts a factory instance:
-
+### Has Many
+Tiếp theo, hãy xây dựng Eloquent relationship bằng fluent factory API. Giả sử ứng dụng có model `App\Models\User` và `App\Models\Post`, trong đó `User` định nghĩa relationship `hasMany` với `Post`. Ta có thể tạo một user có ba post bằng method `has`; method này nhận một factory instance:
 ```php
 use App\Models\Post;
 use App\Models\User;
@@ -368,17 +309,13 @@ $user = User::factory()
     ->has(Post::factory()->count(3))
     ->create();
 ```
-
-By convention, when passing a `Post` model to the `has` method, Laravel will assume that the `User` model must have a `posts` method that defines the relationship. If necessary, you may explicitly specify the name of the relationship that you would like to manipulate:
-
+Theo convention, khi truyền factory của `Post` vào `has`, Laravel giả định model `User` có method relationship `posts`. Nếu cần, bạn có thể chỉ định rõ tên relationship muốn thao tác:
 ```php
 $user = User::factory()
     ->has(Post::factory()->count(3), 'posts')
     ->create();
 ```
-
-Of course, you may perform state manipulations on the related models. In addition, you may pass a closure-based state transformation if your state change requires access to the parent model:
-
+Bạn có thể áp dụng state cho related model. Ngoài ra, state transformation có thể là closure nếu thay đổi cần truy cập parent model:
 ```php
 $user = User::factory()
     ->has(
@@ -392,18 +329,14 @@ $user = User::factory()
 ```
 
 <a name="has-many-relationships-using-magic-methods"></a>
-#### Using Magic Methods
-
-For convenience, you may use Laravel's magic factory relationship methods to build relationships. For example, the following example will use convention to determine that the related models should be created via a `posts` relationship method on the `User` model:
-
+#### Dùng magic method
+Để thuận tiện, Laravel cung cấp magic factory relationship method. Ví dụ sau dựa vào convention để xác định related model phải được tạo qua relationship `posts` trên `User`:
 ```php
 $user = User::factory()
     ->hasPosts(3)
     ->create();
 ```
-
-When using magic methods to create factory relationships, you may pass an array of attributes to override on the related models:
-
+Khi dùng magic method để tạo relationship, bạn có thể truyền mảng attribute để override trên related model:
 ```php
 $user = User::factory()
     ->hasPosts(3, [
@@ -411,9 +344,7 @@ $user = User::factory()
     ])
     ->create();
 ```
-
-You may also pass multiple attribute arrays to create related models with per-model state. Laravel will apply each array in sequence:
-
+Bạn cũng có thể truyền nhiều mảng attribute để tạo related model với state riêng cho từng model. Laravel áp dụng từng mảng theo thứ tự:
 ```php
 $user = User::factory()
     ->hasPosts(
@@ -423,9 +354,7 @@ $user = User::factory()
     )
     ->create();
 ```
-
-You may provide a closure-based state transformation if your state change requires access to the parent model:
-
+Nếu state transformation cần parent model, hãy truyền closure:
 ```php
 $user = User::factory()
     ->hasPosts(3, function (array $attributes, User $user) {
@@ -435,10 +364,8 @@ $user = User::factory()
 ```
 
 <a name="belongs-to-relationships"></a>
-### Belongs To Relationships
-
-Now that we have explored how to build "has many" relationships using factories, let's explore the inverse of the relationship. The `for` method may be used to define the parent model that factory created models belong to. For example, we can create three `App\Models\Post` model instances that belong to a single user:
-
+### Belongs To
+Sau khi xem cách tạo "has many", hãy xem chiều ngược lại. Method `for` định nghĩa parent model mà các model được factory tạo thuộc về. Ví dụ, ta có thể tạo ba `Post` cùng thuộc một user:
 ```php
 use App\Models\Post;
 use App\Models\User;
@@ -450,9 +377,7 @@ $posts = Post::factory()
     ]))
     ->create();
 ```
-
-If you already have a parent model instance that should be associated with the models you are creating, you may pass the model instance to the `for` method:
-
+Nếu đã có parent model instance cần liên kết với model đang tạo, hãy truyền instance đó vào `for`:
 ```php
 $user = User::factory()->create();
 
@@ -463,10 +388,8 @@ $posts = Post::factory()
 ```
 
 <a name="belongs-to-relationships-using-magic-methods"></a>
-#### Using Magic Methods
-
-For convenience, you may use Laravel's magic factory relationship methods to define "belongs to" relationships. For example, the following example will use convention to determine that the three posts should belong to the `user` relationship on the `Post` model:
-
+#### Dùng magic method
+Laravel cũng cung cấp magic method để định nghĩa "belongs to". Ví dụ sau dùng convention để xác định ba post phải thuộc relationship `user` trên model `Post`:
 ```php
 $posts = Post::factory()
     ->count(3)
@@ -477,10 +400,8 @@ $posts = Post::factory()
 ```
 
 <a name="many-to-many-relationships"></a>
-### Many to Many Relationships
-
-Like [has many relationships](#has-many-relationships), "many to many" relationships may be created using the `has` method:
-
+### Nhiều - nhiều
+Tương tự [has many](#has-many-relationships), relationship "many to many" có thể được tạo bằng method `has`:
 ```php
 use App\Models\Role;
 use App\Models\User;
@@ -491,10 +412,8 @@ $user = User::factory()
 ```
 
 <a name="pivot-table-attributes"></a>
-#### Pivot Table Attributes
-
-If you need to define attributes that should be set on the pivot / intermediate table linking the models, you may use the `hasAttached` method. This method accepts an array of pivot table attribute names and values as its second argument:
-
+#### Attribute trên pivot table
+Nếu cần đặt attribute trên pivot / intermediate table liên kết hai model, hãy dùng method `hasAttached`. Đối số thứ hai là mảng tên và giá trị attribute của pivot table:
 ```php
 use App\Models\Role;
 use App\Models\User;
@@ -506,9 +425,7 @@ $user = User::factory()
     )
     ->create();
 ```
-
-You may provide a closure-based state transformation if your state change requires access to the related model:
-
+Nếu thay đổi state cần truy cập related model, bạn có thể truyền state transformation dạng closure:
 ```php
 $user = User::factory()
     ->hasAttached(
@@ -521,9 +438,7 @@ $user = User::factory()
     )
     ->create();
 ```
-
-You may also pass an array of pivot arrays to provide unique pivot data for each related model:
-
+Bạn cũng có thể truyền mảng các pivot array để cung cấp dữ liệu pivot riêng cho từng related model:
 ```php
 $user = User::factory()
     ->hasAttached(
@@ -535,9 +450,7 @@ $user = User::factory()
     )
     ->create();
 ```
-
-If you already have model instances that you would like to be attached to the models you are creating, you may pass the model instances to the `hasAttached` method. In this example, the same three roles will be attached to all three users:
-
+Nếu đã có model instance muốn attach vào các model đang tạo, hãy truyền instance vào `hasAttached`. Trong ví dụ này, cùng ba role sẽ được attach cho cả ba user:
 ```php
 $roles = Role::factory()->count(3)->create();
 
@@ -548,10 +461,8 @@ $users = User::factory()
 ```
 
 <a name="many-to-many-relationships-using-magic-methods"></a>
-#### Using Magic Methods
-
-For convenience, you may use Laravel's magic factory relationship methods to define many to many relationships. For example, the following example will use convention to determine that the related models should be created via a `roles` relationship method on the `User` model:
-
+#### Dùng magic method
+Bạn có thể dùng magic factory relationship method cho many-to-many. Ví dụ sau dựa vào convention để tạo related model thông qua relationship `roles` trên `User`:
 ```php
 $user = User::factory()
     ->hasRoles(1, [
@@ -561,10 +472,8 @@ $user = User::factory()
 ```
 
 <a name="polymorphic-relationships"></a>
-### Polymorphic Relationships
-
-[Polymorphic relationships](/docs/{{version}}/eloquent-relationships#polymorphic-relationships) may also be created using factories. Polymorphic "morph many" relationships are created in the same way as typical "has many" relationships. For example, if an `App\Models\Post` model has a `morphMany` relationship with an `App\Models\Comment` model:
-
+### Polymorphic relationship
+[Polymorphic relationship](/docs/{{version}}/eloquent-relationships#polymorphic-relationships) cũng có thể được tạo bằng factory. Polymorphic `morphMany` được tạo tương tự `hasMany`. Ví dụ nếu `Post` có relationship `morphMany` với `Comment`:
 ```php
 use App\Models\Post;
 
@@ -572,10 +481,8 @@ $post = Post::factory()->hasComments(3)->create();
 ```
 
 <a name="morph-to-relationships"></a>
-#### Morph To Relationships
-
-Magic methods may not be used to create `morphTo` relationships. Instead, the `for` method must be used directly and the name of the relationship must be explicitly provided. For example, imagine that the `Comment` model has a `commentable` method that defines a `morphTo` relationship. In this situation, we may create three comments that belong to a single post by using the `for` method directly:
-
+#### Morph To
+Magic method không thể dùng để tạo relationship `morphTo`. Thay vào đó, bạn phải gọi trực tiếp `for` và chỉ định rõ tên relationship. Ví dụ, nếu `Comment` có method `commentable` định nghĩa `morphTo`, ta có thể tạo ba comment thuộc một post bằng cách gọi `for` trực tiếp:
 ```php
 $comments = Comment::factory()->count(3)->for(
     Post::factory(), 'commentable'
@@ -583,10 +490,8 @@ $comments = Comment::factory()->count(3)->for(
 ```
 
 <a name="polymorphic-many-to-many-relationships"></a>
-#### Polymorphic Many to Many Relationships
-
-Polymorphic "many to many" (`morphToMany` / `morphedByMany`) relationships may be created just like non-polymorphic "many to many" relationships:
-
+#### Đa hình nhiều - nhiều
+Polymorphic "many to many" (`morphToMany` / `morphedByMany`) được tạo tương tự relationship many-to-many thông thường:
 ```php
 use App\Models\Tag;
 use App\Models\Video;
@@ -598,9 +503,7 @@ $video = Video::factory()
     )
     ->create();
 ```
-
-Of course, the magic `has` method may also be used to create polymorphic "many to many" relationships:
-
+Magic method `has` cũng có thể dùng để tạo polymorphic many-to-many:
 ```php
 $video = Video::factory()
     ->hasTags(3, ['public' => true])
@@ -608,10 +511,8 @@ $video = Video::factory()
 ```
 
 <a name="defining-relationships-within-factories"></a>
-### Defining Relationships Within Factories
-
-To define a relationship within your model factory, you will typically assign a new factory instance to the foreign key of the relationship. This is normally done for the "inverse" relationships such as `belongsTo` and `morphTo` relationships. For example, if you would like to create a new user when creating a post, you may do the following:
-
+### Định nghĩa relationship trong factory
+Để định nghĩa relationship ngay trong model factory, thông thường bạn gán một factory instance mới cho foreign key của relationship. Cách này thường dùng cho relationship "inverse" như `belongsTo` và `morphTo`. Ví dụ, nếu muốn tự tạo user mới khi tạo post:
 ```php
 use App\Models\User;
 
@@ -629,9 +530,7 @@ public function definition(): array
     ];
 }
 ```
-
-If the relationship's columns depend on the factory that defines it you may assign a closure to an attribute. The closure will receive the factory's evaluated attribute array:
-
+Nếu column của relationship phụ thuộc vào factory đang định nghĩa nó, bạn có thể gán closure cho attribute. Closure nhận evaluated attribute array của factory:
 ```php
 /**
  * Define the model's default state.
@@ -652,22 +551,16 @@ public function definition(): array
 ```
 
 <a name="recycling-an-existing-model-for-relationships"></a>
-### Recycling an Existing Model for Relationships
-
-If you have models that share a common relationship with another model, you may use the `recycle` method to ensure a single instance of the related model is recycled for all of the relationships created by the factory.
-
-For example, imagine you have `Airline`, `Flight`, and `Ticket` models, where the ticket belongs to an airline and a flight, and the flight also belongs to an airline. When creating tickets, you will probably want the same airline for both the ticket and the flight, so you may pass an airline instance to the `recycle` method:
-
+### Tái sử dụng model có sẵn cho relationship
+Nếu nhiều model có chung relationship với một model khác, bạn có thể dùng method `recycle` để đảm bảo cùng một related model instance được tái sử dụng cho toàn bộ relationship do factory tạo.
+Ví dụ, giả sử có các model `Airline`, `Flight` và `Ticket`; ticket thuộc airline và flight, còn flight cũng thuộc airline. Khi tạo ticket, bạn thường muốn airline của ticket và flight là cùng một record, vì vậy có thể truyền airline instance vào `recycle`:
 ```php
 Ticket::factory()
     ->recycle(Airline::factory()->create())
     ->create();
 ```
-
-You may find the `recycle` method particularly useful if you have models belonging to a common user or team.
-
-The `recycle` method also accepts a collection of existing models. When a collection is provided to the `recycle` method, a random model from the collection will be chosen when the factory needs a model of that type:
-
+Method `recycle` đặc biệt hữu ích khi nhiều model cùng thuộc một user hoặc team.
+`recycle` cũng nhận collection các model có sẵn. Khi truyền collection, factory sẽ chọn ngẫu nhiên một model trong collection mỗi khi cần model thuộc type đó:
 ```php
 Ticket::factory()
     ->recycle($airlines)

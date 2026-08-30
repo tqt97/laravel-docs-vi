@@ -1,52 +1,52 @@
-# Starter Kits
+# Starter Kit
 
-- [Introduction](#introduction)
-- [Creating an Application Using a Starter Kit](#creating-an-application)
-- [Available Starter Kits](#available-starter-kits)
+- [Giới thiệu](#introduction)
+- [Tạo ứng dụng bằng Starter Kit](#creating-an-application)
+- [Các Starter Kit hiện có](#available-starter-kits)
     - [React](#react)
     - [Svelte](#svelte)
     - [Vue](#vue)
     - [Livewire](#livewire)
-- [Starter Kit Customization](#starter-kit-customization)
+- [Tùy chỉnh Starter Kit](#starter-kit-customization)
     - [React](#react-customization)
     - [Svelte](#svelte-customization)
     - [Vue](#vue-customization)
     - [Livewire](#livewire-customization)
-- [Authentication](#authentication)
-    - [Enabling and Disabling Features](#enabling-and-disabling-features)
-    - [Customizing User Creation and Password Reset](#customizing-actions)
-    - [Two-Factor Authentication](#two-factor-authentication)
-    - [Rate Limiting](#rate-limiting)
-- [Teams](#teams)
-- [WorkOS AuthKit Authentication](#workos)
-    - [Configuring Your WorkOS Starter Kit](#configuring-your-workos-starter-kit)
+- [Xác thực](#authentication)
+    - [Bật và tắt tính năng](#enabling-and-disabling-features)
+    - [Tùy chỉnh tạo người dùng và đặt lại mật khẩu](#customizing-actions)
+    - [Xác thực hai yếu tố](#two-factor-authentication)
+    - [Giới hạn tần suất](#rate-limiting)
+- [Team](#teams)
+- [Xác thực bằng WorkOS AuthKit](#workos)
+    - [Cấu hình WorkOS Starter Kit](#configuring-your-workos-starter-kit)
 - [Inertia SSR](#inertia-ssr)
-- [Community Maintained Starter Kits](#community-maintained-starter-kits)
-- [Frequently Asked Questions](#faqs)
+- [Starter Kit do cộng đồng duy trì](#community-maintained-starter-kits)
+- [Câu hỏi thường gặp](#faqs)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-To give you a head start building your new Laravel application, we are happy to offer [application starter kits](https://laravel.com/starter-kits). These starter kits give you a head start on building your next Laravel application, and include the routes, controllers, and views you need to register and authenticate your application's users. The starter kits use [Laravel Fortify](/docs/{{version}}/fortify) to provide authentication.
+Để giúp bạn bắt đầu xây dựng ứng dụng Laravel mới nhanh hơn, Laravel cung cấp các [starter kit cho ứng dụng](https://laravel.com/starter-kits). Các starter kit này cung cấp sẵn những thành phần nền tảng cho ứng dụng Laravel tiếp theo của bạn, bao gồm route, controller và view cần thiết để đăng ký và xác thực người dùng. Các starter kit sử dụng [Laravel Fortify](/docs/{{version}}/fortify) để cung cấp chức năng xác thực.
 
-While you are welcome to use these starter kits, they are not required. You are free to build your own application from the ground up by simply installing a fresh copy of Laravel. Either way, we know you will build something great!
+Bạn có thể sử dụng các starter kit này, nhưng chúng không bắt buộc. Bạn hoàn toàn có thể xây dựng ứng dụng từ đầu bằng cách cài đặt một bản Laravel mới. Dù chọn cách nào, bạn vẫn có toàn quyền xây dựng ứng dụng theo nhu cầu của mình.
 
 <a name="creating-an-application"></a>
-## Creating an Application Using a Starter Kit
+## Tạo ứng dụng bằng Starter Kit
 
-To create a new Laravel application using one of our starter kits, you should first [install PHP and the Laravel CLI tool](/docs/{{version}}/installation#installing-php). If you already have PHP and Composer installed, you may install the Laravel installer CLI tool via Composer:
+Để tạo ứng dụng Laravel mới bằng một trong các starter kit, trước tiên bạn nên [cài đặt PHP và công cụ Laravel CLI](/docs/{{version}}/installation#installing-php). Nếu đã cài PHP và Composer, bạn có thể cài Laravel installer CLI thông qua Composer:
 
 ```shell
 composer global require laravel/installer
 ```
 
-Then, create a new Laravel application using the Laravel installer CLI. The Laravel installer will prompt you to select your preferred starter kit:
+Sau đó, tạo ứng dụng Laravel mới bằng Laravel installer CLI. Laravel installer sẽ yêu cầu bạn chọn starter kit mong muốn:
 
 ```shell
 laravel new my-app
 ```
 
-After creating your Laravel application, you only need to install its frontend dependencies via NPM and start the Laravel development server:
+Sau khi tạo ứng dụng Laravel, bạn chỉ cần cài các dependency frontend bằng NPM và khởi động development server của Laravel:
 
 ```shell
 cd my-app
@@ -54,56 +54,56 @@ npm install && npm run build
 composer run dev
 ```
 
-Once you have started the Laravel development server, your application will be accessible in your web browser at [http://localhost:8000](http://localhost:8000).
+Sau khi development server của Laravel được khởi động, bạn có thể truy cập ứng dụng bằng trình duyệt tại [http://localhost:8000](http://localhost:8000).
 
 <a name="available-starter-kits"></a>
-## Available Starter Kits
+## Các Starter Kit hiện có
 
 <a name="react"></a>
 ### React
 
-Our React starter kit provides a robust, modern starting point for building Laravel applications with a React frontend using [Inertia](https://inertiajs.com).
+React starter kit cung cấp một nền tảng khởi đầu hiện đại và vững chắc để xây dựng ứng dụng Laravel có frontend React bằng [Inertia](https://inertiajs.com).
 
-Inertia allows you to build modern, single-page React applications using classic server-side routing and controllers. This lets you enjoy the frontend power of React combined with the incredible backend productivity of Laravel and lightning-fast Vite compilation.
+Inertia cho phép bạn xây dựng ứng dụng React single-page hiện đại nhưng vẫn sử dụng routing và controller phía server theo cách truyền thống. Nhờ đó, bạn có thể kết hợp sức mạnh frontend của React với năng suất backend của Laravel và tốc độ biên dịch rất nhanh của Vite.
 
-The React starter kit utilizes React 19, TypeScript, Tailwind, and the [shadcn/ui](https://ui.shadcn.com) component library.
+React starter kit sử dụng React 19, TypeScript, Tailwind và thư viện component [shadcn/ui](https://ui.shadcn.com).
 
 <a name="svelte"></a>
 ### Svelte
 
-Our Svelte starter kit provides a robust, modern starting point for building Laravel applications with a Svelte frontend using [Inertia](https://inertiajs.com).
+Svelte starter kit cung cấp một nền tảng khởi đầu hiện đại và vững chắc để xây dựng ứng dụng Laravel có frontend Svelte bằng [Inertia](https://inertiajs.com).
 
-Inertia allows you to build modern, single-page Svelte applications using classic server-side routing and controllers. This lets you enjoy the frontend power of Svelte combined with the incredible backend productivity of Laravel and lightning-fast Vite compilation.
+Inertia cho phép bạn xây dựng ứng dụng Svelte single-page hiện đại nhưng vẫn sử dụng routing và controller phía server theo cách truyền thống. Nhờ đó, bạn có thể kết hợp sức mạnh frontend của Svelte với năng suất backend của Laravel và tốc độ biên dịch rất nhanh của Vite.
 
-The Svelte starter kit utilizes Svelte 5, TypeScript, Tailwind, and the [shadcn-svelte](https://www.shadcn-svelte.com/) component library.
+Svelte starter kit sử dụng Svelte 5, TypeScript, Tailwind và thư viện component [shadcn-svelte](https://www.shadcn-svelte.com/).
 
 <a name="vue"></a>
 ### Vue
 
-Our Vue starter kit provides a great starting point for building Laravel applications with a Vue frontend using [Inertia](https://inertiajs.com).
+Vue starter kit cung cấp một nền tảng khởi đầu tốt để xây dựng ứng dụng Laravel có frontend Vue bằng [Inertia](https://inertiajs.com).
 
-Inertia allows you to build modern, single-page Vue applications using classic server-side routing and controllers. This lets you enjoy the frontend power of Vue combined with the incredible backend productivity of Laravel and lightning-fast Vite compilation.
+Inertia cho phép bạn xây dựng ứng dụng Vue single-page hiện đại nhưng vẫn sử dụng routing và controller phía server theo cách truyền thống. Nhờ đó, bạn có thể kết hợp sức mạnh frontend của Vue với năng suất backend của Laravel và tốc độ biên dịch rất nhanh của Vite.
 
-The Vue starter kit utilizes the Vue Composition API, TypeScript, Tailwind, and the [shadcn-vue](https://www.shadcn-vue.com/) component library.
+Vue starter kit sử dụng Vue Composition API, TypeScript, Tailwind và thư viện component [shadcn-vue](https://www.shadcn-vue.com/).
 
 <a name="livewire"></a>
 ### Livewire
 
-Our Livewire starter kit provides the perfect starting point for building Laravel applications with a [Laravel Livewire](https://livewire.laravel.com) frontend.
+Livewire starter kit cung cấp nền tảng khởi đầu phù hợp để xây dựng ứng dụng Laravel với frontend sử dụng [Laravel Livewire](https://livewire.laravel.com).
 
-Livewire is a powerful way of building dynamic, reactive, frontend UIs using just PHP. It's a great fit for teams that primarily use Blade templates and are looking for a simpler alternative to JavaScript-driven SPA frameworks like React, Svelte, and Vue.
+Livewire là một cách mạnh mẽ để xây dựng giao diện frontend động và reactive chỉ bằng PHP. Đây là lựa chọn phù hợp cho các đội ngũ chủ yếu sử dụng Blade template và muốn một giải pháp đơn giản hơn so với các SPA framework dựa trên JavaScript như React, Svelte và Vue.
 
-The Livewire starter kit utilizes Livewire, Tailwind, and the [Flux UI](https://fluxui.dev) component library.
+Livewire starter kit sử dụng Livewire, Tailwind và thư viện component [Flux UI](https://fluxui.dev).
 
 <a name="starter-kit-customization"></a>
-## Starter Kit Customization
+## Tùy chỉnh Starter Kit
 
 <a name="react-customization"></a>
 ### React
 
-Our React starter kit is built with Inertia 3, React 19, Tailwind 4, and [shadcn/ui](https://ui.shadcn.com). As with all of our starter kits, all of the backend and frontend code exists within your application to allow for full customization.
+React starter kit được xây dựng với Inertia 3, React 19, Tailwind 4 và [shadcn/ui](https://ui.shadcn.com). Tương tự tất cả starter kit khác, toàn bộ mã backend và frontend đều nằm trong ứng dụng của bạn để bạn có thể tùy chỉnh hoàn toàn.
 
-The majority of the frontend code is located in the `resources/js` directory. You are free to modify any of the code to customize the appearance and behavior of your application:
+Phần lớn mã frontend nằm trong thư mục `resources/js`. Bạn có thể sửa bất kỳ phần mã nào để tùy chỉnh giao diện và hành vi của ứng dụng:
 
 ```text
 resources/js/
@@ -115,13 +115,13 @@ resources/js/
 └── types/         # TypeScript definitions
 ```
 
-To publish additional shadcn components, first [find the component you want to publish](https://ui.shadcn.com). Then, publish the component using `npx`:
+Để thêm các component shadcn khác, trước tiên hãy [tìm component bạn muốn thêm](https://ui.shadcn.com). Sau đó, thêm component bằng `npx`:
 
 ```shell
 npx shadcn@latest add switch
 ```
 
-In this example, the command will publish the Switch component to `resources/js/components/ui/switch.tsx`. Once the component has been published, you can use it in any of your pages:
+Trong ví dụ này, lệnh sẽ thêm component Switch vào `resources/js/components/ui/switch.tsx`. Sau khi component được thêm, bạn có thể sử dụng nó trong bất kỳ page nào:
 
 ```jsx
 import { Switch } from "@/components/ui/switch"
@@ -138,9 +138,9 @@ export default MyPage;
 ```
 
 <a name="react-available-layouts"></a>
-#### Available Layouts
+#### Các layout hiện có
 
-The React starter kit includes two different primary layouts for you to choose from: a "sidebar" layout and a "header" layout. The sidebar layout is the default, but you can switch to the header layout by modifying the layout that is imported at the top of your application's `resources/js/layouts/app-layout.tsx` file:
+React starter kit cung cấp hai layout chính để bạn lựa chọn: layout "sidebar" và layout "header". Sidebar là layout mặc định, nhưng bạn có thể chuyển sang header bằng cách thay đổi layout được import ở đầu file `resources/js/layouts/app-layout.tsx` của ứng dụng:
 
 ```js
 import AppLayoutTemplate from '@/layouts/app/app-sidebar-layout'; // [tl! remove]
@@ -148,9 +148,9 @@ import AppLayoutTemplate from '@/layouts/app/app-header-layout'; // [tl! add]
 ```
 
 <a name="react-sidebar-variants"></a>
-#### Sidebar Variants
+#### Các biến thể Sidebar
 
-The sidebar layout includes three different variants: the default sidebar variant, the "inset" variant, and the "floating" variant. You may choose the variant you like best by modifying the `resources/js/components/app-sidebar.tsx` component:
+Layout sidebar có ba biến thể: sidebar mặc định, "inset" và "floating". Bạn có thể chọn biến thể phù hợp bằng cách sửa component `resources/js/components/app-sidebar.tsx`:
 
 ```text
 <Sidebar collapsible="icon" variant="sidebar"> [tl! remove]
@@ -158,11 +158,11 @@ The sidebar layout includes three different variants: the default sidebar varian
 ```
 
 <a name="react-authentication-page-layout-variants"></a>
-#### Authentication Page Layout Variants
+#### Các biến thể layout trang xác thực
 
-The authentication pages included with the React starter kit, such as the login page and registration page, also offer three different layout variants: "simple", "card", and "split".
+Các trang xác thực trong React starter kit, chẳng hạn trang đăng nhập và đăng ký, cũng cung cấp ba biến thể layout: "simple", "card" và "split".
 
-To change your authentication layout, modify the layout that is imported at the top of your application's `resources/js/layouts/auth-layout.tsx` file:
+Để thay đổi layout xác thực, hãy sửa layout được import ở đầu file `resources/js/layouts/auth-layout.tsx` của ứng dụng:
 
 ```js
 import AuthLayoutTemplate from '@/layouts/auth/auth-simple-layout'; // [tl! remove]
@@ -172,9 +172,9 @@ import AuthLayoutTemplate from '@/layouts/auth/auth-split-layout'; // [tl! add]
 <a name="svelte-customization"></a>
 ### Svelte
 
-Our Svelte starter kit is built with Inertia 3, Svelte 5, Tailwind, and [shadcn-svelte](https://www.shadcn-svelte.com/). As with all of our starter kits, all of the backend and frontend code exists within your application to allow for full customization.
+Svelte starter kit được xây dựng với Inertia 3, Svelte 5, Tailwind và [shadcn-svelte](https://www.shadcn-svelte.com/). Tương tự tất cả starter kit khác, toàn bộ mã backend và frontend đều nằm trong ứng dụng của bạn để bạn có thể tùy chỉnh hoàn toàn.
 
-The majority of the frontend code is located in the `resources/js` directory. You are free to modify any of the code to customize the appearance and behavior of your application:
+Phần lớn mã frontend nằm trong thư mục `resources/js`. Bạn có thể sửa bất kỳ phần mã nào để tùy chỉnh giao diện và hành vi của ứng dụng:
 
 ```text
 resources/js/
@@ -185,13 +185,13 @@ resources/js/
 └── types/         # TypeScript definitions
 ```
 
-To publish additional shadcn-svelte components, first [find the component you want to publish](https://www.shadcn-svelte.com). Then, publish the component using `npx`:
+Để thêm các component shadcn-svelte khác, trước tiên hãy [tìm component bạn muốn thêm](https://www.shadcn-svelte.com). Sau đó, thêm component bằng `npx`:
 
 ```shell
 npx shadcn-svelte@latest add switch
 ```
 
-In this example, the command will publish the Switch component to `resources/js/components/ui/switch/switch.svelte`. Once the component has been published, you can use it in any of your pages:
+Trong ví dụ này, lệnh sẽ thêm component Switch vào `resources/js/components/ui/switch/switch.svelte`. Sau khi component được thêm, bạn có thể sử dụng nó trong bất kỳ page nào:
 
 ```svelte
 <script lang="ts">
@@ -204,9 +204,9 @@ In this example, the command will publish the Switch component to `resources/js/
 ```
 
 <a name="svelte-available-layouts"></a>
-#### Available Layouts
+#### Các layout hiện có
 
-The Svelte starter kit includes two different primary layouts for you to choose from: a "sidebar" layout and a "header" layout. The sidebar layout is the default, but you can switch to the header layout by modifying the layout that is imported at the top of your application's `resources/js/layouts/AppLayout.svelte` file:
+Svelte starter kit cung cấp hai layout chính để bạn lựa chọn: layout "sidebar" và layout "header". Sidebar là layout mặc định, nhưng bạn có thể chuyển sang header bằng cách thay đổi layout được import ở đầu file `resources/js/layouts/AppLayout.svelte` của ứng dụng:
 
 ```js
 import AppLayout from '@/layouts/app/AppSidebarLayout.svelte'; // [tl! remove]
@@ -214,9 +214,9 @@ import AppLayout from '@/layouts/app/AppHeaderLayout.svelte'; // [tl! add]
 ```
 
 <a name="svelte-sidebar-variants"></a>
-#### Sidebar Variants
+#### Các biến thể Sidebar
 
-The sidebar layout includes three different variants: the default sidebar variant, the "inset" variant, and the "floating" variant. You may choose the variant you like best by modifying the `resources/js/components/AppSidebar.svelte` component:
+Layout sidebar có ba biến thể: sidebar mặc định, "inset" và "floating". Bạn có thể chọn biến thể phù hợp bằng cách sửa component `resources/js/components/AppSidebar.svelte`:
 
 ```text
 <Sidebar collapsible="icon" variant="sidebar"> [tl! remove]
@@ -224,11 +224,11 @@ The sidebar layout includes three different variants: the default sidebar varian
 ```
 
 <a name="svelte-authentication-page-layout-variants"></a>
-#### Authentication Page Layout Variants
+#### Các biến thể layout trang xác thực
 
-The authentication pages included with the Svelte starter kit, such as the login page and registration page, also offer three different layout variants: "simple", "card", and "split".
+Các trang xác thực trong Svelte starter kit, chẳng hạn trang đăng nhập và đăng ký, cũng cung cấp ba biến thể layout: "simple", "card" và "split".
 
-To change your authentication layout, modify the layout that is imported at the top of your application's `resources/js/layouts/AuthLayout.svelte` file:
+Để thay đổi layout xác thực, hãy sửa layout được import ở đầu file `resources/js/layouts/AuthLayout.svelte` của ứng dụng:
 
 ```js
 import AuthLayout from '@/layouts/auth/AuthSimpleLayout.svelte'; // [tl! remove]
@@ -238,9 +238,9 @@ import AuthLayout from '@/layouts/auth/AuthSplitLayout.svelte'; // [tl! add]
 <a name="vue-customization"></a>
 ### Vue
 
-Our Vue starter kit is built with Inertia 3, Vue 3 Composition API, Tailwind, and [shadcn-vue](https://www.shadcn-vue.com/). As with all of our starter kits, all of the backend and frontend code exists within your application to allow for full customization.
+Vue starter kit được xây dựng với Inertia 3, Vue 3 Composition API, Tailwind và [shadcn-vue](https://www.shadcn-vue.com/). Tương tự tất cả starter kit khác, toàn bộ mã backend và frontend đều nằm trong ứng dụng của bạn để bạn có thể tùy chỉnh hoàn toàn.
 
-The majority of the frontend code is located in the `resources/js` directory. You are free to modify any of the code to customize the appearance and behavior of your application:
+Phần lớn mã frontend nằm trong thư mục `resources/js`. Bạn có thể sửa bất kỳ phần mã nào để tùy chỉnh giao diện và hành vi của ứng dụng:
 
 ```text
 resources/js/
@@ -252,13 +252,13 @@ resources/js/
 └── types/         # TypeScript definitions
 ```
 
-To publish additional shadcn-vue components, first [find the component you want to publish](https://www.shadcn-vue.com). Then, publish the component using `npx`:
+Để thêm các component shadcn-vue khác, trước tiên hãy [tìm component bạn muốn thêm](https://www.shadcn-vue.com). Sau đó, thêm component bằng `npx`:
 
 ```shell
 npx shadcn-vue@latest add switch
 ```
 
-In this example, the command will publish the Switch component to `resources/js/components/ui/Switch.vue`. Once the component has been published, you can use it in any of your pages:
+Trong ví dụ này, lệnh sẽ thêm component Switch vào `resources/js/components/ui/Switch.vue`. Sau khi component được thêm, bạn có thể sử dụng nó trong bất kỳ page nào:
 
 ```vue
 <script setup lang="ts">
@@ -273,9 +273,9 @@ import { Switch } from '@/components/ui/switch'
 ```
 
 <a name="vue-available-layouts"></a>
-#### Available Layouts
+#### Các layout hiện có
 
-The Vue starter kit includes two different primary layouts for you to choose from: a "sidebar" layout and a "header" layout. The sidebar layout is the default, but you can switch to the header layout by modifying the layout that is imported at the top of your application's `resources/js/layouts/AppLayout.vue` file:
+Vue starter kit cung cấp hai layout chính để bạn lựa chọn: layout "sidebar" và layout "header". Sidebar là layout mặc định, nhưng bạn có thể chuyển sang header bằng cách thay đổi layout được import ở đầu file `resources/js/layouts/AppLayout.vue` của ứng dụng:
 
 ```js
 import AppLayout from '@/layouts/app/AppSidebarLayout.vue'; // [tl! remove]
@@ -283,9 +283,9 @@ import AppLayout from '@/layouts/app/AppHeaderLayout.vue'; // [tl! add]
 ```
 
 <a name="vue-sidebar-variants"></a>
-#### Sidebar Variants
+#### Các biến thể Sidebar
 
-The sidebar layout includes three different variants: the default sidebar variant, the "inset" variant, and the "floating" variant. You may choose the variant you like best by modifying the `resources/js/components/AppSidebar.vue` component:
+Layout sidebar có ba biến thể: sidebar mặc định, "inset" và "floating". Bạn có thể chọn biến thể phù hợp bằng cách sửa component `resources/js/components/AppSidebar.vue`:
 
 ```text
 <Sidebar collapsible="icon" variant="sidebar"> [tl! remove]
@@ -293,11 +293,11 @@ The sidebar layout includes three different variants: the default sidebar varian
 ```
 
 <a name="vue-authentication-page-layout-variants"></a>
-#### Authentication Page Layout Variants
+#### Các biến thể layout trang xác thực
 
-The authentication pages included with the Vue starter kit, such as the login page and registration page, also offer three different layout variants: "simple", "card", and "split".
+Các trang xác thực trong Vue starter kit, chẳng hạn trang đăng nhập và đăng ký, cũng cung cấp ba biến thể layout: "simple", "card" và "split".
 
-To change your authentication layout, modify the layout that is imported at the top of your application's `resources/js/layouts/AuthLayout.vue` file:
+Để thay đổi layout xác thực, hãy sửa layout được import ở đầu file `resources/js/layouts/AuthLayout.vue` của ứng dụng:
 
 ```js
 import AuthLayout from '@/layouts/auth/AuthSimpleLayout.vue'; // [tl! remove]
@@ -307,9 +307,9 @@ import AuthLayout from '@/layouts/auth/AuthSplitLayout.vue'; // [tl! add]
 <a name="livewire-customization"></a>
 ### Livewire
 
-Our Livewire starter kit is built with Livewire 4, Tailwind, and [Flux UI](https://fluxui.dev/). As with all of our starter kits, all of the backend and frontend code exists within your application to allow for full customization.
+Livewire starter kit được xây dựng với Livewire 4, Tailwind và [Flux UI](https://fluxui.dev/). Tương tự tất cả starter kit khác, toàn bộ mã backend và frontend đều nằm trong ứng dụng của bạn để bạn có thể tùy chỉnh hoàn toàn.
 
-The majority of the frontend code is located in the `resources/views` directory. You are free to modify any of the code to customize the appearance and behavior of your application:
+Phần lớn mã frontend nằm trong thư mục `resources/views`. Bạn có thể sửa bất kỳ phần mã nào để tùy chỉnh giao diện và hành vi của ứng dụng:
 
 ```text
 resources/views
@@ -323,9 +323,9 @@ resources/views
 ```
 
 <a name="livewire-available-layouts"></a>
-#### Available Layouts
+#### Các layout hiện có
 
-The Livewire starter kit includes two different primary layouts for you to choose from: a "sidebar" layout and a "header" layout. The sidebar layout is the default, but you can switch to the header layout by modifying the layout that is used by your application's `resources/views/layouts/app.blade.php` file. In addition, you should add the `container` attribute to the main Flux component:
+Livewire starter kit cung cấp hai layout chính để bạn lựa chọn: layout "sidebar" và layout "header". Sidebar là layout mặc định, nhưng bạn có thể chuyển sang header bằng cách sửa layout được sử dụng trong file `resources/views/layouts/app.blade.php`. Ngoài ra, bạn nên thêm attribute `container` vào component Flux chính:
 
 ```blade
 <x-layouts::app.header>
@@ -336,11 +336,11 @@ The Livewire starter kit includes two different primary layouts for you to choos
 ```
 
 <a name="livewire-authentication-page-layout-variants"></a>
-#### Authentication Page Layout Variants
+#### Các biến thể layout trang xác thực
 
-The authentication pages included with the Livewire starter kit, such as the login page and registration page, also offer three different layout variants: "simple", "card", and "split".
+Các trang xác thực trong Livewire starter kit, chẳng hạn trang đăng nhập và đăng ký, cũng cung cấp ba biến thể layout: "simple", "card" và "split".
 
-To change your authentication layout, modify the layout that is used by your application's `resources/views/layouts/auth.blade.php` file:
+Để thay đổi layout xác thực, hãy sửa layout được sử dụng trong file `resources/views/layouts/auth.blade.php` của ứng dụng:
 
 ```blade
 <x-layouts::auth.split>
@@ -349,41 +349,41 @@ To change your authentication layout, modify the layout that is used by your app
 ```
 
 <a name="authentication"></a>
-## Authentication
+## Xác thực
 
-All starter kits use [Laravel Fortify](/docs/{{version}}/fortify) to handle authentication. Fortify provides routes, controllers, and logic for login, registration, password reset, email verification, and more.
+Tất cả starter kit đều sử dụng [Laravel Fortify](/docs/{{version}}/fortify) để xử lý xác thực. Fortify cung cấp route, controller và logic cho đăng nhập, đăng ký, đặt lại mật khẩu, xác minh email và nhiều chức năng khác.
 
-Fortify automatically registers the following authentication routes based on the features that are enabled in your application's `config/fortify.php` configuration file:
+Fortify tự động đăng ký các route xác thực sau dựa trên những tính năng được bật trong file cấu hình `config/fortify.php` của ứng dụng:
 
 <div class="overflow-auto">
 
-| Route                              | Method | Description                         |
+| Route                              | Phương thức | Mô tả                         |
 | ---------------------------------- | ------ | ----------------------------------- |
-| `/login`                           | `GET`    | Display login form                  |
-| `/login`                           | `POST`   | Authenticate user                   |
-| `/logout`                          | `POST`   | Log user out                        |
-| `/register`                        | `GET`    | Display registration form           |
-| `/register`                        | `POST`   | Create new user                     |
-| `/forgot-password`                 | `GET`    | Display password reset request form |
-| `/forgot-password`                 | `POST`   | Send password reset link            |
-| `/reset-password/{token}`          | `GET`    | Display password reset form         |
-| `/reset-password`                  | `POST`   | Update password                     |
-| `/email/verify`                    | `GET`    | Display email verification notice   |
-| `/email/verify/{id}/{hash}`        | `GET`    | Verify email address                |
-| `/email/verification-notification` | `POST`   | Resend verification email           |
-| `/user/confirm-password`           | `GET`    | Display password confirmation form  |
-| `/user/confirm-password`           | `POST`   | Confirm password                    |
-| `/two-factor-challenge`            | `GET`    | Display 2FA challenge form          |
-| `/two-factor-challenge`            | `POST`   | Verify 2FA code                     |
+| `/login`                           | `GET`    | Hiển thị form đăng nhập                  |
+| `/login`                           | `POST`   | Xác thực người dùng                   |
+| `/logout`                          | `POST`   | Đăng xuất người dùng                        |
+| `/register`                        | `GET`    | Hiển thị form đăng ký           |
+| `/register`                        | `POST`   | Tạo người dùng mới                     |
+| `/forgot-password`                 | `GET`    | Hiển thị form yêu cầu đặt lại mật khẩu |
+| `/forgot-password`                 | `POST`   | Gửi liên kết đặt lại mật khẩu            |
+| `/reset-password/{token}`          | `GET`    | Hiển thị form đặt lại mật khẩu         |
+| `/reset-password`                  | `POST`   | Cập nhật mật khẩu                     |
+| `/email/verify`                    | `GET`    | Hiển thị thông báo xác minh email   |
+| `/email/verify/{id}/{hash}`        | `GET`    | Xác minh địa chỉ email                |
+| `/email/verification-notification` | `POST`   | Gửi lại email xác minh           |
+| `/user/confirm-password`           | `GET`    | Hiển thị form xác nhận mật khẩu  |
+| `/user/confirm-password`           | `POST`   | Xác nhận mật khẩu                    |
+| `/two-factor-challenge`            | `GET`    | Hiển thị form thử thách 2FA          |
+| `/two-factor-challenge`            | `POST`   | Xác minh mã 2FA                     |
 
 </div>
 
-The `php artisan route:list` Artisan command can be used to display all of the routes in your application.
+Bạn có thể dùng lệnh Artisan `php artisan route:list` để hiển thị toàn bộ route trong ứng dụng.
 
 <a name="enabling-and-disabling-features"></a>
-### Enabling and Disabling Features
+### Bật và tắt tính năng
 
-You can control which Fortify features are enabled in your application's `config/fortify.php` configuration file:
+Bạn có thể kiểm soát những tính năng Fortify nào được bật trong file cấu hình `config/fortify.php` của ứng dụng:
 
 ```php
 use Laravel\Fortify\Features;
@@ -399,26 +399,26 @@ use Laravel\Fortify\Features;
 ],
 ```
 
-To disable a feature, comment out or remove that feature entry from the `features` array. For example, remove `Features::registration()` to disable public registration.
+Để tắt một tính năng, hãy comment hoặc xóa mục tương ứng khỏi mảng `features`. Ví dụ, xóa `Features::registration()` để tắt đăng ký công khai.
 
-When using the [React](#react), [Svelte](#svelte) or [Vue](#vue) starter kits, you will also need to remove any references to the disabled feature's routes in your frontend code. For example, if you disable email verification, you should remove the imports and references to the `verification` routes in your React, Svelte, or Vue components. This is necessary because these starter kits use Wayfinder for type-safe routing, which generates route definitions at build time. If you reference routes that no longer exist, your application will fail to build.
+Khi sử dụng starter kit [React](#react), [Svelte](#svelte) hoặc [Vue](#vue), bạn cũng cần xóa mọi tham chiếu trong mã frontend tới các route của tính năng đã tắt. Ví dụ, nếu tắt xác minh email, bạn nên xóa các import và tham chiếu tới route `verification` trong component React, Svelte hoặc Vue. Điều này là cần thiết vì các starter kit này sử dụng Wayfinder cho type-safe routing; Wayfinder tạo định nghĩa route tại thời điểm build. Nếu mã frontend tham chiếu tới route không còn tồn tại, quá trình build ứng dụng sẽ thất bại.
 
 <a name="customizing-actions"></a>
-### Customizing User Creation and Password Reset
+### Tùy chỉnh việc tạo người dùng và đặt lại mật khẩu
 
-When a user registers or resets their password, Fortify invokes action classes located in your application's `app/Actions/Fortify` directory:
+Khi người dùng đăng ký hoặc đặt lại mật khẩu, Fortify gọi các action class nằm trong thư mục `app/Actions/Fortify` của ứng dụng:
 
 <div class="overflow-auto">
 
-| File                          | Description                           |
+| File                          | Mô tả                           |
 | ----------------------------- | ------------------------------------- |
-| `CreateNewUser.php`           | Validates and creates new users       |
-| `ResetUserPassword.php`       | Validates and updates user passwords  |
-| `PasswordValidationRules.php` | Defines password validation rules     |
+| `CreateNewUser.php`           | Validate và tạo người dùng mới       |
+| `ResetUserPassword.php`       | Validate và cập nhật mật khẩu người dùng  |
+| `PasswordValidationRules.php` | Định nghĩa các rule validation mật khẩu     |
 
 </div>
 
-For example, to customize your application's registration logic, you should edit the `CreateNewUser` action:
+Ví dụ, để tùy chỉnh logic đăng ký của ứng dụng, bạn nên sửa action `CreateNewUser`:
 
 ```php
 public function create(array $input): User
@@ -440,16 +440,16 @@ public function create(array $input): User
 ```
 
 <a name="two-factor-authentication"></a>
-### Two-Factor Authentication
+### Xác thực hai yếu tố
 
-Starter kits include built-in two-factor authentication (2FA), allowing users to secure their accounts using any TOTP-compatible authenticator app. 2FA is enabled by default via `Features::twoFactorAuthentication()` in your application's `config/fortify.php` configuration file.
+Các starter kit tích hợp sẵn xác thực hai yếu tố (2FA), cho phép người dùng bảo vệ tài khoản bằng bất kỳ ứng dụng xác thực nào tương thích TOTP. 2FA được bật mặc định thông qua `Features::twoFactorAuthentication()` trong file cấu hình `config/fortify.php` của ứng dụng.
 
-The `confirm` option requires users to verify a code before 2FA is fully enabled, while `confirmPassword` requires password confirmation before enabling or disabling 2FA. For more details, see [Fortify's two-factor authentication documentation](/docs/{{version}}/fortify#two-factor-authentication).
+Tùy chọn `confirm` yêu cầu người dùng xác minh một mã trước khi 2FA được bật hoàn toàn, còn `confirmPassword` yêu cầu xác nhận mật khẩu trước khi bật hoặc tắt 2FA. Để biết thêm chi tiết, hãy xem [tài liệu xác thực hai yếu tố của Fortify](/docs/{{version}}/fortify#two-factor-authentication).
 
 <a name="rate-limiting"></a>
-### Rate Limiting
+### Giới hạn tần suất
 
-Rate limiting prevents brute-forcing and repeated login attempts from overwhelming your authentication endpoints. You can customize Fortify's rate limiting behavior in your application's `FortifyServiceProvider`:
+Rate limiting giúp ngăn brute-force và các lần đăng nhập lặp lại làm quá tải endpoint xác thực. Bạn có thể tùy chỉnh hành vi rate limiting của Fortify trong `FortifyServiceProvider` của ứng dụng:
 
 ```php
 use Illuminate\Support\Facades\RateLimiter;
@@ -461,38 +461,38 @@ RateLimiter::for('login', function ($request) {
 ```
 
 <a name="teams"></a>
-## Teams
+## Team
 
-The React, Svelte, Vue, and Livewire starter kits may also be generated with team support. When the teams feature is enabled, each user belongs to one or more teams and has a current team. During registration, new users are automatically given a personal team. The starter kits also include team management screens for creating teams, switching between teams, inviting members, and updating team details.
+Các starter kit React, Svelte, Vue và Livewire cũng có thể được tạo với hỗ trợ team. Khi tính năng team được bật, mỗi người dùng thuộc một hoặc nhiều team và có một team hiện tại. Khi đăng ký, người dùng mới tự động được tạo một personal team. Starter kit cũng cung cấp các màn hình quản lý team để tạo team, chuyển đổi team, mời thành viên và cập nhật thông tin team.
 
-When a route is scoped to the current team, the current team's slug is included in the URL. For example, the dashboard route becomes `/{current_team}/dashboard`, while team management pages use routes such as `settings/teams/{team}`. When using the `{current_team}` and `{team}` route parameters, the starter kits automatically ensure that the authenticated user belongs to the requested team before allowing access to the route.
+Khi một route được giới hạn theo team hiện tại, slug của team hiện tại sẽ được đưa vào URL. Ví dụ, route dashboard trở thành `/{current_team}/dashboard`, còn các trang quản lý team sử dụng route như `settings/teams/{team}`. Khi dùng các route parameter `{current_team}` và `{team}`, starter kit tự động đảm bảo người dùng đã xác thực thuộc team được yêu cầu trước khi cho phép truy cập route.
 
-To make generating team-aware URLs more convenient, the starter kits register URL defaults for the authenticated user's current team. This allows calls to helpers such as `route('dashboard')` to automatically include the current team's slug. When a user signs in, registers, or switches teams, the starter kits update the current team and refresh these URL defaults so generated links continue to use the correct team context.
+Để việc tạo URL theo team thuận tiện hơn, starter kit đăng ký URL default cho team hiện tại của người dùng đã xác thực. Nhờ đó, khi gọi helper như `route('dashboard')`, slug của team hiện tại sẽ tự động được thêm vào. Khi người dùng đăng nhập, đăng ký hoặc chuyển team, starter kit cập nhật team hiện tại và làm mới các URL default này để những link được tạo tiếp tục sử dụng đúng ngữ cảnh team.
 
-When creating or renaming a team, the starter kits also prevent users from choosing reserved names that could produce unsafe or conflicting route segments. For example, names that would collide with route prefixes such as `settings`, `login`, or `dashboard` may not be used.
+Khi tạo hoặc đổi tên team, starter kit cũng ngăn người dùng chọn các tên dành riêng có thể tạo ra route segment không an toàn hoặc xung đột. Ví dụ, không thể sử dụng những tên xung đột với route prefix như `settings`, `login` hoặc `dashboard`.
 
 <a name="workos"></a>
-## WorkOS AuthKit Authentication
+## Xác thực bằng WorkOS AuthKit
 
-By default, the React, Svelte, Vue, and Livewire starter kits all utilize Laravel's built-in authentication system to offer login, registration, password reset, email verification, and more. In addition, we also offer a [WorkOS AuthKit](https://authkit.com) powered variant of each starter kit that offers:
+Theo mặc định, các starter kit React, Svelte, Vue và Livewire đều sử dụng hệ thống xác thực tích hợp của Laravel để cung cấp đăng nhập, đăng ký, đặt lại mật khẩu, xác minh email và nhiều chức năng khác. Ngoài ra, mỗi starter kit còn có một biến thể sử dụng [WorkOS AuthKit](https://authkit.com), cung cấp:
 
 <div class="content-list" markdown="1">
 
-- Social authentication (Google, Microsoft, GitHub, and Apple)
-- Passkey authentication
-- Email based "Magic Auth"
+- Xác thực qua mạng xã hội (Google, Microsoft, GitHub và Apple)
+- Xác thực bằng passkey
+- "Magic Auth" dựa trên email
 - SSO
 
 </div>
 
-Using WorkOS as your authentication provider [requires a WorkOS account](https://workos.com). WorkOS offers free authentication for applications up to 1 million monthly active users.
+Việc sử dụng WorkOS làm nhà cung cấp xác thực [yêu cầu tài khoản WorkOS](https://workos.com). WorkOS cung cấp xác thực miễn phí cho các ứng dụng có tối đa 1 triệu người dùng hoạt động hàng tháng.
 
-To use WorkOS AuthKit as your application's authentication provider, select the WorkOS option when creating your new starter kit powered application via `laravel new`.
+Để sử dụng WorkOS AuthKit làm nhà cung cấp xác thực cho ứng dụng, hãy chọn tùy chọn WorkOS khi tạo ứng dụng mới bằng starter kit thông qua `laravel new`.
 
 <a name="configuring-your-workos-starter-kit"></a>
-### Configuring Your WorkOS Starter Kit
+### Cấu hình WorkOS Starter Kit
 
-After creating a new application using a WorkOS powered starter kit, you should set the `WORKOS_CLIENT_ID`, `WORKOS_API_KEY`, and `WORKOS_REDIRECT_URL` environment variables in your application's `.env` file. These variables should match the values provided to you in the WorkOS dashboard for your application:
+Sau khi tạo ứng dụng mới bằng starter kit sử dụng WorkOS, bạn nên thiết lập các biến môi trường `WORKOS_CLIENT_ID`, `WORKOS_API_KEY` và `WORKOS_REDIRECT_URL` trong file `.env` của ứng dụng. Các biến này phải khớp với giá trị được cung cấp trong WorkOS dashboard của ứng dụng:
 
 ```ini
 WORKOS_CLIENT_ID=your-client-id
@@ -500,59 +500,59 @@ WORKOS_API_KEY=your-api-key
 WORKOS_REDIRECT_URL="${APP_URL}/authenticate"
 ```
 
-Additionally, you should configure the application homepage URL in your WorkOS dashboard. This URL is where users will be redirected after they log out of your application.
+Ngoài ra, bạn nên cấu hình URL trang chủ của ứng dụng trong WorkOS dashboard. Người dùng sẽ được chuyển hướng tới URL này sau khi đăng xuất khỏi ứng dụng.
 
 <a name="configuring-authkit-authentication-methods"></a>
-#### Configuring AuthKit Authentication Methods
+#### Cấu hình phương thức xác thực AuthKit
 
-When using a WorkOS powered starter kit, we recommend that you disable "Email + Password" authentication within your application's WorkOS AuthKit configuration settings, allowing users to only authenticate via social authentication providers, passkeys, "Magic Auth", and SSO. This allows your application to totally avoid handling user passwords.
+Khi sử dụng starter kit dựa trên WorkOS, Laravel khuyến nghị tắt xác thực "Email + Password" trong phần cấu hình WorkOS AuthKit của ứng dụng, để người dùng chỉ xác thực thông qua nhà cung cấp social authentication, passkey, "Magic Auth" và SSO. Nhờ đó, ứng dụng có thể hoàn toàn không phải xử lý mật khẩu của người dùng.
 
 <a name="configuring-authkit-session-timeouts"></a>
-#### Configuring AuthKit Session Timeouts
+#### Cấu hình thời gian hết hạn session của AuthKit
 
-In addition, we recommend that you configure your WorkOS AuthKit session inactivity timeout to match your Laravel application's configured session timeout threshold, which is typically two hours.
+Ngoài ra, Laravel khuyến nghị cấu hình thời gian hết hạn do không hoạt động của session WorkOS AuthKit khớp với ngưỡng timeout session đã cấu hình trong ứng dụng Laravel, thường là hai giờ.
 
 <a name="inertia-ssr"></a>
 ### Inertia SSR
 
-The React, Svelte, and Vue starter kits are compatible with Inertia's [server-side rendering](https://inertiajs.com/server-side-rendering) capabilities. To build an Inertia SSR compatible bundle for your application, run the `build:ssr` command:
+Các starter kit React, Svelte và Vue tương thích với khả năng [server-side rendering](https://inertiajs.com/server-side-rendering) của Inertia. Để build bundle tương thích Inertia SSR cho ứng dụng, hãy chạy lệnh `build:ssr`:
 
 ```shell
 npm run build:ssr
 ```
 
-For convenience, a `composer dev:ssr` command is also available. This command will start the Laravel development server and Inertia SSR server after building an SSR compatible bundle for your application, allowing you to test your application locally using Inertia's server-side rendering engine:
+Để thuận tiện, lệnh `composer dev:ssr` cũng được cung cấp. Sau khi build bundle tương thích SSR cho ứng dụng, lệnh này sẽ khởi động Laravel development server và Inertia SSR server, cho phép bạn kiểm thử ứng dụng cục bộ bằng server-side rendering engine của Inertia:
 
 ```shell
 composer dev:ssr
 ```
 
 <a name="community-maintained-starter-kits"></a>
-### Community Maintained Starter Kits
+### Starter Kit do cộng đồng duy trì
 
-When creating a new Laravel application using the Laravel installer, you may provide any community maintained starter kit available on Packagist to the `--using` flag:
+Khi tạo ứng dụng Laravel mới bằng Laravel installer, bạn có thể truyền bất kỳ starter kit nào do cộng đồng duy trì và có trên Packagist vào option `--using`:
 
 ```shell
 laravel new my-app --using=example/starter-kit
 ```
 
 <a name="creating-starter-kits"></a>
-#### Creating Starter Kits
+#### Tạo Starter Kit
 
-To ensure your starter kit is available to others, you will need to publish it to [Packagist](https://packagist.org). Your starter kit should define its required environment variables in its `.env.example` file, and any necessary post-installation commands should be listed in the `post-create-project-cmd` array of the starter kit's `composer.json` file.
+Để starter kit của bạn có thể được người khác sử dụng, bạn cần publish nó lên [Packagist](https://packagist.org). Starter kit nên khai báo các biến môi trường bắt buộc trong file `.env.example`, và mọi lệnh cần chạy sau khi cài đặt nên được liệt kê trong mảng `post-create-project-cmd` của file `composer.json`.
 
 <a name="faqs"></a>
-### Frequently Asked Questions
+### Câu hỏi thường gặp
 
 <a name="faq-upgrade"></a>
-#### How do I upgrade?
+#### Làm thế nào để nâng cấp?
 
-Every starter kit gives you a solid starting point for your next application. With full ownership of the code, you can tweak, customize, and build your application exactly as you envision. However, there is no need to update the starter kit itself.
+Mỗi starter kit cung cấp một nền tảng vững chắc để bắt đầu ứng dụng tiếp theo. Vì bạn sở hữu toàn bộ mã nguồn, bạn có thể điều chỉnh, tùy chỉnh và phát triển ứng dụng chính xác theo nhu cầu. Tuy nhiên, bạn không cần cập nhật bản thân starter kit.
 
 <a name="faq-enable-email-verification"></a>
-#### How do I enable email verification?
+#### Làm thế nào để bật xác minh email?
 
-Email verification can be added by uncommenting the `MustVerifyEmail` import in your `App/Models/User.php` model and ensuring the model implements the `MustVerifyEmail` interface:
+Bạn có thể bật xác minh email bằng cách bỏ comment phần import `MustVerifyEmail` trong model `App/Models/User.php` và đảm bảo model implement interface `MustVerifyEmail`:
 
 ```php
 <?php
@@ -568,7 +568,7 @@ class User extends Authenticatable implements MustVerifyEmail
 }
 ```
 
-After registration, users will receive a verification email. To restrict access to certain routes until the user's email address is verified, add the `verified` middleware to the routes:
+Sau khi đăng ký, người dùng sẽ nhận được email xác minh. Để hạn chế quyền truy cập vào một số route cho đến khi địa chỉ email của người dùng được xác minh, hãy thêm middleware `verified` vào các route:
 
 ```php
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -579,18 +579,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 ```
 
 > [!NOTE]
-> Email verification is not required when using the [WorkOS](#workos) variant of the starter kits.
+> Không cần xác minh email khi sử dụng biến thể [WorkOS](#workos) của starter kit.
 
 <a name="faq-modify-email-template"></a>
-#### How do I modify the default email template?
+#### Làm thế nào để sửa mẫu email mặc định?
 
-You may want to customize the default email template to better align with your application's branding. To modify this template, you should publish the email views to your application with the following command:
+Bạn có thể muốn tùy chỉnh mẫu email mặc định để phù hợp hơn với thương hiệu của ứng dụng. Để sửa mẫu này, hãy publish các email view vào ứng dụng bằng lệnh sau:
 
 ```shell
 php artisan vendor:publish --tag=laravel-mail
 ```
 
-This will generate several files in `resources/views/vendor/mail`. You can modify any of these files as well as the `resources/views/vendor/mail/themes/default.css` file to change the look and appearance of the default email template.
+Lệnh này sẽ tạo một số file trong `resources/views/vendor/mail`. Bạn có thể sửa bất kỳ file nào trong số đó, cũng như file `resources/views/vendor/mail/themes/default.css`, để thay đổi giao diện của mẫu email mặc định.
+
+---
 
 ## Tài liệu chính thức
 

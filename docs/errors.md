@@ -1,44 +1,31 @@
-# Error Handling
-
-- [Introduction](#introduction)
-- [Configuration](#configuration)
-- [Handling Exceptions](#handling-exceptions)
-    - [Reporting Exceptions](#reporting-exceptions)
-    - [Exception Log Levels](#exception-log-levels)
-    - [Ignoring Exceptions by Type](#ignoring-exceptions-by-type)
-    - [Rendering Exceptions](#rendering-exceptions)
-    - [Reportable and Renderable Exceptions](#renderable-exceptions)
-- [Throttling Reported Exceptions](#throttling-reported-exceptions)
-- [HTTP Exceptions](#http-exceptions)
-    - [Custom HTTP Error Pages](#custom-http-error-pages)
-
+# Xử lý lỗi
+- [Giới thiệu](#introduction)
+- [Cấu hình](#configuration)
+- [Xử lý exception](#handling-exceptions)
+    - [Report exception](#reporting-exceptions)
+    - [Log level cho exception](#exception-log-levels)
+    - [Bỏ qua exception theo type](#ignoring-exceptions-by-type)
+    - [Render exception](#rendering-exceptions)
+    - [Reportable và renderable exception](#renderable-exceptions)
+- [Giới hạn exception được report](#throttling-reported-exceptions)
+- [HTTP exception](#http-exceptions)
+    - [Trang lỗi HTTP tùy chỉnh](#custom-http-error-pages)
 <a name="introduction"></a>
-## Introduction
-
-When you start a new Laravel project, error and exception handling is already configured for you; however, at any point, you may use the `withExceptions` method in your application's `bootstrap/app.php` to manage how exceptions are reported and rendered by your application.
-
-The `$exceptions` object provided to the `withExceptions` closure is an instance of `Illuminate\Foundation\Configuration\Exceptions` and is responsible for managing exception handling in your application. We'll dive deeper into this object throughout this documentation.
-
+## Giới thiệu
+Khi tạo dự án Laravel mới, cơ chế xử lý error và exception đã được cấu hình sẵn. Khi cần tùy chỉnh, bạn có thể dùng method `withExceptions` trong `bootstrap/app.php` để quản lý cách ứng dụng report và render exception.
+Object `$exceptions` được truyền vào closure `withExceptions` là instance của `Illuminate\Foundation\Configuration\Exceptions`, chịu trách nhiệm quản lý exception handling trong ứng dụng. Các phần dưới sẽ đi sâu vào object này.
 <a name="configuration"></a>
-## Configuration
-
-The `debug` option in your `config/app.php` configuration file determines how much information about an error is actually displayed to the user. By default, this option is set to respect the value of the `APP_DEBUG` environment variable, which is stored in your `.env` file.
-
-During local development, you should set the `APP_DEBUG` environment variable to `true`.
-
+## Cấu hình
+Option `debug` trong `config/app.php` quyết định lượng thông tin lỗi thực tế được hiển thị cho người dùng. Mặc định, option này lấy giá trị từ biến môi trường `APP_DEBUG` trong file `.env`.
+Trong local development, bạn nên đặt `APP_DEBUG=true`.
 > [!WARNING]
-> In your production environment, the value of `APP_DEBUG` should always be `false`. If the value is set to `true` in production, you risk exposing sensitive configuration values to your application's end users.
-
+> Trong production, `APP_DEBUG` **luôn nên là `false`**. Nếu bật `true` trên production, ứng dụng có nguy cơ để lộ các giá trị cấu hình nhạy cảm cho người dùng cuối.
 <a name="handling-exceptions"></a>
-## Handling Exceptions
-
+## Xử lý exception
 <a name="reporting-exceptions"></a>
-### Reporting Exceptions
-
-In Laravel, exception reporting is used to log exceptions or send them to an external service like [Laravel Nightwatch](https://nightwatch.laravel.com), [Sentry](https://github.com/getsentry/sentry-laravel), or [Flare](https://flareapp.io). By default, exceptions will be logged based on your [logging](/docs/{{version}}/logging) configuration. However, you are free to log exceptions however you wish.
-
-If you need to report different types of exceptions in different ways, you may use the `report` exception method in your application's `bootstrap/app.php` to register a closure that should be executed when an exception of a given type needs to be reported. Laravel will determine what type of exception the closure reports by examining the type-hint of the closure:
-
+### Report exception
+Trong Laravel, report exception được dùng để ghi exception vào log hoặc gửi tới dịch vụ bên ngoài như [Laravel Nightwatch](https://nightwatch.laravel.com), [Sentry](https://github.com/getsentry/sentry-laravel) hay [Flare](https://flareapp.io). Mặc định, exception được log dựa trên cấu hình [logging](/docs/{{version}}/logging), nhưng bạn có thể tùy biến cách report theo nhu cầu.
+Nếu cần report từng loại exception theo cách khác nhau, hãy dùng method exception `report` trong `bootstrap/app.php` để đăng ký closure chạy khi một exception tương ứng cần được report. Laravel xác định loại exception bằng type-hint của closure:
 ```php
 use App\Exceptions\InvalidOrderException;
 
@@ -48,9 +35,7 @@ use App\Exceptions\InvalidOrderException;
     });
 })
 ```
-
-When you register a custom exception reporting callback using the `report` method, Laravel will still log the exception using the default logging configuration for the application. If you wish to stop the propagation of the exception to the default logging stack, you may use the `stop` method when defining your reporting callback or return `false` from the callback:
-
+Khi đăng ký callback report tùy chỉnh bằng method `report`, Laravel vẫn tiếp tục log exception theo cấu hình logging mặc định. Nếu muốn ngăn exception tiếp tục đi vào default logging stack, hãy gọi `stop` khi định nghĩa callback hoặc trả về `false` từ callback:
 ```php
 use App\Exceptions\InvalidOrderException;
 
@@ -64,15 +49,11 @@ use App\Exceptions\InvalidOrderException;
     });
 })
 ```
-
 > [!NOTE]
-> To customize the exception reporting for a given exception, you may also utilize [reportable exceptions](/docs/{{version}}/errors#renderable-exceptions).
-
+> Để tùy biến cách report cho một exception cụ thể, bạn cũng có thể dùng [reportable exception](/docs/{{version}}/errors#renderable-exceptions).
 <a name="global-log-context"></a>
-#### Global Log Context
-
-If available, Laravel automatically adds the current user's ID to every exception's log message as contextual data. You may define your own global contextual data using the `context` exception method in your application's `bootstrap/app.php` file. This information will be included in every exception's log message written by your application:
-
+#### Context log toàn cục
+Khi có thể, Laravel tự động thêm ID của user hiện tại vào log message của exception dưới dạng context data. Bạn có thể định nghĩa global context riêng bằng method exception `context` trong `bootstrap/app.php`; dữ liệu này sẽ được đưa vào mọi exception log message do ứng dụng ghi:
 ```php
 ->withExceptions(function (Exceptions $exceptions): void {
     $exceptions->context(fn () => [
@@ -82,10 +63,8 @@ If available, Laravel automatically adds the current user's ID to every exceptio
 ```
 
 <a name="exception-log-context"></a>
-#### Exception Log Context
-
-While adding context to every log message can be useful, sometimes a particular exception may have unique context that you would like to include in your logs. By defining a `context` method on one of your application's exceptions, you may specify any data relevant to that exception that should be added to the exception's log entry:
-
+#### Context riêng của exception
+Global context hữu ích cho dữ liệu chung, nhưng một exception cụ thể đôi khi có context riêng cần đưa vào log. Bằng cách định nghĩa method `context` trên exception của ứng dụng, bạn có thể trả về dữ liệu liên quan cần được thêm vào log entry của exception đó:
 ```php
 <?php
 
@@ -110,10 +89,8 @@ class InvalidOrderException extends Exception
 ```
 
 <a name="the-report-helper"></a>
-#### The `report` Helper
-
-Sometimes you may need to report an exception but continue handling the current request. The `report` helper function allows you to quickly report an exception without rendering an error page to the user:
-
+#### Helper `report`
+Đôi khi bạn cần report exception nhưng vẫn muốn tiếp tục xử lý request hiện tại. Helper `report` cho phép nhanh chóng report exception mà không render error page cho người dùng:
 ```php
 public function isValid(string $value): bool
 {
@@ -128,20 +105,15 @@ public function isValid(string $value): bool
 ```
 
 <a name="deduplicating-reported-exceptions"></a>
-#### Deduplicating Reported Exceptions
-
-If you are using the `report` function throughout your application, you may occasionally report the same exception multiple times, creating duplicate entries in your logs.
-
-If you would like to ensure that a single instance of an exception is only ever reported once, you may invoke the `dontReportDuplicates` exception method in your application's `bootstrap/app.php` file:
-
+#### Loại bỏ report trùng lặp
+Nếu dùng hàm `report` ở nhiều nơi trong ứng dụng, đôi khi cùng một exception instance có thể bị report nhiều lần, tạo log entry trùng lặp.
+Để đảm bảo một exception instance chỉ được report một lần, hãy gọi method `dontReportDuplicates` trong `bootstrap/app.php`:
 ```php
 ->withExceptions(function (Exceptions $exceptions): void {
     $exceptions->dontReportDuplicates();
 })
 ```
-
-Now, when the `report` helper is called with the same instance of an exception, only the first call will be reported:
-
+Sau đó, khi helper `report` được gọi nhiều lần với cùng một exception instance, chỉ lần gọi đầu tiên được report:
 ```php
 $original = new RuntimeException('Whoops!');
 
@@ -158,14 +130,10 @@ report($caught); // ignored
 ```
 
 <a name="exception-log-levels"></a>
-### Exception Log Levels
-
-When messages are written to your application's [logs](/docs/{{version}}/logging), the messages are written at a specified [log level](/docs/{{version}}/logging#log-levels), which indicates the severity or importance of the message being logged.
-
-As noted above, even when you register a custom exception reporting callback using the `report` method, Laravel will still log the exception using the default logging configuration for the application; however, since the log level can sometimes influence the channels on which a message is logged, you may wish to configure the log level that certain exceptions are logged at.
-
-To accomplish this, you may use the `level` exception method in your application's `bootstrap/app.php` file. This method receives the exception type as its first argument and the log level as its second argument:
-
+### Log level cho exception
+Khi message được ghi vào [log](/docs/{{version}}/logging), mỗi message có một [log level](/docs/{{version}}/logging#log-levels) thể hiện mức độ nghiêm trọng hoặc tầm quan trọng.
+Như đã nói ở trên, ngay cả khi bạn đăng ký callback report tùy chỉnh bằng `report`, Laravel vẫn log exception theo cấu hình mặc định. Vì log level có thể ảnh hưởng tới channel nhận message, đôi khi bạn cần cấu hình level riêng cho một số exception.
+Để làm điều này, dùng method exception `level` trong `bootstrap/app.php`. Method nhận exception type làm đối số thứ nhất và log level làm đối số thứ hai:
 ```php
 use PDOException;
 use Psr\Log\LogLevel;
@@ -176,10 +144,8 @@ use Psr\Log\LogLevel;
 ```
 
 <a name="ignoring-exceptions-by-type"></a>
-### Ignoring Exceptions by Type
-
-When building your application, there will be some types of exceptions you never want to report. To ignore these exceptions, you may use the `dontReport` exception method in your application's `bootstrap/app.php` file. Any class provided to this method will never be reported; however, they may still have custom rendering logic:
-
+### Bỏ qua exception theo type
+Trong ứng dụng sẽ có một số loại exception bạn không muốn report. Dùng method exception `dontReport` trong `bootstrap/app.php` để bỏ qua chúng. Các class được truyền vào method sẽ không được report, dù vẫn có thể có logic render tùy chỉnh:
 ```php
 use App\Exceptions\InvalidOrderException;
 
@@ -189,9 +155,7 @@ use App\Exceptions\InvalidOrderException;
     ]);
 })
 ```
-
-Alternatively, you may simply "mark" an exception class with the `Illuminate\Contracts\Debug\ShouldntReport` interface. When an exception is marked with this interface, it will never be reported by Laravel's exception handler:
-
+Ngoài ra, bạn có thể "đánh dấu" exception class bằng interface `Illuminate\Contracts\Debug\ShouldntReport`. Exception implement interface này sẽ không được Laravel report:
 ```php
 <?php
 
@@ -205,9 +169,7 @@ class PodcastProcessingException extends Exception implements ShouldntReport
     //
 }
 ```
-
-If you need even more control over when a particular type of exception is ignored, you may provide a closure to the `dontReportWhen` method:
-
+Nếu cần kiểm soát chi tiết hơn thời điểm một exception type bị bỏ qua, hãy truyền closure vào method `dontReportWhen`:
 ```php
 use App\Exceptions\InvalidOrderException;
 use Throwable;
@@ -219,9 +181,7 @@ use Throwable;
     });
 })
 ```
-
-Internally, Laravel already ignores some types of errors for you, such as exceptions resulting from 404 HTTP errors, 403 HTTP responses generated by origin mismatches, or 419 HTTP responses generated by invalid CSRF tokens. If you would like to instruct Laravel to stop ignoring a given type of exception, you may use the `stopIgnoring` exception method in your application's `bootstrap/app.php` file:
-
+Bên trong framework, Laravel đã tự bỏ qua một số lỗi phổ biến, chẳng hạn exception từ HTTP 404, HTTP 403 do origin mismatch hoặc HTTP 419 do CSRF token không hợp lệ. Nếu muốn Laravel ngừng bỏ qua một exception type nào đó, hãy dùng method `stopIgnoring` trong `bootstrap/app.php`:
 ```php
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -231,12 +191,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 ```
 
 <a name="rendering-exceptions"></a>
-### Rendering Exceptions
-
-By default, the Laravel exception handler will convert exceptions into an HTTP response for you. However, you are free to register a custom rendering closure for exceptions of a given type. You may accomplish this by using the `render` exception method in your application's `bootstrap/app.php` file.
-
-The closure passed to the `render` method should return an instance of `Illuminate\Http\Response`, which may be generated via the `response` helper. Laravel will determine what type of exception the closure renders by examining the type-hint of the closure:
-
+### Render exception
+Mặc định, Laravel exception handler tự chuyển exception thành HTTP response. Tuy nhiên, bạn có thể đăng ký closure render tùy chỉnh cho từng exception type bằng method `render` trong `bootstrap/app.php`.
+Closure truyền vào `render` nên trả về instance `Illuminate\Http\Response`, có thể được tạo bằng helper `response`. Laravel xác định exception type từ type-hint của closure:
 ```php
 use App\Exceptions\InvalidOrderException;
 use Illuminate\Http\Request;
@@ -247,9 +204,7 @@ use Illuminate\Http\Request;
     });
 })
 ```
-
-You may also use the `render` method to override the rendering behavior for built-in Laravel or Symfony exceptions such as `NotFoundHttpException`. If the closure given to the `render` method does not return a value, Laravel's default exception rendering will be utilized:
-
+Bạn cũng có thể dùng `render` để override hành vi render của exception tích hợp từ Laravel hoặc Symfony như `NotFoundHttpException`. Nếu closure không trả về giá trị, Laravel sẽ dùng cơ chế render exception mặc định:
 ```php
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -266,10 +221,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 ```
 
 <a name="rendering-exceptions-as-json"></a>
-#### Rendering Exceptions as JSON
-
-When rendering an exception, Laravel will automatically determine if the exception should be rendered as an HTML or JSON response based on the `Accept` header of the request. If you would like to customize how Laravel determines whether to render HTML or JSON exception responses, you may utilize the `shouldRenderJsonWhen` method:
-
+#### Render exception dưới dạng JSON
+Khi render exception, Laravel tự xác định response nên là HTML hay JSON dựa trên header `Accept` của request. Nếu muốn tùy chỉnh cách Laravel ra quyết định này, hãy dùng method `shouldRenderJsonWhen`:
 ```php
 use Illuminate\Http\Request;
 use Throwable;
@@ -286,10 +239,8 @@ use Throwable;
 ```
 
 <a name="customizing-the-exception-response"></a>
-#### Customizing the Exception Response
-
-Rarely, you may need to customize the entire HTTP response rendered by Laravel's exception handler. To accomplish this, you may register a response customization closure using the `respond` method:
-
+#### Tùy biến exception response
+Trong một số trường hợp hiếm, bạn cần tùy biến toàn bộ HTTP response do exception handler render. Hãy đăng ký closure tùy biến response bằng method `respond`:
 ```php
 use Symfony\Component\HttpFoundation\Response;
 
@@ -307,10 +258,8 @@ use Symfony\Component\HttpFoundation\Response;
 ```
 
 <a name="renderable-exceptions"></a>
-### Reportable and Renderable Exceptions
-
-Instead of defining custom reporting and rendering behavior in your application's `bootstrap/app.php` file, you may define `report` and `render` methods directly on your application's exceptions. When these methods exist, they will automatically be called by the framework:
-
+### Reportable và renderable exception
+Thay vì định nghĩa hành vi report và render tùy chỉnh trong `bootstrap/app.php`, bạn có thể định nghĩa trực tiếp các method `report` và `render` trên exception class của ứng dụng. Khi tồn tại, framework tự động gọi các method này:
 ```php
 <?php
 
@@ -339,9 +288,7 @@ class InvalidOrderException extends Exception
     }
 }
 ```
-
-If your exception extends an exception that is already renderable, such as a built-in Laravel or Symfony exception, you may return `false` from the exception's `render` method to render the exception's default HTTP response:
-
+Nếu exception của bạn extends một exception vốn đã renderable, chẳng hạn exception tích hợp của Laravel hoặc Symfony, bạn có thể trả về `false` từ method `render` để framework dùng HTTP response mặc định của exception đó:
 ```php
 /**
  * Render the exception as an HTTP response.
@@ -356,9 +303,7 @@ public function render(Request $request): Response|bool
     return false;
 }
 ```
-
-If your exception contains custom reporting logic that is only necessary when certain conditions are met, you may need to instruct Laravel to sometimes report the exception using the default exception handling configuration. To accomplish this, you may return `false` from the exception's `report` method:
-
+Nếu exception có logic report tùy chỉnh chỉ cần trong một số điều kiện, bạn có thể trả về `false` từ method `report` để yêu cầu Laravel dùng cấu hình exception handling mặc định trong những trường hợp còn lại:
 ```php
 /**
  * Report the exception.
@@ -375,17 +320,12 @@ public function report(): bool
     return false;
 }
 ```
-
 > [!NOTE]
-> You may type-hint any required dependencies of the `report` method and they will automatically be injected into the method by Laravel's [service container](/docs/{{version}}/container).
-
+> Bạn có thể type-hint dependency cần thiết trong method `report`; Laravel sẽ tự động inject chúng thông qua [service container](/docs/{{version}}/container).
 <a name="throttling-reported-exceptions"></a>
-### Throttling Reported Exceptions
-
-If your application reports a very large number of exceptions, you may want to throttle how many exceptions are actually logged or sent to your application's external error tracking service.
-
-To take a random sample rate of exceptions, you may use the `throttle` exception method in your application's `bootstrap/app.php` file. The `throttle` method receives a closure that should return a `Lottery` instance:
-
+### Giới hạn exception được report
+Nếu ứng dụng phát sinh số lượng exception rất lớn, bạn có thể cần giới hạn số exception thực sự được ghi log hoặc gửi tới dịch vụ error tracking bên ngoài.
+Để lấy mẫu ngẫu nhiên một tỷ lệ exception, dùng method exception `throttle` trong `bootstrap/app.php`. Method nhận closure và closure nên trả về instance `Lottery`:
 ```php
 use Illuminate\Support\Lottery;
 use Throwable;
@@ -396,9 +336,7 @@ use Throwable;
     });
 })
 ```
-
-It is also possible to conditionally sample based on the exception type. If you would like to only sample instances of a specific exception class, you may return a `Lottery` instance only for that class:
-
+Bạn cũng có thể lấy mẫu có điều kiện theo exception type. Nếu chỉ muốn sample một exception class cụ thể, hãy chỉ trả về `Lottery` cho class đó:
 ```php
 use App\Exceptions\ApiMonitoringException;
 use Illuminate\Support\Lottery;
@@ -412,9 +350,7 @@ use Throwable;
     });
 })
 ```
-
-You may also rate limit exceptions logged or sent to an external error tracking service by returning a `Limit` instance instead of a `Lottery`. This is useful if you want to protect against sudden bursts of exceptions flooding your logs, for example, when a third-party service used by your application is down:
-
+Ngoài sampling, bạn có thể rate-limit exception được log hoặc gửi tới error tracking service bằng cách trả về instance `Limit` thay cho `Lottery`. Điều này hữu ích để tránh một đợt exception đột biến làm tràn log, chẳng hạn khi dịch vụ bên thứ ba mà ứng dụng phụ thuộc bị down:
 ```php
 use Illuminate\Broadcasting\BroadcastException;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -428,9 +364,7 @@ use Throwable;
     });
 })
 ```
-
-By default, limits will use the exception's class as the rate limit key. You can customize this by specifying your own key using the `by` method on the `Limit`:
-
+Mặc định, limit dùng class của exception làm rate-limit key. Bạn có thể tùy biến key bằng method `by` trên `Limit`:
 ```php
 use Illuminate\Broadcasting\BroadcastException;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -444,9 +378,7 @@ use Throwable;
     });
 })
 ```
-
-Of course, you may return a mixture of `Lottery` and `Limit` instances for different exceptions:
-
+Tất nhiên, bạn có thể kết hợp `Lottery` và `Limit` cho các exception khác nhau:
 ```php
 use App\Exceptions\ApiMonitoringException;
 use Illuminate\Broadcasting\BroadcastException;
@@ -466,36 +398,27 @@ use Throwable;
 ```
 
 <a name="http-exceptions"></a>
-## HTTP Exceptions
-
-Some exceptions describe HTTP error codes from the server. For example, this may be a "page not found" error (404), an "unauthorized error" (401), or even a developer generated 500 error. In order to generate such a response from anywhere in your application, you may use the `abort` helper:
-
+## HTTP exception
+Một số exception đại diện cho HTTP error code từ server, chẳng hạn "page not found" (404), "unauthorized" (401) hoặc lỗi 500 do developer tạo. Để tạo response tương ứng ở bất kỳ đâu trong ứng dụng, bạn có thể dùng helper `abort`:
 ```php
 abort(404);
 ```
 
 <a name="custom-http-error-pages"></a>
-### Custom HTTP Error Pages
-
-Laravel makes it easy to display custom error pages for various HTTP status codes. For example, to customize the error page for 404 HTTP status codes, create a `resources/views/errors/404.blade.php` view template. This view will be rendered for all 404 errors generated by your application. The views within this directory should be named to match the HTTP status code they correspond to. The `Symfony\Component\HttpKernel\Exception\HttpException` instance raised by the `abort` function will be passed to the view as an `$exception` variable:
-
+### Trang lỗi HTTP tùy chỉnh
+Laravel giúp hiển thị custom error page cho từng HTTP status code rất đơn giản. Ví dụ, để tùy biến trang 404, hãy tạo view `resources/views/errors/404.blade.php`. View này được render cho mọi lỗi 404 do ứng dụng tạo. Các view trong thư mục nên được đặt tên theo status code tương ứng. Instance `Symfony\Component\HttpKernel\Exception\HttpException` được tạo bởi hàm `abort` sẽ được truyền vào view qua biến `$exception`:
 ```blade
 <h2>{{ $exception->getMessage() }}</h2>
 ```
-
-You may publish Laravel's default error page templates using the `vendor:publish` Artisan command. Once the templates have been published, you may customize them to your liking:
-
+Bạn có thể publish các template error page mặc định của Laravel bằng lệnh Artisan `vendor:publish`. Sau khi publish, hãy tùy chỉnh theo nhu cầu:
 ```shell
 php artisan vendor:publish --tag=laravel-errors
 ```
 
 <a name="fallback-http-error-pages"></a>
-#### Fallback HTTP Error Pages
-
-You may also define a "fallback" error page for a given series of HTTP status codes. This page will be rendered if there is not a corresponding page for the specific HTTP status code that occurred. To accomplish this, define a `4xx.blade.php` template and a `5xx.blade.php` template in your application's `resources/views/errors` directory.
-
-When defining fallback error pages, the fallback pages will not affect `404`, `500`, and `503` error responses since Laravel has internal, dedicated pages for these status codes. To customize the pages rendered for these status codes, you should define a custom error page for each of them individually.
-
+#### Trang lỗi HTTP fallback
+Bạn cũng có thể định nghĩa error page "fallback" cho một nhóm HTTP status code. Page này được render khi không có page riêng cho status code cụ thể. Để làm vậy, tạo template `4xx.blade.php` và `5xx.blade.php` trong `resources/views/errors`.
+Fallback page không ảnh hưởng tới response `404`, `500` và `503` vì Laravel có page nội bộ riêng cho các status code này. Muốn tùy biến chúng, hãy tạo page riêng tương ứng cho từng status code.
 ## Tài liệu chính thức
 
 Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/errors). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

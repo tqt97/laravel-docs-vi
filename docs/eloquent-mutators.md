@@ -1,39 +1,39 @@
-# Eloquent: Mutators & Casting
+# Eloquent: Mutator và Ép kiểu
 
-- [Introduction](#introduction)
-- [Accessors and Mutators](#accessors-and-mutators)
-    - [Defining an Accessor](#defining-an-accessor)
-    - [Defining a Mutator](#defining-a-mutator)
-- [Attribute Casting](#attribute-casting)
-    - [Array and JSON Casting](#array-and-json-casting)
-    - [Vector Casting](#vector-casting)
-    - [Binary Casting](#binary-casting)
-    - [Date Casting](#date-casting)
-    - [Enum Casting](#enum-casting)
-    - [Encrypted Casting](#encrypted-casting)
-    - [Query Time Casting](#query-time-casting)
-- [Custom Casts](#custom-casts)
-    - [Value Object Casting](#value-object-casting)
-    - [Array / JSON Serialization](#array-json-serialization)
+- [Giới thiệu](#introduction)
+- [Accessor và Mutator](#accessors-and-mutators)
+    - [Định nghĩa Accessor](#defining-an-accessor)
+    - [Định nghĩa Mutator](#defining-a-mutator)
+- [Ép kiểu thuộc tính](#attribute-casting)
+    - [Ép kiểu Array và JSON](#array-and-json-casting)
+    - [Ép kiểu Vector](#vector-casting)
+    - [Ép kiểu Binary](#binary-casting)
+    - [Ép kiểu Date](#date-casting)
+    - [Ép kiểu Enum](#enum-casting)
+    - [Ép kiểu mã hóa](#encrypted-casting)
+    - [Ép kiểu tại thời điểm truy vấn](#query-time-casting)
+- [Custom Cast](#custom-casts)
+    - [Ép kiểu Value Object](#value-object-casting)
+    - [Tuần tự hóa Array / JSON](#array-json-serialization)
     - [Inbound Casting](#inbound-casting)
-    - [Cast Parameters](#cast-parameters)
-    - [Comparing Cast Values](#comparing-cast-values)
-    - [Castables](#castables)
+    - [Tham số của Cast](#cast-parameters)
+    - [So sánh giá trị Cast](#comparing-cast-values)
+    - [Castable](#castables)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Accessors, mutators, and attribute casting allow you to transform Eloquent attribute values when you retrieve or set them on model instances. For example, you may want to use the [Laravel encrypter](/docs/{{version}}/encryption) to encrypt a value while it is stored in the database, and then automatically decrypt the attribute when you access it on an Eloquent model. Or, you may want to convert a JSON string that is stored in your database to an array when it is accessed via your Eloquent model.
+Accessor, mutator và attribute casting cho phép bạn biến đổi giá trị thuộc tính Eloquent khi đọc hoặc gán chúng trên các instance của model. Ví dụ, bạn có thể sử dụng [cơ chế mã hóa của Laravel](/docs/{{version}}/encryption) để mã hóa một giá trị khi lưu trong cơ sở dữ liệu, sau đó tự động giải mã thuộc tính khi truy cập nó trên Eloquent model. Hoặc, bạn có thể chuyển một chuỗi JSON đang lưu trong cơ sở dữ liệu thành mảng khi truy cập thông qua Eloquent model.
 
 <a name="accessors-and-mutators"></a>
-## Accessors and Mutators
+## Accessor và Mutator
 
 <a name="defining-an-accessor"></a>
-### Defining an Accessor
+### Định nghĩa Accessor
 
-An accessor transforms an Eloquent attribute value when it is accessed. To define an accessor, create a protected method on your model to represent the accessible attribute. This method name should correspond to the "camel case" representation of the true underlying model attribute / database column when applicable.
+Accessor biến đổi giá trị của một thuộc tính Eloquent khi thuộc tính đó được truy cập. Để định nghĩa accessor, hãy tạo một method `protected` trên model đại diện cho thuộc tính cần truy cập. Khi phù hợp, tên method này phải tương ứng với dạng "camel case" của thuộc tính model / cột cơ sở dữ liệu thực tế bên dưới.
 
-In this example, we'll define an accessor for the `first_name` attribute. The accessor will automatically be called by Eloquent when attempting to retrieve the value of the `first_name` attribute. All attribute accessor / mutator methods must declare a return type-hint of `Illuminate\Database\Eloquent\Casts\Attribute`:
+Trong ví dụ này, chúng ta sẽ định nghĩa accessor cho thuộc tính `first_name`. Eloquent sẽ tự động gọi accessor khi cần lấy giá trị của thuộc tính `first_name`. Tất cả method accessor / mutator của thuộc tính phải khai báo return type-hint là `Illuminate\Database\Eloquent\Casts\Attribute`:
 
 ```php
 <?php
@@ -57,9 +57,9 @@ class User extends Model
 }
 ```
 
-All accessor methods return an `Attribute` instance which defines how the attribute will be accessed and, optionally, mutated. In this example, we are only defining how the attribute will be accessed. To do so, we supply the `get` argument to the `Attribute` class constructor.
+Mọi accessor method đều trả về một instance `Attribute`, dùng để định nghĩa cách thuộc tính được đọc và, nếu cần, được thay đổi. Trong ví dụ này, chúng ta chỉ định nghĩa cách đọc thuộc tính bằng cách truyền đối số `get` vào constructor của class `Attribute`.
 
-As you can see, the original value of the column is passed to the accessor, allowing you to manipulate and return the value. To access the value of the accessor, you may simply access the `first_name` attribute on a model instance:
+Như bạn có thể thấy, giá trị gốc của cột được truyền vào accessor để bạn có thể xử lý rồi trả về giá trị mong muốn. Để lấy giá trị qua accessor, bạn chỉ cần truy cập thuộc tính `first_name` trên một model instance:
 
 ```php
 use App\Models\User;
@@ -70,12 +70,12 @@ $firstName = $user->first_name;
 ```
 
 > [!NOTE]
-> If you would like these computed values to be added to the array / JSON representations of your model, [you will need to append them](/docs/{{version}}/eloquent-serialization#appending-values-to-json).
+> Nếu muốn các giá trị được tính toán này xuất hiện trong biểu diễn array / JSON của model, [bạn cần append chúng](/docs/{{version}}/eloquent-serialization#appending-values-to-json).
 
 <a name="building-value-objects-from-multiple-attributes"></a>
-#### Building Value Objects From Multiple Attributes
+#### Tạo Value Object từ nhiều thuộc tính
 
-Sometimes your accessor may need to transform multiple model attributes into a single "value object". To do so, your `get` closure may accept a second argument of `$attributes`, which will be automatically supplied to the closure and will contain an array of all of the model's current attributes:
+Đôi khi accessor cần biến đổi nhiều thuộc tính của model thành một "value object" duy nhất. Khi đó, closure `get` có thể nhận đối số thứ hai là `$attributes`. Laravel tự động truyền đối số này vào closure dưới dạng mảng chứa toàn bộ thuộc tính hiện tại của model:
 
 ```php
 use App\Support\Address;
@@ -96,9 +96,9 @@ protected function address(): Attribute
 ```
 
 <a name="accessor-caching"></a>
-#### Accessor Caching
+#### Cache Accessor
 
-When returning value objects from accessors, any changes made to the value object will automatically be synced back to the model before the model is saved. This is possible because Eloquent retains instances returned by accessors so it can return the same instance each time the accessor is invoked:
+Khi accessor trả về value object, mọi thay đổi trên object đó sẽ tự động được đồng bộ trở lại model trước khi model được lưu. Điều này thực hiện được vì Eloquent giữ lại instance do accessor trả về, nhờ đó có thể trả về chính instance đó mỗi lần accessor được gọi:
 
 ```php
 use App\Models\User;
@@ -111,7 +111,7 @@ $user->address->lineTwo = 'Updated Address Line 2 Value';
 $user->save();
 ```
 
-However, you may sometimes wish to enable caching for primitive values like strings and booleans, particularly if they are computationally intensive. To accomplish this, you may invoke the `shouldCache` method when defining your accessor:
+Tuy nhiên, đôi khi bạn có thể muốn bật cache cho các giá trị primitive như string và boolean, đặc biệt khi việc tính toán chúng tốn nhiều tài nguyên. Để làm điều này, hãy gọi method `shouldCache` khi định nghĩa accessor:
 
 ```php
 protected function hash(): Attribute
@@ -122,7 +122,7 @@ protected function hash(): Attribute
 }
 ```
 
-If you would like to disable the object caching behavior of attributes, you may invoke the `withoutObjectCaching` method when defining the attribute:
+Nếu muốn tắt cơ chế cache object của thuộc tính, bạn có thể gọi method `withoutObjectCaching` khi định nghĩa thuộc tính:
 
 ```php
 /**
@@ -140,9 +140,9 @@ protected function address(): Attribute
 ```
 
 <a name="defining-a-mutator"></a>
-### Defining a Mutator
+### Định nghĩa Mutator
 
-A mutator transforms an Eloquent attribute value when it is set. To define a mutator, you may provide the `set` argument when defining your attribute. Let's define a mutator for the `first_name` attribute. This mutator will be automatically called when we attempt to set the value of the `first_name` attribute on the model:
+Mutator biến đổi giá trị của một thuộc tính Eloquent khi giá trị được gán. Để định nghĩa mutator, bạn có thể cung cấp đối số `set` khi định nghĩa thuộc tính. Hãy định nghĩa mutator cho thuộc tính `first_name`. Mutator này sẽ tự động được gọi khi chúng ta gán giá trị cho `first_name` trên model:
 
 ```php
 <?php
@@ -167,7 +167,7 @@ class User extends Model
 }
 ```
 
-The mutator closure will receive the value that is being set on the attribute, allowing you to manipulate the value and return the manipulated value. To use our mutator, we only need to set the `first_name` attribute on an Eloquent model:
+Closure của mutator nhận giá trị đang được gán cho thuộc tính, cho phép bạn xử lý và trả về giá trị sau khi biến đổi. Để sử dụng mutator này, chúng ta chỉ cần gán thuộc tính `first_name` trên Eloquent model:
 
 ```php
 use App\Models\User;
@@ -177,12 +177,12 @@ $user = User::find(1);
 $user->first_name = 'Sally';
 ```
 
-In this example, the `set` callback will be called with the value `Sally`. The mutator will then apply the `strtolower` function to the name and set its resulting value in the model's internal `$attributes` array.
+Trong ví dụ này, callback `set` được gọi với giá trị `Sally`. Mutator sau đó áp dụng hàm `strtolower` cho tên và đặt kết quả vào mảng `$attributes` nội bộ của model.
 
 <a name="mutating-multiple-attributes"></a>
-#### Mutating Multiple Attributes
+#### Thay đổi nhiều thuộc tính
 
-Sometimes your mutator may need to set multiple attributes on the underlying model. To do so, you may return an array from the `set` closure. Each key in the array should correspond with an underlying attribute / database column associated with the model:
+Đôi khi mutator cần gán nhiều thuộc tính trên model bên dưới. Khi đó, bạn có thể trả về một mảng từ closure `set`. Mỗi key trong mảng phải tương ứng với một thuộc tính / cột cơ sở dữ liệu của model:
 
 ```php
 use App\Support\Address;
@@ -207,11 +207,11 @@ protected function address(): Attribute
 ```
 
 <a name="attribute-casting"></a>
-## Attribute Casting
+## Ép kiểu thuộc tính
 
-Attribute casting provides functionality similar to accessors and mutators without requiring you to define any additional methods on your model. Instead, your model's `casts` method provides a convenient way of converting attributes to common data types.
+Attribute casting cung cấp chức năng tương tự accessor và mutator nhưng không yêu cầu định nghĩa thêm method trên model. Thay vào đó, method `casts` của model cung cấp cách thuận tiện để chuyển đổi thuộc tính sang các kiểu dữ liệu thông dụng.
 
-The `casts` method should return an array where the key is the name of the attribute being cast and the value is the type you wish to cast the column to. The supported cast types are:
+Method `casts` phải trả về một mảng, trong đó key là tên thuộc tính cần cast và value là kiểu dữ liệu mà bạn muốn ép cột đó sang. Các kiểu cast được hỗ trợ gồm:
 
 <div class="content-list" markdown="1">
 
@@ -242,7 +242,7 @@ The `casts` method should return an array where the key is the name of the attri
 
 </div>
 
-To demonstrate attribute casting, let's cast the `is_admin` attribute, which is stored in our database as an integer (`0` or `1`) to a boolean value:
+Để minh họa attribute casting, hãy cast thuộc tính `is_admin`, vốn được lưu trong cơ sở dữ liệu dưới dạng integer (`0` hoặc `1`), thành giá trị boolean:
 
 ```php
 <?php
@@ -267,7 +267,7 @@ class User extends Model
 }
 ```
 
-After defining the cast, the `is_admin` attribute will always be cast to a boolean when you access it, even if the underlying value is stored in the database as an integer:
+Sau khi định nghĩa cast, thuộc tính `is_admin` luôn được chuyển thành boolean khi truy cập, ngay cả khi giá trị bên dưới được lưu trong cơ sở dữ liệu dưới dạng integer:
 
 ```php
 $user = App\Models\User::find(1);
@@ -277,7 +277,7 @@ if ($user->is_admin) {
 }
 ```
 
-If you need to add a new, temporary cast at runtime, you may use the `mergeCasts` method. These cast definitions will be added to any of the casts already defined on the model:
+Nếu cần thêm cast tạm thời tại runtime, bạn có thể sử dụng method `mergeCasts`. Các định nghĩa cast này sẽ được bổ sung vào những cast đã có trên model:
 
 ```php
 $user->mergeCasts([
@@ -287,12 +287,12 @@ $user->mergeCasts([
 ```
 
 > [!WARNING]
-> Attributes that are `null` will not be cast. In addition, you should never define a cast (or an attribute) that has the same name as a relationship or assign a cast to the model's primary key.
+> Các thuộc tính có giá trị `null` sẽ không được cast. Ngoài ra, bạn không nên định nghĩa cast (hoặc thuộc tính) trùng tên với một relationship, cũng không nên gán cast cho primary key của model.
 
 <a name="stringable-casting"></a>
-#### Stringable Casting
+#### Ép kiểu Stringable
 
-You may use the `Illuminate\Database\Eloquent\Casts\AsStringable` cast class to cast a model attribute to a [fluent Illuminate\Support\Stringable object](/docs/{{version}}/strings#fluent-strings-method-list):
+Bạn có thể sử dụng cast class `Illuminate\Database\Eloquent\Casts\AsStringable` để cast một thuộc tính model thành [object `Illuminate\Support\Stringable` dạng fluent](/docs/{{version}}/strings#fluent-strings-method-list):
 
 ```php
 <?php
@@ -319,9 +319,9 @@ class User extends Model
 ```
 
 <a name="array-and-json-casting"></a>
-### Array and JSON Casting
+### Ép kiểu Array và JSON
 
-The `array` cast is particularly useful when working with columns that are stored as serialized JSON. For example, if your database has a `JSON` or `TEXT` field type that contains serialized JSON, adding the `array` cast to that attribute will automatically deserialize the attribute to a PHP array when you access it on your Eloquent model:
+Cast `array` đặc biệt hữu ích khi làm việc với các cột lưu JSON đã được tuần tự hóa. Ví dụ, nếu cơ sở dữ liệu có field kiểu `JSON` hoặc `TEXT` chứa JSON, việc thêm cast `array` cho thuộc tính sẽ tự động deserialize thuộc tính thành mảng PHP khi bạn truy cập nó trên Eloquent model:
 
 ```php
 <?php
@@ -346,7 +346,7 @@ class User extends Model
 }
 ```
 
-Once the cast is defined, you may access the `options` attribute and it will automatically be deserialized from JSON into a PHP array. When you set the value of the `options` attribute, the given array will automatically be serialized back into JSON for storage:
+Sau khi định nghĩa cast, bạn có thể truy cập thuộc tính `options` và nó sẽ tự động được deserialize từ JSON thành mảng PHP. Khi gán giá trị cho `options`, mảng được cung cấp sẽ tự động được serialize trở lại JSON để lưu trữ:
 
 ```php
 use App\Models\User;
@@ -362,7 +362,7 @@ $user->options = $options;
 $user->save();
 ```
 
-To update a single field of a JSON attribute with a more terse syntax, you may [make the attribute mass assignable](/docs/{{version}}/eloquent#mass-assignment-json-columns) and use the `->` operator when calling the `update` method:
+Để cập nhật một field riêng lẻ của thuộc tính JSON bằng cú pháp ngắn gọn hơn, bạn có thể [cho phép mass assignment đối với thuộc tính](/docs/{{version}}/eloquent#mass-assignment-json-columns) và sử dụng toán tử `->` khi gọi method `update`:
 
 ```php
 $user = User::find(1);
@@ -371,9 +371,9 @@ $user->update(['options->key' => 'value']);
 ```
 
 <a name="json-and-unicode"></a>
-#### JSON and Unicode
+#### JSON và Unicode
 
-If you would like to store an array attribute as JSON with unescaped Unicode characters, you may use the `json:unicode` cast:
+Nếu muốn lưu thuộc tính array dưới dạng JSON mà không escape các ký tự Unicode, bạn có thể sử dụng cast `json:unicode`:
 
 ```php
 /**
@@ -390,9 +390,9 @@ protected function casts(): array
 ```
 
 <a name="array-object-and-collection-casting"></a>
-#### Array Object and Collection Casting
+#### Ép kiểu Array Object và Collection
 
-Although the standard `array` cast is sufficient for many applications, it does have some disadvantages. Since the `array` cast returns a primitive type, it is not possible to mutate an offset of the array directly. For example, the following code will trigger a PHP error:
+Mặc dù cast `array` tiêu chuẩn đủ dùng cho nhiều ứng dụng, nó vẫn có một số hạn chế. Vì cast `array` trả về kiểu primitive, bạn không thể thay đổi trực tiếp một offset của mảng. Ví dụ, đoạn code sau sẽ gây lỗi PHP:
 
 ```php
 $user = User::find(1);
@@ -400,7 +400,7 @@ $user = User::find(1);
 $user->options['key'] = $value;
 ```
 
-To solve this, Laravel offers an `AsArrayObject` cast that casts your JSON attribute to an [ArrayObject](https://www.php.net/manual/en/class.arrayobject.php) class. This feature is implemented using Laravel's [custom cast](#custom-casts) implementation, which allows Laravel to intelligently cache and transform the mutated object such that individual offsets may be modified without triggering a PHP error. To use the `AsArrayObject` cast, simply assign it to an attribute:
+Để giải quyết vấn đề này, Laravel cung cấp cast `AsArrayObject`, chuyển thuộc tính JSON thành class [ArrayObject](https://www.php.net/manual/en/class.arrayobject.php). Tính năng này được triển khai bằng cơ chế [custom cast](#custom-casts) của Laravel, cho phép framework cache và biến đổi object một cách phù hợp để từng offset có thể được chỉnh sửa mà không gây lỗi PHP. Để sử dụng `AsArrayObject`, chỉ cần gán cast này cho thuộc tính:
 
 ```php
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
@@ -418,7 +418,7 @@ protected function casts(): array
 }
 ```
 
-Similarly, Laravel offers an `AsCollection` cast that casts your JSON attribute to a Laravel [Collection](/docs/{{version}}/collections) instance:
+Tương tự, Laravel cung cấp cast `AsCollection` để chuyển thuộc tính JSON thành một instance [Collection](/docs/{{version}}/collections) của Laravel:
 
 ```php
 use Illuminate\Database\Eloquent\Casts\AsCollection;
@@ -436,7 +436,7 @@ protected function casts(): array
 }
 ```
 
-If you would like the `AsCollection` cast to instantiate a custom collection class instead of Laravel's base collection class, you may provide the collection class name as a cast argument:
+Nếu muốn `AsCollection` khởi tạo một custom collection class thay vì base collection class của Laravel, bạn có thể truyền tên collection class làm đối số cho cast:
 
 ```php
 use App\Collections\OptionCollection;
@@ -455,7 +455,7 @@ protected function casts(): array
 }
 ```
 
-The `of` method may be used to indicate collection items should be mapped into a given class via the collection's [mapInto method](/docs/{{version}}/collections#method-mapinto):
+Method `of` có thể được dùng để chỉ định rằng các phần tử của collection phải được map sang một class cụ thể thông qua [method `mapInto`](/docs/{{version}}/collections#method-mapinto) của collection:
 
 ```php
 use App\ValueObjects\Option;
@@ -474,7 +474,7 @@ protected function casts(): array
 }
 ```
 
-When mapping collections to objects, the object should implement the `Illuminate\Contracts\Support\Arrayable` and `JsonSerializable` interfaces to define how their instances should be serialized into the database as JSON:
+Khi map collection thành object, object nên implement các interface `Illuminate\Contracts\Support\Arrayable` và `JsonSerializable` để xác định cách các instance được serialize thành JSON khi lưu vào cơ sở dữ liệu:
 
 ```php
 <?php
@@ -527,9 +527,9 @@ class Option implements Arrayable, JsonSerializable
 ```
 
 <a name="vector-casting"></a>
-### Vector Casting
+### Ép kiểu Vector
 
-You may use the `Illuminate\Database\Eloquent\Casts\AsVector` cast class to cast a database vector column to and from a PHP array:
+Bạn có thể sử dụng cast class `Illuminate\Database\Eloquent\Casts\AsVector` để chuyển đổi hai chiều giữa cột vector trong cơ sở dữ liệu và mảng PHP:
 
 ```php
 use Illuminate\Database\Eloquent\Casts\AsVector;
@@ -547,12 +547,12 @@ protected function casts(): array
 }
 ```
 
-When setting the attribute, the cast accepts a PHP array or an `Arrayable` instance, such as a Laravel collection. When retrieving the attribute, the cast returns an array of floats.
+Khi gán thuộc tính, cast chấp nhận mảng PHP hoặc instance `Arrayable`, chẳng hạn Laravel collection. Khi đọc thuộc tính, cast trả về một mảng các số float.
 
 <a name="binary-casting"></a>
-### Binary Casting
+### Ép kiểu Binary
 
-If your Eloquent model has a [binary type](/docs/{{version}}/migrations#column-method-binary) `uuid` or `ulid` column in addition to your model's auto-incrementing ID column, you may use the `AsBinary` cast to automatically cast the value to and from its binary representation:
+Nếu Eloquent model có cột `uuid` hoặc `ulid` dạng [binary](/docs/{{version}}/migrations#column-method-binary) bên cạnh cột ID tự tăng, bạn có thể dùng cast `AsBinary` để tự động chuyển đổi hai chiều giữa giá trị và biểu diễn binary của nó:
 
 ```php
 use Illuminate\Database\Eloquent\Casts\AsBinary;
@@ -571,7 +571,7 @@ protected function casts(): array
 }
 ```
 
-Once the cast has been defined on the model, you may set the UUID / ULID attribute value to an object instance or a string. Eloquent will automatically cast the value to its binary representation. When retrieving the attribute's value, you will always receive a plain-text string value:
+Sau khi định nghĩa cast trên model, bạn có thể gán giá trị thuộc tính UUID / ULID bằng một object instance hoặc string. Eloquent sẽ tự động chuyển giá trị sang biểu diễn binary. Khi đọc thuộc tính, bạn luôn nhận được giá trị string dạng plain text:
 
 ```php
 use Illuminate\Support\Str;
@@ -584,11 +584,11 @@ return $user->uuid;
 ```
 
 <a name="date-casting"></a>
-### Date Casting
+### Ép kiểu Date
 
-By default, Eloquent will cast the `created_at` and `updated_at` columns to instances of [Carbon](https://github.com/briannesbitt/Carbon), which extends the PHP `DateTime` class and provides an assortment of helpful methods. You may cast additional date attributes by defining additional date casts within your model's `casts` method. Typically, dates should be cast using the `datetime` or `immutable_datetime` cast types.
+Mặc định, Eloquent cast các cột `created_at` và `updated_at` thành instance của [Carbon](https://github.com/briannesbitt/Carbon), class mở rộng `DateTime` của PHP và cung cấp nhiều method hữu ích. Bạn có thể cast thêm các thuộc tính ngày tháng bằng cách khai báo thêm date cast trong method `casts` của model. Thông thường, ngày tháng nên sử dụng kiểu cast `datetime` hoặc `immutable_datetime`.
 
-When defining a `date` or `datetime` cast, you may also specify the date's format. This format will be used when the [model is serialized to an array or JSON](/docs/{{version}}/eloquent-serialization):
+Khi định nghĩa cast `date` hoặc `datetime`, bạn cũng có thể chỉ định format của ngày. Format này được sử dụng khi [model được serialize thành array hoặc JSON](/docs/{{version}}/eloquent-serialization):
 
 ```php
 /**
@@ -604,9 +604,9 @@ protected function casts(): array
 }
 ```
 
-When a column is cast as a date, you may set the corresponding model attribute value to a UNIX timestamp, date string (`Y-m-d`), date-time string, or a `DateTime` / `Carbon` instance. The date's value will be correctly converted and stored in your database.
+Khi một cột được cast thành date, bạn có thể gán thuộc tính model tương ứng bằng UNIX timestamp, date string (`Y-m-d`), date-time string hoặc instance `DateTime` / `Carbon`. Giá trị ngày sẽ được chuyển đổi chính xác và lưu vào cơ sở dữ liệu.
 
-You may customize the default serialization format for all of your model's dates by defining a `serializeDate` method on your model. This method does not affect how your dates are formatted for storage in the database:
+Bạn có thể tùy chỉnh format serialize mặc định cho toàn bộ ngày tháng của model bằng cách định nghĩa method `serializeDate`. Method này không ảnh hưởng đến format dùng để lưu ngày tháng trong cơ sở dữ liệu:
 
 ```php
 /**
@@ -618,7 +618,7 @@ protected function serializeDate(DateTimeInterface $date): string
 }
 ```
 
-To specify the format that should be used when actually storing a model's dates within your database, you should use the `dateFormat` argument on your model's `Table` attribute:
+Để chỉ định format thực sự được dùng khi lưu ngày tháng của model vào cơ sở dữ liệu, hãy sử dụng đối số `dateFormat` trên attribute `Table` của model:
 
 ```php
 use Illuminate\Database\Eloquent\Attributes\Table;
@@ -631,16 +631,16 @@ class Flight extends Model
 ```
 
 <a name="date-casting-and-timezones"></a>
-#### Date Casting, Serialization, and Timezones
+#### Ép kiểu Date, Serialization, and Timezones
 
-By default, the `date` and `datetime` casts will serialize dates to a UTC ISO-8601 date string (`YYYY-MM-DDTHH:MM:SS.uuuuuuZ`), regardless of the timezone specified in your application's `timezone` configuration option. You are strongly encouraged to always use this serialization format, as well as to store your application's dates in the UTC timezone by not changing your application's `timezone` configuration option from its default `UTC` value. Consistently using the UTC timezone throughout your application will provide the maximum level of interoperability with other date manipulation libraries written in PHP and JavaScript.
+Mặc định, các cast `date` và `datetime` serialize ngày thành chuỗi UTC ISO-8601 (`YYYY-MM-DDTHH:MM:SS.uuuuuuZ`), bất kể múi giờ được cấu hình trong tùy chọn `timezone` của ứng dụng. Bạn được khuyến nghị mạnh mẽ luôn sử dụng format serialize này và lưu ngày tháng của ứng dụng theo UTC bằng cách giữ nguyên giá trị mặc định `UTC` của cấu hình `timezone`. Việc sử dụng UTC nhất quán trong toàn bộ ứng dụng mang lại khả năng tương tác tốt nhất với các thư viện xử lý ngày tháng khác viết bằng PHP và JavaScript.
 
-If a custom format is applied to the `date` or `datetime` cast, such as `datetime:Y-m-d H:i:s`, the inner timezone of the Carbon instance will be used during date serialization. Typically, this will be the timezone specified in your application's `timezone` configuration option. However, it's important to note that `timestamp` columns such as `created_at` and `updated_at` are exempt from this behavior and are always formatted in UTC, regardless of the application's timezone setting.
+Nếu áp dụng custom format cho cast `date` hoặc `datetime`, chẳng hạn `datetime:Y-m-d H:i:s`, múi giờ bên trong instance Carbon sẽ được dùng khi serialize ngày. Thông thường đây là múi giờ được chỉ định trong cấu hình `timezone` của ứng dụng. Tuy nhiên, cần lưu ý rằng các cột `timestamp` như `created_at` và `updated_at` không tuân theo hành vi này và luôn được format theo UTC, bất kể cấu hình múi giờ của ứng dụng.
 
 <a name="enum-casting"></a>
-### Enum Casting
+### Ép kiểu Enum
 
-Eloquent also allows you to cast your attribute values to PHP [Enums](https://www.php.net/manual/en/language.enumerations.backed.php). To accomplish this, you may specify the attribute and enum you wish to cast in your model's `casts` method:
+Eloquent cũng cho phép cast giá trị thuộc tính sang [Enum](https://www.php.net/manual/en/language.enumerations.backed.php) của PHP. Để thực hiện, hãy chỉ định thuộc tính và enum cần cast trong method `casts` của model:
 
 ```php
 use App\Enums\ServerStatus;
@@ -658,7 +658,7 @@ protected function casts(): array
 }
 ```
 
-Once you have defined the cast on your model, the specified attribute will be automatically cast to and from an enum when you interact with the attribute:
+Sau khi định nghĩa cast trên model, thuộc tính được chỉ định sẽ tự động được chuyển đổi hai chiều với enum khi bạn tương tác với thuộc tính đó:
 
 ```php
 if ($server->status == ServerStatus::Provisioned) {
@@ -669,9 +669,9 @@ if ($server->status == ServerStatus::Provisioned) {
 ```
 
 <a name="casting-arrays-of-enums"></a>
-#### Casting Arrays of Enums
+#### Ép kiểu mảng Enum
 
-Sometimes you may need your model to store an array of enum values within a single column. To accomplish this, you may utilize the `AsEnumArrayObject` or `AsEnumCollection` casts provided by Laravel:
+Đôi khi model cần lưu một mảng các giá trị enum trong cùng một cột. Khi đó, bạn có thể sử dụng cast `AsEnumArrayObject` hoặc `AsEnumCollection` do Laravel cung cấp:
 
 ```php
 use App\Enums\ServerStatus;
@@ -691,21 +691,21 @@ protected function casts(): array
 ```
 
 <a name="encrypted-casting"></a>
-### Encrypted Casting
+### Ép kiểu mã hóa
 
-The `encrypted` cast will encrypt a model's attribute value using Laravel's built-in [encryption](/docs/{{version}}/encryption) features. In addition, the `encrypted:array`, `encrypted:collection`, `encrypted:object`, `AsEncryptedArrayObject`, and `AsEncryptedCollection` casts work like their unencrypted counterparts; however, as you might expect, the underlying value is encrypted when stored in your database.
+Cast `encrypted` mã hóa giá trị thuộc tính của model bằng tính năng [mã hóa](/docs/{{version}}/encryption) tích hợp sẵn của Laravel. Ngoài ra, các cast `encrypted:array`, `encrypted:collection`, `encrypted:object`, `AsEncryptedArrayObject` và `AsEncryptedCollection` hoạt động tương tự phiên bản không mã hóa tương ứng; tuy nhiên, giá trị bên dưới sẽ được mã hóa khi lưu vào cơ sở dữ liệu.
 
-As the final length of the encrypted text is not predictable and is longer than its plain text counterpart, make sure the associated database column is of `TEXT` type or larger. In addition, since the values are encrypted in the database, you will not be able to query or search encrypted attribute values.
+Do độ dài cuối cùng của dữ liệu đã mã hóa không thể dự đoán và dài hơn plain text tương ứng, hãy bảo đảm cột cơ sở dữ liệu liên quan có kiểu `TEXT` hoặc lớn hơn. Ngoài ra, vì giá trị được mã hóa trong cơ sở dữ liệu, bạn sẽ không thể query hoặc tìm kiếm theo các giá trị thuộc tính đã mã hóa.
 
 <a name="key-rotation"></a>
-#### Key Rotation
+#### Xoay vòng khóa
 
-As you may know, Laravel encrypts strings using the `key` configuration value specified in your application's `app` configuration file. Typically, this value corresponds to the value of the `APP_KEY` environment variable. If you need to rotate your application's encryption key, you may [gracefully do so](/docs/{{version}}/encryption#gracefully-rotating-encryption-keys).
+Laravel mã hóa string bằng giá trị cấu hình `key` trong file cấu hình `app` của ứng dụng. Thông thường, giá trị này tương ứng với biến môi trường `APP_KEY`. Nếu cần xoay vòng khóa mã hóa của ứng dụng, bạn có thể [thực hiện an toàn](/docs/{{version}}/encryption#gracefully-rotating-encryption-keys).
 
 <a name="query-time-casting"></a>
-### Query Time Casting
+### Ép kiểu tại thời điểm truy vấn
 
-Sometimes you may need to apply casts while executing a query, such as when selecting a raw value from a table. For example, consider the following query:
+Đôi khi bạn cần áp dụng cast ngay trong lúc thực thi query, chẳng hạn khi select một raw value từ bảng. Ví dụ, hãy xem query sau:
 
 ```php
 use App\Models\Post;
@@ -718,7 +718,7 @@ $users = User::select([
 ])->get();
 ```
 
-The `last_posted_at` attribute on the results of this query will be a simple string. It would be wonderful if we could apply a `datetime` cast to this attribute when executing the query. Thankfully, we may accomplish this using the `withCasts` method:
+Thuộc tính `last_posted_at` trong kết quả của query này sẽ chỉ là một string. Nếu muốn áp dụng cast `datetime` cho thuộc tính ngay khi thực thi query, bạn có thể sử dụng method `withCasts`:
 
 ```php
 $users = User::select([
@@ -731,15 +731,15 @@ $users = User::select([
 ```
 
 <a name="custom-casts"></a>
-## Custom Casts
+## Custom Cast
 
-Laravel has a variety of built-in, helpful cast types; however, you may occasionally need to define your own cast types. To create a cast, execute the `make:cast` Artisan command. The new cast class will be placed in your `app/Casts` directory:
+Laravel cung cấp nhiều kiểu cast tích hợp hữu ích; tuy nhiên, đôi khi bạn cần tự định nghĩa kiểu cast riêng. Để tạo cast, hãy chạy lệnh Artisan `make:cast`. Class cast mới sẽ được đặt trong thư mục `app/Casts`:
 
 ```shell
 php artisan make:cast AsJson
 ```
 
-All custom cast classes implement the `CastsAttributes` interface. Classes that implement this interface must define a `get` and `set` method. The `get` method is responsible for transforming a raw value from the database into a cast value, while the `set` method should transform a cast value into a raw value that can be stored in the database. As an example, we will re-implement the built-in `json` cast type as a custom cast type:
+Mọi custom cast class đều implement interface `CastsAttributes`. Class implement interface này phải định nghĩa method `get` và `set`. Method `get` chịu trách nhiệm biến đổi raw value từ cơ sở dữ liệu thành giá trị đã cast, còn `set` biến đổi giá trị cast thành raw value có thể lưu trong cơ sở dữ liệu. Ví dụ sau sẽ triển khai lại kiểu cast `json` tích hợp dưới dạng custom cast:
 
 ```php
 <?php
@@ -782,7 +782,7 @@ class AsJson implements CastsAttributes
 }
 ```
 
-Once you have defined a custom cast type, you may attach it to a model attribute using its class name:
+Sau khi định nghĩa custom cast, bạn có thể gắn nó vào một thuộc tính model bằng tên class:
 
 ```php
 <?php
@@ -809,11 +809,11 @@ class User extends Model
 ```
 
 <a name="value-object-casting"></a>
-### Value Object Casting
+### Ép kiểu Value Object
 
-You are not limited to casting values to primitive types. You may also cast values to objects. Defining custom casts that cast values to objects is very similar to casting to primitive types; however, if your value object encompasses more than one database column, the `set` method must return an array of key / value pairs that will be used to set raw, storable values on the model. If your value object only affects a single column, you should simply return the storable value.
+Bạn không bị giới hạn ở việc cast giá trị sang kiểu primitive mà còn có thể cast sang object. Việc định nghĩa custom cast cho object tương tự cast sang primitive; tuy nhiên, nếu value object bao gồm nhiều cột cơ sở dữ liệu, method `set` phải trả về mảng các cặp key / value dùng để gán raw value có thể lưu vào model. Nếu value object chỉ tác động đến một cột, bạn chỉ cần trả về giá trị có thể lưu.
 
-As an example, we will define a custom cast class that casts multiple model values into a single `Address` value object. We will assume the `Address` value object has two public properties: `lineOne` and `lineTwo`:
+Ví dụ, chúng ta sẽ định nghĩa custom cast class để cast nhiều giá trị của model thành một value object `Address`. Giả sử `Address` có hai public property là `lineOne` và `lineTwo`:
 
 ```php
 <?php
@@ -868,7 +868,7 @@ class AsAddress implements CastsAttributes
 }
 ```
 
-When casting to value objects, any changes made to the value object will automatically be synced back to the model before the model is saved:
+Khi cast sang value object, mọi thay đổi trên value object sẽ tự động được đồng bộ trở lại model trước khi model được lưu:
 
 ```php
 use App\Models\User;
@@ -881,14 +881,14 @@ $user->save();
 ```
 
 > [!NOTE]
-> If you plan to serialize your Eloquent models containing value objects to JSON or arrays, you should implement the `Illuminate\Contracts\Support\Arrayable` and `JsonSerializable` interfaces on the value object.
+> Nếu dự định serialize Eloquent model chứa value object thành JSON hoặc array, bạn nên implement các interface `Illuminate\Contracts\Support\Arrayable` và `JsonSerializable` trên value object.
 
 <a name="value-object-caching"></a>
-#### Value Object Caching
+#### Cache Value Object
 
-When attributes that are cast to value objects are resolved, they are cached by Eloquent. Therefore, the same object instance will be returned if the attribute is accessed again.
+Khi thuộc tính được cast sang value object được resolve, Eloquent sẽ cache chúng. Vì vậy, nếu truy cập lại thuộc tính, cùng một object instance sẽ được trả về.
 
-If you would like to disable the object caching behavior of custom cast classes, you may declare a public `withoutObjectCaching` property on your custom cast class:
+Nếu muốn tắt cơ chế cache object của custom cast class, bạn có thể khai báo public property `withoutObjectCaching` trên custom cast class:
 
 ```php
 class AsAddress implements CastsAttributes
@@ -900,11 +900,11 @@ class AsAddress implements CastsAttributes
 ```
 
 <a name="array-json-serialization"></a>
-### Array / JSON Serialization
+### Tuần tự hóa Array / JSON
 
-When an Eloquent model is converted to an array or JSON using the `toArray` and `toJson` methods, your custom cast value objects will typically be serialized as well as long as they implement the `Illuminate\Contracts\Support\Arrayable` and `JsonSerializable` interfaces. However, when using value objects provided by third-party libraries, you may not have the ability to add these interfaces to the object.
+Khi Eloquent model được chuyển thành array hoặc JSON bằng method `toArray` và `toJson`, các value object của custom cast thường cũng được serialize nếu chúng implement `Illuminate\Contracts\Support\Arrayable` và `JsonSerializable`. Tuy nhiên, với value object do thư viện bên thứ ba cung cấp, bạn có thể không thể bổ sung các interface này vào object.
 
-Therefore, you may specify that your custom cast class will be responsible for serializing the value object. To do so, your custom cast class should implement the `Illuminate\Contracts\Database\Eloquent\SerializesCastableAttributes` interface. This interface states that your class should contain a `serialize` method which should return the serialized form of your value object:
+Vì vậy, bạn có thể chỉ định custom cast class chịu trách nhiệm serialize value object. Để làm điều này, custom cast class phải implement interface `Illuminate\Contracts\Database\Eloquent\SerializesCastableAttributes`. Interface này yêu cầu class có method `serialize` trả về biểu diễn đã serialize của value object:
 
 ```php
 /**
@@ -925,15 +925,15 @@ public function serialize(
 <a name="inbound-casting"></a>
 ### Inbound Casting
 
-Occasionally, you may need to write a custom cast class that only transforms values that are being set on the model and does not perform any operations when attributes are being retrieved from the model.
+Đôi khi bạn cần viết custom cast class chỉ biến đổi giá trị khi chúng được gán vào model và không thực hiện thao tác nào khi thuộc tính được đọc từ model.
 
-Inbound only custom casts should implement the `CastsInboundAttributes` interface, which only requires a `set` method to be defined. The `make:cast` Artisan command may be invoked with the `--inbound` option to generate an inbound only cast class:
+Custom cast chỉ xử lý inbound nên implement interface `CastsInboundAttributes`, interface này chỉ yêu cầu định nghĩa method `set`. Bạn có thể gọi lệnh Artisan `make:cast` với tùy chọn `--inbound` để tạo inbound-only cast class:
 
 ```shell
 php artisan make:cast AsHash --inbound
 ```
 
-A classic example of an inbound only cast is a "hashing" cast. For example, we may define a cast that hashes inbound values via a given algorithm:
+Ví dụ điển hình của inbound-only cast là cast dùng để "hash". Chẳng hạn, chúng ta có thể định nghĩa cast hash các giá trị đầu vào bằng một thuật toán được chỉ định:
 
 ```php
 <?php
@@ -971,9 +971,9 @@ class AsHash implements CastsInboundAttributes
 ```
 
 <a name="cast-parameters"></a>
-### Cast Parameters
+### Tham số của Cast
 
-When attaching a custom cast to a model, cast parameters may be specified by separating them from the class name using a `:` character and comma-delimiting multiple parameters. The parameters will be passed to the constructor of the cast class:
+Khi gắn custom cast vào model, bạn có thể chỉ định tham số cast bằng cách ngăn cách chúng với tên class bằng ký tự `:` và dùng dấu phẩy để phân tách nhiều tham số. Các tham số sẽ được truyền vào constructor của cast class:
 
 ```php
 /**
@@ -990,11 +990,11 @@ protected function casts(): array
 ```
 
 <a name="comparing-cast-values"></a>
-### Comparing Cast Values
+### So sánh giá trị Cast
 
-If you would like to define how two given cast values should be compared to determine if they have been changed, your custom cast class may implement the `Illuminate\Contracts\Database\Eloquent\ComparesCastableAttributes` interface. This allows you to have fine-grained control over which values Eloquent considers changed and thus saves to the database when a model is updated.
+Nếu muốn định nghĩa cách so sánh hai giá trị cast để xác định chúng có thay đổi hay không, custom cast class có thể implement interface `Illuminate\Contracts\Database\Eloquent\ComparesCastableAttributes`. Điều này cho phép bạn kiểm soát chi tiết những giá trị nào Eloquent xem là đã thay đổi và vì thế cần lưu vào cơ sở dữ liệu khi model được cập nhật.
 
-This interface states that your class should contain a `compare` method which should return `true` if the given values are considered equal:
+Interface này yêu cầu class có method `compare`, trả về `true` nếu các giá trị được cung cấp được xem là bằng nhau:
 
 ```php
 /**
@@ -1017,9 +1017,9 @@ public function compare(
 ```
 
 <a name="castables"></a>
-### Castables
+### Castable
 
-You may want to allow your application's value objects to define their own custom cast classes. Instead of attaching the custom cast class to your model, you may alternatively attach a value object class that implements the `Illuminate\Contracts\Database\Eloquent\Castable` interface:
+Bạn có thể muốn cho phép value object của ứng dụng tự định nghĩa custom cast class của chính nó. Thay vì gắn custom cast class vào model, bạn có thể gắn một value object class implement interface `Illuminate\Contracts\Database\Eloquent\Castable`:
 
 ```php
 use App\ValueObjects\Address;
@@ -1032,7 +1032,7 @@ protected function casts(): array
 }
 ```
 
-Objects that implement the `Castable` interface must define a `castUsing` method that returns the class name of the custom caster class that is responsible for casting to and from the `Castable` class:
+Object implement interface `Castable` phải định nghĩa method `castUsing`, method này trả về tên class của custom caster chịu trách nhiệm cast hai chiều với class `Castable`:
 
 ```php
 <?php
@@ -1056,7 +1056,7 @@ class Address implements Castable
 }
 ```
 
-When using `Castable` classes, you may still provide arguments in the `casts` method definition. The arguments will be passed to the `castUsing` method:
+Khi sử dụng class `Castable`, bạn vẫn có thể truyền đối số trong định nghĩa method `casts`. Các đối số sẽ được truyền vào method `castUsing`:
 
 ```php
 use App\ValueObjects\Address;
@@ -1070,9 +1070,9 @@ protected function casts(): array
 ```
 
 <a name="anonymous-cast-classes"></a>
-#### Castables & Anonymous Cast Classes
+#### Castable & Anonymous Cast Classes
 
-By combining "castables" with PHP's [anonymous classes](https://www.php.net/manual/en/language.oop5.anonymous.php), you may define a value object and its casting logic as a single castable object. To accomplish this, return an anonymous class from your value object's `castUsing` method. The anonymous class should implement the `CastsAttributes` interface:
+Bằng cách kết hợp "castable" với [anonymous class](https://www.php.net/manual/en/language.oop5.anonymous.php) của PHP, bạn có thể định nghĩa value object và logic casting của nó trong một castable object duy nhất. Để thực hiện, hãy trả về một anonymous class từ method `castUsing` của value object. Anonymous class này phải implement interface `CastsAttributes`:
 
 ```php
 <?php
@@ -1122,6 +1122,8 @@ class Address implements Castable
     }
 }
 ```
+
+---
 
 ## Tài liệu chính thức
 

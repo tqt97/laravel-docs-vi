@@ -1,91 +1,91 @@
 # Laravel Sail
 
-- [Introduction](#introduction)
-- [Installation and Setup](#installation)
-    - [Rebuilding Sail Images](#rebuilding-sail-images)
-    - [Configuring A Shell Alias](#configuring-a-shell-alias)
-- [Starting and Stopping Sail](#starting-and-stopping-sail)
-- [Executing Commands](#executing-sail-commands)
-    - [Executing PHP Commands](#executing-php-commands)
-    - [Executing Composer Commands](#executing-composer-commands)
-    - [Executing Artisan Commands](#executing-artisan-commands)
-    - [Executing Node / NPM Commands](#executing-node-npm-commands)
-- [Interacting With Databases](#interacting-with-sail-databases)
+- [Giới thiệu](#introduction)
+- [Cài đặt và thiết lập](#installation)
+    - [Build lại image của Sail](#rebuilding-sail-images)
+    - [Cấu hình alias cho shell](#configuring-a-shell-alias)
+- [Khởi động và dừng Sail](#starting-and-stopping-sail)
+- [Thực thi lệnh](#executing-sail-commands)
+    - [Thực thi lệnh PHP](#executing-php-commands)
+    - [Thực thi lệnh Composer](#executing-composer-commands)
+    - [Thực thi lệnh Artisan](#executing-artisan-commands)
+    - [Thực thi lệnh Node / NPM](#executing-node-npm-commands)
+- [Làm việc với cơ sở dữ liệu](#interacting-with-sail-databases)
     - [MySQL](#mysql)
     - [MongoDB](#mongodb)
     - [Redis](#redis)
     - [Valkey](#valkey)
     - [Meilisearch](#meilisearch)
     - [Typesense](#typesense)
-- [File Storage](#file-storage)
-- [Running Tests](#running-tests)
+- [Lưu trữ file](#file-storage)
+- [Chạy test](#running-tests)
     - [Laravel Dusk](#laravel-dusk)
-- [Previewing Emails](#previewing-emails)
-- [Container CLI](#sail-container-cli)
-- [PHP Versions](#sail-php-versions)
-    - [Additional PHP Extensions](#sail-php-extensions)
-- [Node Versions](#sail-node-versions)
-- [Sharing Your Site](#sharing-your-site)
-- [Debugging With Xdebug](#debugging-with-xdebug)
-    - [Xdebug CLI Usage](#xdebug-cli-usage)
-    - [Xdebug Browser Usage](#xdebug-browser-usage)
-- [Customization](#sail-customization)
+- [Xem trước email](#previewing-emails)
+- [CLI của container](#sail-container-cli)
+- [Phiên bản PHP](#sail-php-versions)
+    - [PHP extension bổ sung](#sail-php-extensions)
+- [Phiên bản Node](#sail-node-versions)
+- [Chia sẻ website](#sharing-your-site)
+- [Debug với Xdebug](#debugging-with-xdebug)
+    - [Sử dụng Xdebug trên CLI](#xdebug-cli-usage)
+    - [Sử dụng Xdebug trên trình duyệt](#xdebug-browser-usage)
+- [Tùy biến](#sail-customization)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-[Laravel Sail](https://github.com/laravel/sail) is a light-weight command-line interface for interacting with Laravel's default Docker development environment. Sail provides a great starting point for building a Laravel application using PHP, MySQL, and Redis without requiring prior Docker experience.
+[Laravel Sail](https://github.com/laravel/sail) là giao diện dòng lệnh gọn nhẹ để làm việc với môi trường phát triển Docker mặc định của Laravel. Sail cung cấp điểm khởi đầu thuận tiện để xây dựng ứng dụng Laravel bằng PHP, MySQL và Redis mà không yêu cầu bạn phải có kinh nghiệm Docker từ trước.
 
-At its heart, Sail is the `compose.yaml` file and the `sail` script that is stored at the root of your project. The `sail` script provides a CLI with convenient methods for interacting with the Docker containers defined by the `compose.yaml` file.
+Về bản chất, Sail gồm file `compose.yaml` và script `sail` được lưu tại thư mục gốc của project. Script `sail` cung cấp CLI với các lệnh thuận tiện để tương tác với những Docker container được định nghĩa trong file `compose.yaml`.
 
-Laravel Sail is supported on macOS, Linux, and Windows (via [WSL2](https://docs.microsoft.com/en-us/windows/wsl/about)).
+Laravel Sail hỗ trợ macOS, Linux và Windows (thông qua [WSL2](https://docs.microsoft.com/en-us/windows/wsl/about)).
 
 <a name="installation"></a>
-## Installation and Setup
+## Cài đặt và thiết lập
 
-You may install Sail using the Composer package manager:
+Bạn có thể cài đặt Sail bằng Composer:
 
 ```shell
 composer require laravel/sail --dev
 ```
 
-After Sail has been installed, you may run the `sail:install` Artisan command. This command will publish Sail's `compose.yaml` file to the root of your application and modify your `.env` file with the required environment variables in order to connect to the Docker services:
+Sau khi cài đặt Sail, bạn có thể chạy lệnh Artisan `sail:install`. Lệnh này sẽ publish file `compose.yaml` của Sail vào thư mục gốc của ứng dụng và cập nhật file `.env` với các biến môi trường cần thiết để kết nối tới các dịch vụ Docker:
 
 ```shell
 php artisan sail:install
 ```
 
-Finally, you may start Sail. To continue learning how to use Sail, please continue reading the remainder of this documentation:
+Cuối cùng, bạn có thể khởi động Sail. Để tìm hiểu thêm cách sử dụng Sail, hãy tiếp tục đọc các phần còn lại của tài liệu này:
 
 ```shell
 ./vendor/bin/sail up
 ```
 
 > [!WARNING]
-> If you are using Docker Desktop for Linux, you should use the `default` Docker context by executing the following command: `docker context use default`. In addition, if you encounter file permission errors within containers, you may need to set the `SUPERVISOR_PHP_USER` environment variable to `root`.
+> Nếu sử dụng Docker Desktop trên Linux, bạn nên dùng Docker context `default` bằng cách chạy lệnh: `docker context use default`. Ngoài ra, nếu gặp lỗi quyền truy cập file bên trong container, bạn có thể cần đặt biến môi trường `SUPERVISOR_PHP_USER` thành `root`.
 
 <a name="adding-additional-services"></a>
-#### Adding Additional Services
+#### Thêm dịch vụ bổ sung
 
-If you would like to add an additional service to your existing Sail installation, you may run the `sail:add` Artisan command:
+Nếu muốn thêm một dịch vụ vào cài đặt Sail hiện có, bạn có thể chạy lệnh Artisan `sail:add`:
 
 ```shell
 php artisan sail:add
 ```
 
 <a name="using-devcontainers"></a>
-#### Using Devcontainers
+#### Sử dụng Devcontainer
 
-If you would like to develop within a [Devcontainer](https://code.visualstudio.com/docs/remote/containers), you may provide the `--devcontainer` option to the `sail:install` command. The `--devcontainer` option will instruct the `sail:install` command to publish a default `.devcontainer/devcontainer.json ` file to the root of your application:
+Nếu muốn phát triển bên trong [Devcontainer](https://code.visualstudio.com/docs/remote/containers), bạn có thể truyền tùy chọn `--devcontainer` cho lệnh `sail:install`. Tùy chọn này yêu cầu `sail:install` publish file `.devcontainer/devcontainer.json` mặc định vào thư mục gốc của ứng dụng:
 
 ```shell
 php artisan sail:install --devcontainer
 ```
 
 <a name="rebuilding-sail-images"></a>
-### Rebuilding Sail Images
+### Build lại image của Sail
 
-Sometimes you may want to completely rebuild your Sail images to ensure all of the image's packages and software are up to date. You may accomplish this using the `build` command:
+Đôi khi bạn có thể muốn build lại hoàn toàn các image của Sail để bảo đảm mọi package và phần mềm trong image đều được cập nhật. Bạn có thể thực hiện bằng lệnh `build`:
 
 ```shell
 docker compose down -v
@@ -96,59 +96,59 @@ sail up
 ```
 
 <a name="configuring-a-shell-alias"></a>
-### Configuring A Shell Alias
+### Cấu hình alias cho shell
 
-By default, Sail commands are invoked using the `vendor/bin/sail` script that is included with all new Laravel applications:
+Theo mặc định, các lệnh Sail được gọi thông qua script `vendor/bin/sail` có sẵn trong mọi ứng dụng Laravel mới:
 
 ```shell
 ./vendor/bin/sail up
 ```
 
-However, instead of repeatedly typing `vendor/bin/sail` to execute Sail commands, you may wish to configure a shell alias that allows you to execute Sail's commands more easily:
+Tuy nhiên, thay vì phải nhập `vendor/bin/sail` mỗi lần chạy lệnh Sail, bạn có thể cấu hình một shell alias để thực thi các lệnh Sail thuận tiện hơn:
 
 ```shell
 alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 ```
 
-To make sure this is always available, you may add this to your shell configuration file in your home directory, such as `~/.zshrc` or `~/.bashrc`, and then restart your shell.
+Để alias luôn khả dụng, bạn có thể thêm cấu hình này vào file cấu hình shell trong thư mục home, chẳng hạn `~/.zshrc` hoặc `~/.bashrc`, sau đó khởi động lại shell.
 
-Once the shell alias has been configured, you may execute Sail commands by simply typing `sail`. The remainder of this documentation's examples will assume that you have configured this alias:
+Sau khi cấu hình shell alias, bạn chỉ cần nhập `sail` để thực thi lệnh. Các ví dụ còn lại trong tài liệu này giả định rằng bạn đã cấu hình alias này:
 
 ```shell
 sail up
 ```
 
 <a name="starting-and-stopping-sail"></a>
-## Starting and Stopping Sail
+## Khởi động và dừng Sail
 
-Laravel Sail's `compose.yaml` file defines a variety of Docker containers that work together to help you build Laravel applications. Each of these containers is an entry within the `services` configuration of your `compose.yaml` file. The `laravel.test` container is the primary application container that will be serving your application.
+File `compose.yaml` của Laravel Sail định nghĩa nhiều Docker container phối hợp với nhau để hỗ trợ phát triển ứng dụng Laravel. Mỗi container là một mục trong cấu hình `services` của file `compose.yaml`. Container `laravel.test` là container ứng dụng chính, chịu trách nhiệm phục vụ ứng dụng của bạn.
 
-Before starting Sail, you should ensure that no other web servers or databases are running on your local computer. To start all of the Docker containers defined in your application's `compose.yaml` file, you should execute the `up` command:
+Trước khi khởi động Sail, hãy bảo đảm không có web server hoặc database khác đang chạy trên máy local. Để khởi động tất cả Docker container được định nghĩa trong `compose.yaml`, hãy chạy lệnh `up`:
 
 ```shell
 sail up
 ```
 
-To start all of the Docker containers in the background, you may start Sail in "detached" mode:
+Để chạy tất cả Docker container ở chế độ nền, bạn có thể khởi động Sail ở chế độ "detached":
 
 ```shell
 sail up -d
 ```
 
-Once the application's containers have been started, you may access the project in your web browser at: http://localhost.
+Sau khi các container của ứng dụng đã khởi động, bạn có thể truy cập project trên trình duyệt tại: http://localhost.
 
-To stop all of the containers, you may simply press Control + C to stop the container's execution. Or, if the containers are running in the background, you may use the `stop` command:
+Để dừng tất cả container, bạn có thể nhấn Control + C. Nếu các container đang chạy nền, hãy sử dụng lệnh `stop`:
 
 ```shell
 sail stop
 ```
 
 <a name="executing-sail-commands"></a>
-## Executing Commands
+## Thực thi lệnh
 
-When using Laravel Sail, your application is executing within a Docker container and is isolated from your local computer. However, Sail provides a convenient way to run various commands against your application such as arbitrary PHP commands, Artisan commands, Composer commands, and Node / NPM commands.
+Khi sử dụng Laravel Sail, ứng dụng chạy bên trong Docker container và được cô lập khỏi máy local. Tuy nhiên, Sail cung cấp cách thuận tiện để chạy nhiều loại lệnh cho ứng dụng, bao gồm lệnh PHP tùy ý, Artisan, Composer và Node / NPM.
 
-**When reading the Laravel documentation, you will often see references to Composer, Artisan, and Node / NPM commands that do not reference Sail.** Those examples assume that these tools are installed on your local computer. If you are using Sail for your local Laravel development environment, you should execute those commands using Sail:
+**Khi đọc tài liệu Laravel, bạn thường thấy các lệnh Composer, Artisan và Node / NPM không nhắc đến Sail.** Các ví dụ đó giả định những công cụ này đã được cài trên máy local. Nếu dùng Sail làm môi trường phát triển Laravel local, bạn nên thực thi các lệnh đó thông qua Sail:
 
 ```shell
 # Running Artisan commands locally...
@@ -159,9 +159,9 @@ sail artisan queue:work
 ```
 
 <a name="executing-php-commands"></a>
-### Executing PHP Commands
+### Thực thi lệnh PHP
 
-PHP commands may be executed using the `php` command. Of course, these commands will execute using the PHP version that is configured for your application. To learn more about the PHP versions available to Laravel Sail, consult the [PHP version documentation](#sail-php-versions):
+Bạn có thể thực thi lệnh PHP bằng lệnh `php`. Các lệnh này sẽ chạy bằng phiên bản PHP được cấu hình cho ứng dụng. Để tìm hiểu các phiên bản PHP mà Laravel Sail hỗ trợ, hãy xem [tài liệu về phiên bản PHP](#sail-php-versions):
 
 ```shell
 sail php --version
@@ -170,27 +170,27 @@ sail php script.php
 ```
 
 <a name="executing-composer-commands"></a>
-### Executing Composer Commands
+### Thực thi lệnh Composer
 
-Composer commands may be executed using the `composer` command. Laravel Sail's application container includes a Composer installation:
+Bạn có thể thực thi lệnh Composer bằng lệnh `composer`. Container ứng dụng của Laravel Sail đã cài sẵn Composer:
 
 ```shell
 sail composer require laravel/sanctum
 ```
 
 <a name="executing-artisan-commands"></a>
-### Executing Artisan Commands
+### Thực thi lệnh Artisan
 
-Laravel Artisan commands may be executed using the `artisan` command:
+Bạn có thể thực thi các lệnh Laravel Artisan bằng lệnh `artisan`:
 
 ```shell
 sail artisan queue:work
 ```
 
 <a name="executing-node-npm-commands"></a>
-### Executing Node / NPM Commands
+### Thực thi lệnh Node / NPM
 
-Node commands may be executed using the `node` command while NPM commands may be executed using the `npm` command:
+Bạn có thể thực thi lệnh Node bằng `node`, còn lệnh NPM bằng `npm`:
 
 ```shell
 sail node --version
@@ -198,32 +198,32 @@ sail node --version
 sail npm run dev
 ```
 
-If you wish, you may use Yarn instead of NPM:
+Nếu muốn, bạn có thể sử dụng Yarn thay cho NPM:
 
 ```shell
 sail yarn
 ```
 
 <a name="interacting-with-sail-databases"></a>
-## Interacting With Databases
+## Làm việc với cơ sở dữ liệu
 
 <a name="mysql"></a>
 ### MySQL
 
-As you may have noticed, your application's `compose.yaml` file contains an entry for a MySQL container. This container uses a [Docker volume](https://docs.docker.com/storage/volumes/) so that the data stored in your database is persisted even when stopping and restarting your containers.
+Như bạn có thể thấy, file `compose.yaml` của ứng dụng chứa một service cho MySQL container. Container này sử dụng [Docker volume](https://docs.docker.com/storage/volumes/) để dữ liệu trong database vẫn được lưu giữ ngay cả khi bạn dừng rồi khởi động lại container.
 
-In addition, the first time the MySQL container starts, it will create two databases for you. The first database is named using the value of your `DB_DATABASE` environment variable and is for your local development. The second is a dedicated testing database named `testing` and will ensure that your tests do not interfere with your development data.
+Ngoài ra, trong lần khởi động đầu tiên, MySQL container sẽ tạo hai database. Database thứ nhất có tên lấy từ biến môi trường `DB_DATABASE` và được dùng cho phát triển local. Database thứ hai có tên `testing`, dành riêng cho test để bảo đảm dữ liệu test không ảnh hưởng đến dữ liệu phát triển.
 
-Once you have started your containers, you may connect to the MySQL instance within your application by setting your `DB_HOST` environment variable within your application's `.env` file to `mysql`.
+Sau khi khởi động các container, bạn có thể kết nối ứng dụng tới MySQL bằng cách đặt biến môi trường `DB_HOST` trong file `.env` thành `mysql`.
 
-To connect to your application's MySQL database from your local machine, you may use a graphical database management application such as [TablePlus](https://tableplus.com). By default, the MySQL database is accessible at `localhost` port 3306 and the access credentials correspond to the values of your `DB_USERNAME` and `DB_PASSWORD` environment variables. Or, you may connect as the `root` user, which also utilizes the value of your `DB_PASSWORD` environment variable as its password.
+Để kết nối tới MySQL database của ứng dụng từ máy local, bạn có thể dùng công cụ quản trị database có giao diện đồ họa như [TablePlus](https://tableplus.com). Theo mặc định, MySQL khả dụng tại `localhost`, cổng 3306; thông tin đăng nhập tương ứng với `DB_USERNAME` và `DB_PASSWORD`. Bạn cũng có thể đăng nhập bằng user `root`, với mật khẩu là giá trị của `DB_PASSWORD`.
 
 <a name="mongodb"></a>
 ### MongoDB
 
-If you chose to install the [MongoDB](https://www.mongodb.com/) service when installing Sail, your application's `compose.yaml` file contains an entry for a [MongoDB Atlas Local](https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-local-cloud/) container which provides the MongoDB document database with Atlas features like [Search Indexes](https://www.mongodb.com/docs/atlas/atlas-search/). This container uses a [Docker volume](https://docs.docker.com/storage/volumes/) so that the data stored in your database is persisted even when stopping and restarting your containers.
+Nếu chọn cài dịch vụ [MongoDB](https://www.mongodb.com/) khi cài Sail, file `compose.yaml` sẽ có service cho container [MongoDB Atlas Local](https://www.mongodb.com/docs/atlas/cli/current/atlas-cli-local-cloud/), cung cấp document database MongoDB cùng các tính năng Atlas như [Search Indexes](https://www.mongodb.com/docs/atlas/atlas-search/). Container sử dụng [Docker volume](https://docs.docker.com/storage/volumes/) để dữ liệu vẫn được lưu giữ khi container dừng và khởi động lại.
 
-Once you have started your containers, you may connect to the MongoDB instance within your application by setting your `MONGODB_URI` environment variable within your application's `.env` file to `mongodb://mongodb:27017`. Authentication is disabled by default, but you can set the `MONGODB_USERNAME` and `MONGODB_PASSWORD` environment variables to enable authentication before starting the `mongodb` container. Then, add the credentials to the connection string:
+Sau khi khởi động container, bạn có thể kết nối ứng dụng tới MongoDB bằng cách đặt `MONGODB_URI` trong `.env` thành `mongodb://mongodb:27017`. Authentication mặc định bị tắt; bạn có thể đặt `MONGODB_USERNAME` và `MONGODB_PASSWORD` để bật authentication trước khi khởi động container `mongodb`, sau đó thêm thông tin đăng nhập vào connection string:
 
 ```ini
 MONGODB_USERNAME=user
@@ -231,35 +231,35 @@ MONGODB_PASSWORD=laravel
 MONGODB_URI=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017
 ```
 
-For seamless integration of MongoDB with your application, you can install the [official package maintained by MongoDB](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/).
+Để tích hợp MongoDB với ứng dụng một cách thuận tiện, bạn có thể cài [package chính thức do MongoDB duy trì](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/).
 
-To connect to your application's MongoDB database from your local machine, you may use a graphical interface such as [Compass](https://www.mongodb.com/products/tools/compass). By default, the MongoDB database is accessible at `localhost` port `27017`.
+Để kết nối tới MongoDB của ứng dụng từ máy local, bạn có thể dùng giao diện đồ họa như [Compass](https://www.mongodb.com/products/tools/compass). Theo mặc định, MongoDB khả dụng tại `localhost`, cổng `27017`.
 
 <a name="redis"></a>
 ### Redis
 
-Your application's `compose.yaml` file also contains an entry for a [Redis](https://redis.io) container. This container uses a [Docker volume](https://docs.docker.com/storage/volumes/) so that the data stored in your Redis instance is persisted even when stopping and restarting your containers. Once you have started your containers, you may connect to the Redis instance within your application by setting your `REDIS_HOST` environment variable within your application's `.env` file to `redis`.
+File `compose.yaml` của ứng dụng cũng chứa service cho [Redis](https://redis.io). Container này sử dụng [Docker volume](https://docs.docker.com/storage/volumes/) để dữ liệu Redis vẫn được lưu giữ khi container dừng và khởi động lại. Sau khi khởi động container, hãy đặt `REDIS_HOST` trong file `.env` thành `redis` để ứng dụng kết nối tới Redis.
 
-To connect to your application's Redis database from your local machine, you may use a graphical database management application such as [TablePlus](https://tableplus.com). By default, the Redis database is accessible at `localhost` port 6379.
+Để kết nối tới Redis của ứng dụng từ máy local, bạn có thể dùng công cụ quản trị database như [TablePlus](https://tableplus.com). Theo mặc định, Redis khả dụng tại `localhost`, cổng 6379.
 
 <a name="valkey"></a>
 ### Valkey
 
-If you choose to install Valkey service when installing Sail, your application's `compose.yaml` file will contain an entry for [Valkey](https://valkey.io/). This container uses a [Docker volume](https://docs.docker.com/storage/volumes/) so that the data stored in your Valkey instance is persisted even when stopping and restarting your containers. You can connect to this container in your application by setting your `REDIS_HOST` environment variable within your application's `.env` file to `valkey`.
+Nếu chọn cài Valkey cùng Sail, file `compose.yaml` sẽ có service cho [Valkey](https://valkey.io/). Container này dùng [Docker volume](https://docs.docker.com/storage/volumes/) để dữ liệu Valkey vẫn được lưu giữ khi container dừng và khởi động lại. Để ứng dụng kết nối tới container này, hãy đặt `REDIS_HOST` trong `.env` thành `valkey`.
 
-To connect to your application's Valkey database from your local machine, you may use a graphical database management application such as [TablePlus](https://tableplus.com). By default, the Valkey database is accessible at `localhost` port 6379.
+Để kết nối tới Valkey của ứng dụng từ máy local, bạn có thể dùng công cụ quản trị database như [TablePlus](https://tableplus.com). Theo mặc định, Valkey khả dụng tại `localhost`, cổng 6379.
 
 <a name="meilisearch"></a>
 ### Meilisearch
 
-If you chose to install the [Meilisearch](https://www.meilisearch.com) service when installing Sail, your application's `compose.yaml` file will contain an entry for this powerful search engine that is integrated with [Laravel Scout](/docs/{{version}}/scout). Once you have started your containers, you may connect to the Meilisearch instance within your application by setting your `MEILISEARCH_HOST` environment variable to `http://meilisearch:7700`.
+Nếu chọn cài [Meilisearch](https://www.meilisearch.com) cùng Sail, file `compose.yaml` sẽ có service cho search engine này, vốn được tích hợp với [Laravel Scout](/docs/{{version}}/scout). Sau khi khởi động container, hãy đặt `MEILISEARCH_HOST` thành `http://meilisearch:7700` để ứng dụng kết nối tới Meilisearch.
 
-From your local machine, you may access Meilisearch's web based administration panel by navigating to `http://localhost:7700` in your web browser.
+Từ máy local, bạn có thể truy cập giao diện quản trị web của Meilisearch tại `http://localhost:7700`.
 
 <a name="typesense"></a>
 ### Typesense
 
-If you chose to install the [Typesense](https://typesense.org) service when installing Sail, your application's `compose.yaml` file will contain an entry for this lightning fast, open-source search engine that is natively integrated with [Laravel Scout](/docs/{{version}}/scout#typesense). Once you have started your containers, you may connect to the Typesense instance within your application by setting the following environment variables:
+Nếu chọn cài [Typesense](https://typesense.org) cùng Sail, file `compose.yaml` sẽ có service cho search engine mã nguồn mở có tốc độ cao này, được tích hợp trực tiếp với [Laravel Scout](/docs/{{version}}/scout#typesense). Sau khi khởi động container, bạn có thể kết nối ứng dụng tới Typesense bằng các biến môi trường sau:
 
 ```ini
 TYPESENSE_HOST=typesense
@@ -268,14 +268,14 @@ TYPESENSE_PROTOCOL=http
 TYPESENSE_API_KEY=xyz
 ```
 
-From your local machine, you may access Typesense's API via `http://localhost:8108`.
+Từ máy local, bạn có thể truy cập API của Typesense qua `http://localhost:8108`.
 
 <a name="file-storage"></a>
-## File Storage
+## Lưu trữ file
 
-If you plan to use Amazon S3 to store files while running your application in its production environment, you may wish to install the [RustFS](https://rustfs.com) service when installing Sail. RustFS provides an S3 compatible API that you may use to develop locally using Laravel's `s3` file storage driver without creating "test" storage buckets in your production S3 environment. If you choose to install RustFS while installing Sail, a RustFS configuration section will be added to your application's `compose.yaml` file.
+Nếu dự định sử dụng Amazon S3 để lưu file ở production, bạn có thể cài dịch vụ [RustFS](https://rustfs.com) cùng Sail. RustFS cung cấp API tương thích S3, cho phép phát triển local bằng driver lưu trữ `s3` của Laravel mà không cần tạo bucket "test" trong môi trường S3 production. Khi chọn RustFS, một phần cấu hình RustFS sẽ được thêm vào `compose.yaml`.
 
-By default, your application's `filesystems` configuration file already contains a disk configuration for the `s3` disk. In addition to using this disk to interact with Amazon S3, you may use it to interact with any S3 compatible file storage service such as RustFS by simply modifying the associated environment variables that control its configuration. For example, when using RustFS, your filesystem environment variable configuration should be defined as follows:
+Theo mặc định, file cấu hình `filesystems` đã có cấu hình disk `s3`. Ngoài Amazon S3, bạn có thể dùng disk này với bất kỳ dịch vụ lưu trữ tương thích S3 nào như RustFS bằng cách thay đổi các biến môi trường liên quan. Ví dụ, khi dùng RustFS, cấu hình biến môi trường cho filesystem nên như sau:
 
 ```ini
 FILESYSTEM_DISK=s3
@@ -288,9 +288,9 @@ AWS_USE_PATH_STYLE_ENDPOINT=true
 ```
 
 <a name="running-tests"></a>
-## Running Tests
+## Chạy test
 
-Laravel provides amazing testing support out of the box, and you may use Sail's `test` command to run your applications [feature and unit tests](/docs/{{version}}/testing). Any CLI options that are accepted by Pest / PHPUnit may also be passed to the `test` command:
+Laravel cung cấp sẵn khả năng testing mạnh mẽ và bạn có thể dùng lệnh `test` của Sail để chạy [feature test và unit test](/docs/{{version}}/testing) của ứng dụng. Mọi tùy chọn CLI được Pest / PHPUnit chấp nhận cũng có thể truyền cho lệnh `test`:
 
 ```shell
 sail test
@@ -298,13 +298,13 @@ sail test
 sail test --group orders
 ```
 
-The Sail `test` command is equivalent to running the `test` Artisan command:
+Lệnh `test` của Sail tương đương với việc chạy lệnh Artisan `test`:
 
 ```shell
 sail artisan test
 ```
 
-By default, Sail will create a dedicated `testing` database so that your tests do not interfere with the current state of your database. In a default Laravel installation, Sail will also configure your `phpunit.xml` file to use this database when executing your tests:
+Theo mặc định, Sail tạo database `testing` riêng để test không ảnh hưởng tới trạng thái database hiện tại. Trong cài đặt Laravel mặc định, Sail cũng cấu hình file `phpunit.xml` để sử dụng database này khi chạy test:
 
 ```xml
 <env name="DB_DATABASE" value="testing"/>
@@ -313,7 +313,7 @@ By default, Sail will create a dedicated `testing` database so that your tests d
 <a name="laravel-dusk"></a>
 ### Laravel Dusk
 
-[Laravel Dusk](/docs/{{version}}/dusk) provides an expressive, easy-to-use browser automation and testing API. Thanks to Sail, you may run these tests without ever installing Selenium or other tools on your local computer. To get started, uncomment the Selenium service in your application's `compose.yaml` file:
+[Laravel Dusk](/docs/{{version}}/dusk) cung cấp API trực quan, dễ sử dụng cho browser automation và testing. Nhờ Sail, bạn có thể chạy các test này mà không cần cài Selenium hoặc công cụ liên quan trên máy local. Để bắt đầu, hãy bỏ comment service Selenium trong file `compose.yaml`:
 
 ```yaml
 selenium:
@@ -326,7 +326,7 @@ selenium:
         - sail
 ```
 
-Next, ensure that the `laravel.test` service in your application's `compose.yaml` file has a `depends_on` entry for `selenium`:
+Tiếp theo, hãy bảo đảm service `laravel.test` trong `compose.yaml` có `selenium` trong `depends_on`:
 
 ```yaml
 depends_on:
@@ -335,16 +335,16 @@ depends_on:
     - selenium
 ```
 
-Finally, you may run your Dusk test suite by starting Sail and running the `dusk` command:
+Cuối cùng, bạn có thể chạy Dusk test suite bằng cách khởi động Sail và chạy lệnh `dusk`:
 
 ```shell
 sail dusk
 ```
 
 <a name="selenium-on-apple-silicon"></a>
-#### Selenium on Apple Silicon
+#### Selenium trên Apple Silicon
 
-If your local machine contains an Apple Silicon chip, your `selenium` service must use the `selenium/standalone-chromium` image:
+Nếu máy local sử dụng chip Apple Silicon, service `selenium` phải dùng image `selenium/standalone-chromium`:
 
 ```yaml
 selenium:
@@ -358,9 +358,9 @@ selenium:
 ```
 
 <a name="previewing-emails"></a>
-## Previewing Emails
+## Xem trước email
 
-Laravel Sail's default `compose.yaml` file contains a service entry for [Mailpit](https://github.com/axllent/mailpit). Mailpit intercepts emails sent by your application during local development and provides a convenient web interface so that you can preview your email messages in your browser. When using Sail, Mailpit's default host is `mailpit` and is available via port 1025:
+File `compose.yaml` mặc định của Laravel Sail có service [Mailpit](https://github.com/axllent/mailpit). Mailpit chặn các email do ứng dụng gửi trong quá trình phát triển local và cung cấp giao diện web để xem trước email trên trình duyệt. Khi dùng Sail, host mặc định của Mailpit là `mailpit` và dịch vụ hoạt động qua cổng 1025:
 
 ```ini
 MAIL_HOST=mailpit
@@ -368,12 +368,12 @@ MAIL_PORT=1025
 MAIL_ENCRYPTION=null
 ```
 
-When Sail is running, you may access the Mailpit web interface at: http://localhost:8025
+Khi Sail đang chạy, bạn có thể truy cập giao diện web Mailpit tại: http://localhost:8025
 
 <a name="sail-container-cli"></a>
-## Container CLI
+## CLI của container
 
-Sometimes you may wish to start a Bash session within your application's container. You may use the `shell` command to connect to your application's container, allowing you to inspect its files and installed services as well as execute arbitrary shell commands within the container:
+Đôi khi bạn có thể muốn mở một phiên Bash bên trong container của ứng dụng. Lệnh `shell` cho phép kết nối vào container để kiểm tra file, các service đã cài đặt và thực thi lệnh shell tùy ý:
 
 ```shell
 sail shell
@@ -381,16 +381,16 @@ sail shell
 sail root-shell
 ```
 
-To start a new [Laravel Tinker](https://github.com/laravel/tinker) session, you may execute the `tinker` command:
+Để mở một phiên [Laravel Tinker](https://github.com/laravel/tinker) mới, hãy chạy lệnh `tinker`:
 
 ```shell
 sail tinker
 ```
 
 <a name="sail-php-versions"></a>
-## PHP Versions
+## Phiên bản PHP
 
-Sail currently supports serving your application via PHP 8.5, 8.4, 8.3, 8.2, 8.1, or PHP 8.0. The default PHP version used by Sail is currently PHP 8.5. To change the PHP version that is used to serve your application, you should update the `build` definition of the `laravel.test` container in your application's `compose.yaml` file:
+Sail hiện hỗ trợ chạy ứng dụng với PHP 8.5, 8.4, 8.3, 8.2, 8.1 hoặc PHP 8.0. Phiên bản mặc định hiện tại là PHP 8.5. Để thay đổi phiên bản PHP dùng cho ứng dụng, hãy cập nhật cấu hình `build` của container `laravel.test` trong `compose.yaml`:
 
 ```yaml
 # PHP 8.5
@@ -412,13 +412,13 @@ context: ./vendor/laravel/sail/runtimes/8.1
 context: ./vendor/laravel/sail/runtimes/8.0
 ```
 
-In addition, you may wish to update your `image` name to reflect the version of PHP being used by your application. This option is also defined in your application's `compose.yaml` file:
+Ngoài ra, bạn có thể cập nhật tên `image` để phản ánh phiên bản PHP mà ứng dụng đang sử dụng. Tùy chọn này cũng được định nghĩa trong file `compose.yaml`:
 
 ```yaml
 image: sail-8.2/app
 ```
 
-After updating your application's `compose.yaml` file, you should rebuild your container images:
+Sau khi cập nhật file `compose.yaml`, bạn nên build lại các container image:
 
 ```shell
 sail build --no-cache
@@ -427,9 +427,9 @@ sail up
 ```
 
 <a name="sail-php-extensions"></a>
-### Additional PHP Extensions
+### PHP extension bổ sung
 
-Sail's runtime images include a common set of PHP extensions. If your application requires additional extensions, you may install them when building the image by adding a space-separated `PHP_EXTENSIONS` build argument to the `laravel.test` service in your application's `compose.yaml` file:
+Runtime image của Sail bao gồm một tập hợp PHP extension phổ biến. Nếu ứng dụng cần extension bổ sung, bạn có thể cài chúng khi build image bằng cách thêm build argument `PHP_EXTENSIONS`, với các extension phân tách bằng dấu cách, vào service `laravel.test` trong `compose.yaml`:
 
 ```yaml
 build:
@@ -438,12 +438,12 @@ build:
         PHP_EXTENSIONS: 'gmp imagick'
 ```
 
-After updating your application's `compose.yaml` file, you should rebuild your container images.
+Sau khi cập nhật file `compose.yaml`, bạn nên build lại các container image.
 
 <a name="sail-node-versions"></a>
-## Node Versions
+## Phiên bản Node
 
-Sail installs Node 24 by default. To change the Node version that is installed when building your images, you may update the `build.args` definition of the `laravel.test` service in your application's `compose.yaml` file:
+Sail cài Node 24 theo mặc định. Để thay đổi phiên bản Node được cài khi build image, hãy cập nhật `build.args` của service `laravel.test` trong `compose.yaml`:
 
 ```yaml
 build:
@@ -452,7 +452,7 @@ build:
         NODE_VERSION: '18'
 ```
 
-After updating your application's `compose.yaml` file, you should rebuild your container images:
+Sau khi cập nhật file `compose.yaml`, bạn nên build lại các container image:
 
 ```shell
 sail build --no-cache
@@ -461,15 +461,15 @@ sail up
 ```
 
 <a name="sharing-your-site"></a>
-## Sharing Your Site
+## Chia sẻ website
 
-Sometimes you may need to share your site publicly in order to preview your site for a colleague or to test webhook integrations with your application. To share your site, you may use the `share` command. After executing this command, you will be issued a random `laravel-sail.site` URL that you may use to access your application:
+Đôi khi bạn cần công khai tạm thời website để đồng nghiệp xem trước hoặc để kiểm thử tích hợp webhook. Bạn có thể dùng lệnh `share` để chia sẻ website. Sau khi chạy lệnh, bạn sẽ nhận được một URL `laravel-sail.site` ngẫu nhiên để truy cập ứng dụng:
 
 ```shell
 sail share
 ```
 
-When sharing your site via the `share` command, you should configure your application's trusted proxies using the `trustProxies` middleware method in your application's `bootstrap/app.php` file. Otherwise, URL generation helpers such as `url` and `route` will be unable to determine the correct HTTP host that should be used during URL generation:
+Khi chia sẻ website bằng lệnh `share`, bạn nên cấu hình trusted proxy bằng method middleware `trustProxies` trong `bootstrap/app.php`. Nếu không, các helper tạo URL như `url` và `route` sẽ không xác định được HTTP host chính xác khi tạo URL:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -477,42 +477,42 @@ When sharing your site via the `share` command, you should configure your applic
 })
 ```
 
-If you would like to choose the subdomain for your shared site, you may provide the `subdomain` option when executing the `share` command:
+Nếu muốn tự chọn subdomain cho website được chia sẻ, hãy truyền tùy chọn `subdomain` khi chạy lệnh `share`:
 
 ```shell
 sail share --subdomain=my-sail-site
 ```
 
 > [!NOTE]
-> The `share` command is powered by [Expose](https://github.com/beyondcode/expose), an open source tunneling service by [BeyondCode](https://beyondco.de).
+> Lệnh `share` được cung cấp bởi [Expose](https://github.com/beyondcode/expose), một dịch vụ tunneling mã nguồn mở của [BeyondCode](https://beyondco.de).
 
 <a name="debugging-with-xdebug"></a>
-## Debugging With Xdebug
+## Debug với Xdebug
 
-Laravel Sail's Docker configuration includes support for [Xdebug](https://xdebug.org/), a popular and powerful debugger for PHP. To enable Xdebug, ensure you have [published your Sail configuration](#sail-customization). Then, add the following variables to your application's `.env` file to configure Xdebug:
+Cấu hình Docker của Laravel Sail hỗ trợ [Xdebug](https://xdebug.org/), debugger PHP phổ biến và mạnh mẽ. Để bật Xdebug, hãy bảo đảm bạn đã [publish cấu hình Sail](#sail-customization), sau đó thêm các biến sau vào `.env` để cấu hình Xdebug:
 
 ```ini
 SAIL_XDEBUG_MODE=develop,debug,coverage
 ```
 
-Next, ensure that your published `php.ini` file includes the following configuration so that Xdebug is activated in the specified modes:
+Tiếp theo, hãy bảo đảm file `php.ini` đã publish chứa cấu hình sau để Xdebug được kích hoạt với các mode đã chỉ định:
 
 ```ini
 [xdebug]
 xdebug.mode=${XDEBUG_MODE}
 ```
 
-After modifying the `php.ini` file, remember to rebuild your Docker images so that your changes to the `php.ini` file take effect:
+Sau khi chỉnh sửa `php.ini`, hãy nhớ build lại Docker image để các thay đổi trong file có hiệu lực:
 
 ```shell
 sail build --no-cache
 ```
 
-#### Linux Host IP Configuration
+#### Cấu hình IP host trên Linux
 
-Internally, the `XDEBUG_CONFIG` environment variable is defined as `client_host=host.docker.internal` so that Xdebug will be properly configured for Mac and Windows (WSL2). If your local machine is running Linux and you're using Docker 20.10+, `host.docker.internal` is available, and no manual configuration is required.
+Bên trong Sail, biến môi trường `XDEBUG_CONFIG` được đặt thành `client_host=host.docker.internal` để Xdebug hoạt động đúng trên Mac và Windows (WSL2). Nếu máy local chạy Linux với Docker 20.10 trở lên, `host.docker.internal` đã khả dụng nên không cần cấu hình thủ công.
 
-For Docker versions older than 20.10, `host.docker.internal` is not supported on Linux, and you will need to manually define the host IP. To do this, configure a static IP for your container by defining a custom network in your `compose.yaml` file:
+Với Docker phiên bản cũ hơn 20.10, Linux không hỗ trợ `host.docker.internal`, vì vậy bạn cần tự khai báo IP của host. Hãy cấu hình IP tĩnh cho container bằng một custom network trong file `compose.yaml`:
 
 ```yaml
 networks:
@@ -528,16 +528,16 @@ services:
         ipv4_address: 172.20.0.2
 ```
 
-Once you have set the static IP, define the SAIL_XDEBUG_CONFIG variable within your application's .env file:
+Sau khi thiết lập IP tĩnh, hãy khai báo biến `SAIL_XDEBUG_CONFIG` trong file `.env` của ứng dụng:
 
 ```ini
 SAIL_XDEBUG_CONFIG="client_host=172.20.0.2"
 ```
 
 <a name="xdebug-cli-usage"></a>
-### Xdebug CLI Usage
+### Sử dụng Xdebug trên CLI
 
-A `sail debug` command may be used to start a debugging session when running an Artisan command:
+Bạn có thể dùng lệnh `sail debug` để bắt đầu một phiên debug khi chạy lệnh Artisan:
 
 ```shell
 # Run an Artisan command without Xdebug...
@@ -548,29 +548,31 @@ sail debug migrate
 ```
 
 <a name="xdebug-browser-usage"></a>
-### Xdebug Browser Usage
+### Sử dụng Xdebug trên trình duyệt
 
-To debug your application while interacting with the application via a web browser, follow the [instructions provided by Xdebug](https://xdebug.org/docs/step_debug#web-application) for initiating an Xdebug session from the web browser.
+Để debug ứng dụng trong khi tương tác qua trình duyệt, hãy làm theo [hướng dẫn của Xdebug](https://xdebug.org/docs/step_debug#web-application) để khởi tạo phiên Xdebug từ trình duyệt.
 
-If you're using PhpStorm, please review JetBrains' documentation regarding [zero-configuration debugging](https://www.jetbrains.com/help/phpstorm/zero-configuration-debugging.html).
+Nếu sử dụng PhpStorm, hãy tham khảo tài liệu JetBrains về [debug không cần cấu hình](https://www.jetbrains.com/help/phpstorm/zero-configuration-debugging.html).
 
 > [!WARNING]
-> Laravel Sail relies on `artisan serve` to serve your application. The `artisan serve` command only accepts the `XDEBUG_CONFIG` and `XDEBUG_MODE` variables as of Laravel version 8.53.0. Older versions of Laravel (8.52.0 and below) do not support these variables and will not accept debug connections.
+> Laravel Sail sử dụng `artisan serve` để phục vụ ứng dụng. Lệnh `artisan serve` chỉ hỗ trợ các biến `XDEBUG_CONFIG` và `XDEBUG_MODE` từ Laravel 8.53.0. Các phiên bản Laravel cũ hơn (8.52.0 trở xuống) không hỗ trợ những biến này và sẽ không nhận kết nối debug.
 
 <a name="sail-customization"></a>
-## Customization
+## Tùy biến
 
-Since Sail is just Docker, you are free to customize nearly everything about it. To publish Sail's own Dockerfiles, you may execute the `sail:publish` command:
+Vì Sail về bản chất là Docker, bạn có thể tùy biến gần như mọi thành phần. Để publish các Dockerfile của Sail, hãy chạy lệnh `sail:publish`:
 
 ```shell
 sail artisan sail:publish
 ```
 
-After running this command, the Dockerfiles and other configuration files used by Laravel Sail will be placed within a `docker` directory in your application's root directory. After customizing your Sail installation, you may wish to change the image name for the application container in your application's `compose.yaml` file. After doing so, rebuild your application's containers using the `build` command. Assigning a unique name to the application image is particularly important if you are using Sail to develop multiple Laravel applications on a single machine:
+Sau khi chạy lệnh này, Dockerfile và các file cấu hình khác của Laravel Sail sẽ được đặt trong thư mục `docker` ở thư mục gốc ứng dụng. Sau khi tùy biến Sail, bạn có thể đổi tên image của application container trong `compose.yaml`. Tiếp đó, hãy build lại container bằng lệnh `build`. Việc đặt tên image riêng biệt đặc biệt quan trọng nếu bạn dùng Sail để phát triển nhiều ứng dụng Laravel trên cùng một máy:
 
 ```shell
 sail build --no-cache
 ```
+
+---
 
 ## Tài liệu chính thức
 

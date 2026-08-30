@@ -1,20 +1,20 @@
-# Collections
+# Collection
 
-- [Introduction](#introduction)
-    - [Creating Collections](#creating-collections)
-    - [Extending Collections](#extending-collections)
-- [Available Methods](#available-methods)
+- [Giới thiệu](#introduction)
+    - [Tạo Collection](#creating-collections)
+    - [Mở rộng Collection](#extending-collections)
+- [Các method khả dụng](#available-methods)
 - [Higher Order Messages](#higher-order-messages)
-- [Lazy Collections](#lazy-collections)
-    - [Introduction](#lazy-collection-introduction)
-    - [Creating Lazy Collections](#creating-lazy-collections)
-    - [The Enumerable Contract](#the-enumerable-contract)
-    - [Lazy Collection Methods](#lazy-collection-methods)
+- [Lazy Collection](#lazy-collections)
+    - [Giới thiệu](#lazy-collection-introduction)
+    - [Tạo Lazy Collection](#creating-lazy-collections)
+    - [Contract Enumerable](#the-enumerable-contract)
+    - [Các method của Lazy Collection](#lazy-collection-methods)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-The `Illuminate\Support\Collection` class provides a fluent, convenient wrapper for working with arrays of data. For example, check out the following code. We'll use the `collect` helper to create a new collection instance from the array, run the `strtoupper` function on each element, and then remove all empty elements:
+Class `Illuminate\Support\Collection` cung cấp một wrapper thuận tiện theo phong cách fluent để làm việc với các mảng dữ liệu. Ví dụ, hãy xem đoạn code sau. Chúng ta sử dụng helper `collect` để tạo một collection mới từ mảng, chạy hàm `strtoupper` trên từng phần tử, rồi loại bỏ tất cả phần tử rỗng:
 
 ```php
 $collection = collect(['Taylor', 'Abigail', null])->map(function (?string $name) {
@@ -24,26 +24,26 @@ $collection = collect(['Taylor', 'Abigail', null])->map(function (?string $name)
 });
 ```
 
-As you can see, the `Collection` class allows you to chain its methods to perform fluent mapping and reducing of the underlying array. In general, collections are immutable, meaning every `Collection` method returns an entirely new `Collection` instance.
+Như bạn có thể thấy, class `Collection` cho phép chain các method để thực hiện mapping và reducing trên mảng bên dưới theo phong cách fluent. Nhìn chung, collection là immutable, nghĩa là mỗi method của `Collection` trả về một instance `Collection` hoàn toàn mới.
 
 <a name="creating-collections"></a>
-### Creating Collections
+### Tạo Collection
 
-As mentioned above, the `collect` helper returns a new `Illuminate\Support\Collection` instance for the given array. So, creating a collection is as simple as:
+Như đã đề cập ở trên, helper `collect` trả về một instance `Illuminate\Support\Collection` mới cho mảng được cung cấp. Vì vậy, việc tạo collection đơn giản như sau:
 
 ```php
 $collection = collect([1, 2, 3]);
 ```
 
-You may also create a collection using the [make](#method-make) and [fromJson](#method-fromjson) methods.
+Bạn cũng có thể tạo collection bằng các method [make](#method-make) và [fromJson](#method-fromjson).
 
 > [!NOTE]
-> The results of [Eloquent](/docs/{{version}}/eloquent) queries are always returned as `Collection` instances.
+> Kết quả của các truy vấn [Eloquent](/docs/{{version}}/eloquent) luôn được trả về dưới dạng instance `Collection`.
 
 <a name="extending-collections"></a>
-### Extending Collections
+### Mở rộng Collection
 
-Collections are "macroable", which allows you to add additional methods to the `Collection` class at run time. The `Illuminate\Support\Collection` class' `macro` method accepts a closure that will be executed when your macro is called. The macro closure may access the collection's other methods via `$this`, just as if it were a real method of the collection class. For example, the following code adds a `toUpper` method to the `Collection` class:
+Collection hỗ trợ "macroable", cho phép bạn bổ sung method vào class `Collection` tại runtime. Method `macro` của class `Illuminate\Support\Collection` nhận một closure sẽ được thực thi khi macro được gọi. Closure của macro có thể truy cập các method khác của collection thông qua `$this`, giống như một method thực sự của class collection. Ví dụ, đoạn code sau thêm method `toUpper` vào class `Collection`:
 
 ```php
 use Illuminate\Support\Collection;
@@ -62,12 +62,12 @@ $upper = $collection->toUpper();
 // ['FIRST', 'SECOND']
 ```
 
-Typically, you should declare collection macros in the `boot` method of a [service provider](/docs/{{version}}/providers).
+Thông thường, bạn nên khai báo các collection macro trong method `boot` của một [service provider](/docs/{{version}}/providers).
 
 <a name="macro-arguments"></a>
-#### Macro Arguments
+#### Tham số của Macro
 
-If necessary, you may define macros that accept additional arguments:
+Nếu cần, bạn có thể định nghĩa macro nhận thêm tham số:
 
 ```php
 use Illuminate\Support\Collection;
@@ -87,9 +87,9 @@ $translated = $collection->toLocale('es');
 ```
 
 <a name="available-methods"></a>
-## Available Methods
+## Các method khả dụng
 
-For the majority of the remaining collection documentation, we'll discuss each method available on the `Collection` class. Remember, all of these methods may be chained to fluently manipulate the underlying array. Furthermore, almost every method returns a new `Collection` instance, allowing you to preserve the original copy of the collection when necessary:
+Trong phần lớn nội dung còn lại của tài liệu collection, chúng ta sẽ lần lượt tìm hiểu từng method có trên class `Collection`. Hãy nhớ rằng tất cả các method này có thể được chain để thao tác mảng bên dưới theo phong cách fluent. Ngoài ra, gần như mọi method đều trả về một instance `Collection` mới, cho phép bạn giữ nguyên collection ban đầu khi cần:
 
 <style>
     .collection-method-list > p {
@@ -266,7 +266,7 @@ For the majority of the remaining collection documentation, we'll discuss each m
 </div>
 
 <a name="method-listing"></a>
-## Method Listing
+## Danh sách method
 
 <style>
     .collection-method code {
@@ -281,7 +281,7 @@ For the majority of the remaining collection documentation, we'll discuss each m
 <a name="method-after"></a>
 #### `after()` {.collection-method .first-collection-method}
 
-The `after` method returns the item after the given item. `null` is returned if the given item is not found or is the last item:
+Method `after` trả về phần tử đứng sau phần tử được cung cấp. `null` được trả về nếu không tìm thấy phần tử đó hoặc nếu nó là phần tử cuối cùng:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -295,7 +295,7 @@ $collection->after(5);
 // null
 ```
 
-This method searches for the given item using "loose" comparison, meaning a string containing an integer value will be considered equal to an integer of the same value. To use "strict" comparison, you may provide the `strict` argument to the method:
+Method này tìm phần tử được cung cấp bằng phép so sánh "loose", nghĩa là chuỗi chứa một giá trị số nguyên sẽ được xem là bằng với số nguyên có cùng giá trị. Để dùng phép so sánh "strict", bạn có thể truyền tham số `strict` cho method:
 
 ```php
 collect([2, 4, 6, 8])->after('4', strict: true);
@@ -303,7 +303,7 @@ collect([2, 4, 6, 8])->after('4', strict: true);
 // null
 ```
 
-Alternatively, you may provide your own closure to search for the first item that passes a given truth test:
+Ngoài ra, bạn có thể cung cấp closure của riêng mình để tìm phần tử đầu tiên thỏa điều kiện kiểm tra đã cho:
 
 ```php
 collect([2, 4, 6, 8])->after(function (int $item, int $key) {
@@ -316,7 +316,7 @@ collect([2, 4, 6, 8])->after(function (int $item, int $key) {
 <a name="method-all"></a>
 #### `all()` {.collection-method}
 
-The `all` method returns the underlying array represented by the collection:
+Method `all` trả về mảng bên dưới mà collection đại diện:
 
 ```php
 collect([1, 2, 3])->all();
@@ -327,12 +327,12 @@ collect([1, 2, 3])->all();
 <a name="method-average"></a>
 #### `average()` {.collection-method}
 
-Alias for the [avg](#method-avg) method.
+Alias của method [avg](#method-avg).
 
 <a name="method-avg"></a>
 #### `avg()` {.collection-method}
 
-The `avg` method returns the [average value](https://en.wikipedia.org/wiki/Average) of a given key:
+Method `avg` trả về [giá trị trung bình](https://en.wikipedia.org/wiki/Average) của key được cung cấp:
 
 ```php
 $average = collect([
@@ -352,7 +352,7 @@ $average = collect([1, 1, 2, 4])->avg();
 <a name="method-before"></a>
 #### `before()` {.collection-method}
 
-The `before` method is the opposite of the [after](#method-after) method. It returns the item before the given item. `null` is returned if the given item is not found or is the first item:
+Method `before` là phép ngược lại của method [after](#method-after). Nó trả về phần tử đứng trước phần tử được cung cấp. `null` được trả về nếu không tìm thấy phần tử đó hoặc nếu nó là phần tử đầu tiên:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -379,7 +379,7 @@ collect([2, 4, 6, 8])->before(function (int $item, int $key) {
 <a name="method-chunk"></a>
 #### `chunk()` {.collection-method}
 
-The `chunk` method breaks the collection into multiple, smaller collections of a given size:
+Method `chunk` chia collection thành nhiều collection nhỏ hơn với kích thước được chỉ định:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5, 6, 7]);
@@ -391,7 +391,7 @@ $chunks->all();
 // [[1, 2, 3, 4], [5, 6, 7]]
 ```
 
-This method is especially useful in [views](/docs/{{version}}/views) when working with a grid system such as [Bootstrap](https://getbootstrap.com/docs/5.3/layout/grid/). For example, imagine you have a collection of [Eloquent](/docs/{{version}}/eloquent) models you want to display in a grid:
+Method này đặc biệt hữu ích trong [view](/docs/{{version}}/views) khi làm việc với hệ thống grid như [Bootstrap](https://getbootstrap.com/docs/5.3/layout/grid/). Ví dụ, giả sử bạn có một collection các model [Eloquent](/docs/{{version}}/eloquent) và muốn hiển thị chúng theo dạng grid:
 
 ```blade
 @foreach ($products->chunk(3) as $chunk)
@@ -406,7 +406,7 @@ This method is especially useful in [views](/docs/{{version}}/views) when workin
 <a name="method-chunkwhile"></a>
 #### `chunkWhile()` {.collection-method}
 
-The `chunkWhile` method breaks the collection into multiple, smaller collections based on the evaluation of the given callback. The `$chunk` variable passed to the closure may be used to inspect the previous element:
+Method `chunkWhile` chia collection thành nhiều collection nhỏ hơn dựa trên kết quả đánh giá của callback được cung cấp. Biến `$chunk` truyền vào closure có thể được dùng để kiểm tra phần tử trước đó:
 
 ```php
 $collection = collect(str_split('AABBCCCD'));
@@ -423,7 +423,7 @@ $chunks->all();
 <a name="method-collapse"></a>
 #### `collapse()` {.collection-method}
 
-The `collapse` method collapses a collection of arrays or collections into a single, flat collection:
+Method `collapse` gộp một collection gồm các array hoặc collection thành một collection phẳng duy nhất:
 
 ```php
 $collection = collect([
@@ -442,7 +442,7 @@ $collapsed->all();
 <a name="method-collapsewithkeys"></a>
 #### `collapseWithKeys()` {.collection-method}
 
-The `collapseWithKeys` method flattens a collection of arrays or collections into a single collection, keeping the original keys intact. If the collection is already flat, it will return an empty collection:
+Method `collapseWithKeys` làm phẳng một collection gồm các array hoặc collection thành một collection duy nhất, đồng thời giữ nguyên các key ban đầu. Nếu collection vốn đã phẳng, method sẽ trả về một collection rỗng:
 
 ```php
 $collection = collect([
@@ -465,7 +465,7 @@ $collapsed->all();
 <a name="method-collect"></a>
 #### `collect()` {.collection-method}
 
-The `collect` method returns a new `Collection` instance with the items currently in the collection:
+Method `collect` trả về một instance `Collection` mới chứa các phần tử hiện có trong collection:
 
 ```php
 $collectionA = collect([1, 2, 3]);
@@ -477,7 +477,7 @@ $collectionB->all();
 // [1, 2, 3]
 ```
 
-The `collect` method is primarily useful for converting [lazy collections](#lazy-collections) into standard `Collection` instances:
+Method `collect` chủ yếu hữu ích khi chuyển [lazy collection](#lazy-collections) thành instance `Collection` thông thường:
 
 ```php
 $lazyCollection = LazyCollection::make(function () {
@@ -498,12 +498,12 @@ $collection->all();
 ```
 
 > [!NOTE]
-> The `collect` method is especially useful when you have an instance of `Enumerable` and need a non-lazy collection instance. Since `collect()` is part of the `Enumerable` contract, you can safely use it to get a `Collection` instance.
+Method `collect` đặc biệt hữu ích khi bạn có một instance của `Enumerable` và cần một instance collection không lazy. Vì `collect()` là một phần của contract `Enumerable`, bạn có thể sử dụng nó một cách an toàn để lấy instance `Collection`.
 
 <a name="method-combine"></a>
 #### `combine()` {.collection-method}
 
-The `combine` method combines the values of the collection, as keys, with the values of another array or collection:
+Method `combine` dùng các value của collection làm key và kết hợp chúng với các value của một array hoặc collection khác:
 
 ```php
 $collection = collect(['name', 'age']);
@@ -518,7 +518,7 @@ $combined->all();
 <a name="method-concat"></a>
 #### `concat()` {.collection-method}
 
-The `concat` method appends the given array or collection's values onto the end of another collection:
+Method `concat` nối các value của array hoặc collection được cung cấp vào cuối collection khác:
 
 ```php
 $collection = collect(['John Doe']);
@@ -530,12 +530,12 @@ $concatenated->all();
 // ['John Doe', 'Jane Doe', 'Johnny Doe']
 ```
 
-The `concat` method numerically reindexes keys for items concatenated onto the original collection. To maintain keys in associative collections, see the [merge](#method-merge) method.
+Method `concat` đánh lại key dạng số cho các phần tử được nối vào collection ban đầu. Để giữ nguyên key trong associative collection, hãy xem method [merge](#method-merge).
 
 <a name="method-contains"></a>
 #### `contains()` {.collection-method}
 
-The `contains` method determines whether the collection contains a given item. You may pass a closure to the `contains` method to determine if an element exists in the collection matching a given truth test:
+Method `contains` xác định collection có chứa một phần tử được cung cấp hay không. Bạn có thể truyền closure vào `contains` để xác định có phần tử nào trong collection thỏa điều kiện kiểm tra hay không:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -547,7 +547,7 @@ $collection->contains(function (int $value, int $key) {
 // false
 ```
 
-Alternatively, you may pass a string to the `contains` method to determine whether the collection contains a given item value:
+Ngoài ra, bạn có thể truyền một chuỗi cho method `contains` để xác định collection có chứa giá trị phần tử đã cho hay không:
 
 ```php
 $collection = collect(['name' => 'Desk', 'price' => 100]);
@@ -561,7 +561,7 @@ $collection->contains('New York');
 // false
 ```
 
-You may also pass a key / value pair to the `contains` method, which will determine if the given pair exists in the collection:
+Bạn cũng có thể truyền một cặp key / value vào method `contains`; method sẽ xác định cặp đó có tồn tại trong collection hay không:
 
 ```php
 $collection = collect([
@@ -574,22 +574,22 @@ $collection->contains('product', 'Bookcase');
 // false
 ```
 
-The `contains` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value. Use the [containsStrict](#method-containsstrict) method to filter using "strict" comparisons.
+Method `contains` sử dụng phép so sánh "loose" khi kiểm tra value, nghĩa là chuỗi chứa giá trị số nguyên sẽ được xem là bằng với số nguyên có cùng giá trị. Hãy dùng method [containsStrict](#method-containsstrict) để kiểm tra bằng phép so sánh "strict".
 
-For the inverse of `contains`, see the [doesntContain](#method-doesntcontain) method.
+Để thực hiện phép ngược lại với `contains`, hãy xem method [doesntContain](#method-doesntcontain).
 
 <a name="method-containsstrict"></a>
 #### `containsStrict()` {.collection-method}
 
-This method has the same signature as the [contains](#method-contains) method; however, all values are compared using "strict" comparisons.
+Method này có cùng signature với method [contains](#method-contains); tuy nhiên, tất cả value đều được so sánh bằng phép so sánh "strict".
 
 > [!NOTE]
-> This method's behavior is modified when using [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-contains).
+Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-contains).
 
 <a name="method-count"></a>
 #### `count()` {.collection-method}
 
-The `count` method returns the total number of items in the collection:
+Method `count` trả về tổng số phần tử trong collection:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -602,7 +602,7 @@ $collection->count();
 <a name="method-countBy"></a>
 #### `countBy()` {.collection-method}
 
-The `countBy` method counts the occurrences of values in the collection. By default, the method counts the occurrences of every element, allowing you to count certain "types" of elements in the collection:
+Method `countBy` đếm số lần xuất hiện của các value trong collection. Theo mặc định, method đếm số lần xuất hiện của từng phần tử, cho phép bạn đếm một số "loại" phần tử nhất định trong collection:
 
 ```php
 $collection = collect([1, 2, 2, 2, 3]);
@@ -614,7 +614,7 @@ $counted->all();
 // [1 => 1, 2 => 3, 3 => 1]
 ```
 
-You may pass a closure to the `countBy` method to count all items by a custom value:
+Bạn có thể truyền closure vào method `countBy` để đếm tất cả phần tử theo một giá trị tùy chỉnh:
 
 ```php
 $collection = collect(['alice@gmail.com', 'bob@yahoo.com', 'carlos@gmail.com']);
@@ -631,7 +631,7 @@ $counted->all();
 <a name="method-crossjoin"></a>
 #### `crossJoin()` {.collection-method}
 
-The `crossJoin` method cross joins the collection's values among the given arrays or collections, returning a Cartesian product with all possible combinations:
+Method `crossJoin` thực hiện cross join các value của collection với các array hoặc collection được cung cấp, trả về tích Descartes chứa mọi tổ hợp có thể:
 
 ```php
 $collection = collect([1, 2]);
@@ -672,7 +672,7 @@ $matrix->all();
 <a name="method-dd"></a>
 #### `dd()` {.collection-method}
 
-The `dd` method dumps the collection's items and ends execution of the script:
+Method `dd` dump các phần tử của collection và kết thúc thực thi script:
 
 ```php
 $collection = collect(['John Doe', 'Jane Doe']);
@@ -687,12 +687,12 @@ $collection->dd();
 */
 ```
 
-If you do not want to stop executing the script, use the [dump](#method-dump) method instead.
+Nếu không muốn dừng thực thi script, hãy dùng method [dump](#method-dump) thay thế.
 
 <a name="method-diff"></a>
 #### `diff()` {.collection-method}
 
-The `diff` method compares the collection against another collection or a plain PHP `array` based on its values. This method will return the values in the original collection that are not present in the given collection:
+Method `diff` so sánh collection với một collection khác hoặc một PHP `array` thông thường dựa trên value. Method trả về các value trong collection ban đầu không xuất hiện trong collection được cung cấp:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -705,12 +705,12 @@ $diff->all();
 ```
 
 > [!NOTE]
-> This method's behavior is modified when using [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-diff).
+Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-diff).
 
 <a name="method-diffassoc"></a>
 #### `diffAssoc()` {.collection-method}
 
-The `diffAssoc` method compares the collection against another collection or a plain PHP `array` based on its keys and values. This method will return the key / value pairs in the original collection that are not present in the given collection:
+Method `diffAssoc` so sánh collection với một collection khác hoặc một PHP `array` thông thường dựa trên cả key và value. Method trả về các cặp key / value trong collection ban đầu không xuất hiện trong collection được cung cấp:
 
 ```php
 $collection = collect([
@@ -734,7 +734,7 @@ $diff->all();
 <a name="method-diffassocusing"></a>
 #### `diffAssocUsing()` {.collection-method}
 
-Unlike `diffAssoc`, `diffAssocUsing` accepts a user supplied callback function for the indices comparison:
+Khác với `diffAssoc`, `diffAssocUsing` nhận một callback do người dùng cung cấp để so sánh các index:
 
 ```php
 $collection = collect([
@@ -754,12 +754,12 @@ $diff->all();
 // ['color' => 'orange', 'remain' => 6]
 ```
 
-The callback must be a comparison function that returns an integer less than, equal to, or greater than zero. For more information, refer to the PHP documentation on [array_diff_uassoc](https://www.php.net/array_diff_uassoc#refsect1-function.array-diff-uassoc-parameters), which is the PHP function that the `diffAssocUsing` method utilizes internally.
+Callback phải là một hàm so sánh trả về số nguyên nhỏ hơn, bằng hoặc lớn hơn 0. Để biết thêm thông tin, hãy tham khảo tài liệu PHP về [array_diff_uassoc](https://www.php.net/array_diff_uassoc#refsect1-function.array-diff-uassoc-parameters), đây là hàm PHP mà method `diffAssocUsing` sử dụng bên trong.
 
 <a name="method-diffkeys"></a>
 #### `diffKeys()` {.collection-method}
 
-The `diffKeys` method compares the collection against another collection or a plain PHP `array` based on its keys. This method will return the key / value pairs in the original collection that are not present in the given collection:
+Method `diffKeys` so sánh collection với một collection khác hoặc PHP `array` thông thường dựa trên key. Method trả về các cặp key / value trong collection ban đầu không xuất hiện trong collection được cung cấp:
 
 ```php
 $collection = collect([
@@ -785,7 +785,7 @@ $diff->all();
 <a name="method-doesntcontain"></a>
 #### `doesntContain()` {.collection-method}
 
-The `doesntContain` method determines whether the collection does not contain a given item. You may pass a closure to the `doesntContain` method to determine if an element does not exist in the collection matching a given truth test:
+Method `doesntContain` xác định collection không chứa một phần tử được cung cấp hay không. Bạn có thể truyền closure vào `doesntContain` để xác định không tồn tại phần tử nào trong collection thỏa điều kiện kiểm tra được cung cấp:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -797,7 +797,7 @@ $collection->doesntContain(function (int $value, int $key) {
 // false
 ```
 
-Alternatively, you may pass a string to the `doesntContain` method to determine whether the collection does not contain a given item value:
+Ngoài ra, bạn có thể truyền một chuỗi cho method `doesntContain` để xác định collection không chứa giá trị phần tử đã cho:
 
 ```php
 $collection = collect(['name' => 'Desk', 'price' => 100]);
@@ -811,7 +811,7 @@ $collection->doesntContain('Desk');
 // false
 ```
 
-You may also pass a key / value pair to the `doesntContain` method, which will determine if the given pair does not exist in the collection:
+Bạn cũng có thể truyền cặp key / value vào method `doesntContain`; method sẽ xác định cặp đó không tồn tại trong collection hay không:
 
 ```php
 $collection = collect([
@@ -824,17 +824,17 @@ $collection->doesntContain('product', 'Bookcase');
 // true
 ```
 
-The `doesntContain` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value.
+Method `doesntContain` sử dụng phép so sánh "loose" khi kiểm tra value, nghĩa là chuỗi chứa giá trị số nguyên sẽ được xem là bằng với số nguyên có cùng giá trị.
 
 <a name="method-doesntcontainstrict"></a>
 #### `doesntContainStrict()` {.collection-method}
 
-This method has the same signature as the [doesntContain](#method-doesntcontain) method; however, all values are compared using "strict" comparisons.
+Method này có cùng signature với method [doesntContain](#method-doesntcontain); tuy nhiên, tất cả value đều được so sánh bằng phép so sánh "strict".
 
 <a name="method-dot"></a>
 #### `dot()` {.collection-method}
 
-The `dot` method flattens a multi-dimensional collection into a single level collection that uses "dot" notation to indicate depth:
+Method `dot` làm phẳng collection nhiều chiều thành collection một cấp sử dụng ký pháp "dot" để biểu thị độ sâu:
 
 ```php
 $collection = collect(['products' => ['desk' => ['price' => 100]]]);
@@ -849,7 +849,7 @@ $flattened->all();
 <a name="method-dump"></a>
 #### `dump()` {.collection-method}
 
-The `dump` method dumps the collection's items:
+Method `dump` dump các phần tử của collection:
 
 ```php
 $collection = collect(['John Doe', 'Jane Doe']);
@@ -864,12 +864,12 @@ $collection->dump();
 */
 ```
 
-If you want to stop executing the script after dumping the collection, use the [dd](#method-dd) method instead.
+Nếu muốn dừng thực thi script sau khi dump collection, hãy dùng method [dd](#method-dd) thay thế.
 
 <a name="method-duplicates"></a>
 #### `duplicates()` {.collection-method}
 
-The `duplicates` method retrieves and returns duplicate values from the collection:
+Method `duplicates` lấy và trả về các value bị trùng trong collection:
 
 ```php
 $collection = collect(['a', 'b', 'a', 'c', 'b']);
@@ -879,7 +879,7 @@ $collection->duplicates();
 // [2 => 'a', 4 => 'b']
 ```
 
-If the collection contains arrays or objects, you can pass the key of the attributes that you wish to check for duplicate values:
+Nếu collection chứa array hoặc object, bạn có thể truyền key của attribute mà bạn muốn kiểm tra value trùng lặp:
 
 ```php
 $employees = collect([
@@ -896,12 +896,12 @@ $employees->duplicates('position');
 <a name="method-duplicatesstrict"></a>
 #### `duplicatesStrict()` {.collection-method}
 
-This method has the same signature as the [duplicates](#method-duplicates) method; however, all values are compared using "strict" comparisons.
+Method này có cùng signature với method [duplicates](#method-duplicates); tuy nhiên, tất cả value đều được so sánh bằng phép so sánh "strict".
 
 <a name="method-each"></a>
 #### `each()` {.collection-method}
 
-The `each` method iterates over the items in the collection and passes each item to a closure:
+Method `each` lặp qua các phần tử trong collection và truyền từng phần tử vào closure:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -911,7 +911,7 @@ $collection->each(function (int $item, int $key) {
 });
 ```
 
-If you would like to stop iterating through the items, you may return `false` from your closure:
+Nếu muốn dừng quá trình lặp, bạn có thể trả về `false` từ closure:
 
 ```php
 $collection->each(function (int $item, int $key) {
@@ -924,7 +924,7 @@ $collection->each(function (int $item, int $key) {
 <a name="method-eachspread"></a>
 #### `eachSpread()` {.collection-method}
 
-The `eachSpread` method iterates over the collection's items, passing each nested item value into the given callback:
+Method `eachSpread` lặp qua các phần tử của collection và truyền từng value lồng nhau vào callback được cung cấp:
 
 ```php
 $collection = collect([['John Doe', 35], ['Jane Doe', 33]]);
@@ -934,7 +934,7 @@ $collection->eachSpread(function (string $name, int $age) {
 });
 ```
 
-You may stop iterating through the items by returning `false` from the callback:
+Bạn có thể dừng quá trình lặp bằng cách trả về `false` từ callback:
 
 ```php
 $collection->eachSpread(function (string $name, int $age) {
@@ -945,7 +945,7 @@ $collection->eachSpread(function (string $name, int $age) {
 <a name="method-ensure"></a>
 #### `ensure()` {.collection-method}
 
-The `ensure` method may be used to verify that all elements of a collection are of a given type or list of types. Otherwise, an `UnexpectedValueException` will be thrown:
+Method `ensure` có thể được dùng để xác minh tất cả phần tử của collection thuộc một type hoặc danh sách type được chỉ định. Nếu không, `UnexpectedValueException` sẽ được throw:
 
 ```php
 return $collection->ensure(User::class);
@@ -953,19 +953,19 @@ return $collection->ensure(User::class);
 return $collection->ensure([User::class, Customer::class]);
 ```
 
-Primitive types such as `string`, `int`, `float`, `bool`, and `array` may also be specified:
+Các primitive type như `string`, `int`, `float`, `bool`, và `array` cũng có thể được chỉ định:
 
 ```php
 return $collection->ensure('int');
 ```
 
 > [!WARNING]
-> The `ensure` method does not guarantee that elements of different types will not be added to the collection at a later time.
+Method `ensure` không đảm bảo rằng các phần tử thuộc type khác sẽ không được thêm vào collection ở thời điểm sau.
 
 <a name="method-every"></a>
 #### `every()` {.collection-method}
 
-The `every` method may be used to verify that all elements of a collection pass a given truth test:
+Method `every` có thể được dùng để xác minh tất cả phần tử của collection đều thỏa điều kiện kiểm tra được cung cấp:
 
 ```php
 collect([1, 2, 3, 4])->every(function (int $value, int $key) {
@@ -975,7 +975,7 @@ collect([1, 2, 3, 4])->every(function (int $value, int $key) {
 // false
 ```
 
-If the collection is empty, the `every` method will return true:
+Nếu collection rỗng, method `every` sẽ trả về `true`:
 
 ```php
 $collection = collect([]);
@@ -990,7 +990,7 @@ $collection->every(function (int $value, int $key) {
 <a name="method-except"></a>
 #### `except()` {.collection-method}
 
-The `except` method returns all items in the collection except for those with the specified keys:
+Method `except` trả về tất cả phần tử trong collection ngoại trừ các phần tử có key được chỉ định:
 
 ```php
 $collection = collect(['product_id' => 1, 'price' => 100, 'discount' => false]);
@@ -1002,15 +1002,15 @@ $filtered->all();
 // ['product_id' => 1]
 ```
 
-For the inverse of `except`, see the [only](#method-only) method.
+Để thực hiện phép ngược lại với `except`, hãy xem method [only](#method-only).
 
 > [!NOTE]
-> This method's behavior is modified when using [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-except).
+Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-except).
 
 <a name="method-filter"></a>
 #### `filter()` {.collection-method}
 
-The `filter` method filters the collection using the given callback, keeping only those items that pass a given truth test:
+Method `filter` lọc collection bằng callback được cung cấp, chỉ giữ lại những phần tử thỏa điều kiện kiểm tra:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -1024,7 +1024,7 @@ $filtered->all();
 // [3, 4]
 ```
 
-If no callback is supplied, all entries of the collection that are equivalent to `false` will be removed:
+Nếu không cung cấp callback, mọi phần tử trong collection tương đương với `false` sẽ bị loại bỏ:
 
 ```php
 $collection = collect([1, 2, 3, null, false, '', 0, []]);
@@ -1034,12 +1034,12 @@ $collection->filter()->all();
 // [1, 2, 3]
 ```
 
-For the inverse of `filter`, see the [reject](#method-reject) method.
+Để thực hiện phép ngược lại với `filter`, hãy xem method [reject](#method-reject).
 
 <a name="method-first"></a>
 #### `first()` {.collection-method}
 
-The `first` method returns the first element in the collection that passes a given truth test:
+Method `first` trả về phần tử đầu tiên trong collection thỏa điều kiện kiểm tra được cung cấp:
 
 ```php
 collect([1, 2, 3, 4])->first(function (int $value, int $key) {
@@ -1049,7 +1049,7 @@ collect([1, 2, 3, 4])->first(function (int $value, int $key) {
 // 3
 ```
 
-You may also call the `first` method with no arguments to get the first element in the collection. If the collection is empty, `null` is returned:
+Bạn cũng có thể gọi method `first` mà không truyền đối số để lấy phần tử đầu tiên trong collection. Nếu collection rỗng, `null` sẽ được trả về:
 
 ```php
 collect([1, 2, 3, 4])->first();
@@ -1060,7 +1060,7 @@ collect([1, 2, 3, 4])->first();
 <a name="method-first-or-fail"></a>
 #### `firstOrFail()` {.collection-method}
 
-The `firstOrFail` method is identical to the `first` method; however, if no result is found, an `Illuminate\Support\ItemNotFoundException` exception will be thrown:
+Method `firstOrFail` hoạt động giống `first`; tuy nhiên, nếu không tìm thấy kết quả, exception `Illuminate\Support\ItemNotFoundException` sẽ được throw:
 
 ```php
 collect([1, 2, 3, 4])->firstOrFail(function (int $value, int $key) {
@@ -1070,7 +1070,7 @@ collect([1, 2, 3, 4])->firstOrFail(function (int $value, int $key) {
 // Throws ItemNotFoundException...
 ```
 
-You may also call the `firstOrFail` method with no arguments to get the first element in the collection. If the collection is empty, an `Illuminate\Support\ItemNotFoundException` exception will be thrown:
+Bạn cũng có thể gọi method `firstOrFail` mà không truyền đối số để lấy phần tử đầu tiên trong collection. Nếu collection rỗng, exception `Illuminate\Support\ItemNotFoundException` sẽ được throw:
 
 ```php
 collect([])->firstOrFail();
@@ -1081,7 +1081,7 @@ collect([])->firstOrFail();
 <a name="method-first-where"></a>
 #### `firstWhere()` {.collection-method}
 
-The `firstWhere` method returns the first element in the collection with the given key / value pair:
+Method `firstWhere` trả về phần tử đầu tiên trong collection có cặp key / value được chỉ định:
 
 ```php
 $collection = collect([
@@ -1096,7 +1096,7 @@ $collection->firstWhere('name', 'Linda');
 // ['name' => 'Linda', 'age' => 14]
 ```
 
-You may also call the `firstWhere` method with a comparison operator:
+Bạn cũng có thể gọi method `firstWhere` với một toán tử so sánh:
 
 ```php
 $collection->firstWhere('age', '>=', 18);
@@ -1104,7 +1104,7 @@ $collection->firstWhere('age', '>=', 18);
 // ['name' => 'Diego', 'age' => 23]
 ```
 
-Like the [where](#method-where) method, you may pass one argument to the `firstWhere` method. In this scenario, the `firstWhere` method will return the first item where the given item key's value is "truthy":
+Tương tự method [where](#method-where), bạn có thể truyền một đối số cho `firstWhere`. Trong trường hợp này, `firstWhere` sẽ trả về item đầu tiên mà giá trị của key được chỉ định là "truthy":
 
 ```php
 $collection->firstWhere('age');
@@ -1115,7 +1115,7 @@ $collection->firstWhere('age');
 <a name="method-flatmap"></a>
 #### `flatMap()` {.collection-method}
 
-The `flatMap` method iterates through the collection and passes each value to the given closure. The closure is free to modify the item and return it, thus forming a new collection of modified items. Then, the array is flattened by one level:
+Method `flatMap` duyệt qua collection và truyền từng value vào closure được cung cấp. Closure có thể sửa item rồi trả về item đó, từ đó tạo thành một collection mới gồm các item đã được biến đổi. Sau đó, array được làm phẳng một cấp:
 
 ```php
 $collection = collect([
@@ -1136,7 +1136,7 @@ $flattened->all();
 <a name="method-flatten"></a>
 #### `flatten()` {.collection-method}
 
-The `flatten` method flattens a multi-dimensional collection into a single dimension:
+Method `flatten` làm phẳng một collection đa chiều thành một chiều:
 
 ```php
 $collection = collect([
@@ -1153,7 +1153,7 @@ $flattened->all();
 // ['Taylor', 'PHP', 'JavaScript'];
 ```
 
-If necessary, you may pass the `flatten` method a "depth" argument:
+Nếu cần, bạn có thể truyền đối số "depth" cho method `flatten`:
 
 ```php
 $collection = collect([
@@ -1183,12 +1183,12 @@ $products->values()->all();
 */
 ```
 
-In this example, calling `flatten` without providing the depth would have also flattened the nested arrays, resulting in `['iPhone 6S', 'Apple', 'Galaxy S7', 'Samsung']`. Providing a depth allows you to specify the number of levels nested arrays will be flattened.
+Trong ví dụ này, nếu gọi `flatten` mà không cung cấp depth, các array lồng nhau cũng sẽ bị làm phẳng, cho kết quả `['iPhone 6S', 'Apple', 'Galaxy S7', 'Samsung']`. Việc cung cấp depth cho phép bạn chỉ định số cấp của array lồng nhau sẽ được làm phẳng.
 
 <a name="method-flip"></a>
 #### `flip()` {.collection-method}
 
-The `flip` method swaps the collection's keys with their corresponding values:
+Method `flip` hoán đổi các key của collection với value tương ứng:
 
 ```php
 $collection = collect(['name' => 'Taylor', 'framework' => 'Laravel']);
@@ -1203,7 +1203,7 @@ $flipped->all();
 <a name="method-forget"></a>
 #### `forget()` {.collection-method}
 
-The `forget` method removes an item from the collection by its key:
+Method `forget` xóa một item khỏi collection theo key:
 
 ```php
 $collection = collect(['name' => 'Taylor', 'framework' => 'Laravel']);
@@ -1220,12 +1220,12 @@ $collection->forget(['name', 'framework']);
 ```
 
 > [!WARNING]
-> Unlike most other collection methods, `forget` does not return a new modified collection; it modifies and returns the collection it is called on.
+> Không giống phần lớn method khác của collection, `forget` không trả về một collection mới đã được sửa đổi; nó thay đổi và trả về chính collection mà method được gọi trên đó.
 
 <a name="method-forpage"></a>
 #### `forPage()` {.collection-method}
 
-The `forPage` method returns a new collection containing the items that would be present on a given page number. The method accepts the page number as its first argument and the number of items to show per page as its second argument:
+Method `forPage` trả về một collection mới chứa các item sẽ xuất hiện ở số trang được chỉ định. Method nhận số trang làm đối số thứ nhất và số item hiển thị trên mỗi trang làm đối số thứ hai:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -1240,7 +1240,7 @@ $chunk->all();
 <a name="method-fromjson"></a>
 #### `fromJson()` {.collection-method}
 
-The static `fromJson` method creates a new collection instance by decoding a given JSON string using the `json_decode` PHP function:
+Static method `fromJson` tạo một collection instance mới bằng cách decode chuỗi JSON được cung cấp thông qua hàm PHP `json_decode`:
 
 ```php
 use Illuminate\Support\Collection;
@@ -1257,7 +1257,7 @@ $collection = Collection::fromJson($json);
 <a name="method-get"></a>
 #### `get()` {.collection-method}
 
-The `get` method returns the item at a given key. If the key does not exist, `null` is returned:
+Method `get` trả về item tại key được chỉ định. Nếu key không tồn tại, `null` sẽ được trả về:
 
 ```php
 $collection = collect(['name' => 'Taylor', 'framework' => 'Laravel']);
@@ -1267,7 +1267,7 @@ $value = $collection->get('name');
 // Taylor
 ```
 
-You may optionally pass a default value as the second argument:
+Bạn có thể tùy chọn truyền giá trị mặc định làm đối số thứ hai:
 
 ```php
 $collection = collect(['name' => 'Taylor', 'framework' => 'Laravel']);
@@ -1277,7 +1277,7 @@ $value = $collection->get('age', 34);
 // 34
 ```
 
-You may even pass a callback as the method's default value. The result of the callback will be returned if the specified key does not exist:
+Bạn thậm chí có thể truyền callback làm giá trị mặc định của method. Kết quả của callback sẽ được trả về nếu key được chỉ định không tồn tại:
 
 ```php
 $collection->get('email', function () {
@@ -1290,7 +1290,7 @@ $collection->get('email', function () {
 <a name="method-groupby"></a>
 #### `groupBy()` {.collection-method}
 
-The `groupBy` method groups the collection's items by a given key:
+Method `groupBy` nhóm các item của collection theo key được chỉ định:
 
 ```php
 $collection = collect([
@@ -1316,7 +1316,7 @@ $grouped->all();
 */
 ```
 
-Instead of passing a string `key`, you may pass a callback. The callback should return the value you wish to key the group by:
+Thay vì truyền một `key` dạng chuỗi, bạn có thể truyền callback. Callback cần trả về giá trị mà bạn muốn dùng để nhóm:
 
 ```php
 $grouped = $collection->groupBy(function (array $item, int $key) {
@@ -1338,7 +1338,7 @@ $grouped->all();
 */
 ```
 
-Multiple grouping criteria may be passed as an array. Each array element will be applied to the corresponding level within a multi-dimensional array:
+Có thể truyền nhiều tiêu chí nhóm dưới dạng array. Mỗi phần tử của array sẽ được áp dụng cho cấp tương ứng trong array đa chiều:
 
 ```php
 $data = new Collection([
@@ -1381,7 +1381,7 @@ $result = $data->groupBy(['skill', function (array $item) {
 <a name="method-has"></a>
 #### `has()` {.collection-method}
 
-The `has` method determines if a given key exists in the collection:
+Method `has` xác định một key được chỉ định có tồn tại trong collection hay không:
 
 ```php
 $collection = collect(['account_id' => 1, 'product' => 'Desk', 'amount' => 5]);
@@ -1402,7 +1402,7 @@ $collection->has(['amount', 'price']);
 <a name="method-hasany"></a>
 #### `hasAny()` {.collection-method}
 
-The `hasAny` method determines whether any of the given keys exist in the collection:
+Method `hasAny` xác định có bất kỳ key nào trong số các key được cung cấp tồn tại trong collection hay không:
 
 ```php
 $collection = collect(['account_id' => 1, 'product' => 'Desk', 'amount' => 5]);
@@ -1419,7 +1419,7 @@ $collection->hasAny(['name', 'price']);
 <a name="method-hasmany"></a>
 #### `hasMany()` {.collection-method}
 
-The `hasMany` method determines whether the collection contains multiple items:
+Method `hasMany` xác định collection có chứa nhiều item hay không:
 
 ```php
 collect([])->hasMany();
@@ -1445,7 +1445,7 @@ collect([
 <a name="method-hassole"></a>
 #### `hasSole()` {.collection-method}
 
-The `hasSole` method determines if the collection contains a single item, optionally matching the given criteria:
+Method `hasSole` xác định collection có chứa đúng một item hay không, đồng thời có thể tùy chọn kiểm tra item đó theo tiêu chí được cung cấp:
 
 ```php
 collect([])->hasSole();
@@ -1464,7 +1464,7 @@ collect([1, 2, 3])->hasSole(fn (int $item) => $item === 2);
 <a name="method-implode"></a>
 #### `implode()` {.collection-method}
 
-The `implode` method joins items in a collection. Its arguments depend on the type of items in the collection. If the collection contains arrays or objects, you should pass the key of the attributes you wish to join, and the "glue" string you wish to place between the values:
+Method `implode` nối các item trong collection. Các đối số của method phụ thuộc vào kiểu item trong collection. Nếu collection chứa array hoặc object, bạn nên truyền key của attribute muốn nối và chuỗi "glue" muốn đặt giữa các value:
 
 ```php
 $collection = collect([
@@ -1477,7 +1477,7 @@ $collection->implode('product', ', ');
 // 'Desk, Chair'
 ```
 
-If the collection contains simple strings or numeric values, you should pass the "glue" as the only argument to the method:
+Nếu collection chứa các chuỗi đơn giản hoặc giá trị số, bạn chỉ cần truyền "glue" làm đối số duy nhất cho method:
 
 ```php
 collect([1, 2, 3, 4, 5])->implode('-');
@@ -1485,7 +1485,7 @@ collect([1, 2, 3, 4, 5])->implode('-');
 // '1-2-3-4-5'
 ```
 
-You may pass a closure to the `implode` method if you would like to format the values being imploded:
+Bạn có thể truyền closure cho method `implode` nếu muốn định dạng các value trước khi nối:
 
 ```php
 $collection->implode(function (array $item, int $key) {
@@ -1498,7 +1498,7 @@ $collection->implode(function (array $item, int $key) {
 <a name="method-intersect"></a>
 #### `intersect()` {.collection-method}
 
-The `intersect` method removes any values from the original collection that are not present in the given array or collection. The resulting collection will preserve the original collection's keys:
+Method `intersect` loại bỏ khỏi collection gốc mọi value không có trong array hoặc collection được cung cấp. Collection kết quả sẽ giữ nguyên các key của collection gốc:
 
 ```php
 $collection = collect(['Desk', 'Sofa', 'Chair']);
@@ -1511,12 +1511,12 @@ $intersect->all();
 ```
 
 > [!NOTE]
-> This method's behavior is modified when using [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-intersect).
+> Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-intersect).
 
 <a name="method-intersectusing"></a>
 #### `intersectUsing()` {.collection-method}
 
-The `intersectUsing` method removes any values from the original collection that are not present in the given array or collection, using a custom callback to compare the values. The resulting collection will preserve the original collection's keys:
+Method `intersectUsing` loại bỏ khỏi collection gốc mọi value không có trong array hoặc collection được cung cấp, sử dụng callback tùy chỉnh để so sánh các value. Collection kết quả sẽ giữ nguyên các key của collection gốc:
 
 ```php
 $collection = collect(['Desk', 'Sofa', 'Chair']);
@@ -1533,7 +1533,7 @@ $intersect->all();
 <a name="method-intersectAssoc"></a>
 #### `intersectAssoc()` {.collection-method}
 
-The `intersectAssoc` method compares the original collection against another collection or array, returning the key / value pairs that are present in all of the given collections:
+Method `intersectAssoc` so sánh collection gốc với một collection hoặc array khác, rồi trả về các cặp key / value có mặt trong tất cả collection được cung cấp:
 
 ```php
 $collection = collect([
@@ -1556,7 +1556,7 @@ $intersect->all();
 <a name="method-intersectassocusing"></a>
 #### `intersectAssocUsing()` {.collection-method}
 
-The `intersectAssocUsing` method compares the original collection against another collection or array, returning the key / value pairs that are present in both, using a custom comparison callback to determine equality for both keys and values:
+Method `intersectAssocUsing` so sánh collection gốc với một collection hoặc array khác, trả về các cặp key / value có mặt ở cả hai và sử dụng callback so sánh tùy chỉnh để xác định tính bằng nhau của cả key lẫn value:
 
 ```php
 $collection = collect([
@@ -1581,7 +1581,7 @@ $intersect->all();
 <a name="method-intersectbykeys"></a>
 #### `intersectByKeys()` {.collection-method}
 
-The `intersectByKeys` method removes any keys and their corresponding values from the original collection that are not present in the given array or collection:
+Method `intersectByKeys` loại bỏ khỏi collection gốc mọi key cùng value tương ứng nếu key đó không có trong array hoặc collection được cung cấp:
 
 ```php
 $collection = collect([
@@ -1600,7 +1600,7 @@ $intersect->all();
 <a name="method-isempty"></a>
 #### `isEmpty()` {.collection-method}
 
-The `isEmpty` method returns `true` if the collection is empty; otherwise, `false` is returned:
+Method `isEmpty` trả về `true` nếu collection rỗng; ngược lại trả về `false`:
 
 ```php
 collect([])->isEmpty();
@@ -1611,7 +1611,7 @@ collect([])->isEmpty();
 <a name="method-isnotempty"></a>
 #### `isNotEmpty()` {.collection-method}
 
-The `isNotEmpty` method returns `true` if the collection is not empty; otherwise, `false` is returned:
+Method `isNotEmpty` trả về `true` nếu collection không rỗng; ngược lại trả về `false`:
 
 ```php
 collect([])->isNotEmpty();
@@ -1622,7 +1622,7 @@ collect([])->isNotEmpty();
 <a name="method-join"></a>
 #### `join()` {.collection-method}
 
-The `join` method joins the collection's values with a string. Using this method's second argument, you may also specify how the final element should be appended to the string:
+Method `join` nối các value của collection bằng một chuỗi. Thông qua đối số thứ hai, bạn cũng có thể chỉ định cách phần tử cuối cùng được nối vào chuỗi:
 
 ```php
 collect(['a', 'b', 'c'])->join(', '); // 'a, b, c'
@@ -1635,7 +1635,7 @@ collect([])->join(', ', ' and '); // ''
 <a name="method-keyby"></a>
 #### `keyBy()` {.collection-method}
 
-The `keyBy` method keys the collection by the given key. If multiple items have the same key, only the last one will appear in the new collection:
+Method `keyBy` thiết lập key cho collection theo key được cung cấp. Nếu nhiều item có cùng key, chỉ item cuối cùng xuất hiện trong collection mới:
 
 ```php
 $collection = collect([
@@ -1655,7 +1655,7 @@ $keyed->all();
 */
 ```
 
-You may also pass a callback to the method. The callback should return the value to key the collection by:
+Bạn cũng có thể truyền callback cho method. Callback cần trả về value sẽ được dùng làm key cho collection:
 
 ```php
 $keyed = $collection->keyBy(function (array $item, int $key) {
@@ -1675,7 +1675,7 @@ $keyed->all();
 <a name="method-keys"></a>
 #### `keys()` {.collection-method}
 
-The `keys` method returns all of the collection's keys:
+Method `keys` trả về tất cả key của collection:
 
 ```php
 $collection = collect([
@@ -1693,7 +1693,7 @@ $keys->all();
 <a name="method-last"></a>
 #### `last()` {.collection-method}
 
-The `last` method returns the last element in the collection that passes a given truth test:
+Method `last` trả về phần tử cuối cùng trong collection thỏa điều kiện kiểm tra được cung cấp:
 
 ```php
 collect([1, 2, 3, 4])->last(function (int $value, int $key) {
@@ -1703,7 +1703,7 @@ collect([1, 2, 3, 4])->last(function (int $value, int $key) {
 // 2
 ```
 
-You may also call the `last` method with no arguments to get the last element in the collection. If the collection is empty, `null` is returned:
+Bạn cũng có thể gọi method `last` mà không truyền đối số để lấy phần tử cuối cùng trong collection. Nếu collection rỗng, `null` sẽ được trả về:
 
 ```php
 collect([1, 2, 3, 4])->last();
@@ -1714,7 +1714,7 @@ collect([1, 2, 3, 4])->last();
 <a name="method-lazy"></a>
 #### `lazy()` {.collection-method}
 
-The `lazy` method returns a new [LazyCollection](#lazy-collections) instance from the underlying array of items:
+Method `lazy` trả về một instance [LazyCollection](#lazy-collections) mới từ array item bên dưới:
 
 ```php
 $lazyCollection = collect([1, 2, 3, 4])->lazy();
@@ -1728,7 +1728,7 @@ $lazyCollection->all();
 // [1, 2, 3, 4]
 ```
 
-This is especially useful when you need to perform transformations on a huge `Collection` that contains many items:
+Điều này đặc biệt hữu ích khi bạn cần thực hiện các phép biến đổi trên một `Collection` rất lớn chứa nhiều item:
 
 ```php
 $count = $hugeCollection
@@ -1738,17 +1738,17 @@ $count = $hugeCollection
     ->count();
 ```
 
-By converting the collection to a `LazyCollection`, we avoid having to allocate a ton of additional memory. Though the original collection still keeps _its_ values in memory, the subsequent filters will not. Therefore, virtually no additional memory will be allocated when filtering the collection's results.
+Bằng cách chuyển collection thành `LazyCollection`, chúng ta tránh phải cấp phát một lượng lớn bộ nhớ bổ sung. Dù collection gốc vẫn giữ _các_ value của nó trong bộ nhớ, các filter tiếp theo thì không. Vì vậy, gần như không có thêm bộ nhớ nào được cấp phát khi lọc kết quả của collection.
 
 <a name="method-macro"></a>
 #### `macro()` {.collection-method}
 
-The static `macro` method allows you to add methods to the `Collection` class at run time. Refer to the documentation on [extending collections](#extending-collections) for more information.
+Static method `macro` cho phép bạn thêm method vào class `Collection` tại runtime. Xem tài liệu về [mở rộng collection](#extending-collections) để biết thêm thông tin.
 
 <a name="method-make"></a>
 #### `make()` {.collection-method}
 
-The static `make` method creates a new collection instance. See the [Creating Collections](#creating-collections) section.
+Static method `make` tạo một collection instance mới. Xem phần [Tạo Collection](#creating-collections).
 
 ```php
 use Illuminate\Support\Collection;
@@ -1759,7 +1759,7 @@ $collection = Collection::make([1, 2, 3]);
 <a name="method-map"></a>
 #### `map()` {.collection-method}
 
-The `map` method iterates through the collection and passes each value to the given callback. The callback is free to modify the item and return it, thus forming a new collection of modified items:
+Method `map` duyệt qua collection và truyền từng value vào callback được cung cấp. Callback có thể sửa item rồi trả về item đó, từ đó tạo thành một collection mới gồm các item đã được biến đổi:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -1774,12 +1774,12 @@ $multiplied->all();
 ```
 
 > [!WARNING]
-> Like most other collection methods, `map` returns a new collection instance; it does not modify the collection it is called on. If you want to transform the original collection, use the [transform](#method-transform) method.
+> Giống phần lớn method khác của collection, `map` trả về một collection instance mới; nó không thay đổi collection mà method được gọi trên đó. Nếu muốn biến đổi collection gốc, hãy dùng method [transform](#method-transform).
 
 <a name="method-mapinto"></a>
 #### `mapInto()` {.collection-method}
 
-The `mapInto()` method iterates over the collection, creating a new instance of the given class by passing the value into the constructor:
+Method `mapInto()` duyệt qua collection, tạo một instance mới của class được cung cấp bằng cách truyền value vào constructor:
 
 ```php
 class Currency
@@ -1804,7 +1804,7 @@ $currencies->all();
 <a name="method-mapspread"></a>
 #### `mapSpread()` {.collection-method}
 
-The `mapSpread` method iterates over the collection's items, passing each nested item value into the given closure. The closure is free to modify the item and return it, thus forming a new collection of modified items:
+Method `mapSpread` duyệt qua các item của collection và truyền từng value của item lồng nhau vào closure được cung cấp. Closure có thể sửa item rồi trả về item đó, từ đó tạo thành một collection mới gồm các item đã được biến đổi:
 
 ```php
 $collection = collect([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
@@ -1823,7 +1823,7 @@ $sequence->all();
 <a name="method-maptogroups"></a>
 #### `mapToGroups()` {.collection-method}
 
-The `mapToGroups` method groups the collection's items by the given closure. The closure should return an associative array containing a single key / value pair, thus forming a new collection of grouped values:
+Method `mapToGroups` nhóm các item của collection theo closure được cung cấp. Closure cần trả về một associative array chứa một cặp key / value duy nhất, từ đó tạo thành collection mới gồm các value đã được nhóm:
 
 ```php
 $collection = collect([
@@ -1862,7 +1862,7 @@ $grouped->get('Sales')->all();
 <a name="method-mapwithkeys"></a>
 #### `mapWithKeys()` {.collection-method}
 
-The `mapWithKeys` method iterates through the collection and passes each value to the given callback. The callback should return an associative array containing a single key / value pair:
+Method `mapWithKeys` duyệt qua collection và truyền từng value vào callback được cung cấp. Callback cần trả về một associative array chứa một cặp key / value duy nhất:
 
 ```php
 $collection = collect([
@@ -1895,7 +1895,7 @@ $keyed->all();
 <a name="method-max"></a>
 #### `max()` {.collection-method}
 
-The `max` method returns the maximum value of a given key:
+Method `max` trả về giá trị lớn nhất của key được chỉ định:
 
 ```php
 $max = collect([
@@ -1913,7 +1913,7 @@ $max = collect([1, 2, 3, 4, 5])->max();
 <a name="method-median"></a>
 #### `median()` {.collection-method}
 
-The `median` method returns the [median value](https://en.wikipedia.org/wiki/Median) of a given key:
+Method `median` trả về [giá trị trung vị](https://en.wikipedia.org/wiki/Median) của key được chỉ định:
 
 ```php
 $median = collect([
@@ -1933,7 +1933,7 @@ $median = collect([1, 1, 2, 4])->median();
 <a name="method-merge"></a>
 #### `merge()` {.collection-method}
 
-The `merge` method merges the given array or collection with the original collection. If a string key in the given items matches a string key in the original collection, the given item's value will overwrite the value in the original collection:
+Method `merge` hợp nhất array hoặc collection được cung cấp với collection gốc. Nếu một string key trong các item được cung cấp trùng với string key trong collection gốc, value của item được cung cấp sẽ ghi đè value trong collection gốc:
 
 ```php
 $collection = collect(['product_id' => 1, 'price' => 100]);
@@ -1945,7 +1945,7 @@ $merged->all();
 // ['product_id' => 1, 'price' => 200, 'discount' => false]
 ```
 
-If the given item's keys are numeric, the values will be appended to the end of the collection:
+Nếu key của các item được cung cấp là số, các value sẽ được nối vào cuối collection:
 
 ```php
 $collection = collect(['Desk', 'Chair']);
@@ -1960,7 +1960,7 @@ $merged->all();
 <a name="method-mergerecursive"></a>
 #### `mergeRecursive()` {.collection-method}
 
-The `mergeRecursive` method merges the given array or collection recursively with the original collection. If a string key in the given items matches a string key in the original collection, then the values for these keys are merged together into an array, and this is done recursively:
+Method `mergeRecursive` hợp nhất đệ quy array hoặc collection được cung cấp với collection gốc. Nếu một string key trong các item được cung cấp trùng với string key trong collection gốc, các value của những key này sẽ được hợp nhất thành một array và quá trình đó được thực hiện đệ quy:
 
 ```php
 $collection = collect(['product_id' => 1, 'price' => 100]);
@@ -1979,7 +1979,7 @@ $merged->all();
 <a name="method-min"></a>
 #### `min()` {.collection-method}
 
-The `min` method returns the minimum value of a given key:
+Method `min` trả về giá trị nhỏ nhất của key được chỉ định:
 
 ```php
 $min = collect([
@@ -1997,7 +1997,7 @@ $min = collect([1, 2, 3, 4, 5])->min();
 <a name="method-mode"></a>
 #### `mode()` {.collection-method}
 
-The `mode` method returns the [mode value](https://en.wikipedia.org/wiki/Mode_(statistics)) of a given key:
+Method `mode` trả về [giá trị mode](https://en.wikipedia.org/wiki/Mode_(statistics)) của key được chỉ định:
 
 ```php
 $mode = collect([
@@ -2021,7 +2021,7 @@ $mode = collect([1, 1, 2, 2])->mode();
 <a name="method-multiply"></a>
 #### `multiply()` {.collection-method}
 
-The `multiply` method creates the specified number of copies of all items in the collection:
+Phương thức `multiply` tạo số lượng bản sao được chỉ định cho tất cả phần tử trong collection:
 
 ```php
 $users = collect([
@@ -2044,7 +2044,7 @@ $users = collect([
 <a name="method-nth"></a>
 #### `nth()` {.collection-method}
 
-The `nth` method creates a new collection consisting of every n-th element:
+Phương thức `nth` tạo một collection mới gồm mỗi phần tử thứ n:
 
 ```php
 $collection = collect(['a', 'b', 'c', 'd', 'e', 'f']);
@@ -2054,7 +2054,7 @@ $collection->nth(4);
 // ['a', 'e']
 ```
 
-You may optionally pass a starting offset as the second argument:
+Bạn có thể tùy chọn truyền offset bắt đầu làm đối số thứ hai:
 
 ```php
 $collection->nth(4, 1);
@@ -2065,7 +2065,7 @@ $collection->nth(4, 1);
 <a name="method-only"></a>
 #### `only()` {.collection-method}
 
-The `only` method returns the items in the collection with the specified keys:
+Phương thức `only` trả về các phần tử trong collection có các key được chỉ định:
 
 ```php
 $collection = collect([
@@ -2082,17 +2082,17 @@ $filtered->all();
 // ['product_id' => 1, 'name' => 'Desk']
 ```
 
-For the inverse of `only`, see the [except](#method-except) method.
+Để thực hiện thao tác ngược với `only`, hãy xem phương thức [except](#method-except).
 
 > [!NOTE]
-> This method's behavior is modified when using [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-only).
+> Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-only).
 
 <a name="method-pad"></a>
 #### `pad()` {.collection-method}
 
-The `pad` method will fill the array with the given value until the array reaches the specified size. This method behaves like the [array_pad](https://secure.php.net/manual/en/function.array-pad.php) PHP function.
+Phương thức `pad` sẽ điền giá trị đã cho vào mảng cho đến khi mảng đạt kích thước được chỉ định. Phương thức này hoạt động tương tự hàm PHP [array_pad](https://secure.php.net/manual/en/function.array-pad.php).
 
-To pad to the left, you should specify a negative size. No padding will take place if the absolute value of the given size is less than or equal to the length of the array:
+Để thêm phần tử đệm về bên trái, hãy chỉ định kích thước âm. Việc đệm sẽ không diễn ra nếu giá trị tuyệt đối của kích thước đã cho nhỏ hơn hoặc bằng độ dài của mảng:
 
 ```php
 $collection = collect(['A', 'B', 'C']);
@@ -2113,7 +2113,7 @@ $filtered->all();
 <a name="method-partition"></a>
 #### `partition()` {.collection-method}
 
-The `partition` method may be combined with PHP array destructuring to separate elements that pass a given truth test from those that do not:
+Phương thức `partition` có thể kết hợp với cú pháp destructuring mảng của PHP để tách các phần tử thỏa điều kiện kiểm tra khỏi các phần tử không thỏa:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5, 6]);
@@ -2132,12 +2132,12 @@ $equalOrAboveThree->all();
 ```
 
 > [!NOTE]
-> This method's behavior is modified when interacting with [Eloquent collections](/docs/{{version}}/eloquent-collections#method-partition).
+> Hành vi của method này được thay đổi khi làm việc với [Eloquent collections](/docs/{{version}}/eloquent-collections#method-partition).
 
 <a name="method-percentage"></a>
 #### `percentage()` {.collection-method}
 
-The `percentage` method may be used to quickly determine the percentage of items in the collection that pass a given truth test:
+Phương thức `percentage` có thể được dùng để nhanh chóng xác định tỷ lệ phần trăm các phần tử trong collection thỏa một điều kiện kiểm tra cho trước:
 
 ```php
 $collection = collect([1, 1, 2, 2, 2, 3]);
@@ -2147,7 +2147,7 @@ $percentage = $collection->percentage(fn (int $value) => $value === 1);
 // 33.33
 ```
 
-By default, the percentage will be rounded to two decimal places. However, you may customize this behavior by providing a second argument to the method:
+Mặc định, tỷ lệ phần trăm sẽ được làm tròn đến hai chữ số thập phân. Tuy nhiên, bạn có thể tùy chỉnh hành vi này bằng cách truyền đối số thứ hai cho phương thức:
 
 ```php
 $percentage = $collection->percentage(fn (int $value) => $value === 1, precision: 3);
@@ -2158,7 +2158,7 @@ $percentage = $collection->percentage(fn (int $value) => $value === 1, precision
 <a name="method-pipe"></a>
 #### `pipe()` {.collection-method}
 
-The `pipe` method passes the collection to the given closure and returns the result of the executed closure:
+Phương thức `pipe` truyền collection vào closure đã cho và trả về kết quả thực thi closure:
 
 ```php
 $collection = collect([1, 2, 3]);
@@ -2173,7 +2173,7 @@ $piped = $collection->pipe(function (Collection $collection) {
 <a name="method-pipeinto"></a>
 #### `pipeInto()` {.collection-method}
 
-The `pipeInto` method creates a new instance of the given class and passes the collection into the constructor:
+Phương thức `pipeInto` tạo một instance mới của class đã cho và truyền collection vào constructor:
 
 ```php
 class ResourceCollection
@@ -2198,7 +2198,7 @@ $resource->collection->all();
 <a name="method-pipethrough"></a>
 #### `pipeThrough()` {.collection-method}
 
-The `pipeThrough` method passes the collection to the given array of closures and returns the result of the executed closures:
+Phương thức `pipeThrough` truyền collection lần lượt qua mảng các closure đã cho và trả về kết quả sau khi các closure được thực thi:
 
 ```php
 use Illuminate\Support\Collection;
@@ -2220,7 +2220,7 @@ $result = $collection->pipeThrough([
 <a name="method-pluck"></a>
 #### `pluck()` {.collection-method}
 
-The `pluck` method retrieves all of the values for a given key:
+Phương thức `pluck` lấy tất cả giá trị của một key đã cho:
 
 ```php
 $collection = collect([
@@ -2235,7 +2235,7 @@ $plucked->all();
 // ['Desk', 'Chair']
 ```
 
-You may also specify how you wish the resulting collection to be keyed:
+Bạn cũng có thể chỉ định cách đặt key cho collection kết quả:
 
 ```php
 $plucked = $collection->pluck('name', 'product_id');
@@ -2245,7 +2245,7 @@ $plucked->all();
 // ['prod-100' => 'Desk', 'prod-200' => 'Chair']
 ```
 
-The `pluck` method also supports retrieving nested values using "dot" notation:
+Phương thức `pluck` cũng hỗ trợ lấy các giá trị lồng nhau bằng ký hiệu "dot":
 
 ```php
 $collection = collect([
@@ -2270,7 +2270,7 @@ $plucked->all();
 // [['Rosa', 'Judith'], ['Abigail', 'Joey']]
 ```
 
-If duplicate keys exist, the last matching element will be inserted into the plucked collection:
+Nếu tồn tại các key trùng nhau, phần tử khớp cuối cùng sẽ được đưa vào collection kết quả của `pluck`:
 
 ```php
 $collection = collect([
@@ -2290,7 +2290,7 @@ $plucked->all();
 <a name="method-pop"></a>
 #### `pop()` {.collection-method}
 
-The `pop` method removes and returns the last item from the collection. If the collection is empty, `null` will be returned:
+Phương thức `pop` xóa và trả về phần tử cuối cùng của collection. Nếu collection rỗng, `null` sẽ được trả về:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2304,7 +2304,7 @@ $collection->all();
 // [1, 2, 3, 4]
 ```
 
-You may pass an integer to the `pop` method to remove and return multiple items from the end of a collection:
+Bạn có thể truyền một số nguyên vào phương thức `pop` để xóa và trả về nhiều phần tử từ cuối collection:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2321,7 +2321,7 @@ $collection->all();
 <a name="method-prepend"></a>
 #### `prepend()` {.collection-method}
 
-The `prepend` method adds an item to the beginning of the collection:
+Phương thức `prepend` thêm một phần tử vào đầu collection:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2333,7 +2333,7 @@ $collection->all();
 // [0, 1, 2, 3, 4, 5]
 ```
 
-You may also pass a second argument to specify the key of the prepended item:
+Bạn cũng có thể truyền đối số thứ hai để chỉ định key cho phần tử được thêm vào đầu:
 
 ```php
 $collection = collect(['one' => 1, 'two' => 2]);
@@ -2348,7 +2348,7 @@ $collection->all();
 <a name="method-pull"></a>
 #### `pull()` {.collection-method}
 
-The `pull` method removes and returns an item from the collection by its key:
+Phương thức `pull` xóa và trả về một phần tử khỏi collection theo key của phần tử đó:
 
 ```php
 $collection = collect(['product_id' => 'prod-100', 'name' => 'Desk']);
@@ -2365,7 +2365,7 @@ $collection->all();
 <a name="method-push"></a>
 #### `push()` {.collection-method}
 
-The `push` method appends an item to the end of the collection:
+Phương thức `push` thêm một phần tử vào cuối collection:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -2377,7 +2377,7 @@ $collection->all();
 // [1, 2, 3, 4, 5]
 ```
 
-You may also provide multiple items to append to the end of the collection:
+Bạn cũng có thể cung cấp nhiều phần tử để thêm vào cuối collection:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -2392,7 +2392,7 @@ $collection->all();
 <a name="method-put"></a>
 #### `put()` {.collection-method}
 
-The `put` method sets the given key and value in the collection:
+Phương thức `put` thiết lập key và value đã cho trong collection:
 
 ```php
 $collection = collect(['product_id' => 1, 'name' => 'Desk']);
@@ -2407,7 +2407,7 @@ $collection->all();
 <a name="method-random"></a>
 #### `random()` {.collection-method}
 
-The `random` method returns a random item from the collection:
+Phương thức `random` trả về một phần tử ngẫu nhiên từ collection:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2417,7 +2417,7 @@ $collection->random();
 // 4 - (retrieved randomly)
 ```
 
-You may pass an integer to `random` to specify how many items you would like to randomly retrieve. A collection of items is always returned when explicitly passing the number of items you wish to receive:
+Bạn có thể truyền một số nguyên vào `random` để chỉ định số lượng phần tử muốn lấy ngẫu nhiên. Khi truyền rõ số lượng phần tử cần nhận, phương thức luôn trả về một collection:
 
 ```php
 $random = $collection->random(3);
@@ -2427,9 +2427,9 @@ $random->all();
 // [2, 4, 5] - (retrieved randomly)
 ```
 
-If the collection instance has fewer items than requested, the `random` method will throw an `InvalidArgumentException`.
+Nếu instance collection có ít phần tử hơn số lượng được yêu cầu, phương thức `random` sẽ ném `InvalidArgumentException`.
 
-The `random` method also accepts a closure, which will receive the current collection instance:
+Phương thức `random` cũng chấp nhận một closure; closure này sẽ nhận instance collection hiện tại:
 
 ```php
 use Illuminate\Support\Collection;
@@ -2444,7 +2444,7 @@ $random->all();
 <a name="method-range"></a>
 #### `range()` {.collection-method}
 
-The `range` method returns a collection containing integers between the specified range:
+Phương thức `range` trả về một collection chứa các số nguyên trong khoảng được chỉ định:
 
 ```php
 $collection = collect()->range(3, 6);
@@ -2457,7 +2457,7 @@ $collection->all();
 <a name="method-reduce"></a>
 #### `reduce()` {.collection-method}
 
-The `reduce` method reduces the collection to a single value, passing the result of each iteration into the subsequent iteration:
+Phương thức `reduce` rút gọn collection thành một giá trị duy nhất bằng cách truyền kết quả của mỗi vòng lặp sang vòng lặp tiếp theo:
 
 ```php
 $collection = collect([1, 2, 3]);
@@ -2469,7 +2469,7 @@ $total = $collection->reduce(function (?int $carry, int $item) {
 // 6
 ```
 
-The value for `$carry` on the first iteration is `null`; however, you may specify its initial value by passing a second argument to `reduce`:
+Giá trị của `$carry` ở vòng lặp đầu tiên là `null`; tuy nhiên, bạn có thể chỉ định giá trị khởi tạo bằng cách truyền đối số thứ hai cho `reduce`:
 
 ```php
 $collection->reduce(function (int $carry, int $item) {
@@ -2479,7 +2479,7 @@ $collection->reduce(function (int $carry, int $item) {
 // 10
 ```
 
-The `reduce` method also passes array keys to the given callback:
+Phương thức `reduce` cũng truyền các key của mảng vào callback đã cho:
 
 ```php
 $collection = collect([
@@ -2504,7 +2504,7 @@ $collection->reduce(function (int $carry, int $value, string $key) use ($ratio) 
 <a name="method-reduce-into"></a>
 #### `reduceInto()` {.collection-method}
 
-The `reduceInto` method reduces the collection to a single value by mutating the given initial value. Unlike the `reduce` method, the given callback does not need to return the accumulated value:
+Phương thức `reduceInto` rút gọn collection thành một giá trị duy nhất bằng cách thay đổi trực tiếp giá trị khởi tạo đã cho. Khác với phương thức `reduce`, callback không cần trả về giá trị tích lũy:
 
 ```php
 class OrderStats
@@ -2530,7 +2530,7 @@ $stats->total;
 // 400
 ```
 
-When reducing into a scalar or array, you should accept it by reference in the callback so that your mutations are applied to the original value:
+Khi rút gọn vào một scalar hoặc mảng, bạn nên nhận giá trị đó theo tham chiếu trong callback để các thay đổi được áp dụng lên giá trị gốc:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2547,7 +2547,7 @@ $even = $collection->reduceInto([], function (array &$result, int $value) {
 <a name="method-reduce-spread"></a>
 #### `reduceSpread()` {.collection-method}
 
-The `reduceSpread` method reduces the collection to an array of values, passing the results of each iteration into the subsequent iteration. This method is similar to the `reduce` method; however, it can accept multiple initial values:
+Phương thức `reduceSpread` rút gọn collection thành một mảng giá trị và truyền kết quả của mỗi vòng lặp sang vòng lặp tiếp theo. Phương thức này tương tự `reduce`, nhưng có thể nhận nhiều giá trị khởi tạo:
 
 ```php
 [$creditsRemaining, $batch] = Image::where('status', 'unprocessed')
@@ -2566,7 +2566,7 @@ The `reduceSpread` method reduces the collection to an array of values, passing 
 <a name="method-reject"></a>
 #### `reject()` {.collection-method}
 
-The `reject` method filters the collection using the given closure. The closure should return `true` if the item should be removed from the resulting collection:
+Phương thức `reject` lọc collection bằng closure đã cho. Closure nên trả về `true` nếu phần tử cần bị loại khỏi collection kết quả:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -2580,12 +2580,12 @@ $filtered->all();
 // [1, 2]
 ```
 
-For the inverse of the `reject` method, see the [filter](#method-filter) method.
+Để thực hiện thao tác ngược với phương thức `reject`, hãy xem phương thức [filter](#method-filter).
 
 <a name="method-replace"></a>
 #### `replace()` {.collection-method}
 
-The `replace` method behaves similarly to `merge`; however, in addition to overwriting matching items that have string keys, the `replace` method will also overwrite items in the collection that have matching numeric keys:
+Phương thức `replace` hoạt động tương tự `merge`; tuy nhiên, ngoài việc ghi đè các phần tử khớp có key dạng chuỗi, `replace` còn ghi đè các phần tử trong collection có key dạng số trùng khớp:
 
 ```php
 $collection = collect(['Taylor', 'Abigail', 'James']);
@@ -2600,7 +2600,7 @@ $replaced->all();
 <a name="method-replacerecursive"></a>
 #### `replaceRecursive()` {.collection-method}
 
-The `replaceRecursive` method behaves similarly to `replace`, but it will recur into arrays and apply the same replacement process to the inner values:
+Phương thức `replaceRecursive` hoạt động tương tự `replace`, nhưng sẽ đệ quy vào các mảng và áp dụng cùng quy trình thay thế cho các giá trị bên trong:
 
 ```php
 $collection = collect([
@@ -2626,7 +2626,7 @@ $replaced->all();
 <a name="method-reverse"></a>
 #### `reverse()` {.collection-method}
 
-The `reverse` method reverses the order of the collection's items, preserving the original keys:
+Phương thức `reverse` đảo ngược thứ tự các phần tử trong collection đồng thời giữ nguyên các key ban đầu:
 
 ```php
 $collection = collect(['a', 'b', 'c', 'd', 'e']);
@@ -2649,7 +2649,7 @@ $reversed->all();
 <a name="method-search"></a>
 #### `search()` {.collection-method}
 
-The `search` method searches the collection for the given value and returns its key if found. If the item is not found, `false` is returned:
+Phương thức `search` tìm giá trị đã cho trong collection và trả về key nếu tìm thấy. Nếu không tìm thấy phần tử, phương thức trả về `false`:
 
 ```php
 $collection = collect([2, 4, 6, 8]);
@@ -2659,7 +2659,7 @@ $collection->search(4);
 // 1
 ```
 
-The search is done using a "loose" comparison, meaning a string with an integer value will be considered equal to an integer of the same value. To use "strict" comparison, pass `true` as the second argument to the method:
+Việc tìm kiếm sử dụng phép so sánh "loose", nghĩa là chuỗi chứa một giá trị số nguyên sẽ được xem là bằng với số nguyên có cùng giá trị. Để dùng phép so sánh "strict", hãy truyền `true` làm đối số thứ hai của phương thức:
 
 ```php
 collect([2, 4, 6, 8])->search('4', strict: true);
@@ -2667,7 +2667,7 @@ collect([2, 4, 6, 8])->search('4', strict: true);
 // false
 ```
 
-Alternatively, you may provide your own closure to search for the first item that passes a given truth test:
+Ngoài ra, bạn có thể cung cấp closure của riêng mình để tìm phần tử đầu tiên thỏa điều kiện kiểm tra đã cho:
 
 ```php
 collect([2, 4, 6, 8])->search(function (int $item, int $key) {
@@ -2680,7 +2680,7 @@ collect([2, 4, 6, 8])->search(function (int $item, int $key) {
 <a name="method-select"></a>
 #### `select()` {.collection-method}
 
-The `select` method selects the given keys from the collection, similar to an SQL `SELECT` statement:
+Phương thức `select` chọn các key đã cho từ collection, tương tự câu lệnh SQL `SELECT`:
 
 ```php
 $users = collect([
@@ -2701,7 +2701,7 @@ $users->select(['name', 'role']);
 <a name="method-shift"></a>
 #### `shift()` {.collection-method}
 
-The `shift` method removes and returns the first item from the collection:
+Phương thức `shift` xóa và trả về phần tử đầu tiên của collection:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2715,7 +2715,7 @@ $collection->all();
 // [2, 3, 4, 5]
 ```
 
-You may pass an integer to the `shift` method to remove and return multiple items from the beginning of a collection:
+Bạn có thể truyền một số nguyên vào phương thức `shift` để xóa và trả về nhiều phần tử từ đầu collection:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2732,7 +2732,7 @@ $collection->all();
 <a name="method-shuffle"></a>
 #### `shuffle()` {.collection-method}
 
-The `shuffle` method randomly shuffles the items in the collection:
+Phương thức `shuffle` xáo trộn ngẫu nhiên các phần tử trong collection:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2747,7 +2747,7 @@ $shuffled->all();
 <a name="method-skip"></a>
 #### `skip()` {.collection-method}
 
-The `skip` method returns a new collection, with the given number of elements removed from the beginning of the collection:
+Phương thức `skip` trả về một collection mới sau khi loại bỏ số lượng phần tử được chỉ định khỏi đầu collection:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -2762,7 +2762,7 @@ $collection->all();
 <a name="method-skipuntil"></a>
 #### `skipUntil()` {.collection-method}
 
-The `skipUntil` method skips over items from the collection while the given callback returns `false`. Once the callback returns `true` all of the remaining items in the collection will be returned as a new collection:
+Phương thức `skipUntil` bỏ qua các phần tử trong collection khi callback đã cho còn trả về `false`. Ngay khi callback trả về `true`, toàn bộ phần tử còn lại sẽ được trả về dưới dạng một collection mới:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -2776,7 +2776,7 @@ $subset->all();
 // [3, 4]
 ```
 
-You may also pass a simple value to the `skipUntil` method to skip all items until the given value is found:
+Bạn cũng có thể truyền một giá trị đơn giản vào phương thức `skipUntil` để bỏ qua tất cả phần tử cho đến khi tìm thấy giá trị đã cho:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -2789,12 +2789,12 @@ $subset->all();
 ```
 
 > [!WARNING]
-> If the given value is not found or the callback never returns `true`, the `skipUntil` method will return an empty collection.
+> Nếu không tìm thấy giá trị đã cho hoặc callback không bao giờ trả về `true`, method `skipUntil` sẽ trả về một collection rỗng.
 
 <a name="method-skipwhile"></a>
 #### `skipWhile()` {.collection-method}
 
-The `skipWhile` method skips over items from the collection while the given callback returns `true`. Once the callback returns `false` all of the remaining items in the collection will be returned as a new collection:
+Phương thức `skipWhile` bỏ qua các phần tử trong collection khi callback đã cho còn trả về `true`. Ngay khi callback trả về `false`, toàn bộ phần tử còn lại sẽ được trả về dưới dạng một collection mới:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -2809,12 +2809,12 @@ $subset->all();
 ```
 
 > [!WARNING]
-> If the callback never returns `false`, the `skipWhile` method will return an empty collection.
+> Nếu callback không bao giờ trả về `false`, method `skipWhile` sẽ trả về một collection rỗng.
 
 <a name="method-slice"></a>
 #### `slice()` {.collection-method}
 
-The `slice` method returns a slice of the collection starting at the given index:
+Phương thức `slice` trả về một phần của collection bắt đầu tại index đã cho:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -2826,7 +2826,7 @@ $slice->all();
 // [5, 6, 7, 8, 9, 10]
 ```
 
-If you would like to limit the size of the returned slice, pass the desired size as the second argument to the method:
+Nếu muốn giới hạn kích thước phần được trả về, hãy truyền kích thước mong muốn làm đối số thứ hai của phương thức:
 
 ```php
 $slice = $collection->slice(4, 2);
@@ -2836,12 +2836,12 @@ $slice->all();
 // [5, 6]
 ```
 
-The returned slice will preserve keys by default. If you do not wish to preserve the original keys, you can use the [values](#method-values) method to reindex them.
+Mặc định, phần được trả về sẽ giữ nguyên các key. Nếu không muốn giữ các key ban đầu, bạn có thể dùng phương thức [values](#method-values) để đánh lại index.
 
 <a name="method-sliding"></a>
 #### `sliding()` {.collection-method}
 
-The `sliding` method returns a new collection of chunks representing a "sliding window" view of the items in the collection:
+Phương thức `sliding` trả về một collection mới gồm các chunk biểu diễn dạng xem "sliding window" của các phần tử trong collection:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2853,7 +2853,7 @@ $chunks->toArray();
 // [[1, 2], [2, 3], [3, 4], [4, 5]]
 ```
 
-This is especially useful in conjunction with the [eachSpread](#method-eachspread) method:
+Điều này đặc biệt hữu ích khi kết hợp với phương thức [eachSpread](#method-eachspread):
 
 ```php
 $transactions->sliding(2)->eachSpread(function (Collection $previous, Collection $current) {
@@ -2861,7 +2861,7 @@ $transactions->sliding(2)->eachSpread(function (Collection $previous, Collection
 });
 ```
 
-You may optionally pass a second "step" value, which determines the distance between the first item of every chunk:
+Bạn có thể tùy chọn truyền giá trị "step" thứ hai để xác định khoảng cách giữa phần tử đầu tiên của mỗi chunk:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -2876,7 +2876,7 @@ $chunks->toArray();
 <a name="method-sole"></a>
 #### `sole()` {.collection-method}
 
-The `sole` method returns the first element in the collection that passes a given truth test, but only if the truth test matches exactly one element:
+Phương thức `sole` trả về phần tử đầu tiên trong collection thỏa điều kiện kiểm tra đã cho, nhưng chỉ khi điều kiện đó khớp chính xác một phần tử:
 
 ```php
 collect([1, 2, 3, 4])->sole(function (int $value, int $key) {
@@ -2886,7 +2886,7 @@ collect([1, 2, 3, 4])->sole(function (int $value, int $key) {
 // 2
 ```
 
-You may also pass a key / value pair to the `sole` method, which will return the first element in the collection that matches the given pair, but only if it exactly one element matches:
+Bạn cũng có thể truyền một cặp key / value vào phương thức `sole`; phương thức sẽ trả về phần tử đầu tiên trong collection khớp với cặp đã cho, nhưng chỉ khi có chính xác một phần tử khớp:
 
 ```php
 $collection = collect([
@@ -2899,7 +2899,7 @@ $collection->sole('product', 'Chair');
 // ['product' => 'Chair', 'price' => 100]
 ```
 
-Alternatively, you may also call the `sole` method with no argument to get the first element in the collection if there is only one element:
+Ngoài ra, bạn cũng có thể gọi phương thức `sole` mà không truyền đối số để lấy phần tử đầu tiên nếu collection chỉ có duy nhất một phần tử:
 
 ```php
 $collection = collect([
@@ -2911,17 +2911,17 @@ $collection->sole();
 // ['product' => 'Desk', 'price' => 200]
 ```
 
-If there are no elements in the collection that should be returned by the `sole` method, an `\Illuminate\Collections\ItemNotFoundException` exception will be thrown. If there is more than one element that should be returned, an `\Illuminate\Collections\MultipleItemsFoundException` will be thrown.
+Nếu collection không có phần tử nào để phương thức `sole` trả về, exception `\Illuminate\Collections\ItemNotFoundException` sẽ được ném. Nếu có nhiều hơn một phần tử có thể được trả về, `\Illuminate\Collections\MultipleItemsFoundException` sẽ được ném.
 
 <a name="method-some"></a>
 #### `some()` {.collection-method}
 
-Alias for the [contains](#method-contains) method.
+Alias của phương thức [contains](#method-contains).
 
 <a name="method-sort"></a>
 #### `sort()` {.collection-method}
 
-The `sort` method sorts the collection. The sorted collection keeps the original array keys, so in the following example we will use the [values](#method-values) method to reset the keys to consecutively numbered indexes:
+Phương thức `sort` sắp xếp collection. Collection sau khi sắp xếp vẫn giữ các key ban đầu của mảng, vì vậy trong ví dụ sau chúng ta sẽ dùng phương thức [values](#method-values) để đặt lại key thành các index liên tiếp:
 
 ```php
 $collection = collect([5, 3, 1, 2, 4]);
@@ -2933,15 +2933,15 @@ $sorted->values()->all();
 // [1, 2, 3, 4, 5]
 ```
 
-If your sorting needs are more advanced, you may pass a callback to `sort` with your own algorithm. Refer to the PHP documentation on [uasort](https://secure.php.net/manual/en/function.uasort.php#refsect1-function.uasort-parameters), which is what the collection's `sort` method calls utilizes internally.
+Nếu nhu cầu sắp xếp phức tạp hơn, bạn có thể truyền một callback chứa thuật toán của riêng mình vào `sort`. Hãy tham khảo tài liệu PHP về [uasort](https://secure.php.net/manual/en/function.uasort.php#refsect1-function.uasort-parameters), đây là hàm mà phương thức `sort` của collection sử dụng bên trong.
 
 > [!NOTE]
-> If you need to sort a collection of nested arrays or objects, see the [sortBy](#method-sortby) and [sortByDesc](#method-sortbydesc) methods.
+> Nếu cần sắp xếp một collection gồm các array hoặc object lồng nhau, hãy xem các method [sortBy](#method-sortby) và [sortByDesc](#method-sortbydesc).
 
 <a name="method-sortby"></a>
 #### `sortBy()` {.collection-method}
 
-The `sortBy` method sorts the collection by the given key. The sorted collection keeps the original array keys, so in the following example we will use the [values](#method-values) method to reset the keys to consecutively numbered indexes:
+Phương thức `sortBy` sắp xếp collection theo key đã cho. Collection sau khi sắp xếp vẫn giữ các key ban đầu của mảng, vì vậy trong ví dụ sau chúng ta sẽ dùng phương thức [values](#method-values) để đặt lại key thành các index liên tiếp:
 
 ```php
 $collection = collect([
@@ -2963,7 +2963,7 @@ $sorted->values()->all();
 */
 ```
 
-The `sortBy` method accepts [sort flags](https://www.php.net/manual/en/function.sort.php) as its second argument:
+Phương thức `sortBy` chấp nhận [sort flags](https://www.php.net/manual/en/function.sort.php) làm đối số thứ hai:
 
 ```php
 $collection = collect([
@@ -2985,7 +2985,7 @@ $sorted->values()->all();
 */
 ```
 
-Alternatively, you may pass your own closure to determine how to sort the collection's values:
+Ngoài ra, bạn có thể truyền closure của riêng mình để xác định cách sắp xếp các giá trị trong collection:
 
 ```php
 $collection = collect([
@@ -3009,7 +3009,7 @@ $sorted->values()->all();
 */
 ```
 
-If you would like to sort your collection by multiple attributes, you may pass an array of sort operations to the `sortBy` method. Each sort operation should be an array consisting of the attribute that you wish to sort by and the direction of the desired sort:
+Nếu muốn sắp xếp collection theo nhiều thuộc tính, bạn có thể truyền một mảng các thao tác sắp xếp vào phương thức `sortBy`. Mỗi thao tác sắp xếp phải là một mảng gồm thuộc tính cần sắp xếp và hướng sắp xếp mong muốn:
 
 ```php
 $collection = collect([
@@ -3036,7 +3036,7 @@ $sorted->values()->all();
 */
 ```
 
-When sorting a collection by multiple attributes, you may also provide closures that define each sort operation:
+Khi sắp xếp collection theo nhiều thuộc tính, bạn cũng có thể cung cấp các closure để định nghĩa từng thao tác sắp xếp:
 
 ```php
 $collection = collect([
@@ -3066,12 +3066,12 @@ $sorted->values()->all();
 <a name="method-sortbydesc"></a>
 #### `sortByDesc()` {.collection-method}
 
-This method has the same signature as the [sortBy](#method-sortby) method, but will sort the collection in the opposite order.
+Method này có cùng signature với method [sortBy](#method-sortby), nhưng sẽ sắp xếp collection theo thứ tự ngược lại.
 
 <a name="method-sortdesc"></a>
 #### `sortDesc()` {.collection-method}
 
-This method will sort the collection in the opposite order as the [sort](#method-sort) method:
+Method này sẽ sắp xếp collection theo thứ tự ngược với method [sort](#method-sort):
 
 ```php
 $collection = collect([5, 3, 1, 2, 4]);
@@ -3083,12 +3083,12 @@ $sorted->values()->all();
 // [5, 4, 3, 2, 1]
 ```
 
-Unlike `sort`, you may not pass a closure to `sortDesc`. Instead, you should use the [sort](#method-sort) method and invert your comparison.
+Khác với `sort`, bạn không thể truyền closure cho `sortDesc`. Thay vào đó, hãy sử dụng method [sort](#method-sort) và đảo ngược phép so sánh.
 
 <a name="method-sortkeys"></a>
 #### `sortKeys()` {.collection-method}
 
-The `sortKeys` method sorts the collection by the keys of the underlying associative array:
+Method `sortKeys` sắp xếp collection theo các key của associative array bên dưới:
 
 ```php
 $collection = collect([
@@ -3113,12 +3113,12 @@ $sorted->all();
 <a name="method-sortkeysdesc"></a>
 #### `sortKeysDesc()` {.collection-method}
 
-This method has the same signature as the [sortKeys](#method-sortkeys) method, but will sort the collection in the opposite order.
+Method này có cùng signature với method [sortKeys](#method-sortkeys), nhưng sẽ sắp xếp collection theo thứ tự ngược lại.
 
 <a name="method-sortkeysusing"></a>
 #### `sortKeysUsing()` {.collection-method}
 
-The `sortKeysUsing` method sorts the collection by the keys of the underlying associative array using a callback:
+Method `sortKeysUsing` sắp xếp collection theo các key của associative array bên dưới bằng một callback:
 
 ```php
 $collection = collect([
@@ -3140,12 +3140,12 @@ $sorted->all();
 */
 ```
 
-The callback must be a comparison function that returns an integer less than, equal to, or greater than zero. For more information, refer to the PHP documentation on [uksort](https://www.php.net/manual/en/function.uksort.php#refsect1-function.uksort-parameters), which is the PHP function that `sortKeysUsing` method utilizes internally.
+Callback phải là một hàm so sánh trả về số nguyên nhỏ hơn, bằng hoặc lớn hơn 0. Để biết thêm thông tin, hãy tham khảo tài liệu PHP về [uksort](https://www.php.net/manual/en/function.uksort.php#refsect1-function.uksort-parameters), đây là hàm PHP được method `sortKeysUsing` sử dụng nội bộ.
 
 <a name="method-splice"></a>
 #### `splice()` {.collection-method}
 
-The `splice` method removes and returns a slice of items starting at the specified index:
+Method `splice` xóa và trả về một phần các phần tử bắt đầu từ index được chỉ định:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -3161,7 +3161,7 @@ $collection->all();
 // [1, 2]
 ```
 
-You may pass a second argument to limit the size of the resulting collection:
+Bạn có thể truyền đối số thứ hai để giới hạn kích thước của collection kết quả:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -3177,7 +3177,7 @@ $collection->all();
 // [1, 2, 4, 5]
 ```
 
-In addition, you may pass a third argument containing the new items to replace the items removed from the collection:
+Ngoài ra, bạn có thể truyền đối số thứ ba chứa các phần tử mới để thay thế những phần tử đã bị xóa khỏi collection:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -3196,7 +3196,7 @@ $collection->all();
 <a name="method-split"></a>
 #### `split()` {.collection-method}
 
-The `split` method breaks a collection into the given number of groups:
+Method `split` chia một collection thành số lượng nhóm được chỉ định:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -3211,7 +3211,7 @@ $groups->all();
 <a name="method-splitin"></a>
 #### `splitIn()` {.collection-method}
 
-The `splitIn` method breaks a collection into the given number of groups, filling non-terminal groups completely before allocating the remainder to the final group:
+Method `splitIn` chia một collection thành số lượng nhóm được chỉ định, điền đầy hoàn toàn các nhóm không phải nhóm cuối trước khi phân bổ phần còn lại cho nhóm cuối:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -3226,7 +3226,7 @@ $groups->all();
 <a name="method-sum"></a>
 #### `sum()` {.collection-method}
 
-The `sum` method returns the sum of all items in the collection:
+Method `sum` trả về tổng của tất cả phần tử trong collection:
 
 ```php
 collect([1, 2, 3, 4, 5])->sum();
@@ -3234,7 +3234,7 @@ collect([1, 2, 3, 4, 5])->sum();
 // 15
 ```
 
-If the collection contains nested arrays or objects, you should pass a key that will be used to determine which values to sum:
+Nếu collection chứa các array hoặc object lồng nhau, bạn nên truyền key dùng để xác định các giá trị cần tính tổng:
 
 ```php
 $collection = collect([
@@ -3247,7 +3247,7 @@ $collection->sum('pages');
 // 1272
 ```
 
-In addition, you may pass your own closure to determine which values of the collection to sum:
+Ngoài ra, bạn có thể truyền closure riêng để xác định các giá trị trong collection cần tính tổng:
 
 ```php
 $collection = collect([
@@ -3266,7 +3266,7 @@ $collection->sum(function (array $product) {
 <a name="method-take"></a>
 #### `take()` {.collection-method}
 
-The `take` method returns a new collection with the specified number of items:
+Method `take` trả về một collection mới với số lượng phần tử được chỉ định:
 
 ```php
 $collection = collect([0, 1, 2, 3, 4, 5]);
@@ -3278,7 +3278,7 @@ $chunk->all();
 // [0, 1, 2]
 ```
 
-You may also pass a negative integer to take the specified number of items from the end of the collection:
+Bạn cũng có thể truyền một số nguyên âm để lấy số lượng phần tử được chỉ định từ cuối collection:
 
 ```php
 $collection = collect([0, 1, 2, 3, 4, 5]);
@@ -3293,7 +3293,7 @@ $chunk->all();
 <a name="method-takeuntil"></a>
 #### `takeUntil()` {.collection-method}
 
-The `takeUntil` method returns items in the collection until the given callback returns `true`:
+Method `takeUntil` trả về các phần tử trong collection cho đến khi callback đã cho trả về `true`:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -3307,7 +3307,7 @@ $subset->all();
 // [1, 2]
 ```
 
-You may also pass a simple value to the `takeUntil` method to get the items until the given value is found:
+Bạn cũng có thể truyền một giá trị đơn giản cho method `takeUntil` để lấy các phần tử cho đến khi tìm thấy giá trị đã cho:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -3320,12 +3320,12 @@ $subset->all();
 ```
 
 > [!WARNING]
-> If the given value is not found or the callback never returns `true`, the `takeUntil` method will return all items in the collection.
+> Nếu không tìm thấy giá trị đã cho hoặc callback không bao giờ trả về `true`, method `takeUntil` sẽ trả về tất cả phần tử trong collection.
 
 <a name="method-takewhile"></a>
 #### `takeWhile()` {.collection-method}
 
-The `takeWhile` method returns items in the collection until the given callback returns `false`:
+Method `takeWhile` trả về các phần tử trong collection cho đến khi callback đã cho trả về `false`:
 
 ```php
 $collection = collect([1, 2, 3, 4]);
@@ -3340,12 +3340,12 @@ $subset->all();
 ```
 
 > [!WARNING]
-> If the callback never returns `false`, the `takeWhile` method will return all items in the collection.
+> Nếu callback không bao giờ trả về `false`, method `takeWhile` sẽ trả về tất cả phần tử trong collection.
 
 <a name="method-tap"></a>
 #### `tap()` {.collection-method}
 
-The `tap` method passes the collection to the given callback, allowing you to "tap" into the collection at a specific point and do something with the items while not affecting the collection itself. The collection is then returned by the `tap` method:
+Method `tap` truyền collection vào callback đã cho, cho phép bạn "can thiệp" vào collection tại một thời điểm cụ thể và thực hiện thao tác với các phần tử mà không ảnh hưởng đến chính collection. Sau đó, method `tap` trả về collection:
 
 ```php
 collect([2, 4, 3, 1, 5])
@@ -3361,7 +3361,7 @@ collect([2, 4, 3, 1, 5])
 <a name="method-times"></a>
 #### `times()` {.collection-method}
 
-The static `times` method creates a new collection by invoking the given closure a specified number of times:
+Method static `times` tạo một collection mới bằng cách gọi closure đã cho với số lần được chỉ định:
 
 ```php
 $collection = Collection::times(10, function (int $number) {
@@ -3376,7 +3376,7 @@ $collection->all();
 <a name="method-toarray"></a>
 #### `toArray()` {.collection-method}
 
-The `toArray` method converts the collection into a plain PHP `array`. If the collection's values are [Eloquent](/docs/{{version}}/eloquent) models, the models will also be converted to arrays:
+Method `toArray` chuyển collection thành một PHP `array` thuần. Nếu các giá trị trong collection là model [Eloquent](/docs/{{version}}/eloquent), các model cũng sẽ được chuyển thành array:
 
 ```php
 $collection = collect(['name' => 'Desk', 'price' => 200]);
@@ -3391,12 +3391,12 @@ $collection->toArray();
 ```
 
 > [!WARNING]
-> `toArray` also converts all of the collection's nested objects that are an instance of `Arrayable` to an array. If you want to get the raw array underlying the collection, use the [all](#method-all) method instead.
+> `toArray` cũng chuyển tất cả object lồng nhau trong collection có implement `Arrayable` thành array. Nếu muốn lấy raw array bên dưới collection, hãy sử dụng method [all](#method-all).
 
 <a name="method-tojson"></a>
 #### `toJson()` {.collection-method}
 
-The `toJson` method converts the collection into a JSON serialized string:
+Method `toJson` chuyển collection thành một chuỗi JSON đã serialize:
 
 ```php
 $collection = collect(['name' => 'Desk', 'price' => 200]);
@@ -3409,7 +3409,7 @@ $collection->toJson();
 <a name="method-to-pretty-json"></a>
 #### `toPrettyJson()` {.collection-method}
 
-The `toPrettyJson` method converts the collection into a formatted JSON string using the `JSON_PRETTY_PRINT` option:
+Method `toPrettyJson` chuyển collection thành chuỗi JSON đã được định dạng bằng option `JSON_PRETTY_PRINT`:
 
 ```php
 $collection = collect(['name' => 'Desk', 'price' => 200]);
@@ -3420,7 +3420,7 @@ $collection->toPrettyJson();
 <a name="method-transform"></a>
 #### `transform()` {.collection-method}
 
-The `transform` method iterates over the collection and calls the given callback with each item in the collection. The items in the collection will be replaced by the values returned by the callback:
+Method `transform` lặp qua collection và gọi callback đã cho với từng phần tử. Các phần tử trong collection sẽ được thay thế bằng những giá trị do callback trả về:
 
 ```php
 $collection = collect([1, 2, 3, 4, 5]);
@@ -3435,12 +3435,12 @@ $collection->all();
 ```
 
 > [!WARNING]
-> Unlike most other collection methods, `transform` modifies the collection itself. If you wish to create a new collection instead, use the [map](#method-map) method.
+> Khác với hầu hết các method collection khác, `transform` thay đổi trực tiếp collection. Nếu muốn tạo một collection mới, hãy sử dụng method [map](#method-map).
 
 <a name="method-undot"></a>
 #### `undot()` {.collection-method}
 
-The `undot` method expands a single-dimensional collection that uses "dot" notation into a multi-dimensional collection:
+Method `undot` mở rộng một collection một chiều sử dụng ký pháp "dot" thành collection đa chiều:
 
 ```php
 $person = collect([
@@ -3477,7 +3477,7 @@ $person->toArray();
 <a name="method-union"></a>
 #### `union()` {.collection-method}
 
-The `union` method adds the given array to the collection. If the given array contains keys that are already in the original collection, the original collection's values will be preferred:
+Method `union` thêm array đã cho vào collection. Nếu array đã cho chứa các key đã tồn tại trong collection ban đầu, các giá trị của collection ban đầu sẽ được ưu tiên:
 
 ```php
 $collection = collect([1 => ['a'], 2 => ['b']]);
@@ -3492,7 +3492,7 @@ $union->all();
 <a name="method-unique"></a>
 #### `unique()` {.collection-method}
 
-The `unique` method returns all of the unique items in the collection. The returned collection keeps the original array keys, so in the following example we will use the [values](#method-values) method to reset the keys to consecutively numbered indexes:
+Method `unique` trả về tất cả phần tử duy nhất trong collection. Collection trả về vẫn giữ các key mảng ban đầu, vì vậy trong ví dụ sau chúng ta sẽ dùng method [values](#method-values) để đặt lại key thành các index liên tiếp:
 
 ```php
 $collection = collect([1, 1, 2, 2, 3, 4, 2]);
@@ -3504,7 +3504,7 @@ $unique->values()->all();
 // [1, 2, 3, 4]
 ```
 
-When dealing with nested arrays or objects, you may specify the key used to determine uniqueness:
+Khi làm việc với các array hoặc object lồng nhau, bạn có thể chỉ định key dùng để xác định tính duy nhất:
 
 ```php
 $collection = collect([
@@ -3527,7 +3527,7 @@ $unique->values()->all();
 */
 ```
 
-Finally, you may also pass your own closure to the `unique` method to specify which value should determine an item's uniqueness:
+Cuối cùng, bạn cũng có thể truyền closure riêng cho method `unique` để chỉ định giá trị nào sẽ quyết định tính duy nhất của một phần tử:
 
 ```php
 $unique = $collection->unique(function (array $item) {
@@ -3546,20 +3546,20 @@ $unique->values()->all();
 */
 ```
 
-The `unique` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value. Use the [uniqueStrict](#method-uniquestrict) method to filter using "strict" comparisons.
+Method `unique` sử dụng phép so sánh "loose" khi kiểm tra giá trị phần tử, nghĩa là một chuỗi biểu diễn số nguyên sẽ được xem là bằng với số nguyên có cùng giá trị. Hãy sử dụng method [uniqueStrict](#method-uniquestrict) để lọc bằng phép so sánh "strict".
 
 > [!NOTE]
-> This method's behavior is modified when using [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-unique).
+> Hành vi của method này được thay đổi khi sử dụng [Eloquent Collections](/docs/{{version}}/eloquent-collections#method-unique).
 
 <a name="method-uniquestrict"></a>
 #### `uniqueStrict()` {.collection-method}
 
-This method has the same signature as the [unique](#method-unique) method; however, all values are compared using "strict" comparisons.
+Method này có cùng signature với method [unique](#method-unique); tuy nhiên, tất cả giá trị được so sánh bằng phép so sánh "strict".
 
 <a name="method-unless"></a>
 #### `unless()` {.collection-method}
 
-The `unless` method will execute the given callback unless the first argument given to the method evaluates to `true`. The collection instance and the first argument given to the `unless` method will be provided to the closure:
+Method `unless` sẽ thực thi callback đã cho trừ khi đối số đầu tiên truyền vào method được đánh giá là `true`. Instance collection và đối số đầu tiên truyền vào method `unless` sẽ được cung cấp cho closure:
 
 ```php
 $collection = collect([1, 2, 3]);
@@ -3577,7 +3577,7 @@ $collection->all();
 // [1, 2, 3, 5]
 ```
 
-A second callback may be passed to the `unless` method. The second callback will be executed when the first argument given to the `unless` method evaluates to `true`:
+Có thể truyền callback thứ hai cho method `unless`. Callback thứ hai sẽ được thực thi khi đối số đầu tiên truyền vào method `unless` được đánh giá là `true`:
 
 ```php
 $collection = collect([1, 2, 3]);
@@ -3593,22 +3593,22 @@ $collection->all();
 // [1, 2, 3, 5]
 ```
 
-For the inverse of `unless`, see the [when](#method-when) method.
+Để thực hiện thao tác ngược với `unless`, hãy xem method [when](#method-when).
 
 <a name="method-unlessempty"></a>
 #### `unlessEmpty()` {.collection-method}
 
-Alias for the [whenNotEmpty](#method-whennotempty) method.
+Alias của method [whenNotEmpty](#method-whennotempty).
 
 <a name="method-unlessnotempty"></a>
 #### `unlessNotEmpty()` {.collection-method}
 
-Alias for the [whenEmpty](#method-whenempty) method.
+Alias của method [whenEmpty](#method-whenempty).
 
 <a name="method-unwrap"></a>
 #### `unwrap()` {.collection-method}
 
-The static `unwrap` method returns the collection's underlying items from the given value when applicable:
+Method static `unwrap` trả về các phần tử bên dưới collection từ giá trị đã cho khi phù hợp:
 
 ```php
 Collection::unwrap(collect('John Doe'));
@@ -3627,7 +3627,7 @@ Collection::unwrap('John Doe');
 <a name="method-value"></a>
 #### `value()` {.collection-method}
 
-The `value` method retrieves a given value from the first element of the collection:
+Method `value` lấy một giá trị đã cho từ phần tử đầu tiên của collection:
 
 ```php
 $collection = collect([
@@ -3643,7 +3643,7 @@ $value = $collection->value('price');
 <a name="method-values"></a>
 #### `values()` {.collection-method}
 
-The `values` method returns a new collection with the keys reset to consecutive integers:
+Method `values` trả về một collection mới với các key được đặt lại thành các số nguyên liên tiếp:
 
 ```php
 $collection = collect([
@@ -3666,7 +3666,7 @@ $values->all();
 <a name="method-when"></a>
 #### `when()` {.collection-method}
 
-The `when` method will execute the given callback when the first argument given to the method evaluates to `true`. The collection instance and the first argument given to the `when` method will be provided to the closure:
+Method `when` sẽ thực thi callback đã cho khi đối số đầu tiên truyền vào method được đánh giá là `true`. Instance collection và đối số đầu tiên truyền vào method `when` sẽ được cung cấp cho closure:
 
 ```php
 $collection = collect([1, 2, 3]);
@@ -3684,7 +3684,7 @@ $collection->all();
 // [1, 2, 3, 4]
 ```
 
-A second callback may be passed to the `when` method. The second callback will be executed when the first argument given to the `when` method evaluates to `false`:
+Có thể truyền callback thứ hai cho method `when`. Callback thứ hai sẽ được thực thi khi đối số đầu tiên truyền vào method `when` được đánh giá là `false`:
 
 ```php
 $collection = collect([1, 2, 3]);
@@ -3700,12 +3700,12 @@ $collection->all();
 // [1, 2, 3, 5]
 ```
 
-For the inverse of `when`, see the [unless](#method-unless) method.
+Để thực hiện thao tác ngược với `when`, hãy xem method [unless](#method-unless).
 
 <a name="method-whenempty"></a>
 #### `whenEmpty()` {.collection-method}
 
-The `whenEmpty` method will execute the given callback when the collection is empty:
+Method `whenEmpty` sẽ thực thi callback đã cho khi collection rỗng:
 
 ```php
 $collection = collect(['Michael', 'Tom']);
@@ -3729,7 +3729,7 @@ $collection->all();
 // ['Adam']
 ```
 
-A second closure may be passed to the `whenEmpty` method that will be executed when the collection is not empty:
+Có thể truyền closure thứ hai cho method `whenEmpty`; closure này sẽ được thực thi khi collection không rỗng:
 
 ```php
 $collection = collect(['Michael', 'Tom']);
@@ -3745,12 +3745,12 @@ $collection->all();
 // ['Michael', 'Tom', 'Taylor']
 ```
 
-For the inverse of `whenEmpty`, see the [whenNotEmpty](#method-whennotempty) method.
+Để thực hiện thao tác ngược với `whenEmpty`, hãy xem method [whenNotEmpty](#method-whennotempty).
 
 <a name="method-whennotempty"></a>
 #### `whenNotEmpty()` {.collection-method}
 
-The `whenNotEmpty` method will execute the given callback when the collection is not empty:
+Method `whenNotEmpty` sẽ thực thi callback đã cho khi collection không rỗng:
 
 ```php
 $collection = collect(['Michael', 'Tom']);
@@ -3774,7 +3774,7 @@ $collection->all();
 // []
 ```
 
-A second closure may be passed to the `whenNotEmpty` method that will be executed when the collection is empty:
+Có thể truyền closure thứ hai cho method `whenNotEmpty`; closure này sẽ được thực thi khi collection rỗng:
 
 ```php
 $collection = collect();
@@ -3790,12 +3790,12 @@ $collection->all();
 // ['Taylor']
 ```
 
-For the inverse of `whenNotEmpty`, see the [whenEmpty](#method-whenempty) method.
+Để thực hiện thao tác ngược với `whenNotEmpty`, hãy xem method [whenEmpty](#method-whenempty).
 
 <a name="method-where"></a>
 #### `where()` {.collection-method}
 
-The `where` method filters the collection by a given key / value pair:
+Method `where` lọc collection theo một cặp key / value đã cho:
 
 ```php
 $collection = collect([
@@ -3817,9 +3817,9 @@ $filtered->all();
 */
 ```
 
-The `where` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value. Use the [whereStrict](#method-wherestrict) method to filter using "strict" comparisons, or the [whereNull](#method-wherenull) and [whereNotNull](#method-wherenotnull) methods to filter for `null` values.
+Method `where` sử dụng phép so sánh "loose" khi kiểm tra giá trị phần tử, nghĩa là một chuỗi biểu diễn số nguyên sẽ được xem là bằng với số nguyên có cùng giá trị. Hãy sử dụng method [whereStrict](#method-wherestrict) để lọc bằng phép so sánh "strict", hoặc các method [whereNull](#method-wherenull) và [whereNotNull](#method-wherenotnull) để lọc các giá trị `null`.
 
-Optionally, you may pass a comparison operator as the second parameter. Supported operators are: '===', '!==', '!=', '==', '=', '<>', '>', '<', '>=', and '<=':
+Bạn có thể tùy chọn truyền toán tử so sánh làm tham số thứ hai. Các toán tử được hỗ trợ gồm: '===', '!==', '!=', '==', '=', '<>', '>', '<', '>=', và '<=':
 
 ```php
 $collection = collect([
@@ -3843,12 +3843,12 @@ $filtered->all();
 <a name="method-wherestrict"></a>
 #### `whereStrict()` {.collection-method}
 
-This method has the same signature as the [where](#method-where) method; however, all values are compared using "strict" comparisons.
+Method này có cùng signature với method [where](#method-where); tuy nhiên, tất cả giá trị được so sánh bằng phép so sánh "strict".
 
 <a name="method-wherebetween"></a>
 #### `whereBetween()` {.collection-method}
 
-The `whereBetween` method filters the collection by determining if a specified item value is within a given range:
+Method `whereBetween` lọc collection bằng cách xác định xem giá trị của phần tử được chỉ định có nằm trong khoảng đã cho hay không:
 
 ```php
 $collection = collect([
@@ -3875,7 +3875,7 @@ $filtered->all();
 <a name="method-wherein"></a>
 #### `whereIn()` {.collection-method}
 
-The `whereIn` method removes elements from the collection that do not have a specified item value that is contained within the given array:
+Method `whereIn` loại khỏi collection các phần tử có giá trị được chỉ định không nằm trong array đã cho:
 
 ```php
 $collection = collect([
@@ -3897,17 +3897,17 @@ $filtered->all();
 */
 ```
 
-The `whereIn` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value. Use the [whereInStrict](#method-whereinstrict) method to filter using "strict" comparisons.
+Method `whereIn` sử dụng phép so sánh "loose" khi kiểm tra giá trị phần tử, nghĩa là một chuỗi biểu diễn số nguyên sẽ được xem là bằng với số nguyên có cùng giá trị. Hãy sử dụng method [whereInStrict](#method-whereinstrict) để lọc bằng phép so sánh "strict".
 
 <a name="method-whereinstrict"></a>
 #### `whereInStrict()` {.collection-method}
 
-This method has the same signature as the [whereIn](#method-wherein) method; however, all values are compared using "strict" comparisons.
+Method này có cùng signature với method [whereIn](#method-wherein); tuy nhiên, tất cả giá trị được so sánh bằng phép so sánh "strict".
 
 <a name="method-whereinstanceof"></a>
 #### `whereInstanceOf()` {.collection-method}
 
-The `whereInstanceOf` method filters the collection by a given class type:
+Method `whereInstanceOf` lọc collection theo class type đã cho:
 
 ```php
 use App\Models\User;
@@ -3929,7 +3929,7 @@ $filtered->all();
 <a name="method-wherenotbetween"></a>
 #### `whereNotBetween()` {.collection-method}
 
-The `whereNotBetween` method filters the collection by determining if a specified item value is outside of a given range:
+Method `whereNotBetween` lọc collection bằng cách xác định xem giá trị của phần tử được chỉ định có nằm ngoài khoảng đã cho hay không:
 
 ```php
 $collection = collect([
@@ -3955,7 +3955,7 @@ $filtered->all();
 <a name="method-wherenotin"></a>
 #### `whereNotIn()` {.collection-method}
 
-The `whereNotIn` method removes elements from the collection that have a specified item value that is contained within the given array:
+Method `whereNotIn` loại khỏi collection các phần tử có giá trị được chỉ định nằm trong array đã cho:
 
 ```php
 $collection = collect([
@@ -3977,17 +3977,17 @@ $filtered->all();
 */
 ```
 
-The `whereNotIn` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value. Use the [whereNotInStrict](#method-wherenotinstrict) method to filter using "strict" comparisons.
+Method `whereNotIn` sử dụng phép so sánh "loose" khi kiểm tra giá trị phần tử, nghĩa là một chuỗi biểu diễn số nguyên sẽ được xem là bằng với số nguyên có cùng giá trị. Hãy sử dụng method [whereNotInStrict](#method-wherenotinstrict) để lọc bằng phép so sánh "strict".
 
 <a name="method-wherenotinstrict"></a>
 #### `whereNotInStrict()` {.collection-method}
 
-This method has the same signature as the [whereNotIn](#method-wherenotin) method; however, all values are compared using "strict" comparisons.
+Method này có cùng signature với method [whereNotIn](#method-wherenotin); tuy nhiên, tất cả giá trị được so sánh bằng phép so sánh "strict".
 
 <a name="method-wherenotnull"></a>
 #### `whereNotNull()` {.collection-method}
 
-The `whereNotNull` method returns items from the collection where the given key is not `null`:
+Method `whereNotNull` trả về các phần tử trong collection mà key đã cho không phải `null`:
 
 ```php
 $collection = collect([
@@ -4015,7 +4015,7 @@ $filtered->all();
 <a name="method-wherenull"></a>
 #### `whereNull()` {.collection-method}
 
-The `whereNull` method returns items from the collection where the given key is `null`:
+Method `whereNull` trả về các phần tử trong collection mà key đã cho là `null`:
 
 ```php
 $collection = collect([
@@ -4040,7 +4040,7 @@ $filtered->all();
 <a name="method-wrap"></a>
 #### `wrap()` {.collection-method}
 
-The static `wrap` method wraps the given value in a collection when applicable:
+Method static `wrap` bọc giá trị đã cho trong một collection khi phù hợp:
 
 ```php
 use Illuminate\Support\Collection;
@@ -4067,7 +4067,7 @@ $collection->all();
 <a name="method-zip"></a>
 #### `zip()` {.collection-method}
 
-The `zip` method merges together the values of the given array with the values of the original collection at their corresponding index:
+Method `zip` ghép các giá trị của array đã cho với các giá trị của collection ban đầu tại index tương ứng:
 
 ```php
 $collection = collect(['Chair', 'Desk']);
@@ -4082,9 +4082,9 @@ $zipped->all();
 <a name="higher-order-messages"></a>
 ## Higher Order Messages
 
-Collections also provide support for "higher order messages", which are short-cuts for performing common actions on collections. The collection methods that provide higher order messages are: [average](#method-average), [avg](#method-avg), [contains](#method-contains), [each](#method-each), [every](#method-every), [filter](#method-filter), [first](#method-first), [flatMap](#method-flatmap), [groupBy](#method-groupby), [keyBy](#method-keyby), [map](#method-map), [max](#method-max), [min](#method-min), [partition](#method-partition), [reject](#method-reject), [skipUntil](#method-skipuntil), [skipWhile](#method-skipwhile), [some](#method-some), [sortBy](#method-sortby), [sortByDesc](#method-sortbydesc), [sum](#method-sum), [takeUntil](#method-takeuntil), [takeWhile](#method-takewhile), and [unique](#method-unique).
+Collections cũng hỗ trợ "higher order messages", là các cách viết tắt để thực hiện những thao tác phổ biến trên collection. Các method collection hỗ trợ higher order messages gồm: [average](#method-average), [avg](#method-avg), [contains](#method-contains), [each](#method-each), [every](#method-every), [filter](#method-filter), [first](#method-first), [flatMap](#method-flatmap), [groupBy](#method-groupby), [keyBy](#method-keyby), [map](#method-map), [max](#method-max), [min](#method-min), [partition](#method-partition), [reject](#method-reject), [skipUntil](#method-skipuntil), [skipWhile](#method-skipwhile), [some](#method-some), [sortBy](#method-sortby), [sortByDesc](#method-sortbydesc), [sum](#method-sum), [takeUntil](#method-takeuntil), [takeWhile](#method-takewhile), và [unique](#method-unique).
 
-Each higher order message can be accessed as a dynamic property on a collection instance. For instance, let's use the `each` higher order message to call a method on each object within a collection:
+Mỗi higher order message có thể được truy cập như một dynamic property trên instance collection. Ví dụ, hãy dùng higher order message `each` để gọi một method trên từng object trong collection:
 
 ```php
 use App\Models\User;
@@ -4094,7 +4094,7 @@ $users = User::where('votes', '>', 500)->get();
 $users->each->markAsVip();
 ```
 
-Likewise, we can use the `sum` higher order message to gather the total number of "votes" for a collection of users:
+Tương tự, chúng ta có thể dùng higher order message `sum` để tính tổng số "votes" của một collection người dùng:
 
 ```php
 $users = User::where('group', 'Development')->get();
@@ -4103,17 +4103,17 @@ return $users->sum->votes;
 ```
 
 <a name="lazy-collections"></a>
-## Lazy Collections
+## Lazy Collection
 
 <a name="lazy-collection-introduction"></a>
-### Introduction
+### Giới thiệu
 
 > [!WARNING]
-> Before learning more about Laravel's lazy collections, take some time to familiarize yourself with [PHP generators](https://www.php.net/manual/en/language.generators.overview.php).
+> Trước khi tìm hiểu sâu hơn về lazy collections của Laravel, hãy dành thời gian làm quen với [PHP generators](https://www.php.net/manual/en/language.generators.overview.php).
 
-To supplement the already powerful `Collection` class, the `LazyCollection` class leverages PHP's [generators](https://www.php.net/manual/en/language.generators.overview.php) to allow you to work with very large datasets while keeping memory usage low.
+Để bổ sung cho class `Collection` vốn đã rất mạnh, class `LazyCollection` tận dụng [generators](https://www.php.net/manual/en/language.generators.overview.php) của PHP để cho phép bạn làm việc với các tập dữ liệu rất lớn mà vẫn giữ mức sử dụng bộ nhớ thấp.
 
-For example, imagine your application needs to process a multi-gigabyte log file while taking advantage of Laravel's collection methods to parse the logs. Instead of reading the entire file into memory at once, lazy collections may be used to keep only a small part of the file in memory at a given time:
+Ví dụ, hãy tưởng tượng ứng dụng cần xử lý một file log có kích thước nhiều gigabyte đồng thời tận dụng các method collection của Laravel để phân tích log. Thay vì đọc toàn bộ file vào bộ nhớ cùng lúc, lazy collections có thể được dùng để chỉ giữ một phần nhỏ của file trong bộ nhớ tại mỗi thời điểm:
 
 ```php
 use App\Models\LogEntry;
@@ -4134,7 +4134,7 @@ LazyCollection::make(function () {
 });
 ```
 
-Or, imagine you need to iterate through 10,000 Eloquent models. When using traditional Laravel collections, all 10,000 Eloquent models must be loaded into memory at the same time:
+Hoặc, hãy tưởng tượng bạn cần lặp qua 10.000 Eloquent model. Khi sử dụng collection Laravel truyền thống, toàn bộ 10.000 Eloquent model phải được nạp vào bộ nhớ cùng lúc:
 
 ```php
 use App\Models\User;
@@ -4144,7 +4144,7 @@ $users = User::all()->filter(function (User $user) {
 });
 ```
 
-However, the query builder's `cursor` method returns a `LazyCollection` instance. This allows you to still only run a single query against the database but also only keep one Eloquent model loaded in memory at a time. In this example, the `filter` callback is not executed until we actually iterate over each user individually, allowing for a drastic reduction in memory usage:
+Tuy nhiên, method `cursor` của query builder trả về một instance `LazyCollection`. Điều này cho phép bạn vẫn chỉ chạy một query duy nhất tới database nhưng tại mỗi thời điểm chỉ giữ một Eloquent model trong bộ nhớ. Trong ví dụ này, callback `filter` chưa được thực thi cho đến khi chúng ta thực sự lặp qua từng user, nhờ đó giảm đáng kể mức sử dụng bộ nhớ:
 
 ```php
 use App\Models\User;
@@ -4159,9 +4159,9 @@ foreach ($users as $user) {
 ```
 
 <a name="creating-lazy-collections"></a>
-### Creating Lazy Collections
+### Tạo Lazy Collection
 
-To create a lazy collection instance, you should pass a PHP generator function to the collection's `make` method:
+Để tạo một instance lazy collection, bạn nên truyền một PHP generator function vào method `make` của collection:
 
 ```php
 use Illuminate\Support\LazyCollection;
@@ -4178,9 +4178,9 @@ LazyCollection::make(function () {
 ```
 
 <a name="the-enumerable-contract"></a>
-### The Enumerable Contract
+### Contract Enumerable
 
-Almost all methods available on the `Collection` class are also available on the `LazyCollection` class. Both of these classes implement the `Illuminate\Support\Enumerable` contract, which defines the following methods:
+Hầu hết các method có trên class `Collection` cũng có trên class `LazyCollection`. Cả hai class đều implement contract `Illuminate\Support\Enumerable`, contract này định nghĩa các method sau:
 
 <style>
     .collection-method-list > p {
@@ -4313,17 +4313,17 @@ Almost all methods available on the `Collection` class are also available on the
 </div>
 
 > [!WARNING]
-> Methods that mutate the collection (such as `shift`, `pop`, `prepend` etc.) are **not** available on the `LazyCollection` class.
+> Các method làm thay đổi collection (chẳng hạn `shift`, `pop`, `prepend`, v.v.) **không** có trên class `LazyCollection`.
 
 <a name="lazy-collection-methods"></a>
-### Lazy Collection Methods
+### Các method của Lazy Collection
 
-In addition to the methods defined in the `Enumerable` contract, the `LazyCollection` class contains the following methods:
+Ngoài các method được định nghĩa trong contract `Enumerable`, class `LazyCollection` còn có các method sau:
 
 <a name="method-takeUntilTimeout"></a>
 #### `takeUntilTimeout()` {.collection-method}
 
-The `takeUntilTimeout` method returns a new lazy collection that will enumerate values until the specified time. After that time, the collection will then stop enumerating:
+Method `takeUntilTimeout` trả về một lazy collection mới sẽ liệt kê các giá trị cho đến thời điểm được chỉ định. Sau thời điểm đó, collection sẽ dừng việc liệt kê:
 
 ```php
 $lazyCollection = LazyCollection::times(INF)
@@ -4342,7 +4342,7 @@ $lazyCollection->each(function (int $number) {
 // 59
 ```
 
-To illustrate the usage of this method, imagine an application that submits invoices from the database using a cursor. You could define a [scheduled task](/docs/{{version}}/scheduling) that runs every 15 minutes and only processes invoices for a maximum of 14 minutes:
+Để minh họa cách sử dụng method này, hãy tưởng tượng một ứng dụng gửi invoice từ database bằng cursor. Bạn có thể định nghĩa một [scheduled task](/docs/{{version}}/scheduling) chạy mỗi 15 phút và chỉ xử lý invoice trong tối đa 14 phút:
 
 ```php
 use App\Models\Invoice;
@@ -4358,7 +4358,7 @@ Invoice::pending()->cursor()
 <a name="method-tapEach"></a>
 #### `tapEach()` {.collection-method}
 
-While the `each` method calls the given callback for each item in the collection right away, the `tapEach` method only calls the given callback as the items are being pulled out of the list one by one:
+Trong khi method `each` gọi callback đã cho ngay lập tức cho từng phần tử trong collection, method `tapEach` chỉ gọi callback khi các phần tử lần lượt được lấy ra khỏi danh sách:
 
 ```php
 // Nothing has been dumped so far...
@@ -4377,7 +4377,7 @@ $array = $lazyCollection->take(3)->all();
 <a name="method-throttle"></a>
 #### `throttle()` {.collection-method}
 
-The `throttle` method will throttle the lazy collection such that each value is returned after the specified number of seconds. This method is especially useful for situations where you may be interacting with external APIs that rate limit incoming requests:
+Method `throttle` sẽ giới hạn tốc độ lazy collection để mỗi giá trị được trả về sau số giây được chỉ định. Method này đặc biệt hữu ích trong các tình huống bạn tương tác với external API có giới hạn tốc độ request gửi đến:
 
 ```php
 use App\Models\User;
@@ -4393,7 +4393,7 @@ User::where('vip', true)
 <a name="method-remember"></a>
 #### `remember()` {.collection-method}
 
-The `remember` method returns a new lazy collection that will remember any values that have already been enumerated and will not retrieve them again on subsequent collection enumerations:
+Method `remember` trả về một lazy collection mới có khả năng ghi nhớ các giá trị đã được liệt kê và không lấy lại chúng trong những lần liệt kê collection tiếp theo:
 
 ```php
 // No query has been executed yet...
@@ -4411,7 +4411,7 @@ $users->take(20)->all();
 <a name="method-with-heartbeat"></a>
 #### `withHeartbeat()` {.collection-method}
 
-The `withHeartbeat` method allows you to execute a callback at regular time intervals while a lazy collection is being enumerated. This is particularly useful for long-running operations that require periodic maintenance tasks, such as extending locks or sending progress updates:
+Method `withHeartbeat` cho phép bạn thực thi callback theo các khoảng thời gian đều đặn trong khi lazy collection đang được liệt kê. Điều này đặc biệt hữu ích cho các thao tác chạy lâu cần thực hiện tác vụ bảo trì định kỳ, chẳng hạn gia hạn lock hoặc gửi cập nhật tiến độ:
 
 ```php
 use Carbon\CarbonInterval;
@@ -4433,6 +4433,8 @@ if ($lock->get()) {
     }
 }
 ```
+
+---
 
 ## Tài liệu chính thức
 

@@ -1,14 +1,14 @@
 # Laravel Dusk
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-    - [Managing ChromeDriver Installations](#managing-chromedriver-installations)
-    - [Using Other Browsers](#using-other-browsers)
-- [Getting Started](#getting-started)
-    - [Generating Tests](#generating-tests)
-    - [Resetting the Database After Each Test](#resetting-the-database-after-each-test)
-    - [Running Tests](#running-tests)
-    - [Environment Handling](#environment-handling)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+    - [Quản lý cài đặt ChromeDriver](#managing-chromedriver-installations)
+    - [Sử dụng trình duyệt khác](#using-other-browsers)
+- [Bắt đầu](#getting-started)
+    - [Tạo test](#generating-tests)
+    - [Đặt lại cơ sở dữ liệu sau mỗi test](#resetting-the-database-after-each-test)
+    - [Chạy test](#running-tests)
+    - [Xử lý môi trường](#environment-handling)
 - [Browser Basics](#browser-basics)
     - [Creating Browsers](#creating-browsers)
     - [Navigation](#navigation)
@@ -51,40 +51,40 @@
     - [Chipper CI](#running-tests-on-chipper-ci)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
 > [!WARNING]
-> [Pest 4](https://pestphp.com/) now includes automated browser testing which offers significant performance and usability improvements compared to Laravel Dusk. For new projects, we recommend using Pest for browser testing.
+> [Pest 4](https://pestphp.com/) hiện đã bao gồm kiểm thử trình duyệt tự động, mang lại những cải thiện đáng kể về hiệu năng và khả năng sử dụng so với Laravel Dusk. Với dự án mới, chúng tôi khuyến nghị sử dụng Pest để kiểm thử trình duyệt.
 
-[Laravel Dusk](https://github.com/laravel/dusk) provides an expressive, easy-to-use browser automation and testing API. By default, Dusk does not require you to install JDK or Selenium on your local computer. Instead, Dusk uses a standalone [ChromeDriver](https://sites.google.com/chromium.org/driver) installation. However, you are free to utilize any other Selenium compatible driver you wish.
+[Laravel Dusk](https://github.com/laravel/dusk) cung cấp API tự động hóa trình duyệt và kiểm thử có tính biểu đạt cao, dễ sử dụng. Theo mặc định, Dusk không yêu cầu bạn cài đặt JDK hoặc Selenium trên máy tính cục bộ. Thay vào đó, Dusk sử dụng một bản cài đặt [ChromeDriver](https://sites.google.com/chromium.org/driver) độc lập. Tuy nhiên, bạn có thể sử dụng bất kỳ driver nào khác tương thích với Selenium.
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
-To get started, you should install [Google Chrome](https://www.google.com/chrome) and add the `laravel/dusk` Composer dependency to your project:
+Để bắt đầu, bạn nên cài đặt [Google Chrome](https://www.google.com/chrome) và thêm dependency Composer `laravel/dusk` vào dự án:
 
 ```shell
 composer require laravel/dusk --dev
 ```
 
 > [!WARNING]
-> If you are manually registering Dusk's service provider, you should **never** register it in your production environment, as doing so could lead to arbitrary users being able to authenticate with your application.
+> Nếu bạn đăng ký service provider của Dusk theo cách thủ công, bạn **không bao giờ** nên đăng ký nó trong môi trường production, vì điều đó có thể khiến người dùng bất kỳ có khả năng xác thực với ứng dụng của bạn.
 
-After installing the Dusk package, execute the `dusk:install` Artisan command. The `dusk:install` command will create a `tests/Browser` directory, an example Dusk test, and install the Chrome Driver binary for your operating system:
+Sau khi cài đặt package Dusk, hãy chạy lệnh Artisan `dusk:install`. Lệnh `dusk:install` sẽ tạo thư mục `tests/Browser`, một Dusk test mẫu và cài đặt binary ChromeDriver cho hệ điều hành của bạn:
 
 ```shell
 php artisan dusk:install
 ```
 
-Next, set the `APP_URL` environment variable in your application's `.env` file. This value should match the URL you use to access your application in a browser.
+Tiếp theo, hãy thiết lập biến môi trường `APP_URL` trong file `.env` của ứng dụng. Giá trị này phải khớp với URL mà bạn sử dụng để truy cập ứng dụng trong trình duyệt.
 
 > [!NOTE]
-> If you are using [Laravel Sail](/docs/{{version}}/sail) to manage your local development environment, please also consult the Sail documentation on [configuring and running Dusk tests](/docs/{{version}}/sail#laravel-dusk).
+> Nếu bạn đang sử dụng [Laravel Sail](/docs/{{version}}/sail) để quản lý môi trường phát triển cục bộ, hãy tham khảo thêm tài liệu Sail về [cấu hình và chạy Dusk test](/docs/{{version}}/sail#laravel-dusk).
 
 <a name="managing-chromedriver-installations"></a>
-### Managing ChromeDriver Installations
+### Quản lý cài đặt ChromeDriver
 
-If you would like to install a different version of ChromeDriver than what is installed by Laravel Dusk via the `dusk:install` command, you may use the `dusk:chrome-driver` command:
+Nếu muốn cài đặt một phiên bản ChromeDriver khác với phiên bản được Laravel Dusk cài qua lệnh `dusk:install`, bạn có thể sử dụng lệnh `dusk:chrome-driver`:
 
 ```shell
 # Install the latest version of ChromeDriver for your OS...
@@ -101,14 +101,14 @@ php artisan dusk:chrome-driver --detect
 ```
 
 > [!WARNING]
-> Dusk requires the `chromedriver` binaries to be executable. If you're having problems running Dusk, you should ensure the binaries are executable using the following command: `chmod -R 0755 vendor/laravel/dusk/bin/`.
+> Dusk yêu cầu các binary `chromedriver` phải có quyền thực thi. Nếu gặp vấn đề khi chạy Dusk, bạn nên bảo đảm các binary có thể thực thi bằng lệnh sau: `chmod -R 0755 vendor/laravel/dusk/bin/`.
 
 <a name="using-other-browsers"></a>
-### Using Other Browsers
+### Sử dụng trình duyệt khác
 
-By default, Dusk uses Google Chrome and a standalone [ChromeDriver](https://sites.google.com/chromium.org/driver) installation to run your browser tests. However, you may start your own Selenium server and run your tests against any browser you wish.
+Theo mặc định, Dusk sử dụng Google Chrome và một bản cài đặt [ChromeDriver](https://sites.google.com/chromium.org/driver) độc lập để chạy browser test. Tuy nhiên, bạn có thể tự khởi động Selenium server và chạy test trên bất kỳ trình duyệt nào mong muốn.
 
-To get started, open your `tests/DuskTestCase.php` file, which is the base Dusk test case for your application. Within this file, you can remove the call to the `startChromeDriver` method. This will stop Dusk from automatically starting the ChromeDriver:
+Để bắt đầu, hãy mở file `tests/DuskTestCase.php`, đây là Dusk test case cơ sở của ứng dụng. Trong file này, bạn có thể bỏ lời gọi đến phương thức `startChromeDriver`. Việc này sẽ ngăn Dusk tự động khởi động ChromeDriver:
 
 ```php
 /**
@@ -122,7 +122,7 @@ public static function prepare(): void
 }
 ```
 
-Next, you may modify the `driver` method to connect to the URL and port of your choice. In addition, you may modify the "desired capabilities" that should be passed to the WebDriver:
+Tiếp theo, bạn có thể sửa phương thức `driver` để kết nối tới URL và port mong muốn. Ngoài ra, bạn có thể thay đổi các "desired capabilities" được truyền cho WebDriver:
 
 ```php
 use Facebook\WebDriver\Remote\RemoteWebDriver;
@@ -139,26 +139,26 @@ protected function driver(): RemoteWebDriver
 ```
 
 <a name="getting-started"></a>
-## Getting Started
+## Bắt đầu
 
 <a name="generating-tests"></a>
-### Generating Tests
+### Tạo test
 
-To generate a Dusk test, use the `dusk:make` Artisan command. The generated test will be placed in the `tests/Browser` directory:
+Để tạo một Dusk test, hãy sử dụng lệnh Artisan `dusk:make`. Test được tạo sẽ nằm trong thư mục `tests/Browser`:
 
 ```shell
 php artisan dusk:make LoginTest
 ```
 
 <a name="resetting-the-database-after-each-test"></a>
-### Resetting the Database After Each Test
+### Đặt lại cơ sở dữ liệu sau mỗi test
 
-Most of the tests you write will interact with pages that retrieve data from your application's database; however, your Dusk tests should never use the `RefreshDatabase` trait. The `RefreshDatabase` trait leverages database transactions which will not be applicable or available across HTTP requests. Instead, you have two options: the `DatabaseMigrations` trait and the `DatabaseTruncation` trait.
+Phần lớn test bạn viết sẽ tương tác với các trang truy xuất dữ liệu từ cơ sở dữ liệu của ứng dụng; tuy nhiên, Dusk test không bao giờ nên sử dụng trait `RefreshDatabase`. Trait `RefreshDatabase` tận dụng transaction của cơ sở dữ liệu, vốn không áp dụng hoặc không khả dụng xuyên qua các HTTP request. Thay vào đó, bạn có hai lựa chọn: trait `DatabaseMigrations` và trait `DatabaseTruncation`.
 
 <a name="reset-migrations"></a>
-#### Using Database Migrations
+#### Sử dụng Database Migrations
 
-The `DatabaseMigrations` trait will run your database migrations before each test. However, dropping and re-creating your database tables for each test is typically slower than truncating the tables:
+Trait `DatabaseMigrations` sẽ chạy các database migration trước mỗi test. Tuy nhiên, xóa và tạo lại các bảng cơ sở dữ liệu cho từng test thường chậm hơn việc truncate các bảng:
 
 ```php tab=Pest
 <?php
@@ -188,12 +188,12 @@ class ExampleTest extends DuskTestCase
 ```
 
 > [!WARNING]
-> SQLite in-memory databases may not be used when executing Dusk tests. Since the browser executes within its own process, it will not be able to access the in-memory databases of other processes.
+> Không thể sử dụng cơ sở dữ liệu SQLite in-memory khi chạy Dusk test. Vì trình duyệt chạy trong process riêng, nó sẽ không thể truy cập cơ sở dữ liệu in-memory của process khác.
 
 <a name="reset-truncation"></a>
-#### Using Database Truncation
+#### Sử dụng Database Truncation
 
-The `DatabaseTruncation` trait will migrate your database on the first test in order to ensure your database tables have been properly created. However, on subsequent tests, the database's tables will simply be truncated - providing a speed boost over re-running all of your database migrations:
+Trait `DatabaseTruncation` sẽ migrate cơ sở dữ liệu ở test đầu tiên để bảo đảm các bảng đã được tạo đúng cách. Tuy nhiên, ở những test tiếp theo, các bảng chỉ được truncate, giúp tăng tốc so với việc chạy lại toàn bộ database migration:
 
 ```php tab=Pest
 <?php
@@ -223,10 +223,10 @@ class ExampleTest extends DuskTestCase
 }
 ```
 
-By default, this trait will truncate all tables except the `migrations` table. If you would like to customize the tables that should be truncated, you may define a `$tablesToTruncate` property on your test class:
+Theo mặc định, trait này sẽ truncate tất cả bảng ngoại trừ bảng `migrations`. Nếu muốn tùy chỉnh các bảng cần truncate, bạn có thể định nghĩa property `$tablesToTruncate` trên test class:
 
 > [!NOTE]
-> If you are using Pest, you should define properties or methods on the base `DuskTestCase` class or on any class your test file extends.
+> Nếu đang sử dụng Pest, bạn nên định nghĩa các property hoặc method trên class cơ sở `DuskTestCase` hoặc trên bất kỳ class nào mà file test của bạn kế thừa.
 
 ```php
 /**
@@ -237,7 +237,7 @@ By default, this trait will truncate all tables except the `migrations` table. I
 protected $tablesToTruncate = ['users'];
 ```
 
-Alternatively, you may define an `$exceptTables` property on your test class to specify which tables should be excluded from truncation:
+Ngoài ra, bạn có thể định nghĩa property `$exceptTables` trên test class để chỉ định những bảng cần loại trừ khỏi quá trình truncate:
 
 ```php
 /**
@@ -248,7 +248,7 @@ Alternatively, you may define an `$exceptTables` property on your test class to 
 protected $exceptTables = ['users'];
 ```
 
-To specify the database connections that should have their tables truncated, you may define a `$connectionsToTruncate` property on your test class:
+Để chỉ định các kết nối cơ sở dữ liệu có bảng cần được truncate, bạn có thể định nghĩa property `$connectionsToTruncate` trên test class:
 
 ```php
 /**
@@ -259,7 +259,7 @@ To specify the database connections that should have their tables truncated, you
 protected $connectionsToTruncate = ['mysql'];
 ```
 
-If you would like to execute code before or after database truncation is performed, you may define `beforeTruncatingDatabase` or `afterTruncatingDatabase` methods on your test class:
+Nếu muốn thực thi code trước hoặc sau khi quá trình truncate cơ sở dữ liệu được thực hiện, bạn có thể định nghĩa các phương thức `beforeTruncatingDatabase` hoặc `afterTruncatingDatabase` trên test class:
 
 ```php
 /**
@@ -280,33 +280,33 @@ protected function afterTruncatingDatabase(): void
 ```
 
 <a name="running-tests"></a>
-### Running Tests
+### Chạy test
 
-To run your browser tests, execute the `dusk` Artisan command:
+Để chạy browser test, hãy thực thi lệnh Artisan `dusk`:
 
 ```shell
 php artisan dusk
 ```
 
-If you had test failures the last time you ran the `dusk` command, you may save time by re-running the failing tests first using the `dusk:fails` command:
+Nếu lần chạy lệnh `dusk` trước có test thất bại, bạn có thể tiết kiệm thời gian bằng cách chạy lại các test thất bại trước với lệnh `dusk:fails`:
 
 ```shell
 php artisan dusk:fails
 ```
 
-The `dusk` command accepts any argument that is normally accepted by the Pest / PHPUnit test runner, such as allowing you to only run the tests for a given [group](https://docs.phpunit.de/en/10.5/annotations.html#group):
+Lệnh `dusk` chấp nhận mọi argument thường được Pest / PHPUnit test runner hỗ trợ, chẳng hạn cho phép bạn chỉ chạy test thuộc một [group](https://docs.phpunit.de/en/10.5/annotations.html#group) nhất định:
 
 ```shell
 php artisan dusk --group=foo
 ```
 
 > [!NOTE]
-> If you are using [Laravel Sail](/docs/{{version}}/sail) to manage your local development environment, please consult the Sail documentation on [configuring and running Dusk tests](/docs/{{version}}/sail#laravel-dusk).
+> Nếu bạn đang sử dụng [Laravel Sail](/docs/{{version}}/sail) để quản lý môi trường phát triển cục bộ, hãy tham khảo tài liệu Sail về [cấu hình và chạy Dusk test](/docs/{{version}}/sail#laravel-dusk).
 
 <a name="manually-starting-chromedriver"></a>
-#### Manually Starting ChromeDriver
+#### Khởi động ChromeDriver thủ công
 
-By default, Dusk will automatically attempt to start ChromeDriver. If this does not work for your particular system, you may manually start ChromeDriver before running the `dusk` command. If you choose to start ChromeDriver manually, you should comment out the following line of your `tests/DuskTestCase.php` file:
+Theo mặc định, Dusk sẽ tự động cố gắng khởi động ChromeDriver. Nếu cách này không hoạt động trên hệ thống của bạn, bạn có thể khởi động ChromeDriver thủ công trước khi chạy lệnh `dusk`. Nếu chọn khởi động ChromeDriver thủ công, bạn nên comment dòng sau trong file `tests/DuskTestCase.php`:
 
 ```php
 /**
@@ -320,7 +320,7 @@ public static function prepare(): void
 }
 ```
 
-In addition, if you start ChromeDriver on a port other than 9515, you should modify the `driver` method of the same class to reflect the correct port:
+Ngoài ra, nếu bạn khởi động ChromeDriver trên port khác 9515, hãy sửa phương thức `driver` của cùng class để sử dụng đúng port:
 
 ```php
 use Facebook\WebDriver\Remote\RemoteWebDriver;
@@ -337,19 +337,19 @@ protected function driver(): RemoteWebDriver
 ```
 
 <a name="environment-handling"></a>
-### Environment Handling
+### Xử lý môi trường
 
-To force Dusk to use its own environment file when running tests, create a `.env.dusk.{environment}` file in the root of your project. For example, if you will be initiating the `dusk` command from your `local` environment, you should create a `.env.dusk.local` file.
+Để buộc Dusk sử dụng file môi trường riêng khi chạy test, hãy tạo file `.env.dusk.{environment}` tại thư mục gốc của dự án. Ví dụ, nếu bạn chạy lệnh `dusk` từ môi trường `local`, hãy tạo file `.env.dusk.local`.
 
-When running tests, Dusk will back-up your `.env` file and rename your Dusk environment to `.env`. Once the tests have completed, your `.env` file will be restored.
+Khi chạy test, Dusk sẽ sao lưu file `.env` và đổi tên file môi trường Dusk thành `.env`. Sau khi test hoàn tất, file `.env` của bạn sẽ được khôi phục.
 
 <a name="browser-basics"></a>
-## Browser Basics
+## Kiến thức cơ bản về trình duyệt
 
 <a name="creating-browsers"></a>
-### Creating Browsers
+### Tạo trình duyệt
 
-To get started, let's write a test that verifies we can log into our application. After generating a test, we can modify it to navigate to the login page, enter some credentials, and click the "Login" button. To create a browser instance, you may call the `browse` method from within your Dusk test:
+Để bắt đầu, hãy viết một test xác minh rằng chúng ta có thể đăng nhập vào ứng dụng. Sau khi tạo test, chúng ta có thể chỉnh sửa nó để điều hướng đến trang đăng nhập, nhập thông tin xác thực và nhấn nút "Login". Để tạo một browser instance, bạn có thể gọi phương thức `browse` bên trong Dusk test:
 
 ```php tab=Pest
 <?php
@@ -408,12 +408,12 @@ class ExampleTest extends DuskTestCase
 }
 ```
 
-As you can see in the example above, the `browse` method accepts a closure. A browser instance will automatically be passed to this closure by Dusk and is the main object used to interact with and make assertions against your application.
+Như bạn có thể thấy trong ví dụ trên, phương thức `browse` nhận một closure. Dusk sẽ tự động truyền một browser instance vào closure này; đây là đối tượng chính được dùng để tương tác với ứng dụng và thực hiện các assertion.
 
 <a name="creating-multiple-browsers"></a>
-#### Creating Multiple Browsers
+#### Tạo nhiều trình duyệt
 
-Sometimes you may need multiple browsers in order to properly carry out a test. For example, multiple browsers may be needed to test a chat screen that interacts with websockets. To create multiple browsers, simply add more browser arguments to the signature of the closure given to the `browse` method:
+Đôi khi bạn có thể cần nhiều trình duyệt để thực hiện test đúng cách. Ví dụ, có thể cần nhiều trình duyệt để kiểm thử một màn hình chat tương tác qua WebSocket. Để tạo nhiều trình duyệt, chỉ cần thêm các browser argument vào signature của closure được truyền cho phương thức `browse`:
 
 ```php
 $this->browse(function (Browser $first, Browser $second) {
@@ -433,21 +433,21 @@ $this->browse(function (Browser $first, Browser $second) {
 ```
 
 <a name="navigation"></a>
-### Navigation
+### Điều hướng
 
-The `visit` method may be used to navigate to a given URI within your application:
+Phương thức `visit` có thể được dùng để điều hướng đến một URI nhất định trong ứng dụng:
 
 ```php
 $browser->visit('/login');
 ```
 
-You may use the `visitRoute` method to navigate to a [named route](/docs/{{version}}/routing#named-routes):
+Bạn có thể sử dụng phương thức `visitRoute` để điều hướng đến một [named route](/docs/{{version}}/routing#named-routes):
 
 ```php
 $browser->visitRoute($routeName, $parameters);
 ```
 
-You may navigate "back" and "forward" using the `back` and `forward` methods:
+Bạn có thể điều hướng "quay lại" và "tiến tới" bằng các phương thức `back` và `forward`:
 
 ```php
 $browser->back();
@@ -455,49 +455,49 @@ $browser->back();
 $browser->forward();
 ```
 
-You may use the `refresh` method to refresh the page:
+Bạn có thể sử dụng phương thức `refresh` để tải lại trang:
 
 ```php
 $browser->refresh();
 ```
 
 <a name="resizing-browser-windows"></a>
-### Resizing Browser Windows
+### Thay đổi kích thước cửa sổ trình duyệt
 
-You may use the `resize` method to adjust the size of the browser window:
+Bạn có thể sử dụng phương thức `resize` để điều chỉnh kích thước cửa sổ trình duyệt:
 
 ```php
 $browser->resize(1920, 1080);
 ```
 
-The `maximize` method may be used to maximize the browser window:
+Phương thức `maximize` có thể được dùng để phóng to tối đa cửa sổ trình duyệt:
 
 ```php
 $browser->maximize();
 ```
 
-The `fitContent` method will resize the browser window to match the size of its content:
+Phương thức `fitContent` sẽ thay đổi kích thước cửa sổ trình duyệt để khớp với kích thước nội dung:
 
 ```php
 $browser->fitContent();
 ```
 
-When a test fails, Dusk will automatically resize the browser to fit the content prior to taking a screenshot. You may disable this feature by calling the `disableFitOnFailure` method within your test:
+Khi một test thất bại, Dusk sẽ tự động thay đổi kích thước trình duyệt để vừa với nội dung trước khi chụp ảnh màn hình. Bạn có thể tắt tính năng này bằng cách gọi phương thức `disableFitOnFailure` trong test:
 
 ```php
 $browser->disableFitOnFailure();
 ```
 
-You may use the `move` method to move the browser window to a different position on your screen:
+Bạn có thể sử dụng phương thức `move` để di chuyển cửa sổ trình duyệt đến một vị trí khác trên màn hình:
 
 ```php
 $browser->move($x = 100, $y = 100);
 ```
 
 <a name="browser-macros"></a>
-### Browser Macros
+### Browser Macro
 
-If you would like to define a custom browser method that you can re-use in a variety of your tests, you may use the `macro` method on the `Browser` class. Typically, you should call this method from a [service provider's](/docs/{{version}}/providers) `boot` method:
+Nếu muốn định nghĩa một phương thức browser tùy chỉnh có thể tái sử dụng trong nhiều test, bạn có thể dùng phương thức `macro` trên class `Browser`. Thông thường, bạn nên gọi phương thức này từ phương thức `boot` của một [service provider](/docs/{{version}}/providers):
 
 ```php
 <?php
@@ -523,7 +523,7 @@ class DuskServiceProvider extends ServiceProvider
 }
 ```
 
-The `macro` function accepts a name as its first argument, and a closure as its second. The macro's closure will be executed when calling the macro as a method on a `Browser` instance:
+Hàm `macro` nhận tên làm argument đầu tiên và một closure làm argument thứ hai. Closure của macro sẽ được thực thi khi gọi macro như một phương thức trên `Browser` instance:
 
 ```php
 $this->browse(function (Browser $browser) use ($user) {
@@ -534,9 +534,9 @@ $this->browse(function (Browser $browser) use ($user) {
 ```
 
 <a name="authentication"></a>
-### Authentication
+### Xác thực
 
-Often, you will be testing pages that require authentication. You can use Dusk's `loginAs` method in order to avoid interacting with your application's login screen during every test. The `loginAs` method accepts a primary key associated with your authenticatable model or an authenticatable model instance:
+Thông thường, bạn sẽ kiểm thử các trang yêu cầu xác thực. Bạn có thể sử dụng phương thức `loginAs` của Dusk để tránh phải tương tác với màn hình đăng nhập của ứng dụng trong mỗi test. Phương thức `loginAs` nhận primary key liên kết với authenticatable model hoặc một authenticatable model instance:
 
 ```php
 use App\Models\User;
@@ -549,12 +549,12 @@ $this->browse(function (Browser $browser) {
 ```
 
 > [!WARNING]
-> After using the `loginAs` method, the user session will be maintained for all tests within the file.
+> Sau khi sử dụng phương thức `loginAs`, session của người dùng sẽ được duy trì cho tất cả test trong file.
 
 <a name="cookies"></a>
-### Cookies
+### Cookie
 
-You may use the `cookie` method to get or set an encrypted cookie's value. By default, all of the cookies created by Laravel are encrypted:
+Bạn có thể sử dụng phương thức `cookie` để lấy hoặc thiết lập giá trị của cookie đã mã hóa. Theo mặc định, tất cả cookie do Laravel tạo đều được mã hóa:
 
 ```php
 $browser->cookie('name');
@@ -562,7 +562,7 @@ $browser->cookie('name');
 $browser->cookie('name', 'Taylor');
 ```
 
-You may use the `plainCookie` method to get or set an unencrypted cookie's value:
+Bạn có thể sử dụng phương thức `plainCookie` để lấy hoặc thiết lập giá trị của cookie không mã hóa:
 
 ```php
 $browser->plainCookie('name');
@@ -570,16 +570,16 @@ $browser->plainCookie('name');
 $browser->plainCookie('name', 'Taylor');
 ```
 
-You may use the `deleteCookie` method to delete the given cookie:
+Bạn có thể sử dụng phương thức `deleteCookie` để xóa cookie đã cho:
 
 ```php
 $browser->deleteCookie('name');
 ```
 
 <a name="executing-javascript"></a>
-### Executing JavaScript
+### Thực thi JavaScript
 
-You may use the `script` method to execute arbitrary JavaScript statements within the browser:
+Bạn có thể sử dụng phương thức `script` để thực thi các câu lệnh JavaScript tùy ý bên trong trình duyệt:
 
 ```php
 $browser->script('document.documentElement.scrollTop = 0');
@@ -593,51 +593,51 @@ $output = $browser->script('return window.location.pathname');
 ```
 
 <a name="taking-a-screenshot"></a>
-### Taking a Screenshot
+### Chụp ảnh màn hình
 
-You may use the `screenshot` method to take a screenshot and store it with the given filename. All screenshots will be stored within the `tests/Browser/screenshots` directory:
+Bạn có thể sử dụng phương thức `screenshot` để chụp ảnh màn hình và lưu với tên file đã cho. Tất cả ảnh chụp màn hình sẽ được lưu trong thư mục `tests/Browser/screenshots`:
 
 ```php
 $browser->screenshot('filename');
 ```
 
-The `responsiveScreenshots` method may be used to take a series of screenshots at various breakpoints:
+Phương thức `responsiveScreenshots` có thể được dùng để chụp một loạt ảnh màn hình tại nhiều breakpoint khác nhau:
 
 ```php
 $browser->responsiveScreenshots('filename');
 ```
 
-The `screenshotElement` method may be used to take a screenshot of a specific element on the page:
+Phương thức `screenshotElement` có thể được dùng để chụp ảnh màn hình của một element cụ thể trên trang:
 
 ```php
 $browser->screenshotElement('#selector', 'filename');
 ```
 
 <a name="storing-console-output-to-disk"></a>
-### Storing Console Output to Disk
+### Lưu output của console xuống đĩa
 
-You may use the `storeConsoleLog` method to write the current browser's console output to disk with the given filename. Console output will be stored within the `tests/Browser/console` directory:
+Bạn có thể sử dụng phương thức `storeConsoleLog` để ghi console output của trình duyệt hiện tại xuống đĩa với tên file đã cho. Console output sẽ được lưu trong thư mục `tests/Browser/console`:
 
 ```php
 $browser->storeConsoleLog('filename');
 ```
 
 <a name="storing-page-source-to-disk"></a>
-### Storing Page Source to Disk
+### Lưu source của trang xuống đĩa
 
-You may use the `storeSource` method to write the current page's source to disk with the given filename. The page source will be stored within the `tests/Browser/source` directory:
+Bạn có thể sử dụng phương thức `storeSource` để ghi source của trang hiện tại xuống đĩa với tên file đã cho. Source của trang sẽ được lưu trong thư mục `tests/Browser/source`:
 
 ```php
 $browser->storeSource('filename');
 ```
 
 <a name="interacting-with-elements"></a>
-## Interacting With Elements
+## Tương tác với phần tử
 
 <a name="dusk-selectors"></a>
-### Dusk Selectors
+### Selector của Dusk
 
-Choosing good CSS selectors for interacting with elements is one of the hardest parts of writing Dusk tests. Over time, frontend changes can cause CSS selectors like the following to break your tests:
+Việc chọn CSS selector phù hợp để tương tác với các phần tử là một trong những phần khó nhất khi viết test Dusk. Theo thời gian, các thay đổi ở frontend có thể khiến những CSS selector như sau làm test của bạn bị hỏng:
 
 ```html
 // HTML...
@@ -651,7 +651,7 @@ Choosing good CSS selectors for interacting with elements is one of the hardest 
 $browser->click('.login-page .container div > button');
 ```
 
-Dusk selectors allow you to focus on writing effective tests rather than remembering CSS selectors. To define a selector, add a `dusk` attribute to your HTML element. Then, when interacting with a Dusk browser, prefix the selector with `@` to manipulate the attached element within your test:
+Selector của Dusk giúp bạn tập trung vào việc viết test hiệu quả thay vì phải ghi nhớ CSS selector. Để định nghĩa một selector, hãy thêm thuộc tính `dusk` vào phần tử HTML. Sau đó, khi tương tác với trình duyệt Dusk, hãy thêm tiền tố `@` vào selector để thao tác với phần tử tương ứng trong test:
 
 ```html
 // HTML...
@@ -665,7 +665,7 @@ Dusk selectors allow you to focus on writing effective tests rather than remembe
 $browser->click('@login-button');
 ```
 
-If desired, you may customize the HTML attribute that the Dusk selector utilizes via the `selectorHtmlAttribute` method. Typically, this method should be called from the `boot` method of your application's `AppServiceProvider`:
+Nếu muốn, bạn có thể tùy chỉnh thuộc tính HTML mà selector Dusk sử dụng thông qua phương thức `selectorHtmlAttribute`. Thông thường, phương thức này nên được gọi từ phương thức `boot` của `AppServiceProvider` trong ứng dụng:
 
 ```php
 use Laravel\Dusk\Dusk;
@@ -674,12 +674,12 @@ Dusk::selectorHtmlAttribute('data-dusk');
 ```
 
 <a name="text-values-and-attributes"></a>
-### Text, Values, and Attributes
+### Văn bản, giá trị và thuộc tính
 
 <a name="retrieving-setting-values"></a>
-#### Retrieving and Setting Values
+#### Lấy và thiết lập giá trị
 
-Dusk provides several methods for interacting with the current value, display text, and attributes of elements on the page. For example, to get the "value" of an element that matches a given CSS or Dusk selector, use the `value` method:
+Dusk cung cấp một số phương thức để tương tác với giá trị hiện tại, văn bản hiển thị và thuộc tính của các phần tử trên trang. Ví dụ, để lấy "value" của phần tử khớp với CSS selector hoặc Dusk selector đã cho, hãy sử dụng phương thức `value`:
 
 ```php
 // Retrieve the value...
@@ -689,58 +689,58 @@ $value = $browser->value('selector');
 $browser->value('selector', 'value');
 ```
 
-You may use the `inputValue` method to get the "value" of an input element that has a given field name:
+Bạn có thể sử dụng phương thức `inputValue` để lấy "value" của phần tử input có tên trường đã cho:
 
 ```php
 $value = $browser->inputValue('field');
 ```
 
 <a name="retrieving-text"></a>
-#### Retrieving Text
+#### Lấy văn bản
 
-The `text` method may be used to retrieve the display text of an element that matches the given selector:
+Phương thức `text` có thể được dùng để lấy văn bản hiển thị của phần tử khớp với selector đã cho:
 
 ```php
 $text = $browser->text('selector');
 ```
 
 <a name="retrieving-attributes"></a>
-#### Retrieving Attributes
+#### Lấy thuộc tính
 
-Finally, the `attribute` method may be used to retrieve the value of an attribute of an element matching the given selector:
+Cuối cùng, phương thức `attribute` có thể được dùng để lấy giá trị của một thuộc tính trên phần tử khớp với selector đã cho:
 
 ```php
 $attribute = $browser->attribute('selector', 'value');
 ```
 
 <a name="interacting-with-forms"></a>
-### Interacting With Forms
+### Tương tác với biểu mẫu
 
 <a name="typing-values"></a>
-#### Typing Values
+#### Nhập giá trị
 
-Dusk provides a variety of methods for interacting with forms and input elements. First, let's take a look at an example of typing text into an input field:
+Dusk cung cấp nhiều phương thức để tương tác với biểu mẫu và các phần tử input. Trước tiên, hãy xem ví dụ nhập văn bản vào một trường input:
 
 ```php
 $browser->type('email', 'taylor@laravel.com');
 ```
 
-Note that, although the method accepts one if necessary, we are not required to pass a CSS selector into the `type` method. If a CSS selector is not provided, Dusk will search for an `input` or `textarea` field with the given `name` attribute.
+Lưu ý rằng mặc dù phương thức chấp nhận CSS selector khi cần, chúng ta không bắt buộc phải truyền selector vào phương thức `type`. Nếu không cung cấp CSS selector, Dusk sẽ tìm trường `input` hoặc `textarea` có thuộc tính `name` tương ứng.
 
-To append text to a field without clearing its content, you may use the `append` method:
+Để nối thêm văn bản vào một trường mà không xóa nội dung hiện có, bạn có thể sử dụng phương thức `append`:
 
 ```php
 $browser->type('tags', 'foo')
     ->append('tags', ', bar, baz');
 ```
 
-You may clear the value of an input using the `clear` method:
+Bạn có thể xóa giá trị của input bằng phương thức `clear`:
 
 ```php
 $browser->clear('email');
 ```
 
-You can instruct Dusk to type slowly using the `typeSlowly` method. By default, Dusk will pause for 100 milliseconds between key presses. To customize the amount of time between key presses, you may pass the appropriate number of milliseconds as the third argument to the method:
+Bạn có thể yêu cầu Dusk nhập chậm bằng phương thức `typeSlowly`. Mặc định, Dusk sẽ tạm dừng 100 mili giây giữa mỗi lần nhấn phím. Để tùy chỉnh khoảng thời gian này, hãy truyền số mili giây thích hợp làm đối số thứ ba của phương thức:
 
 ```php
 $browser->typeSlowly('mobile', '+1 (202) 555-5555');
@@ -748,7 +748,7 @@ $browser->typeSlowly('mobile', '+1 (202) 555-5555');
 $browser->typeSlowly('mobile', '+1 (202) 555-5555', 300);
 ```
 
-You may use the `appendSlowly` method to append text slowly:
+Bạn có thể sử dụng phương thức `appendSlowly` để nối thêm văn bản một cách chậm rãi:
 
 ```php
 $browser->type('tags', 'foo')
@@ -756,72 +756,72 @@ $browser->type('tags', 'foo')
 ```
 
 <a name="dropdowns"></a>
-#### Dropdowns
+#### Danh sách thả xuống
 
-To select a value available on a `select` element, you may use the `select` method. Like the `type` method, the `select` method does not require a full CSS selector. When passing a value to the `select` method, you should pass the underlying option value instead of the display text:
+Để chọn một giá trị có sẵn trên phần tử `select`, bạn có thể sử dụng phương thức `select`. Tương tự `type`, phương thức `select` không yêu cầu CSS selector đầy đủ. Khi truyền giá trị cho `select`, bạn nên truyền giá trị thực của option thay vì văn bản hiển thị:
 
 ```php
 $browser->select('size', 'Large');
 ```
 
-You may select a random option by omitting the second argument:
+Bạn có thể chọn ngẫu nhiên một option bằng cách bỏ qua đối số thứ hai:
 
 ```php
 $browser->select('size');
 ```
 
-By providing an array as the second argument to the `select` method, you can instruct the method to select multiple options:
+Bằng cách truyền một mảng làm đối số thứ hai cho `select`, bạn có thể yêu cầu phương thức chọn nhiều option:
 
 ```php
 $browser->select('categories', ['Art', 'Music']);
 ```
 
 <a name="checkboxes"></a>
-#### Checkboxes
+#### Checkbox
 
-To "check" a checkbox input, you may use the `check` method. Like many other input related methods, a full CSS selector is not required. If a CSS selector match can't be found, Dusk will search for a checkbox with a matching `name` attribute:
+Để đánh dấu một checkbox, bạn có thể sử dụng phương thức `check`. Giống nhiều phương thức liên quan đến input khác, không cần CSS selector đầy đủ. Nếu không tìm thấy CSS selector phù hợp, Dusk sẽ tìm checkbox có thuộc tính `name` tương ứng:
 
 ```php
 $browser->check('terms');
 ```
 
-The `uncheck` method may be used to "uncheck" a checkbox input:
+Phương thức `uncheck` có thể được dùng để bỏ đánh dấu checkbox:
 
 ```php
 $browser->uncheck('terms');
 ```
 
 <a name="radio-buttons"></a>
-#### Radio Buttons
+#### Nút radio
 
-To "select" a `radio` input option, you may use the `radio` method. Like many other input related methods, a full CSS selector is not required. If a CSS selector match can't be found, Dusk will search for a `radio` input with matching `name` and `value` attributes:
+Để chọn một tùy chọn `radio`, bạn có thể sử dụng phương thức `radio`. Giống nhiều phương thức input khác, không cần CSS selector đầy đủ. Nếu không tìm thấy CSS selector phù hợp, Dusk sẽ tìm input `radio` có thuộc tính `name` và `value` tương ứng:
 
 ```php
 $browser->radio('size', 'large');
 ```
 
 <a name="attaching-files"></a>
-### Attaching Files
+### Đính kèm tệp
 
-The `attach` method may be used to attach a file to a `file` input element. Like many other input related methods, a full CSS selector is not required. If a CSS selector match can't be found, Dusk will search for a `file` input with a matching `name` attribute:
+Phương thức `attach` có thể được dùng để đính kèm tệp vào phần tử input `file`. Giống nhiều phương thức input khác, không cần CSS selector đầy đủ. Nếu không tìm thấy selector phù hợp, Dusk sẽ tìm input `file` có thuộc tính `name` tương ứng:
 
 ```php
 $browser->attach('photo', __DIR__.'/photos/mountains.png');
 ```
 
 > [!WARNING]
-> The attach function requires the `Zip` PHP extension to be installed and enabled on your server.
+> Hàm attach yêu cầu PHP extension `Zip` được cài đặt và bật trên máy chủ.
 
 <a name="pressing-buttons"></a>
-### Pressing Buttons
+### Nhấn nút
 
-The `press` method may be used to click a button element on the page. The argument given to the `press` method may be either the display text of the button or a CSS / Dusk selector:
+Phương thức `press` có thể được dùng để nhấp một phần tử button trên trang. Đối số truyền cho `press` có thể là văn bản hiển thị của nút hoặc CSS / Dusk selector:
 
 ```php
 $browser->press('Login');
 ```
 
-When submitting forms, many applications disable the form's submission button after it is pressed and then re-enable the button when the form submission's HTTP request is complete. To press a button and wait for the button to be re-enabled, you may use the `pressAndWaitFor` method:
+Khi gửi biểu mẫu, nhiều ứng dụng vô hiệu hóa nút submit sau khi được nhấn và bật lại khi HTTP request gửi biểu mẫu hoàn tất. Để nhấn nút và chờ nút được bật lại, bạn có thể sử dụng phương thức `pressAndWaitFor`:
 
 ```php
 // Press the button and wait a maximum of 5 seconds for it to be enabled...
@@ -832,15 +832,15 @@ $browser->pressAndWaitFor('Save', 1);
 ```
 
 <a name="clicking-links"></a>
-### Clicking Links
+### Nhấp liên kết
 
-To click a link, you may use the `clickLink` method on the browser instance. The `clickLink` method will click the link that has the given display text:
+Để nhấp một liên kết, bạn có thể sử dụng phương thức `clickLink` trên browser instance. `clickLink` sẽ nhấp liên kết có văn bản hiển thị đã cho:
 
 ```php
 $browser->clickLink($linkText);
 ```
 
-You may use the `seeLink` method to determine if a link with the given display text is visible on the page:
+Bạn có thể sử dụng phương thức `seeLink` để xác định liệu liên kết có văn bản hiển thị đã cho có xuất hiện trên trang hay không:
 
 ```php
 if ($browser->seeLink($linkText)) {
@@ -849,30 +849,30 @@ if ($browser->seeLink($linkText)) {
 ```
 
 > [!WARNING]
-> These methods interact with jQuery. If jQuery is not available on the page, Dusk will automatically inject it into the page so it is available for the test's duration.
+> Các phương thức này tương tác với jQuery. Nếu jQuery không có sẵn trên trang, Dusk sẽ tự động inject jQuery để sử dụng trong suốt thời gian chạy test.
 
 <a name="using-the-keyboard"></a>
-### Using the Keyboard
+### Sử dụng bàn phím
 
-The `keys` method allows you to provide more complex input sequences to a given element than normally allowed by the `type` method. For example, you may instruct Dusk to hold modifier keys while entering values. In this example, the `shift` key will be held while `taylor` is entered into the element matching the given selector. After `taylor` is typed, `swift` will be typed without any modifier keys:
+Phương thức `keys` cho phép bạn cung cấp chuỗi nhập liệu phức tạp hơn cho một phần tử so với phương thức `type`. Ví dụ, bạn có thể yêu cầu Dusk giữ phím bổ trợ trong khi nhập giá trị. Trong ví dụ này, phím `shift` được giữ khi nhập `taylor` vào phần tử khớp selector; sau đó `swift` được nhập mà không giữ phím bổ trợ:
 
 ```php
 $browser->keys('selector', ['{shift}', 'taylor'], 'swift');
 ```
 
-Another valuable use case for the `keys` method is sending a "keyboard shortcut" combination to the primary CSS selector for your application:
+Một trường hợp hữu ích khác của `keys` là gửi tổ hợp phím tắt đến CSS selector chính của ứng dụng:
 
 ```php
 $browser->keys('.app', ['{command}', 'j']);
 ```
 
 > [!NOTE]
-> All modifier keys such as `{command}` are wrapped in `{}` characters, and match the constants defined in the `Facebook\WebDriver\WebDriverKeys` class, which can be [found on GitHub](https://github.com/php-webdriver/php-webdriver/blob/master/lib/WebDriverKeys.php).
+> Tất cả phím bổ trợ như `{command}` đều được bao quanh bởi ký tự `{}` và tương ứng với các hằng được định nghĩa trong lớp `Facebook\WebDriver\WebDriverKeys`, có thể [xem trên GitHub](https://github.com/php-webdriver/php-webdriver/blob/master/lib/WebDriverKeys.php).
 
 <a name="fluent-keyboard-interactions"></a>
-#### Fluent Keyboard Interactions
+#### Tương tác bàn phím theo fluent API
 
-Dusk also provides a `withKeyboard` method, allowing you to fluently perform complex keyboard interactions via the `Laravel\Dusk\Keyboard` class. The `Keyboard` class provides `press`, `release`, `type`, and `pause` methods:
+Dusk cũng cung cấp phương thức `withKeyboard`, cho phép bạn thực hiện các tương tác bàn phím phức tạp theo fluent API thông qua lớp `Laravel\Dusk\Keyboard`. Lớp `Keyboard` cung cấp các phương thức `press`, `release`, `type` và `pause`:
 
 ```php
 use Laravel\Dusk\Keyboard;
@@ -886,9 +886,9 @@ $browser->withKeyboard(function (Keyboard $keyboard) {
 ```
 
 <a name="keyboard-macros"></a>
-#### Keyboard Macros
+#### Macro bàn phím
 
-If you would like to define custom keyboard interactions that you can easily re-use throughout your test suite, you may use the `macro` method provided by the `Keyboard` class. Typically, you should call this method from a [service provider's](/docs/{{version}}/providers) `boot` method:
+Nếu muốn định nghĩa các tương tác bàn phím tùy chỉnh để dễ dàng tái sử dụng trong toàn bộ test suite, bạn có thể dùng phương thức `macro` của lớp `Keyboard`. Thông thường, phương thức này nên được gọi từ `boot` của một [service provider](/docs/{{version}}/providers):
 
 ```php
 <?php
@@ -926,7 +926,7 @@ class DuskServiceProvider extends ServiceProvider
 }
 ```
 
-The `macro` function accepts a name as its first argument and a closure as its second. The macro's closure will be executed when calling the macro as a method on a `Keyboard` instance:
+Hàm `macro` nhận tên làm đối số thứ nhất và closure làm đối số thứ hai. Closure của macro sẽ được thực thi khi gọi macro như một phương thức trên instance `Keyboard`:
 
 ```php
 $browser->click('@textarea')
@@ -936,30 +936,30 @@ $browser->click('@textarea')
 ```
 
 <a name="using-the-mouse"></a>
-### Using the Mouse
+### Sử dụng chuột
 
 <a name="clicking-on-elements"></a>
-#### Clicking on Elements
+#### Nhấp vào phần tử
 
-The `click` method may be used to click on an element matching the given CSS or Dusk selector:
+Phương thức `click` có thể được dùng để nhấp vào phần tử khớp với CSS hoặc Dusk selector đã cho:
 
 ```php
 $browser->click('.selector');
 ```
 
-The `clickAtXPath` method may be used to click on an element matching the given XPath expression:
+Phương thức `clickAtXPath` có thể được dùng để nhấp vào phần tử khớp với biểu thức XPath đã cho:
 
 ```php
 $browser->clickAtXPath('//div[@class = "selector"]');
 ```
 
-The `clickAtPoint` method may be used to click on the topmost element at a given pair of coordinates relative to the viewable area of the browser:
+Phương thức `clickAtPoint` có thể được dùng để nhấp vào phần tử nằm trên cùng tại cặp tọa độ đã cho, tính tương đối với vùng hiển thị của trình duyệt:
 
 ```php
 $browser->clickAtPoint($x = 0, $y = 0);
 ```
 
-The `doubleClick` method may be used to simulate the double click of a mouse:
+Phương thức `doubleClick` có thể được dùng để mô phỏng thao tác nhấp đúp chuột:
 
 ```php
 $browser->doubleClick();
@@ -967,7 +967,7 @@ $browser->doubleClick();
 $browser->doubleClick('.selector');
 ```
 
-The `rightClick` method may be used to simulate the right click of a mouse:
+Phương thức `rightClick` có thể được dùng để mô phỏng thao tác nhấp chuột phải:
 
 ```php
 $browser->rightClick();
@@ -975,7 +975,7 @@ $browser->rightClick();
 $browser->rightClick('.selector');
 ```
 
-The `clickAndHold` method may be used to simulate a mouse button being clicked and held down. A subsequent call to the `releaseMouse` method will undo this behavior and release the mouse button:
+Phương thức `clickAndHold` có thể được dùng để mô phỏng việc nhấn và giữ nút chuột. Sau đó, gọi `releaseMouse` sẽ kết thúc hành vi này và thả nút chuột:
 
 ```php
 $browser->clickAndHold('.selector');
@@ -985,7 +985,7 @@ $browser->clickAndHold()
     ->releaseMouse();
 ```
 
-The `controlClick` method may be used to simulate the `ctrl+click` event within the browser:
+Phương thức `controlClick` có thể được dùng để mô phỏng sự kiện `ctrl+click` trong trình duyệt:
 
 ```php
 $browser->controlClick();
@@ -993,7 +993,7 @@ $browser->controlClick();
 $browser->controlClick('.selector');
 ```
 
-The `clickWhenVisible` or `clickWhenEnabled` method may be used to wait for an element to be ready before clicking it exactly once:
+Phương thức `clickWhenVisible` hoặc `clickWhenEnabled` có thể được dùng để chờ phần tử sẵn sàng trước khi nhấp chính xác một lần:
 
 ```php
 $browser->clickWhenVisible('@save-button');
@@ -1001,24 +1001,24 @@ $browser->clickWhenEnabled('@submit-button');
 ```
 
 <a name="mouseover"></a>
-#### Mouseover
+#### Di chuột qua phần tử
 
-The `mouseover` method may be used when you need to move the mouse over an element matching the given CSS or Dusk selector:
+Phương thức `mouseover` có thể được dùng khi bạn cần di chuột lên phần tử khớp với CSS hoặc Dusk selector đã cho:
 
 ```php
 $browser->mouseover('.selector');
 ```
 
 <a name="drag-drop"></a>
-#### Drag and Drop
+#### Kéo và thả
 
-The `drag` method may be used to drag an element matching the given selector to another element:
+Phương thức `drag` có thể được dùng để kéo phần tử khớp selector đã cho sang một phần tử khác:
 
 ```php
 $browser->drag('.from-selector', '.to-selector');
 ```
 
-Or, you may drag an element in a single direction:
+Hoặc, bạn có thể kéo phần tử theo một hướng cụ thể:
 
 ```php
 $browser->dragLeft('.selector', $pixels = 10);
@@ -1027,49 +1027,49 @@ $browser->dragUp('.selector', $pixels = 10);
 $browser->dragDown('.selector', $pixels = 10);
 ```
 
-Finally, you may drag an element by a given offset:
+Cuối cùng, bạn có thể kéo phần tử theo một độ lệch đã cho:
 
 ```php
 $browser->dragOffset('.selector', $x = 10, $y = 10);
 ```
 
 <a name="javascript-dialogs"></a>
-### JavaScript Dialogs
+### Hộp thoại JavaScript
 
-Dusk provides various methods to interact with JavaScript Dialogs. For example, you may use the `waitForDialog` method to wait for a JavaScript dialog to appear. This method accepts an optional argument indicating how many seconds to wait for the dialog to appear:
+Dusk cung cấp nhiều phương thức để tương tác với hộp thoại JavaScript. Ví dụ, bạn có thể dùng `waitForDialog` để chờ hộp thoại JavaScript xuất hiện. Phương thức này nhận một đối số tùy chọn cho biết số giây tối đa cần chờ:
 
 ```php
 $browser->waitForDialog($seconds = null);
 ```
 
-The `assertDialogOpened` method may be used to assert that a dialog has been displayed and contains the given message:
+Phương thức `assertDialogOpened` có thể được dùng để xác nhận rằng một hộp thoại đã hiển thị và chứa thông báo đã cho:
 
 ```php
 $browser->assertDialogOpened('Dialog message');
 ```
 
-If the JavaScript dialog contains a prompt, you may use the `typeInDialog` method to type a value into the prompt:
+Nếu hộp thoại JavaScript chứa prompt, bạn có thể dùng `typeInDialog` để nhập giá trị vào prompt:
 
 ```php
 $browser->typeInDialog('Hello World');
 ```
 
-To close an open JavaScript dialog by clicking the "OK" button, you may invoke the `acceptDialog` method:
+Để đóng hộp thoại JavaScript đang mở bằng cách nhấp nút "OK", bạn có thể gọi `acceptDialog`:
 
 ```php
 $browser->acceptDialog();
 ```
 
-To close an open JavaScript dialog by clicking the "Cancel" button, you may invoke the `dismissDialog` method:
+Để đóng hộp thoại JavaScript đang mở bằng cách nhấp nút "Cancel", bạn có thể gọi `dismissDialog`:
 
 ```php
 $browser->dismissDialog();
 ```
 
 <a name="interacting-with-iframes"></a>
-### Interacting With Inline Frames
+### Tương tác với inline frame
 
-If you need to interact with elements within an iframe, you may use the `withinFrame` method. All element interactions that take place within the closure provided to the `withinFrame` method will be scoped to the context of the specified iframe:
+Nếu cần tương tác với các phần tử bên trong iframe, bạn có thể dùng `withinFrame`. Mọi tương tác phần tử diễn ra trong closure truyền cho `withinFrame` sẽ được giới hạn trong ngữ cảnh của iframe đã chỉ định:
 
 ```php
 $browser->withinFrame('#credit-card-details', function ($browser) {
@@ -1081,9 +1081,9 @@ $browser->withinFrame('#credit-card-details', function ($browser) {
 ```
 
 <a name="scoping-selectors"></a>
-### Scoping Selectors
+### Giới hạn phạm vi selector
 
-Sometimes you may wish to perform several operations while scoping all of the operations within a given selector. For example, you may wish to assert that some text exists only within a table and then click a button within that table. You may use the `with` method to accomplish this. All operations performed within the closure given to the `with` method will be scoped to the original selector:
+Đôi khi bạn muốn thực hiện nhiều thao tác nhưng giới hạn tất cả chúng trong một selector nhất định. Ví dụ, bạn có thể muốn xác nhận một đoạn văn bản chỉ tồn tại trong bảng rồi nhấp một nút bên trong bảng đó. Bạn có thể dùng `with` để thực hiện việc này. Mọi thao tác trong closure truyền cho `with` sẽ được giới hạn theo selector ban đầu:
 
 ```php
 $browser->with('.table', function (Browser $table) {
@@ -1092,7 +1092,7 @@ $browser->with('.table', function (Browser $table) {
 });
 ```
 
-You may occasionally need to execute assertions outside of the current scope. You may use the `elsewhere` and `elsewhereWhenAvailable` methods to accomplish this:
+Đôi khi bạn cần thực thi assertion bên ngoài phạm vi hiện tại. Bạn có thể dùng `elsewhere` và `elsewhereWhenAvailable` để thực hiện việc này:
 
 ```php
 $browser->with('.table', function (Browser $table) {
@@ -1111,35 +1111,35 @@ $browser->with('.table', function (Browser $table) {
 ```
 
 <a name="waiting-for-elements"></a>
-### Waiting for Elements
+### Chờ phần tử
 
-When testing applications that use JavaScript extensively, it often becomes necessary to "wait" for certain elements or data to be available before proceeding with a test. Dusk makes this a cinch. Using a variety of methods, you may wait for elements to become visible on the page or even wait until a given JavaScript expression evaluates to `true`.
+Khi kiểm thử các ứng dụng sử dụng JavaScript nhiều, bạn thường cần "chờ" một số phần tử hoặc dữ liệu sẵn sàng trước khi tiếp tục test. Dusk giúp việc này trở nên đơn giản. Với nhiều phương thức khác nhau, bạn có thể chờ phần tử hiển thị trên trang hoặc thậm chí chờ đến khi một biểu thức JavaScript trả về `true`.
 
 <a name="waiting"></a>
-#### Waiting
+#### Chờ
 
-If you just need to pause the test for a given number of milliseconds, use the `pause` method:
+Nếu chỉ cần tạm dừng test trong một số mili giây nhất định, hãy dùng `pause`:
 
 ```php
 $browser->pause(1000);
 ```
 
-If you need to pause the test only if a given condition is `true`, use the `pauseIf` method:
+Nếu chỉ cần tạm dừng test khi một điều kiện nhất định là `true`, hãy dùng `pauseIf`:
 
 ```php
 $browser->pauseIf(App::environment('production'), 1000);
 ```
 
-Likewise, if you need to pause the test unless a given condition is `true`, you may use the `pauseUnless` method:
+Tương tự, nếu cần tạm dừng test trừ khi một điều kiện nhất định là `true`, bạn có thể dùng `pauseUnless`:
 
 ```php
 $browser->pauseUnless(App::environment('testing'), 1000);
 ```
 
 <a name="waiting-for-selectors"></a>
-#### Waiting for Selectors
+#### Chờ selector
 
-The `waitFor` method may be used to pause the execution of the test until the element matching the given CSS or Dusk selector is displayed on the page. By default, this will pause the test for a maximum of five seconds before throwing an exception. If necessary, you may pass a custom timeout threshold as the second argument to the method:
+Phương thức `waitFor` có thể được dùng để tạm dừng thực thi test cho đến khi phần tử khớp với CSS hoặc Dusk selector đã cho hiển thị trên trang. Mặc định, test sẽ chờ tối đa năm giây trước khi ném exception. Nếu cần, bạn có thể truyền ngưỡng timeout tùy chỉnh làm đối số thứ hai:
 
 ```php
 // Wait a maximum of five seconds for the selector...
@@ -1149,7 +1149,7 @@ $browser->waitFor('.selector');
 $browser->waitFor('.selector', 1);
 ```
 
-You may also wait until the element matching the given selector contains the given text:
+Bạn cũng có thể chờ đến khi phần tử khớp selector đã cho chứa văn bản chỉ định:
 
 ```php
 // Wait a maximum of five seconds for the selector to contain the given text...
@@ -1159,7 +1159,7 @@ $browser->waitForTextIn('.selector', 'Hello World');
 $browser->waitForTextIn('.selector', 'Hello World', 1);
 ```
 
-You may also wait until the element matching the given selector is missing from the page:
+Bạn cũng có thể chờ đến khi phần tử khớp selector đã cho biến mất khỏi trang:
 
 ```php
 // Wait a maximum of five seconds until the selector is missing...
@@ -1169,7 +1169,7 @@ $browser->waitUntilMissing('.selector');
 $browser->waitUntilMissing('.selector', 1);
 ```
 
-Or, you may wait until the element matching the given selector is enabled or disabled:
+Hoặc, bạn có thể chờ đến khi phần tử khớp selector đã cho được bật hoặc bị vô hiệu hóa:
 
 ```php
 // Wait a maximum of five seconds until the selector is enabled...
@@ -1186,9 +1186,9 @@ $browser->waitUntilDisabled('.selector', 1);
 ```
 
 <a name="scoping-selectors-when-available"></a>
-#### Scoping Selectors When Available
+#### Giới hạn phạm vi selector khi khả dụng
 
-Occasionally, you may wish to wait for an element to appear that matches a given selector and then interact with the element. For example, you may wish to wait until a modal window is available and then press the "OK" button within the modal. The `whenAvailable` method may be used to accomplish this. All element operations performed within the given closure will be scoped to the original selector:
+Đôi khi bạn muốn chờ một phần tử khớp selector xuất hiện rồi tương tác với phần tử đó. Ví dụ, bạn có thể chờ modal khả dụng rồi nhấn nút "OK" bên trong modal. Phương thức `whenAvailable` có thể được dùng cho mục đích này. Mọi thao tác phần tử trong closure đã cho sẽ được giới hạn theo selector ban đầu:
 
 ```php
 $browser->whenAvailable('.modal', function (Browser $modal) {
@@ -1198,9 +1198,9 @@ $browser->whenAvailable('.modal', function (Browser $modal) {
 ```
 
 <a name="waiting-for-text"></a>
-#### Waiting for Text
+#### Chờ văn bản
 
-The `waitForText` method may be used to wait until the given text is displayed on the page:
+Phương thức `waitForText` có thể được dùng để chờ đến khi văn bản đã cho hiển thị trên trang:
 
 ```php
 // Wait a maximum of five seconds for the text...
@@ -1210,7 +1210,7 @@ $browser->waitForText('Hello World');
 $browser->waitForText('Hello World', 1);
 ```
 
-You may use the `waitUntilMissingText` method to wait until the displayed text has been removed from the page:
+Bạn có thể dùng `waitUntilMissingText` để chờ đến khi văn bản đang hiển thị được loại khỏi trang:
 
 ```php
 // Wait a maximum of five seconds for the text to be removed...
@@ -1221,9 +1221,9 @@ $browser->waitUntilMissingText('Hello World', 1);
 ```
 
 <a name="waiting-for-links"></a>
-#### Waiting for Links
+#### Chờ liên kết
 
-The `waitForLink` method may be used to wait until the given link text is displayed on the page:
+Phương thức `waitForLink` có thể được dùng để chờ đến khi văn bản liên kết đã cho hiển thị trên trang:
 
 ```php
 // Wait a maximum of five seconds for the link...
@@ -1234,9 +1234,9 @@ $browser->waitForLink('Create', 1);
 ```
 
 <a name="waiting-for-inputs"></a>
-#### Waiting for Inputs
+#### Chờ input
 
-The `waitForInput` method may be used to wait until the given input field is visible on the page:
+Phương thức `waitForInput` có thể được dùng để chờ đến khi trường input đã cho hiển thị trên trang:
 
 ```php
 // Wait a maximum of five seconds for the input...
@@ -1247,30 +1247,30 @@ $browser->waitForInput($field, 1);
 ```
 
 <a name="waiting-on-the-page-location"></a>
-#### Waiting on the Page Location
+#### Chờ vị trí trang
 
-When making a path assertion such as `$browser->assertPathIs('/home')`, the assertion can fail if `window.location.pathname` is being updated asynchronously. You may use the `waitForLocation` method to wait for the location to be a given value:
+Khi thực hiện path assertion như `$browser->assertPathIs('/home')`, assertion có thể thất bại nếu `window.location.pathname` đang được cập nhật bất đồng bộ. Bạn có thể dùng `waitForLocation` để chờ location đạt đến giá trị đã cho:
 
 ```php
 $browser->waitForLocation('/secret');
 ```
 
-The `waitForLocation` method can also be used to wait for the current window location to be a fully qualified URL:
+`waitForLocation` cũng có thể được dùng để chờ location của cửa sổ hiện tại trở thành một URL đầy đủ:
 
 ```php
 $browser->waitForLocation('https://example.com/path');
 ```
 
-You may also wait for a [named route's](/docs/{{version}}/routing#named-routes) location:
+Bạn cũng có thể chờ location của một [named route](/docs/{{version}}/routing#named-routes):
 
 ```php
 $browser->waitForRoute($routeName, $parameters);
 ```
 
 <a name="waiting-for-page-reloads"></a>
-#### Waiting for Page Reloads
+#### Chờ tải lại trang
 
-If you need to wait for a page to reload after performing an action, use the `waitForReload` method:
+Nếu cần chờ trang tải lại sau khi thực hiện một thao tác, hãy dùng `waitForReload`:
 
 ```php
 use Laravel\Dusk\Browser;
@@ -1281,7 +1281,7 @@ $browser->waitForReload(function (Browser $browser) {
 ->assertSee('Success!');
 ```
 
-Since the need to wait for the page to reload typically occurs after clicking a button, you may use the `clickAndWaitForReload` method for convenience:
+Vì nhu cầu chờ trang tải lại thường xảy ra sau khi nhấp nút, bạn có thể dùng `clickAndWaitForReload` để thuận tiện hơn:
 
 ```php
 $browser->clickAndWaitForReload('.selector')
@@ -1289,9 +1289,9 @@ $browser->clickAndWaitForReload('.selector')
 ```
 
 <a name="waiting-on-javascript-expressions"></a>
-#### Waiting on JavaScript Expressions
+#### Chờ biểu thức JavaScript
 
-Sometimes you may wish to pause the execution of a test until a given JavaScript expression evaluates to `true`. You may easily accomplish this using the `waitUntil` method. When passing an expression to this method, you do not need to include the `return` keyword or an ending semi-colon:
+Đôi khi bạn muốn tạm dừng thực thi test cho đến khi một biểu thức JavaScript trả về `true`. Bạn có thể dễ dàng thực hiện bằng `waitUntil`. Khi truyền biểu thức cho phương thức này, bạn không cần thêm từ khóa `return` hoặc dấu chấm phẩy ở cuối:
 
 ```php
 // Wait a maximum of five seconds for the expression to be true...
@@ -1302,9 +1302,9 @@ $browser->waitUntil('App.data.servers.length > 0', 1);
 ```
 
 <a name="waiting-on-vue-expressions"></a>
-#### Waiting on Vue Expressions
+#### Chờ biểu thức Vue
 
-The `waitUntilVue` and `waitUntilVueIsNot` methods may be used to wait until a [Vue component](https://vuejs.org) attribute has a given value:
+Các phương thức `waitUntilVue` và `waitUntilVueIsNot` có thể được dùng để chờ đến khi một thuộc tính của [Vue component](https://vuejs.org) có giá trị đã cho:
 
 ```php
 // Wait until the component attribute contains the given value...
@@ -1315,15 +1315,15 @@ $browser->waitUntilVueIsNot('user.name', null, '@user');
 ```
 
 <a name="waiting-for-javascript-events"></a>
-#### Waiting for JavaScript Events
+#### Chờ sự kiện JavaScript
 
-The `waitForEvent` method can be used to pause the execution of a test until a JavaScript event occurs:
+Phương thức `waitForEvent` có thể được dùng để tạm dừng thực thi test cho đến khi một sự kiện JavaScript xảy ra:
 
 ```php
 $browser->waitForEvent('load');
 ```
 
-The event listener is attached to the current scope, which is the `body` element by default. When using a scoped selector, the event listener will be attached to the matching element:
+Event listener được gắn vào phạm vi hiện tại, mặc định là phần tử `body`. Khi dùng selector có giới hạn phạm vi, event listener sẽ được gắn vào phần tử khớp:
 
 ```php
 $browser->with('iframe', function (Browser $iframe) {
@@ -1332,13 +1332,13 @@ $browser->with('iframe', function (Browser $iframe) {
 });
 ```
 
-You may also provide a selector as the second argument to the `waitForEvent` method to attach the event listener to a specific element:
+Bạn cũng có thể truyền selector làm đối số thứ hai của `waitForEvent` để gắn event listener vào một phần tử cụ thể:
 
 ```php
 $browser->waitForEvent('load', '.selector');
 ```
 
-You may also wait for events on the `document` and `window` objects:
+Bạn cũng có thể chờ sự kiện trên các đối tượng `document` và `window`:
 
 ```php
 // Wait until the document is scrolled...
@@ -1349,9 +1349,9 @@ $browser->waitForEvent('resize', 'window', 5);
 ```
 
 <a name="waiting-with-a-callback"></a>
-#### Waiting With a Callback
+#### Chờ bằng callback
 
-Many of the "wait" methods in Dusk rely on the underlying `waitUsing` method. You may use this method directly to wait for a given closure to return `true`. The `waitUsing` method accepts the maximum number of seconds to wait, the interval at which the closure should be evaluated, the closure, and an optional failure message:
+Nhiều phương thức "wait" của Dusk dựa trên `waitUsing`. Bạn có thể dùng trực tiếp phương thức này để chờ một closure trả về `true`. `waitUsing` nhận số giây tối đa cần chờ, khoảng thời gian giữa các lần đánh giá closure, closure và một thông báo lỗi tùy chọn:
 
 ```php
 $browser->waitUsing(10, 1, function () use ($something) {
@@ -1360,9 +1360,9 @@ $browser->waitUsing(10, 1, function () use ($something) {
 ```
 
 <a name="scrolling-an-element-into-view"></a>
-### Scrolling an Element Into View
+### Cuộn phần tử vào vùng hiển thị
 
-Sometimes you may not be able to click on an element because it is outside of the viewable area of the browser. The `scrollIntoView` method will scroll the browser window until the element at the given selector is within the view:
+Đôi khi bạn không thể nhấp vào một phần tử vì nó nằm ngoài vùng hiển thị của trình duyệt. `scrollIntoView` sẽ cuộn cửa sổ trình duyệt cho đến khi phần tử tại selector đã cho nằm trong vùng hiển thị:
 
 ```php
 $browser->scrollIntoView('.selector')
@@ -1370,9 +1370,9 @@ $browser->scrollIntoView('.selector')
 ```
 
 <a name="available-assertions"></a>
-## Available Assertions
+## Các assertion khả dụng
 
-Dusk provides a variety of assertions that you may make against your application. All of the available assertions are documented in the list below:
+Dusk cung cấp nhiều assertion để kiểm tra ứng dụng. Toàn bộ assertion khả dụng được liệt kê và mô tả bên dưới:
 
 <style>
     .collection-method-list > p {
@@ -1474,7 +1474,7 @@ Dusk provides a variety of assertions that you may make against your application
 <a name="assert-title"></a>
 #### assertTitle
 
-Assert that the page title matches the given text:
+Xác nhận tiêu đề trang khớp với văn bản đã cho:
 
 ```php
 $browser->assertTitle($title);
@@ -1483,7 +1483,7 @@ $browser->assertTitle($title);
 <a name="assert-title-contains"></a>
 #### assertTitleContains
 
-Assert that the page title contains the given text:
+Xác nhận tiêu đề trang chứa văn bản đã cho:
 
 ```php
 $browser->assertTitleContains($title);
@@ -1492,7 +1492,7 @@ $browser->assertTitleContains($title);
 <a name="assert-url-is"></a>
 #### assertUrlIs
 
-Assert that the current URL (without the query string) matches the given string:
+Xác nhận URL hiện tại (không gồm query string) khớp với chuỗi đã cho:
 
 ```php
 $browser->assertUrlIs($url);
@@ -1501,7 +1501,7 @@ $browser->assertUrlIs($url);
 <a name="assert-scheme-is"></a>
 #### assertSchemeIs
 
-Assert that the current URL scheme matches the given scheme:
+Xác nhận scheme của URL hiện tại khớp với scheme đã cho:
 
 ```php
 $browser->assertSchemeIs($scheme);
@@ -1510,7 +1510,7 @@ $browser->assertSchemeIs($scheme);
 <a name="assert-scheme-is-not"></a>
 #### assertSchemeIsNot
 
-Assert that the current URL scheme does not match the given scheme:
+Xác nhận scheme của URL hiện tại không khớp với scheme đã cho:
 
 ```php
 $browser->assertSchemeIsNot($scheme);
@@ -1519,7 +1519,7 @@ $browser->assertSchemeIsNot($scheme);
 <a name="assert-host-is"></a>
 #### assertHostIs
 
-Assert that the current URL host matches the given host:
+Xác nhận host của URL hiện tại khớp với host đã cho:
 
 ```php
 $browser->assertHostIs($host);
@@ -1528,7 +1528,7 @@ $browser->assertHostIs($host);
 <a name="assert-host-is-not"></a>
 #### assertHostIsNot
 
-Assert that the current URL host does not match the given host:
+Xác nhận host của URL hiện tại không khớp với host đã cho:
 
 ```php
 $browser->assertHostIsNot($host);
@@ -1537,7 +1537,7 @@ $browser->assertHostIsNot($host);
 <a name="assert-port-is"></a>
 #### assertPortIs
 
-Assert that the current URL port matches the given port:
+Xác nhận port của URL hiện tại khớp với port đã cho:
 
 ```php
 $browser->assertPortIs($port);
@@ -1546,7 +1546,7 @@ $browser->assertPortIs($port);
 <a name="assert-port-is-not"></a>
 #### assertPortIsNot
 
-Assert that the current URL port does not match the given port:
+Xác nhận port của URL hiện tại không khớp với port đã cho:
 
 ```php
 $browser->assertPortIsNot($port);
@@ -1555,7 +1555,7 @@ $browser->assertPortIsNot($port);
 <a name="assert-path-begins-with"></a>
 #### assertPathBeginsWith
 
-Assert that the current URL path begins with the given path:
+Xác nhận path của URL hiện tại bắt đầu bằng path đã cho:
 
 ```php
 $browser->assertPathBeginsWith('/home');
@@ -1564,7 +1564,7 @@ $browser->assertPathBeginsWith('/home');
 <a name="assert-path-ends-with"></a>
 #### assertPathEndsWith
 
-Assert that the current URL path ends with the given path:
+Xác nhận path của URL hiện tại kết thúc bằng path đã cho:
 
 ```php
 $browser->assertPathEndsWith('/home');
@@ -1573,7 +1573,7 @@ $browser->assertPathEndsWith('/home');
 <a name="assert-path-contains"></a>
 #### assertPathContains
 
-Assert that the current URL path contains the given path:
+Xác nhận path của URL hiện tại chứa path đã cho:
 
 ```php
 $browser->assertPathContains('/home');
@@ -1582,7 +1582,7 @@ $browser->assertPathContains('/home');
 <a name="assert-path-is"></a>
 #### assertPathIs
 
-Assert that the current path matches the given path:
+Xác nhận path hiện tại khớp với path đã cho:
 
 ```php
 $browser->assertPathIs('/home');
@@ -1591,7 +1591,7 @@ $browser->assertPathIs('/home');
 <a name="assert-path-is-not"></a>
 #### assertPathIsNot
 
-Assert that the current path does not match the given path:
+Xác nhận path hiện tại không khớp với path đã cho:
 
 ```php
 $browser->assertPathIsNot('/home');
@@ -1600,7 +1600,7 @@ $browser->assertPathIsNot('/home');
 <a name="assert-route-is"></a>
 #### assertRouteIs
 
-Assert that the current URL matches the given [named route's](/docs/{{version}}/routing#named-routes) URL:
+Xác nhận URL hiện tại khớp với URL của [named route](/docs/{{version}}/routing#named-routes) đã cho:
 
 ```php
 $browser->assertRouteIs($name, $parameters);
@@ -1609,13 +1609,13 @@ $browser->assertRouteIs($name, $parameters);
 <a name="assert-query-string-has"></a>
 #### assertQueryStringHas
 
-Assert that the given query string parameter is present:
+Xác nhận tham số query string đã cho tồn tại:
 
 ```php
 $browser->assertQueryStringHas($name);
 ```
 
-Assert that the given query string parameter is present and has a given value:
+Xác nhận tham số query string đã cho tồn tại và có giá trị đã cho:
 
 ```php
 $browser->assertQueryStringHas($name, $value);
@@ -1624,7 +1624,7 @@ $browser->assertQueryStringHas($name, $value);
 <a name="assert-query-string-missing"></a>
 #### assertQueryStringMissing
 
-Assert that the given query string parameter is missing:
+Xác nhận tham số query string đã cho không tồn tại:
 
 ```php
 $browser->assertQueryStringMissing($name);
@@ -1633,7 +1633,7 @@ $browser->assertQueryStringMissing($name);
 <a name="assert-fragment-is"></a>
 #### assertFragmentIs
 
-Assert that the URL's current hash fragment matches the given fragment:
+Xác nhận hash fragment hiện tại của URL khớp với fragment đã cho:
 
 ```php
 $browser->assertFragmentIs('anchor');
@@ -1642,7 +1642,7 @@ $browser->assertFragmentIs('anchor');
 <a name="assert-fragment-begins-with"></a>
 #### assertFragmentBeginsWith
 
-Assert that the URL's current hash fragment begins with the given fragment:
+Xác nhận hash fragment hiện tại của URL bắt đầu bằng fragment đã cho:
 
 ```php
 $browser->assertFragmentBeginsWith('anchor');
@@ -1651,7 +1651,7 @@ $browser->assertFragmentBeginsWith('anchor');
 <a name="assert-fragment-is-not"></a>
 #### assertFragmentIsNot
 
-Assert that the URL's current hash fragment does not match the given fragment:
+Xác nhận hash fragment hiện tại của URL không khớp với fragment đã cho:
 
 ```php
 $browser->assertFragmentIsNot('anchor');
@@ -1660,7 +1660,7 @@ $browser->assertFragmentIsNot('anchor');
 <a name="assert-has-cookie"></a>
 #### assertHasCookie
 
-Assert that the given encrypted cookie is present:
+Xác nhận cookie đã mã hóa được chỉ định tồn tại:
 
 ```php
 $browser->assertHasCookie($name);
@@ -1669,7 +1669,7 @@ $browser->assertHasCookie($name);
 <a name="assert-has-plain-cookie"></a>
 #### assertHasPlainCookie
 
-Assert that the given unencrypted cookie is present:
+Xác nhận cookie không mã hóa được chỉ định tồn tại:
 
 ```php
 $browser->assertHasPlainCookie($name);
@@ -1678,7 +1678,7 @@ $browser->assertHasPlainCookie($name);
 <a name="assert-cookie-missing"></a>
 #### assertCookieMissing
 
-Assert that the given encrypted cookie is not present:
+Xác nhận cookie đã mã hóa được chỉ định không tồn tại:
 
 ```php
 $browser->assertCookieMissing($name);
@@ -1687,7 +1687,7 @@ $browser->assertCookieMissing($name);
 <a name="assert-plain-cookie-missing"></a>
 #### assertPlainCookieMissing
 
-Assert that the given unencrypted cookie is not present:
+Xác nhận cookie không mã hóa được chỉ định không tồn tại:
 
 ```php
 $browser->assertPlainCookieMissing($name);
@@ -1696,7 +1696,7 @@ $browser->assertPlainCookieMissing($name);
 <a name="assert-cookie-value"></a>
 #### assertCookieValue
 
-Assert that an encrypted cookie has a given value:
+Xác nhận cookie đã mã hóa có giá trị đã cho:
 
 ```php
 $browser->assertCookieValue($name, $value);
@@ -1705,7 +1705,7 @@ $browser->assertCookieValue($name, $value);
 <a name="assert-plain-cookie-value"></a>
 #### assertPlainCookieValue
 
-Assert that an unencrypted cookie has a given value:
+Xác nhận cookie không mã hóa có giá trị đã cho:
 
 ```php
 $browser->assertPlainCookieValue($name, $value);
@@ -1714,7 +1714,7 @@ $browser->assertPlainCookieValue($name, $value);
 <a name="assert-see"></a>
 #### assertSee
 
-Assert that the given text is present on the page:
+Xác nhận văn bản đã cho xuất hiện trên trang:
 
 ```php
 $browser->assertSee($text);
@@ -1723,7 +1723,7 @@ $browser->assertSee($text);
 <a name="assert-dont-see"></a>
 #### assertDontSee
 
-Assert that the given text is not present on the page:
+Xác nhận văn bản đã cho không xuất hiện trên trang:
 
 ```php
 $browser->assertDontSee($text);
@@ -1732,7 +1732,7 @@ $browser->assertDontSee($text);
 <a name="assert-see-in"></a>
 #### assertSeeIn
 
-Assert that the given text is present within the selector:
+Xác nhận văn bản đã cho xuất hiện bên trong selector:
 
 ```php
 $browser->assertSeeIn($selector, $text);
@@ -1741,7 +1741,7 @@ $browser->assertSeeIn($selector, $text);
 <a name="assert-dont-see-in"></a>
 #### assertDontSeeIn
 
-Assert that the given text is not present within the selector:
+Xác nhận văn bản đã cho không xuất hiện bên trong selector:
 
 ```php
 $browser->assertDontSeeIn($selector, $text);
@@ -1750,7 +1750,7 @@ $browser->assertDontSeeIn($selector, $text);
 <a name="assert-see-anything-in"></a>
 #### assertSeeAnythingIn
 
-Assert that any text is present within the selector:
+Xác nhận có văn bản xuất hiện bên trong selector:
 
 ```php
 $browser->assertSeeAnythingIn($selector);
@@ -1759,7 +1759,7 @@ $browser->assertSeeAnythingIn($selector);
 <a name="assert-see-nothing-in"></a>
 #### assertSeeNothingIn
 
-Assert that no text is present within the selector:
+Xác nhận không có văn bản nào xuất hiện bên trong selector:
 
 ```php
 $browser->assertSeeNothingIn($selector);
@@ -1768,7 +1768,7 @@ $browser->assertSeeNothingIn($selector);
 <a name="assert-count"></a>
 #### assertCount
 
-Assert that elements matching the given selector appear the specified number of times:
+Xác nhận các phần tử khớp selector đã cho xuất hiện đúng số lần được chỉ định:
 
 ```php
 $browser->assertCount($selector, $count);
@@ -1777,7 +1777,7 @@ $browser->assertCount($selector, $count);
 <a name="assert-script"></a>
 #### assertScript
 
-Assert that the given JavaScript expression evaluates to the given value:
+Xác nhận biểu thức JavaScript đã cho trả về giá trị được chỉ định:
 
 ```php
 $browser->assertScript('window.isLoaded')
@@ -1787,7 +1787,7 @@ $browser->assertScript('window.isLoaded')
 <a name="assert-source-has"></a>
 #### assertSourceHas
 
-Assert that the given source code is present on the page:
+Xác nhận mã nguồn đã cho xuất hiện trên trang:
 
 ```php
 $browser->assertSourceHas($code);
@@ -1796,7 +1796,7 @@ $browser->assertSourceHas($code);
 <a name="assert-source-missing"></a>
 #### assertSourceMissing
 
-Assert that the given source code is not present on the page:
+Xác nhận mã nguồn đã cho không xuất hiện trên trang:
 
 ```php
 $browser->assertSourceMissing($code);
@@ -1805,7 +1805,7 @@ $browser->assertSourceMissing($code);
 <a name="assert-see-link"></a>
 #### assertSeeLink
 
-Assert that the given link is present on the page:
+Xác nhận liên kết đã cho xuất hiện trên trang:
 
 ```php
 $browser->assertSeeLink($linkText);
@@ -1814,7 +1814,7 @@ $browser->assertSeeLink($linkText);
 <a name="assert-dont-see-link"></a>
 #### assertDontSeeLink
 
-Assert that the given link is not present on the page:
+Xác nhận liên kết đã cho không xuất hiện trên trang:
 
 ```php
 $browser->assertDontSeeLink($linkText);
@@ -1823,7 +1823,7 @@ $browser->assertDontSeeLink($linkText);
 <a name="assert-input-value"></a>
 #### assertInputValue
 
-Assert that the given input field has the given value:
+Xác nhận trường input đã cho có giá trị được chỉ định:
 
 ```php
 $browser->assertInputValue($field, $value);
@@ -1832,7 +1832,7 @@ $browser->assertInputValue($field, $value);
 <a name="assert-input-value-is-not"></a>
 #### assertInputValueIsNot
 
-Assert that the given input field does not have the given value:
+Xác nhận trường input đã cho không có giá trị được chỉ định:
 
 ```php
 $browser->assertInputValueIsNot($field, $value);
@@ -1841,7 +1841,7 @@ $browser->assertInputValueIsNot($field, $value);
 <a name="assert-checked"></a>
 #### assertChecked
 
-Assert that the given checkbox is checked:
+Xác nhận checkbox đã cho đang được chọn:
 
 ```php
 $browser->assertChecked($field);
@@ -1850,7 +1850,7 @@ $browser->assertChecked($field);
 <a name="assert-not-checked"></a>
 #### assertNotChecked
 
-Assert that the given checkbox is not checked:
+Xác nhận checkbox đã cho không được chọn:
 
 ```php
 $browser->assertNotChecked($field);
@@ -1859,7 +1859,7 @@ $browser->assertNotChecked($field);
 <a name="assert-indeterminate"></a>
 #### assertIndeterminate
 
-Assert that the given checkbox is in an indeterminate state:
+Xác nhận checkbox đã cho đang ở trạng thái indeterminate:
 
 ```php
 $browser->assertIndeterminate($field);
@@ -1868,7 +1868,7 @@ $browser->assertIndeterminate($field);
 <a name="assert-radio-selected"></a>
 #### assertRadioSelected
 
-Assert that the given radio field is selected:
+Xác nhận radio field đã cho đang được chọn:
 
 ```php
 $browser->assertRadioSelected($field, $value);
@@ -1877,7 +1877,7 @@ $browser->assertRadioSelected($field, $value);
 <a name="assert-radio-not-selected"></a>
 #### assertRadioNotSelected
 
-Assert that the given radio field is not selected:
+Xác nhận radio field đã cho không được chọn:
 
 ```php
 $browser->assertRadioNotSelected($field, $value);
@@ -1886,7 +1886,7 @@ $browser->assertRadioNotSelected($field, $value);
 <a name="assert-selected"></a>
 #### assertSelected
 
-Assert that the given dropdown has the given value selected:
+Xác nhận dropdown đã cho đang chọn giá trị được chỉ định:
 
 ```php
 $browser->assertSelected($field, $value);
@@ -1895,7 +1895,7 @@ $browser->assertSelected($field, $value);
 <a name="assert-not-selected"></a>
 #### assertNotSelected
 
-Assert that the given dropdown does not have the given value selected:
+Xác nhận dropdown đã cho không chọn giá trị được chỉ định:
 
 ```php
 $browser->assertNotSelected($field, $value);
@@ -1904,7 +1904,7 @@ $browser->assertNotSelected($field, $value);
 <a name="assert-select-has-options"></a>
 #### assertSelectHasOptions
 
-Assert that the given array of values are available to be selected:
+Xác nhận mảng giá trị đã cho có sẵn để lựa chọn:
 
 ```php
 $browser->assertSelectHasOptions($field, $values);
@@ -1913,7 +1913,7 @@ $browser->assertSelectHasOptions($field, $values);
 <a name="assert-select-missing-options"></a>
 #### assertSelectMissingOptions
 
-Assert that the given array of values are not available to be selected:
+Xác nhận mảng giá trị đã cho không có sẵn để lựa chọn:
 
 ```php
 $browser->assertSelectMissingOptions($field, $values);
@@ -1922,7 +1922,7 @@ $browser->assertSelectMissingOptions($field, $values);
 <a name="assert-select-has-option"></a>
 #### assertSelectHasOption
 
-Assert that the given value is available to be selected on the given field:
+Xác nhận giá trị đã cho có sẵn để lựa chọn trên field được chỉ định:
 
 ```php
 $browser->assertSelectHasOption($field, $value);
@@ -1931,7 +1931,7 @@ $browser->assertSelectHasOption($field, $value);
 <a name="assert-select-missing-option"></a>
 #### assertSelectMissingOption
 
-Assert that the given value is not available to be selected:
+Xác nhận giá trị đã cho không có sẵn để lựa chọn:
 
 ```php
 $browser->assertSelectMissingOption($field, $value);
@@ -1940,7 +1940,7 @@ $browser->assertSelectMissingOption($field, $value);
 <a name="assert-value"></a>
 #### assertValue
 
-Assert that the element matching the given selector has the given value:
+Xác nhận phần tử khớp selector đã cho có giá trị được chỉ định:
 
 ```php
 $browser->assertValue($selector, $value);
@@ -1949,7 +1949,7 @@ $browser->assertValue($selector, $value);
 <a name="assert-value-is-not"></a>
 #### assertValueIsNot
 
-Assert that the element matching the given selector does not have the given value:
+Xác nhận phần tử khớp selector đã cho không có giá trị được chỉ định:
 
 ```php
 $browser->assertValueIsNot($selector, $value);
@@ -1958,7 +1958,7 @@ $browser->assertValueIsNot($selector, $value);
 <a name="assert-attribute"></a>
 #### assertAttribute
 
-Assert that the element matching the given selector has the given value in the provided attribute:
+Xác nhận phần tử khớp selector đã cho có giá trị được chỉ định trong attribute đã cung cấp:
 
 ```php
 $browser->assertAttribute($selector, $attribute, $value);
@@ -1967,7 +1967,7 @@ $browser->assertAttribute($selector, $attribute, $value);
 <a name="assert-attribute-missing"></a>
 #### assertAttributeMissing
 
-Assert that the element matching the given selector is missing the provided attribute:
+Xác nhận phần tử khớp selector đã cho không có attribute được cung cấp:
 
 ```php
 $browser->assertAttributeMissing($selector, $attribute);
@@ -1976,7 +1976,7 @@ $browser->assertAttributeMissing($selector, $attribute);
 <a name="assert-attribute-contains"></a>
 #### assertAttributeContains
 
-Assert that the element matching the given selector contains the given value in the provided attribute:
+Xác nhận attribute được chỉ định của phần tử khớp selector đã cho chứa giá trị được cung cấp:
 
 ```php
 $browser->assertAttributeContains($selector, $attribute, $value);
@@ -1985,7 +1985,7 @@ $browser->assertAttributeContains($selector, $attribute, $value);
 <a name="assert-attribute-doesnt-contain"></a>
 #### assertAttributeDoesntContain
 
-Assert that the element matching the given selector does not contain the given value in the provided attribute:
+Xác nhận attribute được chỉ định của phần tử khớp selector đã cho không chứa giá trị được cung cấp:
 
 ```php
 $browser->assertAttributeDoesntContain($selector, $attribute, $value);
@@ -1994,13 +1994,13 @@ $browser->assertAttributeDoesntContain($selector, $attribute, $value);
 <a name="assert-aria-attribute"></a>
 #### assertAriaAttribute
 
-Assert that the element matching the given selector has the given value in the provided aria attribute:
+Xác nhận phần tử khớp selector đã cho có giá trị được chỉ định trong aria attribute đã cung cấp:
 
 ```php
 $browser->assertAriaAttribute($selector, $attribute, $value);
 ```
 
-For example, given the markup `<button aria-label="Add"></button>`, you may assert against the `aria-label` attribute like so:
+Ví dụ, với markup `<button aria-label="Add"></button>`, bạn có thể assertion đối với attribute `aria-label` như sau:
 
 ```php
 $browser->assertAriaAttribute('button', 'label', 'Add')
@@ -2009,13 +2009,13 @@ $browser->assertAriaAttribute('button', 'label', 'Add')
 <a name="assert-data-attribute"></a>
 #### assertDataAttribute
 
-Assert that the element matching the given selector has the given value in the provided data attribute:
+Xác nhận phần tử khớp selector đã cho có giá trị được chỉ định trong data attribute đã cung cấp:
 
 ```php
 $browser->assertDataAttribute($selector, $attribute, $value);
 ```
 
-For example, given the markup `<tr id="row-1" data-content="attendees"></tr>`, you may assert against the `data-content` attribute like so:
+Ví dụ, với markup `<tr id="row-1" data-content="attendees"></tr>`, bạn có thể assertion đối với attribute `data-content` như sau:
 
 ```php
 $browser->assertDataAttribute('#row-1', 'content', 'attendees')
@@ -2024,7 +2024,7 @@ $browser->assertDataAttribute('#row-1', 'content', 'attendees')
 <a name="assert-visible"></a>
 #### assertVisible
 
-Assert that the element matching the given selector is visible:
+Xác nhận phần tử khớp selector đã cho đang hiển thị:
 
 ```php
 $browser->assertVisible($selector);
@@ -2033,7 +2033,7 @@ $browser->assertVisible($selector);
 <a name="assert-present"></a>
 #### assertPresent
 
-Assert that the element matching the given selector is present in the source:
+Xác nhận phần tử khớp selector đã cho tồn tại trong source:
 
 ```php
 $browser->assertPresent($selector);
@@ -2042,7 +2042,7 @@ $browser->assertPresent($selector);
 <a name="assert-not-present"></a>
 #### assertNotPresent
 
-Assert that the element matching the given selector is not present in the source:
+Xác nhận phần tử khớp selector đã cho không tồn tại trong source:
 
 ```php
 $browser->assertNotPresent($selector);
@@ -2051,7 +2051,7 @@ $browser->assertNotPresent($selector);
 <a name="assert-missing"></a>
 #### assertMissing
 
-Assert that the element matching the given selector is not visible:
+Xác nhận phần tử khớp selector đã cho không hiển thị:
 
 ```php
 $browser->assertMissing($selector);
@@ -2060,7 +2060,7 @@ $browser->assertMissing($selector);
 <a name="assert-input-present"></a>
 #### assertInputPresent
 
-Assert that an input with the given name is present:
+Xác nhận input có name đã cho tồn tại:
 
 ```php
 $browser->assertInputPresent($name);
@@ -2069,7 +2069,7 @@ $browser->assertInputPresent($name);
 <a name="assert-input-missing"></a>
 #### assertInputMissing
 
-Assert that an input with the given name is not present in the source:
+Xác nhận input có name đã cho không tồn tại trong source:
 
 ```php
 $browser->assertInputMissing($name);
@@ -2078,7 +2078,7 @@ $browser->assertInputMissing($name);
 <a name="assert-dialog-opened"></a>
 #### assertDialogOpened
 
-Assert that a JavaScript dialog with the given message has been opened:
+Xác nhận JavaScript dialog với message đã cho đã được mở:
 
 ```php
 $browser->assertDialogOpened($message);
@@ -2087,7 +2087,7 @@ $browser->assertDialogOpened($message);
 <a name="assert-enabled"></a>
 #### assertEnabled
 
-Assert that the given field is enabled:
+Xác nhận field đã cho đang được bật:
 
 ```php
 $browser->assertEnabled($field);
@@ -2096,7 +2096,7 @@ $browser->assertEnabled($field);
 <a name="assert-disabled"></a>
 #### assertDisabled
 
-Assert that the given field is disabled:
+Xác nhận field đã cho đang bị vô hiệu hóa:
 
 ```php
 $browser->assertDisabled($field);
@@ -2105,7 +2105,7 @@ $browser->assertDisabled($field);
 <a name="assert-button-enabled"></a>
 #### assertButtonEnabled
 
-Assert that the given button is enabled:
+Xác nhận button đã cho đang được bật:
 
 ```php
 $browser->assertButtonEnabled($button);
@@ -2114,7 +2114,7 @@ $browser->assertButtonEnabled($button);
 <a name="assert-button-disabled"></a>
 #### assertButtonDisabled
 
-Assert that the given button is disabled:
+Xác nhận button đã cho đang bị vô hiệu hóa:
 
 ```php
 $browser->assertButtonDisabled($button);
@@ -2123,7 +2123,7 @@ $browser->assertButtonDisabled($button);
 <a name="assert-focused"></a>
 #### assertFocused
 
-Assert that the given field is focused:
+Xác nhận field đã cho đang được focus:
 
 ```php
 $browser->assertFocused($field);
@@ -2132,7 +2132,7 @@ $browser->assertFocused($field);
 <a name="assert-not-focused"></a>
 #### assertNotFocused
 
-Assert that the given field is not focused:
+Xác nhận field đã cho không được focus:
 
 ```php
 $browser->assertNotFocused($field);
@@ -2141,7 +2141,7 @@ $browser->assertNotFocused($field);
 <a name="assert-authenticated"></a>
 #### assertAuthenticated
 
-Assert that the user is authenticated:
+Xác nhận người dùng đã được xác thực:
 
 ```php
 $browser->assertAuthenticated();
@@ -2150,7 +2150,7 @@ $browser->assertAuthenticated();
 <a name="assert-guest"></a>
 #### assertGuest
 
-Assert that the user is not authenticated:
+Xác nhận người dùng chưa được xác thực:
 
 ```php
 $browser->assertGuest();
@@ -2159,7 +2159,7 @@ $browser->assertGuest();
 <a name="assert-authenticated-as"></a>
 #### assertAuthenticatedAs
 
-Assert that the user is authenticated as the given user:
+Xác nhận người dùng đang được xác thực với user đã cho:
 
 ```php
 $browser->assertAuthenticatedAs($user);
@@ -2168,7 +2168,7 @@ $browser->assertAuthenticatedAs($user);
 <a name="assert-vue"></a>
 #### assertVue
 
-Dusk even allows you to make assertions on the state of [Vue component](https://vuejs.org) data. For example, imagine your application contains the following Vue component:
+Dusk thậm chí cho phép bạn assertion trạng thái dữ liệu của [Vue component](https://vuejs.org). Ví dụ, giả sử ứng dụng chứa Vue component sau:
 
     // HTML...
 
@@ -2188,7 +2188,7 @@ Dusk even allows you to make assertions on the state of [Vue component](https://
         }
     });
 
-You may assert on the state of the Vue component like so:
+Bạn có thể assertion trạng thái của Vue component như sau:
 
 ```php tab=Pest
 test('vue', function () {
@@ -2215,7 +2215,7 @@ public function test_vue(): void
 <a name="assert-vue-is-not"></a>
 #### assertVueIsNot
 
-Assert that a given Vue component data property does not match the given value:
+Xác nhận thuộc tính dữ liệu của Vue component đã cho không khớp với giá trị được chỉ định:
 
 ```php
 $browser->assertVueIsNot($property, $value, $componentSelector = null);
@@ -2224,7 +2224,7 @@ $browser->assertVueIsNot($property, $value, $componentSelector = null);
 <a name="assert-vue-contains"></a>
 #### assertVueContains
 
-Assert that a given Vue component data property is an array and contains the given value:
+Xác nhận thuộc tính dữ liệu của Vue component đã cho là một array và chứa giá trị được chỉ định:
 
 ```php
 $browser->assertVueContains($property, $value, $componentSelector = null);
@@ -2233,7 +2233,7 @@ $browser->assertVueContains($property, $value, $componentSelector = null);
 <a name="assert-vue-doesnt-contain"></a>
 #### assertVueDoesntContain
 
-Assert that a given Vue component data property is an array and does not contain the given value:
+Xác nhận thuộc tính dữ liệu của Vue component đã cho là một array và không chứa giá trị được chỉ định:
 
 ```php
 $browser->assertVueDoesntContain($property, $value, $componentSelector = null);
@@ -2242,26 +2242,26 @@ $browser->assertVueDoesntContain($property, $value, $componentSelector = null);
 <a name="pages"></a>
 ## Pages
 
-Sometimes, tests require several complicated actions to be performed in sequence. This can make your tests harder to read and understand. Dusk Pages allow you to define expressive actions that may then be performed on a given page via a single method. Pages also allow you to define short-cuts to common selectors for your application or for a single page.
+Đôi khi, các bài kiểm thử yêu cầu thực hiện liên tiếp nhiều thao tác phức tạp. Điều này có thể khiến bài kiểm thử khó đọc và khó hiểu hơn. Dusk Pages cho phép bạn định nghĩa các thao tác có tính biểu đạt cao, sau đó thực hiện chúng trên một trang cụ thể chỉ bằng một phương thức. Pages cũng cho phép bạn định nghĩa các lối tắt cho những selector thường dùng trong ứng dụng hoặc trên một trang cụ thể.
 
 <a name="generating-pages"></a>
-### Generating Pages
+### Tạo Page
 
-To generate a page object, execute the `dusk:page` Artisan command. All page objects will be placed in your application's `tests/Browser/Pages` directory:
+Để tạo một page object, hãy chạy lệnh Artisan `dusk:page`. Tất cả page object sẽ được đặt trong thư mục `tests/Browser/Pages` của ứng dụng:
 
 ```shell
 php artisan dusk:page Login
 ```
 
 <a name="configuring-pages"></a>
-### Configuring Pages
+### Cấu hình Page
 
-By default, pages have three methods: `url`, `assert`, and `elements`. We will discuss the `url` and `assert` methods now. The `elements` method will be [discussed in more detail below](#shorthand-selectors).
+Theo mặc định, page có ba phương thức: `url`, `assert` và `elements`. Phần này sẽ trình bày các phương thức `url` và `assert`. Phương thức `elements` sẽ được [trình bày chi tiết hơn ở phần bên dưới](#shorthand-selectors).
 
 <a name="the-url-method"></a>
-#### The `url` Method
+#### Phương thức `url`
 
-The `url` method should return the path of the URL that represents the page. Dusk will use this URL when navigating to the page in the browser:
+Phương thức `url` phải trả về path của URL đại diện cho page. Dusk sẽ sử dụng URL này khi điều hướng trình duyệt đến page:
 
 ```php
 /**
@@ -2274,9 +2274,9 @@ public function url(): string
 ```
 
 <a name="the-assert-method"></a>
-#### The `assert` Method
+#### Phương thức `assert`
 
-The `assert` method may make any assertions necessary to verify that the browser is actually on the given page. It is not actually necessary to place anything within this method; however, you are free to make these assertions if you wish. These assertions will be run automatically when navigating to the page:
+Phương thức `assert` có thể thực hiện bất kỳ assertion nào cần thiết để xác minh rằng trình duyệt thực sự đang ở page đã cho. Bạn không bắt buộc phải đặt nội dung trong phương thức này; tuy nhiên, bạn có thể thêm các assertion nếu muốn. Các assertion này sẽ tự động được chạy khi điều hướng đến page:
 
 ```php
 /**
@@ -2289,9 +2289,9 @@ public function assert(Browser $browser): void
 ```
 
 <a name="navigating-to-pages"></a>
-### Navigating to Pages
+### Điều hướng đến Page
 
-Once a page has been defined, you may navigate to it using the `visit` method:
+Sau khi đã định nghĩa page, bạn có thể điều hướng đến page đó bằng phương thức `visit`:
 
 ```php
 use Tests\Browser\Pages\Login;
@@ -2299,7 +2299,7 @@ use Tests\Browser\Pages\Login;
 $browser->visit(new Login);
 ```
 
-Sometimes you may already be on a given page and need to "load" the page's selectors and methods into the current test context. This is common when pressing a button and being redirected to a given page without explicitly navigating to it. In this situation, you may use the `on` method to load the page:
+Đôi khi bạn đã ở một page nhất định và cần "nạp" các selector cùng phương thức của page vào ngữ cảnh kiểm thử hiện tại. Trường hợp này thường xảy ra khi nhấn một nút và được chuyển hướng đến page khác mà không điều hướng tường minh. Khi đó, bạn có thể sử dụng phương thức `on` để nạp page:
 
 ```php
 use Tests\Browser\Pages\CreatePlaylist;
@@ -2311,9 +2311,9 @@ $browser->visit('/dashboard')
 ```
 
 <a name="shorthand-selectors"></a>
-### Shorthand Selectors
+### Selector viết tắt
 
-The `elements` method within page classes allows you to define quick, easy-to-remember shortcuts for any CSS selector on your page. For example, let's define a shortcut for the "email" input field of the application's login page:
+Phương thức `elements` trong các page class cho phép bạn định nghĩa những lối tắt ngắn gọn, dễ nhớ cho bất kỳ CSS selector nào trên page. Ví dụ, hãy định nghĩa một lối tắt cho trường nhập "email" trên trang đăng nhập của ứng dụng:
 
 ```php
 /**
@@ -2329,16 +2329,16 @@ public function elements(): array
 }
 ```
 
-Once the shortcut has been defined, you may use the shorthand selector anywhere you would typically use a full CSS selector:
+Sau khi lối tắt được định nghĩa, bạn có thể sử dụng selector viết tắt ở bất kỳ nơi nào mà thông thường bạn sẽ dùng một CSS selector đầy đủ:
 
 ```php
 $browser->type('@email', 'taylor@laravel.com');
 ```
 
 <a name="global-shorthand-selectors"></a>
-#### Global Shorthand Selectors
+#### Selector viết tắt toàn cục
 
-After installing Dusk, a base `Page` class will be placed in your `tests/Browser/Pages` directory. This class contains a `siteElements` method which may be used to define global shorthand selectors that should be available on every page throughout your application:
+Sau khi cài đặt Dusk, một class `Page` cơ sở sẽ được đặt trong thư mục `tests/Browser/Pages`. Class này chứa phương thức `siteElements`, có thể dùng để định nghĩa các selector viết tắt toàn cục khả dụng trên mọi page trong ứng dụng:
 
 ```php
 /**
@@ -2355,9 +2355,9 @@ public static function siteElements(): array
 ```
 
 <a name="page-methods"></a>
-### Page Methods
+### Các phương thức của Page
 
-In addition to the default methods defined on pages, you may define additional methods which may be used throughout your tests. For example, let's imagine we are building a music management application. A common action for one page of the application might be to create a playlist. Instead of re-writing the logic to create a playlist in each test, you may define a `createPlaylist` method on a page class:
+Ngoài các phương thức mặc định được định nghĩa trên page, bạn có thể định nghĩa thêm các phương thức để sử dụng xuyên suốt bộ kiểm thử. Ví dụ, giả sử chúng ta đang xây dựng một ứng dụng quản lý âm nhạc. Một thao tác phổ biến trên một page có thể là tạo playlist. Thay vì viết lại logic tạo playlist trong từng bài kiểm thử, bạn có thể định nghĩa phương thức `createPlaylist` trên page class:
 
 ```php
 <?php
@@ -2383,7 +2383,7 @@ class Dashboard extends Page
 }
 ```
 
-Once the method has been defined, you may use it within any test that utilizes the page. The browser instance will automatically be passed as the first argument to custom page methods:
+Sau khi phương thức được định nghĩa, bạn có thể sử dụng nó trong bất kỳ bài kiểm thử nào sử dụng page đó. Browser instance sẽ tự động được truyền làm đối số đầu tiên cho các phương thức page tùy chỉnh:
 
 ```php
 use Tests\Browser\Pages\Dashboard;
@@ -2396,18 +2396,18 @@ $browser->visit(new Dashboard)
 <a name="components"></a>
 ## Components
 
-Components are similar to Dusk's "page objects", but are intended for pieces of UI and functionality that are re-used throughout your application, such as a navigation bar or notification window. As such, components are not bound to specific URLs.
+Components tương tự "page objects" của Dusk, nhưng được thiết kế cho các phần UI và chức năng được tái sử dụng xuyên suốt ứng dụng, chẳng hạn thanh điều hướng hoặc cửa sổ thông báo. Vì vậy, component không bị ràng buộc với URL cụ thể.
 
 <a name="generating-components"></a>
-### Generating Components
+### Tạo Component
 
-To generate a component, execute the `dusk:component` Artisan command. New components are placed in the `tests/Browser/Components` directory:
+Để tạo một component, hãy chạy lệnh Artisan `dusk:component`. Các component mới sẽ được đặt trong thư mục `tests/Browser/Components`:
 
 ```shell
 php artisan dusk:component DatePicker
 ```
 
-As shown above, a "date picker" is an example of a component that might exist throughout your application on a variety of pages. It can become cumbersome to manually write the browser automation logic to select a date in dozens of tests throughout your test suite. Instead, we can define a Dusk component to represent the date picker, allowing us to encapsulate that logic within the component:
+Như ví dụ trên, "date picker" là một component có thể xuất hiện trên nhiều page khác nhau trong ứng dụng. Việc tự viết logic browser automation để chọn ngày trong hàng chục bài kiểm thử có thể trở nên rườm rà. Thay vào đó, chúng ta có thể định nghĩa một Dusk component đại diện cho date picker, qua đó đóng gói logic này bên trong component:
 
 ```php
 <?php
@@ -2470,9 +2470,9 @@ class DatePicker extends BaseComponent
 ```
 
 <a name="using-components"></a>
-### Using Components
+### Sử dụng Component
 
-Once the component has been defined, we can easily select a date within the date picker from any test. And, if the logic necessary to select a date changes, we only need to update the component:
+Sau khi component được định nghĩa, chúng ta có thể dễ dàng chọn ngày trong date picker từ bất kỳ bài kiểm thử nào. Nếu logic cần thiết để chọn ngày thay đổi, chúng ta chỉ cần cập nhật component:
 
 ```php tab=Pest
 <?php
@@ -2521,7 +2521,7 @@ class ExampleTest extends DuskTestCase
 }
 ```
 
-The `component` method may be used to retrieve a browser instance scoped to the given component:
+Phương thức `component` có thể được dùng để lấy một browser instance được giới hạn phạm vi trong component đã cho:
 
 ```php
 $datePicker = $browser->component(new DatePickerComponent);
@@ -2535,12 +2535,12 @@ $datePicker->assertSee('January');
 ## Continuous Integration
 
 > [!WARNING]
-> Most Dusk continuous integration configurations expect your Laravel application to be served using the built-in PHP development server on port 8000. Therefore, before continuing, you should ensure that your continuous integration environment has an `APP_URL` environment variable value of `http://127.0.0.1:8000`.
+> Hầu hết cấu hình continuous integration của Dusk đều kỳ vọng ứng dụng Laravel được phục vụ bằng development server tích hợp của PHP trên cổng 8000. Vì vậy, trước khi tiếp tục, hãy đảm bảo môi trường continuous integration có biến môi trường `APP_URL` với giá trị `http://127.0.0.1:8000`.
 
 <a name="running-tests-on-heroku-ci"></a>
 ### Heroku CI
 
-To run Dusk tests on [Heroku CI](https://www.heroku.com/continuous-integration), add the following Google Chrome buildpack and scripts to your Heroku `app.json` file:
+Để chạy các bài kiểm thử Dusk trên [Heroku CI](https://www.heroku.com/continuous-integration), hãy thêm Google Chrome buildpack và các script sau vào file `app.json` của Heroku:
 
 ```json
 {
@@ -2562,7 +2562,7 @@ To run Dusk tests on [Heroku CI](https://www.heroku.com/continuous-integration),
 <a name="running-tests-on-travis-ci"></a>
 ### Travis CI
 
-To run your Dusk tests on [Travis CI](https://travis-ci.org), use the following `.travis.yml` configuration. Since Travis CI is not a graphical environment, we will need to take some extra steps in order to launch a Chrome browser. In addition, we will use `php artisan serve` to launch PHP's built-in web server:
+Để chạy các bài kiểm thử Dusk trên [Travis CI](https://travis-ci.org), hãy sử dụng cấu hình `.travis.yml` sau. Vì Travis CI không phải môi trường đồ họa, chúng ta cần thực hiện thêm một số bước để khởi chạy trình duyệt Chrome. Ngoài ra, chúng ta sẽ dùng `php artisan serve` để khởi chạy web server tích hợp của PHP:
 
 ```yaml
 language: php
@@ -2590,7 +2590,7 @@ script:
 <a name="running-tests-on-github-actions"></a>
 ### GitHub Actions
 
-If you are using [GitHub Actions](https://github.com/features/actions) to run your Dusk tests, you may use the following configuration file as a starting point. Like TravisCI, we will use the `php artisan serve` command to launch PHP's built-in web server:
+Nếu sử dụng [GitHub Actions](https://github.com/features/actions) để chạy các bài kiểm thử Dusk, bạn có thể dùng file cấu hình sau làm điểm khởi đầu. Tương tự Travis CI, chúng ta sẽ dùng lệnh `php artisan serve` để khởi chạy web server tích hợp của PHP:
 
 ```yaml
 name: CI
@@ -2641,7 +2641,7 @@ jobs:
 <a name="running-tests-on-chipper-ci"></a>
 ### Chipper CI
 
-If you are using [Chipper CI](https://chipperci.com) to run your Dusk tests, you may use the following configuration file as a starting point. We will use PHP's built-in server to run Laravel so we can listen for requests:
+Nếu sử dụng [Chipper CI](https://chipperci.com) để chạy các bài kiểm thử Dusk, bạn có thể dùng file cấu hình sau làm điểm khởi đầu. Chúng ta sẽ sử dụng server tích hợp của PHP để chạy Laravel nhằm có thể lắng nghe các request:
 
 ```yaml
 # file .chipperci.yml
@@ -2684,7 +2684,9 @@ pipeline:
       php artisan dusk --env=ci
 ```
 
-To learn more about running Dusk tests on Chipper CI, including how to use databases, consult the [official Chipper CI documentation](https://chipperci.com/docs/testing/laravel-dusk-new/).
+Để tìm hiểu thêm về cách chạy các bài kiểm thử Dusk trên Chipper CI, bao gồm cách sử dụng database, hãy tham khảo [tài liệu Chipper CI chính thức](https://chipperci.com/docs/testing/laravel-dusk-new/).
+
+---
 
 ## Tài liệu chính thức
 

@@ -1,62 +1,62 @@
 # Laravel Boost
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-    - [Set Up Your Agents](#set-up-your-agents)
-    - [Keeping Boost Resources Updated](#keeping-boost-resources-updated)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+    - [Thiết lập agent](#set-up-your-agents)
+    - [Luôn cập nhật tài nguyên Boost](#keeping-boost-resources-updated)
 - [MCP Server](#mcp-server)
-    - [Available MCP Tools](#available-mcp-tools)
-    - [Manually Registering the MCP Server](#manually-registering-the-mcp-server)
-- [AI Guidelines](#ai-guidelines)
-    - [Available AI Guidelines](#available-ai-guidelines)
-    - [Adding Custom AI Guidelines](#adding-custom-ai-guidelines)
-    - [Overriding Boost AI Guidelines](#overriding-boost-ai-guidelines)
-    - [Third-Party Package AI Guidelines](#third-party-package-ai-guidelines)
-- [Agent Skills](#agent-skills)
-    - [Available Skills](#available-skills)
-    - [Custom Skills](#custom-skills)
-    - [Overriding Skills](#overriding-skills)
-    - [Third-Party Package Skills](#third-party-package-skills)
-- [Guidelines vs. Skills](#guidelines-vs-skills)
-- [Project Rules](#project-rules)
-    - [Recording Rules](#recording-rules)
-    - [Inferring Your Application's Conventions](#inferring-your-applications-conventions)
-    - [Disabling Project Rules](#disabling-project-rules)
-- [Documentation API](#documentation-api)
+    - [Các MCP tool có sẵn](#available-mcp-tools)
+    - [Đăng ký MCP server thủ công](#manually-registering-the-mcp-server)
+- [AI Guideline](#ai-guidelines)
+    - [AI guideline có sẵn](#available-ai-guidelines)
+    - [Thêm AI guideline tùy chỉnh](#adding-custom-ai-guidelines)
+    - [Ghi đè AI guideline của Boost](#overriding-boost-ai-guidelines)
+    - [AI guideline cho package bên thứ ba](#third-party-package-ai-guidelines)
+- [Agent Skill](#agent-skills)
+    - [Skill có sẵn](#available-skills)
+    - [Skill tùy chỉnh](#custom-skills)
+    - [Ghi đè skill](#overriding-skills)
+    - [Skill cho package bên thứ ba](#third-party-package-skills)
+- [Guideline và Skill](#guidelines-vs-skills)
+- [Quy tắc dự án](#project-rules)
+    - [Ghi lại quy tắc](#recording-rules)
+    - [Suy luận convention của ứng dụng](#inferring-your-applications-conventions)
+    - [Tắt quy tắc dự án](#disabling-project-rules)
+- [API tài liệu](#documentation-api)
 - [Extending Boost](#extending-boost)
-    - [Adding Support for Other IDEs / AI Agents](#adding-support-for-other-ides-ai-agents)
+    - [Thêm hỗ trợ cho IDE / AI agent khác](#adding-support-for-other-ides-ai-agents)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel Boost accelerates AI-assisted development by providing the essential guidelines and agent skills that help AI agents write high-quality Laravel applications that adhere to Laravel best practices.
+Laravel Boost tăng tốc quá trình phát triển có AI hỗ trợ bằng cách cung cấp các guideline thiết yếu và agent skill giúp AI agent viết ứng dụng Laravel chất lượng cao, tuân theo các best practice của Laravel.
 
-Boost also provides a powerful Laravel ecosystem documentation API that combines a built-in MCP tool with an extensive knowledge base containing over 17,000 pieces of Laravel-specific information, all enhanced by semantic search capabilities using embeddings for precise, context-aware results. Boost instructs AI agents like Claude Code and Cursor to use this API to learn about the latest Laravel features and best practices.
+Boost cũng cung cấp một API tài liệu mạnh mẽ cho hệ sinh thái Laravel, kết hợp MCP tool tích hợp sẵn với kho kiến thức mở rộng chứa hơn 17.000 mục thông tin dành riêng cho Laravel. Tất cả được tăng cường bằng khả năng tìm kiếm ngữ nghĩa sử dụng embedding để trả về kết quả chính xác và phù hợp ngữ cảnh. Boost hướng dẫn các AI agent như Claude Code và Cursor sử dụng API này để tìm hiểu các tính năng Laravel mới nhất và các best practice.
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
-Laravel Boost can be installed via Composer:
+Có thể cài đặt Laravel Boost thông qua Composer:
 
 ```shell
 composer require laravel/boost --dev
 ```
 
-Next, install the MCP server and coding guidelines:
+Tiếp theo, hãy cài đặt MCP server và các coding guideline:
 
 ```shell
 php artisan boost:install
 ```
 
-The `boost:install` command will generate the relevant agent guideline and skill files for the coding agents you selected during the installation process.
+Lệnh `boost:install` sẽ tạo các file agent guideline và skill phù hợp cho những coding agent bạn đã chọn trong quá trình cài đặt.
 
-Once Laravel Boost has been installed, you're ready to start coding with Cursor, Claude Code, or your AI agent of choice.
+Sau khi Laravel Boost được cài đặt, bạn đã sẵn sàng bắt đầu lập trình với Cursor, Claude Code hoặc AI agent mà bạn lựa chọn.
 
 > [!NOTE]
-> Feel free to add the generated MCP configuration file (`.mcp.json`), guideline files (`CLAUDE.md`, `AGENTS.md`, `junie/`, etc.), and the `boost.json` configuration file to your application's `.gitignore`, as these files are automatically regenerated when running `boost:install` and `boost:update`.
+> Bạn có thể thêm file cấu hình MCP được tạo (`.mcp.json`), các file guideline (`CLAUDE.md`, `AGENTS.md`, `junie/`, v.v.) và file cấu hình `boost.json` vào `.gitignore` của ứng dụng, vì các file này sẽ tự động được tạo lại khi chạy `boost:install` và `boost:update`.
 
 <a name="set-up-your-agents"></a>
-### Set Up Your Agents
+### Thiết lập agent
 
 ```text tab=Cursor
 1. Open the command palette (`Cmd+Shift+P` or `Ctrl+Shift+P`)
@@ -97,15 +97,15 @@ gemini mcp add -s project -t stdio laravel-boost php artisan boost:mcp
 ```
 
 <a name="keeping-boost-resources-updated"></a>
-### Keeping Boost Resources Updated
+### Luôn cập nhật tài nguyên Boost
 
-You may want to periodically update your local Boost resources (AI guidelines and skills) to ensure they reflect the latest versions of the Laravel ecosystem packages you have installed. To do so, you can use the `boost:update` Artisan command.
+Bạn nên cập nhật định kỳ các tài nguyên Boost cục bộ (AI guideline và skill) để bảo đảm chúng phản ánh phiên bản mới nhất của các package thuộc hệ sinh thái Laravel mà bạn đã cài đặt. Để thực hiện, hãy dùng lệnh Artisan `boost:update`.
 
 ```shell
 php artisan boost:update
 ```
 
-You may also automate this process by adding it to your Composer "post-update-cmd" scripts:
+Bạn cũng có thể tự động hóa quá trình này bằng cách thêm lệnh vào script Composer `post-update-cmd`:
 
 ```json
 {
@@ -117,7 +117,7 @@ You may also automate this process by adding it to your Composer "post-update-cm
 }
 ```
 
-By default, the `boost:update` command will only update the existing Boost resources already published within your application. If you would like Boost to scan your application for any newly installed packages and offer to publish their corresponding guidelines and skills, you may use the `--discover` option:
+Theo mặc định, lệnh `boost:update` chỉ cập nhật các tài nguyên Boost hiện có đã được publish trong ứng dụng. Nếu muốn Boost quét ứng dụng để tìm các package mới cài đặt và đề xuất publish guideline cùng skill tương ứng, bạn có thể sử dụng tùy chọn `--discover`:
 
 ```shell
 php artisan boost:update --discover
@@ -126,39 +126,39 @@ php artisan boost:update --discover
 <a name="mcp-server"></a>
 ## MCP Server
 
-Laravel Boost provides an MCP (Model Context Protocol) server that exposes tools for AI agents to interact with your Laravel application. These tools give agents the ability to inspect your application's structure, query the database, execute code, and more.
+Laravel Boost cung cấp một MCP (Model Context Protocol) server, expose các tool để AI agent tương tác với ứng dụng Laravel. Những tool này cho phép agent kiểm tra cấu trúc ứng dụng, truy vấn cơ sở dữ liệu, thực thi code và nhiều tác vụ khác.
 
 <a name="available-mcp-tools"></a>
-### Available MCP Tools
+### Các MCP tool có sẵn
 
 <div class="overflow-auto">
 
-| Name                 | Notes                                                                                                       |
+| Tên                  | Ghi chú                                                                                                     |
 | -------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Application Info     | Read PHP & Laravel versions, database engine, list of ecosystem packages with versions, and Eloquent models |
-| Browser Logs         | Read logs and errors from the browser                                                                       |
-| Database Connections | Inspect available database connections, including the default connection                                    |
-| Database Query       | Execute a query against the database                                                                        |
-| Database Schema      | Read the database schema                                                                                    |
-| Get Absolute URL     | Convert relative path URIs to absolute so agents generate valid URLs                                        |
-| Last Error           | Read the last error from the application's log files                                                        |
-| Read Log Entries     | Read the last N log entries                                                                                 |
-| Record Rule          | Record a durable [project rule](#project-rules) into `.ai/rules` so future agents inherit it                |
-| Search Docs          | Query the Laravel hosted documentation API service to retrieve documentation based on installed packages    |
+| Application Info     | Đọc phiên bản PHP và Laravel, database engine, danh sách package hệ sinh thái kèm phiên bản và các model Eloquent |
+| Browser Logs         | Đọc log và lỗi từ trình duyệt                                                                                |
+| Database Connections | Kiểm tra các kết nối cơ sở dữ liệu khả dụng, bao gồm kết nối mặc định                                        |
+| Database Query       | Thực thi truy vấn trên cơ sở dữ liệu                                                                         |
+| Database Schema      | Đọc schema cơ sở dữ liệu                                                                                     |
+| Get Absolute URL     | Chuyển URI đường dẫn tương đối thành tuyệt đối để agent tạo URL hợp lệ                                       |
+| Last Error           | Đọc lỗi gần nhất từ các file log của ứng dụng                                                                |
+| Read Log Entries     | Đọc N mục log gần nhất                                                                                       |
+| Record Rule          | Ghi một [quy tắc dự án](#project-rules) bền vững vào `.ai/rules` để các agent sau kế thừa                    |
+| Search Docs          | Truy vấn dịch vụ API tài liệu do Laravel lưu trữ để lấy tài liệu dựa trên các package đã cài đặt             |
 
 </div>
 
 <a name="manually-registering-the-mcp-server"></a>
-### Manually Registering the MCP Server
+### Đăng ký MCP server thủ công
 
-Sometimes you may need to manually register the Laravel Boost MCP server with your editor of choice. You should register the MCP server using the following details:
+Đôi khi bạn có thể cần đăng ký Laravel Boost MCP server thủ công với editor mình sử dụng. Hãy đăng ký MCP server với các thông tin sau:
 
 <table>
-<tr><td><strong>Command</strong></td><td><code>php</code></td></tr>
-<tr><td><strong>Args</strong></td><td><code>artisan boost:mcp</code></td></tr>
+<tr><td><strong>Lệnh</strong></td><td><code>php</code></td></tr>
+<tr><td><strong>Đối số</strong></td><td><code>artisan boost:mcp</code></td></tr>
 </table>
 
-JSON example:
+Ví dụ JSON:
 
 ```json
 {
@@ -172,18 +172,18 @@ JSON example:
 ```
 
 <a name="ai-guidelines"></a>
-## AI Guidelines
+## AI Guideline
 
-AI guidelines are composable instruction files that are loaded upfront to provide AI agents with essential context about Laravel ecosystem packages. These guidelines contain core conventions, best practices, and framework-specific patterns that help agents generate consistent, high-quality code.
+AI guideline là các file chỉ dẫn có thể kết hợp với nhau, được nạp ngay từ đầu để cung cấp cho AI agent ngữ cảnh thiết yếu về các package trong hệ sinh thái Laravel. Những guideline này chứa các convention cốt lõi, best practice và pattern đặc thù của framework, giúp agent tạo code nhất quán và chất lượng cao.
 
 <a name="available-ai-guidelines"></a>
-### Available AI Guidelines
+### AI guideline có sẵn
 
-Laravel Boost includes AI guidelines for the following packages and frameworks. The `core` guidelines provide generic, generalized advice to the AI for the given package that is applicable across all versions.
+Laravel Boost bao gồm AI guideline cho các package và framework sau. Guideline `core` cung cấp hướng dẫn tổng quát cho AI về package tương ứng và có thể áp dụng cho mọi phiên bản.
 
 <div class="overflow-auto">
 
-| Package           | Versions Supported     |
+| Package           | Phiên bản được hỗ trợ |
 | ----------------- | ---------------------- |
 | Core & Boost      | core                   |
 | Laravel Framework | core, 10.x, 11.x, 12.x, 13.x |
@@ -208,26 +208,26 @@ Laravel Boost includes AI guidelines for the following packages and frameworks. 
 
 </div>
 
-> **Note:** To keep your AI guidelines up-to-date, see the [Keeping Boost Resources Updated](#keeping-boost-resources-updated) section.
+> **Lưu ý:** Để luôn cập nhật AI guideline, hãy xem phần [Luôn cập nhật tài nguyên Boost](#keeping-boost-resources-updated).
 
 <a name="adding-custom-ai-guidelines"></a>
-### Adding Custom AI Guidelines
+### Thêm AI guideline tùy chỉnh
 
-To augment Laravel Boost with your own custom AI guidelines, add `.blade.php` or `.md` files to your application's `.ai/guidelines/*` directory. These files will automatically be included with Laravel Boost's guidelines when you run `boost:install`.
+Để bổ sung AI guideline tùy chỉnh của riêng bạn vào Laravel Boost, hãy thêm các file `.blade.php` hoặc `.md` vào thư mục `.ai/guidelines/*` của ứng dụng. Các file này sẽ tự động được đưa vào cùng guideline của Laravel Boost khi bạn chạy `boost:install`.
 
 <a name="overriding-boost-ai-guidelines"></a>
-### Overriding Boost AI Guidelines
+### Ghi đè AI guideline của Boost
 
-You can override Boost's built-in AI guidelines by creating your own custom guidelines with matching file paths. When you create a custom guideline that matches an existing Boost guideline path, Boost will use your custom version instead of the built-in one.
+Bạn có thể ghi đè AI guideline tích hợp sẵn của Boost bằng cách tạo guideline tùy chỉnh có đường dẫn file tương ứng. Khi guideline tùy chỉnh trùng với đường dẫn của một guideline hiện có trong Boost, Boost sẽ sử dụng phiên bản tùy chỉnh của bạn thay cho phiên bản tích hợp sẵn.
 
-For example, to override Boost's "Inertia React v2 Form Guidance" guidelines, create a file at `.ai/guidelines/inertia-react/2/forms.blade.php`. When you run `boost:install`, Boost will include your custom guideline instead of the default one.
+Ví dụ, để ghi đè guideline "Inertia React v2 Form Guidance" của Boost, hãy tạo file tại `.ai/guidelines/inertia-react/2/forms.blade.php`. Khi chạy `boost:install`, Boost sẽ sử dụng guideline tùy chỉnh của bạn thay cho guideline mặc định.
 
 <a name="third-party-package-ai-guidelines"></a>
-### Third-Party Package AI Guidelines
+### AI guideline cho package bên thứ ba
 
-If you maintain a third-party package and would like Boost to include AI guidelines for it, you can do so by adding a `resources/boost/guidelines/core.blade.php` file to your package. When users of your package run `php artisan boost:install`, Boost will automatically load your guidelines.
+Nếu bạn duy trì một package bên thứ ba và muốn Boost bao gồm AI guideline cho package đó, hãy thêm file `resources/boost/guidelines/core.blade.php` vào package. Khi người dùng package chạy `php artisan boost:install`, Boost sẽ tự động nạp guideline của bạn.
 
-AI guidelines should provide a short overview of what your package does, outline any required file structure or conventions, and explain how to create or use its main features (with example commands or code snippets). Keep them concise, actionable, and focused on best practices so AI can generate correct code for your users. Here is an example:
+AI guideline nên cung cấp phần tổng quan ngắn về chức năng của package, mô tả cấu trúc file hoặc convention bắt buộc, đồng thời giải thích cách tạo hoặc sử dụng các tính năng chính (kèm command hoặc code snippet ví dụ). Hãy giữ guideline súc tích, có thể áp dụng trực tiếp và tập trung vào best practice để AI có thể tạo code chính xác cho người dùng. Ví dụ:
 
 ```php
 ## Package Name
@@ -247,14 +247,14 @@ $result = PackageName::featureTwo($param1, $param2);
 ```
 
 <a name="agent-skills"></a>
-## Agent Skills
+## Agent Skill
 
-[Agent Skills](https://agentskills.io/home) are lightweight, targeted knowledge modules that agents can activate on-demand when working on specific domains. Unlike guidelines, which are loaded upfront, skills allow detailed patterns and best practices to be loaded only when relevant, reducing context bloat and improving the relevance of AI-generated code.
+[Agent Skill](https://agentskills.io/home) là các module kiến thức gọn nhẹ, có mục tiêu cụ thể mà agent có thể kích hoạt theo nhu cầu khi làm việc trong từng domain. Khác với guideline được nạp ngay từ đầu, skill chỉ nạp các pattern chi tiết và best practice khi có liên quan, nhờ đó giảm context dư thừa và tăng độ phù hợp của code do AI tạo ra.
 
-When you run `boost:install` and select skills as a feature, skills are automatically installed based on the packages detected in your `composer.json`. For example, if your project includes `livewire/livewire`, the `livewire-development` skill will be installed automatically. Skills included with Boost, such as `infer-conventions`, are installed regardless of which packages you have.
+Khi chạy `boost:install` và chọn skill làm một tính năng, các skill sẽ tự động được cài dựa trên những package được phát hiện trong `composer.json`. Ví dụ, nếu project có `livewire/livewire`, skill `livewire-development` sẽ tự động được cài. Các skill đi kèm Boost, chẳng hạn `infer-conventions`, được cài bất kể project đang có package nào.
 
 <a name="available-skills"></a>
-### Available Skills
+### Skill có sẵn
 
 <div class="overflow-auto">
 
@@ -276,34 +276,34 @@ When you run `boost:install` and select skills as a feature, skills are automati
 
 </div>
 
-> **Note:** To keep your skills up-to-date, see the [Keeping Boost Resources Updated](#keeping-boost-resources-updated) section.
+> **Lưu ý:** Để luôn cập nhật skill, hãy xem phần [Luôn cập nhật tài nguyên Boost](#keeping-boost-resources-updated).
 
 <a name="custom-skills"></a>
-### Custom Skills
+### Skill tùy chỉnh
 
-To create your own custom skills, add a `SKILL.md` file to your application's `.ai/skills/{skill-name}/` directory. When you run `boost:update`, your custom skills will be installed alongside Boost's built-in skills.
+Để tạo skill tùy chỉnh, hãy thêm file `SKILL.md` vào thư mục `.ai/skills/{skill-name}/` của ứng dụng. Khi chạy `boost:update`, skill tùy chỉnh sẽ được cài cùng các skill tích hợp sẵn của Boost.
 
-For example, to create a custom skill for your application's domain logic:
+Ví dụ, để tạo một skill tùy chỉnh cho domain logic của ứng dụng:
 
 ```
 .ai/skills/creating-invoices/SKILL.md
 ```
 
 <a name="overriding-skills"></a>
-### Overriding Skills
+### Ghi đè skill
 
-You can override Boost's built-in skills by creating your own custom skills with matching names. When you create a custom skill that matches an existing Boost skill name, Boost will use your custom version instead of the built-in one.
+Bạn có thể ghi đè skill tích hợp sẵn của Boost bằng cách tạo skill tùy chỉnh có cùng tên. Khi skill tùy chỉnh trùng tên với một skill hiện có của Boost, Boost sẽ sử dụng phiên bản tùy chỉnh thay cho phiên bản tích hợp sẵn.
 
-For example, to override Boost's `livewire-development` skill, create a file at `.ai/skills/livewire-development/SKILL.md`. When you run `boost:update`, Boost will include your custom skill instead of the default one.
+Ví dụ, để ghi đè skill `livewire-development` của Boost, hãy tạo file `.ai/skills/livewire-development/SKILL.md`. Khi chạy `boost:update`, Boost sẽ sử dụng skill tùy chỉnh của bạn thay cho skill mặc định.
 
 <a name="third-party-package-skills"></a>
-### Third-Party Package Skills
+### Skill cho package bên thứ ba
 
-If you maintain a third-party package and would like Boost to include skills for it, you can do so by adding a `resources/boost/skills/{skill-name}/SKILL.md` file to your package. When users of your package run `php artisan boost:install`, Boost will automatically install your skills based on user preference.
+Nếu bạn duy trì package bên thứ ba và muốn Boost bao gồm skill cho package đó, hãy thêm file `resources/boost/skills/{skill-name}/SKILL.md` vào package. Khi người dùng chạy `php artisan boost:install`, Boost sẽ tự động cài skill của bạn dựa trên lựa chọn của người dùng.
 
-Boost Skills support the [Agent Skills format](https://agentskills.io/what-are-skills) and should be structured as a folder containing a `SKILL.md` file with YAML frontmatter and Markdown instructions. The `SKILL.md` file must include required frontmatter (`name` and `description`) and can optionally include scripts, templates, and reference materials.
+Boost Skill hỗ trợ [định dạng Agent Skills](https://agentskills.io/what-are-skills) và nên được tổ chức thành một thư mục chứa file `SKILL.md` với YAML frontmatter và hướng dẫn Markdown. File `SKILL.md` bắt buộc phải có frontmatter `name` và `description`, đồng thời có thể tùy chọn kèm script, template và tài liệu tham khảo.
 
-Skills should outline any required file structure or conventions, and explain how to create or use its main features (with example commands or code snippets). Keep them concise, actionable, and focused on best practices so AI can generate correct code for your users:
+Skill nên mô tả cấu trúc file hoặc convention bắt buộc và giải thích cách tạo hoặc sử dụng các tính năng chính (kèm command hoặc code snippet ví dụ). Hãy giữ nội dung súc tích, có thể áp dụng trực tiếp và tập trung vào best practice để AI tạo code chính xác cho người dùng:
 
 ```markdown
 ---
@@ -325,42 +325,42 @@ $result = PackageName::featureTwo($param1, $param2);
 ```
 
 <a name="guidelines-vs-skills"></a>
-## Guidelines vs. Skills
+## Guideline và Skill
 
-Laravel Boost provides two distinct ways to give AI agents context about your application: **guidelines** and **skills**.
+Laravel Boost cung cấp hai cách riêng biệt để cung cấp cho AI agent ngữ cảnh về ứng dụng: **guideline** và **skill**.
 
-**Guidelines** are loaded upfront when the AI agent starts, providing essential context about Laravel conventions and best practices that apply broadly across your codebase.
+**Guideline** được nạp ngay khi AI agent khởi động, cung cấp ngữ cảnh thiết yếu về convention và best practice của Laravel có thể áp dụng rộng khắp codebase.
 
-**Skills** are activated on-demand when working on specific tasks, containing detailed patterns for particular domains (like Livewire components or Pest tests). Loading skills only when relevant reduces context bloat and improves code quality.
+**Skill** được kích hoạt theo nhu cầu khi xử lý các tác vụ cụ thể và chứa pattern chi tiết cho từng domain, chẳng hạn component Livewire hoặc test Pest. Chỉ nạp skill khi có liên quan giúp giảm context dư thừa và cải thiện chất lượng code.
 
 <div class="overflow-auto">
 
-| Aspect      | Guidelines                        | Skills                           |
+| Khía cạnh   | Guideline                          | Skill                             |
 | ----------- | --------------------------------- | -------------------------------- |
-| **Loaded**  | Upfront, always present           | On-demand, when relevant         |
-| **Scope**   | Broad, foundational               | Focused, task-specific           |
-| **Purpose** | Core conventions & best practices | Detailed implementation patterns |
+| **Thời điểm nạp** | Nạp từ đầu, luôn hiện diện | Theo nhu cầu, khi có liên quan |
+| **Phạm vi** | Rộng, mang tính nền tảng | Tập trung, theo từng tác vụ |
+| **Mục đích** | Convention cốt lõi và best practice | Pattern triển khai chi tiết |
 
 </div>
 
-Both guidelines and skills describe the Laravel ecosystem. To capture the conventions of your own application, you should use [project rules](#project-rules).
+Cả guideline và skill đều mô tả hệ sinh thái Laravel. Để ghi lại convention riêng của ứng dụng, bạn nên sử dụng [quy tắc dự án](#project-rules).
 
 <a name="project-rules"></a>
-## Project Rules
+## Quy tắc dự án
 
-While guidelines and skills teach agents how to write Laravel, project rules teach them how to write your application. A rule is anything you would otherwise need to explain again in every new session:
+Trong khi guideline và skill hướng dẫn agent cách viết Laravel, quy tắc dự án hướng dẫn chúng cách viết chính ứng dụng của bạn. Một quy tắc có thể là bất kỳ điều gì mà nếu không ghi lại, bạn sẽ phải giải thích lại trong mỗi session mới:
 
 <div class="content-list" markdown="1">
 
-- Decisions made along the way by you, your agents, or your teammates.
-- Style guidelines and preferences that are difficult to get an agent to follow.
-- Traps and constraints that can't be inferred from the surrounding code.
+- Các quyết định được đưa ra trong quá trình phát triển bởi bạn, agent hoặc đồng đội.
+- Quy chuẩn style và preference mà agent khó tự tuân thủ nhất quán.
+- Các bẫy và ràng buộc không thể suy luận từ code xung quanh.
 
 </div>
 
-Rules are stored as Markdown files within your application's `.ai/rules` directory and should be committed to source control. Unlike an agent's own memory, which is personal and session-scoped, your rules are shared with your team and with every agent that works on your application.
+Các quy tắc được lưu dưới dạng file Markdown trong thư mục `.ai/rules` của ứng dụng và nên được commit vào source control. Khác với memory riêng của agent vốn mang tính cá nhân và chỉ tồn tại trong phạm vi session, các quy tắc này được chia sẻ với cả team và mọi agent làm việc trên ứng dụng.
 
-Each rule file declares the file globs it applies to within its frontmatter:
+Mỗi file quy tắc khai báo các file glob mà nó áp dụng trong frontmatter:
 
 ```markdown
 ---
@@ -377,7 +377,7 @@ current tenant's query scope. Extending Laravel's base controller directly will 
 data across tenants.
 ```
 
-In addition, Boost maintains an `.ai/rules/index.md` file which maps globs to their rule files. Agents are instructed to consult this index before planning or editing any file, so a rule is only loaded when it is relevant:
+Ngoài ra, Boost duy trì file `.ai/rules/index.md` để ánh xạ glob tới các file quy tắc tương ứng. Agent được hướng dẫn kiểm tra index này trước khi lập kế hoạch hoặc chỉnh sửa file, nhờ đó một quy tắc chỉ được nạp khi có liên quan:
 
 ```markdown
 # Project Rules Index
@@ -391,53 +391,53 @@ Before planning or editing, find the row whose globs match the file's path and r
 ```
 
 > [!NOTE]
-> Unlike the `.mcp.json` and generated guideline files, the `.ai/rules` directory should be committed to source control so that your rules are shared with your team.
+> Khác với `.mcp.json` và các file guideline được tạo tự động, thư mục `.ai/rules` nên được commit vào source control để các quy tắc được chia sẻ với team.
 
 <a name="recording-rules"></a>
-### Recording Rules
+### Ghi lại quy tắc
 
-To record a rule, you may simply ask your agent to remember it:
+Để ghi lại một quy tắc, bạn chỉ cần yêu cầu agent ghi nhớ nó:
 
 ```text
 Remember that all money values are stored as integer cents, never as floats.
 ```
 
-The agent will invoke Boost's `record-rule` MCP tool with a `glob`, a short `title`, and a `note`. Boost will then file the rule under the matching area, creating the rule file if needed, and update the index.
+Agent sẽ gọi MCP tool `record-rule` của Boost với một `glob`, `title` ngắn và `note`. Sau đó Boost sẽ lưu quy tắc vào khu vực phù hợp, tạo file quy tắc nếu cần và cập nhật index.
 
-You should always record rules using the `record-rule` tool rather than creating rule files by hand. Boost regenerates `.ai/rules/index.md` as part of recording a rule, and agents rely on that index to discover which rules apply to the file they are working on. A rule file that is added manually will not be discovered until the index is next regenerated.
+Bạn nên luôn ghi quy tắc bằng tool `record-rule` thay vì tự tạo file quy tắc thủ công. Boost tạo lại `.ai/rules/index.md` trong quá trình ghi quy tắc và agent dựa vào index này để xác định quy tắc nào áp dụng cho file đang xử lý. File quy tắc được thêm thủ công sẽ không được phát hiện cho đến lần tiếp theo index được tạo lại.
 
 <a name="inferring-your-applications-conventions"></a>
-### Inferring Your Application's Conventions
+### Suy luận convention của ứng dụng
 
-Recording rules one at a time works well going forward; however, an existing application already contains years of conventions. The `infer-conventions` skill will bootstrap your rules from the code you have already written. To get started, ask your agent to use the skill:
+Ghi từng quy tắc một là cách phù hợp cho các thay đổi về sau; tuy nhiên, một ứng dụng hiện hữu có thể đã chứa nhiều năm convention. Skill `infer-conventions` sẽ khởi tạo bộ quy tắc từ code bạn đã viết. Để bắt đầu, hãy yêu cầu agent sử dụng skill:
 
 ```text
 Use the infer-conventions skill
 ```
 
-The skill will sweep your application across a checklist of Laravel convention dimensions, including validation, controllers, authorization, models, architecture, testing, frontend, database, and console, followed by an open-ended pass for patterns such as base classes, shared traits, and module layouts.
+Skill sẽ quét ứng dụng theo checklist các khía cạnh convention của Laravel, gồm validation, controller, authorization, model, architecture, testing, frontend, database và console; sau đó thực hiện một lượt mở rộng để tìm các pattern như base class, shared trait và module layout.
 
-The skill documents what your code actually does rather than what it should do. It records only well-supported, non-default conventions, skips framework defaults and anything Pint or Rector already enforces, and reports genuinely mixed patterns instead of recording them. Before writing any rules, the skill will present each convention it discovered, along with its supporting evidence, for your approval. If you would like the skill to record all discovered conventions without confirmation, you may tell it to "yolo".
+Skill ghi lại những gì code thực tế đang làm thay vì những gì code nên làm. Nó chỉ ghi các convention không mặc định có bằng chứng rõ ràng, bỏ qua mặc định của framework và những gì Pint hoặc Rector đã enforce, đồng thời báo cáo các pattern thực sự không nhất quán thay vì ghi chúng thành quy tắc. Trước khi ghi bất kỳ quy tắc nào, skill sẽ trình bày từng convention phát hiện được cùng bằng chứng để bạn phê duyệt. Nếu muốn skill ghi lại tất cả convention đã phát hiện mà không cần xác nhận, bạn có thể yêu cầu nó `yolo`.
 
 <a name="disabling-project-rules"></a>
-### Disabling Project Rules
+### Tắt quy tắc dự án
 
-Project rules are enabled by default. To disable them entirely, define the following environment variable. This removes the `record-rule` MCP tool and stops Boost from managing the `.ai/rules` directory:
+Quy tắc dự án được bật mặc định. Để tắt hoàn toàn, hãy khai báo biến môi trường sau. Việc này sẽ loại bỏ MCP tool `record-rule` và ngăn Boost quản lý thư mục `.ai/rules`:
 
 ```ini
 BOOST_RULES_ENABLED=false
 ```
 
 <a name="documentation-api"></a>
-## Documentation API
+## API tài liệu
 
-Laravel Boost includes a Documentation API that provides AI agents with access to an extensive knowledge base containing over 17,000 pieces of Laravel-specific information. The API uses semantic search with embeddings to deliver precise, context-aware results.
+Laravel Boost cung cấp một API tài liệu cho phép AI agent truy cập kho tri thức chuyên biệt về Laravel với hơn 17.000 mục thông tin. API sử dụng tìm kiếm ngữ nghĩa với embedding để trả về kết quả chính xác và phù hợp với ngữ cảnh.
 
-The `Search Docs` MCP tool allows agents to query the Laravel hosted documentation API service to retrieve documentation based on your installed packages. Boost's AI guidelines and skills will automatically instruct your coding agent to use this API.
+MCP tool `Search Docs` cho phép agent truy vấn dịch vụ API tài liệu do Laravel lưu trữ để lấy tài liệu dựa trên các package đã cài đặt trong ứng dụng. AI guideline và skill của Boost sẽ tự động hướng dẫn coding agent sử dụng API này.
 
 <div class="overflow-auto">
 
-| Package           | Versions Supported |
+| Package           | Phiên bản được hỗ trợ |
 | ----------------- | ------------------ |
 | Laravel Framework | 10.x, 11.x, 12.x, 13.x |
 | Filament          | 2.x, 3.x, 4.x, 5.x |
@@ -451,21 +451,21 @@ The `Search Docs` MCP tool allows agents to query the Laravel hosted documentati
 </div>
 
 <a name="extending-boost"></a>
-## Extending Boost
+## Mở rộng Boost
 
-Boost works with many popular IDEs and AI agents out of the box. If your coding tool isn't supported yet, you can create your own agent and integrate it with Boost.
+Boost hỗ trợ sẵn nhiều IDE và AI agent phổ biến. Nếu công cụ lập trình của bạn chưa được hỗ trợ, bạn có thể tạo agent riêng và tích hợp agent đó với Boost.
 
 <a name="adding-support-for-other-ides-ai-agents"></a>
-### Adding Support for Other IDEs / AI Agents
+### Thêm hỗ trợ cho IDE / AI agent khác
 
-To add support for a new IDE or AI agent, create a class that extends `Laravel\Boost\Install\Agents\Agent` and implement one or more of the following contracts depending on what you need:
+Để thêm hỗ trợ cho một IDE hoặc AI agent mới, hãy tạo một class kế thừa `Laravel\Boost\Install\Agents\Agent` và implement một hoặc nhiều contract sau tùy theo nhu cầu:
 
-- `Laravel\Boost\Contracts\SupportsGuidelines` - Adds support for AI guidelines.
-- `Laravel\Boost\Contracts\SupportsMcp` - Adds support for MCP.
-- `Laravel\Boost\Contracts\SupportsSkills` - Adds support for Agent Skills.
+- `Laravel\Boost\Contracts\SupportsGuidelines` - Thêm hỗ trợ cho AI guideline.
+- `Laravel\Boost\Contracts\SupportsMcp` - Thêm hỗ trợ cho MCP.
+- `Laravel\Boost\Contracts\SupportsSkills` - Thêm hỗ trợ cho Agent Skill.
 
 <a name="writing-the-agent"></a>
-#### Writing the Agent
+#### Viết agent
 
 ```php
 <?php
@@ -485,12 +485,12 @@ class CustomAgent extends Agent implements SupportsGuidelines, SupportsMcp, Supp
 }
 ```
 
-For an example implementation, see [ClaudeCode.php](https://github.com/laravel/boost/blob/main/src/Install/Agents/ClaudeCode.php).
+Để xem ví dụ triển khai, hãy tham khảo [ClaudeCode.php](https://github.com/laravel/boost/blob/main/src/Install/Agents/ClaudeCode.php).
 
 <a name="registering-the-agent"></a>
-#### Registering the Agent
+#### Đăng ký agent
 
-Register your custom agent in the `boot` method of your application's `App\Providers\AppServiceProvider`:
+Đăng ký custom agent trong phương thức `boot` của `App\Providers\AppServiceProvider` trong ứng dụng:
 
 ```php
 use Laravel\Boost\Boost;
@@ -501,7 +501,9 @@ public function boot(): void
 }
 ```
 
-Once registered, your agent will be available for selection when running `php artisan boost:install`.
+Sau khi đăng ký, agent sẽ xuất hiện để bạn lựa chọn khi chạy `php artisan boost:install`.
+
+---
 
 ## Tài liệu chính thức
 

@@ -1,47 +1,21 @@
 # Laravel Socialite
-
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Upgrading Socialite](#upgrading-socialite)
-- [Configuration](#configuration)
-- [Authentication](#authentication)
-    - [Routing](#routing)
-    - [Authentication and Storage](#authentication-and-storage)
-    - [Access Scopes](#access-scopes)
-    - [Slack Bot Scopes](#slack-bot-scopes)
-    - [Optional Parameters](#optional-parameters)
-- [Retrieving User Details](#retrieving-user-details)
-- [Testing](#testing)
-
 <a name="introduction"></a>
-## Introduction
-
-In addition to typical, form based authentication, Laravel also provides a simple, convenient way to authenticate with OAuth providers using [Laravel Socialite](https://github.com/laravel/socialite). Socialite currently supports authentication via Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket, and Slack.
-
+## Giới thiệu
+Bên cạnh authentication dựa trên form truyền thống, Laravel còn cung cấp cách đơn giản và thuận tiện để xác thực với các OAuth provider thông qua [Laravel Socialite](https://github.com/laravel/socialite). Socialite hiện hỗ trợ Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket và Slack.
 > [!NOTE]
-> Adapters for other platforms are available via the community driven [Socialite Providers](https://socialiteproviders.com/) website.
-
+> Adapter cho các nền tảng khác có thể được tìm thấy trên website cộng đồng [Socialite Providers](https://socialiteproviders.com/).
 <a name="installation"></a>
-## Installation
-
-To get started with Socialite, use the Composer package manager to add the package to your project's dependencies:
-
+Bên cạnh authentication dựa trên form truyền thống, Laravel còn cung cấp cách đơn giản và thuận tiện để xác thực với các OAuth provider thông qua [Laravel Socialite](https://github.com/laravel/socialite). Socialite hiện hỗ trợ Facebook, X, LinkedIn, Google, GitHub, GitLab, Bitbucket và Slack.
 ```shell
 composer require laravel/socialite
 ```
 
 <a name="upgrading-socialite"></a>
-## Upgrading Socialite
-
-When upgrading to a new major version of Socialite, it's important that you carefully review [the upgrade guide](https://github.com/laravel/socialite/blob/master/UPGRADE.md).
-
+Để bắt đầu với Socialite, hãy dùng Composer để thêm package vào dependency của project:
 <a name="configuration"></a>
-## Configuration
-
-Before using Socialite, you will need to add credentials for the OAuth providers your application utilizes. Typically, these credentials may be retrieved by creating a "developer application" within the dashboard of the service you will be authenticating with.
-
-These credentials should be placed in your application's `config/services.php` configuration file, and should use the key `facebook`, `x`, `linkedin-openid`, `google`, `github`, `gitlab`, `bitbucket`, `slack`, or `slack-openid`, depending on the providers your application requires:
-
+## Cấu hình
+Trước khi dùng Socialite, bạn cần thêm credential cho các OAuth provider mà ứng dụng sử dụng. Thông thường, credential được lấy bằng cách tạo một "developer application" trong dashboard của dịch vụ mà ứng dụng sẽ dùng để xác thực.
+Các credential này nên được đặt trong file cấu hình `config/services.php`, với key `facebook`, `x`, `linkedin-openid`, `google`, `github`, `gitlab`, `bitbucket`, `slack` hoặc `slack-openid` tùy provider ứng dụng cần:
 ```php
 'github' => [
     'client_id' => env('GITHUB_CLIENT_ID'),
@@ -49,18 +23,11 @@ These credentials should be placed in your application's `config/services.php` c
     'redirect' => 'http://example.com/callback-url',
 ],
 ```
-
-> [!NOTE]
-> If the `redirect` option contains a relative path, it will automatically be resolved to a fully qualified URL.
-
+## Nâng cấp Socialite
 <a name="authentication"></a>
 ## Authentication
-
 <a name="routing"></a>
-### Routing
-
-To authenticate users using an OAuth provider, you will need two routes: one for redirecting the user to the OAuth provider, and another for receiving the callback from the provider after authentication. The example routes below demonstrate the implementation of both routes:
-
+Trước khi dùng Socialite, bạn cần thêm credential cho các OAuth provider mà ứng dụng sử dụng. Thông thường, credential được lấy bằng cách tạo một "developer application" trong dashboard của dịch vụ mà ứng dụng sẽ dùng để xác thực.
 ```php
 use Laravel\Socialite\Socialite;
 
@@ -74,14 +41,10 @@ Route::get('/auth/callback', function () {
     // $user->token
 });
 ```
-
-The `redirect` method provided by the `Socialite` facade takes care of redirecting the user to the OAuth provider, while the `user` method will examine the incoming request and retrieve the user's information from the provider after they have approved the authentication request.
-
+Phương thức `redirect` của facade `Socialite` xử lý việc redirect người dùng tới OAuth provider, còn `user` sẽ đọc request callback và lấy thông tin người dùng từ provider sau khi họ chấp thuận yêu cầu xác thực.
 <a name="authentication-and-storage"></a>
-### Authentication and Storage
-
-Once the user has been retrieved from the OAuth provider, you may determine if the user exists in your application's database and [authenticate the user](/docs/{{version}}/authentication#authenticate-a-user-instance). If the user does not exist in your application's database, you will typically create a new record in your database to represent the user:
-
+### Authentication và lưu trữ
+Sau khi lấy người dùng từ OAuth provider, bạn có thể kiểm tra người dùng đó đã tồn tại trong database hay chưa và [authenticate user](/docs/{{version}}/authentication#authenticate-a-user-instance). Nếu chưa tồn tại, thông thường bạn sẽ tạo record mới để đại diện cho người dùng:
 ```php
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -104,15 +67,10 @@ Route::get('/auth/callback', function () {
     return redirect('/dashboard');
 });
 ```
-
 > [!NOTE]
-> For more information regarding what user information is available from specific OAuth providers, please consult the documentation on [retrieving user details](#retrieving-user-details).
-
+> Để biết provider cụ thể trả về những thông tin người dùng nào, hãy xem phần [lấy thông tin người dùng](#retrieving-user-details).
 <a name="access-scopes"></a>
-### Access Scopes
-
-Before redirecting the user, you may use the `scopes` method to specify the "scopes" that should be included in the authentication request. This method will merge all previously specified scopes with the scopes that you specify:
-
+Để xác thực người dùng bằng OAuth provider, bạn cần hai route: một route redirect người dùng tới provider và một route nhận callback từ provider sau khi xác thực. Ví dụ dưới đây triển khai cả hai route:
 ```php
 use Laravel\Socialite\Socialite;
 
@@ -120,51 +78,36 @@ return Socialite::driver('github')
     ->scopes(['read:user', 'public_repo'])
     ->redirect();
 ```
-
-You can overwrite all existing scopes on the authentication request using the `setScopes` method:
-
+Phương thức `redirect` của facade `Socialite` xử lý việc redirect người dùng tới OAuth provider, còn `user` sẽ đọc request callback và lấy thông tin người dùng từ provider sau khi họ chấp thuận yêu cầu xác thực.
 ```php
 return Socialite::driver('github')
     ->setScopes(['read:user', 'public_repo'])
     ->redirect();
 ```
-
+### Authentication và lưu trữ
 <a name="slack-bot-scopes"></a>
 ### Slack Bot Scopes
-
-Slack's API provides [different types of access tokens](https://api.slack.com/authentication/token-types), each with their own set of [permission scopes](https://api.slack.com/scopes). Socialite is compatible with both of the following Slack access tokens types:
-
+API của Slack cung cấp [nhiều loại access token](https://api.slack.com/authentication/token-types), mỗi loại có tập [permission scope](https://api.slack.com/scopes) riêng. Socialite tương thích với hai loại Slack access token sau:
 <div class="content-list" markdown="1">
 
-- Bot (prefixed with `xoxb-`)
-- User (prefixed with `xoxp-`)
-
-</div>
-
-By default, the `slack` driver will generate a `user` token and invoking the driver's `user` method will return the user's details.
-
-Bot tokens are primarily useful if your application will be sending notifications to external Slack workspaces that are owned by your application's users. To generate a bot token, invoke the `asBotUser` method before redirecting the user to Slack for authentication:
-
+> [!NOTE]
+> Để biết provider cụ thể trả về những thông tin người dùng nào, hãy xem phần [lấy thông tin người dùng](#retrieving-user-details).
+Mặc định, driver `slack` tạo token loại `user`, và khi gọi phương thức `user` của driver, Socialite trả về thông tin người dùng.
+Bot token đặc biệt hữu ích nếu ứng dụng cần gửi notification tới Slack workspace bên ngoài thuộc sở hữu của người dùng ứng dụng. Để tạo bot token, hãy gọi `asBotUser` trước khi redirect người dùng sang Slack để xác thực:
 ```php
 return Socialite::driver('slack')
     ->asBotUser()
     ->setScopes(['chat:write', 'chat:write.public', 'chat:write.customize'])
     ->redirect();
 ```
-
-In addition, you must invoke the `asBotUser` method before invoking the `user` method after Slack redirects the user back to your application after authentication:
-
+Trước khi redirect người dùng, bạn có thể dùng `scopes` để chỉ định các "scope" cần đưa vào request xác thực. Phương thức này merge các scope đã khai báo trước đó với scope mới bạn truyền vào:
 ```php
 $user = Socialite::driver('slack')->asBotUser()->user();
 ```
-
-When generating a bot token, the `user` method will still return a `Laravel\Socialite\Two\User` instance; however, only the `token` property will be hydrated. This token may be stored in order to [send notifications to the authenticated user's Slack workspaces](/docs/{{version}}/notifications#notifying-external-slack-workspaces).
-
+Bạn có thể ghi đè toàn bộ scope hiện tại trên request xác thực bằng `setScopes`:
 <a name="optional-parameters"></a>
-### Optional Parameters
-
-A number of OAuth providers support other optional parameters on the redirect request. To include any optional parameters in the request, call the `with` method with an associative array:
-
+### Tham số tùy chọn
+Một số OAuth provider hỗ trợ thêm parameter tùy chọn trên redirect request. Để thêm parameter, hãy gọi `with` với associative array:
 ```php
 use Laravel\Socialite\Socialite;
 
@@ -172,17 +115,11 @@ return Socialite::driver('google')
     ->with(['hd' => 'example.com'])
     ->redirect();
 ```
-
-> [!WARNING]
-> When using the `with` method, be careful not to pass any reserved keywords such as `state` or `response_type`.
-
+### Slack Bot Scopes
 <a name="retrieving-user-details"></a>
-## Retrieving User Details
-
-After the user is redirected back to your application's authentication callback route, you may retrieve the user's details using Socialite's `user` method. The user object returned by the `user` method provides a variety of properties and methods you may use to store information about the user in your own database.
-
-Differing properties and methods may be available on this object depending on whether the OAuth provider you are authenticating with supports OAuth 1.0 or OAuth 2.0:
-
+## Lấy thông tin người dùng
+Sau khi người dùng được redirect về route callback xác thực của ứng dụng, bạn có thể lấy thông tin của họ bằng phương thức `user` của Socialite. Object người dùng được trả về cung cấp nhiều property và method để bạn lưu thông tin cần thiết vào database của mình.
+Các property và method khả dụng có thể khác nhau tùy OAuth provider đang dùng hỗ trợ OAuth 1.0 hay OAuth 2.0:
 ```php
 use Laravel\Socialite\Socialite;
 
@@ -208,27 +145,19 @@ Route::get('/auth/callback', function () {
 ```
 
 <a name="retrieving-user-details-from-a-token-oauth2"></a>
-#### Retrieving User Details From a Token
-
-If you already have a valid access token for a user, you can retrieve their user details using Socialite's `userFromToken` method:
-
+Bot token đặc biệt hữu ích nếu ứng dụng cần gửi notification tới Slack workspace bên ngoài thuộc sở hữu của người dùng ứng dụng. Để tạo bot token, hãy gọi `asBotUser` trước khi redirect người dùng sang Slack để xác thực:
 ```php
 use Laravel\Socialite\Socialite;
 
 $user = Socialite::driver('github')->userFromToken($token);
 ```
-
-If you are using Facebook Limited Login via an iOS application, Facebook will return an OIDC token instead of an access token. To retrieve user details from the OIDC token, provide the nonce used to initiate the login to the `userFromToken` method:
-
+Ngoài ra, bạn cũng phải gọi `asBotUser` trước `user` sau khi Slack redirect người dùng quay lại ứng dụng:
 ```php
 $user = Socialite::driver('facebook')->userFromToken($token, $nonce);
 ```
-
+Khi tạo bot token, phương thức `user` vẫn trả về instance `Laravel\Socialite\Two\User`; tuy nhiên chỉ property `token` được hydrate. Token này có thể được lưu để [gửi notification tới Slack workspace của người dùng đã xác thực](/docs/{{version}}/notifications#notifying-external-slack-workspaces).
 <a name="stateless-authentication"></a>
-#### Stateless Authentication
-
-The `stateless` method may be used to disable session state verification. This is useful when adding social authentication to a stateless API that does not utilize cookie based sessions:
-
+### Tham số tùy chọn
 ```php
 use Laravel\Socialite\Socialite;
 
@@ -236,15 +165,10 @@ return Socialite::driver('google')->stateless()->user();
 ```
 
 <a name="testing"></a>
-## Testing
-
-Laravel Socialite provides a convenient way to test OAuth authentication flows without making actual requests to OAuth providers. The `fake` method allows you to mock the OAuth provider's behavior and define the user data that should be returned.
-
+## Kiểm thử
+Laravel Socialite cung cấp cách thuận tiện để kiểm thử OAuth authentication flow mà không gửi request thật tới OAuth provider. Phương thức `fake` cho phép mock behavior của provider và định nghĩa dữ liệu người dùng sẽ được trả về.
 <a name="faking-the-redirect"></a>
-#### Faking the Redirect
-
-To test that your application correctly redirects users to an OAuth provider, you may invoke the `fake` method before making a request to your redirect route. This will cause Socialite to return a redirect to a fake authorization URL instead of redirecting to the actual OAuth provider:
-
+Sau khi người dùng được redirect về route callback xác thực của ứng dụng, bạn có thể lấy thông tin của họ bằng phương thức `user` của Socialite. Object người dùng được trả về cung cấp nhiều property và method để bạn lưu thông tin cần thiết vào database của mình.
 ```php
 use Laravel\Socialite\Socialite;
 
@@ -258,10 +182,8 @@ test('user is redirected to github', function () {
 ```
 
 <a name="faking-the-callback"></a>
-#### Faking the Callback
-
-To test your application's callback route, you may invoke the `fake` method and provide a `User` instance that should be returned when your application requests the user's details from the provider. The `User` instance may be created using the `fake` method:
-
+#### Fake Callback
+Để kiểm thử callback route, hãy gọi `fake` và truyền instance `User` sẽ được trả về khi ứng dụng yêu cầu thông tin người dùng từ provider. Instance `User` có thể được tạo bằng phương thức `fake`:
 ```php
 use Laravel\Socialite\Socialite;
 use Laravel\Socialite\Two\User;
@@ -284,9 +206,7 @@ test('user can login with github', function () {
     ]);
 });
 ```
-
-By default, the `User` instance will include fake OAuth token values. If needed, you may override these values by passing additional attributes to the `fake` method:
-
+Nếu đã có access token hợp lệ của người dùng, bạn có thể lấy thông tin bằng phương thức `userFromToken` của Socialite:
 ```php
 $fakeUser = User::fake([
     'id' => 'github-123',
@@ -298,8 +218,8 @@ $fakeUser = User::fake([
     'approvedScopes' => ['read', 'write'],
 ]);
 ```
-
-OAuth 1 users may be faked using the `Laravel\Socialite\One\User` class.
+Nếu dùng Facebook Limited Login trong ứng dụng iOS, Facebook trả về OIDC token thay vì access token. Để lấy thông tin người dùng từ OIDC token, hãy truyền nonce dùng khi khởi tạo login vào `userFromToken`:
+Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/socialite). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.
 
 ## Tài liệu chính thức
 

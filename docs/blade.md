@@ -1,58 +1,58 @@
-# Blade Templates
+# Blade Template
 
-- [Introduction](#introduction)
-    - [Supercharging Blade With Livewire](#supercharging-blade-with-livewire)
-- [Displaying Data](#displaying-data)
-    - [HTML Entity Encoding](#html-entity-encoding)
-    - [Blade and JavaScript Frameworks](#blade-and-javascript-frameworks)
+- [Giới thiệu](#introduction)
+    - [Tăng sức mạnh cho Blade với Livewire](#supercharging-blade-with-livewire)
+- [Hiển thị dữ liệu](#displaying-data)
+    - [Mã hóa HTML entity](#html-entity-encoding)
+    - [Blade và các JavaScript framework](#blade-and-javascript-frameworks)
 - [Blade Directives](#blade-directives)
-    - [If Statements](#if-statements)
-    - [Switch Statements](#switch-statements)
-    - [Loops](#loops)
-    - [The Loop Variable](#the-loop-variable)
-    - [Conditional Classes](#conditional-classes)
-    - [Additional Attributes](#additional-attributes)
-    - [Including Subviews](#including-subviews)
-    - [The `@once` Directive](#the-once-directive)
-    - [Raw PHP](#raw-php)
-    - [Fonts](#fonts)
-    - [Comments](#comments)
-- [Components](#components)
-    - [Rendering Components](#rendering-components)
-    - [Index Components](#index-components)
-    - [Passing Data to Components](#passing-data-to-components)
-    - [Component Attributes](#component-attributes)
-    - [Reserved Keywords](#reserved-keywords)
-    - [Slots](#slots)
-    - [Inline Component Views](#inline-component-views)
-    - [Dynamic Components](#dynamic-components)
-    - [Manually Registering Components](#manually-registering-components)
-- [Anonymous Components](#anonymous-components)
-    - [Anonymous Index Components](#anonymous-index-components)
-    - [Data Properties / Attributes](#data-properties-attributes)
-    - [Accessing Parent Data](#accessing-parent-data)
-    - [Anonymous Component Paths](#anonymous-component-paths)
-- [Building Layouts](#building-layouts)
-    - [Layouts Using Components](#layouts-using-components)
-    - [Layouts Using Template Inheritance](#layouts-using-template-inheritance)
-- [Forms](#forms)
-    - [CSRF Field](#csrf-field)
-    - [Method Field](#method-field)
-    - [Validation Errors](#validation-errors)
-- [Stacks](#stacks)
-- [Service Injection](#service-injection)
-- [Rendering Inline Blade Templates](#rendering-inline-blade-templates)
-- [Rendering Blade Fragments](#rendering-blade-fragments)
-- [Extending Blade](#extending-blade)
-    - [Custom Echo Handlers](#custom-echo-handlers)
-    - [Custom If Statements](#custom-if-statements)
+    - [Câu lệnh If](#if-statements)
+    - [Câu lệnh Switch](#switch-statements)
+    - [Vòng lặp](#loops)
+    - [Biến vòng lặp](#the-loop-variable)
+    - [Class theo điều kiện](#conditional-classes)
+    - [Các attribute bổ sung](#additional-attributes)
+    - [Include subview](#including-subviews)
+    - [Directive `@once`](#the-once-directive)
+    - [PHP thuần](#raw-php)
+    - [Font](#fonts)
+    - [Comment](#comments)
+- [Component](#components)
+    - [Render component](#rendering-components)
+    - [Index component](#index-components)
+    - [Truyền dữ liệu vào component](#passing-data-to-components)
+    - [Attribute của component](#component-attributes)
+    - [Từ khóa dành riêng](#reserved-keywords)
+    - [Slot](#slots)
+    - [Inline component view](#inline-component-views)
+    - [Dynamic component](#dynamic-components)
+    - [Đăng ký component thủ công](#manually-registering-components)
+- [Component ẩn danh](#anonymous-components)
+    - [Anonymous index component](#anonymous-index-components)
+    - [Data property / attribute](#data-properties-attributes)
+    - [Truy cập dữ liệu của component cha](#accessing-parent-data)
+    - [Đường dẫn component ẩn danh](#anonymous-component-paths)
+- [Xây dựng layout](#building-layouts)
+    - [Layout sử dụng component](#layouts-using-components)
+    - [Layout sử dụng kế thừa template](#layouts-using-template-inheritance)
+- [Form](#forms)
+    - [Trường CSRF](#csrf-field)
+    - [Trường method](#method-field)
+    - [Lỗi validation](#validation-errors)
+- [Stack](#stacks)
+- [Inject service](#service-injection)
+- [Render Blade template inline](#rendering-inline-blade-templates)
+- [Render Blade fragment](#rendering-blade-fragments)
+- [Mở rộng Blade](#extending-blade)
+    - [Tùy chỉnh echo handler](#custom-echo-handlers)
+    - [Tùy chỉnh câu lệnh If](#custom-if-statements)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Blade is the simple, yet powerful templating engine that is included with Laravel. Unlike some PHP templating engines, Blade does not restrict you from using plain PHP code in your templates. In fact, all Blade templates are compiled into plain PHP code and cached until they are modified, meaning Blade adds essentially zero overhead to your application. Blade template files use the `.blade.php` file extension and are typically stored in the `resources/views` directory.
+Blade là template engine đơn giản nhưng mạnh mẽ được tích hợp sẵn trong Laravel. Không giống một số PHP template engine khác, Blade không hạn chế bạn sử dụng mã PHP thuần trong template. Trên thực tế, mọi Blade template đều được biên dịch thành mã PHP thuần và được cache cho đến khi chúng thay đổi, vì vậy Blade hầu như không tạo thêm overhead cho ứng dụng. Các file Blade template sử dụng phần mở rộng `.blade.php` và thường được lưu trong thư mục `resources/views`.
 
-Blade views may be returned from routes or controllers using the global `view` helper. Of course, as mentioned in the documentation on [views](/docs/{{version}}/views), data may be passed to the Blade view using the `view` helper's second argument:
+Blade view có thể được trả về từ route hoặc controller bằng helper toàn cục `view`. Như đã đề cập trong tài liệu về [view](/docs/{{version}}/views), bạn có thể truyền dữ liệu vào Blade view thông qua đối số thứ hai của helper `view`:
 
 ```php
 Route::get('/', function () {
@@ -61,14 +61,14 @@ Route::get('/', function () {
 ```
 
 <a name="supercharging-blade-with-livewire"></a>
-### Supercharging Blade With Livewire
+### Tăng sức mạnh cho Blade với Livewire
 
-Want to take your Blade templates to the next level and build dynamic interfaces with ease? Check out [Laravel Livewire](https://livewire.laravel.com). Livewire allows you to write Blade components that are augmented with dynamic functionality that would typically only be possible via frontend frameworks like React, Svelte, or Vue, providing a great approach to building modern, reactive frontends without the complexities, client-side rendering, or build steps of many JavaScript frameworks.
+Bạn muốn nâng Blade template lên một tầm cao hơn và dễ dàng xây dựng giao diện động? Hãy xem [Laravel Livewire](https://livewire.laravel.com). Livewire cho phép bạn viết các Blade component được bổ sung khả năng động vốn thường chỉ có thể thực hiện bằng các frontend framework như React, Svelte hoặc Vue. Đây là một cách hiệu quả để xây dựng frontend hiện đại, reactive mà không phải đối mặt với độ phức tạp, client-side rendering hay các bước build thường gặp ở nhiều JavaScript framework.
 
 <a name="displaying-data"></a>
-## Displaying Data
+## Hiển thị dữ liệu
 
-You may display data that is passed to your Blade views by wrapping the variable in curly braces. For example, given the following route:
+Bạn có thể hiển thị dữ liệu được truyền vào Blade view bằng cách đặt biến bên trong cặp dấu ngoặc nhọn. Ví dụ, với route sau:
 
 ```php
 Route::get('/', function () {
@@ -76,25 +76,25 @@ Route::get('/', function () {
 });
 ```
 
-You may display the contents of the `name` variable like so:
+Bạn có thể hiển thị nội dung của biến `name` như sau:
 
 ```blade
 Hello, {{ $name }}.
 ```
 
 > [!NOTE]
-> Blade's `{{ }}` echo statements are automatically sent through PHP's `htmlspecialchars` function to prevent XSS attacks.
+> Các câu lệnh echo `{{ }}` của Blade tự động được xử lý qua hàm `htmlspecialchars` của PHP để ngăn chặn các cuộc tấn công XSS.
 
-You are not limited to displaying the contents of the variables passed to the view. You may also echo the results of any PHP function. In fact, you can put any PHP code you wish inside of a Blade echo statement:
+Bạn không chỉ bị giới hạn ở việc hiển thị nội dung của các biến được truyền vào view. Bạn cũng có thể echo kết quả của bất kỳ hàm PHP nào. Thực tế, bạn có thể đặt bất kỳ mã PHP nào mong muốn bên trong một câu lệnh echo của Blade:
 
 ```blade
 The current UNIX timestamp is {{ time() }}.
 ```
 
 <a name="html-entity-encoding"></a>
-### HTML Entity Encoding
+### Mã hóa HTML entity
 
-By default, Blade (and the Laravel `e` function) will double encode HTML entities. If you would like to disable double encoding, call the `Blade::withoutDoubleEncoding` method from the `boot` method of your `AppServiceProvider`:
+Theo mặc định, Blade (và hàm `e` của Laravel) sẽ mã hóa kép các HTML entity. Nếu muốn tắt việc mã hóa kép, hãy gọi phương thức `Blade::withoutDoubleEncoding` từ phương thức `boot` của `AppServiceProvider`:
 
 ```php
 <?php
@@ -117,21 +117,21 @@ class AppServiceProvider extends ServiceProvider
 ```
 
 <a name="displaying-unescaped-data"></a>
-#### Displaying Unescaped Data
+#### Hiển thị dữ liệu không escape
 
-By default, Blade `{{ }}` statements are automatically sent through PHP's `htmlspecialchars` function to prevent XSS attacks. If you do not want your data to be escaped, you may use the following syntax:
+Theo mặc định, các câu lệnh `{{ }}` của Blade tự động được xử lý qua hàm `htmlspecialchars` của PHP để ngăn chặn tấn công XSS. Nếu không muốn dữ liệu được escape, bạn có thể sử dụng cú pháp sau:
 
 ```blade
 Hello, {!! $name !!}.
 ```
 
 > [!WARNING]
-> Be very careful when echoing content that is supplied by users of your application. You should typically use the escaped, double curly brace syntax to prevent XSS attacks when displaying user supplied data.
+> Hãy đặc biệt cẩn thận khi echo nội dung do người dùng ứng dụng cung cấp. Thông thường, bạn nên sử dụng cú pháp hai dấu ngoặc nhọn có escape để ngăn chặn tấn công XSS khi hiển thị dữ liệu do người dùng cung cấp.
 
 <a name="blade-and-javascript-frameworks"></a>
-### Blade and JavaScript Frameworks
+### Blade và các JavaScript framework
 
-Since many JavaScript frameworks also use "curly" braces to indicate a given expression should be displayed in the browser, you may use the `@` symbol to inform the Blade rendering engine an expression should remain untouched. For example:
+Vì nhiều JavaScript framework cũng sử dụng dấu ngoặc nhọn để biểu thị một biểu thức cần được hiển thị trong trình duyệt, bạn có thể dùng ký hiệu `@` để thông báo cho Blade rendering engine rằng biểu thức đó cần được giữ nguyên. Ví dụ:
 
 ```blade
 <h1>Laravel</h1>
@@ -139,9 +139,9 @@ Since many JavaScript frameworks also use "curly" braces to indicate a given exp
 Hello, @{{ name }}.
 ```
 
-In this example, the `@` symbol will be removed by Blade; however, the `{{ name }}` expression will remain untouched by the Blade engine, allowing it to be rendered by your JavaScript framework.
+Trong ví dụ này, ký hiệu `@` sẽ được Blade loại bỏ; tuy nhiên, biểu thức `{{ name }}` vẫn được Blade engine giữ nguyên, nhờ đó JavaScript framework của bạn có thể render biểu thức này.
 
-The `@` symbol may also be used to escape Blade directives:
+Ký hiệu `@` cũng có thể được dùng để escape các Blade directive:
 
 ```blade
 {{-- Blade template --}}
@@ -152,9 +152,9 @@ The `@` symbol may also be used to escape Blade directives:
 ```
 
 <a name="rendering-json"></a>
-#### Rendering JSON
+#### Render JSON
 
-Sometimes you may pass an array to your view with the intention of rendering it as JSON in order to initialize a JavaScript variable. For example:
+Đôi khi bạn có thể truyền một mảng vào view với mục đích render nó thành JSON để khởi tạo một biến JavaScript. Ví dụ:
 
 ```php
 <script>
@@ -162,7 +162,7 @@ Sometimes you may pass an array to your view with the intention of rendering it 
 </script>
 ```
 
-However, instead of manually calling `json_encode`, you may use the `Illuminate\Support\Js::from` method. The `from` method accepts the same arguments as PHP's `json_encode` function; however, it will ensure that the resulting JSON has been properly escaped for inclusion within HTML quotes. The `from` method will return a string `JSON.parse` JavaScript statement that will convert the given object or array into a valid JavaScript object:
+Tuy nhiên, thay vì gọi `json_encode` thủ công, bạn có thể sử dụng phương thức `Illuminate\Support\Js::from`. Phương thức `from` nhận các đối số giống hàm `json_encode` của PHP, đồng thời đảm bảo JSON tạo ra được escape đúng cách để nhúng bên trong dấu nháy HTML. Phương thức `from` trả về một chuỗi câu lệnh JavaScript `JSON.parse`, dùng để chuyển object hoặc array đã cho thành một JavaScript object hợp lệ:
 
 ```blade
 <script>
@@ -170,7 +170,7 @@ However, instead of manually calling `json_encode`, you may use the `Illuminate\
 </script>
 ```
 
-The latest versions of the Laravel application skeleton include a `Js` facade, which provides convenient access to this functionality within your Blade templates:
+Các phiên bản mới nhất của Laravel application skeleton bao gồm facade `Js`, giúp truy cập chức năng này thuận tiện ngay trong Blade template:
 
 ```blade
 <script>
@@ -179,12 +179,12 @@ The latest versions of the Laravel application skeleton include a `Js` facade, w
 ```
 
 > [!WARNING]
-> You should only use the `Js::from` method to render existing variables as JSON. The Blade templating is based on regular expressions and attempts to pass a complex expression to the directive may cause unexpected failures.
+> Bạn chỉ nên sử dụng phương thức `Js::from` để render các biến hiện có thành JSON. Cơ chế template của Blade dựa trên biểu thức chính quy, vì vậy việc cố truyền một biểu thức phức tạp vào directive có thể gây ra lỗi ngoài mong đợi.
 
 <a name="the-at-verbatim-directive"></a>
-#### The `@verbatim` Directive
+#### Directive `@verbatim`
 
-If you are displaying JavaScript variables in a large portion of your template, you may wrap the HTML in the `@verbatim` directive so that you do not have to prefix each Blade echo statement with an `@` symbol:
+Nếu bạn hiển thị biến JavaScript trong một phần lớn của template, bạn có thể bọc HTML bằng directive `@verbatim` để không phải thêm ký hiệu `@` trước từng câu lệnh echo của Blade:
 
 ```blade
 @verbatim
@@ -195,14 +195,14 @@ If you are displaying JavaScript variables in a large portion of your template, 
 ```
 
 <a name="blade-directives"></a>
-## Blade Directives
+## Blade directive
 
-In addition to template inheritance and displaying data, Blade also provides convenient shortcuts for common PHP control structures, such as conditional statements and loops. These shortcuts provide a very clean, terse way of working with PHP control structures while also remaining familiar to their PHP counterparts.
+Ngoài kế thừa template và hiển thị dữ liệu, Blade còn cung cấp các cú pháp rút gọn tiện lợi cho những cấu trúc điều khiển PHP phổ biến như câu lệnh điều kiện và vòng lặp. Các cú pháp này giúp làm việc với cấu trúc điều khiển PHP một cách gọn gàng, súc tích nhưng vẫn quen thuộc như cú pháp PHP tương ứng.
 
 <a name="if-statements"></a>
-### If Statements
+### Câu lệnh If
 
-You may construct `if` statements using the `@if`, `@elseif`, `@else`, and `@endif` directives. These directives function identically to their PHP counterparts:
+Bạn có thể xây dựng câu lệnh `if` bằng các directive `@if`, `@elseif`, `@else` và `@endif`. Các directive này hoạt động tương tự các cấu trúc tương ứng trong PHP:
 
 ```blade
 @if (count($records) === 1)
@@ -214,7 +214,7 @@ You may construct `if` statements using the `@if`, `@elseif`, `@else`, and `@end
 @endif
 ```
 
-For convenience, Blade also provides an `@unless` directive:
+Để thuận tiện, Blade cũng cung cấp directive `@unless`:
 
 ```blade
 @unless (Auth::check())
@@ -222,7 +222,7 @@ For convenience, Blade also provides an `@unless` directive:
 @endunless
 ```
 
-In addition to the conditional directives already discussed, the `@isset` and `@empty` directives may be used as convenient shortcuts for their respective PHP functions:
+Ngoài các directive điều kiện đã đề cập, `@isset` và `@empty` có thể được dùng như cú pháp rút gọn tiện lợi cho các hàm PHP tương ứng:
 
 ```blade
 @isset($records)
@@ -235,9 +235,9 @@ In addition to the conditional directives already discussed, the `@isset` and `@
 ```
 
 <a name="authentication-directives"></a>
-#### Authentication Directives
+#### Directive xác thực
 
-The `@auth` and `@guest` directives may be used to quickly determine if the current user is [authenticated](/docs/{{version}}/authentication) or is a guest:
+Các directive `@auth` và `@guest` có thể được dùng để nhanh chóng xác định người dùng hiện tại đã [xác thực](/docs/{{version}}/authentication) hay đang là khách:
 
 ```blade
 @auth
@@ -249,7 +249,7 @@ The `@auth` and `@guest` directives may be used to quickly determine if the curr
 @endguest
 ```
 
-If needed, you may specify the authentication guard that should be checked when using the `@auth` and `@guest` directives:
+Nếu cần, bạn có thể chỉ định authentication guard cần kiểm tra khi sử dụng các directive `@auth` và `@guest`:
 
 ```blade
 @auth('admin')
@@ -262,9 +262,9 @@ If needed, you may specify the authentication guard that should be checked when 
 ```
 
 <a name="environment-directives"></a>
-#### Environment Directives
+#### Directive môi trường
 
-You may check if the application is running in the production environment using the `@production` directive:
+Bạn có thể kiểm tra ứng dụng có đang chạy trong môi trường production hay không bằng directive `@production`:
 
 ```blade
 @production
@@ -272,7 +272,7 @@ You may check if the application is running in the production environment using 
 @endproduction
 ```
 
-Or, you may determine if the application is running in a specific environment using the `@env` directive:
+Hoặc, bạn có thể xác định ứng dụng có đang chạy trong một môi trường cụ thể hay không bằng directive `@env`:
 
 ```blade
 @env('staging')
@@ -285,9 +285,9 @@ Or, you may determine if the application is running in a specific environment us
 ```
 
 <a name="section-directives"></a>
-#### Section Directives
+#### Directive section
 
-You may determine if a template inheritance section has content using the `@hasSection` directive:
+Bạn có thể xác định một section kế thừa của template có nội dung hay không bằng directive `@hasSection`:
 
 ```blade
 @hasSection('navigation')
@@ -299,7 +299,7 @@ You may determine if a template inheritance section has content using the `@hasS
 @endif
 ```
 
-You may use the `sectionMissing` directive to determine if a section does not have content:
+Bạn có thể sử dụng directive `sectionMissing` để xác định một section không có nội dung:
 
 ```blade
 @sectionMissing('navigation')
@@ -310,9 +310,9 @@ You may use the `sectionMissing` directive to determine if a section does not ha
 ```
 
 <a name="session-directives"></a>
-#### Session Directives
+#### Directive session
 
-The `@session` directive may be used to determine if a [session](/docs/{{version}}/session) value exists. If the session value exists, the template contents within the `@session` and `@endsession` directives will be evaluated. Within the `@session` directive's contents, you may echo the `$value` variable to display the session value:
+Directive `@session` có thể được dùng để xác định một giá trị [session](/docs/{{version}}/session) có tồn tại hay không. Nếu giá trị session tồn tại, nội dung template nằm giữa `@session` và `@endsession` sẽ được thực thi. Bên trong nội dung của directive `@session`, bạn có thể echo biến `$value` để hiển thị giá trị session:
 
 ```blade
 @session('status')
@@ -323,9 +323,9 @@ The `@session` directive may be used to determine if a [session](/docs/{{version
 ```
 
 <a name="context-directives"></a>
-#### Context Directives
+#### Directive context
 
-The `@context` directive may be used to determine if a [context](/docs/{{version}}/context) value exists. If the context value exists, the template contents within the `@context` and `@endcontext` directives will be evaluated. Within the `@context` directive's contents, you may echo the `$value` variable to display the context value:
+Directive `@context` có thể được dùng để xác định một giá trị [context](/docs/{{version}}/context) có tồn tại hay không. Nếu giá trị context tồn tại, nội dung template nằm giữa `@context` và `@endcontext` sẽ được thực thi. Bên trong nội dung của directive `@context`, bạn có thể echo biến `$value` để hiển thị giá trị context:
 
 ```blade
 @context('canonical')
@@ -334,9 +334,9 @@ The `@context` directive may be used to determine if a [context](/docs/{{version
 ```
 
 <a name="switch-statements"></a>
-### Switch Statements
+### Câu lệnh Switch
 
-Switch statements can be constructed using the `@switch`, `@case`, `@break`, `@default` and `@endswitch` directives:
+Câu lệnh switch có thể được xây dựng bằng các directive `@switch`, `@case`, `@break`, `@default` và `@endswitch`:
 
 ```blade
 @switch($i)
@@ -354,9 +354,9 @@ Switch statements can be constructed using the `@switch`, `@case`, `@break`, `@d
 ```
 
 <a name="loops"></a>
-### Loops
+### Vòng lặp
 
-In addition to conditional statements, Blade provides simple directives for working with PHP's loop structures. Again, each of these directives functions identically to their PHP counterparts:
+Ngoài câu lệnh điều kiện, Blade cung cấp các directive đơn giản để làm việc với cấu trúc vòng lặp của PHP. Tương tự, mỗi directive này hoạt động giống cấu trúc PHP tương ứng:
 
 ```blade
 @for ($i = 0; $i < 10; $i++)
@@ -379,9 +379,9 @@ In addition to conditional statements, Blade provides simple directives for work
 ```
 
 > [!NOTE]
-> While iterating through a `foreach` loop, you may use the [loop variable](#the-loop-variable) to gain valuable information about the loop, such as whether you are in the first or last iteration through the loop.
+> Khi lặp qua một vòng `foreach`, bạn có thể sử dụng [biến loop](#the-loop-variable) để lấy các thông tin hữu ích về vòng lặp, chẳng hạn đang ở lần lặp đầu tiên hay cuối cùng.
 
-When using loops you may also skip the current iteration or end the loop using the `@continue` and `@break` directives:
+Khi sử dụng vòng lặp, bạn cũng có thể bỏ qua lần lặp hiện tại hoặc kết thúc vòng lặp bằng các directive `@continue` và `@break`:
 
 ```blade
 @foreach ($users as $user)
@@ -397,7 +397,7 @@ When using loops you may also skip the current iteration or end the loop using t
 @endforeach
 ```
 
-You may also include the continuation or break condition within the directive declaration:
+Bạn cũng có thể đặt trực tiếp điều kiện tiếp tục hoặc thoát vòng lặp trong khai báo directive:
 
 ```blade
 @foreach ($users as $user)
@@ -410,9 +410,9 @@ You may also include the continuation or break condition within the directive de
 ```
 
 <a name="the-loop-variable"></a>
-### The Loop Variable
+### Biến Loop
 
-While iterating through a `foreach` loop, a `$loop` variable will be available inside of your loop. This variable provides access to some useful bits of information such as the current loop index and whether this is the first or last iteration through the loop:
+Khi lặp qua một vòng `foreach`, biến `$loop` sẽ khả dụng bên trong vòng lặp. Biến này cung cấp nhiều thông tin hữu ích, chẳng hạn index hiện tại và liệu đây có phải lần lặp đầu tiên hoặc cuối cùng hay không:
 
 ```blade
 @foreach ($users as $user)
@@ -428,7 +428,7 @@ While iterating through a `foreach` loop, a `$loop` variable will be available i
 @endforeach
 ```
 
-If you are in a nested loop, you may access the parent loop's `$loop` variable via the `parent` property:
+Nếu đang ở trong vòng lặp lồng nhau, bạn có thể truy cập biến `$loop` của vòng lặp cha thông qua thuộc tính `parent`:
 
 ```blade
 @foreach ($users as $user)
@@ -440,29 +440,29 @@ If you are in a nested loop, you may access the parent loop's `$loop` variable v
 @endforeach
 ```
 
-The `$loop` variable also contains a variety of other useful properties:
+Biến `$loop` còn chứa nhiều thuộc tính hữu ích khác:
 
 <div class="overflow-auto">
 
-| Property           | Description                                            |
+| Thuộc tính          | Mô tả                                                  |
 | ------------------ | ------------------------------------------------------ |
-| `$loop->index`     | The index of the current loop iteration (starts at 0). |
-| `$loop->iteration` | The current loop iteration (starts at 1).              |
-| `$loop->remaining` | The iterations remaining in the loop.                  |
-| `$loop->count`     | The total number of items in the array being iterated. |
-| `$loop->first`     | Whether this is the first iteration through the loop.  |
-| `$loop->last`      | Whether this is the last iteration through the loop.   |
-| `$loop->even`      | Whether this is an even iteration through the loop.    |
-| `$loop->odd`       | Whether this is an odd iteration through the loop.     |
-| `$loop->depth`     | The nesting level of the current loop.                 |
-| `$loop->parent`    | When in a nested loop, the parent's loop variable.     |
+| `$loop->index`     | Chỉ số của lần lặp hiện tại (bắt đầu từ 0). |
+| `$loop->iteration` | Số thứ tự của lần lặp hiện tại (bắt đầu từ 1). |
+| `$loop->remaining` | Số lần lặp còn lại trong vòng lặp. |
+| `$loop->count`     | Tổng số phần tử trong mảng đang được lặp. |
+| `$loop->first`     | Cho biết đây có phải là lần lặp đầu tiên của vòng lặp hay không. |
+| `$loop->last`      | Cho biết đây có phải là lần lặp cuối cùng của vòng lặp hay không. |
+| `$loop->even`      | Cho biết đây có phải là lần lặp chẵn hay không. |
+| `$loop->odd`       | Cho biết đây có phải là lần lặp lẻ hay không. |
+| `$loop->depth`     | Mức lồng nhau của vòng lặp hiện tại. |
+| `$loop->parent`    | Khi ở trong vòng lặp lồng nhau, đây là biến vòng lặp của vòng lặp cha. |
 
 </div>
 
 <a name="conditional-classes"></a>
-### Conditional Classes & Styles
+### Class và style có điều kiện
 
-The `@class` directive conditionally compiles a CSS class string. The directive accepts an array of classes where the array key contains the class or classes you wish to add, while the value is a boolean expression. If the array element has a numeric key, it will always be included in the rendered class list:
+Directive `@class` biên dịch chuỗi CSS class theo điều kiện. Directive nhận một mảng class, trong đó key chứa class hoặc các class bạn muốn thêm và value là một biểu thức boolean. Nếu phần tử mảng có key dạng số, class đó sẽ luôn được đưa vào danh sách class được render:
 
 ```blade
 @php
@@ -480,7 +480,7 @@ The `@class` directive conditionally compiles a CSS class string. The directive 
 <span class="p-4 text-gray-500 bg-red"></span>
 ```
 
-Likewise, the `@style` directive may be used to conditionally add inline CSS styles to an HTML element:
+Tương tự, directive `@style` có thể được dùng để thêm CSS inline vào một phần tử HTML theo điều kiện:
 
 ```blade
 @php
@@ -496,9 +496,9 @@ Likewise, the `@style` directive may be used to conditionally add inline CSS sty
 ```
 
 <a name="additional-attributes"></a>
-### Additional Attributes
+### Các thuộc tính bổ sung
 
-For convenience, you may use the `@checked` directive to easily indicate if a given HTML checkbox input is "checked". This directive will echo `checked` if the provided condition evaluates to `true`:
+Để thuận tiện, bạn có thể sử dụng directive `@checked` để xác định một checkbox HTML có ở trạng thái `checked` hay không. Directive này sẽ xuất `checked` nếu điều kiện được cung cấp trả về `true`:
 
 ```blade
 <input
@@ -509,7 +509,7 @@ For convenience, you may use the `@checked` directive to easily indicate if a gi
 />
 ```
 
-Likewise, the `@selected` directive may be used to indicate if a given select option should be "selected":
+Tương tự, directive `@selected` có thể được dùng để xác định một option của select có nên ở trạng thái `selected` hay không:
 
 ```blade
 <select name="version">
@@ -521,13 +521,13 @@ Likewise, the `@selected` directive may be used to indicate if a given select op
 </select>
 ```
 
-Additionally, the `@disabled` directive may be used to indicate if a given element should be "disabled":
+Ngoài ra, directive `@disabled` có thể được dùng để xác định một phần tử có nên ở trạng thái `disabled` hay không:
 
 ```blade
 <button type="submit" @disabled($errors->isNotEmpty())>Submit</button>
 ```
 
-Moreover, the `@readonly` directive may be used to indicate if a given element should be "readonly":
+Directive `@readonly` có thể được dùng để xác định một phần tử có nên ở trạng thái `readonly` hay không:
 
 ```blade
 <input
@@ -538,7 +538,7 @@ Moreover, the `@readonly` directive may be used to indicate if a given element s
 />
 ```
 
-In addition, the `@required` directive may be used to indicate if a given element should be "required":
+Directive `@required` có thể được dùng để xác định một phần tử có nên ở trạng thái `required` hay không:
 
 ```blade
 <input
@@ -550,12 +550,12 @@ In addition, the `@required` directive may be used to indicate if a given elemen
 ```
 
 <a name="including-subviews"></a>
-### Including Subviews
+### Include subview
 
 > [!NOTE]
-> While you're free to use the `@include` directive, Blade [components](#components) provide similar functionality and offer several benefits over the `@include` directive such as data and attribute binding.
+> Mặc dù bạn có thể sử dụng directive `@include`, [component](#components) của Blade cung cấp chức năng tương tự cùng một số lợi ích bổ sung, chẳng hạn binding dữ liệu và thuộc tính.
 
-Blade's `@include` directive allows you to include a Blade view from within another view. All variables that are available to the parent view will be made available to the included view:
+Directive `@include` của Blade cho phép include một Blade view từ bên trong một view khác. Tất cả biến khả dụng trong view cha cũng sẽ khả dụng trong view được include:
 
 ```blade
 <div>
@@ -567,19 +567,19 @@ Blade's `@include` directive allows you to include a Blade view from within anot
 </div>
 ```
 
-Even though the included view will inherit all data available in the parent view, you may also pass an array of additional data that should be made available to the included view:
+Mặc dù view được include sẽ kế thừa toàn bộ dữ liệu khả dụng trong view cha, bạn cũng có thể truyền thêm một mảng dữ liệu để cung cấp cho view đó:
 
 ```blade
 @include('view.name', ['status' => 'complete'])
 ```
 
-If you attempt to `@include` a view which does not exist, Laravel will throw an error. If you would like to include a view that may or may not be present, you should use the `@includeIf` directive:
+Nếu bạn cố `@include` một view không tồn tại, Laravel sẽ phát sinh lỗi. Nếu muốn include một view có thể tồn tại hoặc không, hãy sử dụng directive `@includeIf`:
 
 ```blade
 @includeIf('view.name', ['status' => 'complete'])
 ```
 
-If you would like to `@include` a view if a given boolean expression evaluates to `true` or `false`, you may use the `@includeWhen` and `@includeUnless` directives:
+Nếu muốn `@include` một view dựa trên việc một biểu thức boolean trả về `true` hoặc `false`, bạn có thể sử dụng các directive `@includeWhen` và `@includeUnless`:
 
 ```blade
 @includeWhen($boolean, 'view.name', ['status' => 'complete'])
@@ -587,45 +587,45 @@ If you would like to `@include` a view if a given boolean expression evaluates t
 @includeUnless($boolean, 'view.name', ['status' => 'complete'])
 ```
 
-To include the first view that exists from a given array of views, you may use the `includeFirst` directive:
+Để include view đầu tiên tồn tại trong một mảng view cho trước, bạn có thể sử dụng directive `includeFirst`:
 
 ```blade
 @includeFirst(['custom.admin', 'admin'], ['status' => 'complete'])
 ```
 
-If you would like to include a view without inheriting any variables from the parent view, you may use the `@includeIsolated` directive. The included view will only have access to variables you explicitly pass:
+Nếu muốn include một view mà không kế thừa bất kỳ biến nào từ view cha, bạn có thể sử dụng directive `@includeIsolated`. View được include chỉ có thể truy cập các biến mà bạn truyền vào một cách tường minh:
 
 ```blade
 @includeIsolated('view.name', ['user' => $user])
 ```
 
 > [!WARNING]
-> You should avoid using the `__DIR__` and `__FILE__` constants in your Blade views, since they will refer to the location of the cached, compiled view.
+> Bạn nên tránh sử dụng các hằng `__DIR__` và `__FILE__` trong Blade view vì chúng sẽ trỏ tới vị trí của view đã được biên dịch và cache.
 
 <a name="rendering-views-for-collections"></a>
-#### Rendering Views for Collections
+#### Render view cho Collection
 
-You may combine loops and includes into one line with Blade's `@each` directive:
+Bạn có thể kết hợp vòng lặp và include trên một dòng bằng directive `@each` của Blade:
 
 ```blade
 @each('view.name', $jobs, 'job')
 ```
 
-The `@each` directive's first argument is the view to render for each element in the array or collection. The second argument is the array or collection you wish to iterate over, while the third argument is the variable name that will be assigned to the current iteration within the view. So, for example, if you are iterating over an array of `jobs`, typically you will want to access each job as a `job` variable within the view. The array key for the current iteration will be available as the `key` variable within the view.
+Đối số đầu tiên của directive `@each` là view cần render cho từng phần tử trong array hoặc collection. Đối số thứ hai là array hoặc collection cần lặp, còn đối số thứ ba là tên biến được gán cho phần tử hiện tại bên trong view. Ví dụ, khi lặp qua một mảng `jobs`, thông thường bạn sẽ truy cập từng job thông qua biến `job` trong view. Key của phần tử hiện tại sẽ khả dụng thông qua biến `key`.
 
-You may also pass a fourth argument to the `@each` directive. This argument determines the view that will be rendered if the given array is empty.
+Bạn cũng có thể truyền đối số thứ tư cho directive `@each`. Đối số này xác định view sẽ được render nếu mảng được cung cấp rỗng.
 
 ```blade
 @each('view.name', $jobs, 'job', 'view.empty')
 ```
 
 > [!WARNING]
-> Views rendered via `@each` do not inherit the variables from the parent view. If the child view requires these variables, you should use the `@foreach` and `@include` directives instead.
+> Các view được render qua `@each` không kế thừa biến từ view cha. Nếu view con cần các biến này, bạn nên sử dụng `@foreach` kết hợp với `@include`.
 
 <a name="the-once-directive"></a>
-### The `@once` Directive
+### Directive `@once`
 
-The `@once` directive allows you to define a portion of the template that will only be evaluated once per rendering cycle. This may be useful for pushing a given piece of JavaScript into the page's header using [stacks](#stacks). For example, if you are rendering a given [component](#components) within a loop, you may wish to only push the JavaScript to the header the first time the component is rendered:
+Directive `@once` cho phép bạn định nghĩa một phần template chỉ được thực thi một lần trong mỗi chu kỳ render. Điều này hữu ích khi đẩy một đoạn JavaScript vào phần header của trang bằng [stack](#stacks). Ví dụ, nếu render một [component](#components) trong vòng lặp, bạn có thể chỉ muốn đẩy JavaScript vào header ở lần đầu component được render:
 
 ```blade
 @once
@@ -637,7 +637,7 @@ The `@once` directive allows you to define a portion of the template that will o
 @endonce
 ```
 
-Since the `@once` directive is often used in conjunction with the `@push` or `@prepend` directives, the `@pushOnce` and `@prependOnce` directives are available for your convenience:
+Vì directive `@once` thường được dùng cùng `@push` hoặc `@prepend`, Blade cung cấp thêm các directive `@pushOnce` và `@prependOnce` để thuận tiện hơn:
 
 ```blade
 @pushOnce('scripts')
@@ -647,7 +647,7 @@ Since the `@once` directive is often used in conjunction with the `@push` or `@p
 @endPushOnce
 ```
 
-If you are pushing duplicate content from two separate Blade templates, you should provide a unique identifier as the second argument to the `@pushOnce` directive to ensure the content is only rendered once:
+Nếu bạn push nội dung trùng lặp từ hai Blade template khác nhau, hãy cung cấp một định danh duy nhất làm đối số thứ hai của directive `@pushOnce` để đảm bảo nội dung chỉ được render một lần:
 
 ```blade
 <!-- pie-chart.blade.php -->
@@ -662,9 +662,9 @@ If you are pushing duplicate content from two separate Blade templates, you shou
 ```
 
 <a name="raw-php"></a>
-### Raw PHP
+### PHP thuần
 
-In some situations, it's useful to embed PHP code into your views. You can use the Blade `@php` directive to execute a block of plain PHP within your template:
+Trong một số trường hợp, việc nhúng mã PHP vào view là hữu ích. Bạn có thể sử dụng directive `@php` của Blade để thực thi một khối PHP thuần bên trong template:
 
 ```blade
 @php
@@ -672,39 +672,39 @@ In some situations, it's useful to embed PHP code into your views. You can use t
 @endphp
 ```
 
-Or, if you only need to use PHP to import a class, you may use the `@use` directive:
+Hoặc, nếu chỉ cần dùng PHP để import một class, bạn có thể sử dụng directive `@use`:
 
 ```blade
 @use('App\Models\Flight')
 ```
 
-A second argument may be provided to the `@use` directive to alias the imported class:
+Bạn có thể truyền đối số thứ hai cho directive `@use` để đặt alias cho class được import:
 
 ```blade
 @use('App\Models\Flight', 'FlightModel')
 ```
 
-If you have multiple classes within the same namespace, you may group the imports of those classes:
+Nếu có nhiều class trong cùng namespace, bạn có thể nhóm các import của chúng:
 
 ```blade
 @use('App\Models\{Flight, Airport}')
 ```
 
-The `@use` directive also supports importing PHP functions and constants by prefixing the import path with the `function` or `const` modifiers:
+Directive `@use` cũng hỗ trợ import hàm và hằng PHP bằng cách thêm modifier `function` hoặc `const` trước đường dẫn import:
 
 ```blade
 @use(function App\Helpers\format_currency)
 @use(const App\Constants\MAX_ATTEMPTS)
 ```
 
-Just like class imports, aliases are supported for functions and constants as well:
+Tương tự import class, alias cũng được hỗ trợ cho hàm và hằng:
 
 ```blade
 @use(function App\Helpers\format_currency, 'formatMoney')
 @use(const App\Constants\MAX_ATTEMPTS, 'MAX_TRIES')
 ```
 
-Grouped imports are also supported with both function and const modifiers, allowing you to import multiple symbols from the same namespace in a single directive:
+Import theo nhóm cũng được hỗ trợ với cả modifier `function` và `const`, cho phép import nhiều symbol từ cùng namespace trong một directive:
 
 ```blade
 @use(function App\Helpers\{format_currency, format_date})
@@ -712,9 +712,9 @@ Grouped imports are also supported with both function and const modifiers, allow
 ```
 
 <a name="fonts"></a>
-### Fonts
+### Font
 
-When using [Laravel's Vite font optimization](/docs/{{version}}/vite#working-with-fonts), you may use the `@fonts` directive to render your configured font preload links and inline font CSS in your application's layout:
+Khi sử dụng [tính năng tối ưu font của Laravel với Vite](/docs/{{version}}/vite#working-with-fonts), bạn có thể dùng directive `@fonts` để render các liên kết preload font đã cấu hình và CSS font inline trong layout của ứng dụng:
 
 ```blade
 <!doctype html>
@@ -726,9 +726,9 @@ When using [Laravel's Vite font optimization](/docs/{{version}}/vite#working-wit
 </head>
 ```
 
-The `@fonts` directive renders all font families configured in your `vite.config.js` file. The directive should typically be placed in the `<head>` of your application's root layout before any content that uses those fonts.
+Directive `@fonts` render tất cả font family được cấu hình trong file `vite.config.js`. Thông thường, directive này nên được đặt trong `<head>` của root layout, trước mọi nội dung sử dụng các font đó.
 
-If a page only needs some of your configured fonts, you may pass one or more font aliases to the directive:
+Nếu một trang chỉ cần một số font đã cấu hình, bạn có thể truyền một hoặc nhiều alias của font vào directive:
 
 ```blade
 {{-- Load a single font alias... --}}
@@ -738,48 +738,48 @@ If a page only needs some of your configured fonts, you may pass one or more fon
 @fonts(['sans', 'mono'])
 ```
 
-Font aliases are configured using the `alias` option when defining fonts in your Vite configuration. The `@fonts` directive calls the `fonts` method provided by the `Vite` facade, which may also be invoked directly:
+Alias của font được cấu hình bằng tùy chọn `alias` khi định nghĩa font trong cấu hình Vite. Directive `@fonts` gọi phương thức `fonts` do facade `Vite` cung cấp; bạn cũng có thể gọi trực tiếp phương thức này:
 
 ```blade
 {{ Vite::fonts(['sans', 'mono']) }}
 ```
 
 <a name="comments"></a>
-### Comments
+### Comment
 
-Blade also allows you to define comments in your views. However, unlike HTML comments, Blade comments are not included in the HTML returned by your application:
+Blade cũng cho phép định nghĩa comment trong view. Tuy nhiên, khác với comment HTML, comment của Blade không xuất hiện trong HTML mà ứng dụng trả về:
 
 ```blade
 {{-- This comment will not be present in the rendered HTML --}}
 ```
 
 <a name="components"></a>
-## Components
+## Component
 
-Components and slots provide similar benefits to sections, layouts, and includes; however, some may find the mental model of components and slots easier to understand. There are two approaches to writing components: class-based components and anonymous components.
+Component và slot mang lại lợi ích tương tự section, layout và include; tuy nhiên, với nhiều người, mô hình tư duy của component và slot dễ hiểu hơn. Có hai cách xây dựng component: component dựa trên class và component ẩn danh.
 
-To create a class-based component, you may use the `make:component` Artisan command. To illustrate how to use components, we will create a simple `Alert` component. The `make:component` command will place the component in the `app/View/Components` directory:
+Để tạo component dựa trên class, bạn có thể sử dụng lệnh Artisan `make:component`. Để minh họa cách sử dụng component, chúng ta sẽ tạo một component `Alert` đơn giản. Lệnh `make:component` sẽ đặt component trong thư mục `app/View/Components`:
 
 ```shell
 php artisan make:component Alert
 ```
 
-The `make:component` command will also create a view template for the component. The view will be placed in the `resources/views/components` directory. When writing components for your own application, components are automatically discovered within the `app/View/Components` directory and `resources/views/components` directory, so no further component registration is typically required.
+Lệnh `make:component` cũng tạo view template cho component. View được đặt trong thư mục `resources/views/components`. Khi xây dựng component cho chính ứng dụng của bạn, Laravel tự động phát hiện component trong `app/View/Components` và `resources/views/components`, vì vậy thông thường không cần đăng ký thêm.
 
-You may also create components within subdirectories:
+Bạn cũng có thể tạo component trong các thư mục con:
 
 ```shell
 php artisan make:component Forms/Input
 ```
 
-The command above will create an `Input` component in the `app/View/Components/Forms` directory and the view will be placed in the `resources/views/components/forms` directory.
+Lệnh trên tạo component `Input` trong thư mục `app/View/Components/Forms` và đặt view tương ứng trong `resources/views/components/forms`.
 
 <a name="manually-registering-package-components"></a>
-#### Manually Registering Package Components
+#### Đăng ký component của package theo cách thủ công
 
-When writing components for your own application, components are automatically discovered within the `app/View/Components` directory and `resources/views/components` directory.
+Khi xây dựng component cho chính ứng dụng của bạn, Laravel tự động phát hiện component trong các thư mục `app/View/Components` và `resources/views/components`.
 
-However, if you are building a package that utilizes Blade components, you will need to manually register your component class and its HTML tag alias. You should typically register your components in the `boot` method of your package's service provider:
+Tuy nhiên, nếu đang xây dựng một package sử dụng Blade component, bạn cần đăng ký thủ công class của component và alias thẻ HTML tương ứng. Thông thường, bạn nên đăng ký các component trong phương thức `boot` của service provider thuộc package:
 
 ```php
 use Illuminate\Support\Facades\Blade;
@@ -793,13 +793,13 @@ public function boot(): void
 }
 ```
 
-Once your component has been registered, it may be rendered using its tag alias:
+Sau khi component được đăng ký, bạn có thể render nó bằng alias của thẻ:
 
 ```blade
 <x-package-alert/>
 ```
 
-Alternatively, you may use the `componentNamespace` method to autoload component classes by convention. For example, a `Nightshade` package might have `Calendar` and `ColorPicker` components that reside within the `Package\Views\Components` namespace:
+Ngoài ra, bạn có thể sử dụng phương thức `componentNamespace` để tự động tải các class component theo convention. Ví dụ, package `Nightshade` có thể có các component `Calendar` và `ColorPicker` nằm trong namespace `Package\Views\Components`:
 
 ```php
 use Illuminate\Support\Facades\Blade;
@@ -813,19 +813,19 @@ public function boot(): void
 }
 ```
 
-This will allow the usage of package components by their vendor namespace using the `package-name::` syntax:
+Điều này cho phép sử dụng component của package thông qua vendor namespace với cú pháp `package-name::`:
 
 ```blade
 <x-nightshade::calendar />
 <x-nightshade::color-picker />
 ```
 
-Blade will automatically detect the class that's linked to this component by pascal-casing the component name. Subdirectories are also supported using "dot" notation.
+Blade sẽ tự động xác định class liên kết với component bằng cách chuyển tên component sang PascalCase. Các thư mục con cũng được hỗ trợ thông qua ký hiệu dấu chấm.
 
 <a name="rendering-components"></a>
-### Rendering Components
+### Render component
 
-To display a component, you may use a Blade component tag within one of your Blade templates. Blade component tags start with the string `x-` followed by the kebab case name of the component class:
+Để hiển thị một component, bạn có thể sử dụng thẻ Blade component trong template Blade. Thẻ component của Blade bắt đầu bằng `x-`, theo sau là tên class component ở dạng kebab-case:
 
 ```blade
 <x-alert/>
@@ -833,13 +833,13 @@ To display a component, you may use a Blade component tag within one of your Bla
 <x-user-profile/>
 ```
 
-If the component class is nested deeper within the `app/View/Components` directory, you may use the `.` character to indicate directory nesting. For example, if we assume a component is located at `app/View/Components/Inputs/Button.php`, we may render it like so:
+Nếu class component nằm sâu hơn trong thư mục `app/View/Components`, bạn có thể dùng ký tự `.` để biểu thị cấu trúc thư mục lồng nhau. Ví dụ, nếu component nằm tại `app/View/Components/Inputs/Button.php`, bạn có thể render như sau:
 
 ```blade
 <x-inputs.button/>
 ```
 
-If you would like to conditionally render your component, you may define a `shouldRender` method on your component class. If the `shouldRender` method returns `false` the component will not be rendered:
+Nếu muốn render component theo điều kiện, bạn có thể định nghĩa phương thức `shouldRender` trên class component. Nếu `shouldRender` trả về `false`, component sẽ không được render:
 
 ```php
 use Illuminate\Support\Str;
@@ -854,9 +854,9 @@ public function shouldRender(): bool
 ```
 
 <a name="index-components"></a>
-### Index Components
+### Index component
 
-Sometimes components are part of a component group and you may wish to group the related components within a single directory. For example, imagine a "card" component with the following class structure:
+Đôi khi các component thuộc cùng một nhóm và bạn muốn gom những component liên quan vào một thư mục. Ví dụ, hãy hình dung component "card" có cấu trúc class như sau:
 
 ```text
 App\Views\Components\Card\Card
@@ -864,7 +864,7 @@ App\Views\Components\Card\Header
 App\Views\Components\Card\Body
 ```
 
-Since the root `Card` component is nested within a `Card` directory, you might expect that you would need to render the component via `<x-card.card>`. However, when a component's file name matches the name of the component's directory, Laravel automatically assumes that component is the "root" component and allows you to render the component without repeating the directory name:
+Vì component gốc `Card` nằm trong thư mục `Card`, bạn có thể nghĩ rằng phải render nó bằng `<x-card.card>`. Tuy nhiên, khi tên file component trùng với tên thư mục chứa component, Laravel tự động xem đó là component "gốc" và cho phép render mà không cần lặp lại tên thư mục:
 
 ```blade
 <x-card>
@@ -874,15 +874,15 @@ Since the root `Card` component is nested within a `Card` directory, you might e
 ```
 
 <a name="passing-data-to-components"></a>
-### Passing Data to Components
+### Truyền dữ liệu vào component
 
-You may pass data to Blade components using HTML attributes. Hard-coded, primitive values may be passed to the component using simple HTML attribute strings. PHP expressions and variables should be passed to the component via attributes that use the `:` character as a prefix:
+Bạn có thể truyền dữ liệu vào Blade component bằng HTML attribute. Các giá trị nguyên thủy được viết cố định có thể truyền bằng chuỗi HTML attribute thông thường. Biểu thức và biến PHP nên được truyền qua attribute có ký tự `:` ở đầu:
 
 ```blade
 <x-alert type="error" :message="$message"/>
 ```
 
-You should define all of the component's data attributes in its class constructor. All public properties on a component will automatically be made available to the component's view. It is not necessary to pass the data to the view from the component's `render` method:
+Bạn nên định nghĩa toàn bộ data attribute của component trong constructor của class. Mọi public property trên component sẽ tự động khả dụng trong view của component. Không cần truyền dữ liệu vào view từ phương thức `render` của component:
 
 ```php
 <?php
@@ -912,7 +912,7 @@ class Alert extends Component
 }
 ```
 
-When your component is rendered, you may display the contents of your component's public variables by echoing the variables by name:
+Khi component được render, bạn có thể hiển thị giá trị của các public variable bằng cách echo trực tiếp biến theo tên:
 
 ```blade
 <div class="alert alert-{{ $type }}">
@@ -921,9 +921,9 @@ When your component is rendered, you may display the contents of your component'
 ```
 
 <a name="casing"></a>
-#### Casing
+#### Quy tắc viết hoa/thường
 
-Component constructor arguments should be specified using `camelCase`, while `kebab-case` should be used when referencing the argument names in your HTML attributes. For example, given the following component constructor:
+Đối số constructor của component nên được khai báo bằng `camelCase`, trong khi `kebab-case` được dùng khi tham chiếu tên đối số trong HTML attribute. Ví dụ, với constructor component sau:
 
 ```php
 /**
@@ -934,16 +934,16 @@ public function __construct(
 ) {}
 ```
 
-The `$alertType` argument may be provided to the component like so:
+Đối số `$alertType` có thể được truyền vào component như sau:
 
 ```blade
 <x-alert alert-type="danger" />
 ```
 
 <a name="short-attribute-syntax"></a>
-#### Short Attribute Syntax
+#### Cú pháp attribute rút gọn
 
-When passing attributes to components, you may also use a "short attribute" syntax. This is often convenient since attribute names frequently match the variable names they correspond to:
+Khi truyền attribute vào component, bạn cũng có thể sử dụng cú pháp "attribute rút gọn". Cú pháp này thường tiện lợi vì tên attribute thường trùng với tên biến tương ứng:
 
 ```blade
 {{-- Short attribute syntax... --}}
@@ -954,9 +954,9 @@ When passing attributes to components, you may also use a "short attribute" synt
 ```
 
 <a name="escaping-attribute-rendering"></a>
-#### Escaping Attribute Rendering
+#### Escape khi render attribute
 
-Since some JavaScript frameworks such as Alpine.js also use colon-prefixed attributes, you may use a double colon (`::`) prefix to inform Blade that the attribute is not a PHP expression. For example, given the following component:
+Vì một số JavaScript framework như Alpine.js cũng sử dụng attribute có tiền tố dấu hai chấm, bạn có thể dùng tiền tố hai dấu hai chấm (`::`) để cho Blade biết rằng attribute đó không phải là một biểu thức PHP. Ví dụ, với component sau:
 
 ```blade
 <x-button ::class="{ danger: isDeleting }">
@@ -964,7 +964,7 @@ Since some JavaScript frameworks such as Alpine.js also use colon-prefixed attri
 </x-button>
 ```
 
-The following HTML will be rendered by Blade:
+Blade sẽ render HTML sau:
 
 ```blade
 <button :class="{ danger: isDeleting }">
@@ -973,9 +973,9 @@ The following HTML will be rendered by Blade:
 ```
 
 <a name="component-methods"></a>
-#### Component Methods
+#### Phương thức của component
 
-In addition to public variables being available to your component template, any public methods on the component may be invoked. For example, imagine a component that has an `isSelected` method:
+Ngoài các public variable có thể sử dụng trong template của component, mọi public method của component cũng có thể được gọi. Ví dụ, giả sử một component có phương thức `isSelected`:
 
 ```php
 /**
@@ -987,7 +987,7 @@ public function isSelected(string $option): bool
 }
 ```
 
-You may execute this method from your component template by invoking the variable matching the name of the method:
+Bạn có thể thực thi phương thức này từ template của component bằng cách gọi biến có tên tương ứng với tên phương thức:
 
 ```blade
 <option {{ $isSelected($value) ? 'selected' : '' }} value="{{ $value }}">
@@ -996,9 +996,9 @@ You may execute this method from your component template by invoking the variabl
 ```
 
 <a name="using-attributes-slots-within-component-class"></a>
-#### Accessing Attributes and Slots Within Component Classes
+#### Truy cập attribute và slot bên trong class component
 
-Blade components also allow you to access the component name, attributes, and slot inside the class's render method. However, in order to access this data, you should return a closure from your component's `render` method:
+Blade component cũng cho phép bạn truy cập tên component, các attribute và slot bên trong phương thức `render` của class. Tuy nhiên, để truy cập dữ liệu này, bạn nên trả về một closure từ phương thức `render` của component:
 
 ```php
 use Closure;
@@ -1014,7 +1014,7 @@ public function render(): Closure
 }
 ```
 
-The closure returned by your component's `render` method may also receive a `$data` array as its only argument. This array will contain several elements that provide information about the component:
+Closure được phương thức `render` của component trả về cũng có thể nhận mảng `$data` làm đối số duy nhất. Mảng này chứa một số phần tử cung cấp thông tin về component:
 
 ```php
 return function (array $data) {
@@ -1027,16 +1027,16 @@ return function (array $data) {
 ```
 
 > [!WARNING]
-> The elements in the `$data` array should never be directly embedded into the Blade string returned by your `render` method, as doing so could allow remote code execution via malicious attribute content.
+> Không bao giờ nên nhúng trực tiếp các phần tử trong mảng `$data` vào chuỗi Blade được phương thức `render` trả về, vì điều này có thể cho phép thực thi mã từ xa thông qua nội dung attribute độc hại.
 
-The `componentName` is equal to the name used in the HTML tag after the `x-` prefix. So `<x-alert />`'s `componentName` will be `alert`. The `attributes` element will contain all of the attributes that were present on the HTML tag. The `slot` element is an `Illuminate\Support\HtmlString` instance with the contents of the component's slot.
+`componentName` chính là tên được dùng trong HTML tag sau tiền tố `x-`. Vì vậy, `componentName` của `<x-alert />` sẽ là `alert`. Phần tử `attributes` chứa tất cả attribute có trên HTML tag. Phần tử `slot` là một instance của `Illuminate\Support\HtmlString` chứa nội dung slot của component.
 
-The closure should return a string. If the returned string corresponds to an existing view, that view will be rendered; otherwise, the returned string will be evaluated as an inline Blade view.
+Closure phải trả về một chuỗi. Nếu chuỗi trả về tương ứng với một view hiện có, view đó sẽ được render; nếu không, chuỗi trả về sẽ được đánh giá như một inline Blade view.
 
 <a name="additional-dependencies"></a>
-#### Additional Dependencies
+#### Dependency bổ sung
 
-If your component requires dependencies from Laravel's [service container](/docs/{{version}}/container), you may list them before any of the component's data attributes and they will automatically be injected by the container:
+Nếu component cần các dependency từ [service container](/docs/{{version}}/container) của Laravel, bạn có thể khai báo chúng trước các data attribute của component và container sẽ tự động inject chúng:
 
 ```php
 use App\Services\AlertCreator;
@@ -1052,9 +1052,9 @@ public function __construct(
 ```
 
 <a name="hiding-attributes-and-methods"></a>
-#### Hiding Attributes / Methods
+#### Ẩn attribute / phương thức
 
-If you would like to prevent some public methods or properties from being exposed as variables to your component template, you may add them to an `$except` array property on your component:
+Nếu muốn ngăn một số public method hoặc property được expose thành biến cho template của component, bạn có thể thêm chúng vào property mảng `$except` trên component:
 
 ```php
 <?php
@@ -1082,15 +1082,15 @@ class Alert extends Component
 ```
 
 <a name="component-attributes"></a>
-### Component Attributes
+### Attribute của component
 
-We've already examined how to pass data attributes to a component; however, sometimes you may need to specify additional HTML attributes, such as `class`, that are not part of the data required for a component to function. Typically, you want to pass these additional attributes down to the root element of the component template. For example, imagine we want to render an `alert` component like so:
+Chúng ta đã xem cách truyền data attribute vào component; tuy nhiên, đôi khi bạn cần chỉ định thêm các HTML attribute, chẳng hạn `class`, không thuộc phần dữ liệu cần thiết để component hoạt động. Thông thường, bạn sẽ muốn truyền các attribute bổ sung này xuống phần tử gốc của template component. Ví dụ, giả sử chúng ta muốn render component `alert` như sau:
 
 ```blade
 <x-alert type="error" :message="$message" class="mt-4"/>
 ```
 
-All of the attributes that are not part of the component's constructor will automatically be added to the component's "attribute bag". This attribute bag is automatically made available to the component via the `$attributes` variable. All of the attributes may be rendered within the component by echoing this variable:
+Tất cả attribute không thuộc constructor của component sẽ tự động được thêm vào "attribute bag" của component. Attribute bag này tự động có sẵn trong component thông qua biến `$attributes`. Bạn có thể render toàn bộ các attribute bằng cách echo biến này:
 
 ```blade
 <div {{ $attributes }}>
@@ -1099,12 +1099,12 @@ All of the attributes that are not part of the component's constructor will auto
 ```
 
 > [!WARNING]
-> Using directives such as `@env` within component tags is not supported at this time. For example, `<x-alert :live="@env('production')"/>` will not be compiled.
+> Hiện tại, Blade chưa hỗ trợ sử dụng các directive như `@env` bên trong thẻ component. Ví dụ, `<x-alert :live="@env('production')"/>` sẽ không được biên dịch.
 
 <a name="default-merged-attributes"></a>
-#### Default / Merged Attributes
+#### Attribute mặc định / được merge
 
-Sometimes you may need to specify default values for attributes or merge additional values into some of the component's attributes. To accomplish this, you may use the attribute bag's `merge` method. This method is particularly useful for defining a set of default CSS classes that should always be applied to a component:
+Đôi khi bạn cần chỉ định giá trị mặc định cho attribute hoặc merge thêm giá trị vào một số attribute của component. Để làm điều này, bạn có thể sử dụng phương thức `merge` của attribute bag. Phương thức này đặc biệt hữu ích khi định nghĩa một tập CSS class mặc định luôn được áp dụng cho component:
 
 ```blade
 <div {{ $attributes->merge(['class' => 'alert alert-'.$type]) }}>
@@ -1112,13 +1112,13 @@ Sometimes you may need to specify default values for attributes or merge additio
 </div>
 ```
 
-If we assume this component is utilized like so:
+Giả sử component này được sử dụng như sau:
 
 ```blade
 <x-alert type="error" :message="$message" class="mb-4"/>
 ```
 
-The final, rendered HTML of the component will appear like the following:
+HTML cuối cùng được render từ component sẽ như sau:
 
 ```blade
 <div class="alert alert-error mb-4">
@@ -1127,9 +1127,9 @@ The final, rendered HTML of the component will appear like the following:
 ```
 
 <a name="conditionally-merge-classes"></a>
-#### Conditionally Merge Classes
+#### Merge class theo điều kiện
 
-Sometimes you may wish to merge classes if a given condition is `true`. You can accomplish this via the `class` method, which accepts an array of classes where the array key contains the class or classes you wish to add, while the value is a boolean expression. If the array element has a numeric key, it will always be included in the rendered class list:
+Đôi khi bạn muốn merge class khi một điều kiện nhất định là `true`. Bạn có thể thực hiện bằng phương thức `class`, phương thức này nhận một mảng class, trong đó key chứa class hoặc các class cần thêm còn value là một biểu thức boolean. Nếu phần tử mảng có key dạng số, phần tử đó luôn được đưa vào danh sách class được render:
 
 ```blade
 <div {{ $attributes->class(['p-4', 'bg-red' => $hasError]) }}>
@@ -1137,7 +1137,7 @@ Sometimes you may wish to merge classes if a given condition is `true`. You can 
 </div>
 ```
 
-If you need to merge other attributes onto your component, you can chain the `merge` method onto the `class` method:
+Nếu cần merge các attribute khác vào component, bạn có thể chain phương thức `merge` sau phương thức `class`:
 
 ```blade
 <button {{ $attributes->class(['p-4'])->merge(['type' => 'button']) }}>
@@ -1146,12 +1146,12 @@ If you need to merge other attributes onto your component, you can chain the `me
 ```
 
 > [!NOTE]
-> If you need to conditionally compile classes on other HTML elements that shouldn't receive merged attributes, you can use the [@class directive](#conditional-classes).
+> Nếu cần biên dịch class theo điều kiện trên các phần tử HTML khác không nhận các attribute được merge, bạn có thể sử dụng [directive `@class`](#conditional-classes).
 
 <a name="non-class-attribute-merging"></a>
-#### Non-Class Attribute Merging
+#### Merge attribute không phải `class`
 
-When merging attributes that are not `class` attributes, the values provided to the `merge` method will be considered the "default" values of the attribute. However, unlike the `class` attribute, these attributes will not be merged with injected attribute values. Instead, they will be overwritten. For example, a `button` component's implementation may look like the following:
+Khi merge các attribute không phải `class`, các giá trị truyền vào phương thức `merge` sẽ được xem là giá trị "mặc định" của attribute. Tuy nhiên, khác với attribute `class`, các attribute này sẽ không được merge với giá trị attribute được truyền vào mà sẽ bị ghi đè. Ví dụ, component `button` có thể được triển khai như sau:
 
 ```blade
 <button {{ $attributes->merge(['type' => 'button']) }}>
@@ -1159,7 +1159,7 @@ When merging attributes that are not `class` attributes, the values provided to 
 </button>
 ```
 
-To render the button component with a custom `type`, it may be specified when consuming the component. If no type is specified, the `button` type will be used:
+Để render component button với `type` tùy chỉnh, bạn có thể chỉ định `type` khi sử dụng component. Nếu không chỉ định, `button` sẽ được dùng làm type mặc định:
 
 ```blade
 <x-button type="submit">
@@ -1167,7 +1167,7 @@ To render the button component with a custom `type`, it may be specified when co
 </x-button>
 ```
 
-The rendered HTML of the `button` component in this example would be:
+HTML được render của component `button` trong ví dụ này sẽ là:
 
 ```blade
 <button type="submit">
@@ -1175,7 +1175,7 @@ The rendered HTML of the `button` component in this example would be:
 </button>
 ```
 
-If you would like an attribute other than `class` to have its default value and injected values joined together, you may use the `prepends` method. In this example, the `data-controller` attribute will always begin with `profile-controller` and any additional injected `data-controller` values will be placed after this default value:
+Nếu muốn một attribute khác `class` kết hợp giá trị mặc định với các giá trị được truyền vào, bạn có thể sử dụng phương thức `prepends`. Trong ví dụ này, attribute `data-controller` luôn bắt đầu bằng `profile-controller`, và mọi giá trị `data-controller` bổ sung được truyền vào sẽ được đặt sau giá trị mặc định này:
 
 ```blade
 <div {{ $attributes->merge(['data-controller' => $attributes->prepends('profile-controller')]) }}>
@@ -1184,33 +1184,33 @@ If you would like an attribute other than `class` to have its default value and 
 ```
 
 <a name="filtering-attributes"></a>
-#### Retrieving and Filtering Attributes
+#### Lấy và lọc attribute
 
-You may filter attributes using the `filter` method. This method accepts a closure which should return `true` if you wish to retain the attribute in the attribute bag:
+Bạn có thể lọc attribute bằng phương thức `filter`. Phương thức này nhận một closure và closure phải trả về `true` nếu bạn muốn giữ attribute đó trong attribute bag:
 
 ```blade
 {{ $attributes->filter(fn (string $value, string $key) => $key == 'foo') }}
 ```
 
-For convenience, you may use the `whereStartsWith` method to retrieve all attributes whose keys begin with a given string:
+Để thuận tiện, bạn có thể dùng phương thức `whereStartsWith` để lấy tất cả attribute có key bắt đầu bằng một chuỗi cho trước:
 
 ```blade
 {{ $attributes->whereStartsWith('wire:model') }}
 ```
 
-Conversely, the `whereDoesntStartWith` method may be used to exclude all attributes whose keys begin with a given string:
+Ngược lại, phương thức `whereDoesntStartWith` có thể được dùng để loại bỏ tất cả attribute có key bắt đầu bằng một chuỗi cho trước:
 
 ```blade
 {{ $attributes->whereDoesntStartWith('wire:model') }}
 ```
 
-Using the `first` method, you may render the first attribute in a given attribute bag:
+Với phương thức `first`, bạn có thể render attribute đầu tiên trong một attribute bag:
 
 ```blade
 {{ $attributes->whereStartsWith('wire:model')->first() }}
 ```
 
-If you would like to check if an attribute is present on the component, you may use the `has` method. This method accepts the attribute name as its only argument and returns a boolean indicating whether or not the attribute is present:
+Nếu muốn kiểm tra một attribute có tồn tại trên component hay không, bạn có thể dùng phương thức `has`. Phương thức này nhận tên attribute làm đối số duy nhất và trả về boolean cho biết attribute có tồn tại hay không:
 
 ```blade
 @if ($attributes->has('class'))
@@ -1218,7 +1218,7 @@ If you would like to check if an attribute is present on the component, you may 
 @endif
 ```
 
-If an array is passed to the `has` method, the method will determine if all of the given attributes are present on the component:
+Nếu truyền một mảng vào phương thức `has`, phương thức sẽ xác định liệu tất cả attribute được chỉ định có tồn tại trên component hay không:
 
 ```blade
 @if ($attributes->has(['name', 'class']))
@@ -1226,7 +1226,7 @@ If an array is passed to the `has` method, the method will determine if all of t
 @endif
 ```
 
-The `hasAny` method may be used to determine if any of the given attributes are present on the component:
+Phương thức `hasAny` có thể được dùng để xác định liệu có bất kỳ attribute nào trong số các attribute được chỉ định tồn tại trên component hay không:
 
 ```blade
 @if ($attributes->hasAny(['href', ':href', 'v-bind:href']))
@@ -1234,28 +1234,28 @@ The `hasAny` method may be used to determine if any of the given attributes are 
 @endif
 ```
 
-You may retrieve a specific attribute's value using the `get` method:
+Bạn có thể lấy giá trị của một attribute cụ thể bằng phương thức `get`:
 
 ```blade
 {{ $attributes->get('class') }}
 ```
 
-The `only` method may be used to retrieve only the attributes with the given keys:
+Phương thức `only` có thể được dùng để chỉ lấy các attribute có key được chỉ định:
 
 ```blade
 {{ $attributes->only(['class']) }}
 ```
 
-The `except` method may be used to retrieve all attributes except those with the given keys:
+Phương thức `except` có thể được dùng để lấy tất cả attribute ngoại trừ các attribute có key được chỉ định:
 
 ```blade
 {{ $attributes->except(['class']) }}
 ```
 
 <a name="reserved-keywords"></a>
-### Reserved Keywords
+### Từ khóa dành riêng
 
-By default, some keywords are reserved for Blade's internal use in order to render components. The following keywords cannot be defined as public properties or method names within your components:
+Theo mặc định, một số từ khóa được dành riêng cho Blade sử dụng nội bộ khi render component. Các từ khóa sau không thể được định nghĩa làm public property hoặc tên phương thức trong component:
 
 <div class="content-list" markdown="1">
 
@@ -1271,9 +1271,9 @@ By default, some keywords are reserved for Blade's internal use in order to rend
 </div>
 
 <a name="slots"></a>
-### Slots
+### Slot
 
-You will often need to pass additional content to your component via "slots". Component slots are rendered by echoing the `$slot` variable. To explore this concept, let's imagine that an `alert` component has the following markup:
+Bạn thường cần truyền thêm nội dung vào component thông qua "slot". Slot của component được render bằng cách echo biến `$slot`. Để tìm hiểu khái niệm này, giả sử component `alert` có markup sau:
 
 ```blade
 <!-- /resources/views/components/alert.blade.php -->
@@ -1283,7 +1283,7 @@ You will often need to pass additional content to your component via "slots". Co
 </div>
 ```
 
-We may pass content to the `slot` by injecting content into the component:
+Chúng ta có thể truyền nội dung vào `slot` bằng cách đặt nội dung bên trong component:
 
 ```blade
 <x-alert>
@@ -1291,7 +1291,7 @@ We may pass content to the `slot` by injecting content into the component:
 </x-alert>
 ```
 
-Sometimes a component may need to render multiple different slots in different locations within the component. Let's modify our alert component to allow for the injection of a "title" slot:
+Đôi khi component cần render nhiều slot khác nhau tại các vị trí khác nhau. Hãy sửa component alert để cho phép truyền thêm slot "title":
 
 ```blade
 <!-- /resources/views/components/alert.blade.php -->
@@ -1303,7 +1303,7 @@ Sometimes a component may need to render multiple different slots in different l
 </div>
 ```
 
-You may define the content of the named slot using the `x-slot` tag. Any content not within an explicit `x-slot` tag will be passed to the component in the `$slot` variable:
+Bạn có thể định nghĩa nội dung của named slot bằng tag `x-slot`. Mọi nội dung không nằm trong một tag `x-slot` tường minh sẽ được truyền vào component qua biến `$slot`:
 
 ```xml
 <x-alert>
@@ -1315,7 +1315,7 @@ You may define the content of the named slot using the `x-slot` tag. Any content
 </x-alert>
 ```
 
-You may invoke a slot's `isEmpty` method to determine if the slot contains content:
+Bạn có thể gọi phương thức `isEmpty` của slot để xác định slot có chứa nội dung hay không:
 
 ```blade
 <span class="alert-title">{{ $title }}</span>
@@ -1329,7 +1329,7 @@ You may invoke a slot's `isEmpty` method to determine if the slot contains conte
 </div>
 ```
 
-Additionally, the `hasActualContent` method may be used to determine if the slot contains any "actual" content that is not an HTML comment:
+Ngoài ra, phương thức `hasActualContent` có thể được dùng để xác định slot có chứa nội dung "thực sự" nào không phải HTML comment hay không:
 
 ```blade
 @if ($slot->hasActualContent())
@@ -1338,9 +1338,9 @@ Additionally, the `hasActualContent` method may be used to determine if the slot
 ```
 
 <a name="scoped-slots"></a>
-#### Scoped Slots
+#### Scoped Slot
 
-If you have used a JavaScript framework such as Vue, you may be familiar with "scoped slots", which allow you to access data or methods from the component within your slot. You may achieve similar behavior in Laravel by defining public methods or properties on your component and accessing the component within your slot via the `$component` variable. In this example, we will assume that the `x-alert` component has a public `formatAlert` method defined on its component class:
+Nếu từng sử dụng JavaScript framework như Vue, bạn có thể quen với "scoped slot", cho phép truy cập dữ liệu hoặc phương thức của component ngay bên trong slot. Trong Laravel, bạn có thể đạt được hành vi tương tự bằng cách định nghĩa public method hoặc property trên component và truy cập component trong slot thông qua biến `$component`. Trong ví dụ này, giả sử component `x-alert` có public method `formatAlert` được định nghĩa trên class component:
 
 ```blade
 <x-alert>
@@ -1353,9 +1353,9 @@ If you have used a JavaScript framework such as Vue, you may be familiar with "s
 ```
 
 <a name="slot-attributes"></a>
-#### Slot Attributes
+#### Attribute của slot
 
-Like Blade components, you may assign additional [attributes](#component-attributes) to slots such as CSS class names:
+Tương tự Blade component, bạn có thể gán thêm [attribute](#component-attributes) cho slot, chẳng hạn tên CSS class:
 
 ```xml
 <x-card class="shadow-sm">
@@ -1371,7 +1371,7 @@ Like Blade components, you may assign additional [attributes](#component-attribu
 </x-card>
 ```
 
-To interact with slot attributes, you may access the `attributes` property of the slot's variable. For more information on how to interact with attributes, please consult the documentation on [component attributes](#component-attributes):
+Để thao tác với attribute của slot, bạn có thể truy cập property `attributes` của biến slot. Để biết thêm thông tin về cách làm việc với attribute, hãy xem tài liệu về [attribute của component](#component-attributes):
 
 ```blade
 @props([
@@ -1393,9 +1393,9 @@ To interact with slot attributes, you may access the `attributes` property of th
 ```
 
 <a name="inline-component-views"></a>
-### Inline Component Views
+### View component inline
 
-For very small components, it may feel cumbersome to manage both the component class and the component's view template. For this reason, you may return the component's markup directly from the `render` method:
+Với các component rất nhỏ, việc quản lý đồng thời class component và template view của component có thể khá rườm rà. Vì vậy, bạn có thể trả về trực tiếp markup của component từ phương thức `render`:
 
 ```php
 /**
@@ -1412,18 +1412,18 @@ public function render(): string
 ```
 
 <a name="generating-inline-view-components"></a>
-#### Generating Inline View Components
+#### Tạo component sử dụng view inline
 
-To create a component that renders an inline view, you may use the `inline` option when executing the `make:component` command:
+Để tạo component render một view inline, bạn có thể sử dụng tùy chọn `inline` khi chạy lệnh `make:component`:
 
 ```shell
 php artisan make:component Alert --inline
 ```
 
 <a name="dynamic-components"></a>
-### Dynamic Components
+### Component động
 
-Sometimes you may need to render a component but not know which component should be rendered until runtime. In this situation, you may use Laravel's built-in `dynamic-component` component to render the component based on a runtime value or variable:
+Đôi khi bạn cần render một component nhưng chỉ đến runtime mới biết component nào cần được render. Trong trường hợp này, bạn có thể sử dụng component `dynamic-component` tích hợp sẵn của Laravel để render component dựa trên một giá trị hoặc biến tại runtime:
 
 ```blade
 // $componentName = "secondary-button";
@@ -1432,14 +1432,14 @@ Sometimes you may need to render a component but not know which component should
 ```
 
 <a name="manually-registering-components"></a>
-### Manually Registering Components
+### Đăng ký component thủ công
 
 > [!WARNING]
-> The following documentation on manually registering components is primarily applicable to those who are writing Laravel packages that include view components. If you are not writing a package, this portion of the component documentation may not be relevant to you.
+> Phần tài liệu sau về đăng ký component thủ công chủ yếu dành cho những người đang viết package Laravel có chứa view component. Nếu bạn không viết package, phần này có thể không liên quan đến bạn.
 
-When writing components for your own application, components are automatically discovered within the `app/View/Components` directory and `resources/views/components` directory.
+Khi xây dựng component cho chính ứng dụng của bạn, Laravel tự động phát hiện component trong các thư mục `app/View/Components` và `resources/views/components`.
 
-However, if you are building a package that utilizes Blade components or placing components in non-conventional directories, you will need to manually register your component class and its HTML tag alias so that Laravel knows where to find the component. You should typically register your components in the `boot` method of your package's service provider:
+Tuy nhiên, nếu bạn đang xây dựng package sử dụng Blade component hoặc đặt component trong các thư mục không theo convention, bạn cần đăng ký thủ công class component và alias thẻ HTML của nó để Laravel biết nơi tìm component. Thông thường, bạn nên đăng ký component trong phương thức `boot` của service provider thuộc package:
 
 ```php
 use Illuminate\Support\Facades\Blade;
@@ -1454,15 +1454,15 @@ public function boot(): void
 }
 ```
 
-Once your component has been registered, it may be rendered using its tag alias:
+Sau khi component được đăng ký, bạn có thể render nó bằng alias của thẻ:
 
 ```blade
 <x-package-alert/>
 ```
 
-#### Autoloading Package Components
+#### Tự động tải component của package
 
-Alternatively, you may use the `componentNamespace` method to autoload component classes by convention. For example, a `Nightshade` package might have `Calendar` and `ColorPicker` components that reside within the `Package\Views\Components` namespace:
+Ngoài ra, bạn có thể sử dụng phương thức `componentNamespace` để tự động tải các class component theo convention. Ví dụ, package `Nightshade` có thể có các component `Calendar` và `ColorPicker` nằm trong namespace `Package\Views\Components`:
 
 ```php
 use Illuminate\Support\Facades\Blade;
@@ -1476,49 +1476,49 @@ public function boot(): void
 }
 ```
 
-This will allow the usage of package components by their vendor namespace using the `package-name::` syntax:
+Điều này cho phép sử dụng component của package thông qua vendor namespace với cú pháp `package-name::`:
 
 ```blade
 <x-nightshade::calendar />
 <x-nightshade::color-picker />
 ```
 
-Blade will automatically detect the class that's linked to this component by pascal-casing the component name. Subdirectories are also supported using "dot" notation.
+Blade sẽ tự động xác định class liên kết với component bằng cách chuyển tên component sang PascalCase. Các thư mục con cũng được hỗ trợ thông qua ký hiệu dấu chấm.
 
 <a name="anonymous-components"></a>
-## Anonymous Components
+## Component ẩn danh
 
-Similar to inline components, anonymous components provide a mechanism for managing a component via a single file. However, anonymous components utilize a single view file and have no associated class. To define an anonymous component, you only need to place a Blade template within your `resources/views/components` directory. For example, assuming you have defined a component at `resources/views/components/alert.blade.php`, you may simply render it like so:
+Tương tự component inline, component ẩn danh cung cấp cơ chế quản lý component chỉ bằng một file. Tuy nhiên, component ẩn danh sử dụng một file view duy nhất và không có class đi kèm. Để định nghĩa component ẩn danh, bạn chỉ cần đặt một Blade template trong thư mục `resources/views/components`. Ví dụ, giả sử bạn đã định nghĩa component tại `resources/views/components/alert.blade.php`, bạn có thể render nó như sau:
 
 ```blade
 <x-alert/>
 ```
 
-You may use the `.` character to indicate if a component is nested deeper inside the `components` directory. For example, assuming the component is defined at `resources/views/components/inputs/button.blade.php`, you may render it like so:
+Bạn có thể sử dụng ký tự `.` để biểu thị component nằm sâu hơn trong thư mục `components`. Ví dụ, nếu component được định nghĩa tại `resources/views/components/inputs/button.blade.php`, bạn có thể render như sau:
 
 ```blade
 <x-inputs.button/>
 ```
 
-To create an anonymous component via Artisan, you may use the `--view` flag when invoking the `make:component` command:
+Để tạo component ẩn danh bằng Artisan, bạn có thể sử dụng cờ `--view` khi gọi lệnh `make:component`:
 
 ```shell
 php artisan make:component forms.input --view
 ```
 
-The command above will create a Blade file at `resources/views/components/forms/input.blade.php` which can be rendered as a component via `<x-forms.input />`.
+Lệnh trên sẽ tạo file Blade tại `resources/views/components/forms/input.blade.php`, có thể được render dưới dạng component bằng `<x-forms.input />`.
 
 <a name="anonymous-index-components"></a>
-### Anonymous Index Components
+### Component index ẩn danh
 
-Sometimes, when a component is made up of many Blade templates, you may wish to group the given component's templates within a single directory. For example, imagine an "accordion" component with the following directory structure:
+Đôi khi, khi một component gồm nhiều Blade template, bạn có thể muốn nhóm các template của component đó trong cùng một thư mục. Ví dụ, hãy hình dung một component "accordion" có cấu trúc thư mục sau:
 
 ```text
 /resources/views/components/accordion.blade.php
 /resources/views/components/accordion/item.blade.php
 ```
 
-This directory structure allows you to render the accordion component and its item like so:
+Cấu trúc thư mục này cho phép bạn render component accordion và item của nó như sau:
 
 ```blade
 <x-accordion>
@@ -1528,9 +1528,9 @@ This directory structure allows you to render the accordion component and its it
 </x-accordion>
 ```
 
-However, in order to render the accordion component via `x-accordion`, we were forced to place the "index" accordion component template in the `resources/views/components` directory instead of nesting it within the `accordion` directory with the other accordion related templates.
+Tuy nhiên, để render component accordion bằng `x-accordion`, chúng ta buộc phải đặt template component "index" của accordion trong thư mục `resources/views/components` thay vì đặt nó bên trong thư mục `accordion` cùng các template liên quan khác.
 
-Thankfully, Blade allows you to place a file matching the component's directory name within the component's directory itself. When this template exists, it can be rendered as the "root" element of the component even though it is nested within a directory. So, we can continue to use the same Blade syntax given in the example above; however, we will adjust our directory structure like so:
+May mắn là Blade cho phép bạn đặt một file có tên trùng với thư mục component ngay bên trong chính thư mục đó. Khi template này tồn tại, nó có thể được render như phần tử "gốc" của component dù đang nằm trong một thư mục con. Vì vậy, chúng ta vẫn có thể sử dụng cú pháp Blade như ví dụ trên, nhưng điều chỉnh cấu trúc thư mục như sau:
 
 ```text
 /resources/views/components/accordion/accordion.blade.php
@@ -1538,11 +1538,11 @@ Thankfully, Blade allows you to place a file matching the component's directory 
 ```
 
 <a name="data-properties-attributes"></a>
-### Data Properties / Attributes
+### Property dữ liệu / Attribute
 
-Since anonymous components do not have any associated class, you may wonder how you may differentiate which data should be passed to the component as variables and which attributes should be placed in the component's [attribute bag](#component-attributes).
+Vì component ẩn danh không có class đi kèm, bạn có thể thắc mắc làm thế nào để phân biệt dữ liệu nào nên được truyền vào component dưới dạng biến và attribute nào nên được đặt trong [attribute bag](#component-attributes) của component.
 
-You may specify which attributes should be considered data variables using the `@props` directive at the top of your component's Blade template. All other attributes on the component will be available via the component's attribute bag. If you wish to give a data variable a default value, you may specify the variable's name as the array key and the default value as the array value:
+Bạn có thể chỉ định attribute nào được xem là biến dữ liệu bằng directive `@props` ở đầu Blade template của component. Mọi attribute khác trên component sẽ có sẵn thông qua attribute bag. Nếu muốn cung cấp giá trị mặc định cho một biến dữ liệu, hãy dùng tên biến làm key của mảng và giá trị mặc định làm value:
 
 ```blade
 <!-- /resources/views/components/alert.blade.php -->
@@ -1554,16 +1554,16 @@ You may specify which attributes should be considered data variables using the `
 </div>
 ```
 
-Given the component definition above, we may render the component like so:
+Với định nghĩa component ở trên, chúng ta có thể render component như sau:
 
 ```blade
 <x-alert type="error" :message="$message" class="mb-4"/>
 ```
 
 <a name="accessing-parent-data"></a>
-### Accessing Parent Data
+### Truy cập dữ liệu của component cha
 
-Sometimes you may want to access data from a parent component inside a child component. In these cases, you may use the `@aware` directive. For example, imagine we are building a complex menu component consisting of a parent `<x-menu>` and child `<x-menu.item>`:
+Đôi khi bạn muốn truy cập dữ liệu của component cha từ bên trong component con. Trong trường hợp này, bạn có thể sử dụng directive `@aware`. Ví dụ, hãy hình dung chúng ta đang xây dựng một menu phức tạp gồm component cha `<x-menu>` và component con `<x-menu.item>`:
 
 ```blade
 <x-menu color="purple">
@@ -1572,7 +1572,7 @@ Sometimes you may want to access data from a parent component inside a child com
 </x-menu>
 ```
 
-The `<x-menu>` component may have an implementation like the following:
+Component `<x-menu>` có thể được triển khai như sau:
 
 ```blade
 <!-- /resources/views/components/menu/index.blade.php -->
@@ -1584,7 +1584,7 @@ The `<x-menu>` component may have an implementation like the following:
 </ul>
 ```
 
-Because the `color` prop was only passed into the parent (`<x-menu>`), it won't be available inside `<x-menu.item>`. However, if we use the `@aware` directive, we can make it available inside `<x-menu.item>` as well:
+Vì prop `color` chỉ được truyền vào component cha (`<x-menu>`), nó sẽ không có sẵn bên trong `<x-menu.item>`. Tuy nhiên, nếu sử dụng directive `@aware`, chúng ta cũng có thể làm cho giá trị này khả dụng trong `<x-menu.item>`:
 
 ```blade
 <!-- /resources/views/components/menu/item.blade.php -->
@@ -1597,14 +1597,14 @@ Because the `color` prop was only passed into the parent (`<x-menu>`), it won't 
 ```
 
 > [!WARNING]
-> The `@aware` directive cannot access parent data that is not explicitly passed to the parent component via HTML attributes. Default `@props` values that are not explicitly passed to the parent component cannot be accessed by the `@aware` directive.
+> Directive `@aware` không thể truy cập dữ liệu của component cha nếu dữ liệu đó không được truyền rõ ràng vào component cha thông qua HTML attribute. Các giá trị mặc định của `@props` không được truyền rõ ràng vào component cha cũng không thể được `@aware` truy cập.
 
 <a name="anonymous-component-paths"></a>
-### Anonymous Component Paths
+### Đường dẫn component ẩn danh
 
-As previously discussed, anonymous components are typically defined by placing a Blade template within your `resources/views/components` directory. However, you may occasionally want to register other anonymous component paths with Laravel in addition to the default path.
+Như đã đề cập, component ẩn danh thường được định nghĩa bằng cách đặt Blade template trong thư mục `resources/views/components`. Tuy nhiên, đôi khi bạn có thể muốn đăng ký thêm các đường dẫn component ẩn danh khác với Laravel bên cạnh đường dẫn mặc định.
 
-The `anonymousComponentPath` method accepts the "path" to the anonymous component location as its first argument and an optional "namespace" that components should be placed under as its second argument. Typically, this method should be called from the `boot` method of one of your application's [service providers](/docs/{{version}}/providers):
+Phương thức `anonymousComponentPath` nhận "path" đến vị trí component ẩn danh làm đối số thứ nhất và một "namespace" tùy chọn cho các component làm đối số thứ hai. Thông thường, phương thức này nên được gọi từ `boot` của một [service provider](/docs/{{version}}/providers) trong ứng dụng:
 
 ```php
 /**
@@ -1616,36 +1616,36 @@ public function boot(): void
 }
 ```
 
-When component paths are registered without a specified prefix as in the example above, they may be rendered in your Blade components without a corresponding prefix as well. For example, if a `panel.blade.php` component exists in the path registered above, it may be rendered like so:
+Khi đường dẫn component được đăng ký mà không chỉ định prefix như ví dụ trên, các component cũng có thể được render trong Blade mà không cần prefix tương ứng. Ví dụ, nếu component `panel.blade.php` tồn tại trong đường dẫn đã đăng ký ở trên, bạn có thể render như sau:
 
 ```blade
 <x-panel />
 ```
 
-Prefix "namespaces" may be provided as the second argument to the `anonymousComponentPath` method:
+Bạn có thể cung cấp "namespace" dạng prefix làm đối số thứ hai cho phương thức `anonymousComponentPath`:
 
 ```php
 Blade::anonymousComponentPath(__DIR__.'/../components', 'dashboard');
 ```
 
-When a prefix is provided, components within that "namespace" may be rendered by prefixing the component's namespace to the component name when the component is rendered:
+Khi có prefix, các component trong "namespace" đó có thể được render bằng cách thêm namespace của component vào trước tên component:
 
 ```blade
 <x-dashboard::panel />
 ```
 
 <a name="building-layouts"></a>
-## Building Layouts
+## Xây dựng layout
 
 <a name="layouts-using-components"></a>
-### Layouts Using Components
+### Layout sử dụng component
 
-Most web applications maintain the same general layout across various pages. It would be incredibly cumbersome and hard to maintain our application if we had to repeat the entire layout HTML in every view we create. Thankfully, it's convenient to define this layout as a single [Blade component](#components) and then use it throughout our application.
+Hầu hết ứng dụng web duy trì cùng một bố cục tổng thể trên nhiều trang. Nếu phải lặp lại toàn bộ HTML của layout trong mọi view, ứng dụng sẽ rất cồng kềnh và khó bảo trì. May mắn là chúng ta có thể định nghĩa layout này dưới dạng một [Blade component](#components) duy nhất rồi sử dụng xuyên suốt ứng dụng.
 
 <a name="defining-the-layout-component"></a>
-#### Defining the Layout Component
+#### Định nghĩa layout component
 
-For example, imagine we are building a "todo" list application. We might define a `layout` component that looks like the following:
+Ví dụ, hãy hình dung chúng ta đang xây dựng ứng dụng danh sách "todo". Ta có thể định nghĩa component `layout` như sau:
 
 ```blade
 <!-- resources/views/components/layout.blade.php -->
@@ -1663,9 +1663,9 @@ For example, imagine we are building a "todo" list application. We might define 
 ```
 
 <a name="applying-the-layout-component"></a>
-#### Applying the Layout Component
+#### Áp dụng layout component
 
-Once the `layout` component has been defined, we may create a Blade view that utilizes the component. In this example, we will define a simple view that displays our task list:
+Sau khi component `layout` được định nghĩa, chúng ta có thể tạo Blade view sử dụng component này. Trong ví dụ sau, ta sẽ định nghĩa một view đơn giản để hiển thị danh sách task:
 
 ```blade
 <!-- resources/views/tasks.blade.php -->
@@ -1677,7 +1677,7 @@ Once the `layout` component has been defined, we may create a Blade view that ut
 </x-layout>
 ```
 
-Remember, content that is injected into a component will be supplied to the default `$slot` variable within our `layout` component. As you may have noticed, our `layout` also respects a `$title` slot if one is provided; otherwise, a default title is shown. We may inject a custom title from our task list view using the standard slot syntax discussed in the [component documentation](#components):
+Hãy nhớ rằng nội dung được đưa vào component sẽ được cung cấp cho biến `$slot` mặc định bên trong component `layout`. Như bạn có thể thấy, `layout` cũng sử dụng slot `$title` nếu được cung cấp; nếu không, tiêu đề mặc định sẽ được hiển thị. Chúng ta có thể truyền tiêu đề tùy chỉnh từ view danh sách task bằng cú pháp slot tiêu chuẩn đã trình bày trong [tài liệu component](#components):
 
 ```blade
 <!-- resources/views/tasks.blade.php -->
@@ -1693,7 +1693,7 @@ Remember, content that is injected into a component will be supplied to the defa
 </x-layout>
 ```
 
-Now that we have defined our layout and task list views, we just need to return the `task` view from a route:
+Sau khi đã định nghĩa layout và view danh sách task, chúng ta chỉ cần trả về view `task` từ một route:
 
 ```php
 use App\Models\Task;
@@ -1704,14 +1704,14 @@ Route::get('/tasks', function () {
 ```
 
 <a name="layouts-using-template-inheritance"></a>
-### Layouts Using Template Inheritance
+### Layout sử dụng kế thừa template
 
 <a name="defining-a-layout"></a>
-#### Defining a Layout
+#### Định nghĩa layout
 
-Layouts may also be created via "template inheritance". This was the primary way of building applications prior to the introduction of [components](#components).
+Layout cũng có thể được tạo bằng "kế thừa template". Đây từng là cách chính để xây dựng ứng dụng trước khi [component](#components) được giới thiệu.
 
-To get started, let's take a look at a simple example. First, we will examine a page layout. Since most web applications maintain the same general layout across various pages, it's convenient to define this layout as a single Blade view:
+Để bắt đầu, hãy xem một ví dụ đơn giản. Trước tiên, chúng ta sẽ xem xét layout của một trang. Vì hầu hết ứng dụng web duy trì cùng một bố cục tổng thể trên nhiều trang, việc định nghĩa layout này thành một Blade view duy nhất sẽ thuận tiện hơn:
 
 ```blade
 <!-- resources/views/layouts/app.blade.php -->
@@ -1732,14 +1732,14 @@ To get started, let's take a look at a simple example. First, we will examine a 
 </html>
 ```
 
-As you can see, this file contains typical HTML mark-up. However, take note of the `@section` and `@yield` directives. The `@section` directive, as the name implies, defines a section of content, while the `@yield` directive is used to display the contents of a given section.
+Như bạn thấy, file này chứa markup HTML thông thường. Tuy nhiên, hãy chú ý đến các directive `@section` và `@yield`. Đúng như tên gọi, `@section` định nghĩa một phần nội dung, còn `@yield` được dùng để hiển thị nội dung của một section cụ thể.
 
-Now that we have defined a layout for our application, let's define a child page that inherits the layout.
+Sau khi đã định nghĩa layout cho ứng dụng, hãy định nghĩa một trang con kế thừa layout đó.
 
 <a name="extending-a-layout"></a>
-#### Extending a Layout
+#### Kế thừa layout
 
-When defining a child view, use the `@extends` Blade directive to specify which layout the child view should "inherit". Views which extend a Blade layout may inject content into the layout's sections using `@section` directives. Remember, as seen in the example above, the contents of these sections will be displayed in the layout using `@yield`:
+Khi định nghĩa view con, hãy sử dụng directive Blade `@extends` để chỉ định layout mà view con sẽ "kế thừa". Các view kế thừa Blade layout có thể đưa nội dung vào các section của layout bằng directive `@section`. Như trong ví dụ trên, nội dung của các section này sẽ được hiển thị trong layout bằng `@yield`:
 
 ```blade
 <!-- resources/views/child.blade.php -->
@@ -1759,24 +1759,24 @@ When defining a child view, use the `@extends` Blade directive to specify which 
 @endsection
 ```
 
-In this example, the `sidebar` section is utilizing the `@@parent` directive to append (rather than overwriting) content to the layout's sidebar. The `@@parent` directive will be replaced by the content of the layout when the view is rendered.
+Trong ví dụ này, section `sidebar` sử dụng directive `@@parent` để nối thêm nội dung vào sidebar của layout thay vì ghi đè. Directive `@@parent` sẽ được thay thế bằng nội dung tương ứng của layout khi view được render.
 
 > [!NOTE]
-> Contrary to the previous example, this `sidebar` section ends with `@endsection` instead of `@show`. The `@endsection` directive will only define a section while `@show` will define and **immediately yield** the section.
+> Khác với ví dụ trước, section `sidebar` này kết thúc bằng `@endsection` thay vì `@show`. Directive `@endsection` chỉ định nghĩa section, trong khi `@show` vừa định nghĩa vừa **hiển thị ngay** section đó.
 
-The `@yield` directive also accepts a default value as its second parameter. This value will be rendered if the section being yielded is undefined:
+Directive `@yield` cũng nhận giá trị mặc định làm tham số thứ hai. Giá trị này sẽ được render nếu section cần hiển thị chưa được định nghĩa:
 
 ```blade
 @yield('content', 'Default content')
 ```
 
 <a name="forms"></a>
-## Forms
+## Biểu mẫu
 
 <a name="csrf-field"></a>
-### CSRF Field
+### Trường CSRF
 
-Anytime you define an HTML form in your application, you should include a hidden CSRF token field in the form so that [the CSRF protection](/docs/{{version}}/csrf) middleware can validate the request. You may use the `@csrf` Blade directive to generate the token field:
+Mỗi khi định nghĩa một HTML form trong ứng dụng, bạn nên thêm trường CSRF token ẩn để middleware [bảo vệ CSRF](/docs/{{version}}/csrf) có thể xác thực request. Bạn có thể dùng directive Blade `@csrf` để tạo trường token:
 
 ```blade
 <form method="POST" action="/profile">
@@ -1787,9 +1787,9 @@ Anytime you define an HTML form in your application, you should include a hidden
 ```
 
 <a name="method-field"></a>
-### Method Field
+### Trường phương thức
 
-Since HTML forms can't make `PUT`, `PATCH`, or `DELETE` requests, you will need to add a hidden `_method` field to spoof these HTTP verbs. The `@method` Blade directive can create this field for you:
+Vì HTML form không thể gửi trực tiếp request `PUT`, `PATCH` hoặc `DELETE`, bạn cần thêm trường `_method` ẩn để giả lập các HTTP verb này. Directive Blade `@method` có thể tạo trường đó cho bạn:
 
 ```blade
 <form action="/foo/bar" method="POST">
@@ -1800,9 +1800,9 @@ Since HTML forms can't make `PUT`, `PATCH`, or `DELETE` requests, you will need 
 ```
 
 <a name="validation-errors"></a>
-### Validation Errors
+### Lỗi validation
 
-The `@error` directive may be used to quickly check if [validation error messages](/docs/{{version}}/validation#quick-displaying-the-validation-errors) exist for a given attribute. Within an `@error` directive, you may echo the `$message` variable to display the error message:
+Directive `@error` có thể được dùng để nhanh chóng kiểm tra xem một attribute có [thông báo lỗi validation](/docs/{{version}}/validation#quick-displaying-the-validation-errors) hay không. Bên trong `@error`, bạn có thể xuất biến `$message` để hiển thị thông báo lỗi:
 
 ```blade
 <!-- /resources/views/post/create.blade.php -->
@@ -1820,7 +1820,7 @@ The `@error` directive may be used to quickly check if [validation error message
 @enderror
 ```
 
-Since the `@error` directive compiles to an "if" statement, you may use the `@else` directive to render content when there is not an error for an attribute:
+Vì directive `@error` được biên dịch thành câu lệnh "if", bạn có thể sử dụng `@else` để render nội dung khi attribute không có lỗi:
 
 ```blade
 <!-- /resources/views/auth.blade.php -->
@@ -1834,7 +1834,7 @@ Since the `@error` directive compiles to an "if" statement, you may use the `@el
 />
 ```
 
-You may pass [the name of a specific error bag](/docs/{{version}}/validation#named-error-bags) as the second parameter to the `@error` directive to retrieve validation error messages on pages containing multiple forms:
+Bạn có thể truyền [tên của một error bag cụ thể](/docs/{{version}}/validation#named-error-bags) làm tham số thứ hai cho directive `@error` để lấy thông báo lỗi validation trên các trang chứa nhiều form:
 
 ```blade
 <!-- /resources/views/auth.blade.php -->
@@ -1853,9 +1853,9 @@ You may pass [the name of a specific error bag](/docs/{{version}}/validation#nam
 ```
 
 <a name="stacks"></a>
-## Stacks
+## Stack
 
-Blade allows you to push to named stacks which can be rendered somewhere else in another view or layout. This can be particularly useful for specifying any JavaScript libraries required by your child views:
+Blade cho phép bạn đẩy nội dung vào các stack có tên, sau đó render chúng ở vị trí khác trong một view hoặc layout. Điều này đặc biệt hữu ích khi chỉ định các thư viện JavaScript mà view con cần:
 
 ```blade
 @push('scripts')
@@ -1863,7 +1863,7 @@ Blade allows you to push to named stacks which can be rendered somewhere else in
 @endpush
 ```
 
-If you would like to `@push` content if a given boolean expression evaluates to `true`, you may use the `@pushIf` directive:
+Nếu muốn `@push` nội dung khi một biểu thức boolean được đánh giá là `true`, bạn có thể sử dụng directive `@pushIf`:
 
 ```blade
 @pushIf($shouldPush, 'scripts')
@@ -1871,7 +1871,7 @@ If you would like to `@push` content if a given boolean expression evaluates to 
 @endPushIf
 ```
 
-You may push to a stack as many times as needed. To render the complete stack contents, pass the name of the stack to the `@stack` directive:
+Bạn có thể push vào một stack bao nhiêu lần tùy ý. Để render toàn bộ nội dung stack, hãy truyền tên stack cho directive `@stack`:
 
 ```blade
 <head>
@@ -1881,7 +1881,7 @@ You may push to a stack as many times as needed. To render the complete stack co
 </head>
 ```
 
-If you would like to prepend content onto the beginning of a stack, you should use the `@prepend` directive:
+Nếu muốn chèn nội dung vào đầu stack, hãy sử dụng directive `@prepend`:
 
 ```blade
 @push('scripts')
@@ -1895,7 +1895,7 @@ If you would like to prepend content onto the beginning of a stack, you should u
 @endprepend
 ```
 
-The `@hasstack` directive may be used to determine if a stack is empty:
+Directive `@hasstack` có thể được dùng để xác định một stack có rỗng hay không:
 
 ```blade
 @hasstack('list')
@@ -1906,9 +1906,9 @@ The `@hasstack` directive may be used to determine if a stack is empty:
 ```
 
 <a name="service-injection"></a>
-## Service Injection
+## Inject service
 
-The `@inject` directive may be used to retrieve a service from the Laravel [service container](/docs/{{version}}/container). The first argument passed to `@inject` is the name of the variable the service will be placed into, while the second argument is the class or interface name of the service you wish to resolve:
+Directive `@inject` có thể được dùng để lấy một service từ [service container](/docs/{{version}}/container) của Laravel. Đối số thứ nhất truyền vào `@inject` là tên biến sẽ chứa service, còn đối số thứ hai là tên class hoặc interface của service bạn muốn resolve:
 
 ```blade
 @inject('metrics', 'App\Services\MetricsService')
@@ -1919,9 +1919,9 @@ The `@inject` directive may be used to retrieve a service from the Laravel [serv
 ```
 
 <a name="rendering-inline-blade-templates"></a>
-## Rendering Inline Blade Templates
+## Render Blade template inline
 
-Sometimes you may need to transform a raw Blade template string into valid HTML. You may accomplish this using the `render` method provided by the `Blade` facade. The `render` method accepts the Blade template string and an optional array of data to provide to the template:
+Đôi khi bạn cần chuyển một chuỗi Blade template thô thành HTML hợp lệ. Bạn có thể thực hiện việc này bằng phương thức `render` của facade `Blade`. Phương thức `render` nhận chuỗi Blade template và một mảng dữ liệu tùy chọn để cung cấp cho template:
 
 ```php
 use Illuminate\Support\Facades\Blade;
@@ -1929,7 +1929,7 @@ use Illuminate\Support\Facades\Blade;
 return Blade::render('Hello, {{ $name }}', ['name' => 'Julian Bashir']);
 ```
 
-Laravel renders inline Blade templates by writing them to the `storage/framework/views` directory. If you would like Laravel to remove these temporary files after rendering the Blade template, you may provide the `deleteCachedView` argument to the method:
+Laravel render Blade template inline bằng cách ghi chúng vào thư mục `storage/framework/views`. Nếu muốn Laravel xóa các file tạm này sau khi render Blade template, bạn có thể truyền đối số `deleteCachedView` cho phương thức:
 
 ```php
 return Blade::render(
@@ -1940,9 +1940,9 @@ return Blade::render(
 ```
 
 <a name="rendering-blade-fragments"></a>
-## Rendering Blade Fragments
+## Render Blade fragment
 
-When using frontend frameworks such as [Turbo](https://turbo.hotwired.dev/) and [htmx](https://htmx.org/), you may occasionally need to only return a portion of a Blade template within your HTTP response. Blade "fragments" allow you to do just that. To get started, place a portion of your Blade template within `@fragment` and `@endfragment` directives:
+Khi sử dụng frontend framework như [Turbo](https://turbo.hotwired.dev/) và [htmx](https://htmx.org/), đôi khi bạn chỉ cần trả về một phần của Blade template trong HTTP response. Blade "fragment" cho phép bạn làm điều đó. Để bắt đầu, hãy đặt một phần Blade template giữa các directive `@fragment` và `@endfragment`:
 
 ```blade
 @fragment('user-list')
@@ -1954,20 +1954,20 @@ When using frontend frameworks such as [Turbo](https://turbo.hotwired.dev/) and 
 @endfragment
 ```
 
-Then, when rendering the view that utilizes this template, you may invoke the `fragment` method to specify that only the specified fragment should be included in the outgoing HTTP response:
+Sau đó, khi render view sử dụng template này, bạn có thể gọi phương thức `fragment` để chỉ định rằng HTTP response trả về chỉ chứa fragment đã chọn:
 
 ```php
 return view('dashboard', ['users' => $users])->fragment('user-list');
 ```
 
-The `fragmentIf` method allows you to conditionally return a fragment of a view based on a given condition. Otherwise, the entire view will be returned:
+Phương thức `fragmentIf` cho phép trả về có điều kiện một fragment của view dựa trên điều kiện cho trước. Nếu điều kiện không thỏa mãn, toàn bộ view sẽ được trả về:
 
 ```php
 return view('dashboard', ['users' => $users])
     ->fragmentIf($request->hasHeader('HX-Request'), 'user-list');
 ```
 
-The `fragments` and `fragmentsIf` methods allow you to return multiple view fragments in the response. The fragments will be concatenated together:
+Các phương thức `fragments` và `fragmentsIf` cho phép trả về nhiều fragment của view trong response. Các fragment sẽ được nối lại với nhau:
 
 ```php
 view('dashboard', ['users' => $users])
@@ -1981,11 +1981,11 @@ view('dashboard', ['users' => $users])
 ```
 
 <a name="extending-blade"></a>
-## Extending Blade
+## Mở rộng Blade
 
-Blade allows you to define your own custom directives using the `directive` method. When the Blade compiler encounters the custom directive, it will call the provided callback with the expression that the directive contains.
+Blade cho phép bạn định nghĩa directive tùy chỉnh bằng phương thức `directive`. Khi Blade compiler gặp directive tùy chỉnh, nó sẽ gọi callback được cung cấp với biểu thức nằm trong directive đó.
 
-The following example creates a `@datetime($var)` directive which formats a given `$var`, which should be an instance of `DateTime`:
+Ví dụ sau tạo directive `@datetime($var)` để định dạng `$var`, trong đó `$var` phải là một instance của `DateTime`:
 
 ```php
 <?php
@@ -2017,21 +2017,21 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-As you can see, we will chain the `format` method onto whatever expression is passed into the directive. So, in this example, the final PHP generated by this directive will be:
+Như bạn thấy, phương thức `format` sẽ được chain vào biểu thức được truyền cho directive. Vì vậy, trong ví dụ này, PHP cuối cùng được directive sinh ra sẽ là:
 
 ```php
 <?php echo ($var)->format('m/d/Y H:i'); ?>
 ```
 
 > [!WARNING]
-> After updating the logic of a Blade directive, you will need to delete all of the cached Blade views. The cached Blade views may be removed using the `view:clear` Artisan command.
+> Sau khi cập nhật logic của một Blade directive, bạn cần xóa toàn bộ Blade view đã cache. Bạn có thể xóa chúng bằng lệnh Artisan `view:clear`.
 
 <a name="custom-echo-handlers"></a>
-### Custom Echo Handlers
+### Trình xử lý echo tùy chỉnh
 
-If you attempt to "echo" an object using Blade, the object's `__toString` method will be invoked. The [__toString](https://www.php.net/manual/en/language.oop5.magic.php#object.tostring) method is one of PHP's built-in "magic methods". However, sometimes you may not have control over the `__toString` method of a given class, such as when the class that you are interacting with belongs to a third-party library.
+Nếu bạn "echo" một object bằng Blade, phương thức `__toString` của object sẽ được gọi. [__toString](https://www.php.net/manual/en/language.oop5.magic.php#object.tostring) là một trong các "magic method" tích hợp sẵn của PHP. Tuy nhiên, đôi khi bạn không kiểm soát được `__toString` của một class, chẳng hạn khi class đó thuộc thư viện bên thứ ba.
 
-In these cases, Blade allows you to register a custom echo handler for that particular type of object. To accomplish this, you should invoke Blade's `stringable` method. The `stringable` method accepts a closure. This closure should type-hint the type of object that it is responsible for rendering. Typically, the `stringable` method should be invoked within the `boot` method of your application's `AppServiceProvider` class:
+Trong các trường hợp này, Blade cho phép đăng ký trình xử lý echo tùy chỉnh cho loại object cụ thể. Để thực hiện, hãy gọi phương thức `stringable` của Blade. Phương thức này nhận một closure; closure cần type-hint loại object mà nó chịu trách nhiệm render. Thông thường, `stringable` nên được gọi trong phương thức `boot` của class `AppServiceProvider`:
 
 ```php
 use Illuminate\Support\Facades\Blade;
@@ -2048,16 +2048,16 @@ public function boot(): void
 }
 ```
 
-Once your custom echo handler has been defined, you may simply echo the object in your Blade template:
+Sau khi trình xử lý echo tùy chỉnh được định nghĩa, bạn có thể trực tiếp echo object trong Blade template:
 
 ```blade
 Cost: {{ $money }}
 ```
 
 <a name="custom-if-statements"></a>
-### Custom If Statements
+### Câu lệnh if tùy chỉnh
 
-Programming a custom directive is sometimes more complex than necessary when defining simple, custom conditional statements. For that reason, Blade provides a `Blade::if` method which allows you to quickly define custom conditional directives using closures. For example, let's define a custom conditional that checks the configured default "disk" for the application. We may do this in the `boot` method of our `AppServiceProvider`:
+Việc lập trình một directive tùy chỉnh đôi khi phức tạp hơn mức cần thiết nếu bạn chỉ muốn định nghĩa một điều kiện tùy chỉnh đơn giản. Vì vậy, Blade cung cấp phương thức `Blade::if`, cho phép nhanh chóng định nghĩa directive điều kiện tùy chỉnh bằng closure. Ví dụ, hãy định nghĩa một điều kiện kiểm tra "disk" mặc định đã cấu hình cho ứng dụng. Ta có thể thực hiện trong phương thức `boot` của `AppServiceProvider`:
 
 ```php
 use Illuminate\Support\Facades\Blade;
@@ -2073,7 +2073,7 @@ public function boot(): void
 }
 ```
 
-Once the custom conditional has been defined, you can use it within your templates:
+Sau khi điều kiện tùy chỉnh được định nghĩa, bạn có thể sử dụng nó trong các template:
 
 ```blade
 @disk('local')
@@ -2088,6 +2088,8 @@ Once the custom conditional has been defined, you can use it within your templat
     <!-- The application is not using the local disk... -->
 @enddisk
 ```
+
+---
 
 ## Tài liệu chính thức
 

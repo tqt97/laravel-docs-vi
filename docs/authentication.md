@@ -1,14 +1,14 @@
-# Authentication
+# Xác thực
 
-- [Introduction](#introduction)
-    - [Starter Kits](#starter-kits)
-    - [Database Considerations](#introduction-database-considerations)
-    - [Ecosystem Overview](#ecosystem-overview)
-- [Authentication Quickstart](#authentication-quickstart)
-    - [Install a Starter Kit](#install-a-starter-kit)
-    - [Retrieving the Authenticated User](#retrieving-the-authenticated-user)
-    - [Protecting Routes](#protecting-routes)
-    - [Login Throttling](#login-throttling)
+- [Giới thiệu](#introduction)
+    - [Starter Kit](#starter-kits)
+    - [Các lưu ý về cơ sở dữ liệu](#introduction-database-considerations)
+    - [Tổng quan hệ sinh thái](#ecosystem-overview)
+- [Bắt đầu nhanh với xác thực](#authentication-quickstart)
+    - [Cài đặt Starter Kit](#install-a-starter-kit)
+    - [Lấy người dùng đã xác thực](#retrieving-the-authenticated-user)
+    - [Bảo vệ route](#protecting-routes)
+    - [Giới hạn tần suất đăng nhập](#login-throttling)
 - [Manually Authenticating Users](#authenticating-users)
     - [Remembering Users](#remembering-users)
     - [Other Authentication Methods](#other-authentication-methods)
@@ -30,98 +30,98 @@
 - [Events](#events)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Many web applications provide a way for their users to authenticate with the application and "login". Implementing this feature in web applications can be a complex and potentially risky endeavor. For this reason, Laravel strives to give you the tools you need to implement authentication quickly, securely, and easily.
+Nhiều ứng dụng web cung cấp cách để người dùng xác thực với ứng dụng và "đăng nhập". Việc triển khai tính năng này trong ứng dụng web có thể phức tạp và tiềm ẩn rủi ro. Vì vậy, Laravel cố gắng cung cấp các công cụ cần thiết để bạn triển khai xác thực nhanh chóng, an toàn và dễ dàng.
 
-At its core, Laravel's authentication facilities are made up of "guards" and "providers". Guards define how users are authenticated for each request. For example, Laravel ships with a `session` guard which maintains state using session storage and cookies.
+Về cốt lõi, cơ chế xác thực của Laravel được cấu thành từ "guard" và "provider". Guard xác định cách người dùng được xác thực cho mỗi request. Ví dụ, Laravel đi kèm guard `session`, guard này duy trì trạng thái bằng session storage và cookie.
 
-Providers define how users are retrieved from your persistent storage. Laravel ships with support for retrieving users using [Eloquent](/docs/{{version}}/eloquent) and the database query builder. However, you are free to define additional providers as needed for your application.
+Provider xác định cách lấy người dùng từ nơi lưu trữ bền vững của ứng dụng. Laravel hỗ trợ sẵn việc lấy người dùng bằng [Eloquent](/docs/{{version}}/eloquent) và database query builder. Tuy nhiên, bạn có thể tự định nghĩa thêm provider theo nhu cầu của ứng dụng.
 
-Your application's authentication configuration file is located at `config/auth.php`. This file contains several well-documented options for tweaking the behavior of Laravel's authentication services.
+File cấu hình xác thực của ứng dụng nằm tại `config/auth.php`. File này chứa nhiều tùy chọn được tài liệu hóa đầy đủ để điều chỉnh hành vi của các dịch vụ xác thực Laravel.
 
 > [!NOTE]
-> Guards and providers should not be confused with "roles" and "permissions". To learn more about authorizing user actions via permissions, please refer to the [authorization](/docs/{{version}}/authorization) documentation.
+> Không nên nhầm guard và provider với "role" và "permission". Để tìm hiểu thêm về việc phân quyền hành động của người dùng thông qua permission, hãy tham khảo tài liệu [phân quyền](/docs/{{version}}/authorization).
 
 <a name="starter-kits"></a>
-### Starter Kits
+### Starter Kit
 
-Want to get started fast? Install a [Laravel application starter kit](/docs/{{version}}/starter-kits) in a fresh Laravel application. After migrating your database, navigate your browser to `/register` or any other URL that is assigned to your application. The starter kits will take care of scaffolding your entire authentication system!
+Muốn bắt đầu nhanh? Hãy cài đặt một [Laravel application starter kit](/docs/{{version}}/starter-kits) trong ứng dụng Laravel mới. Sau khi migrate cơ sở dữ liệu, truy cập `/register` hoặc URL khác được gán cho ứng dụng. Starter kit sẽ đảm nhiệm việc scaffold toàn bộ hệ thống xác thực cho bạn!
 
-**Even if you choose not to use a starter kit in your final Laravel application, installing a [starter kit](/docs/{{version}}/starter-kits) can be a wonderful opportunity to learn how to implement all of Laravel's authentication functionality in an actual Laravel project.** Since the Laravel starter kits contain authentication controllers, routes, and views for you, you can examine the code within these files to learn how Laravel's authentication features may be implemented.
+**Ngay cả khi bạn quyết định không dùng starter kit trong ứng dụng Laravel cuối cùng, việc cài đặt một [starter kit](/docs/{{version}}/starter-kits) vẫn là cơ hội rất tốt để học cách triển khai toàn bộ chức năng xác thực của Laravel trong một dự án Laravel thực tế.** Vì các Laravel starter kit đã cung cấp controller, route và view phục vụ xác thực, bạn có thể xem mã nguồn trong các file này để tìm hiểu cách triển khai các tính năng xác thực của Laravel.
 
 <a name="introduction-database-considerations"></a>
-### Database Considerations
+### Các lưu ý về cơ sở dữ liệu
 
-By default, Laravel includes an `App\Models\User` [Eloquent model](/docs/{{version}}/eloquent) in your `app/Models` directory. This model may be used with the default Eloquent authentication driver.
+Theo mặc định, Laravel cung cấp [Eloquent model](/docs/{{version}}/eloquent) `App\Models\User` trong thư mục `app/Models`. Model này có thể được sử dụng với Eloquent authentication driver mặc định.
 
-If your application is not using Eloquent, you may use the `database` authentication provider which uses the Laravel query builder. If your application is using MongoDB, check out MongoDB's official [Laravel user authentication documentation](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/user-authentication/).
+Nếu ứng dụng không sử dụng Eloquent, bạn có thể dùng authentication provider `database`, vốn sử dụng Laravel query builder. Nếu ứng dụng sử dụng MongoDB, hãy xem [tài liệu xác thực người dùng Laravel](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/user-authentication/) chính thức của MongoDB.
 
-When building the database schema for the `App\Models\User` model, make sure the password column is at least 60 characters in length. Of course, the `users` table migration that is included in new Laravel applications already creates a column that exceeds this length.
+Khi xây dựng schema cơ sở dữ liệu cho model `App\Models\User`, hãy đảm bảo cột password có độ dài ít nhất 60 ký tự. Migration bảng `users` đi kèm ứng dụng Laravel mới đã tạo sẵn một cột có độ dài vượt yêu cầu này.
 
-Also, you should verify that your `users` (or equivalent) table contains a nullable, string `remember_token` column of 100 characters. This column will be used to store a token for users that select the "remember me" option when logging into your application. Again, the default `users` table migration that is included in new Laravel applications already contains this column.
+Bạn cũng nên xác minh bảng `users` (hoặc bảng tương đương) có cột chuỗi `remember_token`, cho phép null và dài 100 ký tự. Cột này được dùng để lưu token cho người dùng chọn tùy chọn "remember me" khi đăng nhập vào ứng dụng. Migration bảng `users` mặc định đi kèm ứng dụng Laravel mới đã có sẵn cột này.
 
 <a name="ecosystem-overview"></a>
-### Ecosystem Overview
+### Tổng quan hệ sinh thái
 
-Laravel offers several packages related to authentication. Before continuing, we'll review the general authentication ecosystem in Laravel and discuss each package's intended purpose.
+Laravel cung cấp một số package liên quan đến xác thực. Trước khi tiếp tục, chúng ta sẽ xem tổng quan hệ sinh thái xác thực của Laravel và mục đích sử dụng của từng package.
 
-First, consider how authentication works. When using a web browser, a user will provide their username and password via a login form. If these credentials are correct, the application will store information about the authenticated user in the user's [session](/docs/{{version}}/session). A cookie issued to the browser contains the session ID so that subsequent requests to the application can associate the user with the correct session. After the session cookie is received, the application will retrieve the session data based on the session ID, note that the authentication information has been stored in the session, and will consider the user as "authenticated".
+Trước tiên, hãy xem cách xác thực hoạt động. Khi sử dụng trình duyệt web, người dùng cung cấp tên đăng nhập và mật khẩu qua form đăng nhập. Nếu thông tin xác thực chính xác, ứng dụng sẽ lưu thông tin về người dùng đã xác thực trong [session](/docs/{{version}}/session) của họ. Cookie được gửi tới trình duyệt chứa session ID để các request tiếp theo tới ứng dụng có thể được liên kết với đúng session. Khi nhận được session cookie, ứng dụng lấy dữ liệu session dựa trên session ID, nhận biết thông tin xác thực đã được lưu trong session và xem người dùng là "đã xác thực".
 
-When a remote service needs to authenticate to access an API, cookies are not typically used for authentication because there is no web browser. Instead, the remote service sends an API token to the API on each request. The application may validate the incoming token against a table of valid API tokens and "authenticate" the request as being performed by the user associated with that API token.
+Khi một dịch vụ từ xa cần xác thực để truy cập API, cookie thường không được dùng vì không có trình duyệt web. Thay vào đó, dịch vụ từ xa gửi API token tới API trong mỗi request. Ứng dụng có thể đối chiếu token nhận được với bảng API token hợp lệ và "xác thực" request là do người dùng gắn với API token đó thực hiện.
 
 <a name="laravels-built-in-browser-authentication-services"></a>
-#### Laravel's Built-in Browser Authentication Services
+#### Các dịch vụ xác thực trình duyệt tích hợp sẵn của Laravel
 
-Laravel includes built-in authentication and session services which are typically accessed via the `Auth` and `Session` facades. These features provide cookie-based authentication for requests that are initiated from web browsers. They provide methods that allow you to verify a user's credentials and authenticate the user. In addition, these services will automatically store the proper authentication data in the user's session and issue the user's session cookie. A discussion of how to use these services is contained within this documentation.
+Laravel cung cấp sẵn các dịch vụ xác thực và session, thường được truy cập thông qua facade `Auth` và `Session`. Các tính năng này cung cấp xác thực dựa trên cookie cho những request khởi tạo từ trình duyệt web. Chúng cung cấp các phương thức để kiểm tra thông tin đăng nhập và xác thực người dùng. Ngoài ra, các dịch vụ này tự động lưu dữ liệu xác thực thích hợp vào session của người dùng và phát hành session cookie. Cách sử dụng các dịch vụ này được trình bày trong tài liệu này.
 
-**Application Starter Kits**
+**Application Starter Kit**
 
-As discussed in this documentation, you can interact with these authentication services manually to build your application's own authentication layer. However, to help you get started more quickly, we have released [free starter kits](/docs/{{version}}/starter-kits) that provide robust, modern scaffolding of the entire authentication layer.
+Như đã trình bày trong tài liệu này, bạn có thể tương tác thủ công với các dịch vụ xác thực để xây dựng lớp xác thực riêng cho ứng dụng. Tuy nhiên, để giúp bạn bắt đầu nhanh hơn, chúng tôi cung cấp các [starter kit miễn phí](/docs/{{version}}/starter-kits) với scaffold hiện đại và đầy đủ cho toàn bộ lớp xác thực.
 
 <a name="laravels-api-authentication-services"></a>
-#### Laravel's API Authentication Services
+#### Các dịch vụ xác thực API của Laravel
 
-Laravel provides two optional packages to assist you in managing API tokens and authenticating requests made with API tokens: [Passport](/docs/{{version}}/passport) and [Sanctum](/docs/{{version}}/sanctum). Please note that these libraries and Laravel's built-in cookie based authentication libraries are not mutually exclusive. These libraries primarily focus on API token authentication while the built-in authentication services focus on cookie based browser authentication. Many applications will use both Laravel's built-in cookie based authentication services and one of Laravel's API authentication packages.
+Laravel cung cấp hai package tùy chọn giúp quản lý API token và xác thực các request sử dụng API token: [Passport](/docs/{{version}}/passport) và [Sanctum](/docs/{{version}}/sanctum). Lưu ý rằng các thư viện này và cơ chế xác thực dựa trên cookie tích hợp sẵn của Laravel không loại trừ lẫn nhau. Các thư viện này chủ yếu tập trung vào xác thực bằng API token, trong khi dịch vụ xác thực tích hợp tập trung vào xác thực trình duyệt dựa trên cookie. Nhiều ứng dụng sẽ sử dụng đồng thời dịch vụ xác thực cookie tích hợp của Laravel và một package xác thực API của Laravel.
 
 **Passport**
 
-Passport is an OAuth2 authentication provider, offering a variety of OAuth2 "grant types" which allow you to issue various types of tokens. In general, this is a robust and complex package for API authentication. However, most applications do not require the complex features offered by the OAuth2 spec, which can be confusing for both users and developers. In addition, developers have been historically confused about how to authenticate SPA applications or mobile applications using OAuth2 authentication providers like Passport.
+Passport là authentication provider OAuth2, cung cấp nhiều "grant type" OAuth2 cho phép phát hành nhiều loại token khác nhau. Nhìn chung, đây là package mạnh mẽ nhưng phức tạp cho xác thực API. Tuy nhiên, phần lớn ứng dụng không cần các tính năng phức tạp của đặc tả OAuth2, vốn có thể gây khó hiểu cho cả người dùng lẫn developer. Ngoài ra, developer trước đây thường gặp khó khăn khi xác thực ứng dụng SPA hoặc mobile bằng các OAuth2 authentication provider như Passport.
 
 **Sanctum**
 
-In response to the complexity of OAuth2 and developer confusion, we set out to build a simpler, more streamlined authentication package that could handle both first-party web requests from a web browser and API requests via tokens. This goal was realized with the release of [Laravel Sanctum](/docs/{{version}}/sanctum), which should be considered the preferred and recommended authentication package for applications that will be offering a first-party web UI in addition to an API, or will be powered by a single-page application (SPA) that exists separately from the backend Laravel application, or applications that offer a mobile client.
+Để giải quyết sự phức tạp của OAuth2 và những nhầm lẫn mà developer thường gặp, chúng tôi xây dựng một package xác thực đơn giản và tinh gọn hơn, có thể xử lý cả request web first-party từ trình duyệt lẫn request API thông qua token. Mục tiêu này được hiện thực hóa với [Laravel Sanctum](/docs/{{version}}/sanctum), package xác thực nên được ưu tiên và khuyến nghị cho ứng dụng vừa cung cấp giao diện web first-party vừa có API, ứng dụng single-page application (SPA) tách biệt với backend Laravel, hoặc ứng dụng có mobile client.
 
-Laravel Sanctum is a hybrid web / API authentication package that can manage your application's entire authentication process. This is possible because when Sanctum based applications receive a request, Sanctum will first determine if the request includes a session cookie that references an authenticated session. Sanctum accomplishes this by calling Laravel's built-in authentication services which we discussed earlier. If the request is not being authenticated via a session cookie, Sanctum will inspect the request for an API token. If an API token is present, Sanctum will authenticate the request using that token. To learn more about this process, please consult Sanctum's ["how it works"](/docs/{{version}}/sanctum#how-it-works) documentation.
+Laravel Sanctum là package xác thực lai web / API có thể quản lý toàn bộ quy trình xác thực của ứng dụng. Khi ứng dụng dùng Sanctum nhận một request, Sanctum trước tiên xác định request có chứa session cookie tham chiếu đến một session đã xác thực hay không. Sanctum thực hiện việc này bằng cách gọi các dịch vụ xác thực tích hợp của Laravel đã đề cập ở trên. Nếu request không được xác thực qua session cookie, Sanctum sẽ kiểm tra API token. Nếu có API token, Sanctum sẽ xác thực request bằng token đó. Để tìm hiểu thêm về quy trình này, hãy tham khảo tài liệu ["cách hoạt động"](/docs/{{version}}/sanctum#how-it-works) của Sanctum.
 
 <a name="summary-choosing-your-stack"></a>
-#### Summary and Choosing Your Stack
+#### Tổng kết và lựa chọn stack
 
-In summary, if your application will be accessed using a browser and you are building a monolithic Laravel application, your application will use Laravel's built-in authentication services.
+Tóm lại, nếu ứng dụng được truy cập bằng trình duyệt và bạn đang xây dựng một ứng dụng Laravel monolith, ứng dụng sẽ sử dụng các dịch vụ xác thực tích hợp sẵn của Laravel.
 
-Next, if your application offers an API that will be consumed by third parties, you will choose between [Passport](/docs/{{version}}/passport) or [Sanctum](/docs/{{version}}/sanctum) to provide API token authentication for your application. In general, Sanctum should be preferred when possible since it is a simple, complete solution for API authentication, SPA authentication, and mobile authentication, including support for "scopes" or "abilities".
+Tiếp theo, nếu ứng dụng cung cấp API cho bên thứ ba sử dụng, bạn sẽ chọn [Passport](/docs/{{version}}/passport) hoặc [Sanctum](/docs/{{version}}/sanctum) để cung cấp xác thực API token. Nhìn chung nên ưu tiên Sanctum khi có thể vì đây là giải pháp đơn giản, đầy đủ cho xác thực API, SPA và mobile, bao gồm hỗ trợ "scope" hoặc "ability".
 
-If you are building a single-page application (SPA) that will be powered by a Laravel backend, you should use [Laravel Sanctum](/docs/{{version}}/sanctum). When using Sanctum, you will either need to [manually implement your own backend authentication routes](#authenticating-users) or utilize [Laravel Fortify](/docs/{{version}}/fortify) as a headless authentication backend service that provides routes and controllers for features such as registration, password reset, email verification, and more.
+Nếu đang xây dựng single-page application (SPA) dùng Laravel làm backend, bạn nên sử dụng [Laravel Sanctum](/docs/{{version}}/sanctum). Khi dùng Sanctum, bạn cần [tự triển khai các route xác thực backend](#authenticating-users) hoặc sử dụng [Laravel Fortify](/docs/{{version}}/fortify) làm dịch vụ backend xác thực headless, cung cấp route và controller cho các tính năng như đăng ký, đặt lại mật khẩu, xác minh email và nhiều tính năng khác.
 
-Passport may be chosen when your application absolutely needs all of the features provided by the OAuth2 specification. Additionally, if you are building an [MCP server](/docs/{{version}}/mcp) that will be accessed by AI clients, you should use Passport, as MCP clients typically expect to [authenticate using OAuth](/docs/{{version}}/mcp#oauth).
+Có thể chọn Passport khi ứng dụng thực sự cần toàn bộ tính năng mà đặc tả OAuth2 cung cấp. Ngoài ra, nếu đang xây dựng [MCP server](/docs/{{version}}/mcp) để các AI client truy cập, bạn nên dùng Passport vì MCP client thường kỳ vọng [xác thực bằng OAuth](/docs/{{version}}/mcp#oauth).
 
-And, if you would like to get started quickly, we are pleased to recommend [our application starter kits](/docs/{{version}}/starter-kits) as a quick way to start a new Laravel application that already uses our preferred authentication stack of Laravel's built-in authentication services.
+Nếu muốn bắt đầu nhanh, chúng tôi khuyến nghị [application starter kit](/docs/{{version}}/starter-kits) như một cách nhanh chóng để tạo ứng dụng Laravel mới đã sử dụng stack xác thực được khuyến nghị dựa trên các dịch vụ xác thực tích hợp của Laravel.
 
 <a name="authentication-quickstart"></a>
-## Authentication Quickstart
+## Bắt đầu nhanh với xác thực
 
 > [!WARNING]
-> This portion of the documentation discusses authenticating users via the [Laravel application starter kits](/docs/{{version}}/starter-kits), which includes UI scaffolding to help you get started quickly. If you would like to integrate with Laravel's authentication systems directly, check out the documentation on [manually authenticating users](#authenticating-users).
+> Phần tài liệu này trình bày việc xác thực người dùng thông qua [Laravel application starter kit](/docs/{{version}}/starter-kits), bao gồm UI scaffold giúp bạn bắt đầu nhanh chóng. Nếu muốn tích hợp trực tiếp với hệ thống xác thực của Laravel, hãy xem tài liệu về [xác thực người dùng thủ công](#authenticating-users).
 
 <a name="install-a-starter-kit"></a>
-### Install a Starter Kit
+### Cài đặt Starter Kit
 
-First, you should [install a Laravel application starter kit](/docs/{{version}}/starter-kits). Our starter kits offer beautifully designed starting points for incorporating authentication into your fresh Laravel application.
+Trước tiên, bạn nên [cài đặt Laravel application starter kit](/docs/{{version}}/starter-kits). Các starter kit cung cấp điểm khởi đầu được thiết kế hoàn chỉnh để tích hợp xác thực vào ứng dụng Laravel mới.
 
 <a name="retrieving-the-authenticated-user"></a>
-### Retrieving the Authenticated User
+### Lấy người dùng đã xác thực
 
-After creating an application from a starter kit and allowing users to register and authenticate with your application, you will often need to interact with the currently authenticated user. While handling an incoming request, you may access the authenticated user via the `Auth` facade's `user` method:
+Sau khi tạo ứng dụng từ starter kit và cho phép người dùng đăng ký, xác thực với ứng dụng, bạn thường cần tương tác với người dùng hiện đang được xác thực. Khi xử lý request đến, bạn có thể truy cập người dùng đã xác thực thông qua phương thức `user` của facade `Auth`:
 
 ```php
 use Illuminate\Support\Facades\Auth;
@@ -133,7 +133,7 @@ $user = Auth::user();
 $id = Auth::id();
 ```
 
-Alternatively, once a user is authenticated, you may access the authenticated user via an `Illuminate\Http\Request` instance. Remember, type-hinted classes will automatically be injected into your controller methods. By type-hinting the `Illuminate\Http\Request` object, you may gain convenient access to the authenticated user from any controller method in your application via the request's `user` method:
+Ngoài ra, sau khi người dùng được xác thực, bạn có thể truy cập họ thông qua instance `Illuminate\Http\Request`. Hãy nhớ rằng các class được type-hint sẽ tự động được inject vào phương thức controller. Bằng cách type-hint đối tượng `Illuminate\Http\Request`, bạn có thể thuận tiện truy cập người dùng đã xác thực từ bất kỳ phương thức controller nào thông qua phương thức `user` của request:
 
 ```php
 <?php
@@ -160,9 +160,9 @@ class FlightController extends Controller
 ```
 
 <a name="determining-if-the-current-user-is-authenticated"></a>
-#### Determining if the Current User is Authenticated
+#### Xác định người dùng hiện tại đã được xác thực hay chưa
 
-To determine if the user making the incoming HTTP request is authenticated, you may use the `check` method on the `Auth` facade. This method will return `true` if the user is authenticated:
+Để xác định người dùng thực hiện HTTP request đến đã được xác thực hay chưa, bạn có thể dùng phương thức `check` trên facade `Auth`. Phương thức này trả về `true` nếu người dùng đã được xác thực:
 
 ```php
 use Illuminate\Support\Facades\Auth;
@@ -173,12 +173,12 @@ if (Auth::check()) {
 ```
 
 > [!NOTE]
-> Even though it is possible to determine if a user is authenticated using the `check` method, you will typically use a middleware to verify that the user is authenticated before allowing the user access to certain routes / controllers. To learn more about this, check out the documentation on [protecting routes](/docs/{{version}}/authentication#protecting-routes).
+> Mặc dù có thể dùng phương thức `check` để xác định người dùng đã được xác thực hay chưa, thông thường bạn sẽ dùng middleware để xác minh người dùng đã xác thực trước khi cho phép truy cập một số route / controller. Để tìm hiểu thêm, hãy xem tài liệu về [bảo vệ route](/docs/{{version}}/authentication#protecting-routes).
 
 <a name="protecting-routes"></a>
-### Protecting Routes
+### Bảo vệ route
 
-[Route middleware](/docs/{{version}}/middleware) can be used to only allow authenticated users to access a given route. Laravel ships with an `auth` middleware, which is a [middleware alias](/docs/{{version}}/middleware#middleware-aliases) for the `Illuminate\Auth\Middleware\Authenticate` class. Since this middleware is already aliased internally by Laravel, all you need to do is attach the middleware to a route definition:
+Bạn có thể sử dụng [route middleware](/docs/{{version}}/middleware) để chỉ cho phép người dùng đã xác thực truy cập một route nhất định. Laravel cung cấp sẵn middleware `auth`, đây là một [middleware alias](/docs/{{version}}/middleware#middleware-aliases) cho class `Illuminate\Auth\Middleware\Authenticate`. Vì middleware này đã được Laravel đăng ký alias nội bộ, bạn chỉ cần gắn middleware vào định nghĩa route:
 
 ```php
 Route::get('/flights', function () {
@@ -187,9 +187,9 @@ Route::get('/flights', function () {
 ```
 
 <a name="redirecting-unauthenticated-users"></a>
-#### Redirecting Unauthenticated Users
+#### Chuyển hướng người dùng chưa xác thực
 
-When the `auth` middleware detects an unauthenticated user, it will redirect the user to the `login` [named route](/docs/{{version}}/routing#named-routes). You may modify this behavior using the `redirectGuestsTo` method within your application's `bootstrap/app.php` file:
+Khi middleware `auth` phát hiện người dùng chưa xác thực, nó sẽ chuyển hướng người dùng đến [named route](/docs/{{version}}/routing#named-routes) `login`. Bạn có thể thay đổi hành vi này bằng phương thức `redirectGuestsTo` trong file `bootstrap/app.php` của ứng dụng:
 
 ```php
 use Illuminate\Http\Request;
@@ -203,9 +203,9 @@ use Illuminate\Http\Request;
 ```
 
 <a name="redirecting-authenticated-users"></a>
-#### Redirecting Authenticated Users
+#### Chuyển hướng người dùng đã xác thực
 
-When the `guest` middleware detects an authenticated user, it will redirect the user to the `dashboard` or `home` named route. You may modify this behavior using the `redirectUsersTo` method within your application's `bootstrap/app.php` file:
+Khi middleware `guest` phát hiện người dùng đã xác thực, nó sẽ chuyển hướng người dùng đến named route `dashboard` hoặc `home`. Bạn có thể thay đổi hành vi này bằng phương thức `redirectUsersTo` trong file `bootstrap/app.php` của ứng dụng:
 
 ```php
 use Illuminate\Http\Request;
@@ -219,9 +219,9 @@ use Illuminate\Http\Request;
 ```
 
 <a name="specifying-a-guard"></a>
-#### Specifying a Guard
+#### Chỉ định guard
 
-When attaching the `auth` middleware to a route, you may also specify which "guard" should be used to authenticate the user. The guard specified should correspond to one of the keys in the `guards` array of your `auth.php` configuration file:
+Khi gắn middleware `auth` vào route, bạn cũng có thể chỉ định "guard" dùng để xác thực người dùng. Guard được chỉ định phải tương ứng với một key trong mảng `guards` của file cấu hình `auth.php`:
 
 ```php
 Route::get('/flights', function () {
@@ -230,19 +230,19 @@ Route::get('/flights', function () {
 ```
 
 <a name="login-throttling"></a>
-### Login Throttling
+### Giới hạn tần suất đăng nhập
 
-If you are using one of our [application starter kits](/docs/{{version}}/starter-kits), rate limiting will automatically be applied to login attempts. By default, the user will not be able to login for one minute if they fail to provide the correct credentials after several attempts. The throttling is unique to the user's username / email address and their IP address.
+Nếu đang sử dụng một trong các [application starter kit](/docs/{{version}}/starter-kits), rate limiting sẽ tự động được áp dụng cho các lần thử đăng nhập. Theo mặc định, người dùng sẽ không thể đăng nhập trong một phút nếu nhập sai thông tin xác thực sau nhiều lần thử. Cơ chế throttling được xác định riêng theo username / địa chỉ email và địa chỉ IP của người dùng.
 
 > [!NOTE]
-> If you would like to rate limit other routes in your application, check out the [rate limiting documentation](/docs/{{version}}/routing#rate-limiting).
+> Nếu muốn áp dụng rate limit cho các route khác trong ứng dụng, hãy xem [tài liệu rate limiting](/docs/{{version}}/routing#rate-limiting).
 
 <a name="authenticating-users"></a>
-## Manually Authenticating Users
+## Xác thực người dùng thủ công
 
-You are not required to use the authentication scaffolding included with Laravel's [application starter kits](/docs/{{version}}/starter-kits). If you choose not to use this scaffolding, you will need to manage user authentication using the Laravel authentication classes directly. Don't worry, it's a cinch!
+Bạn không bắt buộc phải sử dụng phần khung xác thực đi kèm với [application starter kit](/docs/{{version}}/starter-kits) của Laravel. Nếu không sử dụng phần khung này, bạn sẽ cần quản lý việc xác thực người dùng trực tiếp bằng các lớp xác thực của Laravel. Việc này khá đơn giản.
 
-We will access Laravel's authentication services via the `Auth` [facade](/docs/{{version}}/facades), so we'll need to make sure to import the `Auth` facade at the top of the class. Next, let's check out the `attempt` method. The `attempt` method is normally used to handle authentication attempts from your application's "login" form. If authentication is successful, you should regenerate the user's [session](/docs/{{version}}/session) to prevent [session fixation](https://en.wikipedia.org/wiki/Session_fixation):
+Chúng ta sẽ truy cập các dịch vụ xác thực của Laravel thông qua [facade](/docs/{{version}}/facades) `Auth`, vì vậy hãy đảm bảo import facade `Auth` ở đầu lớp. Tiếp theo, hãy xem phương thức `attempt`. Phương thức `attempt` thường được dùng để xử lý các lần thử xác thực từ form "đăng nhập" của ứng dụng. Nếu xác thực thành công, bạn nên tạo lại [session](/docs/{{version}}/session) của người dùng để ngăn chặn [session fixation](https://en.wikipedia.org/wiki/Session_fixation):
 
 ```php
 <?php
@@ -278,18 +278,18 @@ class LoginController extends Controller
 }
 ```
 
-The `attempt` method accepts an array of key / value pairs as its first argument. The values in the array will be used to find the user in your database table. So, in the example above, the user will be retrieved by the value of the `email` column. If the user is found, the hashed password stored in the database will be compared with the `password` value passed to the method via the array. You should not hash the incoming request's `password` value, since the framework will automatically hash the value before comparing it to the hashed password in the database. An authenticated session will be started for the user if the two hashed passwords match.
+Phương thức `attempt` nhận một mảng các cặp key / value làm đối số đầu tiên. Các giá trị trong mảng sẽ được dùng để tìm người dùng trong bảng cơ sở dữ liệu. Vì vậy, trong ví dụ trên, người dùng sẽ được truy xuất dựa trên giá trị của cột `email`. Nếu tìm thấy người dùng, mật khẩu đã băm lưu trong cơ sở dữ liệu sẽ được so sánh với giá trị `password` được truyền vào phương thức qua mảng. Bạn không nên tự băm giá trị `password` của request đầu vào, vì framework sẽ tự động xử lý việc băm trước khi so sánh với mật khẩu đã băm trong cơ sở dữ liệu. Một session đã xác thực sẽ được khởi tạo cho người dùng nếu hai mật khẩu khớp nhau.
 
-Remember, Laravel's authentication services will retrieve users from your database based on your authentication guard's "provider" configuration. In the default `config/auth.php` configuration file, the Eloquent user provider is specified and it is instructed to use the `App\Models\User` model when retrieving users. You may change these values within your configuration file based on the needs of your application.
+Hãy nhớ rằng các dịch vụ xác thực của Laravel sẽ truy xuất người dùng từ cơ sở dữ liệu dựa trên cấu hình "provider" của authentication guard. Trong file cấu hình mặc định `config/auth.php`, Eloquent user provider được chỉ định sử dụng model `App\Models\User` khi truy xuất người dùng. Bạn có thể thay đổi các giá trị này trong file cấu hình tùy theo nhu cầu của ứng dụng.
 
-The `attempt` method will return `true` if authentication was successful. Otherwise, `false` will be returned.
+Phương thức `attempt` sẽ trả về `true` nếu xác thực thành công. Nếu không, phương thức sẽ trả về `false`.
 
-The `intended` method provided by Laravel's redirector will redirect the user to the URL they were attempting to access before being intercepted by the authentication middleware. A fallback URI may be given to this method in case the intended destination is not available.
+Phương thức `intended` do redirector của Laravel cung cấp sẽ chuyển hướng người dùng đến URL mà họ đã cố truy cập trước khi bị authentication middleware chặn lại. Bạn có thể truyền một URI dự phòng cho phương thức này trong trường hợp đích dự kiến không khả dụng.
 
 <a name="specifying-additional-conditions"></a>
-#### Specifying Additional Conditions
+#### Chỉ định các điều kiện bổ sung
 
-If you wish, you may also add extra query conditions to the authentication query in addition to the user's email and password. To accomplish this, we may simply add the query conditions to the array passed to the `attempt` method. For example, we may verify that the user is marked as "active":
+Nếu muốn, ngoài email và mật khẩu của người dùng, bạn cũng có thể thêm các điều kiện truy vấn bổ sung vào truy vấn xác thực. Để thực hiện, chỉ cần thêm các điều kiện truy vấn vào mảng truyền cho phương thức `attempt`. Ví dụ, chúng ta có thể xác minh người dùng được đánh dấu là "active":
 
 ```php
 if (Auth::attempt(['email' => $email, 'password' => $password, 'active' => 1])) {
@@ -297,7 +297,7 @@ if (Auth::attempt(['email' => $email, 'password' => $password, 'active' => 1])) 
 }
 ```
 
-For complex query conditions, you may provide a closure in your array of credentials. This closure will be invoked with the query instance, allowing you to customize the query based on your application's needs:
+Đối với các điều kiện truy vấn phức tạp, bạn có thể cung cấp một closure trong mảng thông tin xác thực. Closure này sẽ được gọi với query instance, cho phép bạn tùy chỉnh truy vấn theo nhu cầu của ứng dụng:
 
 ```php
 use Illuminate\Database\Eloquent\Builder;
@@ -312,9 +312,9 @@ if (Auth::attempt([
 ```
 
 > [!WARNING]
-> In these examples, `email` is not a required option, it is merely used as an example. You should use whatever column name corresponds to a "username" in your database table.
+> Trong các ví dụ này, `email` không phải là tùy chọn bắt buộc mà chỉ được dùng làm ví dụ. Bạn nên sử dụng tên cột tương ứng với "username" trong bảng cơ sở dữ liệu của mình.
 
-The `attemptWhen` method, which receives a closure as its second argument, may be used to perform more extensive inspection of the potential user before actually authenticating the user. The closure receives the potential user and should return `true` or `false` to indicate if the user may be authenticated:
+Phương thức `attemptWhen`, nhận một closure làm đối số thứ hai, có thể được dùng để kiểm tra kỹ hơn người dùng tiềm năng trước khi thực sự xác thực. Closure nhận người dùng tiềm năng và phải trả về `true` hoặc `false` để cho biết người dùng có được phép xác thực hay không:
 
 ```php
 if (Auth::attemptWhen([
@@ -328,11 +328,11 @@ if (Auth::attemptWhen([
 ```
 
 <a name="accessing-specific-guard-instances"></a>
-#### Accessing Specific Guard Instances
+#### Truy cập một guard instance cụ thể
 
-Via the `Auth` facade's `guard` method, you may specify which guard instance you would like to utilize when authenticating the user. This allows you to manage authentication for separate parts of your application using entirely separate authenticatable models or user tables.
+Thông qua phương thức `guard` của facade `Auth`, bạn có thể chỉ định guard instance muốn sử dụng khi xác thực người dùng. Điều này cho phép quản lý xác thực cho các phần riêng biệt của ứng dụng bằng những model có thể xác thực hoặc bảng người dùng hoàn toàn tách biệt.
 
-The guard name passed to the `guard` method should correspond to one of the guards configured in your `auth.php` configuration file:
+Tên guard truyền vào phương thức `guard` phải tương ứng với một trong các guard được cấu hình trong file `auth.php`:
 
 ```php
 if (Auth::guard('admin')->attempt($credentials)) {
@@ -341,11 +341,11 @@ if (Auth::guard('admin')->attempt($credentials)) {
 ```
 
 <a name="remembering-users"></a>
-### Remembering Users
+### Ghi nhớ người dùng
 
-Many web applications provide a "remember me" checkbox on their login form. If you would like to provide "remember me" functionality in your application, you may pass a boolean value as the second argument to the `attempt` method.
+Nhiều ứng dụng web cung cấp checkbox "remember me" trên form đăng nhập. Nếu muốn cung cấp chức năng "ghi nhớ đăng nhập" trong ứng dụng, bạn có thể truyền một giá trị boolean làm đối số thứ hai cho phương thức `attempt`.
 
-When this value is `true`, Laravel will keep the user authenticated indefinitely or until they manually logout. Your `users` table must include the string `remember_token` column, which will be used to store the "remember me" token. The `users` table migration included with new Laravel applications already includes this column:
+Khi giá trị này là `true`, Laravel sẽ giữ người dùng ở trạng thái đã xác thực vô thời hạn hoặc cho đến khi họ chủ động đăng xuất. Bảng `users` phải có cột chuỗi `remember_token`, dùng để lưu token "remember me". Migration của bảng `users` đi kèm các ứng dụng Laravel mới đã bao gồm cột này:
 
 ```php
 use Illuminate\Support\Facades\Auth;
@@ -355,7 +355,7 @@ if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
 }
 ```
 
-If your application offers "remember me" functionality, you may use the `viaRemember` method to determine if the currently authenticated user was authenticated using the "remember me" cookie:
+Nếu ứng dụng cung cấp chức năng "remember me", bạn có thể dùng phương thức `viaRemember` để xác định người dùng hiện đang được xác thực có đăng nhập thông qua cookie "remember me" hay không:
 
 ```php
 use Illuminate\Support\Facades\Auth;
@@ -366,12 +366,12 @@ if (Auth::viaRemember()) {
 ```
 
 <a name="other-authentication-methods"></a>
-### Other Authentication Methods
+### Các phương thức xác thực khác
 
 <a name="authenticate-a-user-instance"></a>
-#### Authenticate a User Instance
+#### Xác thực một user instance
 
-If you need to set an existing user instance as the currently authenticated user, you may pass the user instance to the `Auth` facade's `login` method. The given user instance must be an implementation of the `Illuminate\Contracts\Auth\Authenticatable` [contract](/docs/{{version}}/contracts). The `App\Models\User` model included with Laravel already implements this interface. This method of authentication is useful when you already have a valid user instance, such as directly after a user registers with your application:
+Nếu cần đặt một user instance hiện có làm người dùng đang được xác thực, bạn có thể truyền user instance đó vào phương thức `login` của facade `Auth`. User instance được truyền vào phải triển khai [contract](/docs/{{version}}/contracts) `Illuminate\Contracts\Auth\Authenticatable`. Model `App\Models\User` đi kèm Laravel đã triển khai interface này. Cách xác thực này hữu ích khi bạn đã có một user instance hợp lệ, chẳng hạn ngay sau khi người dùng đăng ký ứng dụng:
 
 ```php
 use Illuminate\Support\Facades\Auth;
@@ -379,37 +379,37 @@ use Illuminate\Support\Facades\Auth;
 Auth::login($user);
 ```
 
-You may pass a boolean value as the second argument to the `login` method. This value indicates if "remember me" functionality is desired for the authenticated session. Remember, this means that the session will be authenticated indefinitely or until the user manually logs out of the application:
+Bạn có thể truyền một giá trị boolean làm đối số thứ hai cho phương thức `login`. Giá trị này cho biết có sử dụng chức năng "remember me" cho session đã xác thực hay không. Hãy nhớ rằng điều này có nghĩa session sẽ duy trì trạng thái xác thực vô thời hạn hoặc cho đến khi người dùng chủ động đăng xuất khỏi ứng dụng:
 
 ```php
 Auth::login($user, $remember = true);
 ```
 
-If needed, you may specify an authentication guard before calling the `login` method:
+Nếu cần, bạn có thể chỉ định authentication guard trước khi gọi phương thức `login`:
 
 ```php
 Auth::guard('admin')->login($user);
 ```
 
 <a name="authenticate-a-user-by-id"></a>
-#### Authenticate a User by ID
+#### Xác thực người dùng theo ID
 
-To authenticate a user using their database record's primary key, you may use the `loginUsingId` method. This method accepts the primary key of the user you wish to authenticate:
+Để xác thực người dùng bằng khóa chính của bản ghi trong cơ sở dữ liệu, bạn có thể dùng phương thức `loginUsingId`. Phương thức này nhận khóa chính của người dùng mà bạn muốn xác thực:
 
 ```php
 Auth::loginUsingId(1);
 ```
 
-You may pass a boolean value to the `remember` argument of the `loginUsingId` method. This value indicates if "remember me" functionality is desired for the authenticated session. Remember, this means that the session will be authenticated indefinitely or until the user manually logs out of the application:
+Bạn có thể truyền một giá trị boolean cho đối số `remember` của phương thức `loginUsingId`. Giá trị này cho biết có sử dụng chức năng "remember me" cho session đã xác thực hay không. Điều này có nghĩa session sẽ duy trì trạng thái xác thực vô thời hạn hoặc cho đến khi người dùng chủ động đăng xuất khỏi ứng dụng:
 
 ```php
 Auth::loginUsingId(1, remember: true);
 ```
 
 <a name="authenticate-a-user-once"></a>
-#### Authenticate a User Once
+#### Xác thực người dùng một lần
 
-You may use the `once` method to authenticate a user with the application for a single request. No sessions or cookies will be utilized when calling this method, and the `Login` event will not be dispatched:
+Bạn có thể dùng phương thức `once` để xác thực người dùng với ứng dụng chỉ cho một request duy nhất. Khi gọi phương thức này, session và cookie sẽ không được sử dụng, đồng thời event `Login` cũng sẽ không được dispatch:
 
 ```php
 if (Auth::once($credentials)) {
@@ -418,9 +418,9 @@ if (Auth::once($credentials)) {
 ```
 
 <a name="http-basic-authentication"></a>
-## HTTP Basic Authentication
+## Xác thực HTTP Basic
 
-[HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) provides a quick way to authenticate users of your application without setting up a dedicated "login" page. To get started, attach the `auth.basic` [middleware](/docs/{{version}}/middleware) to a route. The `auth.basic` middleware is included with the Laravel framework, so you do not need to define it:
+[HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) cung cấp một cách nhanh chóng để xác thực người dùng của ứng dụng mà không cần thiết lập trang "đăng nhập" riêng. Để bắt đầu, hãy gắn [middleware](/docs/{{version}}/middleware) `auth.basic` vào một route. Middleware `auth.basic` đã được tích hợp trong Laravel framework nên bạn không cần tự định nghĩa:
 
 ```php
 Route::get('/profile', function () {
@@ -428,12 +428,12 @@ Route::get('/profile', function () {
 })->middleware('auth.basic');
 ```
 
-Once the middleware has been attached to the route, you will automatically be prompted for credentials when accessing the route in your browser. By default, the `auth.basic` middleware will assume the `email` column on your `users` database table is the user's "username".
+Sau khi middleware được gắn vào route, trình duyệt sẽ tự động yêu cầu bạn nhập thông tin xác thực khi truy cập route đó. Theo mặc định, middleware `auth.basic` giả định cột `email` trong bảng `users` là "username" của người dùng.
 
 <a name="a-note-on-fastcgi"></a>
-#### A Note on FastCGI
+#### Lưu ý về FastCGI
 
-If you are using [PHP FastCGI](https://www.php.net/manual/en/install.fpm.php) and Apache to serve your Laravel application, HTTP Basic authentication may not work correctly. To correct these problems, the following lines may be added to your application's `.htaccess` file:
+Nếu đang sử dụng [PHP FastCGI](https://www.php.net/manual/en/install.fpm.php) và Apache để phục vụ ứng dụng Laravel, HTTP Basic Authentication có thể hoạt động không chính xác. Để khắc phục, bạn có thể thêm các dòng sau vào file `.htaccess` của ứng dụng:
 
 ```apache
 RewriteCond %{HTTP:Authorization} ^(.+)$
@@ -441,9 +441,9 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 ```
 
 <a name="stateless-http-basic-authentication"></a>
-### Stateless HTTP Basic Authentication
+### Xác thực HTTP Basic không trạng thái
 
-You may also use HTTP Basic Authentication without setting a user identifier cookie in the session. This is primarily helpful if you choose to use HTTP Authentication to authenticate requests to your application's API. To accomplish this, [define a middleware](/docs/{{version}}/middleware) that calls the `onceBasic` method. If no response is returned by the `onceBasic` method, the request may be passed further into the application:
+Bạn cũng có thể sử dụng HTTP Basic Authentication mà không đặt cookie định danh người dùng trong session. Cách này đặc biệt hữu ích nếu bạn chọn HTTP Authentication để xác thực các request tới API của ứng dụng. Để thực hiện, hãy [định nghĩa một middleware](/docs/{{version}}/middleware) gọi phương thức `onceBasic`. Nếu phương thức `onceBasic` không trả về response, request có thể tiếp tục được chuyển sâu hơn vào ứng dụng:
 
 ```php
 <?php
@@ -470,7 +470,7 @@ class AuthenticateOnceWithBasicAuth
 }
 ```
 
-Next, attach the middleware to a route:
+Tiếp theo, hãy gắn middleware vào một route:
 
 ```php
 Route::get('/api/user', function () {
@@ -479,11 +479,11 @@ Route::get('/api/user', function () {
 ```
 
 <a name="logging-out"></a>
-## Logging Out
+## Đăng xuất
 
-To manually log users out of your application, you may use the `logout` method provided by the `Auth` facade. This will remove the authentication information from the user's session so that subsequent requests are not authenticated.
+Để đăng xuất người dùng khỏi ứng dụng theo cách thủ công, bạn có thể dùng phương thức `logout` do facade `Auth` cung cấp. Thao tác này sẽ xóa thông tin xác thực khỏi session của người dùng để các request tiếp theo không còn được xác thực.
 
-In addition to calling the `logout` method, it is recommended that you invalidate the user's session and regenerate their [CSRF token](/docs/{{version}}/csrf). After logging the user out, you would typically redirect the user to the root of your application:
+Ngoài việc gọi phương thức `logout`, bạn nên vô hiệu hóa session của người dùng và tạo lại [CSRF token](/docs/{{version}}/csrf). Sau khi đăng xuất người dùng, thông thường bạn sẽ chuyển hướng họ về trang gốc của ứng dụng:
 
 ```php
 use Illuminate\Http\Request;
@@ -506,11 +506,11 @@ public function logout(Request $request): RedirectResponse
 ```
 
 <a name="invalidating-sessions-on-other-devices"></a>
-### Invalidating Sessions on Other Devices
+### Vô hiệu hóa session trên các thiết bị khác
 
-Laravel also provides a mechanism for invalidating and "logging out" a user's sessions that are active on other devices without invalidating the session on their current device. This feature is typically utilized when a user is changing or updating their password and you would like to invalidate sessions on other devices while keeping the current device authenticated.
+Laravel cũng cung cấp cơ chế để vô hiệu hóa và "đăng xuất" các session của người dùng đang hoạt động trên những thiết bị khác mà không vô hiệu hóa session trên thiết bị hiện tại. Tính năng này thường được sử dụng khi người dùng thay đổi hoặc cập nhật mật khẩu và bạn muốn vô hiệu hóa session trên các thiết bị khác nhưng vẫn giữ thiết bị hiện tại ở trạng thái đã xác thực.
 
-Before getting started, you should make sure that the `Illuminate\Session\Middleware\AuthenticateSession` middleware is included on the routes that should receive session authentication. Typically, you should place this middleware on a route group definition so that it can be applied to the majority of your application's routes. By default, the `AuthenticateSession` middleware may be attached to a route using the `auth.session` [middleware alias](/docs/{{version}}/middleware#middleware-aliases):
+Trước khi bắt đầu, hãy đảm bảo middleware `Illuminate\Session\Middleware\AuthenticateSession` được áp dụng cho các route cần xác thực bằng session. Thông thường, bạn nên đặt middleware này trên một route group để có thể áp dụng cho phần lớn route của ứng dụng. Theo mặc định, middleware `AuthenticateSession` có thể được gắn vào route bằng [middleware alias](/docs/{{version}}/middleware#middleware-aliases) `auth.session`:
 
 ```php
 Route::middleware(['auth', 'auth.session'])->group(function () {
@@ -520,7 +520,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 });
 ```
 
-Then, you may use the `logoutOtherDevices` method provided by the `Auth` facade. This method requires the user to confirm their current password, which your application should accept through an input form:
+Sau đó, bạn có thể sử dụng phương thức `logoutOtherDevices` do facade `Auth` cung cấp. Phương thức này yêu cầu người dùng xác nhận mật khẩu hiện tại, và ứng dụng nên nhận mật khẩu đó thông qua một form nhập liệu:
 
 ```php
 use Illuminate\Support\Facades\Auth;
@@ -528,28 +528,28 @@ use Illuminate\Support\Facades\Auth;
 Auth::logoutOtherDevices($currentPassword);
 ```
 
-When the `logoutOtherDevices` method is invoked, the user's other sessions will be invalidated entirely, meaning they will be "logged out" of all guards they were previously authenticated by.
+Khi phương thức `logoutOtherDevices` được gọi, các session khác của người dùng sẽ bị vô hiệu hóa hoàn toàn, nghĩa là họ sẽ bị "đăng xuất" khỏi tất cả guard mà trước đó họ đã được xác thực.
 
 <a name="password-confirmation"></a>
-## Password Confirmation
+## Xác nhận mật khẩu
 
-While building your application, you may occasionally have actions that should require the user to confirm their password before the action is performed or before the user is redirected to a sensitive area of the application. Laravel includes built-in middleware to make this process a breeze. Implementing this feature will require you to define two routes: one route to display a view asking the user to confirm their password and another route to confirm that the password is valid and redirect the user to their intended destination.
+Trong quá trình xây dựng ứng dụng, đôi khi bạn sẽ có những hành động yêu cầu người dùng xác nhận mật khẩu trước khi hành động được thực hiện hoặc trước khi người dùng được chuyển hướng đến một khu vực nhạy cảm của ứng dụng. Laravel cung cấp sẵn middleware để giúp quá trình này trở nên đơn giản. Để triển khai tính năng này, bạn cần định nghĩa hai route: một route hiển thị view yêu cầu người dùng xác nhận mật khẩu và một route khác để xác nhận mật khẩu hợp lệ rồi chuyển hướng người dùng đến đích mà họ dự định truy cập.
 
 > [!NOTE]
-> The following documentation discusses how to integrate with Laravel's password confirmation features directly; however, if you would like to get started more quickly, the [Laravel application starter kits](/docs/{{version}}/starter-kits) include support for this feature!
+> Phần tài liệu sau trình bày cách tích hợp trực tiếp với các tính năng xác nhận mật khẩu của Laravel; tuy nhiên, nếu muốn bắt đầu nhanh hơn, các [starter kit ứng dụng Laravel](/docs/{{version}}/starter-kits) đã hỗ trợ sẵn tính năng này!
 
 <a name="password-confirmation-configuration"></a>
-### Configuration
+### Cấu hình
 
-After confirming their password, a user will not be asked to confirm their password again for three hours. However, you may configure the length of time before the user is re-prompted for their password by changing the value of the `password_timeout` configuration value within your application's `config/auth.php` configuration file.
+Sau khi xác nhận mật khẩu, người dùng sẽ không bị yêu cầu xác nhận lại mật khẩu trong ba giờ. Tuy nhiên, bạn có thể cấu hình khoảng thời gian trước khi người dùng được yêu cầu nhập lại mật khẩu bằng cách thay đổi giá trị cấu hình `password_timeout` trong file cấu hình `config/auth.php` của ứng dụng.
 
 <a name="password-confirmation-routing"></a>
-### Routing
+### Định tuyến
 
 <a name="the-password-confirmation-form"></a>
-#### The Password Confirmation Form
+#### Form xác nhận mật khẩu
 
-First, we will define a route to display a view that requests the user to confirm their password:
+Đầu tiên, chúng ta sẽ định nghĩa một route để hiển thị view yêu cầu người dùng xác nhận mật khẩu:
 
 ```php
 Route::get('/confirm-password', function () {
@@ -557,12 +557,12 @@ Route::get('/confirm-password', function () {
 })->middleware('auth')->name('password.confirm');
 ```
 
-As you might expect, the view that is returned by this route should have a form containing a `password` field. In addition, feel free to include text within the view that explains that the user is entering a protected area of the application and must confirm their password.
+Như bạn có thể dự đoán, view được route này trả về nên có một form chứa trường `password`. Ngoài ra, bạn có thể thêm nội dung trong view để giải thích rằng người dùng đang truy cập một khu vực được bảo vệ của ứng dụng và phải xác nhận mật khẩu.
 
 <a name="confirming-the-password"></a>
-#### Confirming the Password
+#### Xác nhận mật khẩu
 
-Next, we will define a route that will handle the form request from the "confirm password" view. This route will be responsible for validating the password and redirecting the user to their intended destination:
+Tiếp theo, chúng ta sẽ định nghĩa một route xử lý request từ form của view "confirm password". Route này chịu trách nhiệm kiểm tra mật khẩu và chuyển hướng người dùng đến đích mà họ dự định truy cập:
 
 ```php
 use Illuminate\Http\Request;
@@ -581,12 +581,12 @@ Route::post('/confirm-password', function (Request $request) {
 })->middleware(['auth', 'throttle:6,1']);
 ```
 
-Before moving on, let's examine this route in more detail. First, the request's `password` field is determined to actually match the authenticated user's password. If the password is valid, we need to inform Laravel's session that the user has confirmed their password. The `passwordConfirmed` method will set a timestamp in the user's session that Laravel can use to determine when the user last confirmed their password. Finally, we can redirect the user to their intended destination.
+Trước khi tiếp tục, hãy xem xét route này chi tiết hơn. Trước tiên, trường `password` của request được kiểm tra để đảm bảo thực sự khớp với mật khẩu của người dùng đã xác thực. Nếu mật khẩu hợp lệ, chúng ta cần thông báo cho session của Laravel rằng người dùng đã xác nhận mật khẩu. Phương thức `passwordConfirmed` sẽ lưu một timestamp trong session của người dùng để Laravel có thể xác định lần gần nhất người dùng xác nhận mật khẩu. Cuối cùng, chúng ta có thể chuyển hướng người dùng đến đích mà họ dự định truy cập.
 
 <a name="password-confirmation-protecting-routes"></a>
-### Protecting Routes
+### Bảo vệ route
 
-You should ensure that any route that performs an action which requires recent password confirmation is assigned the `password.confirm` middleware. This middleware is included with the default installation of Laravel and will automatically store the user's intended destination in the session so that the user may be redirected to that location after confirming their password. After storing the user's intended destination in the session, the middleware will redirect the user to the `password.confirm` [named route](/docs/{{version}}/routing#named-routes):
+Bạn nên đảm bảo mọi route thực hiện hành động yêu cầu xác nhận mật khẩu gần đây đều được gán middleware `password.confirm`. Middleware này được bao gồm trong cài đặt mặc định của Laravel và sẽ tự động lưu đích mà người dùng dự định truy cập vào session để có thể chuyển hướng họ trở lại vị trí đó sau khi xác nhận mật khẩu. Sau khi lưu đích dự định vào session, middleware sẽ chuyển hướng người dùng đến [named route](/docs/{{version}}/routing#named-routes) `password.confirm`:
 
 ```php
 Route::get('/settings', function () {
@@ -599,9 +599,9 @@ Route::post('/settings', function () {
 ```
 
 <a name="adding-custom-guards"></a>
-## Adding Custom Guards
+## Thêm guard tùy chỉnh
 
-You may define your own authentication guards using the `extend` method on the `Auth` facade. You should place your call to the `extend` method within a [service provider](/docs/{{version}}/providers). Since Laravel already ships with an `AppServiceProvider`, we can place the code in that provider:
+Bạn có thể định nghĩa các authentication guard của riêng mình bằng phương thức `extend` trên facade `Auth`. Bạn nên đặt lời gọi phương thức `extend` trong một [service provider](/docs/{{version}}/providers). Vì Laravel đã cung cấp sẵn `AppServiceProvider`, chúng ta có thể đặt đoạn mã trong provider này:
 
 ```php
 <?php
@@ -631,7 +631,7 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-As you can see in the example above, the callback passed to the `extend` method should return an implementation of `Illuminate\Contracts\Auth\Guard`. This interface contains a few methods you will need to implement to define a custom guard. Once your custom guard has been defined, you may reference the guard in the `guards` configuration of your `auth.php` configuration file:
+Như bạn có thể thấy trong ví dụ trên, callback được truyền vào phương thức `extend` phải trả về một implementation của `Illuminate\Contracts\Auth\Guard`. Interface này chứa một số phương thức bạn cần triển khai để định nghĩa guard tùy chỉnh. Sau khi guard tùy chỉnh được định nghĩa, bạn có thể tham chiếu guard đó trong cấu hình `guards` của file cấu hình `auth.php`:
 
 ```php
 'guards' => [
@@ -643,11 +643,11 @@ As you can see in the example above, the callback passed to the `extend` method 
 ```
 
 <a name="closure-request-guards"></a>
-### Closure Request Guards
+### Closure request guard
 
-The simplest way to implement a custom, HTTP request based authentication system is by using the `Auth::viaRequest` method. This method allows you to quickly define your authentication process using a single closure.
+Cách đơn giản nhất để triển khai một hệ thống xác thực tùy chỉnh dựa trên HTTP request là sử dụng phương thức `Auth::viaRequest`. Phương thức này cho phép bạn nhanh chóng định nghĩa quy trình xác thực bằng một closure duy nhất.
 
-To get started, call the `Auth::viaRequest` method within the `boot` method of your application's `AppServiceProvider`. The `viaRequest` method accepts an authentication driver name as its first argument. This name can be any string that describes your custom guard. The second argument passed to the method should be a closure that receives the incoming HTTP request and returns a user instance or, if authentication fails, `null`:
+Để bắt đầu, hãy gọi phương thức `Auth::viaRequest` trong phương thức `boot` của `AppServiceProvider` trong ứng dụng. Phương thức `viaRequest` nhận tên authentication driver làm đối số đầu tiên. Tên này có thể là bất kỳ chuỗi nào mô tả guard tùy chỉnh của bạn. Đối số thứ hai là một closure nhận HTTP request đến và trả về một user instance hoặc `null` nếu xác thực thất bại:
 
 ```php
 use App\Models\User;
@@ -665,7 +665,7 @@ public function boot(): void
 }
 ```
 
-Once your custom authentication driver has been defined, you may configure it as a driver within the `guards` configuration of your `auth.php` configuration file:
+Sau khi authentication driver tùy chỉnh được định nghĩa, bạn có thể cấu hình nó làm driver trong cấu hình `guards` của file `auth.php`:
 
 ```php
 'guards' => [
@@ -675,7 +675,7 @@ Once your custom authentication driver has been defined, you may configure it as
 ],
 ```
 
-Finally, you may reference the guard when assigning the authentication middleware to a route:
+Cuối cùng, bạn có thể tham chiếu guard khi gán authentication middleware cho một route:
 
 ```php
 Route::middleware('auth:api')->group(function () {
@@ -684,9 +684,9 @@ Route::middleware('auth:api')->group(function () {
 ```
 
 <a name="adding-custom-user-providers"></a>
-## Adding Custom User Providers
+## Thêm user provider tùy chỉnh
 
-If you are not using a traditional relational database to store your users, you will need to extend Laravel with your own authentication user provider. We will use the `provider` method on the `Auth` facade to define a custom user provider. The user provider resolver should return an implementation of `Illuminate\Contracts\Auth\UserProvider`:
+Nếu không sử dụng cơ sở dữ liệu quan hệ truyền thống để lưu trữ người dùng, bạn sẽ cần mở rộng Laravel bằng authentication user provider của riêng mình. Chúng ta sẽ sử dụng phương thức `provider` trên facade `Auth` để định nghĩa một user provider tùy chỉnh. User provider resolver phải trả về một implementation của `Illuminate\Contracts\Auth\UserProvider`:
 
 ```php
 <?php
@@ -716,7 +716,7 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-After you have registered the provider using the `provider` method, you may switch to the new user provider in your `auth.php` configuration file. First, define a `provider` that uses your new driver:
+Sau khi đăng ký provider bằng phương thức `provider`, bạn có thể chuyển sang user provider mới trong file cấu hình `auth.php`. Trước tiên, hãy định nghĩa một `provider` sử dụng driver mới:
 
 ```php
 'providers' => [
@@ -726,7 +726,7 @@ After you have registered the provider using the `provider` method, you may swit
 ],
 ```
 
-Finally, you may reference this provider in your `guards` configuration:
+Cuối cùng, bạn có thể tham chiếu provider này trong cấu hình `guards`:
 
 ```php
 'guards' => [
@@ -738,11 +738,11 @@ Finally, you may reference this provider in your `guards` configuration:
 ```
 
 <a name="the-user-provider-contract"></a>
-### The User Provider Contract
+### Contract User Provider
 
-`Illuminate\Contracts\Auth\UserProvider` implementations are responsible for fetching an `Illuminate\Contracts\Auth\Authenticatable` implementation out of a persistent storage system, such as MySQL, MongoDB, etc. These two interfaces allow the Laravel authentication mechanisms to continue functioning regardless of how the user data is stored or what type of class is used to represent the authenticated user:
+Các implementation của `Illuminate\Contracts\Auth\UserProvider` chịu trách nhiệm lấy một implementation của `Illuminate\Contracts\Auth\Authenticatable` từ hệ thống lưu trữ bền vững, chẳng hạn như MySQL, MongoDB, v.v. Hai interface này cho phép cơ chế xác thực của Laravel tiếp tục hoạt động bất kể dữ liệu người dùng được lưu trữ theo cách nào hoặc loại class nào được dùng để biểu diễn người dùng đã xác thực.
 
-Let's take a look at the `Illuminate\Contracts\Auth\UserProvider` contract:
+Hãy xem contract `Illuminate\Contracts\Auth\UserProvider`:
 
 ```php
 <?php
@@ -760,22 +760,22 @@ interface UserProvider
 }
 ```
 
-The `retrieveById` function typically receives a key representing the user, such as an auto-incrementing ID from a MySQL database. The `Authenticatable` implementation matching the ID should be retrieved and returned by the method.
+Hàm `retrieveById` thường nhận một khóa đại diện cho người dùng, chẳng hạn ID tự tăng từ cơ sở dữ liệu MySQL. Implementation `Authenticatable` khớp với ID phải được phương thức này truy xuất và trả về.
 
-The `retrieveByToken` function retrieves a user by their unique `$identifier` and "remember me" `$token`, typically stored in a database column like `remember_token`. As with the previous method, the `Authenticatable` implementation with a matching token value should be returned by this method.
+Hàm `retrieveByToken` truy xuất người dùng bằng `$identifier` duy nhất và `$token` "remember me", thường được lưu trong một cột cơ sở dữ liệu như `remember_token`. Tương tự phương thức trước, implementation `Authenticatable` có giá trị token khớp phải được phương thức này trả về.
 
-The `updateRememberToken` method updates the `$user` instance's `remember_token` with the new `$token`. A fresh token is assigned to users on a successful "remember me" authentication attempt or when the user is logging out.
+Phương thức `updateRememberToken` cập nhật `remember_token` của instance `$user` bằng `$token` mới. Một token mới được gán cho người dùng khi lần xác thực "remember me" thành công hoặc khi người dùng đăng xuất.
 
-The `retrieveByCredentials` method receives the array of credentials passed to the `Auth::attempt` method when attempting to authenticate with an application. The method should then "query" the underlying persistent storage for the user matching those credentials. Typically, this method will run a query with a "where" condition that searches for a user record with a "username" matching the value of `$credentials['username']`. The method should return an implementation of `Authenticatable`. **This method should not attempt to do any password validation or authentication.**
+Phương thức `retrieveByCredentials` nhận mảng thông tin xác thực được truyền vào phương thức `Auth::attempt` khi cố gắng xác thực với ứng dụng. Sau đó, phương thức phải "truy vấn" hệ thống lưu trữ bền vững bên dưới để tìm người dùng khớp với các thông tin xác thực đó. Thông thường, phương thức sẽ chạy truy vấn với điều kiện "where" để tìm bản ghi người dùng có "username" khớp với giá trị `$credentials['username']`. Phương thức phải trả về một implementation của `Authenticatable`. **Phương thức này không được thực hiện bất kỳ việc kiểm tra mật khẩu hay xác thực nào.**
 
-The `validateCredentials` method should compare the given `$user` with the `$credentials` to authenticate the user. For example, this method will typically use the `Hash::check` method to compare the value of `$user->getAuthPassword()` to the value of `$credentials['password']`. This method should return `true` or `false` indicating whether the password is valid.
+Phương thức `validateCredentials` phải so sánh `$user` đã cho với `$credentials` để xác thực người dùng. Ví dụ, phương thức này thường sử dụng `Hash::check` để so sánh giá trị `$user->getAuthPassword()` với `$credentials['password']`. Phương thức phải trả về `true` hoặc `false` cho biết mật khẩu có hợp lệ hay không.
 
-The `rehashPasswordIfRequired` method should rehash the given `$user`'s password if required and supported. For example, this method will typically use the `Hash::needsRehash` method to determine if the `$credentials['password']` value needs to be rehashed. If the password needs to be rehashed, the method should use the `Hash::make` method to rehash the password and update the user's record in the underlying persistent storage.
+Phương thức `rehashPasswordIfRequired` phải rehash mật khẩu của `$user` đã cho nếu cần và nếu được hỗ trợ. Ví dụ, phương thức này thường sử dụng `Hash::needsRehash` để xác định giá trị `$credentials['password']` có cần được rehash hay không. Nếu cần, phương thức phải sử dụng `Hash::make` để rehash mật khẩu và cập nhật bản ghi người dùng trong hệ thống lưu trữ bền vững bên dưới.
 
 <a name="the-authenticatable-contract"></a>
-### The Authenticatable Contract
+### Contract Authenticatable
 
-Now that we have explored each of the methods on the `UserProvider`, let's take a look at the `Authenticatable` contract. Remember, user providers should return implementations of this interface from the `retrieveById`, `retrieveByToken`, and `retrieveByCredentials` methods:
+Sau khi đã tìm hiểu từng phương thức của `UserProvider`, hãy xem contract `Authenticatable`. Hãy nhớ rằng user provider phải trả về các implementation của interface này từ các phương thức `retrieveById`, `retrieveByToken` và `retrieveByCredentials`:
 
 ```php
 <?php
@@ -794,24 +794,24 @@ interface Authenticatable
 }
 ```
 
-This interface is simple. The `getAuthIdentifierName` method should return the name of the "primary key" column for the user and the `getAuthIdentifier` method should return the "primary key" of the user. When using a MySQL back-end, this would likely be the auto-incrementing primary key assigned to the user record. The `getAuthPasswordName` method should return the name of the user's password column. The `getAuthPassword` method should return the user's hashed password.
+Interface này khá đơn giản. Phương thức `getAuthIdentifierName` phải trả về tên cột "primary key" của người dùng và phương thức `getAuthIdentifier` phải trả về "primary key" của người dùng. Khi sử dụng backend MySQL, đây thường là khóa chính tự tăng được gán cho bản ghi người dùng. Phương thức `getAuthPasswordName` phải trả về tên cột mật khẩu của người dùng. Phương thức `getAuthPassword` phải trả về mật khẩu đã được hash của người dùng.
 
-This interface allows the authentication system to work with any "user" class, regardless of what ORM or storage abstraction layer you are using. By default, Laravel includes an `App\Models\User` class in the `app/Models` directory which implements this interface.
+Interface này cho phép hệ thống xác thực hoạt động với bất kỳ class "user" nào, bất kể bạn đang sử dụng ORM hay lớp abstraction lưu trữ nào. Theo mặc định, Laravel cung cấp class `App\Models\User` trong thư mục `app/Models` và class này triển khai interface đó.
 
 <a name="automatic-password-rehashing"></a>
-## Automatic Password Rehashing
+## Tự động rehash mật khẩu
 
-Laravel's default password hashing algorithm is bcrypt. The "work factor" for bcrypt hashes can be adjusted via your application's `config/hashing.php` configuration file or the `BCRYPT_ROUNDS` environment variable.
+Thuật toán hash mật khẩu mặc định của Laravel là bcrypt. "Work factor" cho hash bcrypt có thể được điều chỉnh thông qua file cấu hình `config/hashing.php` của ứng dụng hoặc biến môi trường `BCRYPT_ROUNDS`.
 
-Typically, the bcrypt work factor should be increased over time as CPU / GPU processing power increases. If you increase the bcrypt work factor for your application, Laravel will gracefully and automatically rehash user passwords as users authenticate with your application via Laravel's starter kits or when you [manually authenticate users](#authenticating-users) via the `attempt` method.
+Thông thường, work factor của bcrypt nên được tăng dần theo thời gian khi năng lực xử lý CPU / GPU tăng lên. Nếu bạn tăng work factor bcrypt cho ứng dụng, Laravel sẽ tự động và an toàn rehash mật khẩu người dùng khi họ xác thực với ứng dụng thông qua starter kit của Laravel hoặc khi bạn [xác thực người dùng thủ công](#authenticating-users) bằng phương thức `attempt`.
 
-Typically, automatic password rehashing should not disrupt your application; however, you may disable this behavior by publishing the `hashing` configuration file:
+Thông thường, việc tự động rehash mật khẩu không gây gián đoạn ứng dụng; tuy nhiên, bạn có thể tắt hành vi này bằng cách publish file cấu hình `hashing`:
 
 ```shell
 php artisan config:publish hashing
 ```
 
-Once the configuration file has been published, you may set the `rehash_on_login` configuration value to `false`:
+Sau khi file cấu hình được publish, bạn có thể đặt giá trị cấu hình `rehash_on_login` thành `false`:
 
 ```php
 'rehash_on_login' => false,
@@ -820,7 +820,7 @@ Once the configuration file has been published, you may set the `rehash_on_login
 <a name="events"></a>
 ## Events
 
-Laravel dispatches a variety of [events](/docs/{{version}}/events) during the authentication process. You may [define listeners](/docs/{{version}}/events) for any of the following events:
+Laravel dispatch nhiều [event](/docs/{{version}}/events) trong quá trình xác thực. Bạn có thể [định nghĩa listener](/docs/{{version}}/events) cho bất kỳ event nào sau đây:
 
 <div class="overflow-auto">
 
@@ -841,6 +841,8 @@ Laravel dispatches a variety of [events](/docs/{{version}}/events) during the au
 | `Illuminate\Auth\Events\PasswordResetLinkSent` |
 
 </div>
+
+---
 
 ## Tài liệu chính thức
 

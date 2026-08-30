@@ -1,23 +1,22 @@
-# Views
+# View
 
-- [Introduction](#introduction)
-    - [Writing Views in React / Svelte / Vue](#writing-views-in-react-svelte-or-vue)
-- [Creating and Rendering Views](#creating-and-rendering-views)
-    - [Nested View Directories](#nested-view-directories)
-    - [Creating the First Available View](#creating-the-first-available-view)
-    - [Determining if a View Exists](#determining-if-a-view-exists)
-- [Passing Data to Views](#passing-data-to-views)
-    - [Sharing Data With All Views](#sharing-data-with-all-views)
-- [View Composers](#view-composers)
-    - [View Creators](#view-creators)
-- [Optimizing Views](#optimizing-views)
+- [Giới thiệu](#introduction)
+    - [Viết view bằng React / Svelte / Vue](#writing-views-in-react-svelte-or-vue)
+- [Tạo và render view](#creating-and-rendering-views)
+    - [Thư mục view lồng nhau](#nested-view-directories)
+    - [Tạo view khả dụng đầu tiên](#creating-the-first-available-view)
+    - [Kiểm tra view có tồn tại](#determining-if-a-view-exists)
+- [Truyền dữ liệu vào view](#passing-data-to-views)
+    - [Chia sẻ dữ liệu với tất cả view](#sharing-data-with-all-views)
+- [View Composer](#view-composers)
+    - [Gắn composer vào nhiều view](#attaching-a-composer-to-multiple-views)
+- [View Creator](#view-creators)
+- [Tối ưu view](#optimizing-views)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Of course, it's not practical to return entire HTML documents strings directly from your routes and controllers. Thankfully, views provide a convenient way to place all of our HTML in separate files.
-
-Views separate your controller / application logic from your presentation logic and are stored in the `resources/views` directory. When using Laravel, view templates are usually written using the [Blade templating language](/docs/{{version}}/blade). A simple view might look something like this:
+Dĩ nhiên, việc trả trực tiếp toàn bộ chuỗi tài liệu HTML từ route và controller là không thực tế. May mắn thay, view cung cấp một cách thuận tiện để đặt toàn bộ HTML vào các file riêng biệt. View tách logic controller / ứng dụng khỏi logic trình bày và được lưu trong thư mục `resources/views`. Khi sử dụng Laravel, template view thường được viết bằng [ngôn ngữ template Blade](/docs/{{version}}/blade). Một view đơn giản có thể trông như sau:
 
 ```blade
 <!-- View stored in resources/views/greeting.blade.php -->
@@ -29,7 +28,7 @@ Views separate your controller / application logic from your presentation logic 
 </html>
 ```
 
-Since this view is stored at `resources/views/greeting.blade.php`, we may return it using the global `view` helper like so:
+Vì view này được lưu tại `resources/views/greeting.blade.php`, chúng ta có thể trả về view bằng helper `view` toàn cục như sau:
 
 ```php
 Route::get('/', function () {
@@ -38,27 +37,27 @@ Route::get('/', function () {
 ```
 
 > [!NOTE]
-> Looking for more information on how to write Blade templates? Check out the full [Blade documentation](/docs/{{version}}/blade) to get started.
+> Bạn muốn tìm hiểu thêm về cách viết Blade template? Hãy xem đầy đủ [tài liệu Blade](/docs/{{version}}/blade) để bắt đầu.
 
 <a name="writing-views-in-react-svelte-or-vue"></a>
-### Writing Views in React / Svelte / Vue
+### Viết view bằng React / Svelte / Vue
 
-Instead of writing their frontend templates in PHP via Blade, many developers have begun to prefer to write their templates using React, Svelte, or Vue. Laravel makes this painless thanks to [Inertia](https://inertiajs.com/), a library that makes it a cinch to tie your React / Svelte / Vue frontend to your Laravel backend without the typical complexities of building an SPA.
+Thay vì viết template frontend bằng PHP thông qua Blade, nhiều developer hiện thích viết template bằng React, Svelte hoặc Vue. Laravel giúp việc này trở nên đơn giản nhờ [Inertia](https://inertiajs.com/), một thư viện giúp kết nối frontend React / Svelte / Vue với backend Laravel mà không phải xử lý những phức tạp thường gặp khi xây dựng SPA.
 
-Our [React, Svelte, and Vue application starter kits](/docs/{{version}}/starter-kits) give you a great starting point for your next Laravel application powered by Inertia.
+Các [starter kit ứng dụng React, Svelte và Vue](/docs/{{version}}/starter-kits) cung cấp điểm khởi đầu tốt cho ứng dụng Laravel tiếp theo sử dụng Inertia.
 
 <a name="creating-and-rendering-views"></a>
-## Creating and Rendering Views
+## Tạo và render view
 
-You may create a view by placing a file with the `.blade.php` extension in your application's `resources/views` directory or by using the `make:view` Artisan command:
+Bạn có thể tạo view bằng cách đặt file có phần mở rộng `.blade.php` trong thư mục `resources/views` của ứng dụng hoặc sử dụng lệnh Artisan `make:view`:
 
 ```shell
 php artisan make:view greeting
 ```
 
-The `.blade.php` extension informs the framework that the file contains a [Blade template](/docs/{{version}}/blade). Blade templates contain HTML as well as Blade directives that allow you to easily echo values, create "if" statements, iterate over data, and more.
+Phần mở rộng `.blade.php` cho framework biết file chứa một [Blade template](/docs/{{version}}/blade). Blade template gồm HTML cùng các Blade directive cho phép bạn dễ dàng hiển thị giá trị, tạo câu lệnh `if`, lặp qua dữ liệu và nhiều thao tác khác.
 
-Once you have created a view, you may return it from one of your application's routes or controllers using the global `view` helper:
+Sau khi tạo view, bạn có thể trả view từ một route hoặc controller của ứng dụng bằng helper `view` toàn cục:
 
 ```php
 Route::get('/', function () {
@@ -66,7 +65,7 @@ Route::get('/', function () {
 });
 ```
 
-Views may also be returned using the `View` facade:
+View cũng có thể được trả về bằng facade `View`:
 
 ```php
 use Illuminate\Support\Facades\View;
@@ -74,24 +73,24 @@ use Illuminate\Support\Facades\View;
 return View::make('greeting', ['name' => 'James']);
 ```
 
-As you can see, the first argument passed to the `view` helper corresponds to the name of the view file in the `resources/views` directory. The second argument is an array of data that should be made available to the view. In this case, we are passing the `name` variable, which is displayed in the view using [Blade syntax](/docs/{{version}}/blade).
+Như bạn thấy, đối số đầu tiên truyền vào helper `view` tương ứng với tên file view trong thư mục `resources/views`. Đối số thứ hai là một mảng dữ liệu cần được cung cấp cho view. Trong trường hợp này, chúng ta truyền biến `name`, biến này được hiển thị trong view bằng [cú pháp Blade](/docs/{{version}}/blade).
 
 <a name="nested-view-directories"></a>
-### Nested View Directories
+### Thư mục view lồng nhau
 
-Views may also be nested within subdirectories of the `resources/views` directory. "Dot" notation may be used to reference nested views. For example, if your view is stored at `resources/views/admin/profile.blade.php`, you may return it from one of your application's routes / controllers like so:
+View cũng có thể được đặt trong các thư mục con của `resources/views`. Bạn có thể dùng ký pháp dấu chấm để tham chiếu view lồng nhau. Ví dụ, nếu view được lưu tại `resources/views/admin/profile.blade.php`, bạn có thể trả nó từ một route / controller như sau:
 
 ```php
 return view('admin.profile', $data);
 ```
 
 > [!WARNING]
-> View directory names should not contain the `.` character.
+> Tên thư mục view không nên chứa ký tự `.`.
 
 <a name="creating-the-first-available-view"></a>
-### Creating the First Available View
+### Tạo view khả dụng đầu tiên
 
-Using the `View` facade's `first` method, you may create the first view that exists in a given array of views. This may be useful if your application or package allows views to be customized or overwritten:
+Sử dụng phương thức `first` của facade `View`, bạn có thể tạo view đầu tiên tồn tại trong một mảng các view. Điều này có thể hữu ích nếu ứng dụng hoặc package cho phép tùy chỉnh hay ghi đè view:
 
 ```php
 use Illuminate\Support\Facades\View;
@@ -100,9 +99,9 @@ return View::first(['custom.admin', 'admin'], $data);
 ```
 
 <a name="determining-if-a-view-exists"></a>
-### Determining if a View Exists
+### Kiểm tra view có tồn tại
 
-If you need to determine if a view exists, you may use the `View` facade. The `exists` method will return `true` if the view exists:
+Nếu cần xác định một view có tồn tại hay không, bạn có thể sử dụng facade `View`. Phương thức `exists` trả về `true` nếu view tồn tại:
 
 ```php
 use Illuminate\Support\Facades\View;
@@ -113,17 +112,17 @@ if (View::exists('admin.profile')) {
 ```
 
 <a name="passing-data-to-views"></a>
-## Passing Data to Views
+## Truyền dữ liệu vào view
 
-As you saw in the previous examples, you may pass an array of data to views to make that data available to the view:
+Như trong các ví dụ trước, bạn có thể truyền một mảng dữ liệu vào view để dữ liệu đó khả dụng bên trong view:
 
 ```php
 return view('greetings', ['name' => 'Victoria']);
 ```
 
-When passing information in this manner, the data should be an array with key / value pairs. After providing data to a view, you can then access each value within your view using the data's keys, such as `<?php echo $name; ?>`.
+Khi truyền thông tin theo cách này, dữ liệu nên là một mảng các cặp key / value. Sau khi cung cấp dữ liệu cho view, bạn có thể truy cập từng giá trị trong view bằng key tương ứng, chẳng hạn `<?php echo $name; ?>`.
 
-As an alternative to passing a complete array of data to the `view` helper function, you may use the `with` method to add individual pieces of data to the view. The `with` method returns an instance of the view object so that you can continue chaining methods before returning the view:
+Thay vì truyền toàn bộ mảng dữ liệu vào helper `view`, bạn có thể dùng phương thức `with` để thêm từng phần dữ liệu riêng lẻ vào view. Phương thức `with` trả về một instance của view object, vì vậy bạn có thể tiếp tục chain các phương thức trước khi trả view:
 
 ```php
 return view('greeting')
@@ -132,9 +131,9 @@ return view('greeting')
 ```
 
 <a name="sharing-data-with-all-views"></a>
-### Sharing Data With All Views
+### Chia sẻ dữ liệu với tất cả view
 
-Occasionally, you may need to share data with all views that are rendered by your application. You may do so using the `View` facade's `share` method. Typically, you should place calls to the `share` method within a service provider's `boot` method. You are free to add them to the `App\Providers\AppServiceProvider` class or generate a separate service provider to house them:
+Đôi khi, bạn có thể cần chia sẻ dữ liệu với tất cả view được ứng dụng render. Bạn có thể thực hiện điều này bằng phương thức `share` của facade `View`. Thông thường, bạn nên đặt lời gọi phương thức `share` trong phương thức `boot` của một service provider. Bạn có thể thêm chúng vào class `App\Providers\AppServiceProvider` hoặc tạo một service provider riêng để chứa chúng:
 
 ```php
 <?php
@@ -164,13 +163,11 @@ class AppServiceProvider extends ServiceProvider
 ```
 
 <a name="view-composers"></a>
-## View Composers
+## View Composer
 
-View composers are callbacks or class methods that are called when a view is rendered. If you have data that you want to be bound to a view each time that view is rendered, a view composer can help you organize that logic into a single location. View composers may prove particularly useful if the same view is returned by multiple routes or controllers within your application and always needs a particular piece of data.
+View composer là callback hoặc phương thức của class được gọi khi một view được render. Nếu có dữ liệu cần được bind vào một view mỗi lần view đó được render, view composer giúp bạn tổ chức logic này tại một nơi duy nhất. View composer đặc biệt hữu ích nếu cùng một view được nhiều route hoặc controller trong ứng dụng trả về và luôn cần một phần dữ liệu cụ thể.
 
-Typically, view composers will be registered within one of your application's [service providers](/docs/{{version}}/providers). In this example, we'll assume that the `App\Providers\AppServiceProvider` will house this logic.
-
-We'll use the `View` facade's `composer` method to register the view composer. Laravel does not include a default directory for class-based view composers, so you are free to organize them however you wish. For example, you could create an `app/View/Composers` directory to house all of your application's view composers:
+Thông thường, view composer được đăng ký trong một [service provider](/docs/{{version}}/providers) của ứng dụng. Trong ví dụ này, chúng ta giả sử `App\Providers\AppServiceProvider` sẽ chứa logic đó. Chúng ta sử dụng phương thức `composer` của facade `View` để đăng ký view composer. Laravel không cung cấp thư mục mặc định cho class-based view composer, vì vậy bạn có thể tổ chức chúng theo cách mình muốn. Ví dụ, bạn có thể tạo thư mục `app/View/Composers` để chứa tất cả view composer của ứng dụng:
 
 ```php
 <?php
@@ -212,7 +209,7 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-Now that we have registered the composer, the `compose` method of the `App\View\Composers\ProfileComposer` class will be executed each time the `profile` view is being rendered. Let's take a look at an example of the composer class:
+Sau khi composer được đăng ký, phương thức `compose` của class `App\View\Composers\ProfileComposer` sẽ được thực thi mỗi khi view `profile` được render. Hãy xem một ví dụ về class composer:
 
 ```php
 <?php
@@ -241,12 +238,12 @@ class ProfileComposer
 }
 ```
 
-As you can see, all view composers are resolved via the [service container](/docs/{{version}}/container), so you may type-hint any dependencies you need within a composer's constructor.
+Như bạn thấy, tất cả view composer đều được resolve thông qua [service container](/docs/{{version}}/container), vì vậy bạn có thể type-hint bất kỳ dependency nào cần thiết trong constructor của composer.
 
 <a name="attaching-a-composer-to-multiple-views"></a>
-#### Attaching a Composer to Multiple Views
+#### Gắn composer vào nhiều view
 
-You may attach a view composer to multiple views at once by passing an array of views as the first argument to the `composer` method:
+Bạn có thể gắn một view composer vào nhiều view cùng lúc bằng cách truyền một mảng view làm đối số đầu tiên của phương thức `composer`:
 
 ```php
 use App\Views\Composers\MultiComposer;
@@ -258,7 +255,7 @@ View::composer(
 );
 ```
 
-The `composer` method also accepts the `*` character as a wildcard, allowing you to attach a composer to all views:
+Phương thức `composer` cũng chấp nhận ký tự `*` làm wildcard, cho phép bạn gắn composer vào tất cả view:
 
 ```php
 use Illuminate\Support\Facades;
@@ -270,9 +267,9 @@ Facades\View::composer('*', function (View $view) {
 ```
 
 <a name="view-creators"></a>
-### View Creators
+### View Creator
 
-View "creators" are very similar to view composers; however, they are executed immediately after the view is instantiated instead of waiting until the view is about to render. To register a view creator, use the `creator` method:
+View "creator" rất giống view composer; tuy nhiên, chúng được thực thi ngay sau khi view được khởi tạo thay vì đợi đến khi view sắp được render. Để đăng ký view creator, hãy sử dụng phương thức `creator`:
 
 ```php
 use App\View\Creators\ProfileCreator;
@@ -282,17 +279,17 @@ View::creator('profile', ProfileCreator::class);
 ```
 
 <a name="optimizing-views"></a>
-## Optimizing Views
+## Tối ưu view
 
-By default, Blade template views are compiled on demand. When a request is executed that renders a view, Laravel will determine if a compiled version of the view exists. If the file exists, Laravel will then determine if the uncompiled view has been modified more recently than the compiled view. If the compiled view either does not exist, or the uncompiled view has been modified, Laravel will recompile the view.
+Theo mặc định, các Blade template view được compile theo nhu cầu. Khi một request render view được thực thi, Laravel sẽ xác định xem phiên bản đã compile của view có tồn tại hay không. Nếu file tồn tại, Laravel tiếp tục xác định xem view chưa compile có được chỉnh sửa gần đây hơn phiên bản đã compile hay không. Nếu view đã compile không tồn tại hoặc view chưa compile đã được chỉnh sửa, Laravel sẽ compile lại view.
 
-Compiling views during the request may have a small negative impact on performance, so Laravel provides the `view:cache` Artisan command to precompile all of the views utilized by your application. For increased performance, you may wish to run this command as part of your deployment process:
+Việc compile view trong lúc xử lý request có thể gây ảnh hưởng nhỏ đến hiệu năng, vì vậy Laravel cung cấp lệnh Artisan `view:cache` để compile trước tất cả view được ứng dụng sử dụng. Để tăng hiệu năng, bạn có thể chạy lệnh này như một phần của quy trình deployment:
 
 ```shell
 php artisan view:cache
 ```
 
-You may use the `view:clear` command to clear the view cache:
+Bạn có thể sử dụng lệnh `view:clear` để xóa view cache:
 
 ```shell
 php artisan view:clear

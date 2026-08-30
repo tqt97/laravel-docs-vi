@@ -1,27 +1,21 @@
 # Context
-
-- [Introduction](#introduction)
-    - [How it Works](#how-it-works)
-- [Capturing Context](#capturing-context)
+- [Giới thiệu](#introduction)
+    - [Cơ chế hoạt động](#how-it-works)
+- [Ghi dữ liệu vào context](#capturing-context)
     - [Stacks](#stacks)
-- [Retrieving Context](#retrieving-context)
-    - [Determining Item Existence](#determining-item-existence)
-- [Removing Context](#removing-context)
+- [Lấy dữ liệu từ context](#retrieving-context)
+    - [Kiểm tra sự tồn tại của dữ liệu](#determining-item-existence)
+- [Xóa dữ liệu khỏi context](#removing-context)
 - [Hidden Context](#hidden-context)
 - [Events](#events)
     - [Dehydrating](#dehydrating)
     - [Hydrated](#hydrated)
-
 <a name="introduction"></a>
-## Introduction
-
-Laravel's "context" capabilities enable you to capture, retrieve, and share information throughout requests, jobs, and commands executing within your application. This captured information is also included in logs written by your application, giving you deeper insight into the surrounding code execution history that occurred before a log entry was written and allowing you to trace execution flows throughout a distributed system.
-
+## Giới thiệu
+Khả năng "context" của Laravel cho phép bạn ghi nhận, truy xuất và chia sẻ thông tin xuyên suốt các request, job và command đang chạy trong ứng dụng. Thông tin này cũng được đính kèm vào log do ứng dụng ghi ra, giúp bạn hiểu rõ hơn lịch sử thực thi xảy ra trước một log entry và truy vết luồng xử lý trong hệ thống phân tán.
 <a name="how-it-works"></a>
-### How it Works
-
-The best way to understand Laravel's context capabilities is to see it in action using the built-in logging features. To get started, you may [add information to the context](#capturing-context) using the `Context` facade. In this example, we will use a [middleware](/docs/{{version}}/middleware) to add the request URL and a unique trace ID to the context on every incoming request:
-
+### Cơ chế hoạt động
+Cách dễ nhất để hiểu context của Laravel là quan sát nó hoạt động cùng hệ thống logging tích hợp sẵn. Trước tiên, bạn có thể [thêm thông tin vào context](#capturing-context) bằng facade `Context`. Trong ví dụ này, một [middleware](/docs/{{version}}/middleware) sẽ thêm URL của request và một trace ID duy nhất vào context cho mỗi request đi vào ứng dụng:
 ```php
 <?php
 
@@ -47,21 +41,15 @@ class AddContext
     }
 }
 ```
-
-Information added to the context is automatically appended as metadata to any [log entries](/docs/{{version}}/logging) that are written throughout the request. Appending context as metadata allows information passed to individual log entries to be differentiated from the information shared via `Context`. For example, imagine we write the following log entry:
-
+Thông tin được thêm vào context sẽ tự động được đính kèm dưới dạng metadata cho mọi [log entry](/docs/{{version}}/logging) được ghi trong request. Việc tách context thành metadata giúp phân biệt dữ liệu được truyền trực tiếp cho từng log entry với dữ liệu dùng chung qua `Context`. Ví dụ, giả sử ứng dụng ghi log như sau:
 ```php
 Log::info('User authenticated.', ['auth_id' => Auth::id()]);
 ```
-
-The written log will contain the `auth_id` passed to the log entry, but it will also contain the context's `url` and `trace_id` as metadata:
-
+Log được ghi sẽ chứa `auth_id` truyền trực tiếp vào log entry, đồng thời có thêm `url` và `trace_id` từ context dưới dạng metadata:
 ```text
 User authenticated. {"auth_id":27} {"url":"https://example.com/login","trace_id":"e04e1a11-e75c-4db3-b5b5-cfef4ef56697"}
 ```
-
-Information added to the context is also made available to jobs dispatched to the queue. For example, imagine we dispatch a `ProcessPodcast` job to the queue after adding some information to the context:
-
+Thông tin trong context cũng được chuyển tiếp cho các job được dispatch vào queue. Ví dụ, giả sử ta dispatch job `ProcessPodcast` sau khi thêm một số dữ liệu vào context:
 ```php
 // In our middleware...
 Context::add('url', $request->url());
@@ -70,9 +58,7 @@ Context::add('trace_id', Str::uuid()->toString());
 // In our controller...
 ProcessPodcast::dispatch($podcast);
 ```
-
-When the job is dispatched, any information currently stored in the context is captured and shared with the job. The captured information is then hydrated back into the current context while the job is executing. So, if our job's handle method was to write to the log:
-
+Khi job được dispatch, toàn bộ thông tin hiện có trong context được capture và gửi kèm job. Khi job bắt đầu chạy, dữ liệu này được hydrate trở lại context hiện tại. Vì vậy, nếu method `handle` của job ghi log:
 ```php
 class ProcessPodcast implements ShouldQueue
 {
@@ -93,37 +79,27 @@ class ProcessPodcast implements ShouldQueue
     }
 }
 ```
-
-The resulting log entry would contain the information that was added to the context during the request that originally dispatched the job:
-
+Log kết quả sẽ chứa cả thông tin đã được thêm vào context trong request ban đầu đã dispatch job:
 ```text
 Processing podcast. {"podcast_id":95} {"url":"https://example.com/login","trace_id":"e04e1a11-e75c-4db3-b5b5-cfef4ef56697"}
 ```
-
-Although we have focused on the built-in logging related features of Laravel's context, the following documentation will illustrate how context allows you to share information across the HTTP request / queued job boundary and even how to add [hidden context data](#hidden-context) that is not written with log entries.
-
+Dù các ví dụ trên tập trung vào logging, phần tài liệu tiếp theo sẽ cho thấy context còn cho phép chia sẻ dữ liệu qua ranh giới HTTP request / queued job, cũng như lưu [hidden context data](#hidden-context) không được ghi vào log.
 <a name="capturing-context"></a>
-## Capturing Context
-
-You may store information in the current context using the `Context` facade's `add` method:
-
+## Ghi dữ liệu vào context
+Bạn có thể lưu thông tin vào context hiện tại bằng method `add` của facade `Context`:
 ```php
 use Illuminate\Support\Facades\Context;
 
 Context::add('key', 'value');
 ```
-
-To add multiple items at once, you may pass an associative array to the `add` method:
-
+Để thêm nhiều giá trị cùng lúc, truyền một associative array vào method `add`:
 ```php
 Context::add([
     'first_key' => 'value',
     'second_key' => 'value',
 ]);
 ```
-
-The `add` method will override any existing value that shares the same key. If you only wish to add information to the context if the key does not already exist, you may use the `addIf` method:
-
+Method `add` sẽ ghi đè giá trị hiện có nếu trùng key. Nếu chỉ muốn thêm dữ liệu khi key chưa tồn tại, hãy dùng `addIf`:
 ```php
 Context::add('key', 'first');
 
@@ -135,9 +111,7 @@ Context::addIf('key', 'second');
 Context::get('key');
 // "first"
 ```
-
-Context also provides convenient methods for incrementing or decrementing a given key. Both of these methods accept at least one argument: the key to track. A second argument may be provided to specify the amount by which the key should be incremented or decremented:
-
+Context cũng cung cấp các method tiện lợi để tăng hoặc giảm giá trị của một key. Cả hai method đều nhận ít nhất một đối số là key cần theo dõi. Đối số thứ hai có thể được dùng để chỉ định lượng tăng hoặc giảm:
 ```php
 Context::increment('records_added');
 Context::increment('records_added', 5);
@@ -147,10 +121,8 @@ Context::decrement('records_added', 5);
 ```
 
 <a name="conditional-context"></a>
-#### Conditional Context
-
-The `when` method may be used to add data to the context based on a given condition. The first closure provided to the `when` method will be invoked if the given condition evaluates to `true`, while the second closure will be invoked if the condition evaluates to `false`:
-
+#### Context có điều kiện
+Method `when` cho phép thêm dữ liệu vào context dựa trên một điều kiện. Closure đầu tiên được gọi khi điều kiện là `true`; closure thứ hai được gọi khi điều kiện là `false`:
 ```php
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Context;
@@ -163,10 +135,8 @@ Context::when(
 ```
 
 <a name="scoped-context"></a>
-#### Scoped Context
-
-The `scope` method provides a way to temporarily modify the context during the execution of a given callback and restore the context to its original state when the callback finishes executing. Additionally, you can pass extra data that should be merged into the context (as the second and third arguments) while the closure executes.
-
+#### Context theo phạm vi
+Method `scope` cho phép tạm thời thay đổi context trong thời gian thực thi một callback, rồi khôi phục context về trạng thái ban đầu khi callback kết thúc. Bạn cũng có thể truyền thêm dữ liệu cần merge vào context trong lúc closure chạy thông qua đối số thứ hai và thứ ba.
 ```php
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Log;
@@ -197,15 +167,11 @@ Context::allHidden();
 //     'user_id' => 123,
 // ]
 ```
-
 > [!WARNING]
-> If an object within the context is modified inside the scoped closure, that mutation will be reflected outside of the scope.
-
+> Nếu một object nằm trong context bị thay đổi bên trong scoped closure, mutation đó vẫn được phản ánh ra bên ngoài scope.
 <a name="stacks"></a>
 ### Stacks
-
-Context offers the ability to create "stacks", which are lists of data stored in the order that they were added. You can add information to a stack by invoking the `push` method:
-
+Context cho phép tạo "stack" — danh sách dữ liệu được lưu theo đúng thứ tự thêm vào. Bạn có thể đẩy dữ liệu vào stack bằng method `push`:
 ```php
 use Illuminate\Support\Facades\Context;
 
@@ -220,9 +186,7 @@ Context::get('breadcrumbs');
 //     'third_value',
 // ]
 ```
-
-Stacks can be useful to capture historical information about a request, such as events that are happening throughout your application. For example, you could create an event listener to push to a stack every time a query is executed, capturing the query SQL and duration as a tuple:
-
+Stack hữu ích khi cần ghi lại lịch sử xảy ra trong một request. Ví dụ, bạn có thể tạo event listener để push vào stack mỗi khi một query được thực thi, lưu SQL và thời gian chạy query dưới dạng tuple:
 ```php
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\DB;
@@ -232,9 +196,7 @@ DB::listen(function ($event) {
     Context::push('queries', [$event->time, $event->sql]);
 });
 ```
-
-You may determine if a value is in a stack using the `stackContains` and `hiddenStackContains` methods:
-
+Bạn có thể kiểm tra một giá trị có nằm trong stack hay không bằng các method `stackContains` và `hiddenStackContains`:
 ```php
 if (Context::stackContains('breadcrumbs', 'first_value')) {
     //
@@ -244,9 +206,7 @@ if (Context::hiddenStackContains('secrets', 'first_value')) {
     //
 }
 ```
-
-The `stackContains` and `hiddenStackContains` methods also accept a closure as their second argument, allowing more control over the value comparison operation:
-
+`stackContains` và `hiddenStackContains` cũng nhận closure làm đối số thứ hai, giúp kiểm soát chi tiết hơn cách so sánh giá trị:
 ```php
 use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Str;
@@ -257,32 +217,24 @@ return Context::stackContains('breadcrumbs', function ($value) {
 ```
 
 <a name="retrieving-context"></a>
-## Retrieving Context
-
-You may retrieve information from the context using the `Context` facade's `get` method:
-
+## Lấy dữ liệu từ context
+Bạn có thể lấy thông tin từ context bằng method `get` của facade `Context`:
 ```php
 use Illuminate\Support\Facades\Context;
 
 $value = Context::get('key');
 ```
-
-The `only` and `except` methods may be used to retrieve a subset of the information in the context:
-
+Các method `only` và `except` có thể dùng để lấy một tập con dữ liệu trong context:
 ```php
 $data = Context::only(['first_key', 'second_key']);
 
 $data = Context::except(['first_key']);
 ```
-
-The `pull` method may be used to retrieve information from the context and immediately remove it from the context:
-
+Method `pull` lấy dữ liệu từ context và đồng thời xóa dữ liệu đó ngay lập tức:
 ```php
 $value = Context::pull('key');
 ```
-
-If context data is stored in a [stack](#stacks), you may pop items from the stack using the `pop` method:
-
+Nếu dữ liệu context được lưu trong một [stack](#stacks), bạn có thể lấy và loại bỏ phần tử cuối stack bằng method `pop`:
 ```php
 Context::push('breadcrumbs', 'first_value', 'second_value');
 
@@ -292,27 +244,21 @@ Context::pop('breadcrumbs');
 Context::get('breadcrumbs');
 // ['first_value']
 ```
-
-The `remember` and `rememberHidden` methods may be used to retrieve information from the context, while setting the context value to the value returned by the given closure if the requested information doesn't exist:
-
+Các method `remember` và `rememberHidden` cho phép lấy dữ liệu từ context; nếu key chưa tồn tại, context sẽ được gán bằng giá trị trả về từ closure được cung cấp:
 ```php
 $permissions = Context::remember(
     'user-permissions',
     fn () => $user->permissions,
 );
 ```
-
-If you would like to retrieve all of the information stored in the context, you may invoke the `all` method:
-
+Nếu muốn lấy toàn bộ dữ liệu đang lưu trong context, hãy gọi method `all`:
 ```php
 $data = Context::all();
 ```
 
 <a name="determining-item-existence"></a>
-### Determining Item Existence
-
-You may use the `has` and `missing` methods to determine if the context has any value stored for the given key:
-
+### Kiểm tra sự tồn tại của dữ liệu
+Bạn có thể dùng `has` và `missing` để xác định context có lưu giá trị cho key đã cho hay không:
 ```php
 use Illuminate\Support\Facades\Context;
 
@@ -324,9 +270,7 @@ if (Context::missing('key')) {
     // ...
 }
 ```
-
-The `has` method will return `true` regardless of the value stored. So, for example, a key with a `null` value will be considered present:
-
+Method `has` trả về `true` bất kể giá trị được lưu là gì. Vì vậy, một key có giá trị `null` vẫn được xem là đang tồn tại:
 ```php
 Context::add('key', null);
 
@@ -335,10 +279,8 @@ Context::has('key');
 ```
 
 <a name="removing-context"></a>
-## Removing Context
-
-The `forget` method may be used to remove a key and its value from the current context:
-
+## Xóa dữ liệu khỏi context
+Method `forget` dùng để xóa một key cùng giá trị của nó khỏi context hiện tại:
 ```php
 use Illuminate\Support\Facades\Context;
 
@@ -350,18 +292,14 @@ Context::all();
 
 // ['second_key' => 2]
 ```
-
-You may forget several keys at once by providing an array to the `forget` method:
-
+Bạn có thể xóa nhiều key cùng lúc bằng cách truyền một array vào `forget`:
 ```php
 Context::forget(['first_key', 'second_key']);
 ```
 
 <a name="hidden-context"></a>
 ## Hidden Context
-
-Context offers the ability to store "hidden" data. This hidden information is not appended to logs, and is not accessible via the data retrieval methods documented above. Context provides a different set of methods to interact with hidden context information:
-
+Context cho phép lưu dữ liệu "ẩn". Dữ liệu này không được đính kèm vào log và cũng không thể truy cập bằng các method đọc dữ liệu thông thường đã trình bày phía trên. Laravel cung cấp một nhóm method riêng để thao tác với hidden context:
 ```php
 use Illuminate\Support\Facades\Context;
 
@@ -373,9 +311,7 @@ Context::getHidden('key');
 Context::get('key');
 // null
 ```
-
-The "hidden" methods mirror the functionality of the non-hidden methods documented above:
-
+Các method "hidden" có chức năng tương ứng với các method không ẩn đã trình bày ở trên:
 ```php
 Context::addHidden(/* ... */);
 Context::addHiddenIf(/* ... */);
@@ -392,19 +328,13 @@ Context::forgetHidden(/* ... */);
 ```
 
 <a name="events"></a>
-## Events
-
-Context dispatches two events that allow you to hook into the hydration and dehydration process of the context.
-
-To illustrate how these events may be used, imagine that in a middleware of your application you set the `app.locale` configuration value based on the incoming HTTP request's `Accept-Language` header. Context's events allow you to capture this value during the request and restore it on the queue, ensuring notifications sent on the queue have the correct `app.locale` value. We can use context's events and [hidden](#hidden-context) data to achieve this, which the following documentation will illustrate.
-
+## Sự kiện
+Context dispatch hai event cho phép bạn can thiệp vào quá trình hydration và dehydration của context.
+Để hình dung cách dùng các event này, giả sử middleware của ứng dụng đặt giá trị cấu hình `app.locale` dựa trên header `Accept-Language` của HTTP request. Các event của Context cho phép capture giá trị này trong request và khôi phục nó khi chạy queue job, nhờ đó notification gửi từ queue vẫn dùng đúng `app.locale`. Ta có thể kết hợp context events với dữ liệu [hidden](#hidden-context) để thực hiện điều đó.
 <a name="dehydrating"></a>
 ### Dehydrating
-
-Whenever a job is dispatched to the queue the data in the context is "dehydrated" and captured alongside the job's payload. The `Context::dehydrating` method allows you to register a closure that will be invoked during the dehydration process. Within this closure, you may make changes to the data that will be shared with the queued job.
-
-Typically, you should register `dehydrating` callbacks within the `boot` method of your application's `AppServiceProvider` class:
-
+Mỗi khi một job được dispatch vào queue, dữ liệu context được "dehydrate" và capture cùng payload của job. Method `Context::dehydrating` cho phép đăng ký một closure sẽ được gọi trong quá trình dehydration. Bên trong closure, bạn có thể thay đổi dữ liệu sẽ được chia sẻ với queued job.
+Thông thường, callback `dehydrating` nên được đăng ký trong method `boot` của class `AppServiceProvider`:
 ```php
 use Illuminate\Log\Context\Repository;
 use Illuminate\Support\Facades\Config;
@@ -420,17 +350,12 @@ public function boot(): void
     });
 }
 ```
-
 > [!NOTE]
-> You should not use the `Context` facade within the `dehydrating` callback, as that will change the context of the current process. Ensure you only make changes to the repository passed to the callback.
-
+> Không nên dùng facade `Context` bên trong callback `dehydrating`, vì thao tác đó sẽ thay đổi context của process hiện tại. Hãy chỉ thay đổi repository được truyền vào callback.
 <a name="hydrated"></a>
 ### Hydrated
-
-Whenever a queued job begins executing on the queue, any context that was shared with the job will be "hydrated" back into the current context. The `Context::hydrated` method allows you to register a closure that will be invoked during the hydration process.
-
-Typically, you should register `hydrated` callbacks within the `boot` method of your application's `AppServiceProvider` class:
-
+Khi queued job bắt đầu chạy, context đã được chia sẻ cùng job sẽ được "hydrate" trở lại context hiện tại. Method `Context::hydrated` cho phép đăng ký closure được gọi trong quá trình hydration.
+Thông thường, callback `hydrated` nên được đăng ký trong method `boot` của class `AppServiceProvider`:
 ```php
 use Illuminate\Log\Context\Repository;
 use Illuminate\Support\Facades\Config;
@@ -448,10 +373,8 @@ public function boot(): void
     });
 }
 ```
-
 > [!NOTE]
-> You should not use the `Context` facade within the `hydrated` callback and instead ensure you only make changes to the repository passed to the callback.
-
+> Không nên dùng facade `Context` bên trong callback `hydrated`; thay vào đó, chỉ thao tác với repository được truyền vào callback.
 ## Tài liệu chính thức
 
 Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/context). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

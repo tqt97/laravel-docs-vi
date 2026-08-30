@@ -2,8 +2,8 @@
 
 - [Giới thiệu](#introduction)
 - [Kỳ vọng thành công / thất bại](#success-failure-expectations)
-- [Kỳ vọng input / output](#input-output-expectations)
-- [Console Events](#console-events)
+- [Kỳ vọng đầu vào / đầu ra](#input-output-expectations)
+- [Sự kiện Console](#console-events)
 
 <a name="introduction"></a>
 ## Giới thiệu
@@ -46,9 +46,9 @@ $this->artisan('inspire')->assertFailed();
 ```
 
 <a name="input-output-expectations"></a>
-## Kỳ vọng input / output
+## Kỳ vọng đầu vào / đầu ra
 
-Laravel cho phép "mock" input của người dùng cho console command bằng method `expectsQuestion`. Bạn cũng có thể chỉ định exit code và nội dung output mong đợi thông qua `assertExitCode` và `expectsOutput`. Ví dụ với command sau:
+Laravel cho phép "mock" đầu vào của người dùng cho console command bằng method `expectsQuestion`. Bạn cũng có thể chỉ định exit code và nội dung đầu ra mong đợi thông qua `assertExitCode` và `expectsOutput`. Ví dụ với command sau:
 
 ```php
 Artisan::command('question', function () {
@@ -92,7 +92,7 @@ public function test_console_command(): void
 }
 ```
 
-Nếu đang sử dụng function `search` hoặc `multisearch` của [Laravel Prompts](/docs/{{version}}/prompts), bạn có thể dùng assertion `expectsSearch` để mock input người dùng, kết quả tìm kiếm và lựa chọn cuối cùng:
+Nếu đang sử dụng function `search` hoặc `multisearch` của [Laravel Prompts](/docs/{{version}}/prompts), bạn có thể dùng assertion `expectsSearch` để mock đầu vào của người dùng, kết quả tìm kiếm và lựa chọn cuối cùng:
 
 ```php tab=Pest
 test('console command', function () {
@@ -122,7 +122,7 @@ public function test_console_command(): void
 }
 ```
 
-Bạn cũng có thể dùng `doesntExpectOutput` để xác nhận console command không tạo bất kỳ output nào:
+Bạn cũng có thể dùng `doesntExpectOutput` để xác nhận console command không tạo bất kỳ đầu ra nào:
 
 ```php tab=Pest
 test('console command', function () {
@@ -144,7 +144,7 @@ public function test_console_command(): void
 }
 ```
 
-Các method `expectsOutputToContain` và `doesntExpectOutputToContain` dùng để assert một phần nội dung output:
+Các method `expectsOutputToContain` và `doesntExpectOutputToContain` dùng để assert một phần nội dung đầu ra:
 
 ```php tab=Pest
 test('console command', function () {
@@ -194,9 +194,9 @@ $this->artisan('users:all')
 ```
 
 <a name="console-events"></a>
-## Console Events
+## Sự kiện Console
 
-Mặc định, event `Illuminate\Console\Events\CommandStarting` và `Illuminate\Console\Events\CommandFinished` không được dispatch khi chạy test của ứng dụng. Nếu cần các event này trong một test class, hãy thêm trait `Illuminate\Foundation\Testing\WithConsoleEvents`:
+Mặc định, các event `Illuminate\Console\Events\CommandStarting` và `Illuminate\Console\Events\CommandFinished` không được dispatch khi chạy test của ứng dụng. Nếu cần các event này trong một test class, hãy thêm trait `Illuminate\Foundation\Testing\WithConsoleEvents`:
 
 ```php tab=Pest
 <?php
@@ -223,6 +223,8 @@ class ConsoleEventTest extends TestCase
     // ...
 }
 ```
+
+---
 
 ## Tài liệu chính thức
 

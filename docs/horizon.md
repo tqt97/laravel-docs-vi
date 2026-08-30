@@ -1,69 +1,69 @@
 # Laravel Horizon
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-    - [Configuration](#configuration)
-    - [Dashboard Authorization](#dashboard-authorization)
-    - [Max Job Attempts](#max-job-attempts)
-    - [Job Timeout](#job-timeout)
-    - [Job Backoff](#job-backoff)
-    - [Other Worker Options](#other-worker-options)
-    - [Silenced Jobs](#silenced-jobs)
-- [Balancing Strategies](#balancing-strategies)
-    - [Auto Balancing](#auto-balancing)
-    - [Simple Balancing](#simple-balancing)
-    - [No Balancing](#no-balancing)
-- [Upgrading Horizon](#upgrading-horizon)
-- [Running Horizon](#running-horizon)
-    - [Deploying Horizon](#deploying-horizon)
-- [Tags](#tags)
-- [Notifications](#notifications)
-- [Metrics](#metrics)
-- [Deleting Failed Jobs](#deleting-failed-jobs)
-- [Clearing Jobs From Queues](#clearing-jobs-from-queues)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+    - [Cấu hình](#configuration)
+    - [Ủy quyền Dashboard](#dashboard-authorization)
+    - [Số lần thử tối đa của Job](#max-job-attempts)
+    - [Timeout của Job](#job-timeout)
+    - [Backoff của Job](#job-backoff)
+    - [Các tùy chọn Worker khác](#other-worker-options)
+    - [Ẩn Job](#silenced-jobs)
+- [Chiến lược cân bằng](#balancing-strategies)
+    - [Cân bằng tự động](#auto-balancing)
+    - [Cân bằng đơn giản](#simple-balancing)
+    - [Không cân bằng](#no-balancing)
+- [Nâng cấp Horizon](#upgrading-horizon)
+- [Chạy Horizon](#running-horizon)
+    - [Triển khai Horizon](#deploying-horizon)
+- [Tag](#tags)
+- [Thông báo](#notifications)
+- [Metric](#metrics)
+- [Xóa Job thất bại](#deleting-failed-jobs)
+- [Xóa Job khỏi Queue](#clearing-jobs-from-queues)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
 > [!NOTE]
-> Before digging into Laravel Horizon, you should familiarize yourself with Laravel's base [queue services](/docs/{{version}}/queues). Horizon augments Laravel's queue with additional features that may be confusing if you are not already familiar with the basic queue features offered by Laravel.
+> Trước khi tìm hiểu Laravel Horizon, bạn nên làm quen với [dịch vụ queue](/docs/{{version}}/queues) cơ bản của Laravel. Horizon bổ sung thêm nhiều tính năng cho queue của Laravel; những tính năng này có thể khó hiểu nếu bạn chưa nắm các chức năng queue nền tảng mà Laravel cung cấp.
 
-[Laravel Horizon](https://github.com/laravel/horizon) provides a beautiful dashboard and code-driven configuration for your Laravel powered [Redis queues](/docs/{{version}}/queues). Horizon allows you to easily monitor key metrics of your queue system such as job throughput, runtime, and job failures.
+[Laravel Horizon](https://github.com/laravel/horizon) cung cấp dashboard trực quan và cơ chế cấu hình bằng code cho [Redis queue](/docs/{{version}}/queues) của ứng dụng Laravel. Horizon giúp bạn dễ dàng theo dõi các metric quan trọng của hệ thống queue như thông lượng job, thời gian chạy và các job thất bại.
 
-When using Horizon, all of your queue worker configuration is stored in a single, simple configuration file. By defining your application's worker configuration in a version controlled file, you may easily scale or modify your application's queue workers when deploying your application.
+Khi sử dụng Horizon, toàn bộ cấu hình queue worker được lưu trong một file cấu hình duy nhất, đơn giản. Việc định nghĩa cấu hình worker của ứng dụng trong file được quản lý bằng version control giúp bạn dễ dàng scale hoặc thay đổi các queue worker khi triển khai ứng dụng.
 
 <img src="https://laravel.com/img/docs/horizon-example.png">
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
 > [!WARNING]
-> Laravel Horizon requires that you use [Redis](https://redis.io) to power your queue. Therefore, you should ensure that your queue connection is set to `redis` in your application's `config/queue.php` configuration file. Horizon is not compatible with Redis Cluster at this time.
+> Laravel Horizon yêu cầu queue của bạn sử dụng [Redis](https://redis.io). Vì vậy, hãy đảm bảo queue connection được đặt thành `redis` trong file cấu hình `config/queue.php` của ứng dụng. Hiện tại Horizon không tương thích với Redis Cluster.
 
-You may install Horizon into your project using the Composer package manager:
+Bạn có thể cài Horizon vào project bằng Composer:
 
 ```shell
 composer require laravel/horizon
 ```
 
-After installing Horizon, publish its assets using the `horizon:install` Artisan command:
+Sau khi cài Horizon, hãy publish các asset của Horizon bằng lệnh Artisan `horizon:install`:
 
 ```shell
 php artisan horizon:install
 ```
 
 <a name="configuration"></a>
-### Configuration
+### Cấu hình
 
-After publishing Horizon's assets, its primary configuration file will be located at `config/horizon.php`. This configuration file allows you to configure the queue worker options for your application. Each configuration option includes a description of its purpose, so be sure to thoroughly explore this file.
+Sau khi publish asset của Horizon, file cấu hình chính sẽ nằm tại `config/horizon.php`. File này cho phép bạn cấu hình các tùy chọn queue worker của ứng dụng. Mỗi tùy chọn đều có phần mô tả mục đích, vì vậy bạn nên xem kỹ toàn bộ file này.
 
 > [!WARNING]
-> Horizon uses a Redis connection named `horizon` internally. This Redis connection name is reserved and should not be assigned to another Redis connection in the `database.php` configuration file or as the value of the `use` option in the `horizon.php` configuration file.
+> Horizon sử dụng nội bộ một Redis connection có tên `horizon`. Tên connection này được dành riêng và không nên được gán cho Redis connection khác trong file cấu hình `database.php`, cũng như không được dùng làm giá trị của tùy chọn `use` trong file `horizon.php`.
 
 <a name="content-security-policy-csp-nonce"></a>
-#### Content Security Policy (CSP) Nonce
+#### Nonce cho Content Security Policy (CSP)
 
-If you would like to use a [nonce attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/nonce) on the script and style tags used in Horizon views as part of your [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP), you may use the `Horizon::cspNonce` method to specify the nonce to use. This method should typically be invoked within middleware so that a new nonce is assigned for each request:
+Nếu muốn sử dụng [thuộc tính nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/nonce) cho các thẻ script và style trong view của Horizon như một phần của [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP), bạn có thể dùng phương thức `Horizon::cspNonce` để chỉ định nonce. Thông thường, phương thức này nên được gọi trong middleware để mỗi request được gán một nonce mới:
 
 ```php
 use Closure;
@@ -79,7 +79,7 @@ public function handle(Request $request, Closure $next): Response
 }
 ```
 
-You may add this middleware to the `middleware` option in your application's `config/horizon.php` configuration file:
+Bạn có thể thêm middleware này vào tùy chọn `middleware` trong file cấu hình `config/horizon.php` của ứng dụng:
 
 ```php
 'middleware' => [
@@ -89,9 +89,9 @@ You may add this middleware to the `middleware` option in your application's `co
 ```
 
 <a name="environments"></a>
-#### Environments
+#### Environment
 
-After installation, the primary Horizon configuration option that you should familiarize yourself with is the `environments` configuration option. This configuration option is an array of environments that your application runs on and defines the worker process options for each environment. By default, this entry contains a `production` and `local` environment. However, you are free to add more environments as needed:
+Sau khi cài đặt, tùy chọn cấu hình Horizon quan trọng nhất mà bạn nên làm quen là `environments`. Đây là một mảng các environment mà ứng dụng chạy trên đó và định nghĩa các tùy chọn worker process cho từng environment. Mặc định, cấu hình này có environment `production` và `local`; tuy nhiên, bạn có thể thêm các environment khác khi cần:
 
 ```php
 'environments' => [
@@ -111,7 +111,7 @@ After installation, the primary Horizon configuration option that you should fam
 ],
 ```
 
-You may also define a wildcard environment (`*`) which will be used when no other matching environment is found:
+Bạn cũng có thể định nghĩa environment wildcard (`*`), được sử dụng khi không tìm thấy environment nào khác khớp:
 
 ```php
 'environments' => [
@@ -125,22 +125,22 @@ You may also define a wildcard environment (`*`) which will be used when no othe
 ],
 ```
 
-When you start Horizon, it will use the worker process configuration options for the environment that your application is running on. Typically, the environment is determined by the value of the `APP_ENV` [environment variable](/docs/{{version}}/configuration#determining-the-current-environment). For example, the default `local` Horizon environment is configured to start three worker processes and automatically balance the number of worker processes assigned to each queue. The default `production` environment is configured to start a maximum of 10 worker processes and automatically balance the number of worker processes assigned to each queue.
+Khi khởi động Horizon, nó sẽ sử dụng các tùy chọn cấu hình worker process tương ứng với environment hiện tại của ứng dụng. Thông thường, environment được xác định bởi giá trị của [biến môi trường](/docs/{{version}}/configuration#determining-the-current-environment) `APP_ENV`. Ví dụ, environment `local` mặc định của Horizon được cấu hình để khởi động ba worker process và tự động cân bằng số worker được gán cho từng queue. Environment `production` mặc định được cấu hình để khởi động tối đa 10 worker process và tự động cân bằng số worker giữa các queue.
 
 > [!WARNING]
-> You should ensure that the `environments` portion of your `horizon` configuration file contains an entry for each [environment](/docs/{{version}}/configuration#environment-configuration) on which you plan to run Horizon.
+> Hãy đảm bảo phần `environments` trong file cấu hình `horizon` có entry cho từng [environment](/docs/{{version}}/configuration#environment-configuration) mà bạn dự định chạy Horizon.
 
 <a name="supervisors"></a>
-#### Supervisors
+#### Supervisor
 
-As you can see in Horizon's default configuration file, each environment can contain one or more "supervisors". By default, the configuration file defines this supervisor as `supervisor-1`; however, you are free to name your supervisors whatever you want. Each supervisor is essentially responsible for "supervising" a group of worker processes and takes care of balancing worker processes across queues.
+Như bạn có thể thấy trong file cấu hình mặc định của Horizon, mỗi environment có thể chứa một hoặc nhiều "supervisor". Mặc định, file cấu hình định nghĩa supervisor là `supervisor-1`; tuy nhiên, bạn có thể đặt tên supervisor tùy ý. Về cơ bản, mỗi supervisor chịu trách nhiệm giám sát một nhóm worker process và cân bằng các worker process giữa các queue.
 
-You may add additional supervisors to a given environment if you would like to define a new group of worker processes that should run in that environment. You may choose to do this if you would like to define a different balancing strategy or worker process count for a given queue used by your application.
+Bạn có thể thêm supervisor vào một environment nếu muốn định nghĩa một nhóm worker process mới chạy trong environment đó. Cách này hữu ích khi bạn muốn áp dụng chiến lược cân bằng khác hoặc số lượng worker process khác cho một queue cụ thể của ứng dụng.
 
 <a name="maintenance-mode"></a>
 #### Maintenance Mode
 
-While your application is in [maintenance mode](/docs/{{version}}/configuration#maintenance-mode), queued jobs will not be processed by Horizon unless the supervisor's `force` option is defined as `true` within the Horizon configuration file:
+Khi ứng dụng ở [maintenance mode](/docs/{{version}}/configuration#maintenance-mode), Horizon sẽ không xử lý queued job trừ khi tùy chọn `force` của supervisor được đặt thành `true` trong file cấu hình Horizon:
 
 ```php
 'environments' => [
@@ -154,14 +154,14 @@ While your application is in [maintenance mode](/docs/{{version}}/configuration#
 ```
 
 <a name="default-values"></a>
-#### Default Values
+#### Giá trị mặc định
 
-Within Horizon's default configuration file, you will notice a `defaults` configuration option. This configuration option specifies the default values for your application's [supervisors](#supervisors). The supervisor's default configuration values will be merged into the supervisor's configuration for each environment, allowing you to avoid unnecessary repetition when defining your supervisors.
+Trong file cấu hình mặc định của Horizon có tùy chọn `defaults`. Tùy chọn này chỉ định các giá trị mặc định cho [supervisor](#supervisors) của ứng dụng. Các giá trị cấu hình mặc định sẽ được merge vào cấu hình supervisor của từng environment, giúp tránh lặp lại không cần thiết khi định nghĩa supervisor.
 
 <a name="dashboard-authorization"></a>
-### Dashboard Authorization
+### Ủy quyền Dashboard
 
-The Horizon dashboard may be accessed via the `/horizon` route. By default, you will only be able to access this dashboard in the `local` environment. However, within your `app/Providers/HorizonServiceProvider.php` file, there is an [authorization gate](/docs/{{version}}/authorization#gates) definition. This authorization gate controls access to Horizon in **non-local** environments. You are free to modify this gate as needed to restrict access to your Horizon installation:
+Dashboard Horizon có thể được truy cập qua route `/horizon`. Mặc định, bạn chỉ có thể truy cập dashboard này trong environment `local`. Tuy nhiên, file `app/Providers/HorizonServiceProvider.php` có định nghĩa một [authorization gate](/docs/{{version}}/authorization#gates). Gate này kiểm soát quyền truy cập Horizon trong các environment **không phải local**. Bạn có thể sửa gate theo nhu cầu để giới hạn quyền truy cập vào Horizon:
 
 ```php
 /**
@@ -180,17 +180,17 @@ protected function gate(): void
 ```
 
 <a name="alternative-authentication-strategies"></a>
-#### Alternative Authentication Strategies
+#### Chiến lược xác thực thay thế
 
-Remember that Laravel automatically injects the authenticated user into the gate closure. If your application is providing Horizon security via another method, such as IP restrictions, then your Horizon users may not need to "login". Therefore, you will need to change `function (User $user)` closure signature above to `function (User $user = null)` in order to force Laravel to not require authentication.
+Laravel tự động inject người dùng đã xác thực vào gate closure. Nếu ứng dụng bảo vệ Horizon bằng phương thức khác, chẳng hạn giới hạn IP, người dùng Horizon có thể không cần "đăng nhập". Khi đó, bạn cần đổi signature của closure từ `function (User $user)` thành `function (User $user = null)` để Laravel không bắt buộc authentication.
 
 <a name="max-job-attempts"></a>
-### Max Job Attempts
+### Số lần thử tối đa của Job
 
 > [!NOTE]
-> Before refining these options, make sure you are familiar with Laravel's default [queue services](/docs/{{version}}/queues#max-job-attempts-and-timeout) and the concept of 'attempts'.
+> Trước khi tinh chỉnh các tùy chọn này, hãy chắc chắn rằng bạn đã quen với [dịch vụ queue](/docs/{{version}}/queues#max-job-attempts-and-timeout) mặc định của Laravel và khái niệm "attempt".
 
-You can define the maximum number of attempts a job can consume within a supervisor's configuration:
+Bạn có thể định nghĩa số lần thử tối đa mà một job được phép sử dụng trong cấu hình của supervisor:
 
 ```php
 'environments' => [
@@ -204,18 +204,18 @@ You can define the maximum number of attempts a job can consume within a supervi
 ```
 
 > [!NOTE]
-> This option is similar to the `--tries` option when using the Artisan command to process queues.
+> Tùy chọn này tương tự tùy chọn `--tries` khi sử dụng lệnh Artisan để xử lý queue.
 
-Adjusting the `tries` option is essential when using middlewares such as `WithoutOverlapping` or `RateLimited` because they consume attempts. To handle this, adjust the `tries` configuration value either at the supervisor level or by defining the `$tries` property on the job class.
+Việc điều chỉnh tùy chọn `tries` đặc biệt quan trọng khi sử dụng middleware như `WithoutOverlapping` hoặc `RateLimited` vì chúng tiêu tốn số lần thử. Bạn có thể xử lý bằng cách điều chỉnh `tries` ở cấp supervisor hoặc định nghĩa property `$tries` trên job class.
 
-If you don't set the `tries` option, Horizon defaults to a single attempt, unless the job class defines `$tries`, which takes precedence over the Horizon configuration.
+Nếu không thiết lập `tries`, Horizon mặc định chỉ thử một lần, trừ khi job class định nghĩa `$tries`; giá trị trên job class sẽ được ưu tiên hơn cấu hình Horizon.
 
-Setting `tries` or `$tries` to 0 allows unlimited attempts, which is ideal when the number of attempts is uncertain. To prevent endless failures, you can limit the number of exceptions allowed by setting the `$maxExceptions` property on the job class.
+Đặt `tries` hoặc `$tries` thành `0` cho phép thử không giới hạn, phù hợp khi không thể xác định trước số lần thử cần thiết. Để tránh job thất bại vô hạn, bạn có thể giới hạn số exception được phép bằng property `$maxExceptions` trên job class.
 
 <a name="job-timeout"></a>
-### Job Timeout
+### Timeout của Job
 
-Similarly, you can set a `timeout` value at the supervisor level, which specifies how many seconds a worker process can run a job before it's forcefully terminated. Once terminated, the job will either be retried or marked as failed, depending on your queue configuration:
+Tương tự, bạn có thể đặt giá trị `timeout` ở cấp supervisor để xác định số giây tối đa một worker process được phép chạy job trước khi bị buộc dừng. Sau khi bị dừng, job sẽ được thử lại hoặc đánh dấu thất bại tùy theo cấu hình queue:
 
 ```php
 'environments' => [
@@ -229,12 +229,12 @@ Similarly, you can set a `timeout` value at the supervisor level, which specifie
 ```
 
 > [!WARNING]
-> When using the `auto` balancing strategy, Horizon will consider in-progress workers as "hanging" and force-kill them after the Horizon timeout during scale down. Always ensure the Horizon timeout is greater than any job-level timeout, otherwise jobs may be terminated mid-execution. In addition, the `timeout` value should always be at least a few seconds shorter than the `retry_after` value defined in your `config/queue.php` configuration file. Otherwise, your jobs may be processed twice.
+> Khi sử dụng chiến lược cân bằng `auto`, trong quá trình scale down Horizon sẽ xem các worker đang chạy quá thời gian timeout của Horizon là "bị treo" và buộc dừng chúng. Hãy luôn đảm bảo timeout của Horizon lớn hơn mọi timeout ở cấp job, nếu không job có thể bị dừng giữa chừng. Ngoài ra, giá trị `timeout` phải luôn ngắn hơn ít nhất vài giây so với `retry_after` trong file `config/queue.php`; nếu không, job có thể bị xử lý hai lần.
 
 <a name="job-backoff"></a>
-### Job Backoff
+### Backoff của Job
 
-You can define the `backoff` value at the supervisor level to specify how long Horizon should wait before retrying a job that encounters an unhandled exception:
+Bạn có thể định nghĩa `backoff` ở cấp supervisor để chỉ định Horizon phải chờ bao lâu trước khi thử lại một job gặp exception chưa được xử lý:
 
 ```php
 'environments' => [
@@ -247,7 +247,7 @@ You can define the `backoff` value at the supervisor level to specify how long H
 ],
 ```
 
-You may also configure "exponential" backoffs by using an array for the `backoff` value. In this example, the retry delay will be 1 second for the first retry, 5 seconds for the second retry, 10 seconds for the third retry, and 10 seconds for every subsequent retry if there are more attempts remaining:
+Bạn cũng có thể cấu hình backoff tăng dần bằng cách dùng một mảng cho giá trị `backoff`. Trong ví dụ này, độ trễ retry là 1 giây cho lần retry đầu tiên, 5 giây cho lần thứ hai, 10 giây cho lần thứ ba và 10 giây cho mọi lần retry tiếp theo nếu vẫn còn lượt thử:
 
 ```php
 'environments' => [
@@ -261,9 +261,9 @@ You may also configure "exponential" backoffs by using an array for the `backoff
 ```
 
 <a name="other-worker-options"></a>
-### Other Worker Options
+### Các tùy chọn Worker khác
 
-In addition to `tries`, `timeout`, and `backoff`, each supervisor accepts several other options that control how its worker processes behave and when they are automatically restarted. Periodically restarting workers is a good practice for long-running processes, as it helps guard against memory leaks:
+Ngoài `tries`, `timeout` và `backoff`, mỗi supervisor còn nhận một số tùy chọn khác để kiểm soát cách worker process hoạt động và thời điểm chúng tự động restart. Restart worker định kỳ là thực hành tốt cho các process chạy lâu vì giúp hạn chế memory leak:
 
 ```php
 'environments' => [
@@ -283,19 +283,19 @@ In addition to `tries`, `timeout`, and `backoff`, each supervisor accepts severa
 
 <div class="content-list" markdown="1">
 
-- `memory` defines the maximum amount of memory, in megabytes, that a single worker process may consume before it is restarted. By default, this value is `128`.
-- `maxJobs` defines the number of jobs a worker should process before restarting. A value of `0` indicates that workers should not be restarted based on the number of jobs processed. By default, this value is `0`.
-- `maxTime` defines the number of seconds a worker should run before restarting. A value of `0` indicates that workers should not be restarted based on time. By default, this value is `0`.
-- `sleep` defines the number of seconds a worker should wait when no job is available before polling the queue for new jobs again. By default, this value is `3`.
-- `rest` defines the number of seconds to pause between processing each job. By default, this value is `0`.
-- `nice` defines the "niceness" (scheduling priority) of the worker processes. A higher value gives the process a lower priority. By default, this value is `0`.
+- `memory` xác định lượng bộ nhớ tối đa, tính bằng megabyte, mà một worker process có thể sử dụng trước khi được restart. Mặc định là `128`.
+- `maxJobs` xác định số job worker xử lý trước khi restart. Giá trị `0` nghĩa là worker không restart dựa trên số job đã xử lý. Mặc định là `0`.
+- `maxTime` xác định số giây worker được chạy trước khi restart. Giá trị `0` nghĩa là worker không restart dựa trên thời gian. Mặc định là `0`.
+- `sleep` xác định số giây worker chờ khi không có job trước khi poll queue để tìm job mới. Mặc định là `3`.
+- `rest` xác định số giây tạm nghỉ giữa mỗi job được xử lý. Mặc định là `0`.
+- `nice` xác định mức "niceness" (độ ưu tiên scheduling) của worker process. Giá trị càng cao thì process có độ ưu tiên càng thấp. Mặc định là `0`.
 
 </div>
 
 <a name="silenced-jobs"></a>
-### Silenced Jobs
+### Ẩn Job
 
-Sometimes, you may not be interested in viewing certain jobs dispatched by your application or third-party packages. Instead of these jobs taking up space in your "Completed Jobs" list, you can silence them. To get started, add the job's class name to the `silenced` configuration option in your application's `horizon` configuration file:
+Đôi khi bạn không cần xem một số job được dispatch bởi ứng dụng hoặc package bên thứ ba. Thay vì để các job này chiếm chỗ trong danh sách "Completed Jobs", bạn có thể ẩn chúng. Để bắt đầu, hãy thêm tên class của job vào tùy chọn `silenced` trong file cấu hình `horizon` của ứng dụng:
 
 ```php
 'silenced' => [
@@ -303,7 +303,7 @@ Sometimes, you may not be interested in viewing certain jobs dispatched by your 
 ],
 ```
 
-In addition to silencing individual job classes, Horizon also supports silencing jobs based on [tags](#tags). This can be useful if you want to hide multiple jobs that share a common tag:
+Ngoài việc ẩn từng job class, Horizon còn hỗ trợ ẩn job dựa trên [tag](#tags). Điều này hữu ích khi bạn muốn ẩn nhiều job có chung một tag:
 
 ```php
 'silenced_tags' => [
@@ -311,7 +311,7 @@ In addition to silencing individual job classes, Horizon also supports silencing
 ],
 ```
 
-Alternatively, the job you wish to silence can implement the `Laravel\Horizon\Contracts\Silenced` interface. If a job implements this interface, it will automatically be silenced, even if it is not present in the `silenced` configuration array:
+Ngoài ra, job bạn muốn ẩn có thể triển khai interface `Laravel\Horizon\Contracts\Silenced`. Nếu job triển khai interface này, nó sẽ tự động bị ẩn ngay cả khi không có trong mảng cấu hình `silenced`:
 
 ```php
 use Laravel\Horizon\Contracts\Silenced;
@@ -325,25 +325,25 @@ class ProcessPodcast implements ShouldQueue, Silenced
 ```
 
 <a name="balancing-strategies"></a>
-## Balancing Strategies
+## Chiến lược cân bằng
 
-Each supervisor can process one or more queues but unlike Laravel's default queue system, Horizon allows you to choose from three worker balancing strategies: `auto`, `simple`, and `false`.
+Mỗi supervisor có thể xử lý một hoặc nhiều queue. Khác với hệ thống queue mặc định của Laravel, Horizon cho phép bạn chọn một trong ba chiến lược cân bằng worker: `auto`, `simple` và `false`.
 
 <a name="auto-balancing"></a>
-### Auto Balancing
+### Cân bằng tự động
 
-The `auto` strategy, which is the default strategy, adjusts the number of worker processes per queue based on the current workload of the queue. For example, if your `notifications` queue has 1,000 pending jobs while your `default` queue is empty, Horizon will allocate more workers to your `notifications` queue until the queue is empty.
+Chiến lược `auto`, cũng là chiến lược mặc định, điều chỉnh số worker process cho mỗi queue dựa trên workload hiện tại. Ví dụ, nếu queue `notifications` có 1.000 job đang chờ trong khi queue `default` trống, Horizon sẽ phân bổ thêm worker cho queue `notifications` cho đến khi queue được xử lý hết.
 
-When using the `auto` strategy, you may also configure the `minProcesses` and `maxProcesses` configuration options:
+Khi sử dụng chiến lược `auto`, bạn cũng có thể cấu hình các tùy chọn `minProcesses` và `maxProcesses`:
 
 <div class="content-list" markdown="1">
 
-- `minProcesses` defines the minimum number of worker processes per queue. This value must be greater than or equal to 1.
-- `maxProcesses` defines the maximum total number of worker processes Horizon may scale up to across all queues. This value should typically be greater than the number of queues multiplied by the `minProcesses` value. To prevent the supervisor from spawning any processes, you may set this value to 0.
+- `minProcesses` xác định số worker process tối thiểu cho mỗi queue. Giá trị này phải lớn hơn hoặc bằng 1.
+- `maxProcesses` xác định tổng số worker process tối đa mà Horizon có thể scale lên trên tất cả queue. Thông thường, giá trị này nên lớn hơn số queue nhân với `minProcesses`. Để ngăn supervisor tạo bất kỳ process nào, bạn có thể đặt giá trị này thành `0`.
 
 </div>
 
-For example, you may configure Horizon to maintain at least one process per queue and scale up to a total of 10 worker processes:
+Ví dụ, bạn có thể cấu hình Horizon duy trì ít nhất một process cho mỗi queue và scale tối đa tổng cộng 10 worker process:
 
 ```php
 'environments' => [
@@ -362,23 +362,23 @@ For example, you may configure Horizon to maintain at least one process per queu
 ],
 ```
 
-The `autoScalingStrategy` configuration option determines how Horizon will assign more worker processes to queues. You can choose between two strategies:
+Tùy chọn cấu hình `autoScalingStrategy` xác định cách Horizon phân bổ thêm worker process cho các queue. Bạn có thể chọn một trong hai chiến lược:
 
 <div class="content-list" markdown="1">
 
-- The `time` strategy will assign workers based on the total estimated amount of time it will take to clear the queue.
-- The `size` strategy will assign workers based on the total number of jobs on the queue.
+- Chiến lược `time` phân bổ worker dựa trên tổng thời gian ước tính cần thiết để xử lý hết queue.
+- Chiến lược `size` phân bổ worker dựa trên tổng số job trong queue.
 
 </div>
 
-The `balanceMaxShift` and `balanceCooldown` configuration values determine how quickly Horizon will scale to meet worker demand. In the example above, a maximum of one new process will be created or destroyed every three seconds. You are free to tweak these values as necessary based on your application's needs.
+Các giá trị cấu hình `balanceMaxShift` và `balanceCooldown` xác định tốc độ Horizon scale để đáp ứng nhu cầu worker. Trong ví dụ trên, tối đa một process mới sẽ được tạo hoặc hủy sau mỗi ba giây. Bạn có thể điều chỉnh các giá trị này khi cần dựa trên nhu cầu của ứng dụng.
 
 <a name="auto-queue-priorities"></a>
-#### Queue Priorities and Auto Balancing
+#### Độ ưu tiên Queue và Cân bằng tự động
 
-When using the `auto` balancing strategy, Horizon does not enforce strict priority between queues. The order of queues in a supervisor's configuration does not affect how worker processes are assigned. Instead, Horizon relies on the selected `autoScalingStrategy` to dynamically allocate worker processes based on queue load.
+Khi sử dụng chiến lược cân bằng `auto`, Horizon không áp đặt độ ưu tiên nghiêm ngặt giữa các queue. Thứ tự queue trong cấu hình của supervisor không ảnh hưởng đến cách worker process được phân bổ. Thay vào đó, Horizon dựa vào `autoScalingStrategy` đã chọn để phân bổ động worker process theo tải của queue.
 
-For example, in the following configuration, the high queue is not prioritized over the default queue, despite appearing first in the list:
+Ví dụ, trong cấu hình sau, queue `high` không được ưu tiên hơn queue `default`, dù nó xuất hiện trước trong danh sách:
 
 ```php
 'environments' => [
@@ -393,7 +393,7 @@ For example, in the following configuration, the high queue is not prioritized o
 ],
 ```
 
-If you need to enforce a relative priority between queues, you may define multiple supervisors and explicitly allocate processing resources:
+Nếu cần áp đặt độ ưu tiên tương đối giữa các queue, bạn có thể định nghĩa nhiều supervisor và phân bổ tài nguyên xử lý một cách tường minh:
 
 ```php
 'environments' => [
@@ -414,15 +414,15 @@ If you need to enforce a relative priority between queues, you may define multip
 ],
 ```
 
-In this example, the default `queue` can scale up to 10 processes, while the `images` queue is limited to one process. This configuration ensures that your queues can scale independently.
+Trong ví dụ này, queue `default` có thể scale lên tối đa 10 process, trong khi queue `images` bị giới hạn ở một process. Cấu hình này đảm bảo các queue có thể scale độc lập.
 
 > [!NOTE]
-> When dispatching resource-intensive jobs, it's sometimes best to assign them to a dedicated queue with a limited `maxProcesses` value. Otherwise, these jobs could consume excessive CPU resources and overload your system.
+> Khi dispatch các job tiêu tốn nhiều tài nguyên, đôi khi tốt nhất là đưa chúng vào một queue riêng với giá trị `maxProcesses` bị giới hạn. Nếu không, các job này có thể sử dụng quá nhiều tài nguyên CPU và làm hệ thống quá tải.
 
 <a name="simple-balancing"></a>
-### Simple Balancing
+### Cân bằng đơn giản
 
-The `simple` strategy distributes worker processes evenly across the specified queues. With this strategy, Horizon does not automatically scale the number of worker processes. Rather, it uses a fixed number of processes:
+Chiến lược `simple` phân bổ đều worker process cho các queue đã chỉ định. Với chiến lược này, Horizon không tự động scale số lượng worker process mà sử dụng một số lượng process cố định:
 
 ```php
 'environments' => [
@@ -437,9 +437,9 @@ The `simple` strategy distributes worker processes evenly across the specified q
 ],
 ```
 
-In the example above, Horizon will assign 5 processes to each queue, splitting the total of 10 evenly.
+Trong ví dụ trên, Horizon sẽ phân bổ 5 process cho mỗi queue, chia đều tổng số 10 process.
 
-If you'd like to control the number of worker processes assigned to each queue individually, you can define multiple supervisors:
+Nếu muốn kiểm soát riêng số worker process được phân bổ cho từng queue, bạn có thể định nghĩa nhiều supervisor:
 
 ```php
 'environments' => [
@@ -460,12 +460,12 @@ If you'd like to control the number of worker processes assigned to each queue i
 ],
 ```
 
-With this configuration, Horizon will assign 10 processes to the `default` queue and 2 processes to the `notifications` queue.
+Với cấu hình này, Horizon sẽ phân bổ 10 process cho queue `default` và 2 process cho queue `notifications`.
 
 <a name="no-balancing"></a>
-### No Balancing
+### Không cân bằng
 
-When the `balance` option is set to `false`, Horizon processes queues strictly in the order they're listed, similar to Laravel's default queue system. However, it will still scale the number of worker processes if jobs begin to accumulate:
+Khi tùy chọn `balance` được đặt thành `false`, Horizon xử lý các queue nghiêm ngặt theo thứ tự chúng được liệt kê, tương tự hệ thống queue mặc định của Laravel. Tuy nhiên, Horizon vẫn sẽ scale số lượng worker process nếu job bắt đầu tồn đọng:
 
 ```php
 'environments' => [
@@ -481,32 +481,32 @@ When the `balance` option is set to `false`, Horizon processes queues strictly i
 ],
 ```
 
-In the example above, jobs in the `default` queue are always prioritized over jobs in the `notifications` queue. For instance, if there are 1,000 jobs in `default` and only 10 in `notifications`, Horizon will fully process all `default` jobs before handling any from `notifications`.
+Trong ví dụ trên, các job trong queue `default` luôn được ưu tiên hơn các job trong queue `notifications`. Chẳng hạn, nếu `default` có 1.000 job và `notifications` chỉ có 10 job, Horizon sẽ xử lý xong toàn bộ job trong `default` trước khi xử lý bất kỳ job nào từ `notifications`.
 
-You can control Horizon's ability to scale worker processes using the `minProcesses` and `maxProcesses` options:
+Bạn có thể kiểm soát khả năng scale worker process của Horizon bằng các tùy chọn `minProcesses` và `maxProcesses`:
 
 <div class="content-list" markdown="1">
 
-- `minProcesses` defines the minimum number of worker processes in total. This value must be greater than or equal to 1.
-- `maxProcesses` defines the maximum total number of worker processes Horizon may scale up to.
+- `minProcesses` xác định tổng số worker process tối thiểu. Giá trị này phải lớn hơn hoặc bằng 1.
+- `maxProcesses` xác định tổng số worker process tối đa mà Horizon có thể scale lên.
 
 </div>
 
 <a name="upgrading-horizon"></a>
-## Upgrading Horizon
+## Nâng cấp Horizon
 
-When upgrading to a new major version of Horizon, it's important that you carefully review [the upgrade guide](https://github.com/laravel/horizon/blob/master/UPGRADE.md).
+Khi nâng cấp lên một phiên bản major mới của Horizon, bạn nên xem kỹ [hướng dẫn nâng cấp](https://github.com/laravel/horizon/blob/master/UPGRADE.md).
 
 <a name="running-horizon"></a>
-## Running Horizon
+## Chạy Horizon
 
-Once you have configured your supervisors and workers in your application's `config/horizon.php` configuration file, you may start Horizon using the `horizon` Artisan command. This single command will start all of the configured worker processes for the current environment:
+Sau khi cấu hình các supervisor và worker trong file cấu hình `config/horizon.php` của ứng dụng, bạn có thể khởi động Horizon bằng lệnh Artisan `horizon`. Lệnh duy nhất này sẽ khởi động tất cả worker process đã được cấu hình cho environment hiện tại:
 
 ```shell
 php artisan horizon
 ```
 
-You may pause the Horizon process and instruct it to continue processing jobs using the `horizon:pause` and `horizon:continue` Artisan commands:
+Bạn có thể tạm dừng process Horizon và yêu cầu nó tiếp tục xử lý job bằng các lệnh Artisan `horizon:pause` và `horizon:continue`:
 
 ```shell
 php artisan horizon:pause
@@ -514,7 +514,7 @@ php artisan horizon:pause
 php artisan horizon:continue
 ```
 
-You may also pause and continue specific Horizon [supervisors](#supervisors) using the `horizon:pause-supervisor` and `horizon:continue-supervisor` Artisan commands:
+Bạn cũng có thể tạm dừng và tiếp tục từng [supervisor](#supervisors) Horizon cụ thể bằng các lệnh Artisan `horizon:pause-supervisor` và `horizon:continue-supervisor`:
 
 ```shell
 php artisan horizon:pause-supervisor supervisor-1
@@ -522,46 +522,46 @@ php artisan horizon:pause-supervisor supervisor-1
 php artisan horizon:continue-supervisor supervisor-1
 ```
 
-You may check the current status of the Horizon process using the `horizon:status` Artisan command:
+Bạn có thể kiểm tra trạng thái hiện tại của process Horizon bằng lệnh Artisan `horizon:status`:
 
 ```shell
 php artisan horizon:status
 ```
 
-You may check the current status of a specific Horizon [supervisor](#supervisors) using the `horizon:supervisor-status` Artisan command:
+Bạn có thể kiểm tra trạng thái hiện tại của một [supervisor](#supervisors) Horizon cụ thể bằng lệnh Artisan `horizon:supervisor-status`:
 
 ```shell
 php artisan horizon:supervisor-status supervisor-1
 ```
 
-You may gracefully terminate the Horizon process using the `horizon:terminate` Artisan command. Any jobs that are currently being processed will be completed and then Horizon will stop executing:
+Bạn có thể kết thúc process Horizon một cách an toàn bằng lệnh Artisan `horizon:terminate`. Mọi job đang được xử lý sẽ hoàn tất trước khi Horizon dừng chạy:
 
 ```shell
 php artisan horizon:terminate
 ```
 
 <a name="automatically-restarting-horizon"></a>
-#### Automatically Restarting Horizon
+#### Tự động khởi động lại Horizon
 
-During local development, you may run the `horizon:listen` command. When using the `horizon:listen` command, you don't have to manually restart Horizon when you want to reload your updated code. Before using this feature, you should ensure that [Node](https://nodejs.org) is installed within your local development environment. In addition, you should install the [Chokidar](https://github.com/paulmillr/chokidar) file-watching library within your project:
+Trong quá trình phát triển local, bạn có thể chạy lệnh `horizon:listen`. Khi sử dụng `horizon:listen`, bạn không cần tự khởi động lại Horizon mỗi khi muốn nạp lại code vừa cập nhật. Trước khi dùng tính năng này, hãy đảm bảo [Node](https://nodejs.org) đã được cài đặt trong môi trường phát triển local. Ngoài ra, bạn nên cài thư viện theo dõi file [Chokidar](https://github.com/paulmillr/chokidar) vào project:
 
 ```shell
 npm install --save-dev chokidar
 ```
 
-Once Chokidar is installed, you may start Horizon using the `horizon:listen` command:
+Sau khi cài Chokidar, bạn có thể khởi động Horizon bằng lệnh `horizon:listen`:
 
 ```shell
 php artisan horizon:listen
 ```
 
-When running within Docker or Vagrant, you should use the `--poll` option:
+Khi chạy trong Docker hoặc Vagrant, bạn nên sử dụng tùy chọn `--poll`:
 
 ```shell
 php artisan horizon:listen --poll
 ```
 
-You may configure the directories and files that should be watched using the `watch` configuration option within your application's `config/horizon.php` configuration file:
+Bạn có thể cấu hình các thư mục và file cần được theo dõi bằng tùy chọn `watch` trong file cấu hình `config/horizon.php` của ứng dụng:
 
 ```php
 'watch' => [
@@ -578,32 +578,32 @@ You may configure the directories and files that should be watched using the `wa
 ```
 
 <a name="deploying-horizon"></a>
-### Deploying Horizon
+### Deploy Horizon
 
-When you're ready to deploy Horizon to your application's actual server, you should configure a process monitor to monitor the `php artisan horizon` command and restart it if it exits unexpectedly. Don't worry, we'll discuss how to install a process monitor below.
+Khi sẵn sàng deploy Horizon lên server thực tế của ứng dụng, bạn nên cấu hình một process monitor để giám sát lệnh `php artisan horizon` và khởi động lại nếu process thoát ngoài dự kiến. Phần dưới sẽ trình bày cách cài đặt process monitor.
 
-During your application's deployment process, you should instruct the Horizon process to terminate so that it will be restarted by your process monitor and receive your code changes:
+Trong quá trình deploy ứng dụng, bạn nên yêu cầu process Horizon kết thúc để process monitor khởi động lại nó và nạp các thay đổi code mới:
 
 ```shell
 php artisan horizon:terminate
 ```
 
 <a name="installing-supervisor"></a>
-#### Installing Supervisor
+#### Cài đặt Supervisor
 
-Supervisor is a process monitor for the Linux operating system and will automatically restart your `horizon` process if it stops executing. To install Supervisor on Ubuntu, you may use the following command. If you are not using Ubuntu, you can likely install Supervisor using your operating system's package manager:
+Supervisor là một process monitor dành cho hệ điều hành Linux và sẽ tự động khởi động lại process `horizon` nếu process này ngừng chạy. Để cài Supervisor trên Ubuntu, bạn có thể dùng lệnh sau. Nếu không sử dụng Ubuntu, bạn thường có thể cài Supervisor bằng package manager của hệ điều hành:
 
 ```shell
 sudo apt-get install supervisor
 ```
 
 > [!NOTE]
-> If configuring Supervisor yourself sounds overwhelming, consider using [Laravel Cloud](https://cloud.laravel.com), which can manage background processes for your Laravel applications.
+> Nếu việc tự cấu hình Supervisor có vẻ phức tạp, hãy cân nhắc sử dụng [Laravel Cloud](https://cloud.laravel.com), dịch vụ có thể quản lý các background process cho ứng dụng Laravel của bạn.
 
 <a name="supervisor-configuration"></a>
-#### Supervisor Configuration
+#### Cấu hình Supervisor
 
-Supervisor configuration files are typically stored within your server's `/etc/supervisor/conf.d` directory. Within this directory, you may create any number of configuration files that instruct supervisor how your processes should be monitored. For example, let's create a `horizon.conf` file that starts and monitors a `horizon` process:
+Các file cấu hình Supervisor thường được lưu trong thư mục `/etc/supervisor/conf.d` trên server. Trong thư mục này, bạn có thể tạo nhiều file cấu hình để chỉ dẫn Supervisor cách giám sát các process. Ví dụ, hãy tạo file `horizon.conf` để khởi động và giám sát một process `horizon`:
 
 ```ini
 [program:horizon]
@@ -617,15 +617,15 @@ stdout_logfile=/home/forge/example.com/horizon.log
 stopwaitsecs=3600
 ```
 
-When defining your Supervisor configuration, you should ensure that the value of `stopwaitsecs` is greater than the number of seconds consumed by your longest running job. Otherwise, Supervisor may kill the job before it is finished processing.
+Khi định nghĩa cấu hình Supervisor, hãy đảm bảo giá trị `stopwaitsecs` lớn hơn số giây mà job chạy lâu nhất cần để hoàn thành. Nếu không, Supervisor có thể kill job trước khi nó xử lý xong.
 
 > [!WARNING]
-> While the examples above are valid for Ubuntu based servers, the location and file extension expected of Supervisor configuration files may vary between other server operating systems. Please consult your server's documentation for more information.
+> Mặc dù các ví dụ trên phù hợp với server dựa trên Ubuntu, vị trí và phần mở rộng file mà Supervisor yêu cầu có thể khác trên các hệ điều hành server khác. Hãy tham khảo tài liệu của server để biết thêm thông tin.
 
 <a name="starting-supervisor"></a>
-#### Starting Supervisor
+#### Khởi động Supervisor
 
-Once the configuration file has been created, you may update the Supervisor configuration and start the monitored processes using the following commands:
+Sau khi tạo file cấu hình, bạn có thể cập nhật cấu hình Supervisor và khởi động các process được giám sát bằng các lệnh sau:
 
 ```shell
 sudo supervisorctl reread
@@ -636,12 +636,12 @@ sudo supervisorctl start horizon
 ```
 
 > [!NOTE]
-> For more information on running Supervisor, consult the [Supervisor documentation](http://supervisord.org/index.html).
+> Để biết thêm thông tin về cách chạy Supervisor, hãy tham khảo [tài liệu Supervisor](http://supervisord.org/index.html).
 
 <a name="tags"></a>
-## Tags
+## Tag
 
-Horizon allows you to assign "tags" to jobs, including mailables, broadcast events, notifications, and queued event listeners. In fact, Horizon will intelligently and automatically tag most jobs depending on the Eloquent models that are attached to the job. For example, take a look at the following job:
+Horizon cho phép bạn gán "tag" cho job, bao gồm mailables, broadcast event, notification và queued event listener. Trên thực tế, Horizon sẽ tự động gắn tag một cách thông minh cho hầu hết job dựa trên các Eloquent model được gắn với job. Ví dụ, hãy xem job sau:
 
 ```php
 <?php
@@ -673,7 +673,7 @@ class RenderVideo implements ShouldQueue
 }
 ```
 
-If this job is queued with an `App\Models\Video` instance that has an `id` attribute of `1`, it will automatically receive the tag `App\Models\Video:1`. This is because Horizon will search the job's properties for any Eloquent models. If Eloquent models are found, Horizon will intelligently tag the job using the model's class name and primary key:
+Nếu job này được đưa vào queue cùng một instance `App\Models\Video` có thuộc tính `id` bằng `1`, nó sẽ tự động nhận tag `App\Models\Video:1`. Lý do là Horizon sẽ tìm các Eloquent model trong các property của job. Nếu tìm thấy Eloquent model, Horizon sẽ gắn tag cho job bằng tên class của model và primary key:
 
 ```php
 use App\Jobs\RenderVideo;
@@ -685,9 +685,9 @@ RenderVideo::dispatch($video);
 ```
 
 <a name="manually-tagging-jobs"></a>
-#### Manually Tagging Jobs
+#### Gắn tag cho Job thủ công
 
-If you would like to manually define the tags for one of your queueable objects, you may define a `tags` method on the class:
+Nếu muốn tự định nghĩa tag cho một queueable object, bạn có thể định nghĩa method `tags` trên class:
 
 ```php
 class RenderVideo implements ShouldQueue
@@ -705,9 +705,9 @@ class RenderVideo implements ShouldQueue
 ```
 
 <a name="manually-tagging-event-listeners"></a>
-#### Manually Tagging Event Listeners
+#### Gắn tag cho Event Listener thủ công
 
-When retrieving the tags for a queued event listener, Horizon will automatically pass the event instance to the `tags` method, allowing you to add event data to the tags:
+Khi lấy tag cho một queued event listener, Horizon sẽ tự động truyền event instance vào method `tags`, cho phép bạn đưa dữ liệu của event vào tag:
 
 ```php
 class SendRenderNotifications implements ShouldQueue
@@ -725,12 +725,12 @@ class SendRenderNotifications implements ShouldQueue
 ```
 
 <a name="notifications"></a>
-## Notifications
+## Thông báo
 
 > [!WARNING]
-> When configuring Horizon to send Slack or SMS notifications, you should review the [prerequisites for the relevant notification channel](/docs/{{version}}/notifications).
+> Khi cấu hình Horizon gửi thông báo qua Slack hoặc SMS, bạn nên xem lại [các điều kiện tiên quyết của notification channel tương ứng](/docs/{{version}}/notifications).
 
-If you would like to be notified when one of your queues has a long wait time, you may use the `Horizon::routeMailNotificationsTo`, `Horizon::routeSlackNotificationsTo`, and `Horizon::routeSmsNotificationsTo` methods. You may call these methods from the `boot` method of your application's `App\Providers\HorizonServiceProvider`:
+Nếu muốn nhận thông báo khi một queue có thời gian chờ quá lâu, bạn có thể sử dụng các method `Horizon::routeMailNotificationsTo`, `Horizon::routeSlackNotificationsTo` và `Horizon::routeSmsNotificationsTo`. Bạn có thể gọi các method này từ method `boot` của `App\Providers\HorizonServiceProvider` trong ứng dụng:
 
 ```php
 /**
@@ -747,9 +747,9 @@ public function boot(): void
 ```
 
 <a name="configuring-notification-wait-time-thresholds"></a>
-#### Configuring Notification Wait Time Thresholds
+#### Cấu hình ngưỡng thời gian chờ của thông báo
 
-You may configure how many seconds are considered a "long wait" within your application's `config/horizon.php` configuration file. The `waits` configuration option within this file allows you to control the long wait threshold for each connection / queue combination. Any undefined connection / queue combinations will default to a long wait threshold of 60 seconds:
+Bạn có thể cấu hình số giây được xem là "thời gian chờ lâu" trong file cấu hình `config/horizon.php` của ứng dụng. Tùy chọn cấu hình `waits` trong file này cho phép kiểm soát ngưỡng chờ lâu cho từng tổ hợp connection / queue. Mọi tổ hợp connection / queue chưa được định nghĩa sẽ mặc định sử dụng ngưỡng 60 giây:
 
 ```php
 'waits' => [
@@ -759,12 +759,12 @@ You may configure how many seconds are considered a "long wait" within your appl
 ],
 ```
 
-Setting a queue's threshold to `0` will disable long wait notifications for that queue.
+Đặt ngưỡng của một queue thành `0` sẽ tắt thông báo thời gian chờ lâu cho queue đó.
 
 <a name="metrics"></a>
 ## Metrics
 
-Horizon includes a metrics dashboard which provides information regarding your job and queue wait times and throughput. In order to populate this dashboard, you should configure Horizon's `snapshot` Artisan command to run every five minutes in your application's `routes/console.php` file:
+Horizon cung cấp dashboard metrics hiển thị thông tin về thời gian chờ và throughput của job cũng như queue. Để cung cấp dữ liệu cho dashboard này, bạn nên cấu hình lệnh Artisan `snapshot` của Horizon chạy mỗi năm phút trong file `routes/console.php` của ứng dụng:
 
 ```php
 use Illuminate\Support\Facades\Schedule;
@@ -772,7 +772,7 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::command('horizon:snapshot')->everyFiveMinutes();
 ```
 
-You may configure how many snapshots Horizon retains for its metrics graphs using the `metrics.trim_snapshots` option in your application's `config/horizon.php` configuration file. Because this option limits the number of snapshots rather than their age, the retention period depends on how frequently the `horizon:snapshot` command runs:
+Bạn có thể cấu hình số snapshot Horizon giữ lại cho các biểu đồ metrics bằng tùy chọn `metrics.trim_snapshots` trong file cấu hình `config/horizon.php` của ứng dụng. Vì tùy chọn này giới hạn số lượng snapshot thay vì tuổi của chúng, thời gian lưu giữ phụ thuộc vào tần suất chạy lệnh `horizon:snapshot`:
 
 ```php
 'metrics' => [
@@ -783,41 +783,43 @@ You may configure how many snapshots Horizon retains for its metrics graphs usin
 ],
 ```
 
-If you would like to delete all metric data, you can invoke the `horizon:clear-metrics` Artisan command:
+Nếu muốn xóa toàn bộ dữ liệu metrics, bạn có thể gọi lệnh Artisan `horizon:clear-metrics`:
 
 ```shell
 php artisan horizon:clear-metrics
 ```
 
 <a name="deleting-failed-jobs"></a>
-## Deleting Failed Jobs
+## Xóa Job thất bại
 
-If you would like to delete a failed job, you may use the `horizon:forget` command. The `horizon:forget` command accepts the ID or UUID of the failed job as its only argument:
+Nếu muốn xóa một job thất bại, bạn có thể sử dụng lệnh `horizon:forget`. Lệnh `horizon:forget` nhận ID hoặc UUID của job thất bại làm đối số duy nhất:
 
 ```shell
 php artisan horizon:forget 5
 ```
 
-If you would like to delete all failed jobs, you may provide the `--all` option to the `horizon:forget` command:
+Nếu muốn xóa tất cả job thất bại, bạn có thể truyền tùy chọn `--all` cho lệnh `horizon:forget`:
 
 ```shell
 php artisan horizon:forget --all
 ```
 
 <a name="clearing-jobs-from-queues"></a>
-## Clearing Jobs From Queues
+## Xóa Job khỏi Queue
 
-If you would like to delete all jobs from your application's default queue, you may do so using the `horizon:clear` Artisan command:
+Nếu muốn xóa tất cả job khỏi queue mặc định của ứng dụng, bạn có thể thực hiện bằng lệnh Artisan `horizon:clear`:
 
 ```shell
 php artisan horizon:clear
 ```
 
-You may provide the `queue` option to delete jobs from a specific queue:
+Bạn có thể truyền tùy chọn `queue` để xóa job khỏi một queue cụ thể:
 
 ```shell
 php artisan horizon:clear --queue=emails
 ```
+
+---
 
 ## Tài liệu chính thức
 

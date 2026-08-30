@@ -1,51 +1,37 @@
-# Resetting Passwords
-
-- [Introduction](#introduction)
-    - [Configuration](#configuration)
-    - [Driver Prerequisites](#driver-prerequisites)
-    - [Model Preparation](#model-preparation)
-    - [Configuring Trusted Hosts](#configuring-trusted-hosts)
+# Đặt lại mật khẩu
+- [Giới thiệu](#introduction)
+    - [Cấu hình](#configuration)
+    - [Điều kiện của driver](#driver-prerequisites)
+    - [Chuẩn bị model](#model-preparation)
+    - [Cấu hình trusted hosts](#configuring-trusted-hosts)
 - [Routing](#routing)
-    - [Requesting the Password Reset Link](#requesting-the-password-reset-link)
-    - [Resetting the Password](#resetting-the-password)
-- [Deleting Expired Tokens](#deleting-expired-tokens)
-- [Customization](#password-customization)
-
+    - [Yêu cầu link đặt lại mật khẩu](#requesting-the-password-reset-link)
+    - [Đặt lại mật khẩu](#resetting-the-password)
+- [Xóa token hết hạn](#deleting-expired-tokens)
+- [Tùy biến](#password-customization)
 <a name="introduction"></a>
-## Introduction
-
-Most web applications provide a way for users to reset their forgotten passwords. Rather than forcing you to re-implement this by hand for every application you create, Laravel provides convenient services for sending password reset links and secure resetting passwords.
-
+## Giới thiệu
+Hầu hết ứng dụng web đều cho phép người dùng đặt lại mật khẩu đã quên. Thay vì phải tự xây lại chức năng này cho từng ứng dụng, Laravel cung cấp các service thuận tiện để gửi link đặt lại mật khẩu và thực hiện quá trình đổi mật khẩu một cách an toàn.
 > [!NOTE]
-> Want to get started fast? Install a Laravel [application starter kit](/docs/{{version}}/starter-kits) in a fresh Laravel application. Laravel's starter kits will take care of scaffolding your entire authentication system, including resetting forgotten passwords.
-
+> Muốn bắt đầu nhanh? Hãy cài một [application starter kit](/docs/{{version}}/starter-kits) cho ứng dụng Laravel mới. Starter kit sẽ scaffold toàn bộ hệ thống authentication, bao gồm cả chức năng đặt lại mật khẩu đã quên.
 <a name="configuration"></a>
-### Configuration
-
-Your application's password reset configuration file is stored at `config/auth.php`. Be sure to review the options available to you in this file. By default, Laravel is configured to use the `database` password reset driver.
-
-The password reset `driver` configuration option defines where password reset data will be stored. Laravel includes two drivers:
-
+### Cấu hình
+Cấu hình đặt lại mật khẩu của ứng dụng nằm trong file `config/auth.php`. Bạn nên xem qua các tùy chọn trong file này. Mặc định, Laravel dùng password reset driver `database`.
+Tùy chọn cấu hình `driver` xác định nơi lưu dữ liệu đặt lại mật khẩu. Laravel cung cấp hai driver:
 <div class="content-list" markdown="1">
 
-- `database` - password reset data is stored in a relational database.
-- `cache` - password reset data is stored in one of your cache-based stores.
-
+- `database` - dữ liệu đặt lại mật khẩu được lưu trong relational database.
+- `cache` - dữ liệu đặt lại mật khẩu được lưu trong một cache store.
 </div>
 
 <a name="driver-prerequisites"></a>
-### Driver Prerequisites
-
+### Điều kiện của driver
 <a name="database"></a>
 #### Database
-
-When using the default `database` driver, a table must be created to store your application's password reset tokens. Typically, this is included in Laravel's default `0001_01_01_000000_create_users_table.php` database migration.
-
+Khi dùng driver `database` mặc định, ứng dụng cần một table để lưu password reset token. Thông thường table này đã được tạo trong migration mặc định `0001_01_01_000000_create_users_table.php` của Laravel.
 <a name="cache"></a>
 #### Cache
-
-There is also a cache driver available for handling password resets, which does not require a dedicated database table. Entries are keyed by the user's email address, so ensure you are not using email addresses as a cache key elsewhere in your application:
-
+Laravel còn có cache driver cho password reset, không cần table database riêng. Mỗi entry được key theo email người dùng, vì vậy hãy đảm bảo ứng dụng không dùng email làm cache key cho mục đích khác trong cùng store:
 ```php
 'passwords' => [
     'users' => [
@@ -57,51 +43,33 @@ There is also a cache driver available for handling password resets, which does 
     ],
 ],
 ```
-
-To prevent a call to `artisan cache:clear` from flushing your password reset data, you can optionally specify a separate cache store with the `store` configuration key. The value should correspond to a store configured in your `config/cache.php` configuration value.
-
+Để tránh việc chạy `artisan cache:clear` xóa dữ liệu password reset, bạn có thể chỉ định một cache store riêng bằng key cấu hình `store`. Giá trị này phải tương ứng với một store được khai báo trong `config/cache.php`.
 <a name="model-preparation"></a>
-### Model Preparation
-
-Before using the password reset features of Laravel, your application's `App\Models\User` model must use the `Illuminate\Notifications\Notifiable` trait. Typically, this trait is already included on the default `App\Models\User` model that is created with new Laravel applications.
-
-Next, verify that your `App\Models\User` model implements the `Illuminate\Contracts\Auth\CanResetPassword` contract. The `App\Models\User` model included with the framework already implements this interface, and uses the `Illuminate\Auth\Passwords\CanResetPassword` trait to include the methods needed to implement the interface.
-
+### Chuẩn bị model
+Trước khi dùng chức năng password reset của Laravel, model `App\Models\User` phải sử dụng trait `Illuminate\Notifications\Notifiable`. Trait này thường đã có sẵn trong model `User` mặc định của ứng dụng Laravel mới.
+Tiếp theo, hãy xác nhận model `App\Models\User` implement contract `Illuminate\Contracts\Auth\CanResetPassword`. Model `User` mặc định của framework đã implement interface này và dùng trait `Illuminate\Auth\Passwords\CanResetPassword` để cung cấp các method cần thiết.
 <a name="configuring-trusted-hosts"></a>
-### Configuring Trusted Hosts
-
-By default, Laravel will respond to all requests it receives regardless of the content of the HTTP request's `Host` header. In addition, the `Host` header's value will be used when generating absolute URLs to your application during a web request.
-
-Typically, you should configure your web server, such as Nginx or Apache, to only send requests to your application that match a given hostname. However, if you do not have the ability to customize your web server directly and need to instruct Laravel to only respond to certain hostnames, you may do so by using the `trustHosts` middleware method in your application's `bootstrap/app.php` file. This is particularly important when your application offers password reset functionality.
-
-To learn more about this middleware method, please consult the [TrustHosts middleware documentation](/docs/{{version}}/requests#configuring-trusted-hosts).
-
+### Cấu hình trusted hosts
+Mặc định, Laravel phản hồi mọi request nhận được bất kể nội dung header HTTP `Host`. Giá trị của header `Host` cũng được dùng khi tạo absolute URL tới ứng dụng trong quá trình xử lý web request.
+Thông thường, bạn nên cấu hình web server như Nginx hoặc Apache để chỉ chuyển request tới ứng dụng khi hostname khớp với domain mong muốn. Nếu không thể cấu hình trực tiếp web server và cần Laravel chỉ phản hồi một số hostname nhất định, hãy dùng method middleware `trustHosts` trong `bootstrap/app.php`. Điều này đặc biệt quan trọng với ứng dụng có chức năng password reset.
+Để tìm hiểu thêm, xem [tài liệu middleware TrustHosts](/docs/{{version}}/requests#configuring-trusted-hosts).
 <a name="routing"></a>
 ## Routing
-
-To properly implement support for allowing users to reset their passwords, we will need to define several routes. First, we will need a pair of routes to handle allowing the user to request a password reset link via their email address. Second, we will need a pair of routes to handle actually resetting the password once the user visits the password reset link that is emailed to them and completes the password reset form.
-
+Để triển khai đầy đủ chức năng đặt lại mật khẩu, ta cần định nghĩa một số route. Trước hết là một cặp route cho phép người dùng yêu cầu link reset thông qua email. Sau đó là một cặp route xử lý quá trình đặt mật khẩu mới khi người dùng mở link được gửi qua email và submit form reset.
 <a name="requesting-the-password-reset-link"></a>
-### Requesting the Password Reset Link
-
+### Yêu cầu link đặt lại mật khẩu
 <a name="the-password-reset-link-request-form"></a>
-#### The Password Reset Link Request Form
-
-First, we will define the routes that are needed to request password reset links. To get started, we will define a route that returns a view with the password reset link request form:
-
+#### Form yêu cầu link đặt lại mật khẩu
+Trước tiên, định nghĩa route hiển thị view chứa form yêu cầu link reset mật khẩu:
 ```php
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->middleware('guest')->name('password.request');
 ```
-
-The view that is returned by this route should have a form containing an `email` field, which will allow the user to request a password reset link for a given email address.
-
+View được route này trả về nên có form chứa field `email`, cho phép người dùng yêu cầu link reset cho địa chỉ email cụ thể.
 <a name="password-reset-link-handling-the-form-submission"></a>
-#### Handling the Form Submission
-
-Next, we will define a route that handles the form submission request from the "forgot password" view. This route will be responsible for validating the email address and sending the password reset request to the corresponding user:
-
+#### Xử lý form submission
+Tiếp theo, định nghĩa route xử lý form gửi từ màn hình "forgot password". Route này chịu trách nhiệm validate email và gửi yêu cầu đặt lại mật khẩu tới người dùng tương ứng:
 ```php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -118,40 +86,27 @@ Route::post('/forgot-password', function (Request $request) {
         : back()->withErrors(['email' => __($status)]);
 })->middleware('guest')->name('password.email');
 ```
-
-Before moving on, let's examine this route in more detail. First, the request's `email` attribute is validated. Next, we will use Laravel's built-in "password broker" (via the `Password` facade) to send a password reset link to the user. The password broker will take care of retrieving the user by the given field (in this case, the email address) and sending the user a password reset link via Laravel's built-in [notification system](/docs/{{version}}/notifications).
-
-The `sendResetLink` method returns a "status" slug. This status may be translated using Laravel's [localization](/docs/{{version}}/localization) helpers in order to display a user-friendly message to the user regarding the status of their request. The translation of the password reset status is determined by your application's `lang/{lang}/passwords.php` language file. An entry for each possible value of the status slug is located within the `passwords` language file.
-
+Hãy xem kỹ route này. Trước tiên, attribute `email` của request được validate. Sau đó, ta dùng "password broker" tích hợp của Laravel thông qua facade `Password` để gửi link reset. Password broker chịu trách nhiệm tìm user theo field được cung cấp — trong trường hợp này là email — và gửi link đặt lại mật khẩu thông qua [notification system](/docs/{{version}}/notifications) của Laravel.
+Method `sendResetLink` trả về một "status" slug. Bạn có thể dịch status này bằng các helper [localization](/docs/{{version}}/localization) của Laravel để hiển thị thông báo thân thiện cho người dùng. Bản dịch của password reset status được xác định trong file `lang/{lang}/passwords.php`; file này có entry cho từng giá trị status slug có thể xảy ra.
 > [!NOTE]
-> By default, the Laravel application skeleton does not include the `lang` directory. If you would like to customize Laravel's language files, you may publish them via the `lang:publish` Artisan command.
-
-You may be wondering how Laravel knows how to retrieve the user record from your application's database when calling the `Password` facade's `sendResetLink` method. The Laravel password broker utilizes your authentication system's "user providers" to retrieve database records. The user provider used by the password broker is configured within the `passwords` configuration array of your `config/auth.php` configuration file. To learn more about writing custom user providers, consult the [authentication documentation](/docs/{{version}}/authentication#adding-custom-user-providers).
-
+> Mặc định, skeleton ứng dụng Laravel không có thư mục `lang`. Nếu muốn tùy biến các file ngôn ngữ, bạn có thể publish chúng bằng lệnh Artisan `lang:publish`.
+Có thể bạn đang thắc mắc Laravel biết cách lấy user record từ database khi gọi `Password::sendResetLink` như thế nào. Password broker sử dụng "user provider" của authentication system để truy xuất record. User provider mà password broker sử dụng được cấu hình trong mảng `passwords` của file `config/auth.php`. Xem [tài liệu authentication](/docs/{{version}}/authentication#adding-custom-user-providers) để tìm hiểu cách viết custom user provider.
 > [!NOTE]
-> When manually implementing password resets, you are required to define the contents of the views and routes yourself. If you would like scaffolding that includes all necessary authentication and verification logic, check out the [Laravel application starter kits](/docs/{{version}}/starter-kits).
-
+> Khi tự triển khai password reset, bạn phải tự định nghĩa nội dung view và route. Nếu muốn scaffold sẵn toàn bộ authentication và verification logic cần thiết, hãy xem [Laravel application starter kits](/docs/{{version}}/starter-kits).
 <a name="resetting-the-password"></a>
-### Resetting the Password
-
+### Đặt lại mật khẩu
 <a name="the-password-reset-form"></a>
-#### The Password Reset Form
-
-Next, we will define the routes necessary to actually reset the password once the user clicks on the password reset link that has been emailed to them and provides a new password. First, let's define the route that will display the reset password form that is displayed when the user clicks the reset password link. This route will receive a `token` parameter that we will use later to verify the password reset request:
-
+#### Form đặt lại mật khẩu
+Tiếp theo, định nghĩa các route thực sự đặt lại mật khẩu sau khi người dùng bấm link được gửi qua email và nhập mật khẩu mới. Trước hết là route hiển thị form reset. Route này nhận parameter `token`, sau đó sẽ được dùng để xác minh yêu cầu đặt lại mật khẩu:
 ```php
 Route::get('/reset-password/{token}', function (string $token) {
     return view('auth.reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
 ```
-
-The view that is returned by this route should display a form containing an `email` field, a `password` field, a `password_confirmation` field, and a hidden `token` field, which should contain the value of the secret `$token` received by our route.
-
+View được route này trả về nên hiển thị form có các field `email`, `password`, `password_confirmation` và một field ẩn `token` chứa giá trị `$token` bí mật mà route nhận được.
 <a name="password-reset-handling-the-form-submission"></a>
-#### Handling the Form Submission
-
-Of course, we need to define a route to actually handle the password reset form submission. This route will be responsible for validating the incoming request and updating the user's password in the database:
-
+#### Xử lý form submission
+Ta cũng cần route thực sự xử lý form reset mật khẩu. Route này chịu trách nhiệm validate request và cập nhật mật khẩu của user trong database:
 ```php
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -159,7 +114,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-
 Route::post('/reset-password', function (Request $request) {
     $request->validate([
         'token' => 'required',
@@ -185,26 +139,17 @@ Route::post('/reset-password', function (Request $request) {
         : back()->withErrors(['email' => [__($status)]]);
 })->middleware('guest')->name('password.update');
 ```
-
-Before moving on, let's examine this route in more detail. First, the request's `token`, `email`, and `password` attributes are validated. Next, we will use Laravel's built-in "password broker" (via the `Password` facade) to validate the password reset request credentials.
-
-If the token, email address, and password given to the password broker are valid, the closure passed to the `reset` method will be invoked. Within this closure, which receives the user instance and the plain-text password provided to the password reset form, we may update the user's password in the database.
-
-The `reset` method returns a "status" slug. This status may be translated using Laravel's [localization](/docs/{{version}}/localization) helpers in order to display a user-friendly message to the user regarding the status of their request. The translation of the password reset status is determined by your application's `lang/{lang}/passwords.php` language file. An entry for each possible value of the status slug is located within the `passwords` language file. If your application does not contain a `lang` directory, you may create it using the `lang:publish` Artisan command.
-
-Before moving on, you may be wondering how Laravel knows how to retrieve the user record from your application's database when calling the `Password` facade's `reset` method. The Laravel password broker utilizes your authentication system's "user providers" to retrieve database records. The user provider used by the password broker is configured within the `passwords` configuration array of your `config/auth.php` configuration file. To learn more about writing custom user providers, consult the [authentication documentation](/docs/{{version}}/authentication#adding-custom-user-providers).
-
+Hãy xem route này kỹ hơn. Trước tiên, các attribute `token`, `email` và `password` được validate. Tiếp theo, ta dùng password broker tích hợp thông qua facade `Password` để xác minh thông tin của yêu cầu reset.
+Nếu token, email và password truyền cho password broker hợp lệ, closure truyền vào method `reset` sẽ được gọi. Closure nhận user instance và plain-text password từ form; bên trong closure, ta có thể cập nhật mật khẩu của user trong database.
+Method `reset` trả về một "status" slug. Status có thể được dịch bằng helper [localization](/docs/{{version}}/localization) để hiển thị thông báo thân thiện. Bản dịch nằm trong `lang/{lang}/passwords.php`, với entry cho từng status slug có thể xảy ra. Nếu ứng dụng chưa có thư mục `lang`, bạn có thể tạo bằng lệnh Artisan `lang:publish`.
+Tương tự `sendResetLink`, khi gọi `Password::reset`, Laravel tìm user record thông qua "user provider" của hệ thống authentication. User provider của password broker được cấu hình trong mảng `passwords` của `config/auth.php`. Xem [tài liệu authentication](/docs/{{version}}/authentication#adding-custom-user-providers) để tìm hiểu custom user provider.
 <a name="deleting-expired-tokens"></a>
-## Deleting Expired Tokens
-
-If you are using the `database` driver, password reset tokens that have expired will still be present within your database. However, you may easily delete these records using the `auth:clear-resets` Artisan command:
-
+## Xóa token hết hạn
+Nếu dùng driver `database`, các password reset token đã hết hạn vẫn tồn tại trong database. Bạn có thể xóa chúng bằng lệnh Artisan `auth:clear-resets`:
 ```shell
 php artisan auth:clear-resets
 ```
-
-If you would like to automate this process, consider adding the command to your application's [scheduler](/docs/{{version}}/scheduling):
-
+Nếu muốn tự động hóa việc này, hãy cân nhắc thêm command vào [scheduler](/docs/{{version}}/scheduling) của ứng dụng:
 ```php
 use Illuminate\Support\Facades\Schedule;
 
@@ -212,17 +157,13 @@ Schedule::command('auth:clear-resets')->everyFifteenMinutes();
 ```
 
 <a name="password-customization"></a>
-## Customization
-
+## Tùy biến
 <a name="reset-link-customization"></a>
-#### Reset Link Customization
-
-You may customize the password reset link URL using the `createUrlUsing` method provided by the `ResetPassword` notification class. This method accepts a closure which receives the user instance that is receiving the notification as well as the password reset link token. Typically, you should call this method from the `boot` method of your application's `AppServiceProvider`:
-
+#### Tùy biến reset link
+Bạn có thể tùy biến URL của password reset link bằng method `createUrlUsing` trên notification class `ResetPassword`. Method nhận một closure với user instance đang nhận notification và password reset token. Thông thường, hãy gọi method này trong `boot` của `AppServiceProvider`:
 ```php
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
-
 /**
  * Bootstrap any application services.
  */
@@ -235,10 +176,8 @@ public function boot(): void
 ```
 
 <a name="reset-email-customization"></a>
-#### Reset Email Customization
-
-You may easily modify the notification class used to send the password reset link to the user. To get started, override the `sendPasswordResetNotification` method on your `App\Models\User` model. Within this method, you may send the notification using any [notification class](/docs/{{version}}/notifications) of your own creation. The password reset `$token` is the first argument received by the method. You may use this `$token` to build the password reset URL of your choice and send your notification to the user:
-
+#### Tùy biến email reset mật khẩu
+Bạn có thể dễ dàng thay notification class dùng để gửi password reset link. Hãy override method `sendPasswordResetNotification` trên model `App\Models\User`. Trong method này, bạn có thể gửi bất kỳ [notification class](/docs/{{version}}/notifications) tùy chỉnh nào. Password reset `$token` là đối số đầu tiên được truyền vào method; bạn có thể dùng token này để tạo URL reset theo ý muốn và gửi notification tới user:
 ```php
 use App\Notifications\ResetPasswordNotification;
 

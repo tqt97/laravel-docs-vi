@@ -1,31 +1,25 @@
-# Deployment
-
-- [Introduction](#introduction)
-- [Server Requirements](#server-requirements)
-- [Server Configuration](#server-configuration)
+# Triển khai ứng dụng
+- [Giới thiệu](#introduction)
+- [Yêu cầu Server](#server-requirements)
+- [Cấu hình Server](#server-configuration)
     - [Nginx](#nginx)
     - [FrankenPHP](#frankenphp)
-    - [Directory Permissions](#directory-permissions)
-- [Optimization](#optimization)
-    - [Caching Configuration](#optimizing-configuration-loading)
-    - [Caching Events](#caching-events)
-    - [Caching Routes](#optimizing-route-loading)
-    - [Caching Views](#optimizing-view-loading)
-- [Reloading Services](#reloading-services)
+    - [Quyền Directory](#directory-permissions)
+- [Tối ưu](#optimization)
+    - [Cache Configuration](#optimizing-configuration-loading)
+    - [Cache Events](#caching-events)
+    - [Cache Routes](#optimizing-route-loading)
+    - [Cache Views](#optimizing-view-loading)
+- [Reload Services](#reloading-services)
 - [Debug Mode](#debug-mode)
-- [The Health Route](#the-health-route)
-- [Deploying With Laravel Cloud or Forge](#deploying-with-cloud-or-forge)
-
+- [Health Route](#the-health-route)
+- [Deploy bằng Laravel Cloud hoặc Forge](#deploying-with-cloud-or-forge)
 <a name="introduction"></a>
-## Introduction
-
-When you're ready to deploy your Laravel application to production, there are some important things you can do to make sure your application is running as efficiently as possible. In this document, we'll cover some great starting points for making sure your Laravel application is deployed properly.
-
+## Giới thiệu
+Khi chuẩn bị deploy ứng dụng Laravel lên production, có một số việc quan trọng giúp đảm bảo ứng dụng vận hành hiệu quả nhất có thể. Phần này trình bày các điểm khởi đầu cần thiết để triển khai Laravel đúng cách.
 <a name="server-requirements"></a>
-## Server Requirements
-
-The Laravel framework has a few system requirements. You should ensure that your web server has the following minimum PHP version and extensions:
-
+## Yêu cầu máy chủ
+Laravel framework có một số yêu cầu hệ thống. Hãy đảm bảo web server có tối thiểu phiên bản PHP và các extension sau:
 <div class="content-list" markdown="1">
 
 - PHP >= 8.3
@@ -46,15 +40,11 @@ The Laravel framework has a few system requirements. You should ensure that your
 </div>
 
 <a name="server-configuration"></a>
-## Server Configuration
-
+## Cấu hình máy chủ
 <a name="nginx"></a>
 ### Nginx
-
-If you are deploying your application to a server that is running Nginx, you may use the following configuration file as a starting point for configuring your web server. Most likely, this file will need to be customized depending on your server's configuration. **If you would like assistance in managing your server, consider using a fully-managed Laravel platform like [Laravel Cloud](https://cloud.laravel.com).**
-
-Please ensure, like the configuration below, your web server directs all requests to your application's `public/index.php` file. You should never attempt to move the `index.php` file to your project's root, as serving the application from the project root will expose many sensitive configuration files to the public Internet:
-
+Nếu deploy ứng dụng lên server chạy Nginx, bạn có thể dùng file cấu hình bên dưới làm điểm khởi đầu. Gần như chắc chắn bạn sẽ cần điều chỉnh theo cấu hình server thực tế. **Nếu muốn có nền tảng quản lý server hoàn chỉnh, hãy cân nhắc một platform Laravel được quản lý toàn phần như [Laravel Cloud](https://cloud.laravel.com).**
+Hãy đảm bảo web server chuyển toàn bộ request tới file `public/index.php` của ứng dụng như cấu hình bên dưới. **Không nên di chuyển `index.php` lên root project**, vì phục vụ ứng dụng trực tiếp từ project root có thể làm lộ nhiều file cấu hình nhạy cảm ra Internet:
 ```nginx
 server {
     listen 80;
@@ -96,111 +86,73 @@ server {
 
 <a name="frankenphp"></a>
 ### FrankenPHP
-
-[FrankenPHP](https://frankenphp.dev/) may also be used to serve your Laravel applications. FrankenPHP is a modern PHP application server written in Go. To serve a Laravel PHP application using FrankenPHP, you may simply invoke its `php-server` command:
-
+[FrankenPHP](https://frankenphp.dev/) cũng có thể dùng để phục vụ ứng dụng Laravel. FrankenPHP là PHP application server hiện đại viết bằng Go. Để phục vụ Laravel bằng FrankenPHP, bạn có thể chạy command `php-server`:
 ```shell
 frankenphp php-server -r public/
 ```
-
-To take advantage of more powerful features supported by FrankenPHP, such as its [Laravel Octane](/docs/{{version}}/octane) integration, HTTP/3, modern compression, or the ability to package Laravel applications as standalone binaries, please consult FrankenPHP's [Laravel documentation](https://frankenphp.dev/docs/laravel/).
-
+Để tận dụng các tính năng mạnh hơn của FrankenPHP như tích hợp [Laravel Octane](/docs/{{version}}/octane), HTTP/3, compression hiện đại hoặc đóng gói ứng dụng Laravel thành standalone binary, hãy xem [tài liệu Laravel của FrankenPHP](https://frankenphp.dev/docs/laravel/).
 <a name="directory-permissions"></a>
-### Directory Permissions
-
-Laravel will need to write to the `bootstrap/cache` and `storage` directories, so you should ensure the web server process owner has permission to write to these directories.
-
+### Quyền thư mục
+Laravel cần ghi dữ liệu vào các directory `bootstrap/cache` và `storage`, vì vậy hãy đảm bảo user chạy web server process có quyền ghi vào các directory này.
 <a name="optimization"></a>
-## Optimization
-
-When deploying your application to production, there are a variety of files that should be cached, including your configuration, events, routes, and views. Laravel provides a single, convenient `optimize` Artisan command that will cache all of these files. This command should typically be invoked as part of your application's deployment process:
-
+## Tối ưu
+Khi deploy production, có nhiều loại dữ liệu nên được cache gồm configuration, events, routes và views. Laravel cung cấp command Artisan `optimize` để cache tất cả những thành phần này trong một lần chạy. Thông thường command nên nằm trong deployment process:
 ```shell
 php artisan optimize
 ```
-
-The `optimize:clear` method may be used to remove all of the cache files generated by the `optimize` command as well as all keys in the default cache driver:
-
+Phương thức `optimize:clear` dùng để xóa toàn bộ cache file được tạo bởi `optimize`, đồng thời xóa tất cả key trong default cache driver:
 ```shell
 php artisan optimize:clear
 ```
-
-In the following documentation, we will discuss each of the granular optimization commands that are executed by the `optimize` command.
-
+Phần dưới đây trình bày chi tiết từng command tối ưu riêng lẻ được `optimize` thực thi.
 <a name="optimizing-configuration-loading"></a>
-### Caching Configuration
-
-When deploying your application to production, you should make sure that you run the `config:cache` Artisan command during your deployment process:
-
+### Cache cấu hình
+Khi deploy production, hãy đảm bảo chạy command Artisan `config:cache` trong deployment process:
 ```shell
 php artisan config:cache
 ```
-
-This command will combine all of Laravel's configuration files into a single, cached file, which greatly reduces the number of trips the framework must make to the filesystem when loading your configuration values.
-
+Command này kết hợp toàn bộ file cấu hình Laravel thành một cache file duy nhất, giảm đáng kể số lần framework phải truy cập filesystem khi load configuration value.
 > [!WARNING]
-> If you execute the `config:cache` command during your deployment process, you should be sure that you are only calling the `env` function from within your configuration files. Once the configuration has been cached, the `.env` file will not be loaded and all calls to the `env` function for `.env` variables will return `null`.
-
+> Nếu chạy `config:cache` trong deployment process, hãy đảm bảo chỉ gọi function `env` bên trong configuration file. Sau khi configuration được cache, file `.env` không còn được load và mọi lời gọi `env` cho variable trong `.env` sẽ trả `null`.
 <a name="caching-events"></a>
-### Caching Events
-
-You should cache your application's auto-discovered event to listener mappings during your deployment process. This can be accomplished by invoking the `event:cache` Artisan command during deployment:
-
+### Cache sự kiện
+Bạn nên cache mapping event-to-listener được auto-discover trong deployment process. Thực hiện bằng command Artisan `event:cache`:
 ```shell
 php artisan event:cache
 ```
 
 <a name="optimizing-route-loading"></a>
-### Caching Routes
-
-If you are building a large application with many routes, you should make sure that you are running the `route:cache` Artisan command during your deployment process:
-
+### Cache Routes
+Nếu xây dựng ứng dụng lớn có nhiều route, hãy chạy command Artisan `route:cache` trong deployment process:
 ```shell
 php artisan route:cache
 ```
-
-This command reduces all of your route registrations into a single method call within a cached file, improving the performance of route registration when registering hundreds of routes.
-
+Command này rút gọn toàn bộ route registration vào một method call trong cache file, cải thiện hiệu năng đăng ký route khi ứng dụng có hàng trăm route.
 <a name="optimizing-view-loading"></a>
-### Caching Views
-
-When deploying your application to production, you should make sure that you run the `view:cache` Artisan command during your deployment process:
-
+### Cache Views
+Khi deploy production, hãy đảm bảo chạy command Artisan `view:cache`:
 ```shell
 php artisan view:cache
 ```
-
-This command precompiles all your Blade views so they are not compiled on demand, improving the performance of each request that returns a view.
-
+Command này precompile toàn bộ Blade view để chúng không phải compile theo nhu cầu, cải thiện hiệu năng cho mỗi request trả về view.
 <a name="reloading-services"></a>
-## Reloading Services
-
+## Reload Services
 > [!NOTE]
-> When deploying to [Laravel Cloud](https://cloud.laravel.com), it is not necessary to use the `reload` command, as gracefully reloading of all services is handled automatically.
-
-After deploying a new version of your application, any long-running services such as queue workers, Laravel Reverb, or Laravel Octane should be reloaded / restarted to use the new code. Laravel provides a single `reload` Artisan command that will terminate these services:
-
+> Khi deploy bằng [Laravel Cloud](https://cloud.laravel.com), không cần dùng command `reload` vì việc graceful reload toàn bộ service được xử lý tự động.
+Sau khi deploy phiên bản mới, các long-running service như queue worker, Laravel Reverb hoặc Laravel Octane cần được reload / restart để sử dụng code mới. Laravel cung cấp command Artisan `reload` để terminate các service này:
 ```shell
 php artisan reload
 ```
-
-If you are not using [Laravel Cloud](https://cloud.laravel.com), you should manually configure a process monitor that can detect when your reloadable processes exit and automatically restart them.
-
+Nếu không dùng [Laravel Cloud](https://cloud.laravel.com), hãy tự cấu hình process monitor có thể phát hiện process reloadable đã exit và tự động restart.
 <a name="debug-mode"></a>
 ## Debug Mode
-
-The debug option in your `config/app.php` configuration file determines how much information about an error is actually displayed to the user. By default, this option is set to respect the value of the `APP_DEBUG` environment variable, which is stored in your application's `.env` file.
-
+Option debug trong `config/app.php` quyết định mức độ thông tin lỗi được hiển thị cho người dùng. Mặc định option này lấy value từ environment variable `APP_DEBUG` trong file `.env`.
 > [!WARNING]
-> **In your production environment, this value should always be `false`. If the `APP_DEBUG` variable is set to `true` in production, you risk exposing sensitive configuration values to your application's end users.**
-
+> **Trong production, value này phải luôn là `false`. Nếu `APP_DEBUG=true` trên production, ứng dụng có nguy cơ làm lộ configuration value nhạy cảm cho end user.**
 <a name="the-health-route"></a>
-## The Health Route
-
-Laravel includes a built-in health check route that can be used to monitor the status of your application. In production, this route may be used to report the status of your application to an uptime monitor, load balancer, or orchestration system such as Kubernetes.
-
-By default, the health check route is served at `/up` and will return a 200 HTTP response if the application has booted without exceptions. Otherwise, a 500 HTTP response will be returned. You may configure the URI for this route in your application's `bootstrap/app` file:
-
+## Health Route
+Laravel có sẵn health check route để theo dõi trạng thái ứng dụng. Trong production, route này có thể báo tình trạng ứng dụng cho uptime monitor, load balancer hoặc orchestration system như Kubernetes.
+Mặc định health check route nằm tại `/up` và trả HTTP `200` nếu application bootstrap không có exception. Nếu bootstrap lỗi, response là `500`. Bạn có thể cấu hình URI trong file `bootstrap/app`:
 ```php
 ->withRouting(
     web: __DIR__.'/../routes/web.php',
@@ -209,26 +161,17 @@ By default, the health check route is served at `/up` and will return a 200 HTTP
     health: '/status', // [tl! add]
 )
 ```
-
-When HTTP requests are made to this route, Laravel will also dispatch a `Illuminate\Foundation\Events\DiagnosingHealth` event, allowing you to perform additional health checks relevant to your application. Within a [listener](/docs/{{version}}/events) for this event, you may check your application's database or cache status. If you detect a problem with your application, you may simply throw an exception from the listener.
-
+Khi có HTTP request tới route này, Laravel cũng dispatch event `Illuminate\Foundation\Events\DiagnosingHealth`, cho phép thực hiện health check bổ sung phù hợp với ứng dụng. Trong [listener](/docs/{{version}}/events), bạn có thể kiểm tra database hoặc cache. Nếu phát hiện vấn đề, chỉ cần throw exception từ listener.
 <a name="deploying-with-cloud-or-forge"></a>
-## Deploying With Laravel Cloud or Forge
-
+## Deploy bằng Laravel Cloud hoặc Forge
 <a name="laravel-cloud"></a>
 #### Laravel Cloud
-
-If you would like a fully-managed, auto-scaling deployment platform tuned for Laravel, check out [Laravel Cloud](https://cloud.laravel.com). Laravel Cloud is a robust deployment platform for Laravel, offering managed compute, databases, caches, and object storage.
-
-Launch your Laravel application on Cloud and fall in love with the scalable simplicity. Laravel Cloud is fine-tuned by Laravel's creators to work seamlessly with the framework so you can keep writing your Laravel applications exactly like you're used to.
-
+Nếu muốn nền tảng deploy auto-scaling được quản lý toàn phần và tối ưu riêng cho Laravel, hãy xem [Laravel Cloud](https://cloud.laravel.com). Laravel Cloud cung cấp managed compute, database, cache và object storage.
+Bạn có thể đưa ứng dụng Laravel lên Cloud mà vẫn tiếp tục viết application theo cách quen thuộc; nền tảng được chính đội ngũ Laravel tối ưu để làm việc liền mạch với framework.
 <a name="laravel-forge"></a>
 #### Laravel Forge
-
-If you prefer to manage your own servers but aren't comfortable configuring all of the various services needed to run a robust Laravel application, [Laravel Forge](https://forge.laravel.com) is a VPS server management platform for Laravel applications.
-
-Laravel Forge can create servers on various infrastructure providers such as DigitalOcean, Linode, AWS, and more. In addition, Forge installs and manages all of the tools needed to build robust Laravel applications, such as Nginx, MySQL, Redis, Memcached, Beanstalk, and more.
-
+Nếu muốn tự quản server nhưng không muốn tự cấu hình tất cả service cần thiết để chạy Laravel ổn định, [Laravel Forge](https://forge.laravel.com) là nền tảng quản lý VPS dành cho ứng dụng Laravel.
+Laravel Forge có thể tạo server trên nhiều hạ tầng như DigitalOcean, Linode, AWS và các provider khác. Forge cũng cài đặt, quản lý những công cụ cần thiết cho Laravel như Nginx, MySQL, Redis, Memcached, Beanstalk và nhiều service khác.
 ## Tài liệu chính thức
 
 Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/deployment). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

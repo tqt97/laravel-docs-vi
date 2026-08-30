@@ -1,31 +1,31 @@
 # Service Container
 
-- [Introduction](#introduction)
-    - [Zero Configuration Resolution](#zero-configuration-resolution)
-    - [When to Utilize the Container](#when-to-use-the-container)
+- [Giới thiệu](#introduction)
+    - [Phân giải không cần cấu hình](#zero-configuration-resolution)
+    - [Khi nào nên sử dụng Container](#when-to-use-the-container)
 - [Binding](#binding)
-    - [Binding Basics](#binding-basics)
-    - [Binding Interfaces to Implementations](#binding-interfaces-to-implementations)
+    - [Kiến thức cơ bản về Binding](#binding-basics)
+    - [Binding Interface với Implementation](#binding-interfaces-to-implementations)
     - [Contextual Binding](#contextual-binding)
-    - [Contextual Attributes](#contextual-attributes)
-    - [Binding Primitives](#binding-primitives)
-    - [Binding Typed Variadics](#binding-typed-variadics)
-    - [Tagging](#tagging)
-    - [Extending Bindings](#extending-bindings)
-- [Resolving](#resolving)
-    - [The Make Method](#the-make-method)
-    - [Automatic Injection](#automatic-injection)
-- [Method Invocation and Injection](#method-invocation-and-injection)
-- [Container Events](#container-events)
+    - [Contextual Attribute](#contextual-attributes)
+    - [Binding giá trị primitive](#binding-primitives)
+    - [Binding tham số variadic có kiểu](#binding-typed-variadics)
+    - [Gắn tag](#tagging)
+    - [Mở rộng Binding](#extending-bindings)
+- [Phân giải](#resolving)
+    - [Phương thức `make`](#the-make-method)
+    - [Tự động inject dependency](#automatic-injection)
+- [Gọi phương thức và inject dependency](#method-invocation-and-injection)
+- [Sự kiện của Container](#container-events)
     - [Rebinding](#rebinding)
 - [PSR-11](#psr-11)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-The Laravel service container is a powerful tool for managing class dependencies and performing dependency injection. Dependency injection is a fancy phrase that essentially means this: class dependencies are "injected" into the class via the constructor or, in some cases, "setter" methods.
+Service Container của Laravel là một công cụ mạnh mẽ để quản lý dependency giữa các class và thực hiện dependency injection. Nói một cách trực tiếp, dependency injection có nghĩa là các dependency mà một class cần sẽ được "inject" vào class đó thông qua constructor hoặc, trong một số trường hợp, thông qua các phương thức "setter".
 
-Let's look at a simple example:
+Hãy xem một ví dụ đơn giản:
 
 ```php
 <?php
@@ -56,14 +56,14 @@ class PodcastController extends Controller
 }
 ```
 
-In this example, the `PodcastController` needs to retrieve podcasts from a data source such as Apple Music. So, we will **inject** a service that is able to retrieve podcasts. Since the service is injected, we are able to easily "mock", or create a dummy implementation of the `AppleMusic` service when testing our application.
+Trong ví dụ này, `PodcastController` cần lấy podcast từ một nguồn dữ liệu như Apple Music. Vì vậy, chúng ta sẽ **inject** một service có khả năng truy xuất podcast. Do service được inject từ bên ngoài, khi kiểm thử ứng dụng chúng ta có thể dễ dàng "mock" service `AppleMusic`, tức tạo một implementation giả phục vụ cho test.
 
-A deep understanding of the Laravel service container is essential to building a powerful, large application, as well as for contributing to the Laravel core itself.
+Hiểu sâu Service Container của Laravel là nền tảng quan trọng khi xây dựng các ứng dụng lớn, có kiến trúc vững chắc, đồng thời cũng cần thiết nếu bạn muốn đóng góp vào chính Laravel core.
 
 <a name="zero-configuration-resolution"></a>
-### Zero Configuration Resolution
+### Phân giải không cần cấu hình
 
-If a class has no dependencies or only depends on other concrete classes (not interfaces), the container does not need to be instructed on how to resolve that class. For example, you may place the following code in your `routes/web.php` file:
+Nếu một class không có dependency, hoặc chỉ phụ thuộc vào các concrete class khác (không phải interface), bạn không cần chỉ dẫn cho container cách phân giải class đó. Ví dụ, bạn có thể đặt đoạn code sau trong file `routes/web.php`:
 
 ```php
 <?php
@@ -78,14 +78,14 @@ Route::get('/', function (Service $service) {
 });
 ```
 
-In this example, hitting your application's `/` route will automatically resolve the `Service` class and inject it into your route's handler. This is game changing. It means you can develop your application and take advantage of dependency injection without worrying about bloated configuration files.
+Trong ví dụ này, khi truy cập route `/` của ứng dụng, Laravel sẽ tự động phân giải class `Service` và inject instance tương ứng vào handler của route. Đây là một khả năng rất quan trọng: bạn có thể tận dụng dependency injection trong quá trình phát triển mà không phải duy trì những file cấu hình binding cồng kềnh.
 
-Thankfully, many of the classes you will be writing when building a Laravel application automatically receive their dependencies via the container, including [controllers](/docs/{{version}}/controllers), [event listeners](/docs/{{version}}/events), [middleware](/docs/{{version}}/middleware), and more. Additionally, you may type-hint dependencies in the `handle` method of [queued jobs](/docs/{{version}}/queues). Once you taste the power of automatic and zero configuration dependency injection it feels impossible to develop without it.
+Trong ứng dụng Laravel, rất nhiều class bạn viết sẽ tự động nhận dependency thông qua container, bao gồm [controller](/docs/{{version}}/controllers), [event listener](/docs/{{version}}/events), [middleware](/docs/{{version}}/middleware) và nhiều thành phần khác. Bạn cũng có thể type-hint dependency trong phương thức `handle` của [queued job](/docs/{{version}}/queues). Khi đã quen với khả năng dependency injection tự động và không cần cấu hình này, nó sẽ trở thành một phần tự nhiên trong cách bạn phát triển ứng dụng Laravel.
 
 <a name="when-to-use-the-container"></a>
-### When to Utilize the Container
+### Khi nào nên sử dụng Container
 
-Thanks to zero configuration resolution, you will often type-hint dependencies on routes, controllers, event listeners, and elsewhere without ever manually interacting with the container. For example, you might type-hint the `Illuminate\Http\Request` object on your route definition so that you can easily access the current request. Even though we never have to interact with the container to write this code, it is managing the injection of these dependencies behind the scenes:
+Nhờ khả năng phân giải không cần cấu hình, bạn thường chỉ cần type-hint dependency trong route, controller, event listener và nhiều vị trí khác mà không phải trực tiếp thao tác với container. Ví dụ, bạn có thể type-hint đối tượng `Illuminate\Http\Request` trong định nghĩa route để dễ dàng truy cập request hiện tại. Dù đoạn code này không trực tiếp gọi container, phía sau Laravel vẫn sử dụng container để quản lý và inject dependency:
 
 ```php
 use Illuminate\Http\Request;
@@ -95,22 +95,22 @@ Route::get('/', function (Request $request) {
 });
 ```
 
-In many cases, thanks to automatic dependency injection and [facades](/docs/{{version}}/facades), you can build Laravel applications without **ever** manually binding or resolving anything from the container. **So, when would you ever manually interact with the container?** Let's examine two situations.
+Trong nhiều trường hợp, nhờ dependency injection tự động và [facade](/docs/{{version}}/facades), bạn có thể xây dựng ứng dụng Laravel mà **không bao giờ** phải tự binding hoặc phân giải dependency từ container. **Vậy khi nào chúng ta thực sự cần thao tác trực tiếp với container?** Có hai tình huống chính.
 
-First, if you write a class that implements an interface and you wish to type-hint that interface on a route or class constructor, you must [tell the container how to resolve that interface](#binding-interfaces-to-implementations). Secondly, if you are [writing a Laravel package](/docs/{{version}}/packages) that you plan to share with other Laravel developers, you may need to bind your package's services into the container.
+Thứ nhất, nếu bạn viết một class triển khai một interface và muốn type-hint interface đó trong route hoặc constructor của class, bạn phải [chỉ cho container cách phân giải interface đó](#binding-interfaces-to-implementations). Thứ hai, nếu bạn đang [phát triển một Laravel package](/docs/{{version}}/packages) để chia sẻ cho các Laravel developer khác, bạn có thể cần binding các service của package vào container.
 
 <a name="binding"></a>
 ## Binding
 
 <a name="binding-basics"></a>
-### Binding Basics
+### Kiến thức cơ bản về Binding
 
 <a name="simple-bindings"></a>
-#### Simple Bindings
+#### Binding cơ bản
 
-Almost all of your service container bindings will be registered within [service providers](/docs/{{version}}/providers), so most of these examples will demonstrate using the container in that context.
+Hầu hết binding của Service Container sẽ được đăng ký trong [service provider](/docs/{{version}}/providers), vì vậy phần lớn ví dụ trong tài liệu này sẽ minh họa việc sử dụng container trong ngữ cảnh đó.
 
-Within a service provider, you always have access to the container via the `$this->app` property. We can register a binding using the `bind` method, passing the class or interface name that we wish to register along with a closure that returns an instance of the class:
+Bên trong service provider, bạn luôn có thể truy cập container thông qua property `$this->app`. Để đăng ký một binding, hãy gọi phương thức `bind`, truyền vào tên class hoặc interface cần đăng ký cùng một closure trả về instance của class:
 
 ```php
 use App\Services\Transistor;
@@ -122,9 +122,9 @@ $this->app->bind(Transistor::class, function (Application $app) {
 });
 ```
 
-Note that we receive the container itself as an argument to the resolver. We can then use the container to resolve sub-dependencies of the object we are building.
+Lưu ý rằng resolver nhận chính container làm tham số. Từ đó, chúng ta có thể dùng container để phân giải các dependency con của đối tượng đang được khởi tạo.
 
-As mentioned, you will typically be interacting with the container within service providers; however, if you would like to interact with the container outside of a service provider, you may do so via the `App` [facade](/docs/{{version}}/facades):
+Như đã đề cập, thông thường bạn sẽ thao tác với container bên trong service provider. Tuy nhiên, nếu cần sử dụng container bên ngoài service provider, bạn có thể thực hiện thông qua [facade](/docs/{{version}}/facades) `App`:
 
 ```php
 use App\Services\Transistor;
@@ -136,7 +136,7 @@ App::bind(Transistor::class, function (Application $app) {
 });
 ```
 
-You may use the `bindIf` method to register a container binding only if a binding has not already been registered for the given type:
+Bạn có thể dùng phương thức `bindIf` để chỉ đăng ký binding khi type tương ứng chưa có binding nào trong container:
 
 ```php
 $this->app->bindIf(Transistor::class, function (Application $app) {
@@ -144,7 +144,7 @@ $this->app->bindIf(Transistor::class, function (Application $app) {
 });
 ```
 
-For convenience, you may omit providing the class or interface name that you wish to register as a separate argument and instead allow Laravel to infer the type from the return type of the closure you provide to the `bind` method:
+Để thuận tiện, bạn có thể bỏ qua đối số riêng chứa tên class hoặc interface cần đăng ký và để Laravel suy luận type từ return type của closure được truyền vào phương thức `bind`:
 
 ```php
 App::bind(function (Application $app): Transistor {
@@ -153,12 +153,12 @@ App::bind(function (Application $app): Transistor {
 ```
 
 > [!NOTE]
-> There is no need to bind classes into the container if they do not depend on any interfaces. The container does not need to be instructed on how to build these objects, since it can automatically resolve these objects using reflection.
+> Bạn không cần binding một class vào container nếu class đó không phụ thuộc vào interface nào. Container có thể tự động phân giải và khởi tạo những đối tượng này bằng reflection, nên không cần cấu hình cách tạo chúng.
 
 <a name="binding-a-singleton"></a>
-#### Binding A Singleton
+#### Binding Singleton
 
-The `singleton` method binds a class or interface into the container that should only be resolved one time. Once a singleton binding is resolved, the same object instance will be returned on subsequent calls into the container:
+Phương thức `singleton` binding một class hoặc interface vào container theo cách chỉ phân giải một lần. Sau khi singleton binding đã được phân giải, các lần yêu cầu tiếp theo từ container sẽ nhận lại cùng một object instance:
 
 ```php
 use App\Services\Transistor;
@@ -170,7 +170,7 @@ $this->app->singleton(Transistor::class, function (Application $app) {
 });
 ```
 
-You may use the `singletonIf` method to register a singleton container binding only if a binding has not already been registered for the given type:
+Bạn có thể dùng phương thức `singletonIf` để chỉ đăng ký singleton binding khi type tương ứng chưa được binding trong container:
 
 ```php
 $this->app->singletonIf(Transistor::class, function (Application $app) {
@@ -179,9 +179,9 @@ $this->app->singletonIf(Transistor::class, function (Application $app) {
 ```
 
 <a name="singleton-attribute"></a>
-#### Singleton Attribute
+#### Attribute Singleton
 
-Alternatively, you may mark an interface or class with the `#[Singleton]` attribute to indicate to the container that it should be resolved one time:
+Ngoài ra, bạn có thể đánh dấu interface hoặc class bằng attribute `#[Singleton]` để chỉ định rằng container chỉ nên phân giải type đó một lần:
 
 ```php
 <?php
@@ -198,9 +198,9 @@ class Transistor
 ```
 
 <a name="binding-scoped"></a>
-#### Binding Scoped Singletons
+#### Binding Scoped Singleton
 
-The `scoped` method binds a class or interface into the container that should only be resolved one time within a given Laravel request / job lifecycle. While this method is similar to the `singleton` method, instances registered using the `scoped` method will be flushed whenever the Laravel application starts a new "lifecycle", such as when a [Laravel Octane](/docs/{{version}}/octane) worker processes a new request or when a Laravel [queue worker](/docs/{{version}}/queues) processes a new job:
+Phương thức `scoped` binding một class hoặc interface vào container sao cho type đó chỉ được phân giải một lần trong một lifecycle request / job cụ thể của Laravel. Cách hoạt động này tương tự `singleton`, nhưng instance đăng ký bằng `scoped` sẽ được loại bỏ mỗi khi ứng dụng Laravel bắt đầu một "lifecycle" mới, chẳng hạn khi worker của [Laravel Octane](/docs/{{version}}/octane) xử lý request mới hoặc khi [queue worker](/docs/{{version}}/queues) của Laravel xử lý job mới:
 
 ```php
 use App\Services\Transistor;
@@ -212,7 +212,7 @@ $this->app->scoped(Transistor::class, function (Application $app) {
 });
 ```
 
-You may use the `scopedIf` method to register a scoped container binding only if a binding has not already been registered for the given type:
+Bạn có thể dùng phương thức `scopedIf` để chỉ đăng ký scoped binding khi type tương ứng chưa có binding trong container:
 
 ```php
 $this->app->scopedIf(Transistor::class, function (Application $app) {
@@ -221,9 +221,9 @@ $this->app->scopedIf(Transistor::class, function (Application $app) {
 ```
 
 <a name="scoped-attribute"></a>
-#### Scoped Attribute
+#### Attribute Scoped
 
-Alternatively, you may mark an interface or class with the `#[Scoped]` attribute to indicate to the container that it should be resolved one time within a given Laravel request / job lifecycle:
+Ngoài ra, bạn có thể đánh dấu interface hoặc class bằng attribute `#[Scoped]` để chỉ định rằng container chỉ phân giải type đó một lần trong mỗi lifecycle request / job của Laravel:
 
 ```php
 <?php
@@ -240,9 +240,9 @@ class Transistor
 ```
 
 <a name="binding-instances"></a>
-#### Binding Instances
+#### Binding Instance
 
-You may also bind an existing object instance into the container using the `instance` method. The given instance will always be returned on subsequent calls into the container:
+Bạn cũng có thể binding trực tiếp một object instance đã tồn tại vào container bằng phương thức `instance`. Sau đó, mọi lần phân giải type này từ container đều sẽ trả về chính instance đã đăng ký:
 
 ```php
 use App\Services\Transistor;
@@ -254,9 +254,9 @@ $this->app->instance(Transistor::class, $service);
 ```
 
 <a name="binding-interfaces-to-implementations"></a>
-### Binding Interfaces to Implementations
+### Binding Interface với Implementation
 
-A very powerful feature of the service container is its ability to bind an interface to a given implementation. For example, let's assume we have an `EventPusher` interface and a `RedisEventPusher` implementation. Once we have coded our `RedisEventPusher` implementation of this interface, we can register it with the service container like so:
+Một khả năng rất mạnh của Service Container là binding một interface với một implementation cụ thể. Ví dụ, giả sử chúng ta có interface `EventPusher` và implementation `RedisEventPusher`. Sau khi triển khai `RedisEventPusher` cho interface này, chúng ta có thể đăng ký nó với Service Container như sau:
 
 ```php
 use App\Contracts\EventPusher;
@@ -265,7 +265,7 @@ use App\Services\RedisEventPusher;
 $this->app->bind(EventPusher::class, RedisEventPusher::class);
 ```
 
-This statement tells the container that it should inject the `RedisEventPusher` when a class needs an implementation of `EventPusher`. Now we can type-hint the `EventPusher` interface in the constructor of a class that is resolved by the container. Remember, controllers, event listeners, middleware, and various other types of classes within Laravel applications are always resolved using the container:
+Khai báo này cho container biết rằng khi một class cần implementation của `EventPusher`, container phải inject `RedisEventPusher`. Từ đây, chúng ta có thể type-hint interface `EventPusher` trong constructor của class được container phân giải. Hãy nhớ rằng controller, event listener, middleware và nhiều loại class khác trong ứng dụng Laravel đều được phân giải thông qua container:
 
 ```php
 use App\Contracts\EventPusher;
@@ -279,11 +279,11 @@ public function __construct(
 ```
 
 <a name="bind-attribute"></a>
-#### Bind Attribute
+#### Attribute Bind
 
-Laravel also provides a `Bind` attribute for added convenience. You can apply this attribute to any interface to tell Laravel which implementation should be automatically injected whenever that interface is requested. When using the `Bind` attribute, there is no need to perform any additional service registration in your application's service providers.
+Laravel cũng cung cấp attribute `Bind` để việc khai báo thuận tiện hơn. Bạn có thể gắn attribute này vào bất kỳ interface nào để chỉ cho Laravel implementation nào phải được tự động inject mỗi khi interface đó được yêu cầu. Khi sử dụng `Bind`, bạn không cần đăng ký service bổ sung trong các service provider của ứng dụng.
 
-In addition, multiple `Bind` attributes may be placed on an interface in order to configure a different implementation that should be injected for a given set of environments:
+Ngoài ra, một interface có thể khai báo nhiều attribute `Bind` để cấu hình implementation khác nhau sẽ được inject cho từng nhóm environment cụ thể:
 
 ```php
 <?php
@@ -302,7 +302,7 @@ interface EventPusher
 }
 ```
 
-Furthermore, [Singleton](#singleton-attribute) and [Scoped](#scoped-attribute) attributes may be applied to indicate if the container bindings should be resolved once or once per request / job lifecycle:
+Bạn cũng có thể áp dụng các attribute [Singleton](#singleton-attribute) và [Scoped](#scoped-attribute) để xác định binding của container sẽ chỉ được phân giải một lần cho toàn bộ vòng đời tương ứng, hoặc một lần trong mỗi lifecycle request / job:
 
 ```php
 use App\Services\RedisEventPusher;
@@ -317,7 +317,7 @@ interface EventPusher
 }
 ```
 
-For bindings that depend on an arbitrary condition, you may use the `BindWhen` attribute. The closure may receive the container and should return `true` when the binding should be applied. `Bind` and `BindWhen` attributes are evaluated in the order they are declared:
+Với binding phụ thuộc vào một điều kiện tùy ý, bạn có thể sử dụng attribute `BindWhen`. Closure có thể nhận container và phải trả về `true` khi binding cần được áp dụng. Các attribute `Bind` và `BindWhen` được đánh giá theo đúng thứ tự khai báo:
 
 ```php
 use App\Services\BetaEventPusher;
@@ -332,12 +332,12 @@ interface EventPusher
 ```
 
 > [!NOTE]
-> The `BindWhen` attribute requires PHP 8.5 or greater.
+> Attribute `BindWhen` yêu cầu PHP 8.5 trở lên.
 
 <a name="contextual-binding"></a>
 ### Contextual Binding
 
-Sometimes you may have two classes that utilize the same interface, but you wish to inject different implementations into each class. For example, two controllers may depend on different implementations of the `Illuminate\Contracts\Filesystem\Filesystem` [contract](/docs/{{version}}/contracts). Laravel provides a simple, fluent interface for defining this behavior:
+Đôi khi hai class cùng sử dụng một interface nhưng bạn muốn inject implementation khác nhau cho từng class. Ví dụ, hai controller có thể phụ thuộc vào các implementation khác nhau của [contract](/docs/{{version}}/contracts) `Illuminate\Contracts\Filesystem\Filesystem`. Laravel cung cấp một fluent interface đơn giản để định nghĩa hành vi này:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -360,11 +360,11 @@ $this->app->when([VideoController::class, UploadController::class])
 ```
 
 <a name="contextual-attributes"></a>
-### Contextual Attributes
+### Contextual Attribute
 
-Since contextual binding is often used to inject implementations of drivers or configuration values, Laravel offers a variety of contextual binding attributes that allow to inject these types of values without manually defining the contextual bindings in your service providers.
+Vì contextual binding thường được dùng để inject implementation của driver hoặc các giá trị cấu hình, Laravel cung cấp nhiều contextual binding attribute cho phép inject trực tiếp các loại giá trị này mà không phải tự định nghĩa contextual binding trong service provider.
 
-For example, the `Storage` attribute may be used to inject a specific [storage disk](/docs/{{version}}/filesystem):
+Ví dụ, attribute `Storage` có thể được dùng để inject một [storage disk](/docs/{{version}}/filesystem) cụ thể:
 
 ```php
 <?php
@@ -384,7 +384,7 @@ class PhotoController extends Controller
 }
 ```
 
-In addition to the `Storage` attribute, Laravel offers `Auth`, `Cache`, `Config`, `Context`, `DB`, `Give`, `Log`, `RequestAttribute`, `RouteParameter`, and [Tag](#tagging) attributes:
+Ngoài attribute `Storage`, Laravel còn cung cấp các attribute `Auth`, `Cache`, `Config`, `Context`, `DB`, `Give`, `Log`, `RequestAttribute`, `RouteParameter` và [Tag](#tagging):
 
 ```php
 <?php
@@ -430,11 +430,11 @@ class PhotoController extends Controller
 }
 ```
 
-The `RouteParameter` attribute will resolve the route parameter matching the variable name. If needed, you may specify the route parameter name explicitly: `#[RouteParameter('photo')]`.
+Attribute `RouteParameter` sẽ phân giải route parameter có tên khớp với tên biến. Khi cần, bạn có thể chỉ định rõ tên route parameter: `#[RouteParameter('photo')]`.
 
-The `RequestAttribute` attribute will resolve the value stored under the given key in the current request's [attribute bag](https://symfony.com/doc/current/components/http_foundation.html#accessing-request-data): `#[RequestAttribute('organization')]`.
+Attribute `RequestAttribute` sẽ phân giải giá trị được lưu dưới key tương ứng trong [attribute bag](https://symfony.com/doc/current/components/http_foundation.html#accessing-request-data) của request hiện tại: `#[RequestAttribute('organization')]`.
 
-In addition, Laravel provides a `CurrentUser` attribute for injecting the currently authenticated user into a given route or class:
+Ngoài ra, Laravel cung cấp attribute `CurrentUser` để inject user đang được xác thực vào route hoặc class cần sử dụng:
 
 ```php
 use App\Models\User;
@@ -446,9 +446,9 @@ Route::get('/user', function (#[CurrentUser] User $user) {
 ```
 
 <a name="defining-custom-attributes"></a>
-#### Defining Custom Attributes
+#### Định nghĩa Custom Attribute
 
-You can create your own contextual attributes by implementing the `Illuminate\Contracts\Container\ContextualAttribute` contract. The container will call your attribute's `resolve` method, which should resolve the value that should be injected into the class utilizing the attribute. In the example below, we will re-implement Laravel's built-in `Config` attribute:
+Bạn có thể tự tạo contextual attribute bằng cách implement contract `Illuminate\Contracts\Container\ContextualAttribute`. Container sẽ gọi phương thức `resolve` của attribute; phương thức này chịu trách nhiệm phân giải giá trị cần inject vào class đang sử dụng attribute đó. Trong ví dụ dưới đây, chúng ta sẽ tự triển khai lại attribute `Config` có sẵn của Laravel:
 
 ```php
 <?php
@@ -486,9 +486,9 @@ class Config implements ContextualAttribute
 ```
 
 <a name="binding-primitives"></a>
-### Binding Primitives
+### Binding giá trị primitive
 
-Sometimes you may have a class that receives some injected classes, but also needs an injected primitive value such as an integer. You may easily use contextual binding to inject any value your class may need:
+Đôi khi một class vừa nhận các class được inject, vừa cần một giá trị primitive như số nguyên. Bạn có thể sử dụng contextual binding để inject bất kỳ giá trị nào mà class cần:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -498,7 +498,7 @@ $this->app->when(UserController::class)
     ->give($value);
 ```
 
-Sometimes a class may depend on an array of [tagged](#tagging) instances. Using the `giveTagged` method, you may easily inject all of the container bindings with that tag:
+Đôi khi một class phụ thuộc vào một mảng các instance đã được [gắn tag](#tagging). Với phương thức `giveTagged`, bạn có thể dễ dàng inject toàn bộ binding trong container mang tag đó:
 
 ```php
 $this->app->when(ReportAggregator::class)
@@ -506,7 +506,7 @@ $this->app->when(ReportAggregator::class)
     ->giveTagged('reports');
 ```
 
-If you need to inject a value from one of your application's configuration files, you may use the `giveConfig` method:
+Nếu cần inject một giá trị từ file cấu hình của ứng dụng, bạn có thể sử dụng phương thức `giveConfig`:
 
 ```php
 $this->app->when(ReportAggregator::class)
@@ -515,9 +515,9 @@ $this->app->when(ReportAggregator::class)
 ```
 
 <a name="binding-typed-variadics"></a>
-### Binding Typed Variadics
+### Binding tham số variadic có kiểu
 
-Occasionally, you may have a class that receives an array of typed objects using a variadic constructor argument:
+Trong một số trường hợp, một class có thể nhận nhiều object cùng kiểu thông qua một tham số variadic trong constructor:
 
 ```php
 <?php
@@ -546,7 +546,7 @@ class Firewall
 }
 ```
 
-Using contextual binding, you may resolve this dependency by providing the `give` method with a closure that returns an array of resolved `Filter` instances:
+Với contextual binding, bạn có thể phân giải dependency này bằng cách truyền cho phương thức `give` một closure trả về mảng các instance `Filter` đã được phân giải:
 
 ```php
 $this->app->when(Firewall::class)
@@ -560,7 +560,7 @@ $this->app->when(Firewall::class)
     });
 ```
 
-For convenience, you may also just provide an array of class names to be resolved by the container whenever `Firewall` needs `Filter` instances:
+Để thuận tiện hơn, bạn cũng có thể truyền trực tiếp một mảng tên class; container sẽ phân giải các class này mỗi khi `Firewall` cần các instance `Filter`:
 
 ```php
 $this->app->when(Firewall::class)
@@ -573,9 +573,9 @@ $this->app->when(Firewall::class)
 ```
 
 <a name="variadic-tag-dependencies"></a>
-#### Variadic Tag Dependencies
+#### Dependency variadic theo tag
 
-Sometimes a class may have a variadic dependency that is type-hinted as a given class (`Report ...$reports`). Using the `needs` and `giveTagged` methods, you may easily inject all of the container bindings with that [tag](#tagging) for the given dependency:
+Đôi khi một class có dependency variadic được type-hint bằng một class cụ thể (`Report ...$reports`). Bằng các phương thức `needs` và `giveTagged`, bạn có thể inject toàn bộ binding trong container có [tag](#tagging) tương ứng vào dependency đó:
 
 ```php
 $this->app->when(ReportAggregator::class)
@@ -584,9 +584,9 @@ $this->app->when(ReportAggregator::class)
 ```
 
 <a name="tagging"></a>
-### Tagging
+### Gắn tag
 
-Occasionally, you may need to resolve all of a certain "category" of binding. For example, perhaps you are building a report analyzer that receives an array of many different `Report` interface implementations. After registering the `Report` implementations, you can assign them a tag using the `tag` method:
+Trong một số trường hợp, bạn cần phân giải toàn bộ binding thuộc cùng một "nhóm". Ví dụ, bạn đang xây dựng một bộ phân tích báo cáo nhận vào nhiều implementation khác nhau của interface `Report`. Sau khi đăng ký các implementation `Report`, bạn có thể gán cho chúng một tag bằng phương thức `tag`:
 
 ```php
 $this->app->bind(CpuReport::class, function () {
@@ -600,7 +600,7 @@ $this->app->bind(MemoryReport::class, function () {
 $this->app->tag([CpuReport::class, MemoryReport::class], 'reports');
 ```
 
-Once the services have been tagged, you may easily resolve them all via the container's `tagged` method:
+Sau khi các service đã được gắn tag, bạn có thể dễ dàng phân giải tất cả chúng thông qua phương thức `tagged` của container:
 
 ```php
 $this->app->bind(ReportAnalyzer::class, function (Application $app) {
@@ -609,9 +609,9 @@ $this->app->bind(ReportAnalyzer::class, function (Application $app) {
 ```
 
 <a name="extending-bindings"></a>
-### Extending Bindings
+### Mở rộng Binding
 
-The `extend` method allows the modification of resolved services. For example, when a service is resolved, you may run additional code to decorate or configure the service. The `extend` method accepts two arguments, the service class you're extending and a closure that should return the modified service. The closure receives the service being resolved and the container instance:
+Phương thức `extend` cho phép thay đổi một service sau khi service đó được phân giải. Chẳng hạn, khi một service được phân giải, bạn có thể chạy thêm logic để decorate hoặc cấu hình service. `extend` nhận hai đối số: class của service cần mở rộng và một closure trả về service sau khi đã được thay đổi. Closure nhận service đang được phân giải cùng instance của container:
 
 ```php
 $this->app->extend(Service::class, function (Service $service, Application $app) {
@@ -620,12 +620,12 @@ $this->app->extend(Service::class, function (Service $service, Application $app)
 ```
 
 <a name="resolving"></a>
-## Resolving
+## Phân giải
 
 <a name="the-make-method"></a>
-### The `make` Method
+### Phương thức `make`
 
-You may use the `make` method to resolve a class instance from the container. The `make` method accepts the name of the class or interface you wish to resolve:
+Bạn có thể dùng phương thức `make` để phân giải một instance của class từ container. Phương thức `make` nhận tên class hoặc interface mà bạn muốn phân giải:
 
 ```php
 use App\Services\Transistor;
@@ -633,7 +633,7 @@ use App\Services\Transistor;
 $transistor = $this->app->make(Transistor::class);
 ```
 
-If some of your class's dependencies are not resolvable via the container, you may inject them by passing them as an associative array into the `makeWith` method. For example, we may manually pass the `$id` constructor argument required by the `Transistor` service:
+Nếu một số dependency của class không thể được container tự phân giải, bạn có thể cung cấp chúng bằng cách truyền một associative array vào phương thức `makeWith`. Ví dụ, ta có thể truyền thủ công tham số constructor `$id` mà service `Transistor` yêu cầu:
 
 ```php
 use App\Services\Transistor;
@@ -641,7 +641,7 @@ use App\Services\Transistor;
 $transistor = $this->app->makeWith(Transistor::class, ['id' => 1]);
 ```
 
-The `bound` method may be used to determine if a class or interface has been explicitly bound in the container:
+Phương thức `bound` có thể được dùng để kiểm tra một class hoặc interface đã được bind tường minh vào container hay chưa:
 
 ```php
 if ($this->app->bound(Transistor::class)) {
@@ -649,7 +649,7 @@ if ($this->app->bound(Transistor::class)) {
 }
 ```
 
-If you are outside of a service provider in a location of your code that does not have access to the `$app` variable, you may use the `App` [facade](/docs/{{version}}/facades) or the `app` [helper](/docs/{{version}}/helpers#method-app) to resolve a class instance from the container:
+Nếu đang ở bên ngoài service provider, tại một vị trí trong code không thể truy cập biến `$app`, bạn có thể sử dụng [facade](/docs/{{version}}/facades) `App` hoặc [helper](/docs/{{version}}/helpers#method-app) `app` để phân giải một instance của class từ container:
 
 ```php
 use App\Services\Transistor;
@@ -660,7 +660,7 @@ $transistor = App::make(Transistor::class);
 $transistor = app(Transistor::class);
 ```
 
-If you would like to have the Laravel container instance itself injected into a class that is being resolved by the container, you may type-hint the `Illuminate\Container\Container` class on your class's constructor:
+Nếu muốn chính instance của Laravel container được inject vào một class đang được container phân giải, bạn có thể type-hint class `Illuminate\Container\Container` trong constructor của class đó:
 
 ```php
 use Illuminate\Container\Container;
@@ -674,11 +674,11 @@ public function __construct(
 ```
 
 <a name="automatic-injection"></a>
-### Automatic Injection
+### Tự động inject dependency
 
-Alternatively, and importantly, you may type-hint the dependency in the constructor of a class that is resolved by the container, including [controllers](/docs/{{version}}/controllers), [event listeners](/docs/{{version}}/events), [middleware](/docs/{{version}}/middleware), and more. Additionally, you may type-hint dependencies in the `handle` method of [queued jobs](/docs/{{version}}/queues). In practice, this is how most of your objects should be resolved by the container.
+Một cách khác — và cũng là cách quan trọng nhất trong thực tế — là type-hint dependency trong constructor của class được container phân giải, chẳng hạn [controller](/docs/{{version}}/controllers), [event listener](/docs/{{version}}/events), [middleware](/docs/{{version}}/middleware) và nhiều loại class khác. Bạn cũng có thể type-hint dependency trong phương thức `handle` của [queued job](/docs/{{version}}/queues). Trong thực tế, đây là cách phần lớn object trong ứng dụng nên được container phân giải.
 
-For example, you may type-hint a service defined by your application in a controller's constructor. The service will automatically be resolved and injected into the class:
+Ví dụ, bạn có thể type-hint một service do ứng dụng định nghĩa trong constructor của controller. Service đó sẽ được container tự động phân giải và inject vào class:
 
 ```php
 <?php
@@ -707,9 +707,9 @@ class PodcastController extends Controller
 ```
 
 <a name="method-invocation-and-injection"></a>
-## Method Invocation and Injection
+## Gọi phương thức và inject dependency
 
-Sometimes you may wish to invoke a method on an object instance while allowing the container to automatically inject that method's dependencies. For example, given the following class:
+Đôi khi bạn muốn gọi một phương thức trên một object đồng thời để container tự động inject các dependency của phương thức đó. Ví dụ, với class sau:
 
 ```php
 <?php
@@ -732,7 +732,7 @@ class PodcastStats
 }
 ```
 
-You may invoke the `generate` method via the container like so:
+Bạn có thể gọi phương thức `generate` thông qua container như sau:
 
 ```php
 use App\PodcastStats;
@@ -741,7 +741,7 @@ use Illuminate\Support\Facades\App;
 $stats = App::call([new PodcastStats, 'generate']);
 ```
 
-The `call` method accepts any PHP callable. The container's `call` method may even be used to invoke a closure while automatically injecting its dependencies:
+Phương thức `call` chấp nhận bất kỳ PHP callable nào. Bạn thậm chí có thể dùng `call` của container để gọi một closure và đồng thời tự động inject các dependency của closure đó:
 
 ```php
 use App\Services\AppleMusic;
@@ -753,9 +753,9 @@ $result = App::call(function (AppleMusic $apple) {
 ```
 
 <a name="container-events"></a>
-## Container Events
+## Sự kiện của Container
 
-The service container fires an event each time it resolves an object. You may listen to this event using the `resolving` method:
+Service Container phát một event mỗi khi phân giải một object. Bạn có thể lắng nghe event này bằng phương thức `resolving`:
 
 ```php
 use App\Services\Transistor;
@@ -770,12 +770,12 @@ $this->app->resolving(function (mixed $object, Application $app) {
 });
 ```
 
-As you can see, the object being resolved will be passed to the callback, allowing you to set any additional properties on the object before it is given to its consumer.
+Như bạn có thể thấy, object đang được phân giải sẽ được truyền vào callback. Nhờ đó, bạn có thể thiết lập thêm các property cho object trước khi object được chuyển đến nơi sử dụng.
 
 <a name="rebinding"></a>
 ### Rebinding
 
-The `rebinding` method allows you to listen for when a service is re-bound to the container, meaning it is registered again or overridden after its initial binding. This can be useful when you need to update dependencies or modify behavior each time a specific binding is updated:
+Phương thức `rebinding` cho phép bạn lắng nghe thời điểm một service được bind lại vào container, tức service được đăng ký lại hoặc bị ghi đè sau binding ban đầu. Cơ chế này hữu ích khi bạn cần cập nhật dependency hoặc thay đổi hành vi mỗi khi một binding cụ thể được cập nhật:
 
 ```php
 use App\Contracts\PodcastPublisher;
@@ -799,7 +799,7 @@ $this->app->bind(PodcastPublisher::class, TransistorPublisher::class);
 <a name="psr-11"></a>
 ## PSR-11
 
-Laravel's service container implements the [PSR-11](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-11-container.md) interface. Therefore, you may type-hint the PSR-11 container interface to obtain an instance of the Laravel container:
+Service Container của Laravel implement interface [PSR-11](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-11-container.md). Vì vậy, bạn có thể type-hint interface container của PSR-11 để nhận instance của Laravel container:
 
 ```php
 use App\Services\Transistor;
@@ -812,7 +812,9 @@ Route::get('/', function (ContainerInterface $container) {
 });
 ```
 
-An exception is thrown if the given identifier can't be resolved. The exception will be an instance of `Psr\Container\NotFoundExceptionInterface` if the identifier was never bound. If the identifier was bound but was unable to be resolved, an instance of `Psr\Container\ContainerExceptionInterface` will be thrown.
+Một exception sẽ được ném ra nếu identifier được cung cấp không thể phân giải. Nếu identifier chưa từng được bind, exception sẽ là một instance của `Psr\Container\NotFoundExceptionInterface`. Nếu identifier đã được bind nhưng quá trình phân giải thất bại, Laravel sẽ ném một instance của `Psr\Container\ContainerExceptionInterface`.
+
+---
 
 ## Tài liệu chính thức
 

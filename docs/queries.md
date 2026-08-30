@@ -1,15 +1,15 @@
-# Database: Query Builder
+# Cơ sở dữ liệu: Query Builder
 
-- [Introduction](#introduction)
-- [Running Database Queries](#running-database-queries)
-    - [Chunking Results](#chunking-results)
-    - [Streaming Results Lazily](#streaming-results-lazily)
-    - [Aggregates](#aggregates)
-- [Select Statements](#select-statements)
-- [Raw Expressions](#raw-expressions)
-- [Joins](#joins)
-- [Unions](#unions)
-- [Basic Where Clauses](#basic-where-clauses)
+- [Giới thiệu](#introduction)
+- [Thực thi truy vấn cơ sở dữ liệu](#running-database-queries)
+    - [Chia kết quả thành từng khối](#chunking-results)
+    - [Duyệt kết quả theo kiểu lazy](#streaming-results-lazily)
+    - [Các hàm tổng hợp](#aggregates)
+- [Câu lệnh Select](#select-statements)
+- [Biểu thức Raw](#raw-expressions)
+- [Join](#joins)
+- [Union](#unions)
+- [Các mệnh đề Where cơ bản](#basic-where-clauses)
     - [Where Clauses](#where-clauses)
     - [Or Where Clauses](#or-where-clauses)
     - [Where Not Clauses](#where-not-clauses)
@@ -17,43 +17,43 @@
     - [JSON Where Clauses](#json-where-clauses)
     - [Additional Where Clauses](#additional-where-clauses)
     - [Logical Grouping](#logical-grouping)
-- [Advanced Where Clauses](#advanced-where-clauses)
+- [Các mệnh đề Where nâng cao](#advanced-where-clauses)
     - [Where Exists Clauses](#where-exists-clauses)
     - [Subquery Where Clauses](#subquery-where-clauses)
     - [Full Text Where Clauses](#full-text-where-clauses)
     - [Vector Similarity Clauses](#vector-similarity-clauses)
-- [Ordering, Grouping, Limit and Offset](#ordering-grouping-limit-and-offset)
+- [Sắp xếp, nhóm, giới hạn và offset](#ordering-grouping-limit-and-offset)
     - [Ordering](#ordering)
     - [Grouping](#grouping)
     - [Limit and Offset](#limit-and-offset)
-- [Conditional Clauses](#conditional-clauses)
-- [Insert Statements](#insert-statements)
+- [Mệnh đề có điều kiện](#conditional-clauses)
+- [Câu lệnh Insert](#insert-statements)
     - [Upserts](#upserts)
-- [Update Statements](#update-statements)
+- [Câu lệnh Update](#update-statements)
     - [Updating JSON Columns](#updating-json-columns)
     - [Increment and Decrement](#increment-and-decrement)
-- [Delete Statements](#delete-statements)
+- [Câu lệnh Delete](#delete-statements)
 - [Pessimistic Locking](#pessimistic-locking)
-- [Reusable Query Components](#reusable-query-components)
-- [Debugging](#debugging)
+- [Thành phần truy vấn có thể tái sử dụng](#reusable-query-components)
+- [Debug](#debugging)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel's database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your application and works perfectly with all of Laravel's supported database systems.
+Query Builder của Laravel cung cấp một giao diện fluent thuận tiện để xây dựng và thực thi các truy vấn cơ sở dữ liệu. Bạn có thể sử dụng nó cho hầu hết các thao tác cơ sở dữ liệu trong ứng dụng và nó hoạt động tốt với tất cả hệ quản trị cơ sở dữ liệu mà Laravel hỗ trợ.
 
-The Laravel query builder uses PDO parameter binding to protect your application against SQL injection attacks. There is no need to clean or sanitize strings passed to the query builder as query bindings.
+Query Builder của Laravel sử dụng cơ chế parameter binding của PDO để bảo vệ ứng dụng trước các cuộc tấn công SQL injection. Bạn không cần tự làm sạch hoặc sanitize các chuỗi được truyền vào Query Builder dưới dạng query binding.
 
 > [!WARNING]
-> PDO does not support binding column names. Therefore, you should never allow user input to dictate the column names referenced by your queries, including "order by" columns.
+> PDO không hỗ trợ binding tên cột. Vì vậy, bạn tuyệt đối không nên cho phép input của người dùng quyết định tên cột được tham chiếu trong truy vấn, bao gồm cả các cột dùng trong `order by`.
 
 <a name="running-database-queries"></a>
-## Running Database Queries
+## Thực thi truy vấn cơ sở dữ liệu
 
 <a name="retrieving-all-rows-from-a-table"></a>
-#### Retrieving All Rows From a Table
+#### Lấy tất cả các dòng từ một bảng
 
-You may use the `table` method provided by the `DB` facade to begin a query. The `table` method returns a fluent query builder instance for the given table, allowing you to chain more constraints onto the query and then finally retrieve the results of the query using the `get` method:
+Bạn có thể bắt đầu một truy vấn bằng method `table` do facade `DB` cung cấp. Method `table` trả về một Query Builder instance dạng fluent cho bảng đã cho, cho phép bạn nối thêm các điều kiện vào truy vấn rồi cuối cùng lấy kết quả bằng method `get`:
 
 ```php
 <?php
@@ -77,7 +77,7 @@ class UserController extends Controller
 }
 ```
 
-The `get` method returns an `Illuminate\Support\Collection` instance containing the results of the query where each result is an instance of the PHP `stdClass` object. You may access each column's value by accessing the column as a property of the object:
+Method `get` trả về một instance `Illuminate\Support\Collection` chứa kết quả truy vấn, trong đó mỗi kết quả là một object `stdClass` của PHP. Bạn có thể truy cập giá trị của từng cột thông qua property tương ứng trên object:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -90,12 +90,12 @@ foreach ($users as $user) {
 ```
 
 > [!NOTE]
-> Laravel collections provide a variety of extremely powerful methods for mapping and reducing data. For more information on Laravel collections, check out the [collection documentation](/docs/{{version}}/collections).
+> Laravel Collection cung cấp nhiều method mạnh mẽ để biến đổi và tổng hợp dữ liệu. Để biết thêm thông tin, hãy xem [tài liệu Collection](/docs/{{version}}/collections).
 
 <a name="retrieving-a-single-row-column-from-a-table"></a>
-#### Retrieving a Single Row / Column From a Table
+#### Lấy một dòng / cột từ bảng
 
-If you just need to retrieve a single row from a database table, you may use the `DB` facade's `first` method. This method will return a single `stdClass` object:
+Nếu chỉ cần lấy một dòng từ bảng, bạn có thể sử dụng method `first` của facade `DB`. Method này trả về một object `stdClass`:
 
 ```php
 $user = DB::table('users')->where('name', 'John')->first();
@@ -103,28 +103,28 @@ $user = DB::table('users')->where('name', 'John')->first();
 return $user->email;
 ```
 
-If you would like to retrieve a single row from a database table, but throw an `Illuminate\Database\RecordNotFoundException` if no matching row is found, you may use the `firstOrFail` method. If the `RecordNotFoundException` is not caught, a 404 HTTP response is automatically sent back to the client:
+Nếu muốn lấy một dòng nhưng ném `Illuminate\Database\RecordNotFoundException` khi không tìm thấy dòng phù hợp, bạn có thể sử dụng `firstOrFail`. Nếu `RecordNotFoundException` không được bắt, Laravel sẽ tự động trả về HTTP response 404 cho client:
 
 ```php
 $user = DB::table('users')->where('name', 'John')->firstOrFail();
 ```
 
-If you don't need an entire row, you may extract a single value from a record using the `value` method. This method will return the value of the column directly:
+Nếu không cần toàn bộ dòng, bạn có thể lấy trực tiếp một giá trị bằng method `value`. Method này trả về trực tiếp giá trị của cột:
 
 ```php
 $email = DB::table('users')->where('name', 'John')->value('email');
 ```
 
-To retrieve a single row by its `id` column value, use the `find` method:
+Để lấy một dòng theo giá trị của cột `id`, hãy sử dụng method `find`:
 
 ```php
 $user = DB::table('users')->find(3);
 ```
 
 <a name="retrieving-a-list-of-column-values"></a>
-#### Retrieving a List of Column Values
+#### Lấy danh sách giá trị của một cột
 
-If you would like to retrieve an `Illuminate\Support\Collection` instance containing the values of a single column, you may use the `pluck` method. In this example, we'll retrieve a collection of user titles:
+Nếu muốn lấy một instance `Illuminate\Support\Collection` chỉ chứa giá trị của một cột, bạn có thể sử dụng method `pluck`. Trong ví dụ sau, chúng ta lấy một collection chứa chức danh của người dùng:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -136,7 +136,7 @@ foreach ($titles as $title) {
 }
 ```
 
-You may specify the column that the resulting collection should use as its keys by providing a second argument to the `pluck` method:
+Bạn có thể chỉ định cột được dùng làm key của collection kết quả bằng cách truyền đối số thứ hai cho method `pluck`:
 
 ```php
 $titles = DB::table('users')->pluck('title', 'name');
@@ -147,9 +147,9 @@ foreach ($titles as $name => $title) {
 ```
 
 <a name="chunking-results"></a>
-### Chunking Results
+### Chia kết quả thành từng khối
 
-If you need to work with thousands of database records, consider using the `chunk` method provided by the `DB` facade. This method retrieves a small chunk of results at a time and feeds each chunk into a closure for processing. For example, let's retrieve the entire `users` table in chunks of 100 records at a time:
+Nếu cần xử lý hàng nghìn record, hãy cân nhắc sử dụng method `chunk` do facade `DB` cung cấp. Method này mỗi lần chỉ lấy một khối kết quả nhỏ rồi truyền khối đó vào closure để xử lý. Ví dụ, chúng ta có thể đọc toàn bộ bảng `users` theo từng khối 100 record:
 
 ```php
 use Illuminate\Support\Collection;
@@ -162,7 +162,7 @@ DB::table('users')->orderBy('id')->chunk(100, function (Collection $users) {
 });
 ```
 
-You may stop further chunks from being processed by returning `false` from the closure:
+Bạn có thể dừng việc xử lý các khối tiếp theo bằng cách trả về `false` từ closure:
 
 ```php
 DB::table('users')->orderBy('id')->chunk(100, function (Collection $users) {
@@ -172,7 +172,7 @@ DB::table('users')->orderBy('id')->chunk(100, function (Collection $users) {
 });
 ```
 
-If you are updating database records while chunking results, your chunk results could change in unexpected ways. If you plan to update the retrieved records while chunking, it is always best to use the `chunkById` method instead. This method will automatically paginate the results based on the record's primary key:
+Nếu cập nhật record trong lúc đang chia kết quả thành từng khối, tập kết quả của các khối có thể thay đổi theo cách không mong muốn. Nếu dự định cập nhật các record đã lấy trong quá trình xử lý, tốt nhất bạn nên sử dụng `chunkById`. Method này tự động phân trang kết quả dựa trên primary key của record:
 
 ```php
 DB::table('users')->where('active', false)
@@ -185,7 +185,7 @@ DB::table('users')->where('active', false)
     });
 ```
 
-Since the `chunkById` and `lazyById` methods add their own "where" conditions to the query being executed, you should typically [logically group](#logical-grouping) your own conditions within a closure:
+Vì `chunkById` và `lazyById` tự thêm các điều kiện `where` vào truy vấn đang thực thi, thông thường bạn nên [nhóm logic](#logical-grouping) các điều kiện của mình bên trong một closure:
 
 ```php
 DB::table('users')->where(function ($query) {
@@ -200,12 +200,12 @@ DB::table('users')->where(function ($query) {
 ```
 
 > [!WARNING]
-> When updating or deleting records inside the chunk callback, any changes to the primary key or foreign keys could affect the chunk query. This could potentially result in records not being included in the chunked results.
+> Khi cập nhật hoặc xóa record bên trong callback của `chunk`, mọi thay đổi đối với primary key hoặc foreign key đều có thể ảnh hưởng đến truy vấn chia khối. Điều này có thể khiến một số record không xuất hiện trong kết quả được chia khối.
 
 <a name="streaming-results-lazily"></a>
-### Streaming Results Lazily
+### Duyệt kết quả theo kiểu lazy
 
-The `lazy` method works similarly to [the chunk method](#chunking-results) in the sense that it executes the query in chunks. However, instead of passing each chunk into a callback, the `lazy()` method returns a [LazyCollection](/docs/{{version}}/collections#lazy-collections), which lets you interact with the results as a single stream:
+Method `lazy` hoạt động tương tự [method `chunk`](#chunking-results) ở chỗ truy vấn được thực thi theo từng khối. Tuy nhiên, thay vì truyền từng khối vào callback, `lazy()` trả về một [LazyCollection](/docs/{{version}}/collections#lazy-collections), cho phép bạn làm việc với kết quả như một stream duy nhất:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -215,7 +215,7 @@ DB::table('users')->orderBy('id')->lazy()->each(function (object $user) {
 });
 ```
 
-Once again, if you plan to update the retrieved records while iterating over them, it is best to use the `lazyById` or `lazyByIdDesc` methods instead. These methods will automatically paginate the results based on the record's primary key:
+Tương tự, nếu dự định cập nhật các record trong lúc đang duyệt chúng, tốt nhất bạn nên sử dụng `lazyById` hoặc `lazyByIdDesc`. Các method này tự động phân trang kết quả dựa trên primary key của record:
 
 ```php
 DB::table('users')->where('active', false)
@@ -227,12 +227,12 @@ DB::table('users')->where('active', false)
 ```
 
 > [!WARNING]
-> When updating or deleting records while iterating over them, any changes to the primary key or foreign keys could affect the chunk query. This could potentially result in records not being included in the results.
+> Khi cập nhật hoặc xóa record trong lúc duyệt kết quả, mọi thay đổi đối với primary key hoặc foreign key đều có thể ảnh hưởng đến truy vấn chia khối. Điều này có thể khiến một số record không xuất hiện trong kết quả.
 
 <a name="aggregates"></a>
-### Aggregates
+### Các hàm tổng hợp
 
-The query builder also provides a variety of methods for retrieving aggregate values like `count`, `max`, `min`, `avg`, and `sum`. You may call any of these methods after constructing your query:
+Query Builder cũng cung cấp nhiều method để lấy các giá trị tổng hợp như `count`, `max`, `min`, `avg` và `sum`. Bạn có thể gọi các method này sau khi xây dựng truy vấn:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -242,7 +242,7 @@ $users = DB::table('users')->count();
 $price = DB::table('orders')->max('price');
 ```
 
-Of course, you may combine these methods with other clauses to fine-tune how your aggregate value is calculated:
+Bạn cũng có thể kết hợp các method này với những mệnh đề khác để kiểm soát chính xác cách tính giá trị tổng hợp:
 
 ```php
 $price = DB::table('orders')
@@ -251,9 +251,9 @@ $price = DB::table('orders')
 ```
 
 <a name="determining-if-records-exist"></a>
-#### Determining if Records Exist
+#### Kiểm tra record có tồn tại hay không
 
-Instead of using the `count` method to determine if any records exist that match your query's constraints, you may use the `exists` and `doesntExist` methods:
+Thay vì dùng `count` để kiểm tra có record nào thỏa điều kiện truy vấn hay không, bạn có thể sử dụng `exists` và `doesntExist`:
 
 ```php
 if (DB::table('orders')->where('finalized', 1)->exists()) {
@@ -266,12 +266,12 @@ if (DB::table('orders')->where('finalized', 1)->doesntExist()) {
 ```
 
 <a name="select-statements"></a>
-## Select Statements
+## Câu lệnh Select
 
 <a name="specifying-a-select-clause"></a>
-#### Specifying a Select Clause
+#### Chỉ định mệnh đề Select
 
-You may not always want to select all columns from a database table. Using the `select` method, you can specify a custom "select" clause for the query:
+Không phải lúc nào bạn cũng muốn lấy tất cả cột của một bảng. Với method `select`, bạn có thể chỉ định mệnh đề `select` tùy chỉnh cho truy vấn:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -281,13 +281,13 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `distinct` method allows you to force the query to return distinct results:
+Method `distinct` cho phép buộc truy vấn chỉ trả về các kết quả khác nhau:
 
 ```php
 $users = DB::table('users')->distinct()->get();
 ```
 
-If you already have a query builder instance and you wish to add a column to its existing select clause, you may use the `addSelect` method:
+Nếu đã có một Query Builder instance và muốn bổ sung cột vào mệnh đề select hiện tại, bạn có thể sử dụng `addSelect`:
 
 ```php
 $query = DB::table('users')->select('name');
@@ -296,9 +296,9 @@ $users = $query->addSelect('age')->get();
 ```
 
 <a name="raw-expressions"></a>
-## Raw Expressions
+## Biểu thức Raw
 
-Sometimes you may need to insert an arbitrary string into a query. To create a raw string expression, you may use the `raw` method provided by the `DB` facade:
+Đôi khi bạn cần chèn trực tiếp một chuỗi tùy ý vào truy vấn. Để tạo một biểu thức raw, bạn có thể sử dụng method `raw` do facade `DB` cung cấp:
 
 ```php
 $users = DB::table('users')
@@ -309,17 +309,17 @@ $users = DB::table('users')
 ```
 
 > [!WARNING]
-> Raw statements will be injected into the query as strings, so you should be extremely careful to avoid creating SQL injection vulnerabilities.
+> Các raw statement được chèn trực tiếp vào truy vấn dưới dạng chuỗi, vì vậy bạn phải đặc biệt cẩn thận để tránh tạo ra lỗ hổng SQL injection.
 
 <a name="raw-methods"></a>
-### Raw Methods
+### Các method Raw
 
-Instead of using the `DB::raw` method, you may also use the following methods to insert a raw expression into various parts of your query. **Remember, Laravel cannot guarantee that any query using raw expressions is protected against SQL injection vulnerabilities.**
+Thay vì sử dụng `DB::raw`, bạn cũng có thể dùng các method sau để chèn biểu thức raw vào nhiều phần khác nhau của truy vấn. **Hãy nhớ rằng Laravel không thể bảo đảm các truy vấn sử dụng raw expression được bảo vệ khỏi lỗ hổng SQL injection.**
 
 <a name="selectraw"></a>
 #### `selectRaw`
 
-The `selectRaw` method can be used in place of `addSelect(DB::raw(/* ... */))`. This method accepts an optional array of bindings as its second argument:
+Có thể sử dụng `selectRaw` thay cho `addSelect(DB::raw(/* ... */))`. Method này nhận một mảng binding tùy chọn làm đối số thứ hai:
 
 ```php
 $orders = DB::table('orders')
@@ -330,7 +330,7 @@ $orders = DB::table('orders')
 <a name="whereraw-orwhereraw"></a>
 #### `whereRaw / orWhereRaw`
 
-The `whereRaw` and `orWhereRaw` methods can be used to inject a raw "where" clause into your query. These methods accept an optional array of bindings as their second argument:
+Các method `whereRaw` và `orWhereRaw` cho phép chèn một mệnh đề `where` raw vào truy vấn. Chúng nhận một mảng binding tùy chọn làm đối số thứ hai:
 
 ```php
 $orders = DB::table('orders')
@@ -341,7 +341,7 @@ $orders = DB::table('orders')
 <a name="havingraw-orhavingraw"></a>
 #### `havingRaw / orHavingRaw`
 
-The `havingRaw` and `orHavingRaw` methods may be used to provide a raw string as the value of the "having" clause. These methods accept an optional array of bindings as their second argument:
+Các method `havingRaw` và `orHavingRaw` cho phép cung cấp một chuỗi raw làm giá trị của mệnh đề `having`. Chúng nhận một mảng binding tùy chọn làm đối số thứ hai:
 
 ```php
 $orders = DB::table('orders')
@@ -354,7 +354,7 @@ $orders = DB::table('orders')
 <a name="orderbyraw"></a>
 #### `orderByRaw`
 
-The `orderByRaw` method may be used to provide a raw string as the value of the "order by" clause:
+Method `orderByRaw` cho phép cung cấp một chuỗi raw làm giá trị của mệnh đề `order by`:
 
 ```php
 $orders = DB::table('orders')
@@ -365,7 +365,7 @@ $orders = DB::table('orders')
 <a name="groupbyraw"></a>
 #### `groupByRaw`
 
-The `groupByRaw` method may be used to provide a raw string as the value of the `group by` clause:
+Method `groupByRaw` có thể được dùng để cung cấp một chuỗi raw làm giá trị cho mệnh đề `group by`:
 
 ```php
 $orders = DB::table('orders')
@@ -378,9 +378,9 @@ $orders = DB::table('orders')
 ## Joins
 
 <a name="inner-join-clause"></a>
-#### Inner Join Clause
+#### Mệnh đề Inner Join
 
-The query builder may also be used to add join clauses to your queries. To perform a basic "inner join", you may use the `join` method on a query builder instance. The first argument passed to the `join` method is the name of the table you need to join to, while the remaining arguments specify the column constraints for the join. You may even join multiple tables in a single query:
+Query Builder cũng có thể được dùng để thêm các mệnh đề join vào truy vấn. Để thực hiện một "inner join" cơ bản, bạn có thể sử dụng method `join` trên một Query Builder instance. Đối số đầu tiên truyền vào `join` là tên bảng cần join, còn các đối số còn lại xác định các ràng buộc cột cho phép join. Bạn thậm chí có thể join nhiều bảng trong cùng một truy vấn:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -393,9 +393,9 @@ $users = DB::table('users')
 ```
 
 <a name="left-join-right-join-clause"></a>
-#### Left Join / Right Join Clause
+#### Mệnh đề Left Join / Right Join
 
-If you would like to perform a "left join" or "right join" instead of an "inner join", use the `leftJoin` or `rightJoin` methods. These methods have the same signature as the `join` method:
+Nếu muốn thực hiện "left join" hoặc "right join" thay vì "inner join", hãy sử dụng các method `leftJoin` hoặc `rightJoin`. Các method này có cùng signature với method `join`:
 
 ```php
 $users = DB::table('users')
@@ -408,9 +408,9 @@ $users = DB::table('users')
 ```
 
 <a name="cross-join-clause"></a>
-#### Cross Join Clause
+#### Mệnh đề Cross Join
 
-You may use the `crossJoin` method to perform a "cross join". Cross joins generate a cartesian product between the first table and the joined table:
+Bạn có thể sử dụng method `crossJoin` để thực hiện "cross join". Cross join tạo tích Descartes (cartesian product) giữa bảng đầu tiên và bảng được join:
 
 ```php
 $sizes = DB::table('sizes')
@@ -419,9 +419,9 @@ $sizes = DB::table('sizes')
 ```
 
 <a name="advanced-join-clauses"></a>
-#### Advanced Join Clauses
+#### Các mệnh đề Join nâng cao
 
-You may also specify more advanced join clauses. To get started, pass a closure as the second argument to the `join` method. The closure will receive a `Illuminate\Database\Query\JoinClause` instance which allows you to specify constraints on the "join" clause:
+Bạn cũng có thể chỉ định các mệnh đề join nâng cao hơn. Để bắt đầu, hãy truyền một closure làm đối số thứ hai cho method `join`. Closure sẽ nhận một instance `Illuminate\Database\Query\JoinClause`, cho phép bạn chỉ định các ràng buộc cho mệnh đề "join":
 
 ```php
 DB::table('users')
@@ -431,7 +431,7 @@ DB::table('users')
     ->get();
 ```
 
-If you would like to use a "where" clause on your joins, you may use the `where` and `orWhere` methods provided by the `JoinClause` instance. Instead of comparing two columns, these methods will compare the column against a value:
+Nếu muốn sử dụng mệnh đề "where" trên các join, bạn có thể dùng các method `where` và `orWhere` do instance `JoinClause` cung cấp. Thay vì so sánh hai cột, các method này sẽ so sánh cột với một giá trị:
 
 ```php
 DB::table('users')
@@ -443,9 +443,9 @@ DB::table('users')
 ```
 
 <a name="subquery-joins"></a>
-#### Subquery Joins
+#### Join với Subquery
 
-You may use the `joinSub`, `leftJoinSub`, and `rightJoinSub` methods to join a query to a subquery. Each of these methods receives three arguments: the subquery, its table alias, and a closure that defines the related columns. In this example, we will retrieve a collection of users where each user record also contains the `created_at` timestamp of the user's most recently published blog post:
+Bạn có thể sử dụng các method `joinSub`, `leftJoinSub` và `rightJoinSub` để join một truy vấn với subquery. Mỗi method nhận ba đối số: subquery, alias của bảng và một closure xác định các cột liên quan. Trong ví dụ này, chúng ta sẽ lấy một collection người dùng, trong đó mỗi record người dùng cũng chứa timestamp `created_at` của bài blog được xuất bản gần đây nhất của người dùng đó:
 
 ```php
 $latestPosts = DB::table('posts')
@@ -460,14 +460,14 @@ $users = DB::table('users')
 ```
 
 <a name="lateral-joins"></a>
-#### Lateral Joins
+#### Lateral Join
 
 > [!WARNING]
-> Lateral joins are currently supported by PostgreSQL, MySQL >= 8.0.14, and SQL Server.
+> Lateral join hiện được hỗ trợ bởi PostgreSQL, MySQL >= 8.0.14 và SQL Server.
 
-You may use the `joinLateral` and `leftJoinLateral` methods to perform a "lateral join" with a subquery. Each of these methods receives two arguments: the subquery and its table alias. The join condition(s) should be specified within the `where` clause of the given subquery. Lateral joins are evaluated for each row and can reference columns outside the subquery.
+Bạn có thể sử dụng các method `joinLateral` và `leftJoinLateral` để thực hiện "lateral join" với một subquery. Mỗi method nhận hai đối số: subquery và alias của bảng. Các điều kiện join cần được chỉ định trong mệnh đề `where` của subquery đã cho. Lateral join được đánh giá cho từng dòng và có thể tham chiếu đến các cột bên ngoài subquery.
 
-In this example, we will retrieve a collection of users as well as the user's three most recent blog posts. Each user can produce up to three rows in the result set: one for each of their most recent blog posts. The join condition is specified with a `whereColumn` clause within the subquery, referencing the current user row:
+Trong ví dụ này, chúng ta sẽ lấy một collection người dùng cùng ba bài blog gần đây nhất của từng người dùng. Mỗi người dùng có thể tạo tối đa ba dòng trong tập kết quả, tương ứng với từng bài blog gần đây nhất của họ. Điều kiện join được chỉ định bằng mệnh đề `whereColumn` bên trong subquery, tham chiếu đến dòng người dùng hiện tại:
 
 ```php
 $latestPosts = DB::table('posts')
@@ -484,7 +484,7 @@ $users = DB::table('users')
 <a name="unions"></a>
 ## Unions
 
-The query builder also provides a convenient method to "union" two or more queries together. For example, you may create an initial query and use the `union` method to union it with more queries:
+Query Builder cũng cung cấp method thuận tiện để "union" hai hoặc nhiều truy vấn với nhau. Ví dụ, bạn có thể tạo một truy vấn ban đầu rồi sử dụng method `union` để kết hợp nó với các truy vấn khác:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -498,17 +498,17 @@ $users = DB::table('users')
     ->get();
 ```
 
-In addition to the `union` method, the query builder provides a `unionAll` method. Queries that are combined using the `unionAll` method will not have their duplicate results removed. The `unionAll` method has the same method signature as the `union` method.
+Ngoài method `union`, Query Builder còn cung cấp method `unionAll`. Các truy vấn được kết hợp bằng `unionAll` sẽ không loại bỏ các kết quả trùng lặp. Method `unionAll` có cùng signature với method `union`.
 
 <a name="basic-where-clauses"></a>
-## Basic Where Clauses
+## Các mệnh đề Where cơ bản
 
 <a name="where-clauses"></a>
-### Where Clauses
+### Mệnh đề Where
 
-You may use the query builder's `where` method to add "where" clauses to the query. The most basic call to the `where` method requires three arguments. The first argument is the name of the column. The second argument is an operator, which can be any of the database's supported operators. The third argument is the value to compare against the column's value.
+Bạn có thể sử dụng method `where` của Query Builder để thêm các mệnh đề "where" vào truy vấn. Cách gọi `where` cơ bản nhất cần ba đối số. Đối số đầu tiên là tên cột. Đối số thứ hai là toán tử, có thể là bất kỳ toán tử nào được cơ sở dữ liệu hỗ trợ. Đối số thứ ba là giá trị dùng để so sánh với giá trị của cột.
 
-For example, the following query retrieves users where the value of the `votes` column is equal to `100` and the value of the `age` column is greater than `35`:
+Ví dụ, truy vấn sau lấy những người dùng có giá trị cột `votes` bằng `100` và giá trị cột `age` lớn hơn `35`:
 
 ```php
 $users = DB::table('users')
@@ -517,13 +517,13 @@ $users = DB::table('users')
     ->get();
 ```
 
-For convenience, if you want to verify that a column is `=` to a given value, you may pass the value as the second argument to the `where` method. Laravel will assume you would like to use the `=` operator:
+Để thuận tiện, nếu muốn kiểm tra một cột `=` với giá trị cho trước, bạn có thể truyền giá trị đó làm đối số thứ hai của method `where`. Laravel sẽ tự hiểu rằng bạn muốn sử dụng toán tử `=`:
 
 ```php
 $users = DB::table('users')->where('votes', 100)->get();
 ```
 
-You may also provide an associative array to the `where` method to quickly query against multiple columns:
+Bạn cũng có thể truyền một associative array vào method `where` để nhanh chóng truy vấn theo nhiều cột:
 
 ```php
 $users = DB::table('users')->where([
@@ -532,7 +532,7 @@ $users = DB::table('users')->where([
 ])->get();
 ```
 
-As previously mentioned, you may use any operator that is supported by your database system:
+Như đã đề cập, bạn có thể sử dụng bất kỳ toán tử nào được hệ quản trị cơ sở dữ liệu của mình hỗ trợ:
 
 ```php
 $users = DB::table('users')
@@ -548,7 +548,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-You may also pass an array of conditions to the `where` function. Each element of the array should be an array containing the three arguments typically passed to the `where` method:
+Bạn cũng có thể truyền một mảng điều kiện vào method `where`. Mỗi phần tử của mảng phải là một mảng chứa ba đối số thường được truyền vào method `where`:
 
 ```php
 $users = DB::table('users')->where([
@@ -558,15 +558,15 @@ $users = DB::table('users')->where([
 ```
 
 > [!WARNING]
-> PDO does not support binding column names. Therefore, you should never allow user input to dictate the column names referenced by your queries, including "order by" columns.
+> PDO không hỗ trợ binding tên cột. Vì vậy, bạn tuyệt đối không nên cho phép input của người dùng quyết định tên cột được tham chiếu trong truy vấn, bao gồm cả các cột dùng trong `order by`.
 
 > [!WARNING]
-> MySQL and MariaDB automatically typecast strings to integers in string-number comparisons. In this process, non-numeric strings are converted to `0`, which can lead to unexpected results. For example, if your table has a `secret` column with a value of `aaa` and you run `User::where('secret', 0)`, that row will be returned. To avoid this, ensure all values are typecast to their appropriate types before using them in queries.
+> MySQL và MariaDB tự động ép kiểu chuỗi thành số nguyên khi so sánh chuỗi với số. Trong quá trình này, chuỗi không phải số sẽ được chuyển thành `0`, có thể dẫn đến kết quả ngoài mong đợi. Ví dụ, nếu bảng có cột `secret` mang giá trị `aaa` và bạn chạy `User::where('secret', 0)`, dòng đó sẽ được trả về. Để tránh tình huống này, hãy đảm bảo mọi giá trị được ép về kiểu dữ liệu phù hợp trước khi sử dụng trong truy vấn.
 
 <a name="or-where-clauses"></a>
-### Or Where Clauses
+### Mệnh đề Or Where
 
-When chaining together calls to the query builder's `where` method, the "where" clauses will be joined together using the `and` operator. However, you may use the `orWhere` method to join a clause to the query using the `or` operator. The `orWhere` method accepts the same arguments as the `where` method:
+Khi nối tiếp nhiều lần gọi method `where` của Query Builder, các mệnh đề "where" sẽ được kết hợp bằng toán tử `and`. Tuy nhiên, bạn có thể sử dụng method `orWhere` để nối một mệnh đề vào truy vấn bằng toán tử `or`. Method `orWhere` nhận cùng các đối số như method `where`:
 
 ```php
 $users = DB::table('users')
@@ -575,7 +575,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-If you need to group an "or" condition within parentheses, you may pass a closure as the first argument to the `orWhere` method:
+Nếu cần nhóm một điều kiện "or" trong dấu ngoặc đơn, bạn có thể truyền một closure làm đối số đầu tiên cho method `orWhere`:
 
 ```php
 use Illuminate\Database\Query\Builder;
@@ -589,19 +589,19 @@ $users = DB::table('users')
     ->get();
 ```
 
-The example above will produce the following SQL:
+Ví dụ trên sẽ tạo ra câu SQL sau:
 
 ```sql
 select * from users where votes > 100 or (name = 'Abigail' and votes > 50)
 ```
 
 > [!WARNING]
-> You should always group `orWhere` calls in order to avoid unexpected behavior when global scopes are applied.
+> Bạn nên luôn nhóm các lần gọi `orWhere` để tránh hành vi ngoài mong đợi khi global scope được áp dụng.
 
 <a name="where-not-clauses"></a>
-### Where Not Clauses
+### Mệnh đề Where Not
 
-The `whereNot` and `orWhereNot` methods may be used to negate a given group of query constraints. For example, the following query excludes products that are on clearance or which have a price that is less than ten:
+Các method `whereNot` và `orWhereNot` có thể được dùng để phủ định một nhóm ràng buộc truy vấn. Ví dụ, truy vấn sau loại trừ các sản phẩm đang thanh lý hoặc có giá nhỏ hơn mười:
 
 ```php
 $products = DB::table('products')
@@ -613,9 +613,9 @@ $products = DB::table('products')
 ```
 
 <a name="where-any-all-none-clauses"></a>
-### Where Any / All / None Clauses
+### Mệnh đề Where Any / All / None
 
-Sometimes you may need to apply the same query constraints to multiple columns. For example, you may want to retrieve all records where any columns in a given list are `LIKE` a given value. You may accomplish this using the `whereAny` method:
+Đôi khi bạn cần áp dụng cùng một ràng buộc truy vấn cho nhiều cột. Ví dụ, bạn có thể muốn lấy tất cả record mà bất kỳ cột nào trong danh sách cho trước đều `LIKE` một giá trị nhất định. Bạn có thể thực hiện điều này bằng method `whereAny`:
 
 ```php
 $users = DB::table('users')
@@ -628,7 +628,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The query above will result in the following SQL:
+Truy vấn trên sẽ tạo ra câu SQL sau:
 
 ```sql
 SELECT *
@@ -640,7 +640,7 @@ WHERE active = true AND (
 )
 ```
 
-Similarly, the `whereAll` method may be used to retrieve records where all of the given columns match a given constraint:
+Tương tự, method `whereAll` có thể được dùng để lấy các record mà tất cả cột đã cho đều khớp với một ràng buộc nhất định:
 
 ```php
 $posts = DB::table('posts')
@@ -652,7 +652,7 @@ $posts = DB::table('posts')
     ->get();
 ```
 
-The query above will result in the following SQL:
+Truy vấn trên sẽ tạo ra câu SQL sau:
 
 ```sql
 SELECT *
@@ -663,7 +663,7 @@ WHERE published = true AND (
 )
 ```
 
-The `whereNone` method may be used to retrieve records where none of the given columns match a given constraint:
+Method `whereNone` có thể được dùng để lấy các record mà không có cột nào trong số các cột đã cho khớp với ràng buộc nhất định:
 
 ```php
 $albums = DB::table('albums')
@@ -676,7 +676,7 @@ $albums = DB::table('albums')
     ->get();
 ```
 
-The query above will result in the following SQL:
+Truy vấn trên sẽ tạo ra câu SQL sau:
 
 ```sql
 SELECT *
@@ -689,9 +689,9 @@ WHERE published = true AND NOT (
 ```
 
 <a name="json-where-clauses"></a>
-### JSON Where Clauses
+### Mệnh đề Where cho JSON
 
-Laravel also supports querying JSON column types on databases that provide support for JSON column types. Currently, this includes MariaDB 10.3+, MySQL 8.0+, PostgreSQL 12.0+, SQL Server 2017+, and SQLite 3.39.0+. To query a JSON column, use the `->` operator:
+Laravel cũng hỗ trợ truy vấn kiểu cột JSON trên các cơ sở dữ liệu có hỗ trợ kiểu dữ liệu này. Hiện tại bao gồm MariaDB 10.3+, MySQL 8.0+, PostgreSQL 12.0+, SQL Server 2017+ và SQLite 3.39.0+. Để truy vấn một cột JSON, hãy sử dụng toán tử `->`:
 
 ```php
 $users = DB::table('users')
@@ -703,7 +703,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-You may use the `whereJsonContains` and `whereJsonDoesntContain` methods to query JSON arrays:
+Bạn có thể sử dụng các method `whereJsonContains` và `whereJsonDoesntContain` để truy vấn JSON array:
 
 ```php
 $users = DB::table('users')
@@ -715,7 +715,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-If your application uses the MariaDB, MySQL, or PostgreSQL databases, you may pass an array of values to the `whereJsonContains` and `whereJsonDoesntContain` methods:
+Nếu ứng dụng sử dụng MariaDB, MySQL hoặc PostgreSQL, bạn có thể truyền một mảng giá trị vào các method `whereJsonContains` và `whereJsonDoesntContain`:
 
 ```php
 $users = DB::table('users')
@@ -727,7 +727,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-In addition, you may use the `whereJsonContainsKey` or `whereJsonDoesntContainKey` methods to retrieve the results that include or do not include a JSON key:
+Ngoài ra, bạn có thể sử dụng các method `whereJsonContainsKey` hoặc `whereJsonDoesntContainKey` để lấy kết quả có hoặc không có một JSON key:
 
 ```php
 $users = DB::table('users')
@@ -739,7 +739,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-Finally, you may use `whereJsonLength` method to query JSON arrays by their length:
+Cuối cùng, bạn có thể sử dụng method `whereJsonLength` để truy vấn JSON array dựa trên độ dài của chúng:
 
 ```php
 $users = DB::table('users')
@@ -752,11 +752,11 @@ $users = DB::table('users')
 ```
 
 <a name="additional-where-clauses"></a>
-### Additional Where Clauses
+### Các mệnh đề Where bổ sung
 
 **whereLike / orWhereLike / whereNotLike / orWhereNotLike**
 
-The `whereLike` method allows you to add "LIKE" clauses to your query for pattern matching. These methods provide a database-agnostic way of performing string matching queries, with the ability to toggle case-sensitivity. By default, string matching is case-insensitive:
+Method `whereLike` cho phép bạn thêm các mệnh đề "LIKE" vào truy vấn để đối sánh theo mẫu. Các method này cung cấp cách thực hiện truy vấn đối sánh chuỗi không phụ thuộc vào hệ quản trị cơ sở dữ liệu, đồng thời cho phép bật hoặc tắt phân biệt chữ hoa chữ thường. Theo mặc định, việc đối sánh chuỗi không phân biệt chữ hoa chữ thường:
 
 ```php
 $users = DB::table('users')
@@ -764,7 +764,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-You can enable a case-sensitive search via the `caseSensitive` argument:
+Bạn có thể bật tìm kiếm phân biệt chữ hoa chữ thường thông qua đối số `caseSensitive`:
 
 ```php
 $users = DB::table('users')
@@ -772,7 +772,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `orWhereLike` method allows you to add an "or" clause with a LIKE condition:
+Method `orWhereLike` cho phép bạn thêm một mệnh đề "or" với điều kiện LIKE:
 
 ```php
 $users = DB::table('users')
@@ -781,7 +781,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `whereNotLike` method allows you to add "NOT LIKE" clauses to your query:
+Method `whereNotLike` cho phép bạn thêm các mệnh đề "NOT LIKE" vào truy vấn:
 
 ```php
 $users = DB::table('users')
@@ -789,7 +789,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-Similarly, you can use `orWhereNotLike` to add an "or" clause with a NOT LIKE condition:
+Tương tự, bạn có thể sử dụng `orWhereNotLike` để thêm một mệnh đề "or" với điều kiện NOT LIKE:
 
 ```php
 $users = DB::table('users')
@@ -799,11 +799,11 @@ $users = DB::table('users')
 ```
 
 > [!WARNING]
-> The `whereLike` case-sensitive search option is currently not supported on SQL Server.
+> Tùy chọn tìm kiếm phân biệt chữ hoa chữ thường của `whereLike` hiện chưa được hỗ trợ trên SQL Server.
 
 **whereIn / whereNotIn / orWhereIn / orWhereNotIn**
 
-The `whereIn` method verifies that a given column's value is contained within the given array:
+Method `whereIn` kiểm tra giá trị của một cột có nằm trong array được cung cấp hay không:
 
 ```php
 $users = DB::table('users')
@@ -811,7 +811,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `whereNotIn` method verifies that the given column's value is not contained in the given array:
+Method `whereNotIn` kiểm tra giá trị của cột được cung cấp không nằm trong array đã cho:
 
 ```php
 $users = DB::table('users')
@@ -819,7 +819,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-You may also provide a query object as the `whereIn` method's second argument:
+Bạn cũng có thể truyền một query object làm đối số thứ hai của method `whereIn`:
 
 ```php
 $activeUsers = DB::table('users')->select('id')->where('is_active', 1);
@@ -829,7 +829,7 @@ $comments = DB::table('comments')
     ->get();
 ```
 
-The example above will produce the following SQL:
+Ví dụ trên sẽ tạo ra câu SQL sau:
 
 ```sql
 select * from comments where user_id in (
@@ -840,11 +840,11 @@ select * from comments where user_id in (
 ```
 
 > [!WARNING]
-> If you are adding a large array of integer bindings to your query, the `whereIntegerInRaw` or `whereIntegerNotInRaw` methods may be used to greatly reduce your memory usage.
+> Nếu bạn thêm một array lớn gồm các integer binding vào truy vấn, có thể sử dụng `whereIntegerInRaw` hoặc `whereIntegerNotInRaw` để giảm đáng kể lượng bộ nhớ sử dụng.
 
 **whereBetween / orWhereBetween**
 
-The `whereBetween` method verifies that a column's value is between two values:
+Method `whereBetween` kiểm tra giá trị của một cột có nằm giữa hai giá trị hay không:
 
 ```php
 $users = DB::table('users')
@@ -854,7 +854,7 @@ $users = DB::table('users')
 
 **whereNotBetween / orWhereNotBetween**
 
-The `whereNotBetween` method verifies that a column's value lies outside of two values:
+Method `whereNotBetween` kiểm tra giá trị của một cột có nằm ngoài khoảng giữa hai giá trị hay không:
 
 ```php
 $users = DB::table('users')
@@ -864,7 +864,7 @@ $users = DB::table('users')
 
 **whereBetweenColumns / whereNotBetweenColumns / orWhereBetweenColumns / orWhereNotBetweenColumns**
 
-The `whereBetweenColumns` method verifies that a column's value is between the two values of two columns in the same table row:
+Method `whereBetweenColumns` kiểm tra giá trị của một cột có nằm giữa hai giá trị của hai cột khác trong cùng một hàng của bảng hay không:
 
 ```php
 $patients = DB::table('patients')
@@ -872,7 +872,7 @@ $patients = DB::table('patients')
     ->get();
 ```
 
-The `whereNotBetweenColumns` method verifies that a column's value lies outside the two values of two columns in the same table row:
+Method `whereNotBetweenColumns` kiểm tra giá trị của một cột có nằm ngoài khoảng được xác định bởi giá trị của hai cột khác trong cùng một hàng hay không:
 
 ```php
 $patients = DB::table('patients')
@@ -882,7 +882,7 @@ $patients = DB::table('patients')
 
 **whereValueBetween / whereValueNotBetween / orWhereValueBetween / orWhereValueNotBetween**
 
-The `whereValueBetween` method verifies that a given value is between the values of two columns of the same type in the same table row:
+Method `whereValueBetween` kiểm tra một giá trị được cung cấp có nằm giữa giá trị của hai cột cùng kiểu trong cùng một hàng của bảng hay không:
 
 ```php
 $products = DB::table('products')
@@ -890,7 +890,7 @@ $products = DB::table('products')
     ->get();
 ```
 
-The `whereValueNotBetween` method verifies that a value lies outside the values of two columns in the same table row:
+Method `whereValueNotBetween` kiểm tra một giá trị có nằm ngoài khoảng được xác định bởi giá trị của hai cột trong cùng một hàng hay không:
 
 ```php
 $products = DB::table('products')
@@ -900,7 +900,7 @@ $products = DB::table('products')
 
 **whereNull / whereNotNull / orWhereNull / orWhereNotNull**
 
-The `whereNull` method verifies that the value of the given column is `NULL`:
+Method `whereNull` kiểm tra giá trị của cột được cung cấp có phải là `NULL` hay không:
 
 ```php
 $users = DB::table('users')
@@ -908,7 +908,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `whereNotNull` method verifies that the column's value is not `NULL`:
+Method `whereNotNull` kiểm tra giá trị của cột không phải là `NULL`:
 
 ```php
 $users = DB::table('users')
@@ -918,7 +918,7 @@ $users = DB::table('users')
 
 **whereNullSafeEquals / orWhereNullSafeEquals**
 
-The `whereNullSafeEquals` and `orWhereNullSafeEquals` methods may be used to compare a column's value against a given value while treating two `NULL` values as equal:
+Các method `whereNullSafeEquals` và `orWhereNullSafeEquals` có thể được sử dụng để so sánh giá trị của một cột với một giá trị được cung cấp, đồng thời xem hai giá trị `NULL` là bằng nhau:
 
 ```php
 $lastLoginIp = $request->input('last_login_ip');
@@ -930,7 +930,7 @@ $users = DB::table('users')
 
 **whereDate / whereMonth / whereDay / whereYear / whereTime**
 
-The `whereDate` method may be used to compare a column's value against a date:
+Method `whereDate` có thể được sử dụng để so sánh giá trị của một cột với một ngày:
 
 ```php
 $users = DB::table('users')
@@ -938,7 +938,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `whereMonth` method may be used to compare a column's value against a specific month:
+Method `whereMonth` có thể được sử dụng để so sánh giá trị của một cột với một tháng cụ thể:
 
 ```php
 $users = DB::table('users')
@@ -946,7 +946,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `whereDay` method may be used to compare a column's value against a specific day of the month:
+Method `whereDay` có thể được sử dụng để so sánh giá trị của một cột với một ngày cụ thể trong tháng:
 
 ```php
 $users = DB::table('users')
@@ -954,7 +954,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `whereYear` method may be used to compare a column's value against a specific year:
+Method `whereYear` có thể được sử dụng để so sánh giá trị của một cột với một năm cụ thể:
 
 ```php
 $users = DB::table('users')
@@ -962,7 +962,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `whereTime` method may be used to compare a column's value against a specific time:
+Method `whereTime` có thể được sử dụng để so sánh giá trị của một cột với một thời điểm cụ thể:
 
 ```php
 $users = DB::table('users')
@@ -972,7 +972,7 @@ $users = DB::table('users')
 
 **wherePast / whereFuture / whereToday / whereBeforeToday / whereAfterToday**
 
-The `wherePast` and `whereFuture` methods may be used to determine if a column's value is in the past or future:
+Các method `wherePast` và `whereFuture` có thể được sử dụng để xác định giá trị của một cột nằm trong quá khứ hay tương lai:
 
 ```php
 $invoices = DB::table('invoices')
@@ -984,7 +984,7 @@ $invoices = DB::table('invoices')
     ->get();
 ```
 
-The `whereNowOrPast` and `whereNowOrFuture` methods may be used to determine if a column's value is in the past or future, inclusive of the current date and time:
+Các method `whereNowOrPast` và `whereNowOrFuture` có thể được sử dụng để xác định giá trị của một cột nằm trong quá khứ hay tương lai, đồng thời bao gồm cả ngày và thời gian hiện tại:
 
 ```php
 $invoices = DB::table('invoices')
@@ -996,7 +996,7 @@ $invoices = DB::table('invoices')
     ->get();
 ```
 
-The `whereToday`, `whereBeforeToday`, and `whereAfterToday` methods may be used to determine if a column's value is today, before today, or after today, respectively:
+Các method `whereToday`, `whereBeforeToday` và `whereAfterToday` có thể được sử dụng để xác định giá trị của một cột lần lượt là hôm nay, trước hôm nay hoặc sau hôm nay:
 
 ```php
 $invoices = DB::table('invoices')
@@ -1012,7 +1012,7 @@ $invoices = DB::table('invoices')
     ->get();
 ```
 
-Similarly, the `whereTodayOrBefore` and `whereTodayOrAfter` methods may be used to determine if a column's value is before today or after today, inclusive of today's date:
+Tương tự, các method `whereTodayOrBefore` và `whereTodayOrAfter` có thể được sử dụng để xác định giá trị của một cột nằm trước hoặc sau hôm nay, đồng thời bao gồm cả ngày hôm nay:
 
 ```php
 $invoices = DB::table('invoices')
@@ -1026,7 +1026,7 @@ $invoices = DB::table('invoices')
 
 **whereColumn / orWhereColumn**
 
-The `whereColumn` method may be used to verify that two columns are equal:
+Method `whereColumn` có thể được sử dụng để kiểm tra hai cột có bằng nhau hay không:
 
 ```php
 $users = DB::table('users')
@@ -1034,7 +1034,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-You may also pass a comparison operator to the `whereColumn` method:
+Bạn cũng có thể truyền một toán tử so sánh vào method `whereColumn`:
 
 ```php
 $users = DB::table('users')
@@ -1042,7 +1042,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-You may also pass an array of column comparisons to the `whereColumn` method. These conditions will be joined using the `and` operator:
+Bạn cũng có thể truyền một array gồm các phép so sánh cột vào method `whereColumn`. Các điều kiện này sẽ được nối với nhau bằng toán tử `and`:
 
 ```php
 $users = DB::table('users')
@@ -1053,9 +1053,9 @@ $users = DB::table('users')
 ```
 
 <a name="logical-grouping"></a>
-### Logical Grouping
+### Nhóm điều kiện logic
 
-Sometimes you may need to group several "where" clauses within parentheses in order to achieve your query's desired logical grouping. In fact, you should generally always group calls to the `orWhere` method in parentheses in order to avoid unexpected query behavior. To accomplish this, you may pass a closure to the `where` method:
+Đôi khi bạn cần nhóm nhiều mệnh đề "where" trong dấu ngoặc đơn để đạt được cách nhóm logic mong muốn cho truy vấn. Trên thực tế, nhìn chung bạn nên luôn nhóm các lần gọi method `orWhere` trong dấu ngoặc đơn để tránh hành vi truy vấn ngoài mong đợi. Để thực hiện điều này, bạn có thể truyền một closure vào method `where`:
 
 ```php
 $users = DB::table('users')
@@ -1067,22 +1067,22 @@ $users = DB::table('users')
     ->get();
 ```
 
-As you can see, passing a closure into the `where` method instructs the query builder to begin a constraint group. The closure will receive a query builder instance which you can use to set the constraints that should be contained within the parenthesis group. The example above will produce the following SQL:
+Như bạn có thể thấy, việc truyền một closure vào method `where` sẽ yêu cầu query builder bắt đầu một nhóm ràng buộc. Closure sẽ nhận một query builder instance mà bạn có thể sử dụng để thiết lập các ràng buộc cần nằm trong nhóm dấu ngoặc đơn. Ví dụ trên sẽ tạo ra câu SQL sau:
 
 ```sql
 select * from users where name = 'John' and (votes > 100 or title = 'Admin')
 ```
 
 > [!WARNING]
-> You should always group `orWhere` calls in order to avoid unexpected behavior when global scopes are applied.
+> Bạn nên luôn nhóm các lần gọi `orWhere` để tránh hành vi ngoài mong đợi khi global scope được áp dụng.
 
 <a name="advanced-where-clauses"></a>
-## Advanced Where Clauses
+## Các mệnh đề Where nâng cao
 
 <a name="where-exists-clauses"></a>
-### Where Exists Clauses
+### Mệnh đề Where Exists
 
-The `whereExists` method allows you to write "where exists" SQL clauses. The `whereExists` method accepts a closure which will receive a query builder instance, allowing you to define the query that should be placed inside of the "exists" clause:
+Method `whereExists` cho phép bạn viết các mệnh đề SQL "where exists". Method `whereExists` nhận một closure; closure này sẽ nhận query builder instance, cho phép bạn định nghĩa truy vấn cần được đặt bên trong mệnh đề "exists":
 
 ```php
 $users = DB::table('users')
@@ -1094,7 +1094,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-Alternatively, you may provide a query object to the `whereExists` method instead of a closure:
+Ngoài ra, bạn có thể truyền một query object vào method `whereExists` thay cho closure:
 
 ```php
 $orders = DB::table('orders')
@@ -1106,7 +1106,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-Both of the examples above will produce the following SQL:
+Cả hai ví dụ trên đều tạo ra câu SQL sau:
 
 ```sql
 select * from users
@@ -1118,9 +1118,9 @@ where exists (
 ```
 
 <a name="subquery-where-clauses"></a>
-### Subquery Where Clauses
+### Mệnh đề Where với Subquery
 
-Sometimes you may need to construct a "where" clause that compares the results of a subquery to a given value. You may accomplish this by passing a closure and a value to the `where` method. For example, the following query will retrieve all users who have a recent "membership" of a given type;
+Đôi khi bạn cần xây dựng một mệnh đề "where" để so sánh kết quả của một subquery với một giá trị được cung cấp. Bạn có thể thực hiện điều này bằng cách truyền một closure và một giá trị vào method `where`. Ví dụ, truy vấn sau sẽ lấy tất cả user có "membership" gần đây thuộc một loại nhất định:
 
 ```php
 use App\Models\User;
@@ -1135,7 +1135,7 @@ $users = User::where(function (Builder $query) {
 }, 'Pro')->get();
 ```
 
-Or, you may need to construct a "where" clause that compares a column to the results of a subquery. You may accomplish this by passing a column, operator, and closure to the `where` method. For example, the following query will retrieve all income records where the amount is less than average;
+Hoặc bạn có thể cần xây dựng một mệnh đề "where" để so sánh một cột với kết quả của subquery. Bạn có thể thực hiện điều này bằng cách truyền cột, toán tử và closure vào method `where`. Ví dụ, truy vấn sau sẽ lấy tất cả record thu nhập có số tiền nhỏ hơn mức trung bình:
 
 ```php
 use App\Models\Income;
@@ -1147,12 +1147,12 @@ $incomes = Income::where('amount', '<', function (Builder $query) {
 ```
 
 <a name="full-text-where-clauses"></a>
-### Full Text Where Clauses
+### Mệnh đề Where Full Text
 
 > [!WARNING]
-> Full text where clauses are currently supported by MariaDB, MySQL, and PostgreSQL.
+> Các mệnh đề where full text hiện được MariaDB, MySQL và PostgreSQL hỗ trợ.
 
-The `whereFullText` and `orWhereFullText` methods may be used to add full text "where" clauses to a query for columns that have [full text indexes](/docs/{{version}}/migrations#available-index-types). These methods will be transformed into the appropriate SQL for the underlying database system by Laravel. For example, a `MATCH AGAINST` clause will be generated for applications utilizing MariaDB or MySQL:
+Các method `whereFullText` và `orWhereFullText` có thể được sử dụng để thêm mệnh đề "where" full text vào truy vấn đối với các cột có [full text index](/docs/{{version}}/migrations#available-index-types). Laravel sẽ chuyển các method này thành SQL phù hợp với hệ quản trị cơ sở dữ liệu bên dưới. Ví dụ, mệnh đề `MATCH AGAINST` sẽ được tạo cho các ứng dụng sử dụng MariaDB hoặc MySQL:
 
 ```php
 $users = DB::table('users')
@@ -1161,12 +1161,12 @@ $users = DB::table('users')
 ```
 
 <a name="vector-similarity-clauses"></a>
-### Vector Similarity Clauses
+### Mệnh đề Vector Similarity
 
 > [!NOTE]
-> Vector similarity clauses are currently supported on PostgreSQL connections using the `pgvector` extension and MariaDB 11.7 or later. For information on defining vector columns and indexes, consult the [migration documentation](/docs/{{version}}/migrations#available-column-types).
+> Các mệnh đề vector similarity hiện được hỗ trợ trên kết nối PostgreSQL sử dụng extension `pgvector` và MariaDB 11.7 trở lên. Để biết cách định nghĩa cột vector và index, hãy tham khảo [tài liệu migration](/docs/{{version}}/migrations#available-column-types).
 
-The `whereVectorSimilarTo` method filters results by cosine similarity to a given vector and orders the results by relevance. The `minSimilarity` threshold should be a value between `0.0` and `1.0`, where `1.0` is identical:
+Method `whereVectorSimilarTo` lọc kết quả theo độ tương đồng cosine với một vector được cung cấp và sắp xếp kết quả theo mức độ liên quan. Ngưỡng `minSimilarity` phải là giá trị từ `0.0` đến `1.0`, trong đó `1.0` biểu thị giống hệt nhau:
 
 ```php
 $documents = DB::table('documents')
@@ -1175,7 +1175,7 @@ $documents = DB::table('documents')
     ->get();
 ```
 
-When a plain string is given as the vector argument, Laravel will automatically generate embeddings for it using the [Laravel AI SDK](/docs/{{version}}/ai-sdk#embeddings):
+Khi đối số vector được truyền dưới dạng chuỗi thông thường, Laravel sẽ tự động tạo embedding cho chuỗi đó bằng [Laravel AI SDK](/docs/{{version}}/ai-sdk#embeddings):
 
 ```php
 $documents = DB::table('documents')
@@ -1184,7 +1184,7 @@ $documents = DB::table('documents')
     ->get();
 ```
 
-By default, `whereVectorSimilarTo` also orders results by distance (most similar first). You may disable this ordering by passing `false` as the `order` argument:
+Theo mặc định, `whereVectorSimilarTo` cũng sắp xếp kết quả theo khoảng cách, với kết quả tương đồng nhất đứng trước. Bạn có thể tắt việc sắp xếp này bằng cách truyền `false` cho đối số `order`:
 
 ```php
 $documents = DB::table('documents')
@@ -1194,7 +1194,7 @@ $documents = DB::table('documents')
     ->get();
 ```
 
-If you need more control, you may use the `selectVectorDistance`, `whereVectorDistanceLessThan`, and `orderByVectorDistance` methods independently:
+Nếu cần kiểm soát chi tiết hơn, bạn có thể sử dụng độc lập các method `selectVectorDistance`, `whereVectorDistanceLessThan` và `orderByVectorDistance`:
 
 ```php
 $documents = DB::table('documents')
@@ -1206,22 +1206,22 @@ $documents = DB::table('documents')
     ->get();
 ```
 
-When utilizing PostgreSQL, the `pgvector` extension must be loaded before `vector` columns can be created:
+Khi sử dụng PostgreSQL, extension `pgvector` phải được nạp trước khi có thể tạo các cột `vector`:
 
 ```php
 Schema::ensureVectorExtensionExists();
 ```
 
 <a name="ordering-grouping-limit-and-offset"></a>
-## Ordering, Grouping, Limit and Offset
+## Sắp xếp, nhóm, giới hạn và độ lệch
 
 <a name="ordering"></a>
-### Ordering
+### Sắp xếp
 
 <a name="orderby"></a>
-#### The `orderBy` Method
+#### Method `orderBy`
 
-The `orderBy` method allows you to sort the results of the query by a given column. The first argument accepted by the `orderBy` method should be the column you wish to sort by, while the second argument determines the direction of the sort and may be either `asc` or `desc`:
+Method `orderBy` cho phép bạn sắp xếp kết quả truy vấn theo một cột được cung cấp. Đối số đầu tiên của `orderBy` là cột bạn muốn dùng để sắp xếp, trong khi đối số thứ hai xác định chiều sắp xếp và có thể là `asc` hoặc `desc`:
 
 ```php
 $users = DB::table('users')
@@ -1229,7 +1229,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-To sort by multiple columns, you may simply invoke `orderBy` as many times as necessary:
+Để sắp xếp theo nhiều cột, bạn chỉ cần gọi `orderBy` nhiều lần theo nhu cầu:
 
 ```php
 $users = DB::table('users')
@@ -1238,7 +1238,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-The sort direction is optional, and is ascending by default. If you want to sort in descending order, you can specify the second parameter for the `orderBy` method, or just use `orderByDesc`:
+Chiều sắp xếp là tùy chọn và mặc định là tăng dần. Nếu muốn sắp xếp giảm dần, bạn có thể chỉ định tham số thứ hai cho method `orderBy` hoặc sử dụng trực tiếp `orderByDesc`:
 
 ```php
 $users = DB::table('users')
@@ -1246,7 +1246,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-Finally, using the `->` operator, the results can be sorted by a value within a JSON column:
+Cuối cùng, bằng toán tử `->`, kết quả có thể được sắp xếp theo một giá trị nằm bên trong cột JSON:
 
 ```php
 $corporations = DB::table('corporations')
@@ -1256,9 +1256,9 @@ $corporations = DB::table('corporations')
 ```
 
 <a name="latest-oldest"></a>
-#### The `latest` and `oldest` Methods
+#### Các method `latest` và `oldest`
 
-The `latest` and `oldest` methods allow you to easily order results by date. By default, the result will be ordered by the table's `created_at` column. Or, you may pass the column name that you wish to sort by:
+Các method `latest` và `oldest` cho phép bạn dễ dàng sắp xếp kết quả theo ngày. Theo mặc định, kết quả sẽ được sắp xếp theo cột `created_at` của bảng. Ngoài ra, bạn có thể truyền tên cột muốn dùng để sắp xếp:
 
 ```php
 $user = DB::table('users')
@@ -1267,9 +1267,9 @@ $user = DB::table('users')
 ```
 
 <a name="random-ordering"></a>
-#### Random Ordering
+#### Sắp xếp ngẫu nhiên
 
-The `inRandomOrder` method may be used to sort the query results randomly. For example, you may use this method to fetch a random user:
+Method `inRandomOrder` có thể được sử dụng để sắp xếp ngẫu nhiên kết quả truy vấn. Ví dụ, bạn có thể dùng method này để lấy một user ngẫu nhiên:
 
 ```php
 $randomUser = DB::table('users')
@@ -1278,9 +1278,9 @@ $randomUser = DB::table('users')
 ```
 
 <a name="removing-existing-orderings"></a>
-#### Removing Existing Orderings
+#### Xóa các điều kiện sắp xếp hiện có
 
-The `reorder` method removes all of the "order by" clauses that have previously been applied to the query:
+Method `reorder` xóa toàn bộ mệnh đề "order by" đã được áp dụng trước đó cho truy vấn:
 
 ```php
 $query = DB::table('users')->orderBy('name');
@@ -1288,7 +1288,7 @@ $query = DB::table('users')->orderBy('name');
 $unorderedUsers = $query->reorder()->get();
 ```
 
-You may pass a column and direction when calling the `reorder` method in order to remove all existing "order by" clauses and apply an entirely new order to the query:
+Bạn có thể truyền cột và chiều sắp xếp khi gọi method `reorder` để xóa toàn bộ mệnh đề "order by" hiện có và áp dụng một thứ tự hoàn toàn mới cho truy vấn:
 
 ```php
 $query = DB::table('users')->orderBy('name');
@@ -1296,7 +1296,7 @@ $query = DB::table('users')->orderBy('name');
 $usersOrderedByEmail = $query->reorder('email', 'desc')->get();
 ```
 
-For convenience, you may use the `reorderDesc` method to reorder the query results in descending order:
+Để thuận tiện, bạn có thể sử dụng method `reorderDesc` để sắp xếp lại kết quả truy vấn theo thứ tự giảm dần:
 
 ```php
 $query = DB::table('users')->orderBy('name');
@@ -1305,12 +1305,12 @@ $usersOrderedByEmail = $query->reorderDesc('email')->get();
 ```
 
 <a name="grouping"></a>
-### Grouping
+### Nhóm kết quả
 
 <a name="groupby-having"></a>
-#### The `groupBy` and `having` Methods
+#### Các method `groupBy` và `having`
 
-As you might expect, the `groupBy` and `having` methods may be used to group the query results. The `having` method's signature is similar to that of the `where` method:
+Như bạn có thể dự đoán, các method `groupBy` và `having` có thể được sử dụng để nhóm kết quả truy vấn. Chữ ký của method `having` tương tự method `where`:
 
 ```php
 $users = DB::table('users')
@@ -1319,7 +1319,7 @@ $users = DB::table('users')
     ->get();
 ```
 
-You can use the `havingBetween` method to filter the results within a given range:
+Bạn có thể sử dụng method `havingBetween` để lọc kết quả trong một khoảng được cung cấp:
 
 ```php
 $report = DB::table('orders')
@@ -1329,7 +1329,7 @@ $report = DB::table('orders')
     ->get();
 ```
 
-You may pass multiple arguments to the `groupBy` method to group by multiple columns:
+Bạn có thể truyền nhiều đối số vào method `groupBy` để nhóm theo nhiều cột:
 
 ```php
 $users = DB::table('users')
@@ -1338,12 +1338,12 @@ $users = DB::table('users')
     ->get();
 ```
 
-To build more advanced `having` statements, see the [havingRaw](#raw-methods) method.
+Để xây dựng các câu lệnh `having` nâng cao hơn, hãy xem method [havingRaw](#raw-methods).
 
 <a name="limit-and-offset"></a>
-### Limit and Offset
+### Limit và Offset
 
-You may use the `limit` and `offset` methods to limit the number of results returned from the query or to skip a given number of results in the query:
+Bạn có thể sử dụng các method `limit` và `offset` để giới hạn số lượng kết quả được trả về từ truy vấn hoặc bỏ qua một số lượng kết quả nhất định:
 
 ```php
 $users = DB::table('users')
@@ -1353,9 +1353,9 @@ $users = DB::table('users')
 ```
 
 <a name="conditional-clauses"></a>
-## Conditional Clauses
+## Các mệnh đề có điều kiện
 
-Sometimes you may want certain query clauses to apply to a query based on another condition. For instance, you may only want to apply a `where` statement if a given input value is present on the incoming HTTP request. You may accomplish this using the `when` method:
+Đôi khi bạn muốn một số mệnh đề truy vấn chỉ được áp dụng dựa trên một điều kiện khác. Ví dụ, bạn có thể chỉ muốn áp dụng câu lệnh `where` nếu một giá trị input nhất định có trong HTTP request gửi đến. Bạn có thể thực hiện điều này bằng method `when`:
 
 ```php
 $role = $request->input('role');
@@ -1367,9 +1367,9 @@ $users = DB::table('users')
     ->get();
 ```
 
-The `when` method only executes the given closure when the first argument is `true`. If the first argument is `false`, the closure will not be executed. So, in the example above, the closure given to the `when` method will only be invoked if the `role` field is present on the incoming request and evaluates to `true`.
+Method `when` chỉ thực thi closure được cung cấp khi đối số đầu tiên là `true`. Nếu đối số đầu tiên là `false`, closure sẽ không được thực thi. Vì vậy, trong ví dụ trên, closure truyền vào `when` chỉ được gọi nếu field `role` có trong request gửi đến và được đánh giá là `true`.
 
-You may pass another closure as the third argument to the `when` method. This closure will only execute if the first argument evaluates as `false`. To illustrate how this feature may be used, we will use it to configure the default ordering of a query:
+Bạn có thể truyền một closure khác làm đối số thứ ba của method `when`. Closure này chỉ được thực thi nếu đối số đầu tiên được đánh giá là `false`. Để minh họa, chúng ta sẽ sử dụng tính năng này để cấu hình thứ tự sắp xếp mặc định của truy vấn:
 
 ```php
 $sortByVotes = $request->boolean('sort_by_votes');
@@ -1384,9 +1384,9 @@ $users = DB::table('users')
 ```
 
 <a name="insert-statements"></a>
-## Insert Statements
+## Câu lệnh Insert
 
-The query builder also provides an `insert` method that may be used to insert records into the database table. The `insert` method accepts an array of column names and values:
+Query builder cũng cung cấp method `insert` để chèn record vào bảng cơ sở dữ liệu. Method `insert` nhận một array gồm tên cột và giá trị:
 
 ```php
 DB::table('users')->insert([
@@ -1395,7 +1395,7 @@ DB::table('users')->insert([
 ]);
 ```
 
-You may insert several records at once by passing an array of arrays. Each array represents a record that should be inserted into the table:
+Bạn có thể chèn nhiều record cùng lúc bằng cách truyền một array gồm nhiều array. Mỗi array đại diện cho một record cần được chèn vào bảng:
 
 ```php
 DB::table('users')->insert([
@@ -1404,7 +1404,7 @@ DB::table('users')->insert([
 ]);
 ```
 
-The `insertOrIgnore` method will ignore errors while inserting records into the database. When using this method, you should be aware that duplicate record errors will be ignored and other types of errors may also be ignored depending on the database engine. For example, `insertOrIgnore` will [bypass MySQL's strict mode](https://dev.mysql.com/doc/refman/en/sql-mode.html#ignore-effect-on-execution):
+Method `insertOrIgnore` sẽ bỏ qua lỗi trong quá trình chèn record vào cơ sở dữ liệu. Khi sử dụng method này, bạn cần lưu ý rằng lỗi record trùng lặp sẽ bị bỏ qua và các loại lỗi khác cũng có thể bị bỏ qua tùy theo database engine. Ví dụ, `insertOrIgnore` sẽ [bỏ qua strict mode của MySQL](https://dev.mysql.com/doc/refman/en/sql-mode.html#ignore-effect-on-execution):
 
 ```php
 DB::table('users')->insertOrIgnore([
@@ -1413,7 +1413,7 @@ DB::table('users')->insertOrIgnore([
 ]);
 ```
 
-The `insertUsing` method will insert new records into the table while using a subquery to determine the data that should be inserted:
+Method `insertUsing` sẽ chèn các record mới vào bảng, đồng thời sử dụng một subquery để xác định dữ liệu cần chèn:
 
 ```php
 DB::table('pruned_users')->insertUsing([
@@ -1424,9 +1424,9 @@ DB::table('pruned_users')->insertUsing([
 ```
 
 <a name="auto-incrementing-ids"></a>
-#### Auto-Incrementing IDs
+#### ID tự tăng
 
-If the table has an auto-incrementing id, use the `insertGetId` method to insert a record and then retrieve the ID:
+Nếu bảng có ID tự tăng, hãy sử dụng method `insertGetId` để chèn một record rồi lấy ID của record đó:
 
 ```php
 $id = DB::table('users')->insertGetId(
@@ -1435,12 +1435,12 @@ $id = DB::table('users')->insertGetId(
 ```
 
 > [!WARNING]
-> When using PostgreSQL the `insertGetId` method expects the auto-incrementing column to be named `id`. If you would like to retrieve the ID from a different "sequence", you may pass the column name as the second parameter to the `insertGetId` method.
+> Khi sử dụng PostgreSQL, method `insertGetId` mặc định kỳ vọng cột tự tăng có tên `id`. Nếu muốn lấy ID từ một "sequence" khác, bạn có thể truyền tên cột làm tham số thứ hai của method `insertGetId`.
 
 <a name="upserts"></a>
-### Upserts
+### Upsert
 
-The `upsert` method will insert records that do not exist and update the records that already exist with new values that you may specify. The method's first argument consists of the values to insert or update, while the second argument lists the column(s) that uniquely identify records within the associated table. The method's third and final argument is an array of columns that should be updated if a matching record already exists in the database:
+Method `upsert` sẽ chèn các record chưa tồn tại và cập nhật các record đã tồn tại bằng những giá trị mới mà bạn chỉ định. Đối số đầu tiên chứa các giá trị cần chèn hoặc cập nhật; đối số thứ hai liệt kê các cột dùng để định danh duy nhất record trong bảng tương ứng; đối số thứ ba và cũng là cuối cùng là array các cột cần cập nhật nếu một record khớp đã tồn tại trong cơ sở dữ liệu:
 
 ```php
 DB::table('flights')->upsert(
@@ -1453,15 +1453,15 @@ DB::table('flights')->upsert(
 );
 ```
 
-In the example above, Laravel will attempt to insert two records. If a record already exists with the same `departure` and `destination` column values, Laravel will update that record's `price` column.
+Trong ví dụ trên, Laravel sẽ cố gắng chèn hai record. Nếu đã tồn tại record có cùng giá trị ở các cột `departure` và `destination`, Laravel sẽ cập nhật cột `price` của record đó.
 
 > [!WARNING]
-> All databases except SQL Server require the columns in the second argument of the `upsert` method to have a "primary" or "unique" index. In addition, the MariaDB and MySQL database drivers ignore the second argument of the `upsert` method and always use the "primary" and "unique" indexes of the table to detect existing records.
+> Tất cả cơ sở dữ liệu ngoại trừ SQL Server đều yêu cầu các cột trong đối số thứ hai của method `upsert` phải có index "primary" hoặc "unique". Ngoài ra, driver MariaDB và MySQL bỏ qua đối số thứ hai của `upsert` và luôn sử dụng các index "primary" và "unique" của bảng để phát hiện record đã tồn tại.
 
 <a name="update-statements"></a>
-## Update Statements
+## Câu lệnh Update
 
-In addition to inserting records into the database, the query builder can also update existing records using the `update` method. The `update` method, like the `insert` method, accepts an array of column and value pairs indicating the columns to be updated. The `update` method returns the number of affected rows. You may constrain the `update` query using `where` clauses:
+Ngoài việc chèn record vào cơ sở dữ liệu, query builder cũng có thể cập nhật record hiện có bằng method `update`. Tương tự `insert`, method `update` nhận một array gồm các cặp cột và giá trị để chỉ định các cột cần cập nhật. Method `update` trả về số hàng bị ảnh hưởng. Bạn có thể giới hạn truy vấn `update` bằng các mệnh đề `where`:
 
 ```php
 $affected = DB::table('users')
@@ -1470,11 +1470,11 @@ $affected = DB::table('users')
 ```
 
 <a name="update-or-insert"></a>
-#### Update or Insert
+#### Update hoặc Insert
 
-Sometimes you may want to update an existing record in the database or create it if no matching record exists. In this scenario, the `updateOrInsert` method may be used. The `updateOrInsert` method accepts two arguments: an array of conditions by which to find the record, and an array of column and value pairs indicating the columns to be updated.
+Đôi khi bạn muốn cập nhật một record hiện có trong cơ sở dữ liệu hoặc tạo mới nếu không tìm thấy record phù hợp. Trong trường hợp này, có thể sử dụng method `updateOrInsert`. Method `updateOrInsert` nhận hai đối số: một array các điều kiện dùng để tìm record và một array các cặp cột/giá trị chỉ định các cột cần cập nhật.
 
-The `updateOrInsert` method will attempt to locate a matching database record using the first argument's column and value pairs. If the record exists, it will be updated with the values in the second argument. If the record cannot be found, a new record will be inserted with the merged attributes of both arguments:
+Method `updateOrInsert` sẽ tìm record phù hợp bằng các cặp cột và giá trị trong đối số đầu tiên. Nếu record tồn tại, nó sẽ được cập nhật bằng các giá trị trong đối số thứ hai. Nếu không tìm thấy record, một record mới sẽ được chèn với các thuộc tính được hợp nhất từ cả hai đối số:
 
 ```php
 DB::table('users')
@@ -1484,7 +1484,7 @@ DB::table('users')
     );
 ```
 
-You may provide a closure to the `updateOrInsert` method to customize the attributes that are updated or inserted into the database based on the existence of a matching record:
+Bạn có thể truyền một closure vào method `updateOrInsert` để tùy chỉnh các thuộc tính được cập nhật hoặc chèn vào cơ sở dữ liệu dựa trên việc record phù hợp có tồn tại hay không:
 
 ```php
 DB::table('users')->updateOrInsert(
@@ -1501,9 +1501,9 @@ DB::table('users')->updateOrInsert(
 ```
 
 <a name="updating-json-columns"></a>
-### Updating JSON Columns
+### Cập nhật cột JSON
 
-When updating a JSON column, you should use `->` syntax to update the appropriate key in the JSON object. This operation is supported on MariaDB 10.3+, MySQL 5.7+, and PostgreSQL 9.5+:
+Khi cập nhật cột JSON, bạn nên sử dụng cú pháp `->` để cập nhật key tương ứng trong JSON object. Thao tác này được hỗ trợ trên MariaDB 10.3+, MySQL 5.7+ và PostgreSQL 9.5+:
 
 ```php
 $affected = DB::table('users')
@@ -1512,9 +1512,9 @@ $affected = DB::table('users')
 ```
 
 <a name="increment-and-decrement"></a>
-### Increment and Decrement
+### Tăng và giảm giá trị
 
-The query builder also provides convenient methods for incrementing or decrementing the value of a given column. Both of these methods accept at least one argument: the column to modify. A second argument may be provided to specify the amount by which the column should be incremented or decremented:
+Query builder cũng cung cấp các method thuận tiện để tăng hoặc giảm giá trị của một cột. Cả hai method đều nhận ít nhất một đối số là cột cần thay đổi. Có thể truyền đối số thứ hai để chỉ định lượng giá trị cần tăng hoặc giảm:
 
 ```php
 DB::table('users')->increment('votes');
@@ -1526,13 +1526,13 @@ DB::table('users')->decrement('votes');
 DB::table('users')->decrement('votes', 5);
 ```
 
-If needed, you may also specify additional columns to update during the increment or decrement operation:
+Nếu cần, bạn cũng có thể chỉ định các cột bổ sung cần cập nhật trong quá trình tăng hoặc giảm:
 
 ```php
 DB::table('users')->increment('votes', 1, ['name' => 'John']);
 ```
 
-In addition, you may increment or decrement multiple columns at once using the `incrementEach` and `decrementEach` methods:
+Ngoài ra, bạn có thể tăng hoặc giảm nhiều cột cùng lúc bằng các method `incrementEach` và `decrementEach`:
 
 ```php
 DB::table('users')->incrementEach([
@@ -1542,9 +1542,9 @@ DB::table('users')->incrementEach([
 ```
 
 <a name="delete-statements"></a>
-## Delete Statements
+## Câu lệnh Delete
 
-The query builder's `delete` method may be used to delete records from the table. The `delete` method returns the number of affected rows. You may constrain `delete` statements by adding "where" clauses before calling the `delete` method:
+Method `delete` của query builder có thể được sử dụng để xóa record khỏi bảng. Method `delete` trả về số hàng bị ảnh hưởng. Bạn có thể giới hạn câu lệnh `delete` bằng cách thêm các mệnh đề "where" trước khi gọi method `delete`:
 
 ```php
 $deleted = DB::table('users')->delete();
@@ -1555,7 +1555,7 @@ $deleted = DB::table('users')->where('votes', '>', 100)->delete();
 <a name="pessimistic-locking"></a>
 ## Pessimistic Locking
 
-The query builder also includes a few functions to help you achieve "pessimistic locking" when executing your `select` statements. To execute a statement with a "shared lock", you may call the `sharedLock` method. A shared lock prevents the selected rows from being modified until your transaction is committed:
+Query builder cũng cung cấp một số chức năng giúp bạn thực hiện "pessimistic locking" khi chạy các câu lệnh `select`. Để thực thi câu lệnh với "shared lock", bạn có thể gọi method `sharedLock`. Shared lock ngăn các hàng đã chọn bị thay đổi cho đến khi transaction được commit:
 
 ```php
 DB::table('users')
@@ -1564,7 +1564,7 @@ DB::table('users')
     ->get();
 ```
 
-Alternatively, you may use the `lockForUpdate` method. A "for update" lock prevents the selected records from being modified or from being selected with another shared lock:
+Ngoài ra, bạn có thể sử dụng method `lockForUpdate`. Lock "for update" ngăn các record đã chọn bị thay đổi hoặc bị chọn bởi một shared lock khác:
 
 ```php
 DB::table('users')
@@ -1573,7 +1573,7 @@ DB::table('users')
     ->get();
 ```
 
-While not obligatory, it is recommended to wrap pessimistic locks within a [transaction](/docs/{{version}}/database#database-transactions). This ensures that the data retrieved remains unaltered in the database until the entire operation completes. In case of a failure, the transaction will roll back any changes and release the locks automatically:
+Dù không bắt buộc, bạn nên đặt pessimistic lock bên trong một [transaction](/docs/{{version}}/database#database-transactions). Điều này đảm bảo dữ liệu được lấy ra không bị thay đổi trong cơ sở dữ liệu cho đến khi toàn bộ thao tác hoàn tất. Nếu xảy ra lỗi, transaction sẽ rollback mọi thay đổi và tự động giải phóng lock:
 
 ```php
 DB::transaction(function () {
@@ -1604,9 +1604,9 @@ DB::transaction(function () {
 ```
 
 <a name="reusable-query-components"></a>
-## Reusable Query Components
+## Thành phần truy vấn có thể tái sử dụng
 
-If you have repeated query logic throughout your application, you may extract the logic into reusable objects using the query builder's `tap` and `pipe` methods. Imagine you have these two different queries in your application:
+Nếu có logic truy vấn lặp lại trong toàn ứng dụng, bạn có thể tách logic đó thành các object có thể tái sử dụng bằng các method `tap` và `pipe` của query builder. Giả sử ứng dụng có hai truy vấn khác nhau sau:
 
 ```php
 use Illuminate\Database\Query\Builder;
@@ -1634,7 +1634,7 @@ DB::table('flights')
     ->get();
 ```
 
-You may like to extract the destination filtering that is common between the queries into a reusable object:
+Bạn có thể tách phần lọc theo destination dùng chung giữa các truy vấn thành một object có thể tái sử dụng:
 
 ```php
 <?php
@@ -1660,7 +1660,7 @@ class DestinationFilter
 }
 ```
 
-Then, you can use the query builder's `tap` method to apply the object's logic to the query:
+Sau đó, bạn có thể sử dụng method `tap` của query builder để áp dụng logic của object vào truy vấn:
 
 ```php
 use App\Scopes\DestinationFilter;
@@ -1688,11 +1688,11 @@ DB::table('flights')
 ```
 
 <a name="query-pipes"></a>
-#### Query Pipes
+#### Query Pipe
 
-The `tap` method will always return the query builder. If you would like to extract an object that executes the query and returns another value, you may use the `pipe` method instead.
+Method `tap` luôn trả về query builder. Nếu muốn tách thành một object thực thi truy vấn và trả về một giá trị khác, bạn có thể sử dụng method `pipe` thay thế.
 
-Consider the following query object that contains shared [pagination](/docs/{{version}}/pagination) logic used throughout an application. Unlike the `DestinationFilter`, which applies query conditions to the query, the `Paginate` object executes the query and returns a paginator instance:
+Hãy xem query object sau, chứa logic [phân trang](/docs/{{version}}/pagination) dùng chung trong toàn ứng dụng. Khác với `DestinationFilter` chỉ áp dụng điều kiện lên truy vấn, object `Paginate` thực thi truy vấn và trả về một paginator instance:
 
 ```php
 <?php
@@ -1720,7 +1720,7 @@ class Paginate
 }
 ```
 
-Using the query builder's `pipe` method, we can leverage this object to apply our shared pagination logic:
+Bằng method `pipe` của query builder, chúng ta có thể sử dụng object này để áp dụng logic phân trang dùng chung:
 
 ```php
 $flights = DB::table('flights')
@@ -1731,7 +1731,7 @@ $flights = DB::table('flights')
 <a name="debugging"></a>
 ## Debugging
 
-You may use the `dd` and `dump` methods while building a query to dump the current query bindings and SQL. The `dd` method will display the debug information and then stop executing the request. The `dump` method will display the debug information but allow the request to continue executing:
+Bạn có thể sử dụng các method `dd` và `dump` trong khi xây dựng truy vấn để hiển thị binding và SQL hiện tại. Method `dd` hiển thị thông tin debug rồi dừng thực thi request. Method `dump` hiển thị thông tin debug nhưng vẫn cho phép request tiếp tục thực thi:
 
 ```php
 DB::table('users')->where('votes', '>', 100)->dd();
@@ -1739,13 +1739,15 @@ DB::table('users')->where('votes', '>', 100)->dd();
 DB::table('users')->where('votes', '>', 100)->dump();
 ```
 
-The `dumpRawSql` and `ddRawSql` methods may be invoked on a query to dump the query's SQL with all parameter bindings properly substituted:
+Các method `dumpRawSql` và `ddRawSql` có thể được gọi trên truy vấn để hiển thị SQL của truy vấn sau khi tất cả parameter binding đã được thay thế đúng cách:
 
 ```php
 DB::table('users')->where('votes', '>', 100)->dumpRawSql();
 
 DB::table('users')->where('votes', '>', 100)->ddRawSql();
 ```
+
+---
 
 ## Tài liệu chính thức
 

@@ -1,68 +1,68 @@
-# Logging
+# Ghi log
 
-- [Introduction](#introduction)
-- [Configuration](#configuration)
-    - [Available Channel Drivers](#available-channel-drivers)
-    - [Channel Prerequisites](#channel-prerequisites)
-    - [Logging Deprecation Warnings](#logging-deprecation-warnings)
-- [Building Log Stacks](#building-log-stacks)
-- [Writing Log Messages](#writing-log-messages)
-    - [Contextual Information](#contextual-information)
-    - [Writing to Specific Channels](#writing-to-specific-channels)
-- [Monolog Channel Customization](#monolog-channel-customization)
-    - [Customizing Monolog for Channels](#customizing-monolog-for-channels)
-    - [Creating Monolog Handler Channels](#creating-monolog-handler-channels)
-    - [Creating Custom Channels via Factories](#creating-custom-channels-via-factories)
-- [Tailing Log Messages Using Pail](#tailing-log-messages-using-pail)
-    - [Installation](#pail-installation)
-    - [Usage](#pail-usage)
-    - [Filtering Logs](#pail-filtering-logs)
+- [Giới thiệu](#introduction)
+- [Cấu hình](#configuration)
+    - [Các driver channel có sẵn](#available-channel-drivers)
+    - [Điều kiện tiên quyết của channel](#channel-prerequisites)
+    - [Ghi log cảnh báo deprecated](#logging-deprecation-warnings)
+- [Xây dựng log stack](#building-log-stacks)
+- [Ghi thông điệp log](#writing-log-messages)
+    - [Thông tin ngữ cảnh](#contextual-information)
+    - [Ghi vào channel cụ thể](#writing-to-specific-channels)
+- [Tùy chỉnh channel Monolog](#monolog-channel-customization)
+    - [Tùy chỉnh Monolog cho channel](#customizing-monolog-for-channels)
+    - [Tạo channel dùng Monolog handler](#creating-monolog-handler-channels)
+    - [Tạo channel tùy chỉnh bằng factory](#creating-custom-channels-via-factories)
+- [Theo dõi log theo thời gian thực bằng Pail](#tailing-log-messages-using-pail)
+    - [Cài đặt](#pail-installation)
+    - [Cách sử dụng](#pail-usage)
+    - [Lọc log](#pail-filtering-logs)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-To help you learn more about what's happening within your application, Laravel provides robust logging services that allow you to log messages to files, the system error log, and even to Slack to notify your entire team.
+Để giúp bạn hiểu rõ hơn những gì đang diễn ra bên trong ứng dụng, Laravel cung cấp các dịch vụ ghi log mạnh mẽ, cho phép ghi thông điệp vào file, system error log, và thậm chí gửi tới Slack để thông báo cho toàn bộ đội ngũ.
 
-Laravel logging is based on "channels". Each channel represents a specific way of writing log information. For example, the `single` channel writes log files to a single log file, while the `slack` channel sends log messages to Slack. Log messages may be written to multiple channels based on their severity.
+Hệ thống logging của Laravel được xây dựng dựa trên các "channel". Mỗi channel đại diện cho một cách cụ thể để ghi thông tin log. Ví dụ, channel `single` ghi log vào một file duy nhất, trong khi channel `slack` gửi thông điệp log tới Slack. Tùy theo mức độ nghiêm trọng, một thông điệp log có thể được ghi vào nhiều channel.
 
-Under the hood, Laravel utilizes the [Monolog](https://github.com/Seldaek/monolog) library, which provides support for a variety of powerful log handlers. Laravel makes it a cinch to configure these handlers, allowing you to mix and match them to customize your application's log handling.
+Bên dưới, Laravel sử dụng thư viện [Monolog](https://github.com/Seldaek/monolog), cung cấp nhiều log handler mạnh mẽ. Laravel giúp việc cấu hình các handler này trở nên đơn giản, cho phép bạn kết hợp chúng để tùy chỉnh cách ứng dụng xử lý log.
 
 <a name="configuration"></a>
-## Configuration
+## Cấu hình
 
-All of the configuration options that control your application's logging behavior are housed in the `config/logging.php` configuration file. This file allows you to configure your application's log channels, so be sure to review each of the available channels and their options. We'll review a few common options below.
+Tất cả tùy chọn kiểm soát hành vi logging của ứng dụng nằm trong file cấu hình `config/logging.php`. File này cho phép cấu hình các log channel của ứng dụng, vì vậy bạn nên xem qua từng channel có sẵn cùng các tùy chọn của chúng. Một số tùy chọn thường dùng sẽ được trình bày bên dưới.
 
-By default, Laravel will use the `stack` channel when logging messages. The `stack` channel is used to aggregate multiple log channels into a single channel. For more information on building stacks, check out the [documentation below](#building-log-stacks).
+Mặc định, Laravel sử dụng channel `stack` khi ghi log. Channel `stack` dùng để tập hợp nhiều log channel thành một channel duy nhất. Để biết thêm về cách xây dựng stack, hãy xem [phần tài liệu bên dưới](#building-log-stacks).
 
 <a name="available-channel-drivers"></a>
-### Available Channel Drivers
+### Các driver channel có sẵn
 
-Each log channel is powered by a "driver". The driver determines how and where the log message is actually recorded. The following log channel drivers are available in every Laravel application. An entry for most of these drivers is already present in your application's `config/logging.php` configuration file, so be sure to review this file to become familiar with its contents:
+Mỗi log channel được vận hành bởi một "driver". Driver quyết định thông điệp log thực sự được ghi bằng cách nào và ở đâu. Các log channel driver sau có sẵn trong mọi ứng dụng Laravel. Phần lớn các driver này đã có mục cấu hình trong file `config/logging.php` của ứng dụng, vì vậy hãy xem file này để làm quen với nội dung của nó:
 
 <div class="overflow-auto">
 
-| Name         | Description                                                          |
+| Tên          | Mô tả                                                                 |
 | ------------ | -------------------------------------------------------------------- |
-| `custom`     | A driver that calls a specified factory to create a channel.         |
-| `daily`      | A `RotatingFileHandler` based Monolog driver which rotates daily.    |
-| `monthly`    | A `RotatingFileHandler` based Monolog driver which rotates monthly.  |
-| `errorlog`   | An `ErrorLogHandler` based Monolog driver.                           |
-| `monolog`    | A Monolog factory driver that may use any supported Monolog handler. |
-| `papertrail` | A `SyslogUdpHandler` based Monolog driver.                           |
-| `single`     | A single file or path based logger channel (`StreamHandler`).        |
-| `slack`      | A `SlackWebhookHandler` based Monolog driver.                        |
-| `stack`      | A wrapper to facilitate creating "multi-channel" channels.           |
-| `syslog`     | A `SyslogHandler` based Monolog driver.                              |
+| `custom`     | Driver gọi một factory được chỉ định để tạo channel.                  |
+| `daily`      | Driver Monolog dựa trên `RotatingFileHandler`, xoay vòng hằng ngày.   |
+| `monthly`    | Driver Monolog dựa trên `RotatingFileHandler`, xoay vòng hằng tháng.  |
+| `errorlog`   | Driver Monolog dựa trên `ErrorLogHandler`.                            |
+| `monolog`    | Driver factory Monolog có thể dùng bất kỳ Monolog handler được hỗ trợ. |
+| `papertrail` | Driver Monolog dựa trên `SyslogUdpHandler`.                           |
+| `single`     | Channel logger dựa trên một file hoặc đường dẫn duy nhất (`StreamHandler`). |
+| `slack`      | Driver Monolog dựa trên `SlackWebhookHandler`.                        |
+| `stack`      | Lớp bao hỗ trợ tạo channel "đa channel".                             |
+| `syslog`     | Driver Monolog dựa trên `SyslogHandler`.                              |
 
 </div>
 
 > [!NOTE]
-> Check out the documentation on [advanced channel customization](#monolog-channel-customization) to learn more about the `monolog` and `custom` drivers.
+> Xem tài liệu về [tùy chỉnh channel nâng cao](#monolog-channel-customization) để tìm hiểu thêm về các driver `monolog` và `custom`.
 
 <a name="configuring-the-channel-name"></a>
-#### Configuring the Channel Name
+#### Cấu hình tên channel
 
-By default, Monolog is instantiated with a "channel name" that matches the current environment, such as `production` or `local`. To change this value, you may add a `name` option to your channel's configuration:
+Mặc định, Monolog được khởi tạo với một "tên channel" trùng với môi trường hiện tại, chẳng hạn `production` hoặc `local`. Để thay đổi giá trị này, bạn có thể thêm tùy chọn `name` vào cấu hình channel:
 
 ```php
 'stack' => [
@@ -73,41 +73,41 @@ By default, Monolog is instantiated with a "channel name" that matches the curre
 ```
 
 <a name="channel-prerequisites"></a>
-### Channel Prerequisites
+### Điều kiện tiên quyết của channel
 
 <a name="configuring-the-single-daily-and-monthly-channels"></a>
-#### Configuring the Single, Daily, and Monthly Channels
+#### Cấu hình các channel Single, Daily và Monthly
 
-The `single`, `daily`, and `monthly` channels have three optional configuration options: `bubble`, `permission`, and `locking`.
+Các channel `single`, `daily` và `monthly` có ba tùy chọn cấu hình không bắt buộc: `bubble`, `permission` và `locking`.
 
 <div class="overflow-auto">
 
-| Name         | Description                                                                   | Default |
+| Tên          | Mô tả                                                                          | Mặc định |
 | ------------ | ----------------------------------------------------------------------------- | ------- |
-| `bubble`     | Indicates if messages should bubble up to other channels after being handled. | `true`  |
-| `locking`    | Attempt to lock the log file before writing to it.                            | `false` |
-| `permission` | The log file's permissions.                                                   | `0644`  |
+| `bubble`     | Cho biết thông điệp có tiếp tục được chuyển lên các channel khác sau khi xử lý hay không. | `true` |
+| `locking`    | Thử khóa file log trước khi ghi.                                                | `false` |
+| `permission` | Quyền của file log.                                                             | `0644` |
 
 </div>
 
-Additionally, the retention policy for the `daily` and `monthly` channels can be configured via the `max_files` configuration option. The `LOG_DAILY_DAYS` environment variable may also be used to configure retention for the `daily` channel.
+Ngoài ra, chính sách lưu giữ của các channel `daily` và `monthly` có thể được cấu hình bằng tùy chọn `max_files`. Biến môi trường `LOG_DAILY_DAYS` cũng có thể được dùng để cấu hình thời gian lưu giữ cho channel `daily`.
 
 <a name="configuring-the-papertrail-channel"></a>
-#### Configuring the Papertrail Channel
+#### Cấu hình channel Papertrail
 
-The `papertrail` channel requires `host` and `port` configuration options. These may be defined via the `PAPERTRAIL_URL` and `PAPERTRAIL_PORT` environment variables. You can obtain these values from [Papertrail](https://help.papertrailapp.com/kb/configuration/configuring-centralized-logging-from-php-apps/#send-events-from-php-app).
+Channel `papertrail` yêu cầu các tùy chọn cấu hình `host` và `port`. Có thể định nghĩa chúng qua các biến môi trường `PAPERTRAIL_URL` và `PAPERTRAIL_PORT`. Bạn có thể lấy các giá trị này từ [Papertrail](https://help.papertrailapp.com/kb/configuration/configuring-centralized-logging-from-php-apps/#send-events-from-php-app).
 
 <a name="configuring-the-slack-channel"></a>
-#### Configuring the Slack Channel
+#### Cấu hình channel Slack
 
-The `slack` channel requires a `url` configuration option. This value may be defined via the `LOG_SLACK_WEBHOOK_URL` environment variable. This URL should match a URL for an [incoming webhook](https://slack.com/apps/A0F7XDUAZ-incoming-webhooks) that you have configured for your Slack team.
+Channel `slack` yêu cầu tùy chọn cấu hình `url`. Giá trị này có thể được định nghĩa bằng biến môi trường `LOG_SLACK_WEBHOOK_URL`. URL này phải khớp với URL của một [incoming webhook](https://slack.com/apps/A0F7XDUAZ-incoming-webhooks) mà bạn đã cấu hình cho đội ngũ Slack.
 
-By default, Slack will only receive logs at the `critical` level and above; however, you can adjust this using the `LOG_LEVEL` environment variable or by modifying the `level` configuration option within your Slack log channel's configuration array.
+Mặc định, Slack chỉ nhận log ở mức `critical` trở lên; tuy nhiên, bạn có thể điều chỉnh bằng biến môi trường `LOG_LEVEL` hoặc sửa tùy chọn `level` trong mảng cấu hình log channel Slack.
 
 <a name="logging-deprecation-warnings"></a>
-### Logging Deprecation Warnings
+### Ghi log Deprecation Warnings
 
-PHP, Laravel, and other libraries often notify their users that some of their features have been deprecated and will be removed in a future version. If you would like to log these deprecation warnings, you may specify your preferred `deprecations` log channel using the `LOG_DEPRECATIONS_CHANNEL` environment variable, or within your application's `config/logging.php` configuration file:
+PHP, Laravel và các thư viện khác thường thông báo rằng một số tính năng đã bị deprecated và sẽ bị loại bỏ trong phiên bản tương lai. Nếu muốn ghi lại các cảnh báo deprecated này, bạn có thể chỉ định log channel `deprecations` mong muốn bằng biến môi trường `LOG_DEPRECATIONS_CHANNEL` hoặc trong file cấu hình `config/logging.php` của ứng dụng:
 
 ```php
 'deprecations' => [
@@ -120,7 +120,7 @@ PHP, Laravel, and other libraries often notify their users that some of their fe
 ]
 ```
 
-Or, you may define a log channel named `deprecations`. If a log channel with this name exists, it will always be used to log deprecations:
+Hoặc, bạn có thể định nghĩa một log channel tên `deprecations`. Nếu channel có tên này tồn tại, nó sẽ luôn được dùng để ghi các cảnh báo deprecated:
 
 ```php
 'channels' => [
@@ -132,9 +132,9 @@ Or, you may define a log channel named `deprecations`. If a log channel with thi
 ```
 
 <a name="building-log-stacks"></a>
-## Building Log Stacks
+## Xây dựng log stack
 
-As mentioned previously, the `stack` driver allows you to combine multiple channels into a single log channel for convenience. To illustrate how to use log stacks, let's take a look at an example configuration that you might see in a production application:
+Như đã đề cập, driver `stack` cho phép kết hợp nhiều channel thành một log channel duy nhất. Để minh họa cách sử dụng log stack, hãy xem một cấu hình ví dụ thường gặp trong ứng dụng production:
 
 ```php
 'channels' => [
@@ -162,29 +162,29 @@ As mentioned previously, the `stack` driver allows you to combine multiple chann
 ],
 ```
 
-Let's dissect this configuration. First, notice our `stack` channel aggregates two other channels via its `channels` option: `syslog` and `slack`. So, when logging messages, both of these channels will have the opportunity to log the message. However, as we will see below, whether these channels actually log the message may be determined by the message's severity / "level".
+Hãy phân tích cấu hình này. Trước tiên, channel `stack` tập hợp hai channel khác thông qua tùy chọn `channels`: `syslog` và `slack`. Vì vậy, khi ghi log, cả hai channel đều có cơ hội ghi thông điệp. Tuy nhiên, như sẽ thấy bên dưới, việc các channel này có thực sự ghi thông điệp hay không có thể phụ thuộc vào mức độ nghiêm trọng / "level" của thông điệp.
 
 <a name="log-levels"></a>
-#### Log Levels
+#### Mức log
 
-Take note of the `level` configuration option present on the `syslog` and `slack` channel configurations in the example above. This option determines the minimum "level" a message must be in order to be logged by the channel. Monolog, which powers Laravel's logging services, offers all of the log levels defined in the [RFC 5424 specification](https://tools.ietf.org/html/rfc5424). In descending order of severity, these log levels are: **emergency**, **alert**, **critical**, **error**, **warning**, **notice**, **info**, and **debug**.
+Hãy lưu ý tùy chọn cấu hình `level` trong các channel `syslog` và `slack` ở ví dụ trên. Tùy chọn này xác định "level" tối thiểu mà một thông điệp phải đạt để được channel ghi lại. Monolog, nền tảng cho dịch vụ logging của Laravel, cung cấp tất cả mức log được định nghĩa trong [đặc tả RFC 5424](https://tools.ietf.org/html/rfc5424). Theo thứ tự mức độ nghiêm trọng giảm dần, các mức này là: **emergency**, **alert**, **critical**, **error**, **warning**, **notice**, **info** và **debug**.
 
-So, imagine we log a message using the `debug` method:
+Giả sử chúng ta ghi một thông điệp bằng phương thức `debug`:
 
 ```php
 Log::debug('An informational message.');
 ```
 
-Given our configuration, the `syslog` channel will write the message to the system log; however, since the error message is not `critical` or above, it will not be sent to Slack. However, if we log an `emergency` message, it will be sent to both the system log and Slack since the `emergency` level is above our minimum level threshold for both channels:
+Với cấu hình trên, channel `syslog` sẽ ghi thông điệp vào system log; tuy nhiên, vì thông điệp chưa đạt mức `critical` trở lên nên nó sẽ không được gửi tới Slack. Nếu ghi một thông điệp `emergency`, thông điệp sẽ được gửi tới cả system log và Slack vì mức `emergency` cao hơn ngưỡng tối thiểu của cả hai channel:
 
 ```php
 Log::emergency('The system is down!');
 ```
 
 <a name="writing-log-messages"></a>
-## Writing Log Messages
+## Ghi thông điệp log
 
-You may write information to the logs using the `Log` [facade](/docs/{{version}}/facades). As previously mentioned, the logger provides the eight logging levels defined in the [RFC 5424 specification](https://tools.ietf.org/html/rfc5424): **emergency**, **alert**, **critical**, **error**, **warning**, **notice**, **info** and **debug**:
+Bạn có thể ghi thông tin vào log bằng [facade](/docs/{{version}}/facades) `Log`. Như đã đề cập, logger cung cấp tám mức logging được định nghĩa trong [đặc tả RFC 5424](https://tools.ietf.org/html/rfc5424): **emergency**, **alert**, **critical**, **error**, **warning**, **notice**, **info** và **debug**:
 
 ```php
 use Illuminate\Support\Facades\Log;
@@ -199,7 +199,7 @@ Log::info($message);
 Log::debug($message);
 ```
 
-You may call any of these methods to log a message for the corresponding level. By default, the message will be written to the default log channel as configured by your `logging` configuration file:
+Bạn có thể gọi bất kỳ phương thức nào trong số này để ghi thông điệp ở mức tương ứng. Mặc định, thông điệp sẽ được ghi vào log channel mặc định được thiết lập trong file cấu hình `logging`:
 
 ```php
 <?php
@@ -227,9 +227,9 @@ class UserController extends Controller
 ```
 
 <a name="contextual-information"></a>
-### Contextual Information
+### Thông tin ngữ cảnh
 
-An array of contextual data may be passed to the log methods. This contextual data will be formatted and displayed with the log message:
+Có thể truyền một mảng dữ liệu ngữ cảnh vào các phương thức log. Dữ liệu ngữ cảnh này sẽ được định dạng và hiển thị cùng thông điệp log:
 
 ```php
 use Illuminate\Support\Facades\Log;
@@ -237,7 +237,7 @@ use Illuminate\Support\Facades\Log;
 Log::info('User {id} failed to login.', ['id' => $user->id]);
 ```
 
-Occasionally, you may wish to specify some contextual information that should be included with all subsequent log entries in a particular channel. For example, you may wish to log a request ID that is associated with each incoming request to your application. To accomplish this, you may call the `Log` facade's `withContext` method:
+Đôi khi, bạn có thể muốn chỉ định một số thông tin ngữ cảnh cần được đưa vào tất cả log entry tiếp theo của một channel cụ thể. Ví dụ, bạn có thể muốn ghi request ID gắn với từng request đi vào ứng dụng. Để thực hiện điều này, hãy gọi phương thức `withContext` của facade `Log`:
 
 ```php
 <?php
@@ -274,7 +274,7 @@ class AssignRequestId
 }
 ```
 
-If you would like to share contextual information across _all_ logging channels, you may invoke the `Log::shareContext()` method. This method will provide the contextual information to all created channels and any channels that are created subsequently:
+Nếu muốn chia sẻ thông tin ngữ cảnh trên _tất cả_ logging channel, bạn có thể gọi phương thức `Log::shareContext()`. Phương thức này cung cấp thông tin ngữ cảnh cho mọi channel đã được tạo và cả các channel được tạo sau đó:
 
 ```php
 <?php
@@ -308,12 +308,12 @@ class AssignRequestId
 ```
 
 > [!NOTE]
-> If you need to share log context while processing queued jobs, you may utilize [job middleware](/docs/{{version}}/queues#job-middleware).
+> Nếu cần chia sẻ ngữ cảnh log khi xử lý queued job, bạn có thể sử dụng [job middleware](/docs/{{version}}/queues#job-middleware).
 
 <a name="writing-to-specific-channels"></a>
-### Writing to Specific Channels
+### Ghi vào channel cụ thể
 
-Sometimes you may wish to log a message to a channel other than your application's default channel. You may use the `channel` method on the `Log` facade to retrieve and log to any channel defined in your configuration file:
+Đôi khi, bạn có thể muốn ghi thông điệp vào một channel khác với channel mặc định của ứng dụng. Bạn có thể dùng phương thức `channel` trên facade `Log` để lấy và ghi vào bất kỳ channel nào được định nghĩa trong file cấu hình:
 
 ```php
 use Illuminate\Support\Facades\Log;
@@ -321,16 +321,16 @@ use Illuminate\Support\Facades\Log;
 Log::channel('slack')->info('Something happened!');
 ```
 
-If you would like to create an on-demand logging stack consisting of multiple channels, you may use the `stack` method:
+Nếu muốn tạo một logging stack theo yêu cầu gồm nhiều channel, bạn có thể dùng phương thức `stack`:
 
 ```php
 Log::stack(['single', 'slack'])->info('Something happened!');
 ```
 
 <a name="on-demand-channels"></a>
-#### On-Demand Channels
+#### Channel theo yêu cầu
 
-It is also possible to create an on-demand channel by providing the configuration at runtime without that configuration being present in your application's `logging` configuration file. To accomplish this, you may pass a configuration array to the `Log` facade's `build` method:
+Bạn cũng có thể tạo channel theo yêu cầu bằng cách cung cấp cấu hình tại runtime mà không cần cấu hình đó tồn tại trong file cấu hình `logging` của ứng dụng. Để thực hiện, hãy truyền một mảng cấu hình vào phương thức `build` của facade `Log`:
 
 ```php
 use Illuminate\Support\Facades\Log;
@@ -341,7 +341,7 @@ Log::build([
 ])->info('Something happened!');
 ```
 
-You may also wish to include an on-demand channel in an on-demand logging stack. This can be achieved by including your on-demand channel instance in the array passed to the `stack` method:
+Bạn cũng có thể đưa một channel theo yêu cầu vào logging stack theo yêu cầu. Chỉ cần thêm instance của channel đó vào mảng truyền cho phương thức `stack`:
 
 ```php
 use Illuminate\Support\Facades\Log;
@@ -355,14 +355,14 @@ Log::stack(['slack', $channel])->info('Something happened!');
 ```
 
 <a name="monolog-channel-customization"></a>
-## Monolog Channel Customization
+## Tùy chỉnh channel Monolog
 
 <a name="customizing-monolog-for-channels"></a>
-### Customizing Monolog for Channels
+### Tùy chỉnh Monolog cho channel
 
-Sometimes you may need complete control over how Monolog is configured for an existing channel. For example, you may want to configure a custom Monolog `FormatterInterface` implementation for Laravel's built-in `single` channel.
+Đôi khi bạn cần toàn quyền kiểm soát cách Monolog được cấu hình cho một channel hiện có. Ví dụ, bạn có thể muốn cấu hình một implementation Monolog `FormatterInterface` tùy chỉnh cho channel `single` tích hợp sẵn của Laravel.
 
-To get started, define a `tap` array on the channel's configuration. The `tap` array should contain a list of classes that should have an opportunity to customize (or "tap" into) the Monolog instance after it is created. There is no conventional location where these classes should be placed, so you are free to create a directory within your application to contain these classes:
+Để bắt đầu, hãy định nghĩa mảng `tap` trong cấu hình channel. Mảng `tap` chứa danh sách các class được phép tùy chỉnh (hay "tap" vào) instance Monolog sau khi nó được tạo. Không có vị trí quy ước bắt buộc cho các class này, vì vậy bạn có thể tự tạo một thư mục trong ứng dụng để chứa chúng:
 
 ```php
 'single' => [
@@ -374,7 +374,7 @@ To get started, define a `tap` array on the channel's configuration. The `tap` a
 ],
 ```
 
-Once you have configured the `tap` option on your channel, you're ready to define the class that will customize your Monolog instance. This class only needs a single method: `__invoke`, which receives an `Illuminate\Log\Logger` instance. The `Illuminate\Log\Logger` instance proxies all method calls to the underlying Monolog instance:
+Sau khi cấu hình tùy chọn `tap` cho channel, bạn có thể định nghĩa class dùng để tùy chỉnh instance Monolog. Class này chỉ cần một phương thức `__invoke`, nhận vào instance `Illuminate\Log\Logger`. Instance `Illuminate\Log\Logger` sẽ proxy mọi lời gọi phương thức tới instance Monolog bên dưới:
 
 ```php
 <?php
@@ -401,14 +401,14 @@ class CustomizeFormatter
 ```
 
 > [!NOTE]
-> All of your "tap" classes are resolved by the [service container](/docs/{{version}}/container), so any constructor dependencies they require will automatically be injected.
+> Tất cả class "tap" được resolve bởi [service container](/docs/{{version}}/container), vì vậy mọi dependency trong constructor mà chúng yêu cầu sẽ tự động được inject.
 
 <a name="creating-monolog-handler-channels"></a>
-### Creating Monolog Handler Channels
+### Tạo channel dùng Monolog handler
 
-Monolog has a variety of [available handlers](https://github.com/Seldaek/monolog/tree/main/src/Monolog/Handler) and Laravel does not include a built-in channel for each one. In some cases, you may wish to create a custom channel that is merely an instance of a specific Monolog handler that does not have a corresponding Laravel log driver. These channels can be easily created using the `monolog` driver.
+Monolog có nhiều [handler sẵn có](https://github.com/Seldaek/monolog/tree/main/src/Monolog/Handler), và Laravel không cung cấp channel tích hợp sẵn cho từng handler. Trong một số trường hợp, bạn có thể muốn tạo một channel tùy chỉnh chỉ đơn giản là instance của một Monolog handler cụ thể chưa có Laravel log driver tương ứng. Có thể dễ dàng tạo các channel này bằng driver `monolog`.
 
-When using the `monolog` driver, the `handler` configuration option is used to specify which handler will be instantiated. Optionally, any constructor parameters the handler needs may be specified using the `handler_with` configuration option:
+Khi dùng driver `monolog`, tùy chọn cấu hình `handler` chỉ định handler nào sẽ được khởi tạo. Nếu cần, các tham số constructor của handler có thể được khai báo bằng tùy chọn `handler_with`:
 
 ```php
 'logentries' => [
@@ -422,9 +422,9 @@ When using the `monolog` driver, the `handler` configuration option is used to s
 ```
 
 <a name="monolog-formatters"></a>
-#### Monolog Formatters
+#### Formatter của Monolog
 
-When using the `monolog` driver, the Monolog `LineFormatter` will be used as the default formatter. However, you may customize the type of formatter passed to the handler using the `formatter` and `formatter_with` configuration options:
+Khi dùng driver `monolog`, Monolog `LineFormatter` được sử dụng làm formatter mặc định. Tuy nhiên, bạn có thể tùy chỉnh loại formatter truyền cho handler bằng các tùy chọn `formatter` và `formatter_with`:
 
 ```php
 'browser' => [
@@ -437,7 +437,7 @@ When using the `monolog` driver, the Monolog `LineFormatter` will be used as the
 ],
 ```
 
-If you are using a Monolog handler that is capable of providing its own formatter, you may set the value of the `formatter` configuration option to `default`:
+Nếu đang dùng một Monolog handler có khả năng cung cấp formatter riêng, bạn có thể đặt giá trị tùy chọn cấu hình `formatter` thành `default`:
 
 ```php
 'newrelic' => [
@@ -448,11 +448,11 @@ If you are using a Monolog handler that is capable of providing its own formatte
 ```
 
 <a name="monolog-processors"></a>
-#### Monolog Processors
+#### Processor của Monolog
 
-Monolog can also process messages before logging them. You can create your own processors or use the [existing processors offered by Monolog](https://github.com/Seldaek/monolog/tree/main/src/Monolog/Processor).
+Monolog cũng có thể xử lý thông điệp trước khi ghi log. Bạn có thể tự tạo processor hoặc dùng các [processor có sẵn do Monolog cung cấp](https://github.com/Seldaek/monolog/tree/main/src/Monolog/Processor).
 
-If you would like to customize the processors for a `monolog` driver, add a `processors` configuration value to your channel's configuration:
+Nếu muốn tùy chỉnh processor cho driver `monolog`, hãy thêm giá trị cấu hình `processors` vào cấu hình channel:
 
 ```php
 'memory' => [
@@ -475,9 +475,9 @@ If you would like to customize the processors for a `monolog` driver, add a `pro
 ```
 
 <a name="creating-custom-channels-via-factories"></a>
-### Creating Custom Channels via Factories
+### Tạo channel tùy chỉnh bằng factory
 
-If you would like to define an entirely custom channel in which you have full control over Monolog's instantiation and configuration, you may specify a `custom` driver type in your `config/logging.php` configuration file. Your configuration should include a `via` option that contains the name of the factory class which will be invoked to create the Monolog instance:
+Nếu muốn định nghĩa một channel hoàn toàn tùy chỉnh, nơi bạn toàn quyền kiểm soát việc khởi tạo và cấu hình Monolog, hãy chỉ định loại driver `custom` trong file `config/logging.php`. Cấu hình cần có tùy chọn `via` chứa tên factory class sẽ được gọi để tạo instance Monolog:
 
 ```php
 'channels' => [
@@ -488,7 +488,7 @@ If you would like to define an entirely custom channel in which you have full co
 ],
 ```
 
-Once you have configured the `custom` driver channel, you're ready to define the class that will create your Monolog instance. This class only needs a single `__invoke` method which should return the Monolog logger instance. The method will receive the channels configuration array as its only argument:
+Sau khi cấu hình channel dùng driver `custom`, bạn có thể định nghĩa class tạo instance Monolog. Class này chỉ cần một phương thức `__invoke` trả về instance Monolog logger. Phương thức nhận mảng cấu hình channel làm đối số duy nhất:
 
 ```php
 <?php
@@ -510,56 +510,56 @@ class CreateCustomLogger
 ```
 
 <a name="tailing-log-messages-using-pail"></a>
-## Tailing Log Messages Using Pail
+## Theo dõi log theo thời gian thực bằng Pail
 
-Often you may need to tail your application's logs in real time. For example, when debugging an issue or when monitoring your application's logs for specific types of errors.
+Bạn thường cần theo dõi log của ứng dụng theo thời gian thực, chẳng hạn khi debug một vấn đề hoặc giám sát log để tìm các loại lỗi cụ thể.
 
-Laravel Pail is a package that allows you to easily dive into your Laravel application's log files directly from the command line. Unlike the standard `tail` command, Pail is designed to work with any log driver, including [Laravel Nightwatch](https://nightwatch.laravel.com), Sentry, or Flare. In addition, Pail provides a set of useful filters to help you quickly find what you're looking for.
+Laravel Pail là package cho phép bạn dễ dàng theo dõi các file log của ứng dụng Laravel trực tiếp từ command line. Khác với lệnh `tail` tiêu chuẩn, Pail được thiết kế để hoạt động với mọi log driver, bao gồm [Laravel Nightwatch](https://nightwatch.laravel.com), Sentry hoặc Flare. Ngoài ra, Pail cung cấp nhiều bộ lọc hữu ích giúp bạn nhanh chóng tìm thấy thông tin cần thiết.
 
 <img src="https://laravel.com/img/docs/pail-example.png">
 
 <a name="pail-installation"></a>
-### Installation
+### Cài đặt
 
 > [!WARNING]
-> Laravel Pail requires the [PCNTL](https://www.php.net/manual/en/book.pcntl.php) PHP extension.
+> Laravel Pail yêu cầu PHP extension [PCNTL](https://www.php.net/manual/en/book.pcntl.php).
 
-To get started, install Pail into your project using the Composer package manager:
+Để bắt đầu, hãy cài Pail vào project bằng Composer:
 
 ```shell
 composer require --dev laravel/pail
 ```
 
 <a name="pail-usage"></a>
-### Usage
+### Cách sử dụng
 
-To start tailing logs, run the `pail` command:
+Để bắt đầu theo dõi log, hãy chạy lệnh `pail`:
 
 ```shell
 php artisan pail
 ```
 
-To increase the verbosity of the output and avoid truncation (…), use the `-v` option:
+Để tăng mức độ chi tiết của output và tránh bị cắt ngắn (…), hãy dùng tùy chọn `-v`:
 
 ```shell
 php artisan pail -v
 ```
 
-For maximum verbosity and to display exception stack traces, use the `-vv` option:
+Để có mức chi tiết tối đa và hiển thị stack trace của exception, hãy dùng tùy chọn `-vv`:
 
 ```shell
 php artisan pail -vv
 ```
 
-To stop tailing logs, press `Ctrl+C` at any time.
+Để dừng theo dõi log, nhấn `Ctrl+C` bất kỳ lúc nào.
 
 <a name="pail-filtering-logs"></a>
-### Filtering Logs
+### Lọc log
 
 <a name="pail-filtering-logs-filter-option"></a>
 #### `--filter`
 
-You may use the `--filter` option to filter logs by their type, file, message, and stack trace content:
+Bạn có thể dùng tùy chọn `--filter` để lọc log theo loại, file, thông điệp và nội dung stack trace:
 
 ```shell
 php artisan pail --filter="QueryException"
@@ -568,7 +568,7 @@ php artisan pail --filter="QueryException"
 <a name="pail-filtering-logs-message-option"></a>
 #### `--message`
 
-To filter logs by only their message, you may use the `--message` option:
+Để chỉ lọc log theo thông điệp, bạn có thể dùng tùy chọn `--message`:
 
 ```shell
 php artisan pail --message="User created"
@@ -577,7 +577,7 @@ php artisan pail --message="User created"
 <a name="pail-filtering-logs-level-option"></a>
 #### `--level`
 
-The `--level` option may be used to filter logs by their [log level](#log-levels):
+Tùy chọn `--level` có thể được dùng để lọc log theo [mức log](#log-levels):
 
 ```shell
 php artisan pail --level=error
@@ -586,11 +586,13 @@ php artisan pail --level=error
 <a name="pail-filtering-logs-user-option"></a>
 #### `--user`
 
-To only display logs that were written while a given user was authenticated, you may provide the user's ID to the `--user` option:
+Để chỉ hiển thị các log được ghi khi một người dùng cụ thể đang được xác thực, hãy truyền ID của người dùng vào tùy chọn `--user`:
 
 ```shell
 php artisan pail --user=1
 ```
+
+---
 
 ## Tài liệu chính thức
 

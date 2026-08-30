@@ -1,27 +1,27 @@
-# HTTP Tests
+# Kiểm thử HTTP
 
-- [Introduction](#introduction)
-- [Making Requests](#making-requests)
-    - [Customizing Request Headers](#customizing-request-headers)
-    - [Cookies](#cookies)
-    - [Session / Authentication](#session-and-authentication)
-    - [Debugging Responses](#debugging-responses)
-    - [Exception Handling](#exception-handling)
-- [Testing JSON APIs](#testing-json-apis)
-    - [Fluent JSON Testing](#fluent-json-testing)
-- [Testing File Uploads](#testing-file-uploads)
-- [Testing Views](#testing-views)
+- [Giới thiệu](#introduction)
+- [Thực hiện request](#making-requests)
+    - [Tùy chỉnh header của request](#customizing-request-headers)
+    - [Cookie](#cookies)
+    - [Session / Xác thực](#session-and-authentication)
+    - [Debug response](#debugging-responses)
+    - [Xử lý exception](#exception-handling)
+- [Kiểm thử JSON API](#testing-json-apis)
+    - [Kiểm thử JSON theo Fluent API](#fluent-json-testing)
+- [Kiểm thử upload file](#testing-file-uploads)
+- [Kiểm thử View](#testing-views)
     - [Rendering Blade and Components](#rendering-blade-and-components)
 - [Caching Routes](#caching-routes)
-- [Available Assertions](#available-assertions)
+- [Các assertion khả dụng](#available-assertions)
     - [Response Assertions](#response-assertions)
     - [Authentication Assertions](#authentication-assertions)
     - [Validation Assertions](#validation-assertions)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel provides a very fluent API for making HTTP requests to your application and examining the responses. For example, take a look at the feature test defined below:
+Laravel cung cấp một API rất mạch lạc để thực hiện các HTTP request đến ứng dụng và kiểm tra response. Ví dụ, hãy xem feature test được định nghĩa bên dưới:
 
 ```php tab=Pest
 <?php
@@ -54,14 +54,14 @@ class ExampleTest extends TestCase
 }
 ```
 
-The `get` method makes a `GET` request into the application, while the `assertStatus` method asserts that the returned response should have the given HTTP status code. In addition to this simple assertion, Laravel also contains a variety of assertions for inspecting the response headers, content, JSON structure, and more.
+Phương thức `get` thực hiện một request `GET` đến ứng dụng, trong khi phương thức `assertStatus` xác nhận rằng response trả về có HTTP status code đã cho. Ngoài assertion đơn giản này, Laravel còn cung cấp nhiều assertion khác để kiểm tra header, nội dung, cấu trúc JSON của response và nhiều thành phần khác.
 
 <a name="making-requests"></a>
-## Making Requests
+## Thực hiện request
 
-To make a request to your application, you may invoke the `get`, `post`, `put`, `patch`, or `delete` methods within your test. These methods do not actually issue a "real" HTTP request to your application. Instead, the entire network request is simulated internally.
+Để thực hiện request đến ứng dụng, bạn có thể gọi các phương thức `get`, `post`, `put`, `patch` hoặc `delete` trong test. Các phương thức này không thực sự gửi một HTTP request "thật" đến ứng dụng. Thay vào đó, toàn bộ network request được mô phỏng nội bộ.
 
-Instead of returning an `Illuminate\Http\Response` instance, test request methods return an instance of `Illuminate\Testing\TestResponse`, which provides a [variety of helpful assertions](#available-assertions) that allow you to inspect your application's responses:
+Thay vì trả về một instance `Illuminate\Http\Response`, các phương thức request trong test trả về một instance `Illuminate\Testing\TestResponse`, cung cấp [nhiều assertion hữu ích](#available-assertions) để bạn kiểm tra response của ứng dụng:
 
 ```php tab=Pest
 <?php
@@ -94,15 +94,15 @@ class ExampleTest extends TestCase
 }
 ```
 
-In general, each of your tests should only make one request to your application. Unexpected behavior may occur if multiple requests are executed within a single test method.
+Nhìn chung, mỗi test chỉ nên thực hiện một request đến ứng dụng. Hành vi không mong đợi có thể xảy ra nếu nhiều request được thực thi trong cùng một test method.
 
 > [!NOTE]
-> For convenience, the CSRF middleware is automatically disabled when running tests.
+> Để thuận tiện, middleware CSRF sẽ tự động được vô hiệu hóa khi chạy test.
 
 <a name="customizing-request-headers"></a>
-### Customizing Request Headers
+### Tùy chỉnh header của request
 
-You may use the `withHeaders` method to customize the request's headers before it is sent to the application. This method allows you to add any custom headers you would like to the request:
+Bạn có thể sử dụng phương thức `withHeaders` để tùy chỉnh header của request trước khi request được gửi đến ứng dụng. Phương thức này cho phép bạn thêm bất kỳ custom header nào mong muốn vào request:
 
 ```php tab=Pest
 <?php
@@ -140,9 +140,9 @@ class ExampleTest extends TestCase
 ```
 
 <a name="cookies"></a>
-### Cookies
+### Cookie
 
-You may use the `withCookie` or `withCookies` methods to set cookie values before making a request. The `withCookie` method accepts a cookie name and value as its two arguments, while the `withCookies` method accepts an array of name / value pairs:
+Bạn có thể sử dụng phương thức `withCookie` hoặc `withCookies` để thiết lập giá trị cookie trước khi thực hiện request. Phương thức `withCookie` nhận tên và giá trị cookie làm hai đối số, trong khi `withCookies` nhận một mảng các cặp tên / giá trị:
 
 ```php tab=Pest
 <?php
@@ -183,9 +183,9 @@ class ExampleTest extends TestCase
 ```
 
 <a name="session-and-authentication"></a>
-### Session / Authentication
+### Session / Xác thực
 
-Laravel provides several helpers for interacting with the session during HTTP testing. First, you may set the session data to a given array using the `withSession` method. This is useful for loading the session with data before issuing a request to your application:
+Laravel cung cấp một số helper để tương tác với session trong quá trình kiểm thử HTTP. Trước tiên, bạn có thể thiết lập dữ liệu session bằng một mảng cho trước thông qua phương thức `withSession`. Điều này hữu ích khi cần nạp dữ liệu vào session trước khi gửi request đến ứng dụng:
 
 ```php tab=Pest
 <?php
@@ -215,7 +215,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-Laravel's session is typically used to maintain state for the currently authenticated user. Therefore, the `actingAs` helper method provides a simple way to authenticate a given user as the current user. For example, we may use a [model factory](/docs/{{version}}/eloquent-factories) to generate and authenticate a user:
+Session của Laravel thường được dùng để duy trì trạng thái cho người dùng hiện đang được xác thực. Vì vậy, helper `actingAs` cung cấp một cách đơn giản để xác thực một user cụ thể làm user hiện tại. Ví dụ, chúng ta có thể sử dụng [model factory](/docs/{{version}}/eloquent-factories) để tạo và xác thực một user:
 
 ```php tab=Pest
 <?php
@@ -256,22 +256,22 @@ class ExampleTest extends TestCase
 }
 ```
 
-You may also specify which guard should be used to authenticate the given user by passing the guard name as the second argument to the `actingAs` method. The guard that is provided to the `actingAs` method will also become the default guard for the duration of the test:
+Bạn cũng có thể chỉ định guard được dùng để xác thực user bằng cách truyền tên guard làm đối số thứ hai cho phương thức `actingAs`. Guard được truyền vào `actingAs` cũng sẽ trở thành guard mặc định trong suốt thời gian chạy test:
 
 ```php
 $this->actingAs($user, 'web');
 ```
 
-If you would like to ensure the request is unauthenticated, you may use the `actingAsGuest` method:
+Nếu muốn đảm bảo request ở trạng thái chưa xác thực, bạn có thể sử dụng phương thức `actingAsGuest`:
 
 ```php
 $this->actingAsGuest();
 ```
 
 <a name="debugging-responses"></a>
-### Debugging Responses
+### Debug response
 
-After making a test request to your application, the `dump`, `dumpHeaders`, and `dumpSession` methods may be used to examine and debug the response contents:
+Sau khi thực hiện một test request đến ứng dụng, bạn có thể sử dụng các phương thức `dump`, `dumpHeaders` và `dumpSession` để kiểm tra và debug nội dung response:
 
 ```php tab=Pest
 <?php
@@ -308,7 +308,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-Alternatively, you may use the `dd`, `ddHeaders`, `ddBody`, `ddJson`, and `ddSession` methods to dump information about the response and then stop execution:
+Ngoài ra, bạn có thể sử dụng các phương thức `dd`, `ddHeaders`, `ddBody`, `ddJson` và `ddSession` để dump thông tin về response rồi dừng thực thi:
 
 ```php tab=Pest
 <?php
@@ -350,9 +350,9 @@ class ExampleTest extends TestCase
 ```
 
 <a name="exception-handling"></a>
-### Exception Handling
+### Xử lý exception
 
-Sometimes you may need to test that your application is throwing a specific exception. To accomplish this, you may "fake" the exception handler via the `Exceptions` facade. Once the exception handler has been faked, you may utilize the `assertReported` and `assertNotReported` methods to make assertions against exceptions that were thrown during the request:
+Đôi khi bạn cần kiểm thử rằng ứng dụng đang ném ra một exception cụ thể. Để thực hiện việc này, bạn có thể "fake" exception handler thông qua facade `Exceptions`. Sau khi exception handler được fake, bạn có thể sử dụng các phương thức `assertReported` và `assertNotReported` để assertion đối với các exception được ném ra trong request:
 
 ```php tab=Pest
 <?php
@@ -406,7 +406,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-The `assertNotReported` and `assertNothingReported` methods may be used to assert that a given exception was not thrown during the request or that no exceptions were thrown:
+Các phương thức `assertNotReported` và `assertNothingReported` có thể được dùng để xác nhận rằng một exception cụ thể không được ném ra trong request hoặc không có exception nào được ném ra:
 
 ```php
 Exceptions::assertNotReported(InvalidOrderException::class);
@@ -414,19 +414,19 @@ Exceptions::assertNotReported(InvalidOrderException::class);
 Exceptions::assertNothingReported();
 ```
 
-You may totally disable exception handling for a given request by invoking the `withoutExceptionHandling` method before making your request:
+Bạn có thể vô hiệu hóa hoàn toàn việc xử lý exception cho một request cụ thể bằng cách gọi phương thức `withoutExceptionHandling` trước khi thực hiện request:
 
 ```php
 $response = $this->withoutExceptionHandling()->get('/');
 ```
 
-In addition, if you would like to ensure that your application is not utilizing features that have been deprecated by the PHP language or the libraries your application is using, you may invoke the `withoutDeprecationHandling` method before making your request. When deprecation handling is disabled, deprecation warnings will be converted to exceptions, thus causing your test to fail:
+Ngoài ra, nếu muốn đảm bảo ứng dụng không sử dụng các tính năng đã bị PHP hoặc các thư viện mà ứng dụng sử dụng đánh dấu deprecated, bạn có thể gọi phương thức `withoutDeprecationHandling` trước khi thực hiện request. Khi xử lý deprecation bị vô hiệu hóa, các cảnh báo deprecation sẽ được chuyển thành exception, khiến test thất bại:
 
 ```php
 $response = $this->withoutDeprecationHandling()->get('/');
 ```
 
-The `assertThrows` method may be used to assert that code within a given closure throws an exception of the specified type:
+Phương thức `assertThrows` có thể được dùng để xác nhận rằng code bên trong một closure ném ra exception thuộc kiểu được chỉ định:
 
 ```php
 $this->assertThrows(
@@ -435,7 +435,7 @@ $this->assertThrows(
 );
 ```
 
-If you would like to inspect and make assertions against the exception that is thrown, you may provide a closure as the second argument to the `assertThrows` method:
+Nếu muốn kiểm tra và thực hiện assertion đối với exception được ném ra, bạn có thể truyền một closure làm đối số thứ hai cho phương thức `assertThrows`:
 
 ```php
 $this->assertThrows(
@@ -444,16 +444,16 @@ $this->assertThrows(
 );
 ```
 
-The `assertDoesntThrow` method may be used to assert that the code within a given closure does not throw any exceptions:
+Phương thức `assertDoesntThrow` có thể được dùng để xác nhận rằng code bên trong một closure không ném ra bất kỳ exception nào:
 
 ```php
 $this->assertDoesntThrow(fn () => (new ProcessOrder)->execute());
 ```
 
 <a name="testing-json-apis"></a>
-## Testing JSON APIs
+## Kiểm thử JSON API
 
-Laravel also provides several helpers for testing JSON APIs and their responses. For example, the `json`, `getJson`, `postJson`, `putJson`, `patchJson`, `deleteJson`, and `optionsJson` methods may be used to issue JSON requests with various HTTP verbs. You may also easily pass data and headers to these methods. To get started, let's write a test to make a `POST` request to `/api/user` and assert that the expected JSON data was returned:
+Laravel cũng cung cấp một số helper để kiểm thử JSON API và response của chúng. Ví dụ, các phương thức `json`, `getJson`, `postJson`, `putJson`, `patchJson`, `deleteJson` và `optionsJson` có thể được dùng để gửi JSON request với nhiều HTTP verb khác nhau. Bạn cũng có thể dễ dàng truyền dữ liệu và header cho các phương thức này. Để bắt đầu, hãy viết một test thực hiện request `POST` đến `/api/user` và xác nhận rằng dữ liệu JSON mong đợi được trả về:
 
 ```php tab=Pest
 <?php
@@ -494,7 +494,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-In addition, JSON response data may be accessed as array variables on the response, making it convenient for you to inspect the individual values returned within a JSON response:
+Ngoài ra, dữ liệu JSON response có thể được truy cập như các biến mảng trên response, giúp bạn thuận tiện kiểm tra từng giá trị được trả về trong JSON response:
 
 ```php tab=Pest
 expect($response['created'])->toBeTrue();
@@ -505,12 +505,12 @@ $this->assertTrue($response['created']);
 ```
 
 > [!NOTE]
-> The `assertJson` method converts the response to an array to verify that the given array exists within the JSON response returned by the application. So, if there are other properties in the JSON response, this test will still pass as long as the given fragment is present.
+> Phương thức `assertJson` chuyển response thành một mảng để xác minh rằng mảng được cung cấp tồn tại trong JSON response do ứng dụng trả về. Vì vậy, nếu JSON response còn có các thuộc tính khác, test vẫn pass miễn là fragment được cung cấp có mặt.
 
 <a name="verifying-exact-match"></a>
-#### Asserting Exact JSON Matches
+#### Xác nhận JSON khớp chính xác
 
-As previously mentioned, the `assertJson` method may be used to assert that a fragment of JSON exists within the JSON response. If you would like to verify that a given array **exactly matches** the JSON returned by your application, you should use the `assertExactJson` method:
+Như đã đề cập, phương thức `assertJson` có thể được dùng để xác nhận một fragment JSON tồn tại trong JSON response. Nếu muốn xác minh rằng một mảng cho trước **khớp chính xác** với JSON do ứng dụng trả về, bạn nên dùng phương thức `assertExactJson`:
 
 ```php tab=Pest
 <?php
@@ -552,9 +552,9 @@ class ExampleTest extends TestCase
 ```
 
 <a name="verifying-json-paths"></a>
-#### Asserting on JSON Paths
+#### Xác nhận theo JSON path
 
-If you would like to verify that the JSON response contains the given data at a specified path, you should use the `assertJsonPath` method:
+Nếu muốn xác minh JSON response chứa dữ liệu được cung cấp tại một path cụ thể, bạn nên dùng phương thức `assertJsonPath`:
 
 ```php tab=Pest
 <?php
@@ -591,13 +591,13 @@ class ExampleTest extends TestCase
 }
 ```
 
-The `assertJsonPath` method also accepts a closure, which may be used to dynamically determine if the assertion should pass:
+Phương thức `assertJsonPath` cũng chấp nhận một closure, có thể dùng để xác định động assertion có nên pass hay không:
 
 ```php
 $response->assertJsonPath('team.owner.name', fn (string $name) => strlen($name) >= 3);
 ```
 
-If you need to assert multiple JSON paths at once, you may use the `assertJsonPaths` method. The expected value for each path may also be a closure:
+Nếu cần xác nhận nhiều JSON path cùng lúc, bạn có thể dùng phương thức `assertJsonPaths`. Giá trị mong đợi cho mỗi path cũng có thể là một closure:
 
 ```php
 $response->assertJsonPaths([
@@ -607,7 +607,7 @@ $response->assertJsonPaths([
 ]);
 ```
 
-You may use the `assertJsonMissingPaths` method to assert that multiple JSON paths are missing from the response:
+Bạn có thể dùng phương thức `assertJsonMissingPaths` để xác nhận nhiều JSON path không tồn tại trong response:
 
 ```php
 $response->assertJsonMissingPaths([
@@ -617,9 +617,9 @@ $response->assertJsonMissingPaths([
 ```
 
 <a name="fluent-json-testing"></a>
-### Fluent JSON Testing
+### Kiểm thử JSON theo Fluent API
 
-Laravel also offers a beautiful way to fluently test your application's JSON responses. To get started, pass a closure to the `assertJson` method. This closure will be invoked with an instance of `Illuminate\Testing\Fluent\AssertableJson` which can be used to make assertions against the JSON that was returned by your application. The `where` method may be used to make assertions against a particular attribute of the JSON, while the `missing` method may be used to assert that a particular attribute is missing from the JSON:
+Laravel cũng cung cấp một cách thuận tiện để kiểm thử JSON response của ứng dụng theo fluent API. Để bắt đầu, hãy truyền một closure vào phương thức `assertJson`. Closure này sẽ được gọi với một instance của `Illuminate\Testing\Fluent\AssertableJson`, cho phép thực hiện assertion trên JSON do ứng dụng trả về. Phương thức `where` dùng để assertion một thuộc tính cụ thể của JSON, còn `missing` dùng để xác nhận một thuộc tính cụ thể không tồn tại trong JSON:
 
 ```php tab=Pest
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -661,18 +661,18 @@ public function test_fluent_json(): void
 }
 ```
 
-#### Understanding the `etc` Method
+#### Tìm hiểu phương thức `etc`
 
-In the example above, you may have noticed we invoked the `etc` method at the end of our assertion chain. This method informs Laravel that there may be other attributes present on the JSON object. If the `etc` method is not used, the test will fail if other attributes that you did not make assertions against exist on the JSON object.
+Trong ví dụ trên, bạn có thể nhận thấy phương thức `etc` được gọi ở cuối chuỗi assertion. Phương thức này cho Laravel biết JSON object có thể chứa thêm các thuộc tính khác. Nếu không dùng `etc`, test sẽ fail khi JSON object có các thuộc tính khác mà bạn chưa thực hiện assertion.
 
-The intention behind this behavior is to protect you from unintentionally exposing sensitive information in your JSON responses by forcing you to either explicitly make an assertion against the attribute or explicitly allow additional attributes via the `etc` method.
+Mục đích của hành vi này là bảo vệ bạn khỏi việc vô tình làm lộ thông tin nhạy cảm trong JSON response bằng cách buộc bạn phải assertion rõ ràng thuộc tính đó hoặc chủ động cho phép các thuộc tính bổ sung thông qua phương thức `etc`.
 
-However, you should be aware that not including the `etc` method in your assertion chain does not ensure that additional attributes are not being added to arrays that are nested within your JSON object. The `etc` method only ensures that no additional attributes exist at the nesting level in which the `etc` method is invoked.
+Tuy nhiên, cần lưu ý rằng việc không đưa `etc` vào chuỗi assertion không đảm bảo rằng các thuộc tính bổ sung không được thêm vào những mảng lồng bên trong JSON object. Phương thức `etc` chỉ đảm bảo không có thuộc tính bổ sung tại đúng cấp lồng nơi phương thức `etc` được gọi.
 
 <a name="asserting-json-attribute-presence-and-absence"></a>
-#### Asserting Attribute Presence / Absence
+#### Xác nhận thuộc tính tồn tại / không tồn tại
 
-To assert that an attribute is present or absent, you may use the `has` and `missing` methods:
+Để xác nhận một thuộc tính tồn tại hoặc không tồn tại, bạn có thể dùng các phương thức `has` và `missing`:
 
 ```php
 $response->assertJson(fn (AssertableJson $json) =>
@@ -681,7 +681,7 @@ $response->assertJson(fn (AssertableJson $json) =>
 );
 ```
 
-In addition, the `hasAll` and `missingAll` methods allow asserting the presence or absence of multiple attributes simultaneously:
+Ngoài ra, các phương thức `hasAll` và `missingAll` cho phép xác nhận đồng thời sự tồn tại hoặc không tồn tại của nhiều thuộc tính:
 
 ```php
 $response->assertJson(fn (AssertableJson $json) =>
@@ -690,7 +690,7 @@ $response->assertJson(fn (AssertableJson $json) =>
 );
 ```
 
-You may use the `hasAny` method to determine if at least one of a given list of attributes is present:
+Bạn có thể dùng phương thức `hasAny` để xác định liệu có ít nhất một thuộc tính trong danh sách được cung cấp tồn tại hay không:
 
 ```php
 $response->assertJson(fn (AssertableJson $json) =>
@@ -700,9 +700,9 @@ $response->assertJson(fn (AssertableJson $json) =>
 ```
 
 <a name="asserting-against-json-collections"></a>
-#### Asserting Against JSON Collections
+#### Xác nhận trên JSON collection
 
-Often, your route will return a JSON response that contains multiple items, such as multiple users:
+Thông thường, route sẽ trả về JSON response chứa nhiều phần tử, chẳng hạn nhiều user:
 
 ```php
 Route::get('/users', function () {
@@ -710,7 +710,7 @@ Route::get('/users', function () {
 });
 ```
 
-In these situations, we may use the fluent JSON object's `has` method to make assertions against the users included in the response. For example, let's assert that the JSON response contains three users. Next, we'll make some assertions about the first user in the collection using the `first` method. The `first` method accepts a closure which receives another assertable JSON string that we can use to make assertions about the first object in the JSON collection:
+Trong những trường hợp này, chúng ta có thể dùng phương thức `has` của fluent JSON object để thực hiện assertion trên các user có trong response. Ví dụ, trước tiên hãy xác nhận JSON response chứa ba user. Sau đó, dùng phương thức `first` để thực hiện một số assertion đối với user đầu tiên trong collection. Phương thức `first` nhận một closure, closure này nhận một đối tượng JSON có thể assertion khác để chúng ta kiểm tra object đầu tiên trong JSON collection:
 
 ```php
 $response
@@ -726,7 +726,7 @@ $response
     );
 ```
 
-If you would like to make the same assertions against every item in a JSON collection, you may use the `each` method:
+Nếu muốn thực hiện cùng một nhóm assertion trên mọi phần tử của JSON collection, bạn có thể dùng phương thức `each`:
 
 ```php
 $response
@@ -743,9 +743,9 @@ $response
 ```
 
 <a name="scoping-json-collection-assertions"></a>
-#### Scoping JSON Collection Assertions
+#### Giới hạn phạm vi assertion cho JSON collection
 
-Sometimes, your application's routes will return JSON collections that are assigned named keys:
+Đôi khi, route của ứng dụng sẽ trả về các JSON collection được gán vào những key có tên:
 
 ```php
 Route::get('/users', function () {
@@ -756,7 +756,7 @@ Route::get('/users', function () {
 })
 ```
 
-When testing these routes, you may use the `has` method to assert against the number of items in the collection. In addition, you may use the `has` method to scope a chain of assertions:
+Khi kiểm thử các route này, bạn có thể dùng phương thức `has` để xác nhận số lượng phần tử trong collection. Ngoài ra, bạn cũng có thể dùng `has` để giới hạn phạm vi cho một chuỗi assertion:
 
 ```php
 $response
@@ -773,7 +773,7 @@ $response
     );
 ```
 
-However, instead of making two separate calls to the `has` method to assert against the `users` collection, you may make a single call which provides a closure as its third parameter. When doing so, the closure will automatically be invoked and scoped to the first item in the collection:
+Tuy nhiên, thay vì gọi riêng phương thức `has` hai lần để assertion collection `users`, bạn có thể chỉ gọi một lần và truyền closure làm tham số thứ ba. Khi đó, closure sẽ tự động được gọi và giới hạn phạm vi vào phần tử đầu tiên của collection:
 
 ```php
 $response
@@ -790,9 +790,9 @@ $response
 ```
 
 <a name="asserting-json-types"></a>
-#### Asserting JSON Types
+#### Xác nhận kiểu dữ liệu JSON
 
-You may only want to assert that the properties in the JSON response are of a certain type. The `Illuminate\Testing\Fluent\AssertableJson` class provides the `whereType` and `whereAllType` methods for doing just that:
+Có thể bạn chỉ muốn xác nhận các thuộc tính trong JSON response thuộc một kiểu dữ liệu nhất định. Class `Illuminate\Testing\Fluent\AssertableJson` cung cấp các phương thức `whereType` và `whereAllType` cho mục đích này:
 
 ```php
 $response->assertJson(fn (AssertableJson $json) =>
@@ -804,7 +804,7 @@ $response->assertJson(fn (AssertableJson $json) =>
 );
 ```
 
-You may specify multiple types using the `|` character, or passing an array of types as the second parameter to the `whereType` method. The assertion will be successful if the response value is any of the listed types:
+Bạn có thể chỉ định nhiều kiểu bằng ký tự `|`, hoặc truyền một mảng kiểu dữ liệu làm tham số thứ hai cho phương thức `whereType`. Assertion sẽ thành công nếu giá trị response thuộc bất kỳ kiểu nào trong danh sách:
 
 ```php
 $response->assertJson(fn (AssertableJson $json) =>
@@ -813,12 +813,12 @@ $response->assertJson(fn (AssertableJson $json) =>
 );
 ```
 
-The `whereType` and `whereAllType` methods recognize the following types: `string`, `integer`, `double`, `boolean`, `array`, and `null`.
+Các phương thức `whereType` và `whereAllType` nhận diện các kiểu sau: `string`, `integer`, `double`, `boolean`, `array` và `null`.
 
 <a name="testing-file-uploads"></a>
-## Testing File Uploads
+## Kiểm thử upload file
 
-The `Illuminate\Http\UploadedFile` class provides a `fake` method which may be used to generate dummy files or images for testing. This, combined with the `Storage` facade's `fake` method, greatly simplifies the testing of file uploads. For example, you may combine these two features to easily test an avatar upload form:
+Class `Illuminate\Http\UploadedFile` cung cấp phương thức `fake` để tạo file hoặc hình ảnh giả phục vụ kiểm thử. Khi kết hợp với phương thức `fake` của facade `Storage`, việc kiểm thử upload file trở nên đơn giản hơn nhiều. Ví dụ, bạn có thể kết hợp hai tính năng này để dễ dàng kiểm thử form upload avatar:
 
 ```php tab=Pest
 <?php
@@ -865,7 +865,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-If you would like to assert that a given file does not exist, you may use the `assertMissing` method provided by the `Storage` facade:
+Nếu muốn xác nhận một file nhất định không tồn tại, bạn có thể dùng phương thức `assertMissing` do facade `Storage` cung cấp:
 
 ```php
 Storage::fake('avatars');
@@ -876,21 +876,21 @@ Storage::disk('avatars')->assertMissing('missing.jpg');
 ```
 
 <a name="fake-file-customization"></a>
-#### Fake File Customization
+#### Tùy chỉnh file giả
 
-When creating files using the `fake` method provided by the `UploadedFile` class, you may specify the width, height, and size of the image (in kilobytes) in order to better test your application's validation rules:
+Khi tạo file bằng phương thức `fake` do class `UploadedFile` cung cấp, bạn có thể chỉ định chiều rộng, chiều cao và kích thước ảnh (tính bằng kilobyte) để kiểm thử các validation rule của ứng dụng tốt hơn:
 
 ```php
 UploadedFile::fake()->image('avatar.jpg', $width, $height)->size(100);
 ```
 
-In addition to creating images, you may create files of any other type using the `create` method:
+Ngoài việc tạo hình ảnh, bạn có thể tạo file thuộc bất kỳ loại nào khác bằng phương thức `create`:
 
 ```php
 UploadedFile::fake()->create('document.pdf', $sizeInKilobytes);
 ```
 
-If needed, you may pass a `$mimeType` argument to the method to explicitly define the MIME type that should be returned by the file:
+Nếu cần, bạn có thể truyền đối số `$mimeType` vào phương thức để định nghĩa rõ MIME type mà file sẽ trả về:
 
 ```php
 UploadedFile::fake()->create(
@@ -899,9 +899,9 @@ UploadedFile::fake()->create(
 ```
 
 <a name="testing-views"></a>
-## Testing Views
+## Kiểm thử View
 
-Laravel also allows you to render a view without making a simulated HTTP request to the application. To accomplish this, you may call the `view` method within your test. The `view` method accepts the view name and an optional array of data. The method returns an instance of `Illuminate\Testing\TestView`, which offers several methods to conveniently make assertions about the view's contents:
+Laravel cũng cho phép render một view mà không cần tạo HTTP request mô phỏng tới ứng dụng. Để thực hiện, bạn có thể gọi phương thức `view` trong test. Phương thức `view` nhận tên view và một mảng dữ liệu tùy chọn. Phương thức này trả về một instance của `Illuminate\Testing\TestView`, cung cấp nhiều phương thức thuận tiện để assertion nội dung của view:
 
 ```php tab=Pest
 <?php
@@ -931,18 +931,18 @@ class ExampleTest extends TestCase
 }
 ```
 
-The `TestView` class provides the following assertion methods: `assertSee`, `assertSeeInOrder`, `assertSeeText`, `assertSeeTextInOrder`, `assertDontSee`, and `assertDontSeeText`.
+Class `TestView` cung cấp các phương thức assertion sau: `assertSee`, `assertSeeInOrder`, `assertSeeText`, `assertSeeTextInOrder`, `assertDontSee` và `assertDontSeeText`.
 
-If needed, you may get the raw, rendered view contents by casting the `TestView` instance to a string:
+Nếu cần, bạn có thể lấy nội dung view thô đã render bằng cách ép instance `TestView` sang string:
 
 ```php
 $contents = (string) $this->view('welcome');
 ```
 
 <a name="sharing-errors"></a>
-#### Sharing Errors
+#### Chia sẻ lỗi
 
-Some views may depend on errors shared in the [global error bag provided by Laravel](/docs/{{version}}/validation#quick-displaying-the-validation-errors). To hydrate the error bag with error messages, you may use the `withViewErrors` method:
+Một số view có thể phụ thuộc vào các lỗi được chia sẻ trong [global error bag do Laravel cung cấp](/docs/{{version}}/validation#quick-displaying-the-validation-errors). Để nạp các error message vào error bag, bạn có thể dùng phương thức `withViewErrors`:
 
 ```php
 $view = $this->withViewErrors([
@@ -953,9 +953,9 @@ $view->assertSee('Please provide a valid name.');
 ```
 
 <a name="rendering-blade-and-components"></a>
-### Rendering Blade and Components
+### Render Blade và Component
 
-If necessary, you may use the `blade` method to evaluate and render a raw [Blade](/docs/{{version}}/blade) string. Like the `view` method, the `blade` method returns an instance of `Illuminate\Testing\TestView`:
+Nếu cần, bạn có thể dùng phương thức `blade` để evaluate và render một chuỗi [Blade](/docs/{{version}}/blade) thô. Tương tự phương thức `view`, phương thức `blade` trả về một instance của `Illuminate\Testing\TestView`:
 
 ```php
 $view = $this->blade(
@@ -966,7 +966,7 @@ $view = $this->blade(
 $view->assertSee('Taylor');
 ```
 
-You may use the `component` method to evaluate and render a [Blade component](/docs/{{version}}/blade#components). The `component` method returns an instance of `Illuminate\Testing\TestComponent`:
+Bạn có thể dùng phương thức `component` để evaluate và render một [Blade component](/docs/{{version}}/blade#components). Phương thức `component` trả về một instance của `Illuminate\Testing\TestComponent`:
 
 ```php
 $view = $this->component(Profile::class, ['name' => 'Taylor']);
@@ -975,9 +975,9 @@ $view->assertSee('Taylor');
 ```
 
 <a name="caching-routes"></a>
-## Caching Routes
+## Cache Route
 
-Before a test runs, Laravel boots a fresh instance of the application, including collecting all defined routes. If your applications have many route files, you may wish to add the `Illuminate\Foundation\Testing\WithCachedRoutes` trait to your test cases. On tests which use this trait, routes are built once and stored in memory, meaning the route collection process is only run once for all tests in your suite:
+Trước khi một test chạy, Laravel khởi động một instance mới của ứng dụng, bao gồm việc thu thập tất cả route đã định nghĩa. Nếu ứng dụng có nhiều file route, bạn có thể thêm trait `Illuminate\Foundation\Testing\WithCachedRoutes` vào test case. Với các test dùng trait này, route được xây dựng một lần và lưu trong bộ nhớ, nghĩa là quá trình thu thập route chỉ chạy một lần cho toàn bộ test suite:
 
 ```php tab=Pest
 <?php
@@ -1020,12 +1020,12 @@ class BasicTest extends TestCase
 ```
 
 <a name="available-assertions"></a>
-## Available Assertions
+## Các assertion khả dụng
 
 <a name="response-assertions"></a>
-### Response Assertions
+### Response assertion
 
-Laravel's `Illuminate\Testing\TestResponse` class provides a variety of custom assertion methods that you may utilize when testing your application. These assertions may be accessed on the response that is returned by the `json`, `get`, `post`, `put`, and `delete` test methods:
+Class `Illuminate\Testing\TestResponse` của Laravel cung cấp nhiều phương thức assertion tùy chỉnh mà bạn có thể sử dụng khi kiểm thử ứng dụng. Các assertion này có thể được gọi trên response do các phương thức test `json`, `get`, `post`, `put` và `delete` trả về:
 
 <style>
     .collection-method-list > p {
@@ -1131,7 +1131,7 @@ Laravel's `Illuminate\Testing\TestResponse` class provides a variety of custom a
 <a name="assert-accepted"></a>
 #### assertAccepted
 
-Assert that the response has an accepted (202) HTTP status code:
+Xác nhận response có mã trạng thái HTTP accepted (202):
 
 ```php
 $response->assertAccepted();
@@ -1140,7 +1140,7 @@ $response->assertAccepted();
 <a name="assert-bad-request"></a>
 #### assertBadRequest
 
-Assert that the response has a bad request (400) HTTP status code:
+Xác nhận response có mã trạng thái HTTP bad request (400):
 
 ```php
 $response->assertBadRequest();
@@ -1149,7 +1149,7 @@ $response->assertBadRequest();
 <a name="assert-client-error"></a>
 #### assertClientError
 
-Assert that the response has a client error (>= 400, < 500) HTTP status code:
+Xác nhận response có mã trạng thái HTTP thuộc nhóm client error (>= 400, < 500):
 
 ```php
 $response->assertClientError();
@@ -1158,7 +1158,7 @@ $response->assertClientError();
 <a name="assert-conflict"></a>
 #### assertConflict
 
-Assert that the response has a conflict (409) HTTP status code:
+Xác nhận response có mã trạng thái HTTP conflict (409):
 
 ```php
 $response->assertConflict();
@@ -1167,7 +1167,7 @@ $response->assertConflict();
 <a name="assert-cookie"></a>
 #### assertCookie
 
-Assert that the response contains the given cookie:
+Xác nhận response chứa cookie đã cho:
 
 ```php
 $response->assertCookie($cookieName, $value = null);
@@ -1176,7 +1176,7 @@ $response->assertCookie($cookieName, $value = null);
 <a name="assert-cookie-expired"></a>
 #### assertCookieExpired
 
-Assert that the response contains the given cookie and it is expired:
+Xác nhận response chứa cookie đã cho và cookie đó đã hết hạn:
 
 ```php
 $response->assertCookieExpired($cookieName);
@@ -1185,7 +1185,7 @@ $response->assertCookieExpired($cookieName);
 <a name="assert-cookie-not-expired"></a>
 #### assertCookieNotExpired
 
-Assert that the response contains the given cookie and it is not expired:
+Xác nhận response chứa cookie đã cho và cookie đó chưa hết hạn:
 
 ```php
 $response->assertCookieNotExpired($cookieName);
@@ -1194,7 +1194,7 @@ $response->assertCookieNotExpired($cookieName);
 <a name="assert-cookie-missing"></a>
 #### assertCookieMissing
 
-Assert that the response does not contain the given cookie:
+Xác nhận response không chứa cookie đã cho:
 
 ```php
 $response->assertCookieMissing($cookieName);
@@ -1203,7 +1203,7 @@ $response->assertCookieMissing($cookieName);
 <a name="assert-created"></a>
 #### assertCreated
 
-Assert that the response has a 201 HTTP status code:
+Xác nhận response có mã trạng thái HTTP 201:
 
 ```php
 $response->assertCreated();
@@ -1212,7 +1212,7 @@ $response->assertCreated();
 <a name="assert-dont-see"></a>
 #### assertDontSee
 
-Assert that the given string is not contained within the response returned by the application. This assertion will automatically escape the given string unless you pass a second argument of `false`:
+Xác nhận chuỗi đã cho không xuất hiện trong response do ứng dụng trả về. Assertion này sẽ tự động escape chuỗi đã cho, trừ khi bạn truyền đối số thứ hai là `false`:
 
 ```php
 $response->assertDontSee($value, $escape = true);
@@ -1221,7 +1221,7 @@ $response->assertDontSee($value, $escape = true);
 <a name="assert-dont-see-text"></a>
 #### assertDontSeeText
 
-Assert that the given string is not contained within the response text. This assertion will automatically escape the given string unless you pass a second argument of `false`. This method will pass the response content to the `strip_tags` PHP function before making the assertion:
+Xác nhận chuỗi đã cho không xuất hiện trong phần văn bản của response. Assertion này sẽ tự động escape chuỗi đã cho, trừ khi bạn truyền đối số thứ hai là `false`. Phương thức này sẽ truyền nội dung response qua hàm PHP `strip_tags` trước khi thực hiện assertion:
 
 ```php
 $response->assertDontSeeText($value, $escape = true);
@@ -1230,13 +1230,13 @@ $response->assertDontSeeText($value, $escape = true);
 <a name="assert-download"></a>
 #### assertDownload
 
-Assert that the response is a "download". Typically, this means the invoked route that returned the response returned a `Response::download` response, `BinaryFileResponse`, or `Storage::download` response:
+Xác nhận response là một phản hồi "download". Thông thường, điều này có nghĩa route được gọi đã trả về response `Response::download`, `BinaryFileResponse` hoặc `Storage::download`:
 
 ```php
 $response->assertDownload();
 ```
 
-If you wish, you may assert that the downloadable file was assigned a given file name:
+Nếu muốn, bạn có thể xác nhận file tải xuống được gán một tên file cụ thể:
 
 ```php
 $response->assertDownload('image.jpg');
@@ -1245,7 +1245,7 @@ $response->assertDownload('image.jpg');
 <a name="assert-exact-json"></a>
 #### assertExactJson
 
-Assert that the response contains an exact match of the given JSON data:
+Xác nhận response khớp chính xác với dữ liệu JSON đã cho:
 
 ```php
 $response->assertExactJson(array $data);
@@ -1254,18 +1254,18 @@ $response->assertExactJson(array $data);
 <a name="assert-exact-json-structure"></a>
 #### assertExactJsonStructure
 
-Assert that the response contains an exact match of the given JSON structure:
+Xác nhận response khớp chính xác với cấu trúc JSON đã cho:
 
 ```php
 $response->assertExactJsonStructure(array $data);
 ```
 
-This method is a more strict variant of [assertJsonStructure](#assert-json-structure). In contrast with `assertJsonStructure`, this method will fail if the response contains any keys that aren't explicitly included in the expected JSON structure.
+Phương thức này là biến thể nghiêm ngặt hơn của [assertJsonStructure](#assert-json-structure). Khác với `assertJsonStructure`, phương thức này sẽ thất bại nếu response chứa bất kỳ key nào không được khai báo rõ trong cấu trúc JSON mong đợi.
 
 <a name="assert-failed-dependency"></a>
 #### assertFailedDependency
 
-Assert that the response has a failed dependency (424) HTTP status code:
+Xác nhận response có mã trạng thái HTTP failed dependency (424):
 
 ```php
 $response->assertFailedDependency();
@@ -1274,7 +1274,7 @@ $response->assertFailedDependency();
 <a name="assert-forbidden"></a>
 #### assertForbidden
 
-Assert that the response has a forbidden (403) HTTP status code:
+Xác nhận response có mã trạng thái HTTP forbidden (403):
 
 ```php
 $response->assertForbidden();
@@ -1283,7 +1283,7 @@ $response->assertForbidden();
 <a name="assert-found"></a>
 #### assertFound
 
-Assert that the response has a found (302) HTTP status code:
+Xác nhận response có mã trạng thái HTTP found (302):
 
 ```php
 $response->assertFound();
@@ -1292,7 +1292,7 @@ $response->assertFound();
 <a name="assert-gone"></a>
 #### assertGone
 
-Assert that the response has a gone (410) HTTP status code:
+Xác nhận response có mã trạng thái HTTP gone (410):
 
 ```php
 $response->assertGone();
@@ -1301,7 +1301,7 @@ $response->assertGone();
 <a name="assert-header"></a>
 #### assertHeader
 
-Assert that the given header and value is present on the response:
+Xác nhận header và giá trị đã cho tồn tại trong response:
 
 ```php
 $response->assertHeader($headerName, $value = null);
@@ -1310,7 +1310,7 @@ $response->assertHeader($headerName, $value = null);
 <a name="assert-header-contains"></a>
 #### assertHeaderContains
 
-Assert that the given header contains a given substring value:
+Xác nhận header đã cho chứa giá trị chuỗi con được chỉ định:
 
 ```php
 $response->assertHeaderContains($headerName, $value);
@@ -1319,7 +1319,7 @@ $response->assertHeaderContains($headerName, $value);
 <a name="assert-header-missing"></a>
 #### assertHeaderMissing
 
-Assert that the given header is not present on the response:
+Xác nhận header đã cho không tồn tại trong response:
 
 ```php
 $response->assertHeaderMissing($headerName);
@@ -1328,7 +1328,7 @@ $response->assertHeaderMissing($headerName);
 <a name="assert-internal-server-error"></a>
 #### assertInternalServerError
 
-Assert that the response has an "Internal Server Error" (500) HTTP status code:
+Xác nhận response có mã trạng thái HTTP "Internal Server Error" (500):
 
 ```php
 $response->assertInternalServerError();
@@ -1337,18 +1337,18 @@ $response->assertInternalServerError();
 <a name="assert-json"></a>
 #### assertJson
 
-Assert that the response contains the given JSON data:
+Xác nhận response chứa dữ liệu JSON đã cho:
 
 ```php
 $response->assertJson(array $data, $strict = false);
 ```
 
-The `assertJson` method converts the response to an array to verify that the given array exists within the JSON response returned by the application. So, if there are other properties in the JSON response, this test will still pass as long as the given fragment is present.
+Phương thức `assertJson` chuyển response thành một mảng để xác minh mảng đã cho tồn tại trong JSON response do ứng dụng trả về. Vì vậy, ngay cả khi JSON response có các thuộc tính khác, test vẫn pass miễn là fragment đã cho tồn tại.
 
 <a name="assert-json-count"></a>
 #### assertJsonCount
 
-Assert that the response JSON has an array with the expected number of items at the given key:
+Xác nhận JSON response có một mảng với số lượng phần tử mong đợi tại key đã cho:
 
 ```php
 $response->assertJsonCount($count, $key = null);
@@ -1357,7 +1357,7 @@ $response->assertJsonCount($count, $key = null);
 <a name="assert-json-fragment"></a>
 #### assertJsonFragment
 
-Assert that the response contains the given JSON data anywhere in the response:
+Xác nhận response chứa dữ liệu JSON đã cho ở bất kỳ vị trí nào:
 
 ```php
 Route::get('/users', function () {
@@ -1376,7 +1376,7 @@ $response->assertJsonFragment(['name' => 'Taylor Otwell']);
 <a name="assert-json-is-array"></a>
 #### assertJsonIsArray
 
-Assert that the response JSON is an array:
+Xác nhận JSON response là một mảng:
 
 ```php
 $response->assertJsonIsArray();
@@ -1385,7 +1385,7 @@ $response->assertJsonIsArray();
 <a name="assert-json-is-object"></a>
 #### assertJsonIsObject
 
-Assert that the response JSON is an object:
+Xác nhận JSON response là một object:
 
 ```php
 $response->assertJsonIsObject();
@@ -1394,7 +1394,7 @@ $response->assertJsonIsObject();
 <a name="assert-json-missing"></a>
 #### assertJsonMissing
 
-Assert that the response does not contain the given JSON data:
+Xác nhận response không chứa dữ liệu JSON đã cho:
 
 ```php
 $response->assertJsonMissing(array $data);
@@ -1403,7 +1403,7 @@ $response->assertJsonMissing(array $data);
 <a name="assert-json-missing-exact"></a>
 #### assertJsonMissingExact
 
-Assert that the response does not contain the exact JSON data:
+Xác nhận response không chứa chính xác dữ liệu JSON đã cho:
 
 ```php
 $response->assertJsonMissingExact(array $data);
@@ -1412,25 +1412,25 @@ $response->assertJsonMissingExact(array $data);
 <a name="assert-json-missing-validation-errors"></a>
 #### assertJsonMissingValidationErrors
 
-Assert that the response has no JSON validation errors for the given keys:
+Xác nhận response không có lỗi validation JSON đối với các key đã cho:
 
 ```php
 $response->assertJsonMissingValidationErrors($keys);
 ```
 
 > [!NOTE]
-> The more generic [assertValid](#assert-valid) method may be used to assert that a response does not have validation errors that were returned as JSON **and** that no errors were flashed to session storage.
+> Method tổng quát hơn [assertValid](#assert-valid) có thể được dùng để xác nhận response không có validation error được trả về dưới dạng JSON **và** không có error nào được flash vào session storage.
 
 <a name="assert-json-path"></a>
 #### assertJsonPath
 
-Assert that the response contains the given data at the specified path:
+Xác nhận response chứa dữ liệu đã cho tại path được chỉ định:
 
 ```php
 $response->assertJsonPath($path, $expectedValue);
 ```
 
-For example, if the following JSON response is returned by your application:
+Ví dụ, nếu ứng dụng của bạn trả về JSON response sau:
 
 ```json
 {
@@ -1440,7 +1440,7 @@ For example, if the following JSON response is returned by your application:
 }
 ```
 
-You may assert that the `name` property of the `user` object matches a given value like so:
+Bạn có thể xác nhận thuộc tính `name` của object `user` khớp với một giá trị đã cho như sau:
 
 ```php
 $response->assertJsonPath('user.name', 'Steve Schoger');
@@ -1449,13 +1449,13 @@ $response->assertJsonPath('user.name', 'Steve Schoger');
 <a name="assert-json-paths"></a>
 #### assertJsonPaths
 
-Assert that the response contains the given data at the specified paths:
+Xác nhận response chứa dữ liệu đã cho tại các path được chỉ định:
 
 ```php
 $response->assertJsonPaths(array $paths);
 ```
 
-For example, you may assert multiple values within the response at once:
+Ví dụ, bạn có thể xác nhận nhiều giá trị trong response cùng lúc:
 
 ```php
 $response->assertJsonPaths([
@@ -1467,13 +1467,13 @@ $response->assertJsonPaths([
 <a name="assert-json-missing-path"></a>
 #### assertJsonMissingPath
 
-Assert that the response does not contain the given path:
+Xác nhận response không chứa path đã cho:
 
 ```php
 $response->assertJsonMissingPath($path);
 ```
 
-For example, if the following JSON response is returned by your application:
+Ví dụ, nếu ứng dụng của bạn trả về JSON response sau:
 
 ```json
 {
@@ -1483,7 +1483,7 @@ For example, if the following JSON response is returned by your application:
 }
 ```
 
-You may assert that it does not contain the `email` property of the `user` object:
+Bạn có thể xác nhận response không chứa thuộc tính `email` của object `user`:
 
 ```php
 $response->assertJsonMissingPath('user.email');
@@ -1492,13 +1492,13 @@ $response->assertJsonMissingPath('user.email');
 <a name="assert-json-missing-paths"></a>
 #### assertJsonMissingPaths
 
-Assert that the response does not contain the given paths:
+Xác nhận response không chứa các path đã cho:
 
 ```php
 $response->assertJsonMissingPaths($paths);
 ```
 
-For example, you may assert that multiple paths are missing from the response:
+Ví dụ, bạn có thể xác nhận nhiều path không tồn tại trong response:
 
 ```php
 $response->assertJsonMissingPaths([
@@ -1510,13 +1510,13 @@ $response->assertJsonMissingPaths([
 <a name="assert-json-structure"></a>
 #### assertJsonStructure
 
-Assert that the response has a given JSON structure:
+Xác nhận response có cấu trúc JSON đã cho:
 
 ```php
 $response->assertJsonStructure(array $structure);
 ```
 
-For example, if the JSON response returned by your application contains the following data:
+Ví dụ, nếu JSON response do ứng dụng trả về chứa dữ liệu sau:
 
 ```json
 {
@@ -1526,7 +1526,7 @@ For example, if the JSON response returned by your application contains the foll
 }
 ```
 
-You may assert that the JSON structure matches your expectations like so:
+Bạn có thể xác nhận cấu trúc JSON khớp với mong đợi như sau:
 
 ```php
 $response->assertJsonStructure([
@@ -1536,7 +1536,7 @@ $response->assertJsonStructure([
 ]);
 ```
 
-Sometimes, JSON responses returned by your application may contain arrays of objects:
+Đôi khi, JSON response do ứng dụng trả về có thể chứa các mảng object:
 
 ```json
 {
@@ -1555,7 +1555,7 @@ Sometimes, JSON responses returned by your application may contain arrays of obj
 }
 ```
 
-In this situation, you may use the `*` character to assert against the structure of all of the objects in the array:
+Trong trường hợp này, bạn có thể dùng ký tự `*` để assertion cấu trúc của tất cả object trong mảng:
 
 ```php
 $response->assertJsonStructure([
@@ -1572,19 +1572,19 @@ $response->assertJsonStructure([
 <a name="assert-json-validation-errors"></a>
 #### assertJsonValidationErrors
 
-Assert that the response has the given JSON validation errors for the given keys. This method should be used when asserting against responses where the validation errors are returned as a JSON structure instead of being flashed to the session:
+Xác nhận response có các lỗi validation JSON đối với các key đã cho. Nên dùng phương thức này khi assertion response mà lỗi validation được trả về dưới dạng cấu trúc JSON thay vì được flash vào session:
 
 ```php
 $response->assertJsonValidationErrors(array $data, $responseKey = 'errors');
 ```
 
 > [!NOTE]
-> The more generic [assertInvalid](#assert-invalid) method may be used to assert that a response has validation errors returned as JSON **or** that errors were flashed to session storage.
+> Method tổng quát hơn [assertInvalid](#assert-invalid) có thể được dùng để xác nhận response có validation error được trả về dưới dạng JSON **hoặc** error được flash vào session storage.
 
 <a name="assert-json-validation-error-for"></a>
 #### assertJsonValidationErrorFor
 
-Assert the response has any JSON validation errors for the given key:
+Xác nhận response có lỗi validation JSON bất kỳ đối với key đã cho:
 
 ```php
 $response->assertJsonValidationErrorFor(string $key, $responseKey = 'errors');
@@ -1593,7 +1593,7 @@ $response->assertJsonValidationErrorFor(string $key, $responseKey = 'errors');
 <a name="assert-method-not-allowed"></a>
 #### assertMethodNotAllowed
 
-Assert that the response has a method not allowed (405) HTTP status code:
+Xác nhận response có mã trạng thái HTTP method not allowed (405):
 
 ```php
 $response->assertMethodNotAllowed();
@@ -1602,7 +1602,7 @@ $response->assertMethodNotAllowed();
 <a name="assert-moved-permanently"></a>
 #### assertMovedPermanently
 
-Assert that the response has a moved permanently (301) HTTP status code:
+Xác nhận response có mã trạng thái HTTP moved permanently (301):
 
 ```php
 $response->assertMovedPermanently();
@@ -1611,7 +1611,7 @@ $response->assertMovedPermanently();
 <a name="assert-location"></a>
 #### assertLocation
 
-Assert that the response has the given URI value in the `Location` header:
+Xác nhận response có giá trị URI đã cho trong header `Location`:
 
 ```php
 $response->assertLocation($uri);
@@ -1620,7 +1620,7 @@ $response->assertLocation($uri);
 <a name="assert-content"></a>
 #### assertContent
 
-Assert that the given string matches the response content:
+Xác nhận chuỗi đã cho khớp với nội dung response:
 
 ```php
 $response->assertContent($value);
@@ -1629,7 +1629,7 @@ $response->assertContent($value);
 <a name="assert-no-content"></a>
 #### assertNoContent
 
-Assert that the response has the given HTTP status code and no content:
+Xác nhận response có mã trạng thái HTTP đã cho và không có nội dung:
 
 ```php
 $response->assertNoContent($status = 204);
@@ -1638,14 +1638,14 @@ $response->assertNoContent($status = 204);
 <a name="assert-streamed"></a>
 #### assertStreamed
 
-Assert that the response was a streamed response:
+Xác nhận response là streamed response:
 
     $response->assertStreamed();
 
 <a name="assert-streamed-content"></a>
 #### assertStreamedContent
 
-Assert that the given string matches the streamed response content:
+Xác nhận chuỗi đã cho khớp với nội dung streamed response:
 
 ```php
 $response->assertStreamedContent($value);
@@ -1654,7 +1654,7 @@ $response->assertStreamedContent($value);
 <a name="assert-not-found"></a>
 #### assertNotFound
 
-Assert that the response has a not found (404) HTTP status code:
+Xác nhận response có mã trạng thái HTTP not found (404):
 
 ```php
 $response->assertNotFound();
@@ -1663,7 +1663,7 @@ $response->assertNotFound();
 <a name="assert-ok"></a>
 #### assertOk
 
-Assert that the response has a 200 HTTP status code:
+Xác nhận response có mã trạng thái HTTP 200:
 
 ```php
 $response->assertOk();
@@ -1672,7 +1672,7 @@ $response->assertOk();
 <a name="assert-payment-required"></a>
 #### assertPaymentRequired
 
-Assert that the response has a payment required (402) HTTP status code:
+Xác nhận response có mã trạng thái HTTP payment required (402):
 
 ```php
 $response->assertPaymentRequired();
@@ -1681,7 +1681,7 @@ $response->assertPaymentRequired();
 <a name="assert-plain-cookie"></a>
 #### assertPlainCookie
 
-Assert that the response contains the given unencrypted cookie:
+Xác nhận response chứa cookie chưa mã hóa đã cho:
 
 ```php
 $response->assertPlainCookie($cookieName, $value = null);
@@ -1690,7 +1690,7 @@ $response->assertPlainCookie($cookieName, $value = null);
 <a name="assert-redirect"></a>
 #### assertRedirect
 
-Assert that the response is a redirect to the given URI:
+Xác nhận response redirect đến URI đã cho:
 
 ```php
 $response->assertRedirect($uri = null);
@@ -1699,7 +1699,7 @@ $response->assertRedirect($uri = null);
 <a name="assert-redirect-back"></a>
 #### assertRedirectBack
 
-Assert whether the response is redirecting back to the previous page:
+Xác nhận response đang redirect trở lại trang trước:
 
 ```php
 $response->assertRedirectBack();
@@ -1708,7 +1708,7 @@ $response->assertRedirectBack();
 <a name="assert-redirect-back-with-errors"></a>
 #### assertRedirectBackWithErrors
 
-Assert whether the response is redirecting back to the previous page and the [session has the given errors](#assert-session-has-errors):
+Xác nhận response đang redirect trở lại trang trước và [session có các lỗi đã cho](#assert-session-has-errors):
 
 ```php
 $response->assertRedirectBackWithErrors(
@@ -1719,7 +1719,7 @@ $response->assertRedirectBackWithErrors(
 <a name="assert-redirect-back-without-errors"></a>
 #### assertRedirectBackWithoutErrors
 
-Assert whether the response is redirecting back to the previous page and the session does not contain any error messages:
+Xác nhận response đang redirect trở lại trang trước và session không chứa thông báo lỗi nào:
 
 ```php
 $response->assertRedirectBackWithoutErrors();
@@ -1728,7 +1728,7 @@ $response->assertRedirectBackWithoutErrors();
 <a name="assert-redirect-contains"></a>
 #### assertRedirectContains
 
-Assert whether the response is redirecting to a URI that contains the given string:
+Xác nhận response đang redirect đến URI có chứa chuỗi đã cho:
 
 ```php
 $response->assertRedirectContains($string);
@@ -1737,7 +1737,7 @@ $response->assertRedirectContains($string);
 <a name="assert-redirect-to-route"></a>
 #### assertRedirectToRoute
 
-Assert that the response is a redirect to the given [named route](/docs/{{version}}/routing#named-routes):
+Xác nhận response redirect đến [named route](/docs/{{version}}/routing#named-routes) đã cho:
 
 ```php
 $response->assertRedirectToRoute($name, $parameters = []);
@@ -1746,7 +1746,7 @@ $response->assertRedirectToRoute($name, $parameters = []);
 <a name="assert-redirect-to-signed-route"></a>
 #### assertRedirectToSignedRoute
 
-Assert that the response is a redirect to the given [signed route](/docs/{{version}}/urls#signed-urls):
+Xác nhận response redirect đến [signed route](/docs/{{version}}/urls#signed-urls) đã cho:
 
 ```php
 $response->assertRedirectToSignedRoute($name = null, $parameters = []);
@@ -1755,7 +1755,7 @@ $response->assertRedirectToSignedRoute($name = null, $parameters = []);
 <a name="assert-request-timeout"></a>
 #### assertRequestTimeout
 
-Assert that the response has a request timeout (408) HTTP status code:
+Xác nhận response có mã trạng thái HTTP request timeout (408):
 
 ```php
 $response->assertRequestTimeout();
@@ -1764,7 +1764,7 @@ $response->assertRequestTimeout();
 <a name="assert-see"></a>
 #### assertSee
 
-Assert that the given string is contained within the response. This assertion will automatically escape the given string unless you pass a second argument of `false`:
+Xác nhận chuỗi đã cho xuất hiện trong response. Assertion này sẽ tự động escape chuỗi đã cho, trừ khi bạn truyền đối số thứ hai là `false`:
 
 ```php
 $response->assertSee($value, $escape = true);
@@ -1773,7 +1773,7 @@ $response->assertSee($value, $escape = true);
 <a name="assert-see-in-order"></a>
 #### assertSeeInOrder
 
-Assert that the given strings are contained in order within the response. This assertion will automatically escape the given strings unless you pass a second argument of `false`:
+Xác nhận các chuỗi đã cho xuất hiện đúng thứ tự trong response. Assertion này sẽ tự động escape các chuỗi đã cho, trừ khi bạn truyền đối số thứ hai là `false`:
 
 ```php
 $response->assertSeeInOrder(array $values, $escape = true);
@@ -1782,7 +1782,7 @@ $response->assertSeeInOrder(array $values, $escape = true);
 <a name="assert-see-text"></a>
 #### assertSeeText
 
-Assert that the given string is contained within the response text. This assertion will automatically escape the given string unless you pass a second argument of `false`. The response content will be passed to the `strip_tags` PHP function before the assertion is made:
+Xác nhận chuỗi đã cho xuất hiện trong phần văn bản của response. Assertion này sẽ tự động escape chuỗi đã cho, trừ khi bạn truyền đối số thứ hai là `false`. Nội dung response sẽ được truyền qua hàm PHP `strip_tags` trước khi thực hiện assertion:
 
 ```php
 $response->assertSeeText($value, $escape = true);
@@ -1791,7 +1791,7 @@ $response->assertSeeText($value, $escape = true);
 <a name="assert-see-text-in-order"></a>
 #### assertSeeTextInOrder
 
-Assert that the given strings are contained in order within the response text. This assertion will automatically escape the given strings unless you pass a second argument of `false`. The response content will be passed to the `strip_tags` PHP function before the assertion is made:
+Xác nhận các chuỗi đã cho xuất hiện đúng thứ tự trong phần văn bản của response. Assertion này sẽ tự động escape các chuỗi đã cho, trừ khi bạn truyền đối số thứ hai là `false`. Nội dung response sẽ được truyền qua hàm PHP `strip_tags` trước khi thực hiện assertion:
 
 ```php
 $response->assertSeeTextInOrder(array $values, $escape = true);
@@ -1800,7 +1800,7 @@ $response->assertSeeTextInOrder(array $values, $escape = true);
 <a name="assert-server-error"></a>
 #### assertServerError
 
-Assert that the response has a server error (>= 500 , < 600) HTTP status code:
+Xác nhận response có mã trạng thái HTTP thuộc nhóm server error (>= 500, < 600):
 
 ```php
 $response->assertServerError();
@@ -1809,7 +1809,7 @@ $response->assertServerError();
 <a name="assert-service-unavailable"></a>
 #### assertServiceUnavailable
 
-Assert that the response has a "Service Unavailable" (503) HTTP status code:
+Xác nhận response có mã trạng thái HTTP "Service Unavailable" (503):
 
 ```php
 $response->assertServiceUnavailable();
@@ -1818,13 +1818,13 @@ $response->assertServiceUnavailable();
 <a name="assert-session-has"></a>
 #### assertSessionHas
 
-Assert that the session contains the given piece of data:
+Xác nhận session chứa dữ liệu đã cho:
 
 ```php
 $response->assertSessionHas($key, $value = null);
 ```
 
-If needed, a closure can be provided as the second argument to the `assertSessionHas` method. The assertion will pass if the closure returns `true`:
+Khi cần, bạn có thể truyền một closure làm argument thứ hai cho method `assertSessionHas`. Assertion sẽ pass nếu closure trả về `true`:
 
 ```php
 $response->assertSessionHas($key, function (User $value) {
@@ -1835,13 +1835,13 @@ $response->assertSessionHas($key, function (User $value) {
 <a name="assert-session-has-input"></a>
 #### assertSessionHasInput
 
-Assert that the session has a given value in the [flashed input array](/docs/{{version}}/responses#redirecting-with-flashed-session-data):
+Xác nhận session có giá trị đã cho trong [mảng input được flash](/docs/{{version}}/responses#redirecting-with-flashed-session-data):
 
 ```php
 $response->assertSessionHasInput($key, $value = null);
 ```
 
-If needed, a closure can be provided as the second argument to the `assertSessionHasInput` method. The assertion will pass if the closure returns `true`:
+Khi cần, bạn có thể truyền một closure làm argument thứ hai cho method `assertSessionHasInput`. Assertion sẽ pass nếu closure trả về `true`:
 
 ```php
 use Illuminate\Support\Facades\Crypt;
@@ -1854,13 +1854,13 @@ $response->assertSessionHasInput($key, function (string $value) {
 <a name="assert-session-has-all"></a>
 #### assertSessionHasAll
 
-Assert that the session contains a given array of key / value pairs:
+Xác nhận session chứa mảng các cặp key / value đã cho:
 
 ```php
 $response->assertSessionHasAll(array $data);
 ```
 
-For example, if your application's session contains `name` and `status` keys, you may assert that both exist and have the specified values like so:
+Ví dụ, nếu session của ứng dụng chứa các key `name` và `status`, bạn có thể xác nhận cả hai đều tồn tại và có các giá trị được chỉ định như sau:
 
 ```php
 $response->assertSessionHasAll([
@@ -1872,7 +1872,7 @@ $response->assertSessionHasAll([
 <a name="assert-session-has-errors"></a>
 #### assertSessionHasErrors
 
-Assert that the session contains an error for the given `$keys`. If `$keys` is an associative array, assert that the session contains a specific error message (value) for each field (key). This method should be used when testing routes that flash validation errors to the session instead of returning them as a JSON structure:
+Xác nhận session chứa lỗi đối với `$keys` đã cho. Nếu `$keys` là associative array, xác nhận session chứa thông báo lỗi cụ thể (value) cho từng field (key). Nên dùng phương thức này khi kiểm thử các route flash lỗi validation vào session thay vì trả chúng dưới dạng cấu trúc JSON:
 
 ```php
 $response->assertSessionHasErrors(
@@ -1880,13 +1880,13 @@ $response->assertSessionHasErrors(
 );
 ```
 
-For example, to assert that the `name` and `email` fields have validation error messages that were flashed to the session, you may invoke the `assertSessionHasErrors` method like so:
+Ví dụ, để xác nhận các field `name` và `email` có thông báo lỗi validation đã được flash vào session, bạn có thể gọi phương thức `assertSessionHasErrors` như sau:
 
 ```php
 $response->assertSessionHasErrors(['name', 'email']);
 ```
 
-Or, you may assert that a given field has a particular validation error message:
+Hoặc, bạn có thể xác nhận một field đã cho có thông báo lỗi validation cụ thể:
 
 ```php
 $response->assertSessionHasErrors([
@@ -1895,12 +1895,12 @@ $response->assertSessionHasErrors([
 ```
 
 > [!NOTE]
-> The more generic [assertInvalid](#assert-invalid) method may be used to assert that a response has validation errors returned as JSON **or** that errors were flashed to session storage.
+> Method tổng quát hơn [assertInvalid](#assert-invalid) có thể được dùng để xác nhận response có validation error được trả về dưới dạng JSON **hoặc** error được flash vào session storage.
 
 <a name="assert-session-has-errors-in"></a>
 #### assertSessionHasErrorsIn
 
-Assert that the session contains an error for the given `$keys` within a specific [error bag](/docs/{{version}}/validation#named-error-bags). If `$keys` is an associative array, assert that the session contains a specific error message (value) for each field (key), within the error bag:
+Xác nhận session chứa lỗi đối với `$keys` đã cho trong một [error bag](/docs/{{version}}/validation#named-error-bags) cụ thể. Nếu `$keys` là associative array, xác nhận session chứa thông báo lỗi cụ thể (value) cho từng field (key) trong error bag:
 
 ```php
 $response->assertSessionHasErrorsIn($errorBag, $keys = [], $format = null);
@@ -1909,7 +1909,7 @@ $response->assertSessionHasErrorsIn($errorBag, $keys = [], $format = null);
 <a name="assert-session-has-no-errors"></a>
 #### assertSessionHasNoErrors
 
-Assert that the session has no validation errors:
+Xác nhận session không có lỗi validation:
 
 ```php
 $response->assertSessionHasNoErrors();
@@ -1918,19 +1918,19 @@ $response->assertSessionHasNoErrors();
 <a name="assert-session-doesnt-have-errors"></a>
 #### assertSessionDoesntHaveErrors
 
-Assert that the session has no validation errors for the given keys:
+Xác nhận session không có lỗi validation đối với các key đã cho:
 
 ```php
 $response->assertSessionDoesntHaveErrors($keys = [], $format = null, $errorBag = 'default');
 ```
 
 > [!NOTE]
-> The more generic [assertValid](#assert-valid) method may be used to assert that a response does not have validation errors that were returned as JSON **and** that no errors were flashed to session storage.
+> Method tổng quát hơn [assertValid](#assert-valid) có thể được dùng để xác nhận response không có validation error được trả về dưới dạng JSON **và** không có error nào được flash vào session storage.
 
 <a name="assert-session-missing"></a>
 #### assertSessionMissing
 
-Assert that the session does not contain the given key:
+Xác nhận session không chứa key đã cho:
 
 ```php
 $response->assertSessionMissing($key);
@@ -1939,7 +1939,7 @@ $response->assertSessionMissing($key);
 <a name="assert-session-missing-input"></a>
 #### assertSessionMissingInput
 
-Assert that the session is missing the given input key in the flashed input array:
+Xác nhận session không có input key đã cho trong mảng input được flash:
 
 ```php
 $response->assertSessionMissingInput($key);
@@ -1948,7 +1948,7 @@ $response->assertSessionMissingInput($key);
 <a name="assert-status"></a>
 #### assertStatus
 
-Assert that the response has a given HTTP status code:
+Xác nhận response có mã trạng thái HTTP đã cho:
 
 ```php
 $response->assertStatus($code);
@@ -1957,7 +1957,7 @@ $response->assertStatus($code);
 <a name="assert-successful"></a>
 #### assertSuccessful
 
-Assert that the response has a successful (>= 200 and < 300) HTTP status code:
+Xác nhận response có mã trạng thái HTTP thành công (>= 200 và < 300):
 
 ```php
 $response->assertSuccessful();
@@ -1966,7 +1966,7 @@ $response->assertSuccessful();
 <a name="assert-too-many-requests"></a>
 #### assertTooManyRequests
 
-Assert that the response has a too many requests (429) HTTP status code:
+Xác nhận response có mã trạng thái HTTP too many requests (429):
 
 ```php
 $response->assertTooManyRequests();
@@ -1975,7 +1975,7 @@ $response->assertTooManyRequests();
 <a name="assert-unauthorized"></a>
 #### assertUnauthorized
 
-Assert that the response has an unauthorized (401) HTTP status code:
+Xác nhận response có mã trạng thái HTTP unauthorized (401):
 
 ```php
 $response->assertUnauthorized();
@@ -1984,7 +1984,7 @@ $response->assertUnauthorized();
 <a name="assert-unprocessable"></a>
 #### assertUnprocessable
 
-Assert that the response has an unprocessable entity (422) HTTP status code:
+Xác nhận response có mã trạng thái HTTP unprocessable entity (422):
 
 ```php
 $response->assertUnprocessable();
@@ -1993,7 +1993,7 @@ $response->assertUnprocessable();
 <a name="assert-unsupported-media-type"></a>
 #### assertUnsupportedMediaType
 
-Assert that the response has an unsupported media type (415) HTTP status code:
+Xác nhận response có mã trạng thái HTTP unsupported media type (415):
 
 ```php
 $response->assertUnsupportedMediaType();
@@ -2002,7 +2002,7 @@ $response->assertUnsupportedMediaType();
 <a name="assert-valid"></a>
 #### assertValid
 
-Assert that the response has no validation errors for the given keys. This method may be used for asserting against responses where the validation errors are returned as a JSON structure or where the validation errors have been flashed to the session:
+Xác nhận response không có lỗi validation đối với các key đã cho. Phương thức này có thể dùng để assertion các response mà lỗi validation được trả về dưới dạng cấu trúc JSON hoặc đã được flash vào session:
 
 ```php
 // Assert that no validation errors are present...
@@ -2015,13 +2015,13 @@ $response->assertValid(['name', 'email']);
 <a name="assert-invalid"></a>
 #### assertInvalid
 
-Assert that the response has validation errors for the given keys. This method may be used for asserting against responses where the validation errors are returned as a JSON structure or where the validation errors have been flashed to the session:
+Xác nhận response có lỗi validation đối với các key đã cho. Phương thức này có thể dùng để assertion các response mà lỗi validation được trả về dưới dạng cấu trúc JSON hoặc đã được flash vào session:
 
 ```php
 $response->assertInvalid(['name', 'email']);
 ```
 
-You may also assert that a given key has a particular validation error message. When doing so, you may provide the entire message or only a small portion of the message:
+Bạn cũng có thể xác nhận một key đã cho có thông báo lỗi validation cụ thể. Khi đó, bạn có thể cung cấp toàn bộ thông báo hoặc chỉ một phần nhỏ của thông báo:
 
 ```php
 $response->assertInvalid([
@@ -2030,7 +2030,7 @@ $response->assertInvalid([
 ]);
 ```
 
-If you would like to assert that the given fields are the only fields with validation errors, you may use the `assertOnlyInvalid` method:
+Nếu muốn xác nhận các field đã cho là những field duy nhất có lỗi validation, bạn có thể dùng phương thức `assertOnlyInvalid`:
 
 ```php
 $response->assertOnlyInvalid(['name', 'email']);
@@ -2039,13 +2039,13 @@ $response->assertOnlyInvalid(['name', 'email']);
 <a name="assert-view-has"></a>
 #### assertViewHas
 
-Assert that the response view contains a given piece of data:
+Xác nhận view của response chứa dữ liệu đã cho:
 
 ```php
 $response->assertViewHas($key, $value = null);
 ```
 
-Passing a closure as the second argument to the `assertViewHas` method will allow you to inspect and make assertions against a particular piece of view data:
+Truyền một closure làm đối số thứ hai cho phương thức `assertViewHas` cho phép bạn kiểm tra và thực hiện assertion trên một phần dữ liệu cụ thể của view:
 
 ```php
 $response->assertViewHas('user', function (User $user) {
@@ -2053,7 +2053,7 @@ $response->assertViewHas('user', function (User $user) {
 });
 ```
 
-In addition, view data may be accessed as array variables on the response, allowing you to conveniently inspect it:
+Ngoài ra, dữ liệu view có thể được truy cập như các biến mảng trên response, giúp bạn kiểm tra thuận tiện:
 
 ```php tab=Pest
 expect($response['name'])->toBe('Taylor');
@@ -2066,13 +2066,13 @@ $this->assertEquals('Taylor', $response['name']);
 <a name="assert-view-has-all"></a>
 #### assertViewHasAll
 
-Assert that the response view has a given list of data:
+Xác nhận view của response có danh sách dữ liệu đã cho:
 
 ```php
 $response->assertViewHasAll(array $data);
 ```
 
-This method may be used to assert that the view simply contains data matching the given keys:
+Phương thức này có thể dùng để xác nhận view đơn giản là chứa dữ liệu khớp với các key đã cho:
 
 ```php
 $response->assertViewHasAll([
@@ -2081,7 +2081,7 @@ $response->assertViewHasAll([
 ]);
 ```
 
-Or, you may assert that the view data is present and has specific values:
+Hoặc, bạn có thể xác nhận dữ liệu view tồn tại và có các giá trị cụ thể:
 
 ```php
 $response->assertViewHasAll([
@@ -2093,7 +2093,7 @@ $response->assertViewHasAll([
 <a name="assert-view-is"></a>
 #### assertViewIs
 
-Assert that the given view was returned by the route:
+Xác nhận route đã trả về view được chỉ định:
 
 ```php
 $response->assertViewIs($value);
@@ -2102,21 +2102,21 @@ $response->assertViewIs($value);
 <a name="assert-view-missing"></a>
 #### assertViewMissing
 
-Assert that the given data key was not made available to the view returned in the application's response:
+Xác nhận data key đã cho không được cung cấp cho view trong response của ứng dụng:
 
 ```php
 $response->assertViewMissing($key);
 ```
 
 <a name="authentication-assertions"></a>
-### Authentication Assertions
+### Assertion xác thực
 
-Laravel also provides a variety of authentication related assertions that you may utilize within your application's feature tests. Note that these methods are invoked on the test class itself and not the `Illuminate\Testing\TestResponse` instance returned by methods such as `get` and `post`.
+Laravel cũng cung cấp nhiều assertion liên quan đến xác thực mà bạn có thể sử dụng trong feature test của ứng dụng. Lưu ý rằng các phương thức này được gọi trực tiếp trên test class, không phải trên instance `Illuminate\Testing\TestResponse` được trả về bởi các phương thức như `get` và `post`.
 
 <a name="assert-authenticated"></a>
 #### assertAuthenticated
 
-Assert that a user is authenticated:
+Xác nhận một user đã được xác thực:
 
 ```php
 $this->assertAuthenticated($guard = null);
@@ -2125,7 +2125,7 @@ $this->assertAuthenticated($guard = null);
 <a name="assert-guest"></a>
 #### assertGuest
 
-Assert that a user is not authenticated:
+Xác nhận một user chưa được xác thực:
 
 ```php
 $this->assertGuest($guard = null);
@@ -2134,21 +2134,21 @@ $this->assertGuest($guard = null);
 <a name="assert-authenticated-as"></a>
 #### assertAuthenticatedAs
 
-Assert that a specific user is authenticated:
+Xác nhận một user cụ thể đã được xác thực:
 
 ```php
 $this->assertAuthenticatedAs($user, $guard = null);
 ```
 
 <a name="validation-assertions"></a>
-## Validation Assertions
+## Assertion validation
 
-Laravel provides two primary validation related assertions that you may use to ensure the data provided in your request was either valid or invalid.
+Laravel cung cấp hai assertion chính liên quan đến validation mà bạn có thể dùng để đảm bảo dữ liệu được cung cấp trong request là hợp lệ hoặc không hợp lệ.
 
 <a name="validation-assert-valid"></a>
 #### assertValid
 
-Assert that the response has no validation errors for the given keys. This method may be used for asserting against responses where the validation errors are returned as a JSON structure or where the validation errors have been flashed to the session:
+Xác nhận response không có lỗi validation đối với các key đã cho. Phương thức này có thể dùng để assertion các response mà lỗi validation được trả về dưới dạng cấu trúc JSON hoặc đã được flash vào session:
 
 ```php
 // Assert that no validation errors are present...
@@ -2161,13 +2161,13 @@ $response->assertValid(['name', 'email']);
 <a name="validation-assert-invalid"></a>
 #### assertInvalid
 
-Assert that the response has validation errors for the given keys. This method may be used for asserting against responses where the validation errors are returned as a JSON structure or where the validation errors have been flashed to the session:
+Xác nhận response có lỗi validation đối với các key đã cho. Phương thức này có thể dùng để assertion các response mà lỗi validation được trả về dưới dạng cấu trúc JSON hoặc đã được flash vào session:
 
 ```php
 $response->assertInvalid(['name', 'email']);
 ```
 
-You may also assert that a given key has a particular validation error message. When doing so, you may provide the entire message or only a small portion of the message:
+Bạn cũng có thể xác nhận một key đã cho có thông báo lỗi validation cụ thể. Khi đó, bạn có thể cung cấp toàn bộ thông báo hoặc chỉ một phần nhỏ của thông báo:
 
 ```php
 $response->assertInvalid([
@@ -2175,6 +2175,8 @@ $response->assertInvalid([
     'email' => 'valid email address',
 ]);
 ```
+
+---
 
 ## Tài liệu chính thức
 

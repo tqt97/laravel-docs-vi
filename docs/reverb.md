@@ -1,49 +1,39 @@
 # Laravel Reverb
-
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Configuration](#configuration)
-    - [Application Credentials](#application-credentials)
-    - [Allowed Origins](#allowed-origins)
-    - [Additional Applications](#additional-applications)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+- [Cấu hình](#configuration)
+    - [Thông tin xác thực ứng dụng](#application-credentials)
+    - [Origin được phép](#allowed-origins)
+    - [Nhiều ứng dụng](#additional-applications)
     - [SSL](#ssl)
-- [Running the Server](#running-server)
-    - [Debugging](#debugging)
-    - [Restarting](#restarting)
-- [Monitoring](#monitoring)
-- [Running Reverb in Production](#production)
-    - [Open Files](#open-files)
-    - [Event Loop](#event-loop)
-    - [Web Server](#web-server)
-    - [Ports](#ports)
-    - [Process Management](#process-management)
-    - [Scaling](#scaling)
-- [Events](#events)
-
+- [Chạy server](#running-server)
+    - [Gỡ lỗi](#debugging)
+    - [Khởi động lại](#restarting)
+- [Giám sát](#monitoring)
+- [Chạy Reverb trong production](#production)
+    - [Số file đang mở](#open-files)
+    - [Vòng lặp sự kiện](#event-loop)
+    - [Web server](#web-server)
+    - [Cổng](#ports)
+    - [Quản lý process](#process-management)
+    - [Mở rộng hệ thống](#scaling)
+- [Sự kiện](#events)
 <a name="introduction"></a>
-## Introduction
-
-[Laravel Reverb](https://github.com/laravel/reverb) brings blazing-fast and scalable real-time WebSocket communication directly to your Laravel application, and provides seamless integration with Laravel's existing suite of [event broadcasting tools](/docs/{{version}}/broadcasting).
-
+## Giới thiệu
+[Laravel Reverb](https://github.com/laravel/reverb) mang khả năng giao tiếp WebSocket real-time nhanh và có thể mở rộng trực tiếp vào ứng dụng Laravel, đồng thời tích hợp liền mạch với bộ công cụ [event broadcasting](/docs/{{version}}/broadcasting) hiện có của Laravel.
 <a name="installation"></a>
-## Installation
-
-You may install Reverb using the `install:broadcasting` Artisan command:
-
+## Cài đặt
+Bạn có thể cài Reverb bằng lệnh Artisan `install:broadcasting`:
 ```shell
 php artisan install:broadcasting
 ```
 
 <a name="configuration"></a>
-## Configuration
-
-Behind the scenes, the `install:broadcasting` Artisan command will run the `reverb:install` command, which will install Reverb with a sensible set of default configuration options. If you would like to make any configuration changes, you may do so by updating Reverb's environment variables or by updating the `config/reverb.php` configuration file.
-
+## Cấu hình
+Bên dưới, lệnh Artisan `install:broadcasting` sẽ chạy `reverb:install` để cài Reverb với bộ cấu hình mặc định hợp lý. Nếu cần thay đổi, bạn có thể cập nhật các biến môi trường của Reverb hoặc file `config/reverb.php`.
 <a name="application-credentials"></a>
-### Application Credentials
-
-In order to establish a connection to Reverb, a set of Reverb "application" credentials must be exchanged between the client and server. These credentials are configured on the server and are used to verify the request from the client. You may define these credentials using the following environment variables:
-
+### Thông tin xác thực ứng dụng
+Để thiết lập connection tới Reverb, client và server cần trao đổi một bộ thông tin xác thực của "ứng dụng" Reverb. Các thông tin xác thực này được cấu hình ở phía server và dùng để xác minh request từ client. Bạn có thể định nghĩa chúng bằng các biến môi trường sau:
 ```ini
 REVERB_APP_ID=my-app-id
 REVERB_APP_KEY=my-app-key
@@ -51,10 +41,8 @@ REVERB_APP_SECRET=my-app-secret
 ```
 
 <a name="allowed-origins"></a>
-### Allowed Origins
-
-You may also define the origins from which client requests may originate by updating the value of the `allowed_origins` configuration value within the `apps` section of the `config/reverb.php` configuration file. Any requests from an origin not listed in your allowed origins will be rejected. You may allow all origins using `*`:
-
+### Origin được phép
+Bạn cũng có thể giới hạn các origin được phép gửi request tới Reverb thông qua giá trị `allowed_origins` trong phần `apps` của `config/reverb.php`. Request từ origin không nằm trong danh sách sẽ bị từ chối. Dùng `*` để cho phép mọi origin:
 ```php
 'apps' => [
     [
@@ -66,12 +54,9 @@ You may also define the origins from which client requests may originate by upda
 ```
 
 <a name="additional-applications"></a>
-### Additional Applications
-
-Typically, Reverb provides a WebSocket server for the application in which it is installed. However, it is possible to serve more than one application using a single Reverb installation.
-
-For example, you may wish to maintain a single Laravel application which, via Reverb, provides WebSocket connectivity for multiple applications. This can be achieved by defining multiple `apps` in your application's `config/reverb.php` configuration file:
-
+### Nhiều ứng dụng
+Thông thường, Reverb cung cấp WebSocket server cho chính ứng dụng nơi nó được cài. Tuy nhiên, một bản cài đặt Reverb có thể phục vụ nhiều ứng dụng.
+Ví dụ, bạn có thể duy trì một ứng dụng Laravel trung tâm sử dụng Reverb để cung cấp khả năng kết nối WebSocket cho nhiều ứng dụng khác. Điều này được thực hiện bằng cách định nghĩa nhiều `apps` trong `config/reverb.php`:
 ```php
 'apps' => [
     [
@@ -87,19 +72,13 @@ For example, you may wish to maintain a single Laravel application which, via Re
 
 <a name="ssl"></a>
 ### SSL
-
-In most cases, secure WebSocket connections are handled by the upstream web server (Nginx, etc.) before the request is proxied to your Reverb server.
-
-However, it can sometimes be useful, such as during local development, for the Reverb server to handle secure connections directly. If you are using [Laravel Herd's](https://herd.laravel.com) secure site feature or you are using [Laravel Valet](/docs/{{version}}/valet) and have run the [secure command](/docs/{{version}}/valet#securing-sites) against your application, you may use the Herd / Valet certificate generated for your site to secure your Reverb connections. To do so, set the `REVERB_HOST` environment variable to your site's hostname or explicitly pass the hostname option when starting the Reverb server:
-
+Trong phần lớn trường hợp, kết nối WebSocket bảo mật được web server phía trước như Nginx xử lý trước khi request được proxy tới Reverb server.
+Tuy nhiên, trong một số tình huống như local development, bạn có thể muốn Reverb server tự xử lý kết nối bảo mật. Nếu dùng tính năng site bảo mật của [Laravel Herd](https://herd.laravel.com), hoặc dùng [Laravel Valet](/docs/{{version}}/valet) và đã chạy [lệnh secure](/docs/{{version}}/valet#securing-sites), bạn có thể dùng chứng chỉ do Herd / Valet tạo cho site để bảo vệ Reverb connection. Hãy đặt `REVERB_HOST` thành hostname của site hoặc truyền hostname khi khởi động Reverb server:
 ```shell
 php artisan reverb:start --host="0.0.0.0" --port=8080 --hostname="laravel.test"
 ```
-
-Since Herd and Valet domains resolve to `localhost`, running the command above will result in your Reverb server being accessible via the secure WebSocket protocol (`wss`) at `wss://laravel.test:8080`.
-
-You may also manually choose a certificate by defining `tls` options in your application's `config/reverb.php` configuration file. Within the array of `tls` options, you may provide any of the options supported by [PHP's SSL context options](https://www.php.net/manual/en/context.ssl.php):
-
+Vì domain của Herd và Valet resolve về `localhost`, lệnh trên sẽ khiến Reverb server có thể được truy cập qua giao thức WebSocket bảo mật (`wss`) tại `wss://laravel.test:8080`.
+Bạn cũng có thể chọn chứng chỉ thủ công bằng cách định nghĩa các tùy chọn `tls` trong `config/reverb.php`. Bên trong mảng `tls`, có thể cung cấp bất kỳ tùy chọn nào được [PHP SSL context](https://www.php.net/manual/en/context.ssl.php) hỗ trợ:
 ```php
 'options' => [
     'tls' => [
@@ -109,26 +88,18 @@ You may also manually choose a certificate by defining `tls` options in your app
 ```
 
 <a name="running-server"></a>
-## Running the Server
-
-The Reverb server can be started using the `reverb:start` Artisan command:
-
+## Chạy server
+Reverb server có thể được khởi động bằng lệnh Artisan `reverb:start`:
 ```shell
 php artisan reverb:start
 ```
-
-By default, the Reverb server will be started at `0.0.0.0:8080`, making it accessible from all network interfaces.
-
-If you need to specify a custom host or port, you may do so via the `--host` and `--port` options when starting the server:
-
+Mặc định, Reverb server chạy tại `0.0.0.0:8080`, nên có thể truy cập từ mọi giao diện mạng.
+Nếu cần host hoặc cổng riêng, truyền các option `--host` và `--port` khi khởi động server:
 ```shell
 php artisan reverb:start --host=127.0.0.1 --port=9000
 ```
-
-Alternatively, you may define `REVERB_SERVER_HOST` and `REVERB_SERVER_PORT` environment variables in your application's `.env` configuration file.
-
-The `REVERB_SERVER_HOST` and `REVERB_SERVER_PORT` environment variables should not be confused with `REVERB_HOST` and `REVERB_PORT`. The former specify the host and port on which to run the Reverb server itself, while the latter pair instruct Laravel where to send broadcast messages. For example, in a production environment, you may route requests from your public Reverb hostname on port `443` to a Reverb server operating on `0.0.0.0:8080`. In this scenario, your environment variables would be defined as follows:
-
+Ngoài ra, bạn có thể định nghĩa `REVERB_SERVER_HOST` và `REVERB_SERVER_PORT` trong file `.env`.
+Không nên nhầm `REVERB_SERVER_HOST` / `REVERB_SERVER_PORT` với `REVERB_HOST` / `REVERB_PORT`. Cặp đầu xác định host và port nơi chính Reverb server chạy; cặp sau cho Laravel biết nơi gửi thông điệp broadcast. Ví dụ trong production, request tới hostname Reverb công khai ở port `443` có thể được proxy về Reverb server chạy tại `0.0.0.0:8080`. Khi đó các biến môi trường có thể được cấu hình như sau:
 ```ini
 REVERB_SERVER_HOST=0.0.0.0
 REVERB_SERVER_PORT=8080
@@ -138,32 +109,24 @@ REVERB_PORT=443
 ```
 
 <a name="debugging"></a>
-### Debugging
-
-To improve performance, Reverb does not output any debug information by default. If you would like to see the stream of data passing through your Reverb server, you may provide the `--debug` option to the `reverb:start` command:
-
+### Gỡ lỗi
+Để tối ưu hiệu năng, mặc định Reverb không xuất thông tin gỡ lỗi. Nếu muốn xem luồng dữ liệu đi qua Reverb server, hãy truyền option `--debug` cho lệnh `reverb:start`:
 ```shell
 php artisan reverb:start --debug
 ```
 
 <a name="restarting"></a>
-### Restarting
-
-Since Reverb is a long-running process, changes to your code will not be reflected without restarting the server via the `reverb:restart` Artisan command.
-
-The `reverb:restart` command ensures all connections are gracefully terminated before stopping the server. If you are running Reverb with a process manager such as Supervisor, the server will be automatically restarted by the process manager after all connections have been terminated:
-
+### Khởi động lại
+Reverb là process chạy dài hạn, vì vậy thay đổi code sẽ không có hiệu lực cho tới khi server được restart bằng lệnh Artisan `reverb:restart`.
+Lệnh `reverb:restart` đảm bảo mọi connection được đóng một cách êm thấm trước khi server dừng. Nếu Reverb được chạy bằng trình quản lý process như Supervisor, trình quản lý process sẽ tự khởi động lại server sau khi toàn bộ connection đã kết thúc:
 ```shell
 php artisan reverb:restart
 ```
 
 <a name="monitoring"></a>
-## Monitoring
-
-Reverb may be monitored via an integration with [Laravel Pulse](/docs/{{version}}/pulse). By enabling Reverb's Pulse integration, you may track the number of connections and messages being handled by your server.
-
-To enable the integration, you should first ensure you have [installed Pulse](/docs/{{version}}/pulse#installation). Then, add any of Reverb's recorders to your application's `config/pulse.php` configuration file:
-
+## Giám sát
+Bạn có thể giám sát Reverb thông qua tích hợp với [Laravel Pulse](/docs/{{version}}/pulse). Khi bật tích hợp Pulse, bạn có thể theo dõi số lượng kết nối và thông điệp mà server đang xử lý.
+Để bật tích hợp, trước hết hãy đảm bảo đã [cài Pulse](/docs/{{version}}/pulse#installation). Sau đó thêm recorder của Reverb vào `config/pulse.php`:
 ```php
 use Laravel\Reverb\Pulse\Recorders\ReverbConnections;
 use Laravel\Reverb\Pulse\Recorders\ReverbMessages;
@@ -180,9 +143,7 @@ use Laravel\Reverb\Pulse\Recorders\ReverbMessages;
     // ...
 ],
 ```
-
-Next, add the Pulse cards for each recorder to your [Pulse dashboard](/docs/{{version}}/pulse#dashboard-customization):
-
+Tiếp theo, thêm Pulse card tương ứng với từng recorder vào [Pulse dashboard](/docs/{{version}}/pulse#dashboard-customization):
 ```blade
 <x-pulse>
     <livewire:reverb.connections cols="full" />
@@ -190,33 +151,22 @@ Next, add the Pulse cards for each recorder to your [Pulse dashboard](/docs/{{ve
     ...
 </x-pulse>
 ```
-
-Connection activity is recorded by polling for new updates on a periodic basis. To ensure this information is rendered correctly on the Pulse dashboard, you must run the `pulse:check` daemon on your Reverb server. If you are running Reverb in a [horizontally scaled](#scaling) configuration, you should only run this daemon on one of your servers.
-
+Hoạt động kết nối được ghi nhận bằng cách polling định kỳ để lấy các cập nhật mới. Để dữ liệu hiển thị đúng trên Pulse dashboard, bạn phải chạy daemon `pulse:check` trên Reverb server. Nếu Reverb được [scale theo chiều ngang](#scaling), chỉ nên chạy daemon này trên một server.
 <a name="production"></a>
-## Running Reverb in Production
-
-Due to the long-running nature of WebSocket servers, you may need to make some optimizations to your server and hosting environment to ensure your Reverb server can effectively handle the optimal number of connections for the resources available on your server.
-
+## Chạy Reverb trong production
+Vì WebSocket server là process chạy dài hạn, bạn có thể cần tối ưu server và môi trường hosting để Reverb xử lý hiệu quả số lượng kết nối phù hợp với tài nguyên hiện có.
 > [!NOTE]
-> [Laravel Cloud](https://cloud.laravel.com) offers fully managed WebSocket infrastructure powered by Laravel Reverb clusters, allowing you to scale and ship Reverb enabled applications without managing infrastructure.
-
+> [Laravel Cloud](https://cloud.laravel.com) cung cấp hạ tầng WebSocket được quản lý dựa trên cụm Laravel Reverb, giúp mở rộng và triển khai ứng dụng Reverb mà không phải tự quản lý infrastructure.
 <a name="open-files"></a>
-### Open Files
-
-Each WebSocket connection is held in memory until either the client or server disconnects. In Unix and Unix-like environments, each connection is represented by a file. However, there are often limits on the number of allowed open files at both the operating system and application level.
-
+### Số file đang mở
+Mỗi kết nối WebSocket được giữ trong memory cho tới khi client hoặc server ngắt kết nối. Trên Unix và hệ điều hành tương tự Unix, mỗi connection được biểu diễn bằng một file descriptor. Tuy nhiên, cả hệ điều hành lẫn ứng dụng thường giới hạn số lượng file được phép mở đồng thời.
 <a name="operating-system"></a>
-#### Operating System
-
-On a Unix based operating system, you may determine the allowed number of open files using the `ulimit` command:
-
+#### Hệ điều hành
+Trên hệ điều hành nền Unix, bạn có thể kiểm tra giới hạn số file đang mở bằng lệnh `ulimit`:
 ```shell
 ulimit -n
 ```
-
-This command will display the open file limits allowed for different users. You may update these values by editing the `/etc/security/limits.conf` file. For example, updating the maximum number of open files to 10,000 for the `forge` user would look like the following:
-
+Lệnh này hiển thị giới hạn số file đang mở cho từng user. Bạn có thể thay đổi các giá trị bằng cách chỉnh `/etc/security/limits.conf`. Ví dụ, để tăng số file mở tối đa lên 10.000 cho user `forge`:
 ```ini
 # /etc/security/limits.conf
 forge        soft  nofile  10000
@@ -224,21 +174,16 @@ forge        hard  nofile  10000
 ```
 
 <a name="event-loop"></a>
-### Event Loop
-
-Under the hood, Reverb uses a ReactPHP event loop to manage WebSocket connections on the server. By default, this event loop is powered by `stream_select`, which doesn't require any additional extensions. However, `stream_select` is typically limited to 1,024 open files. As such, if you plan to handle more than 1,000 concurrent connections, you will need to use an alternative event loop not bound to the same restrictions.
-
-Reverb will automatically switch to an `ext-uv` powered loop when available. This PHP extension is available for install via PECL:
-
+### Vòng lặp sự kiện
+Bên dưới, Reverb dùng event loop của ReactPHP để quản lý kết nối WebSocket. Mặc định event loop này dựa trên `stream_select`, không cần extension bổ sung. Tuy nhiên, `stream_select` thường bị giới hạn ở 1.024 open files. Vì vậy, nếu dự kiến xử lý hơn 1.000 kết nối đồng thời, bạn cần dùng event loop khác không bị giới hạn tương tự.
+Khi có sẵn, Reverb tự động chuyển sang event loop dựa trên `ext-uv`. PHP extension này có thể được cài qua PECL:
 ```shell
 pecl install uv
 ```
 
 <a name="web-server"></a>
-### Web Server
-
-In most cases, Reverb runs on a non web-facing port on your server. So, in order to route traffic to Reverb, you should configure a reverse proxy. Assuming Reverb is running on host `0.0.0.0` and port `8080` and your server utilizes the Nginx web server, a reverse proxy can be defined for your Reverb server using the following Nginx site configuration:
-
+### Web server
+Trong phần lớn trường hợp, Reverb chạy trên một port không public trực tiếp. Vì vậy, để định tuyến traffic tới Reverb, bạn nên cấu hình reverse proxy. Giả sử Reverb chạy ở `0.0.0.0:8080` và server dùng Nginx, bạn có thể cấu hình site Nginx như sau:
 ```nginx
 server {
     ...
@@ -259,12 +204,9 @@ server {
     ...
 }
 ```
-
 > [!WARNING]
-> Reverb listens for WebSocket connections at `/app` and handles API requests at `/apps`. You should ensure the web server handling Reverb requests can serve both of these URIs. If you are using [Laravel Forge](https://forge.laravel.com) to manage your servers, your Reverb server will be correctly configured by default.
-
-Typically, web servers are configured to limit the number of allowed connections in order to prevent overloading the server. To increase the number of allowed connections on an Nginx web server to 10,000, the `worker_rlimit_nofile` and `worker_connections` values of the `nginx.conf` file should be updated:
-
+> Reverb lắng nghe kết nối WebSocket tại `/app` và xử lý API request tại `/apps`. Hãy đảm bảo web server đứng trước Reverb có thể phục vụ cả hai URI. Nếu dùng [Laravel Forge](https://forge.laravel.com) để quản lý server, Reverb server sẽ được cấu hình đúng mặc định.
+Web server thường giới hạn số connection để tránh quá tải. Để tăng số connection cho Nginx lên 10.000, hãy cập nhật `worker_rlimit_nofile` và `worker_connections` trong `nginx.conf`:
 ```nginx
 user forge;
 worker_processes auto;
@@ -277,26 +219,18 @@ events {
   multi_accept on;
 }
 ```
-
-The configuration above will allow up to 10,000 Nginx workers per process to be spawned. In addition, this configuration sets Nginx's open file limit to 10,000.
-
+Cấu hình trên cho phép tối đa 10.000 kết nối Nginx trên mỗi worker process và đặt giới hạn file mở của Nginx thành 10.000.
 <a name="ports"></a>
-### Ports
-
-Unix-based operating systems typically limit the number of ports which can be opened on the server. You may see the current allowed range via the following command:
-
+### Cổng
+Hệ điều hành nền Unix thường giới hạn phạm vi cổng có thể mở. Bạn có thể xem range hiện tại bằng lệnh sau:
 ```shell
 cat /proc/sys/net/ipv4/ip_local_port_range
 # 32768	60999
 ```
-
-The output above shows the server can handle a maximum of 28,231 (60,999 - 32,768) connections since each connection requires a free port. Although we recommend [horizontal scaling](#scaling) to increase the number of allowed connections, you may increase the number of available open ports by updating the allowed port range in your server's `/etc/sysctl.conf` configuration file.
-
+Output trên cho thấy server có thể xử lý tối đa 28.231 connection (60.999 - 32.768), vì mỗi connection cần một cổng khả dụng. Dù [mở rộng theo chiều ngang](#scaling) thường là lựa chọn tốt hơn để tăng năng lực xử lý, bạn cũng có thể mở rộng phạm vi cổng trong `/etc/sysctl.conf`.
 <a name="process-management"></a>
-### Process Management
-
-In most cases, you should use a process manager such as Supervisor to ensure the Reverb server is continually running. If you are using Supervisor to run Reverb, you should update the `minfds` setting of your server's `supervisor.conf` file to ensure Supervisor is able to open the files required to handle connections to your Reverb server:
-
+### Quản lý process
+Trong production, bạn nên dùng trình quản lý process như Supervisor để đảm bảo Reverb server luôn chạy. Nếu dùng Supervisor, hãy cập nhật `minfds` trong `supervisor.conf` để Supervisor có thể mở đủ số file cần thiết cho các kết nối của Reverb:
 ```ini
 [supervisord]
 ...
@@ -304,46 +238,33 @@ minfds=10000
 ```
 
 <a name="scaling"></a>
-### Scaling
-
-If you need to handle more connections than a single server will allow, you may scale your Reverb server horizontally. Utilizing the publish / subscribe capabilities of Redis, Reverb is able to manage connections across multiple servers. When a message is received by one of your application's Reverb servers, the server will use Redis to publish the incoming message to all other servers.
-
-To enable horizontal scaling, you should set the `REVERB_SCALING_ENABLED` environment variable to `true` in your application's `.env` configuration file:
-
+### Mở rộng hệ thống
+Nếu cần xử lý nhiều kết nối hơn khả năng của một server, bạn có thể scale Reverb theo chiều ngang. Nhờ khả năng publish / subscribe của Redis, Reverb quản lý kết nối trên nhiều server. Khi một Reverb server nhận thông điệp, nó dùng Redis để publish thông điệp đó tới các Reverb server còn lại.
+Để bật mở rộng theo chiều ngang, đặt biến môi trường `REVERB_SCALING_ENABLED` thành `true` trong `.env`:
 ```env
 REVERB_SCALING_ENABLED=true
 ```
-
-Next, you should have a dedicated, central Redis server to which all of the Reverb servers will communicate. Reverb will use the [default Redis connection configured for your application](/docs/{{version}}/redis#configuration) to publish messages to all of your Reverb servers.
-
-Once you have enabled Reverb's scaling option and configured a Redis server, you may simply invoke the `reverb:start` command on multiple servers that are able to communicate with your Redis server. These Reverb servers should be placed behind a load balancer that distributes incoming requests evenly among the servers.
-
+Tiếp theo, bạn cần một Redis server trung tâm để tất cả Reverb server cùng kết nối. Reverb sử dụng [Redis connection mặc định của ứng dụng](/docs/{{version}}/redis#configuration) để publish thông điệp tới toàn bộ Reverb server.
+Sau khi bật scaling và cấu hình Redis, bạn chỉ cần chạy `reverb:start` trên nhiều server có thể giao tiếp với Redis. Các Reverb server này nên nằm sau load balancer để phân phối request đồng đều.
 <a name="events"></a>
-## Events
-
-Reverb dispatches internal events during the lifecycle of a connection and message handling. You may [listen for these events](/docs/{{version}}/events) to perform actions when connections are managed or messages are exchanged.
-
-The following events are dispatched by Reverb:
-
+## Sự kiện
+Reverb dispatch các sự kiện nội bộ trong vòng đời của kết nối và quá trình xử lý thông điệp. Bạn có thể [lắng nghe các sự kiện này](/docs/{{version}}/events) để thực hiện hành động khi kết nối được quản lý hoặc thông điệp được trao đổi.
+Các sự kiện sau được Reverb dispatch:
 #### `Laravel\Reverb\Events\ChannelCreated`
 
-Dispatched when a channel is created. This typically occurs when the first connection subscribes to a specific channel. The event receives the `Laravel\Reverb\Protocols\Pusher\Channel` instance.
-
+Được dispatch khi một channel được tạo, thường xảy ra khi kết nối đầu tiên subscribe vào channel đó. Sự kiện nhận instance `Laravel\Reverb\Protocols\Pusher\Channel`.
 #### `Laravel\Reverb\Events\ChannelRemoved`
 
-Dispatched when a channel is removed. This typically occurs when the last connection unsubscribes from a channel. The event receives the `Laravel\Reverb\Protocols\Pusher\Channel` instance.
-
+Được dispatch khi một channel bị xóa, thường xảy ra khi kết nối cuối cùng unsubscribe khỏi channel. Sự kiện nhận instance `Laravel\Reverb\Protocols\Pusher\Channel`.
 #### `Laravel\Reverb\Events\ConnectionPruned`
 
-Dispatched when a stale connection is pruned by the server. The event receives the `Laravel\Reverb\Contracts\Connection` instance.
-
+Được dispatch khi server loại bỏ một kết nối stale. Sự kiện nhận instance `Laravel\Reverb\Contracts\Connection`.
 #### `Laravel\Reverb\Events\MessageReceived`
 
-Dispatched when a message is received from a client connection. The event receives the `Laravel\Reverb\Contracts\Connection` instance and the raw string `$message`.
-
+Được dispatch khi server nhận thông điệp từ client connection. Sự kiện nhận instance `Laravel\Reverb\Contracts\Connection` và chuỗi thô `$message`.
 #### `Laravel\Reverb\Events\MessageSent`
 
-Dispatched when a message is sent to a client connection. The event receives the `Laravel\Reverb\Contracts\Connection` instance and the raw string `$message`.
+Được dispatch khi thông điệp được gửi tới kết nối client. Sự kiện nhận instance `Laravel\Reverb\Contracts\Connection` và chuỗi thô `$message`.
 
 ## Tài liệu chính thức
 

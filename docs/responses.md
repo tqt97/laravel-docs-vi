@@ -1,33 +1,33 @@
-# HTTP Responses
+# HTTP Responses (Phản hồi HTTP)
 
-- [Creating Responses](#creating-responses)
-    - [Attaching Headers to Responses](#attaching-headers-to-responses)
-    - [Attaching Cookies to Responses](#attaching-cookies-to-responses)
-    - [Cookies and Encryption](#cookies-and-encryption)
-- [Redirects](#redirects)
-    - [Redirecting to Named Routes](#redirecting-named-routes)
-    - [Redirecting to Controller Actions](#redirecting-controller-actions)
-    - [Redirecting to External Domains](#redirecting-external-domains)
-    - [Redirecting With Flashed Session Data](#redirecting-with-flashed-session-data)
-- [Other Response Types](#other-response-types)
-    - [View Responses](#view-responses)
-    - [JSON Responses](#json-responses)
-    - [File Downloads](#file-downloads)
-    - [File Responses](#file-responses)
-- [Streamed Responses](#streamed-responses)
-    - [Consuming Streamed Responses](#consuming-streamed-responses)
-    - [Streamed JSON Responses](#streamed-json-responses)
-    - [Event Streams (SSE)](#event-streams)
-    - [Streamed Downloads](#streamed-downloads)
-- [Response Macros](#response-macros)
+- [Tạo response](#creating-responses)
+    - [Gắn header vào response](#attaching-headers-to-responses)
+    - [Gắn cookie vào response](#attaching-cookies-to-responses)
+    - [Cookie và mã hóa](#cookies-and-encryption)
+- [Chuyển hướng](#redirects)
+    - [Chuyển hướng đến route có tên](#redirecting-named-routes)
+    - [Chuyển hướng đến action của controller](#redirecting-controller-actions)
+    - [Chuyển hướng đến domain bên ngoài](#redirecting-external-domains)
+    - [Chuyển hướng kèm dữ liệu flash trong session](#redirecting-with-flashed-session-data)
+- [Các loại response khác](#other-response-types)
+    - [View response](#view-responses)
+    - [JSON response](#json-responses)
+    - [Tải file](#file-downloads)
+    - [File response](#file-responses)
+- [Streamed response](#streamed-responses)
+    - [Tiêu thụ streamed response](#consuming-streamed-responses)
+    - [Streamed JSON response](#streamed-json-responses)
+    - [Event stream (SSE)](#event-streams)
+    - [Tải xuống dạng stream](#streamed-downloads)
+- [Response macro](#response-macros)
 
 <a name="creating-responses"></a>
-## Creating Responses
+## Tạo response
 
 <a name="strings-arrays"></a>
-#### Strings and Arrays
+#### Chuỗi và mảng
 
-All routes and controllers should return a response to be sent back to the user's browser. Laravel provides several different ways to return responses. The most basic response is returning a string from a route or controller. The framework will automatically convert the string into a full HTTP response:
+Mọi route và controller đều nên trả về một response để gửi lại cho trình duyệt của người dùng. Laravel cung cấp nhiều cách khác nhau để trả về response. Cách cơ bản nhất là trả về một chuỗi từ route hoặc controller; framework sẽ tự động chuyển chuỗi đó thành một HTTP response hoàn chỉnh:
 
 ```php
 Route::get('/', function () {
@@ -35,7 +35,7 @@ Route::get('/', function () {
 });
 ```
 
-In addition to returning strings from your routes and controllers, you may also return arrays. The framework will automatically convert the array into a JSON response:
+Ngoài việc trả về chuỗi từ route và controller, bạn cũng có thể trả về mảng. Framework sẽ tự động chuyển mảng thành JSON response:
 
 ```php
 Route::get('/', function () {
@@ -44,14 +44,14 @@ Route::get('/', function () {
 ```
 
 > [!NOTE]
-> Did you know you can also return [Eloquent collections](/docs/{{version}}/eloquent-collections) from your routes or controllers? They will automatically be converted to JSON. Give it a shot!
+> Bạn cũng có thể trả về [Eloquent collection](/docs/{{version}}/eloquent-collections) trực tiếp từ route hoặc controller. Laravel sẽ tự động chuyển chúng thành JSON.
 
 <a name="response-objects"></a>
-#### Response Objects
+#### Đối tượng Response
 
-Typically, you won't just be returning simple strings or arrays from your route actions. Instead, you will be returning full `Illuminate\Http\Response` instances or [views](/docs/{{version}}/views).
+Thông thường, action của route không chỉ trả về chuỗi hoặc mảng đơn giản. Thay vào đó, bạn sẽ trả về một đối tượng `Illuminate\Http\Response` hoàn chỉnh hoặc một [view](/docs/{{version}}/views).
 
-Returning a full `Response` instance allows you to customize the response's HTTP status code and headers. A `Response` instance inherits from the `Symfony\Component\HttpFoundation\Response` class, which provides a variety of methods for building HTTP responses:
+Việc trả về một đối tượng `Response` hoàn chỉnh cho phép bạn tùy chỉnh HTTP status code và header của response. `Response` kế thừa lớp `Symfony\Component\HttpFoundation\Response`, lớp này cung cấp nhiều phương thức để xây dựng HTTP response:
 
 ```php
 Route::get('/home', function () {
@@ -61,9 +61,9 @@ Route::get('/home', function () {
 ```
 
 <a name="eloquent-models-and-collections"></a>
-#### Eloquent Models and Collections
+#### Model và collection Eloquent
 
-You may also return [Eloquent ORM](/docs/{{version}}/eloquent) models and collections directly from your routes and controllers. When you do, Laravel will automatically convert the models and collections to JSON responses while respecting the model's [hidden attributes](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json):
+Bạn cũng có thể trả về trực tiếp model và collection của [Eloquent ORM](/docs/{{version}}/eloquent) từ route và controller. Khi đó, Laravel tự động chuyển model và collection thành JSON response, đồng thời vẫn tôn trọng các [thuộc tính bị ẩn](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) của model:
 
 ```php
 use App\Models\User;
@@ -74,9 +74,9 @@ Route::get('/user/{user}', function (User $user) {
 ```
 
 <a name="attaching-headers-to-responses"></a>
-### Attaching Headers to Responses
+### Gắn header vào response
 
-Keep in mind that most response methods are chainable, allowing for the fluent construction of response instances. For example, you may use the `header` method to add a series of headers to the response before sending it back to the user:
+Hầu hết các phương thức của response đều có thể gọi nối tiếp, nhờ đó bạn có thể xây dựng response theo fluent API. Ví dụ, phương thức `header` cho phép thêm nhiều header vào response trước khi gửi về cho người dùng:
 
 ```php
 return response($content)
@@ -85,7 +85,7 @@ return response($content)
     ->header('X-Header-Two', 'Header Value');
 ```
 
-Or, you may use the `withHeaders` method to specify an array of headers to be added to the response:
+Hoặc, bạn có thể dùng `withHeaders` để truyền vào một mảng các header cần thêm vào response:
 
 ```php
 return response($content)
@@ -96,7 +96,7 @@ return response($content)
     ]);
 ```
 
-You can remove specific headers from an outgoing response using the `withoutHeader` method:
+Bạn có thể loại bỏ một hoặc nhiều header cụ thể khỏi response sắp gửi bằng phương thức `withoutHeader`:
 
 ```php
 return response($content)->withoutHeader('X-Debug');
@@ -105,9 +105,9 @@ return response($content)->withoutHeader(['X-Debug', 'X-Powered-By']);
 ```
 
 <a name="cache-control-middleware"></a>
-#### Cache Control Middleware
+#### Middleware Cache Control
 
-Laravel includes a `cache.headers` middleware, which may be used to quickly set the `Cache-Control` header for a group of routes. Directives should be provided using the "snake case" equivalent of the corresponding cache-control directive and should be separated by a semicolon. If `etag` is specified in the list of directives, an MD5 hash of the response content will automatically be set as the ETag identifier:
+Laravel cung cấp middleware `cache.headers`, cho phép thiết lập nhanh header `Cache-Control` cho một nhóm route. Các directive phải được viết dưới dạng "snake case" tương ứng với cache-control directive và phân tách bằng dấu chấm phẩy. Nếu danh sách directive có `etag`, Laravel sẽ tự động lấy MD5 hash của nội dung response làm định danh ETag:
 
 ```php
 Route::middleware('cache.headers:public;max_age=30;s_maxage=300;stale_while_revalidate=600;etag')->group(function () {
@@ -122,9 +122,9 @@ Route::middleware('cache.headers:public;max_age=30;s_maxage=300;stale_while_reva
 ```
 
 <a name="attaching-cookies-to-responses"></a>
-### Attaching Cookies to Responses
+### Gắn cookie vào response
 
-You may attach a cookie to an outgoing `Illuminate\Http\Response` instance using the `cookie` method. You should pass the name, value, and the number of minutes the cookie should be considered valid to this method:
+Bạn có thể gắn cookie vào đối tượng `Illuminate\Http\Response` sắp gửi bằng phương thức `cookie`. Hãy truyền tên, giá trị và số phút cookie được xem là còn hiệu lực vào phương thức này:
 
 ```php
 return response('Hello World')->cookie(
@@ -132,7 +132,7 @@ return response('Hello World')->cookie(
 );
 ```
 
-The `cookie` method also accepts a few more arguments which are used less frequently. Generally, these arguments have the same purpose and meaning as the arguments that would be given to PHP's native [setcookie](https://secure.php.net/manual/en/function.setcookie.php) method:
+Phương thức `cookie` còn nhận một số đối số ít được sử dụng hơn. Nhìn chung, mục đích và ý nghĩa của chúng tương ứng với các đối số của hàm [setcookie](https://secure.php.net/manual/en/function.setcookie.php) nguyên bản trong PHP:
 
 ```php
 return response('Hello World')->cookie(
@@ -140,7 +140,7 @@ return response('Hello World')->cookie(
 );
 ```
 
-If you would like to ensure that a cookie is sent with the outgoing response but you do not yet have an instance of that response, you can use the `Cookie` facade to "queue" cookies for attachment to the response when it is sent. The `queue` method accepts the arguments needed to create a cookie instance. These cookies will be attached to the outgoing response before it is sent to the browser:
+Nếu cần bảo đảm cookie được gửi cùng response nhưng chưa có đối tượng response tại thời điểm đó, bạn có thể dùng facade `Cookie` để đưa cookie vào "queue" và gắn nó khi response được gửi. Phương thức `queue` nhận các đối số cần thiết để tạo cookie. Các cookie này sẽ được gắn vào response trước khi response được gửi tới trình duyệt:
 
 ```php
 use Illuminate\Support\Facades\Cookie;
@@ -149,9 +149,9 @@ Cookie::queue('name', 'value', $minutes);
 ```
 
 <a name="generating-cookie-instances"></a>
-#### Generating Cookie Instances
+#### Tạo đối tượng cookie
 
-If you would like to generate a `Symfony\Component\HttpFoundation\Cookie` instance that can be attached to a response instance at a later time, you may use the global `cookie` helper. This cookie will not be sent back to the client unless it is attached to a response instance:
+Nếu muốn tạo một đối tượng `Symfony\Component\HttpFoundation\Cookie` để gắn vào response ở thời điểm sau, bạn có thể dùng helper toàn cục `cookie`. Cookie này sẽ không được gửi về client cho đến khi nó được gắn vào một response:
 
 ```php
 $cookie = cookie('name', 'value', $minutes);
@@ -160,9 +160,9 @@ return response('Hello World')->cookie($cookie);
 ```
 
 <a name="expiring-cookies-early"></a>
-#### Expiring Cookies Early
+#### Cho cookie hết hạn sớm
 
-You may remove a cookie by expiring it via the `withoutCookie` or `withoutCookies` method of an outgoing response:
+Bạn có thể xóa cookie bằng cách làm cho nó hết hạn thông qua `withoutCookie` hoặc `withoutCookies` trên response sắp gửi:
 
 ```php
 return response('Hello World')->withoutCookie('name');
@@ -174,16 +174,16 @@ return response('Hello World')->withoutCookies([
 ]);
 ```
 
-If you do not yet have an instance of the outgoing response, you may use the `Cookie` facade's `expire` method to expire a cookie:
+Nếu chưa có đối tượng response sắp gửi, bạn có thể dùng phương thức `expire` của facade `Cookie` để làm cookie hết hạn:
 
 ```php
 Cookie::expire('name');
 ```
 
 <a name="cookies-and-encryption"></a>
-### Cookies and Encryption
+### Cookie và mã hóa
 
-By default, thanks to the `Illuminate\Cookie\Middleware\EncryptCookies` middleware, all cookies generated by Laravel are encrypted and signed so that they can't be modified or read by the client. If you would like to disable encryption for a subset of cookies generated by your application, you may use the `encryptCookies` method in your application's `bootstrap/app.php` file:
+Mặc định, nhờ middleware `Illuminate\Cookie\Middleware\EncryptCookies`, mọi cookie do Laravel tạo đều được mã hóa và ký để client không thể đọc hoặc sửa đổi nội dung. Nếu muốn tắt mã hóa cho một số cookie cụ thể của ứng dụng, bạn có thể dùng phương thức `encryptCookies` trong file `bootstrap/app.php`:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -194,12 +194,12 @@ By default, thanks to the `Illuminate\Cookie\Middleware\EncryptCookies` middlewa
 ```
 
 > [!NOTE]
-> In general, cookie encryption should never be disabled, as this exposes your cookies to potential client-side data exposure and tampering.
+> Nhìn chung, bạn không nên tắt mã hóa cookie vì điều đó có thể khiến dữ liệu cookie bị lộ hoặc bị chỉnh sửa từ phía client.
 
 <a name="redirects"></a>
-## Redirects
+## Chuyển hướng
 
-Redirect responses are instances of the `Illuminate\Http\RedirectResponse` class, and contain the proper headers needed to redirect the user to another URL. There are several ways to generate a `RedirectResponse` instance. The simplest method is to use the global `redirect` helper:
+Redirect response là các đối tượng của lớp `Illuminate\Http\RedirectResponse` và chứa những header cần thiết để chuyển hướng người dùng sang URL khác. Laravel cung cấp nhiều cách tạo `RedirectResponse`; đơn giản nhất là dùng helper toàn cục `redirect`:
 
 ```php
 Route::get('/dashboard', function () {
@@ -207,7 +207,7 @@ Route::get('/dashboard', function () {
 });
 ```
 
-Sometimes you may wish to redirect the user to their previous location, such as when a submitted form is invalid. You may do so by using the global `back` helper function. Since this feature utilizes the [session](/docs/{{version}}/session), make sure the route calling the `back` function is using the `web` middleware group:
+Đôi khi bạn cần chuyển người dùng về vị trí trước đó, chẳng hạn khi form được gửi lên không hợp lệ. Bạn có thể dùng helper toàn cục `back`. Vì cơ chế này sử dụng [session](/docs/{{version}}/session), hãy bảo đảm route gọi `back` sử dụng middleware group `web`:
 
 ```php
 Route::post('/user/profile', function () {
@@ -218,15 +218,15 @@ Route::post('/user/profile', function () {
 ```
 
 <a name="redirecting-named-routes"></a>
-### Redirecting to Named Routes
+### Chuyển hướng đến route có tên
 
-When you call the `redirect` helper with no parameters, an instance of `Illuminate\Routing\Redirector` is returned, allowing you to call any method on the `Redirector` instance. For example, to generate a `RedirectResponse` to a named route, you may use the `route` method:
+Khi gọi helper `redirect` mà không truyền tham số, Laravel trả về một đối tượng `Illuminate\Routing\Redirector`, cho phép bạn gọi các phương thức của `Redirector`. Ví dụ, để tạo `RedirectResponse` tới một route có tên, hãy dùng phương thức `route`:
 
 ```php
 return redirect()->route('login');
 ```
 
-If your route has parameters, you may pass them as the second argument to the `route` method:
+Nếu route có tham số, bạn có thể truyền chúng làm đối số thứ hai của phương thức `route`:
 
 ```php
 // For a route with the following URI: /profile/{id}
@@ -235,9 +235,9 @@ return redirect()->route('profile', ['id' => 1]);
 ```
 
 <a name="populating-parameters-via-eloquent-models"></a>
-#### Populating Parameters via Eloquent Models
+#### Điền tham số bằng Eloquent Model
 
-If you are redirecting to a route with an "ID" parameter that is being populated from an Eloquent model, you may pass the model itself. The ID will be extracted automatically:
+Nếu chuyển hướng tới một route có tham số "ID" được lấy từ Eloquent model, bạn có thể truyền trực tiếp model. Laravel sẽ tự động lấy ID:
 
 ```php
 // For a route with the following URI: /profile/{id}
@@ -245,7 +245,7 @@ If you are redirecting to a route with an "ID" parameter that is being populated
 return redirect()->route('profile', [$user]);
 ```
 
-If you would like to customize the value that is placed in the route parameter, you can specify the column in the route parameter definition (`/profile/{id:slug}`) or you can override the `getRouteKey` method on your Eloquent model:
+Nếu muốn tùy chỉnh giá trị được đưa vào route parameter, bạn có thể chỉ định column ngay trong định nghĩa tham số (`/profile/{id:slug}`), hoặc override phương thức `getRouteKey` trên Eloquent model:
 
 ```php
 /**
@@ -258,9 +258,9 @@ public function getRouteKey(): mixed
 ```
 
 <a name="redirecting-controller-actions"></a>
-### Redirecting to Controller Actions
+### Chuyển hướng đến action của controller
 
-You may also generate redirects to [controller actions](/docs/{{version}}/controllers). To do so, pass the controller and action name to the `action` method:
+Bạn cũng có thể tạo redirect tới [action của controller](/docs/{{version}}/controllers). Hãy truyền controller và tên action vào phương thức `action`:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -268,7 +268,7 @@ use App\Http\Controllers\UserController;
 return redirect()->action([UserController::class, 'index']);
 ```
 
-If your controller route requires parameters, you may pass them as the second argument to the `action` method:
+Nếu route của controller yêu cầu tham số, bạn có thể truyền chúng làm đối số thứ hai của `action`:
 
 ```php
 return redirect()->action(
@@ -277,18 +277,18 @@ return redirect()->action(
 ```
 
 <a name="redirecting-external-domains"></a>
-### Redirecting to External Domains
+### Chuyển hướng đến domain bên ngoài
 
-Sometimes you may need to redirect to a domain outside of your application. You may do so by calling the `away` method, which creates a `RedirectResponse` without any additional URL encoding, validation, or verification:
+Đôi khi bạn cần chuyển hướng tới một domain bên ngoài ứng dụng. Có thể dùng phương thức `away`; phương thức này tạo `RedirectResponse` mà không thực hiện thêm URL encoding, validation hoặc verification:
 
 ```php
 return redirect()->away('https://www.google.com');
 ```
 
 <a name="redirecting-with-flashed-session-data"></a>
-### Redirecting With Flashed Session Data
+### Chuyển hướng kèm dữ liệu flash trong session
 
-Redirecting to a new URL and [flashing data to the session](/docs/{{version}}/session#flash-data) are usually done at the same time. Typically, this is done after successfully performing an action when you flash a success message to the session. For convenience, you may create a `RedirectResponse` instance and flash data to the session in a single, fluent method chain:
+Chuyển hướng tới URL mới và [flash dữ liệu vào session](/docs/{{version}}/session#flash-data) thường được thực hiện cùng lúc. Trường hợp phổ biến là sau khi một thao tác thành công, ứng dụng flash thông báo thành công vào session. Laravel cho phép tạo `RedirectResponse` và flash dữ liệu trong cùng một chuỗi fluent call:
 
 ```php
 Route::post('/user/profile', function () {
@@ -298,7 +298,7 @@ Route::post('/user/profile', function () {
 });
 ```
 
-After the user is redirected, you may display the flashed message from the [session](/docs/{{version}}/session). For example, using [Blade syntax](/docs/{{version}}/blade):
+Sau khi người dùng được chuyển hướng, bạn có thể hiển thị thông báo đã flash từ [session](/docs/{{version}}/session). Ví dụ với [cú pháp Blade](/docs/{{version}}/blade):
 
 ```blade
 @if (session('status'))
@@ -309,23 +309,23 @@ After the user is redirected, you may display the flashed message from the [sess
 ```
 
 <a name="redirecting-with-input"></a>
-#### Redirecting With Input
+#### Chuyển hướng kèm input
 
-You may use the `withInput` method provided by the `RedirectResponse` instance to flash the current request's input data to the session before redirecting the user to a new location. This is typically done if the user has encountered a validation error. Once the input has been flashed to the session, you may easily [retrieve it](/docs/{{version}}/requests#retrieving-old-input) during the next request to repopulate the form:
+Bạn có thể dùng `withInput` của `RedirectResponse` để flash dữ liệu input của request hiện tại vào session trước khi chuyển hướng. Cách này thường được dùng khi validation thất bại. Sau khi input được flash vào session, request kế tiếp có thể dễ dàng [lấy lại dữ liệu đó](/docs/{{version}}/requests#retrieving-old-input) để điền lại form:
 
 ```php
 return back()->withInput();
 ```
 
 <a name="other-response-types"></a>
-## Other Response Types
+## Các loại response khác
 
-The `response` helper may be used to generate other types of response instances. When the `response` helper is called without arguments, an implementation of the `Illuminate\Contracts\Routing\ResponseFactory` [contract](/docs/{{version}}/contracts) is returned. This contract provides several helpful methods for generating responses.
+Helper `response` có thể tạo nhiều loại response khác. Khi gọi `response` không có đối số, Laravel trả về một implementation của [contract](/docs/{{version}}/contracts) `Illuminate\Contracts\Routing\ResponseFactory`. Contract này cung cấp nhiều phương thức hữu ích để tạo response.
 
 <a name="view-responses"></a>
-### View Responses
+### View response
 
-If you need control over the response's status and headers but also need to return a [view](/docs/{{version}}/views) as the response's content, you should use the `view` method:
+Nếu cần kiểm soát status code và header của response, đồng thời muốn dùng một [view](/docs/{{version}}/views) làm nội dung response, hãy sử dụng phương thức `view`:
 
 ```php
 return response()
@@ -333,12 +333,12 @@ return response()
     ->header('Content-Type', $type);
 ```
 
-Of course, if you do not need to pass a custom HTTP status code or custom headers, you may use the global `view` helper function.
+Nếu không cần HTTP status code hoặc header tùy chỉnh, bạn có thể dùng trực tiếp helper toàn cục `view`.
 
 <a name="json-responses"></a>
-### JSON Responses
+### JSON response
 
-The `json` method will automatically set the `Content-Type` header to `application/json`, as well as convert the given array to JSON using the `json_encode` PHP function:
+Phương thức `json` tự động đặt header `Content-Type` thành `application/json`, đồng thời chuyển mảng được cung cấp thành JSON bằng hàm PHP `json_encode`:
 
 ```php
 return response()->json([
@@ -347,7 +347,7 @@ return response()->json([
 ]);
 ```
 
-If you would like to create a JSONP response, you may use the `json` method in combination with the `withCallback` method:
+Nếu muốn tạo JSONP response, bạn có thể kết hợp phương thức `json` với `withCallback`:
 
 ```php
 return response()
@@ -356,9 +356,9 @@ return response()
 ```
 
 <a name="file-downloads"></a>
-### File Downloads
+### Tải file
 
-The `download` method may be used to generate a response that forces the user's browser to download the file at the given path. The `download` method accepts a filename as the second argument to the method, which will determine the filename that is seen by the user downloading the file. Finally, you may pass an array of HTTP headers as the third argument to the method:
+Phương thức `download` tạo response buộc trình duyệt tải file tại đường dẫn được chỉ định. Đối số thứ hai là tên file mà người dùng sẽ thấy khi tải xuống; đối số thứ ba, nếu có, là một mảng HTTP header:
 
 ```php
 return response()->download($pathToFile);
@@ -367,12 +367,12 @@ return response()->download($pathToFile, $name, $headers);
 ```
 
 > [!WARNING]
-> Symfony HttpFoundation, which manages file downloads, requires the file being downloaded to have an ASCII filename.
+> Symfony HttpFoundation, thành phần xử lý việc tải file, yêu cầu tên file tải xuống phải sử dụng ký tự ASCII.
 
 <a name="file-responses"></a>
-### File Responses
+### File response
 
-The `file` method may be used to display a file, such as an image or PDF, directly in the user's browser instead of initiating a download. This method accepts the absolute path to the file as its first argument and an array of headers as its second argument:
+Phương thức `file` cho phép hiển thị trực tiếp một file, chẳng hạn ảnh hoặc PDF, trong trình duyệt thay vì bắt đầu tải xuống. Đối số thứ nhất là đường dẫn tuyệt đối tới file, đối số thứ hai là một mảng header:
 
 ```php
 return response()->file($pathToFile);
@@ -381,9 +381,9 @@ return response()->file($pathToFile, $headers);
 ```
 
 <a name="streamed-responses"></a>
-## Streamed Responses
+## Streamed response
 
-By streaming data to the client as it is generated, you can significantly reduce memory usage and improve performance, especially for very large responses. Streamed responses allow the client to begin processing data before the server has finished sending it:
+Bằng cách stream dữ liệu tới client ngay khi dữ liệu được tạo ra, bạn có thể giảm đáng kể mức sử dụng bộ nhớ và cải thiện hiệu năng, đặc biệt với response rất lớn. Streamed response cho phép client bắt đầu xử lý dữ liệu trước khi server gửi xong toàn bộ response:
 
 ```php
 Route::get('/stream', function () {
@@ -398,7 +398,7 @@ Route::get('/stream', function () {
 });
 ```
 
-For convenience, if the closure you provide to the `stream` method returns a [Generator](https://www.php.net/manual/en/language.generators.overview.php), Laravel will automatically flush the output buffer between strings returned by the generator, as well as disable Nginx output buffering:
+Nếu closure truyền vào `stream` trả về một [Generator](https://www.php.net/manual/en/language.generators.overview.php), Laravel sẽ tự động flush output buffer giữa các chuỗi do generator trả về, đồng thời tắt output buffering của Nginx:
 
 ```php
 Route::post('/chat', function () {
@@ -413,9 +413,9 @@ Route::post('/chat', function () {
 ```
 
 <a name="consuming-streamed-responses"></a>
-### Consuming Streamed Responses
+### Tiêu thụ streamed response
 
-Streamed responses may be consumed using Laravel's `stream` npm package, which provides a convenient API for interacting with Laravel response and event streams. To get started, install the `@laravel/stream-react`, `@laravel/stream-vue`, or `@laravel/stream-svelte` package:
+Streamed response có thể được tiêu thụ bằng package npm `stream` của Laravel, cung cấp API thuận tiện để tương tác với response stream và event stream của Laravel. Trước tiên, hãy cài `@laravel/stream-react`, `@laravel/stream-vue` hoặc `@laravel/stream-svelte`:
 
 ```shell tab=React
 npm install @laravel/stream-react
@@ -429,7 +429,7 @@ npm install @laravel/stream-vue
 npm install @laravel/stream-svelte
 ```
 
-Then, `useStream` may be used to consume the event stream. After providing your stream URL, the hook will automatically update the `data` with the concatenated response as content is returned from your Laravel application:
+Sau đó, bạn có thể dùng `useStream` để tiêu thụ stream. Khi cung cấp URL của stream, hook sẽ tự động cập nhật `data` bằng nội dung response được nối dần khi ứng dụng Laravel trả dữ liệu về:
 
 ```tsx tab=React
 import { useStream } from "@laravel/stream-react";
@@ -502,12 +502,12 @@ const sendMessage = () => {
 </div>
 ```
 
-When sending data back to the stream via `send`, the active connection to the stream is canceled before sending the new data. All requests are sent as JSON `POST` requests.
+Khi gửi dữ liệu trở lại stream qua `send`, kết nối stream đang hoạt động sẽ bị hủy trước khi dữ liệu mới được gửi. Tất cả request đều được gửi dưới dạng JSON `POST`.
 
 > [!WARNING]
-> Since the `useStream` hook makes a `POST` request to your application, a valid CSRF token is required. The easiest way to provide the CSRF token is to [include it via a meta tag in your application layout's head](/docs/{{version}}/csrf#csrf-x-csrf-token).
+> Vì hook `useStream` gửi `POST` request tới ứng dụng, request cần CSRF token hợp lệ. Cách đơn giản nhất là [khai báo token qua meta tag trong phần head của layout ứng dụng](/docs/{{version}}/csrf#csrf-x-csrf-token).
 
-The second argument given to `useStream` is an options object that you may use to customize the stream consumption behavior. The default values for this object are shown below:
+Đối số thứ hai của `useStream` là một object tùy chọn để điều chỉnh hành vi tiêu thụ stream. Các giá trị mặc định của object này như sau:
 
 ```tsx tab=React
 import { useStream } from "@laravel/stream-react";
@@ -571,9 +571,9 @@ const stream = useStream("chat", {
 <div>{$stream.data}</div>
 ```
 
-`onResponse` is triggered after a successful initial response from the stream and the raw [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) is passed to the callback. `onData` is called as each chunk is received - the current chunk is passed to the callback. `onFinish` is called when a stream has finished and when an error is thrown during the fetch / read cycle.
+`onResponse` được kích hoạt sau khi nhận thành công response ban đầu từ stream và callback nhận [Response](https://developer.mozilla.org/en-US/docs/Web/API/Response) nguyên bản. `onData` được gọi mỗi khi nhận một chunk và callback nhận chính chunk hiện tại. `onFinish` được gọi khi stream kết thúc, cũng như khi phát sinh lỗi trong chu kỳ fetch / read.
 
-By default, a request is not made to the stream on initialization. You may pass an initial payload to the stream by using the `initialInput` option:
+Mặc định, hook không gửi request tới stream ngay khi khởi tạo. Bạn có thể cung cấp payload ban đầu thông qua tùy chọn `initialInput`:
 
 ```tsx tab=React
 import { useStream } from "@laravel/stream-react";
@@ -619,7 +619,7 @@ const stream = useStream("chat", {
 <div>{$stream.data}</div>
 ```
 
-To cancel a stream manually, you may use the `cancel` method returned from the hook:
+Để hủy stream thủ công, hãy dùng phương thức `cancel` do hook trả về:
 
 ```tsx tab=React
 import { useStream } from "@laravel/stream-react";
@@ -664,7 +664,7 @@ const stream = useStream("chat");
 </div>
 ```
 
-Each time the `useStream` hook is used, a random `id` is generated to identify the stream. This is sent back to the server with each request in the `X-STREAM-ID` header. When consuming the same stream from multiple components, you can read and write to the stream by providing your own `id`:
+Mỗi lần dùng hook `useStream`, Laravel tạo một `id` ngẫu nhiên để định danh stream. ID này được gửi tới server trong header `X-STREAM-ID` của mỗi request. Khi nhiều component cùng sử dụng một stream, bạn có thể đọc và ghi vào cùng stream bằng cách cung cấp `id` của riêng mình:
 
 ```tsx tab=React
 // App.tsx
@@ -765,9 +765,9 @@ const stream = useStream("chat", { id });
 ```
 
 <a name="streamed-json-responses"></a>
-### Streamed JSON Responses
+### Streamed JSON response
 
-If you need to stream JSON data incrementally, you may utilize the `streamJson` method. This method is especially useful for large datasets that need to be sent progressively to the browser in a format that can be easily parsed by JavaScript:
+Nếu cần stream dữ liệu JSON theo từng phần, bạn có thể dùng `streamJson`. Phương thức này đặc biệt hữu ích với dataset lớn cần được gửi dần tới trình duyệt dưới định dạng JavaScript có thể parse thuận tiện:
 
 ```php
 use App\Models\User;
@@ -779,7 +779,7 @@ Route::get('/users.json', function () {
 });
 ```
 
-The `useJsonStream` hook is identical to the [useStream hook](#consuming-streamed-responses) except that it will attempt to parse the data as JSON once it has finished streaming:
+Hook `useJsonStream` hoạt động giống [hook `useStream`](#consuming-streamed-responses), ngoại trừ việc nó sẽ cố gắng parse dữ liệu thành JSON sau khi quá trình stream hoàn tất:
 
 ```tsx tab=React
 import { useJsonStream } from "@laravel/stream-react";
@@ -871,9 +871,9 @@ const loadUsers = () => {
 ```
 
 <a name="event-streams"></a>
-### Event Streams (SSE)
+### Event stream (SSE)
 
-The `eventStream` method may be used to return a server-sent events (SSE) streamed response using the `text/event-stream` content type. The `eventStream` method accepts a closure which should [yield](https://www.php.net/manual/en/language.generators.overview.php) responses to the stream as the responses become available:
+Phương thức `eventStream` dùng để trả về streamed response theo chuẩn Server-Sent Events (SSE) với content type `text/event-stream`. `eventStream` nhận một closure; closure này nên [yield](https://www.php.net/manual/en/language.generators.overview.php) từng response vào stream ngay khi chúng sẵn sàng:
 
 ```php
 Route::get('/chat', function () {
@@ -887,7 +887,7 @@ Route::get('/chat', function () {
 });
 ```
 
-If you would like to customize the name of the event, you may yield an instance of the `StreamedEvent` class:
+Nếu muốn tùy chỉnh tên event, bạn có thể yield một đối tượng của lớp `StreamedEvent`:
 
 ```php
 use Illuminate\Http\StreamedEvent;
@@ -899,9 +899,9 @@ yield new StreamedEvent(
 ```
 
 <a name="consuming-event-streams"></a>
-#### Consuming Event Streams
+#### Tiêu thụ event stream
 
-Event streams may be consumed using Laravel's `stream` npm package, which provides a convenient API for interacting with Laravel event streams. To get started, install the `@laravel/stream-react`, `@laravel/stream-vue`, or `@laravel/stream-svelte` package:
+Event stream có thể được tiêu thụ bằng package npm `stream` của Laravel, cung cấp API thuận tiện để tương tác với Laravel event stream. Trước tiên, hãy cài `@laravel/stream-react`, `@laravel/stream-vue` hoặc `@laravel/stream-svelte`:
 
 ```shell tab=React
 npm install @laravel/stream-react
@@ -915,7 +915,7 @@ npm install @laravel/stream-vue
 npm install @laravel/stream-svelte
 ```
 
-Then, `useEventStream` may be used to consume the event stream. After providing your stream URL, the hook will automatically update the `message` with the concatenated response as messages are returned from your Laravel application:
+Sau đó, bạn có thể dùng `useEventStream` để tiêu thụ event stream. Khi cung cấp URL của stream, hook sẽ tự động cập nhật `message` bằng các response được nối lại khi ứng dụng Laravel trả message về:
 
 ```jsx tab=React
 import { useEventStream } from "@laravel/stream-react";
@@ -949,7 +949,7 @@ const eventStream = useEventStream("/chat");
 <div>{$eventStream.message}</div>
 ```
 
-The second argument given to `useEventStream` is an options object that you may use to customize the stream consumption behavior. The default values for this object are shown below:
+Đối số thứ hai của `useEventStream` là một object tùy chọn để điều chỉnh cách tiêu thụ stream. Các giá trị mặc định được trình bày bên dưới:
 
 ```jsx tab=React
 import { useEventStream } from "@laravel/stream-react";
@@ -1017,7 +1017,7 @@ const eventStream = useEventStream("/chat", {
 </script>
 ```
 
-Event streams may also be manually consumed via an [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource) object by your application's frontend. The `eventStream` method will automatically send a `</stream>` update to the event stream when the stream is complete:
+Frontend của ứng dụng cũng có thể tự tiêu thụ event stream bằng đối tượng [EventSource](https://developer.mozilla.org/en-US/docs/Web/API/EventSource). Khi stream hoàn tất, phương thức `eventStream` sẽ tự động gửi bản cập nhật `</stream>` vào event stream:
 
 ```js
 const source = new EventSource('/chat');
@@ -1033,7 +1033,7 @@ source.addEventListener('update', (event) => {
 });
 ```
 
-To customize the final event that is sent to the event stream, you may provide a `StreamedEvent` instance to the `eventStream` method's `endStreamWith` argument:
+Để tùy chỉnh event cuối cùng được gửi vào event stream, hãy truyền một đối tượng `StreamedEvent` vào đối số `endStreamWith` của phương thức `eventStream`:
 
 ```php
 return response()->eventStream(function () {
@@ -1042,9 +1042,9 @@ return response()->eventStream(function () {
 ```
 
 <a name="streamed-downloads"></a>
-### Streamed Downloads
+### Tải xuống dạng stream
 
-Sometimes you may wish to turn the string response of a given operation into a downloadable response without having to write the contents of the operation to disk. You may use the `streamDownload` method in this scenario. This method accepts a callback, filename, and an optional array of headers as its arguments:
+Đôi khi bạn muốn biến chuỗi kết quả của một thao tác thành response có thể tải xuống mà không cần ghi nội dung đó ra đĩa. Trong trường hợp này, hãy dùng `streamDownload`. Phương thức nhận callback, tên file và một mảng header tùy chọn:
 
 ```php
 use App\Services\GitHub;
@@ -1057,9 +1057,9 @@ return response()->streamDownload(function () {
 ```
 
 <a name="response-macros"></a>
-## Response Macros
+## Response macro
 
-If you would like to define a custom response that you can re-use in a variety of your routes and controllers, you may use the `macro` method on the `Response` facade. Typically, you should call this method from the `boot` method of one of your application's [service providers](/docs/{{version}}/providers), such as the `App\Providers\AppServiceProvider` service provider:
+Nếu muốn định nghĩa một response tùy chỉnh có thể tái sử dụng trong nhiều route và controller, bạn có thể dùng phương thức `macro` trên facade `Response`. Thông thường, phương thức này nên được gọi trong `boot` của một [service provider](/docs/{{version}}/providers), chẳng hạn `App\Providers\AppServiceProvider`:
 
 ```php
 <?php
@@ -1083,11 +1083,13 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-The `macro` function accepts a name as its first argument and a closure as its second argument. The macro's closure will be executed when calling the macro name from a `ResponseFactory` implementation or the `response` helper:
+Hàm `macro` nhận tên macro làm đối số thứ nhất và closure làm đối số thứ hai. Closure của macro sẽ được thực thi khi gọi tên macro từ một implementation của `ResponseFactory` hoặc từ helper `response`:
 
 ```php
 return response()->caps('foo');
 ```
+
+---
 
 ## Tài liệu chính thức
 

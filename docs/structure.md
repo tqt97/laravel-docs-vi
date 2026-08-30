@@ -1,180 +1,180 @@
-# Directory Structure
+# Cấu trúc thư mục
 
-- [Introduction](#introduction)
-- [The Root Directory](#the-root-directory)
-    - [The `app` Directory](#the-root-app-directory)
-    - [The `bootstrap` Directory](#the-bootstrap-directory)
-    - [The `config` Directory](#the-config-directory)
-    - [The `database` Directory](#the-database-directory)
-    - [The `public` Directory](#the-public-directory)
-    - [The `resources` Directory](#the-resources-directory)
-    - [The `routes` Directory](#the-routes-directory)
-    - [The `storage` Directory](#the-storage-directory)
-    - [The `tests` Directory](#the-tests-directory)
-    - [The `vendor` Directory](#the-vendor-directory)
-- [The App Directory](#the-app-directory)
-    - [The `Broadcasting` Directory](#the-broadcasting-directory)
-    - [The `Console` Directory](#the-console-directory)
-    - [The `Events` Directory](#the-events-directory)
-    - [The `Exceptions` Directory](#the-exceptions-directory)
-    - [The `Http` Directory](#the-http-directory)
-    - [The `Jobs` Directory](#the-jobs-directory)
-    - [The `Listeners` Directory](#the-listeners-directory)
-    - [The `Mail` Directory](#the-mail-directory)
-    - [The `Models` Directory](#the-models-directory)
-    - [The `Notifications` Directory](#the-notifications-directory)
-    - [The `Policies` Directory](#the-policies-directory)
-    - [The `Providers` Directory](#the-providers-directory)
-    - [The `Rules` Directory](#the-rules-directory)
+- [Giới thiệu](#introduction)
+- [Thư mục gốc](#the-root-directory)
+    - [Thư mục `app`](#the-root-app-directory)
+    - [Thư mục `bootstrap`](#the-bootstrap-directory)
+    - [Thư mục `config`](#the-config-directory)
+    - [Thư mục `database`](#the-database-directory)
+    - [Thư mục `public`](#the-public-directory)
+    - [Thư mục `resources`](#the-resources-directory)
+    - [Thư mục `routes`](#the-routes-directory)
+    - [Thư mục `storage`](#the-storage-directory)
+    - [Thư mục `tests`](#the-tests-directory)
+    - [Thư mục `vendor`](#the-vendor-directory)
+- [Thư mục App](#the-app-directory)
+    - [Thư mục `Broadcasting`](#the-broadcasting-directory)
+    - [Thư mục `Console`](#the-console-directory)
+    - [Thư mục `Events`](#the-events-directory)
+    - [Thư mục `Exceptions`](#the-exceptions-directory)
+    - [Thư mục `Http`](#the-http-directory)
+    - [Thư mục `Jobs`](#the-jobs-directory)
+    - [Thư mục `Listeners`](#the-listeners-directory)
+    - [Thư mục `Mail`](#the-mail-directory)
+    - [Thư mục `Models`](#the-models-directory)
+    - [Thư mục `Notifications`](#the-notifications-directory)
+    - [Thư mục `Policies`](#the-policies-directory)
+    - [Thư mục `Providers`](#the-providers-directory)
+    - [Thư mục `Rules`](#the-rules-directory)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-The default Laravel application structure is intended to provide a great starting point for both large and small applications. But you are free to organize your application however you like. Laravel imposes almost no restrictions on where any given class is located - as long as Composer can autoload the class.
+Cấu trúc mặc định của ứng dụng Laravel được thiết kế để trở thành điểm khởi đầu phù hợp cho cả ứng dụng nhỏ lẫn ứng dụng quy mô lớn. Tuy nhiên, bạn hoàn toàn có thể tổ chức ứng dụng theo cách phù hợp với dự án. Laravel gần như không áp đặt vị trí của một class cụ thể, miễn là Composer có thể autoload class đó.
 
 <a name="the-root-directory"></a>
-## The Root Directory
+## Thư mục gốc
 
 <a name="the-root-app-directory"></a>
-### The App Directory
+### Thư mục App
 
-The `app` directory contains the core code of your application. We'll explore this directory in more detail soon; however, almost all of the classes in your application will be in this directory.
+Thư mục `app` chứa phần code cốt lõi của ứng dụng. Chúng ta sẽ tìm hiểu kỹ hơn về thư mục này ở phần sau; nhìn chung, gần như toàn bộ class của ứng dụng sẽ nằm tại đây.
 
 <a name="the-bootstrap-directory"></a>
-### The Bootstrap Directory
+### Thư mục Bootstrap
 
-The `bootstrap` directory contains the `app.php` file which bootstraps the framework. This directory also houses a `cache` directory which contains framework generated files for performance optimization such as the route and services cache files.
+Thư mục `bootstrap` chứa file `app.php`, chịu trách nhiệm khởi động framework. Thư mục này cũng chứa thư mục `cache`, nơi lưu các file do framework tạo ra nhằm tối ưu hiệu năng, chẳng hạn như route cache và service cache.
 
 <a name="the-config-directory"></a>
-### The Config Directory
+### Thư mục Config
 
-The `config` directory, as the name implies, contains all of your application's configuration files. It's a great idea to read through all of these files and familiarize yourself with all of the options available to you.
+Đúng như tên gọi, thư mục `config` chứa toàn bộ file cấu hình của ứng dụng. Bạn nên đọc qua các file này để làm quen với những tùy chọn cấu hình mà Laravel cung cấp.
 
 <a name="the-database-directory"></a>
-### The Database Directory
+### Thư mục Database
 
-The `database` directory contains your database migrations, model factories, and seeds. If you wish, you may also use this directory to hold an SQLite database.
+Thư mục `database` chứa database migration, model factory và seeder. Nếu muốn, bạn cũng có thể lưu database SQLite trong thư mục này.
 
 <a name="the-public-directory"></a>
-### The Public Directory
+### Thư mục Public
 
-The `public` directory contains the `index.php` file, which is the entry point for all requests entering your application and configures autoloading. This directory also houses your assets such as images, JavaScript, and CSS.
+Thư mục `public` chứa file `index.php`, là entry point cho mọi request đi vào ứng dụng và cũng là nơi cấu hình autoloading. Thư mục này còn chứa các asset công khai như hình ảnh, JavaScript và CSS.
 
 <a name="the-resources-directory"></a>
-### The Resources Directory
+### Thư mục Resources
 
-The `resources` directory contains your [views](/docs/{{version}}/views) as well as your raw, un-compiled assets such as CSS or JavaScript.
+Thư mục `resources` chứa các [view](/docs/{{version}}/views), cùng các asset nguồn chưa được biên dịch như CSS hoặc JavaScript.
 
 <a name="the-routes-directory"></a>
-### The Routes Directory
+### Thư mục Routes
 
-The `routes` directory contains all of the route definitions for your application. By default, two route files are included with Laravel: `web.php` and `console.php`.
+Thư mục `routes` chứa toàn bộ định nghĩa route của ứng dụng. Mặc định, Laravel cung cấp hai file route: `web.php` và `console.php`.
 
-The `web.php` file contains routes that Laravel places in the `web` middleware group, which provides session state, CSRF protection, and cookie encryption. If your application does not offer a stateless, RESTful API then all your routes will most likely be defined in the `web.php` file.
+File `web.php` chứa các route được Laravel đưa vào middleware group `web`, cung cấp session state, CSRF protection và cookie encryption. Nếu ứng dụng không cung cấp RESTful API dạng stateless, phần lớn route của bạn thường sẽ được định nghĩa trong file `web.php`.
 
-The `console.php` file is where you may define all of your closure-based console commands. Each closure is bound to a command instance allowing a simple approach to interacting with each command's IO methods. Even though this file does not define HTTP routes, it defines console based entry points (routes) into your application. You may also [schedule](/docs/{{version}}/scheduling) tasks in the `console.php` file.
+File `console.php` là nơi bạn có thể định nghĩa các console command dựa trên closure. Mỗi closure được bind với một command instance, nhờ đó có thể tương tác thuận tiện với các phương thức I/O của command. Mặc dù file này không định nghĩa HTTP route, nó định nghĩa các entry point dạng console vào ứng dụng. Bạn cũng có thể [lập lịch](/docs/{{version}}/scheduling) tác vụ trong file `console.php`.
 
-Optionally, you may install additional route files for API routes (`api.php`) and broadcasting channels (`channels.php`), via the `install:api` and `install:broadcasting` Artisan commands.
+Nếu cần, bạn có thể cài đặt thêm file route dành cho API (`api.php`) và broadcasting channel (`channels.php`) thông qua các lệnh Artisan `install:api` và `install:broadcasting`.
 
-The `api.php` file contains routes that are intended to be stateless, so requests entering the application through these routes are intended to be authenticated [via tokens](/docs/{{version}}/sanctum) and will not have access to session state.
+File `api.php` chứa các route được thiết kế theo hướng stateless. Vì vậy, request đi vào ứng dụng qua những route này thường được xác thực [bằng token](/docs/{{version}}/sanctum) và không có quyền truy cập session state.
 
-The `channels.php` file is where you may register all of the [event broadcasting](/docs/{{version}}/broadcasting) channels that your application supports.
+File `channels.php` là nơi đăng ký các channel [event broadcasting](/docs/{{version}}/broadcasting) mà ứng dụng hỗ trợ.
 
 <a name="the-storage-directory"></a>
-### The Storage Directory
+### Thư mục Storage
 
-The `storage` directory contains your logs, compiled Blade templates, file based sessions, file caches, and other files generated by the framework. This directory is segregated into `app`, `framework`, and `logs` directories. The `app` directory may be used to store any files generated by your application. The `framework` directory is used to store framework generated files and caches. Finally, the `logs` directory contains your application's log files.
+Thư mục `storage` chứa log, Blade template đã biên dịch, file session, file cache và những file khác do framework tạo ra. Thư mục này được chia thành `app`, `framework` và `logs`. Thư mục `app` có thể dùng để lưu các file do ứng dụng tạo ra. Thư mục `framework` lưu file và cache do framework sinh ra. Cuối cùng, thư mục `logs` chứa các file log của ứng dụng.
 
-The `storage/app/public` directory may be used to store user-generated files, such as profile avatars, that should be publicly accessible. You should create a symbolic link at `public/storage` which points to this directory. You may create the link using the `php artisan storage:link` Artisan command.
+Thư mục `storage/app/public` có thể dùng để lưu các file do người dùng tạo và cần truy cập công khai, chẳng hạn như ảnh đại diện. Bạn nên tạo symbolic link `public/storage` trỏ tới thư mục này. Có thể tạo liên kết bằng lệnh Artisan `php artisan storage:link`.
 
 <a name="the-tests-directory"></a>
-### The Tests Directory
+### Thư mục Tests
 
-The `tests` directory contains your automated tests. Example [Pest](https://pestphp.com) or [PHPUnit](https://phpunit.de/) unit tests and feature tests are provided out of the box. Each test class should be suffixed with the word `Test`. You may run your tests using the `/vendor/bin/pest` or `/vendor/bin/phpunit` commands. Or, if you would like a more detailed and beautiful representation of your test results, you may run your tests using the `php artisan test` Artisan command.
+Thư mục `tests` chứa các automated test của ứng dụng. Laravel cung cấp sẵn các ví dụ unit test và feature test bằng [Pest](https://pestphp.com) hoặc [PHPUnit](https://phpunit.de/). Tên mỗi test class nên kết thúc bằng `Test`. Bạn có thể chạy test bằng `/vendor/bin/pest` hoặc `/vendor/bin/phpunit`. Nếu muốn xem kết quả chi tiết và trực quan hơn, có thể sử dụng lệnh Artisan `php artisan test`.
 
 <a name="the-vendor-directory"></a>
-### The Vendor Directory
+### Thư mục Vendor
 
-The `vendor` directory contains your [Composer](https://getcomposer.org) dependencies.
+Thư mục `vendor` chứa các dependency được cài đặt thông qua [Composer](https://getcomposer.org).
 
 <a name="the-app-directory"></a>
-## The App Directory
+## Thư mục App
 
-The majority of your application is housed in the `app` directory. By default, this directory is namespaced under `App` and is autoloaded by Composer using the [PSR-4 autoloading standard](https://www.php-fig.org/psr/psr-4/).
+Phần lớn code của ứng dụng nằm trong thư mục `app`. Mặc định, thư mục này sử dụng namespace `App` và được Composer autoload theo [chuẩn PSR-4](https://www.php-fig.org/psr/psr-4/).
 
-By default, the `app` directory contains the `Http`, `Models`, and `Providers` directories. However, over time, a variety of other directories will be generated inside the app directory as you use the make Artisan commands to generate classes. For example, the `app/Console` directory will not exist until you execute the `make:command` Artisan command to generate a command class.
+Mặc định, thư mục `app` chứa các thư mục `Http`, `Models` và `Providers`. Theo thời gian, khi bạn sử dụng các lệnh Artisan `make` để tạo class, Laravel sẽ sinh thêm nhiều thư mục khác bên trong `app`. Ví dụ, thư mục `app/Console` chỉ xuất hiện sau khi bạn chạy lệnh Artisan `make:command` để tạo một command class.
 
-Both the `Console` and `Http` directories are further explained in their respective sections below, but think of the `Console` and `Http` directories as providing an API into the core of your application. The HTTP protocol and CLI are both mechanisms to interact with your application, but do not actually contain application logic. In other words, they are two ways of issuing commands to your application. The `Console` directory contains all of your Artisan commands, while the `Http` directory contains your controllers, middleware, and requests.
+Hai thư mục `Console` và `Http` được giải thích chi tiết ở các phần tương ứng bên dưới. Có thể xem chúng như những API để tương tác với phần lõi của ứng dụng. HTTP protocol và CLI đều là cơ chế để giao tiếp với ứng dụng, nhưng bản thân chúng không nên chứa business logic. Nói cách khác, đây là hai cách để gửi lệnh vào ứng dụng. Thư mục `Console` chứa các Artisan command, còn thư mục `Http` chứa controller, middleware và request.
 
 > [!NOTE]
-> Many of the classes in the `app` directory can be generated by Artisan via commands. To review the available commands, run the `php artisan list make` command in your terminal.
+> Nhiều class trong thư mục `app` có thể được tạo bằng Artisan. Để xem các lệnh khả dụng, hãy chạy `php artisan list make` trong terminal.
 
 <a name="the-broadcasting-directory"></a>
-### The Broadcasting Directory
+### Thư mục Broadcasting
 
-The `Broadcasting` directory contains all of the broadcast channel classes for your application. These classes are generated using the `make:channel` command. This directory does not exist by default, but will be created for you when you create your first channel. To learn more about channels, check out the documentation on [event broadcasting](/docs/{{version}}/broadcasting).
+Thư mục `Broadcasting` chứa các broadcast channel class của ứng dụng. Các class này được tạo bằng lệnh `make:channel`. Thư mục này không tồn tại mặc định và sẽ được tạo khi bạn tạo channel đầu tiên. Để tìm hiểu thêm, hãy xem tài liệu về [event broadcasting](/docs/{{version}}/broadcasting).
 
 <a name="the-console-directory"></a>
-### The Console Directory
+### Thư mục Console
 
-The `Console` directory contains all of the custom Artisan commands for your application. These commands may be generated using the `make:command` command.
+Thư mục `Console` chứa các Artisan command tùy chỉnh của ứng dụng. Bạn có thể tạo các command này bằng lệnh `make:command`.
 
 <a name="the-events-directory"></a>
-### The Events Directory
+### Thư mục Events
 
-This directory does not exist by default, but will be created for you by the `event:generate` and `make:event` Artisan commands. The `Events` directory houses [event classes](/docs/{{version}}/events). Events may be used to alert other parts of your application that a given action has occurred, providing a great deal of flexibility and decoupling.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo bởi các lệnh Artisan `event:generate` và `make:event`. Thư mục `Events` chứa các [event class](/docs/{{version}}/events). Event có thể dùng để thông báo cho những phần khác của ứng dụng rằng một hành động cụ thể đã xảy ra, qua đó tăng tính linh hoạt và giảm coupling giữa các thành phần.
 
 <a name="the-exceptions-directory"></a>
-### The Exceptions Directory
+### Thư mục Exceptions
 
-The `Exceptions` directory contains all of the custom exceptions for your application. These exceptions may be generated using the `make:exception` command.
+Thư mục `Exceptions` chứa các custom exception của ứng dụng. Bạn có thể tạo exception bằng lệnh `make:exception`.
 
 <a name="the-http-directory"></a>
-### The Http Directory
+### Thư mục Http
 
-The `Http` directory contains your controllers, middleware, and form requests. Almost all of the logic to handle requests entering your application will be placed in this directory.
+Thư mục `Http` chứa controller, middleware và form request. Gần như toàn bộ logic xử lý request đi vào ứng dụng sẽ được đặt trong thư mục này.
 
 <a name="the-jobs-directory"></a>
-### The Jobs Directory
+### Thư mục Jobs
 
-This directory does not exist by default, but will be created for you if you execute the `make:job` Artisan command. The `Jobs` directory houses the [queueable jobs](/docs/{{version}}/queues) for your application. Jobs may be queued by your application or run synchronously within the current request lifecycle. Jobs that run synchronously during the current request are sometimes referred to as "commands" since they are an implementation of the [command pattern](https://en.wikipedia.org/wiki/Command_pattern).
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:job`. Thư mục `Jobs` chứa các [job có thể đưa vào queue](/docs/{{version}}/queues) của ứng dụng. Job có thể được đưa vào queue hoặc chạy đồng bộ ngay trong request lifecycle hiện tại. Các job chạy đồng bộ trong request hiện tại đôi khi được gọi là "command" vì chúng là một implementation của [Command Pattern](https://en.wikipedia.org/wiki/Command_pattern).
 
 <a name="the-listeners-directory"></a>
-### The Listeners Directory
+### Thư mục Listeners
 
-This directory does not exist by default, but will be created for you if you execute the `event:generate` or `make:listener` Artisan commands. The `Listeners` directory contains the classes that handle your [events](/docs/{{version}}/events). Event listeners receive an event instance and perform logic in response to the event being fired. For example, a `UserRegistered` event might be handled by a `SendWelcomeEmail` listener.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy `event:generate` hoặc `make:listener`. Thư mục `Listeners` chứa các class xử lý [event](/docs/{{version}}/events). Event listener nhận một event instance và thực thi logic để phản hồi event đó. Ví dụ, event `UserRegistered` có thể được xử lý bởi listener `SendWelcomeEmail`.
 
 <a name="the-mail-directory"></a>
-### The Mail Directory
+### Thư mục Mail
 
-This directory does not exist by default, but will be created for you if you execute the `make:mail` Artisan command. The `Mail` directory contains all of your [classes that represent emails](/docs/{{version}}/mail) sent by your application. Mail objects allow you to encapsulate all of the logic of building an email in a single, simple class that may be sent using the `Mail::send` method.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:mail`. Thư mục `Mail` chứa các [class đại diện cho email](/docs/{{version}}/mail) mà ứng dụng gửi đi. Mail object cho phép đóng gói toàn bộ logic xây dựng một email trong một class đơn giản và có thể gửi bằng phương thức `Mail::send`.
 
 <a name="the-models-directory"></a>
-### The Models Directory
+### Thư mục Models
 
-The `Models` directory contains all of your [Eloquent model classes](/docs/{{version}}/eloquent). The Eloquent ORM included with Laravel provides a beautiful, simple ActiveRecord implementation for working with your database. Each database table has a corresponding "Model" which is used to interact with that table. Models allow you to query for data in your tables, as well as insert new records into the table.
+Thư mục `Models` chứa toàn bộ [Eloquent model class](/docs/{{version}}/eloquent). Eloquent ORM đi kèm Laravel cung cấp một implementation Active Record đơn giản và giàu tính biểu đạt để làm việc với database. Mỗi bảng database có một "Model" tương ứng dùng để tương tác với bảng đó. Model cho phép query dữ liệu cũng như chèn record mới vào bảng.
 
 <a name="the-notifications-directory"></a>
-### The Notifications Directory
+### Thư mục Notifications
 
-This directory does not exist by default, but will be created for you if you execute the `make:notification` Artisan command. The `Notifications` directory contains all of the "transactional" [notifications](/docs/{{version}}/notifications) that are sent by your application, such as simple notifications about events that happen within your application. Laravel's notification feature abstracts sending notifications over a variety of drivers such as email, Slack, SMS, or stored in a database.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:notification`. Thư mục `Notifications` chứa các [notification](/docs/{{version}}/notifications) mang tính "transactional" mà ứng dụng gửi đi, chẳng hạn thông báo đơn giản về một sự kiện vừa xảy ra. Tính năng notification của Laravel trừu tượng hóa việc gửi thông báo qua nhiều driver như email, Slack, SMS hoặc lưu vào database.
 
 <a name="the-policies-directory"></a>
-### The Policies Directory
+### Thư mục Policies
 
-This directory does not exist by default, but will be created for you if you execute the `make:policy` Artisan command. The `Policies` directory contains the [authorization policy classes](/docs/{{version}}/authorization) for your application. Policies are used to determine if a user can perform a given action against a resource.
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:policy`. Thư mục `Policies` chứa các [authorization policy class](/docs/{{version}}/authorization) của ứng dụng. Policy được dùng để xác định liệu một user có được phép thực hiện một hành động cụ thể trên resource hay không.
 
 <a name="the-providers-directory"></a>
-### The Providers Directory
+### Thư mục Providers
 
-The `Providers` directory contains all of the [service providers](/docs/{{version}}/providers) for your application. Service providers bootstrap your application by binding services in the service container, registering events, or performing any other tasks to prepare your application for incoming requests.
+Thư mục `Providers` chứa toàn bộ [service provider](/docs/{{version}}/providers) của ứng dụng. Service provider tham gia bootstrap ứng dụng bằng cách bind service vào service container, đăng ký event hoặc thực hiện những tác vụ cần thiết khác để chuẩn bị ứng dụng tiếp nhận request.
 
-In a fresh Laravel application, this directory will already contain the `AppServiceProvider`. You are free to add your own providers to this directory as needed.
+Trong một ứng dụng Laravel mới, thư mục này đã có sẵn `AppServiceProvider`. Bạn có thể bổ sung các provider riêng vào đây khi cần.
 
 <a name="the-rules-directory"></a>
-### The Rules Directory
+### Thư mục Rules
 
-This directory does not exist by default, but will be created for you if you execute the `make:rule` Artisan command. The `Rules` directory contains the custom validation rule objects for your application. Rules are used to encapsulate complicated validation logic in a simple object. For more information, check out the [validation documentation](/docs/{{version}}/validation).
+Thư mục này không tồn tại mặc định, nhưng sẽ được tạo khi bạn chạy lệnh Artisan `make:rule`. Thư mục `Rules` chứa các object đại diện cho custom validation rule của ứng dụng. Rule giúp đóng gói validation logic phức tạp trong một object đơn giản. Để tìm hiểu thêm, hãy xem [tài liệu Validation](/docs/{{version}}/validation).
 
 ## Tài liệu chính thức
 

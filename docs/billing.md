@@ -1,26 +1,26 @@
 # Laravel Cashier (Stripe)
 
-- [Introduction](#introduction)
-- [Upgrading Cashier](#upgrading-cashier)
-- [Installation](#installation)
-- [Configuration](#configuration)
-    - [Billable Model](#billable-model)
-    - [API Keys](#api-keys)
-    - [Currency Configuration](#currency-configuration)
-    - [Tax Configuration](#tax-configuration)
-    - [Logging](#logging)
-    - [Using Custom Models](#using-custom-models)
-- [Quickstart](#quickstart)
-    - [Selling Products](#quickstart-selling-products)
-    - [Selling Subscriptions](#quickstart-selling-subscriptions)
-- [Customers](#customers)
-    - [Retrieving Customers](#retrieving-customers)
-    - [Creating Customers](#creating-customers)
-    - [Updating Customers](#updating-customers)
-    - [Balances](#balances)
-    - [Tax IDs](#tax-ids)
-    - [Syncing Customer Data With Stripe](#syncing-customer-data-with-stripe)
-    - [Billing Portal](#billing-portal)
+- [Giới thiệu](#introduction)
+- [Nâng cấp Cashier](#upgrading-cashier)
+- [Cài đặt](#installation)
+- [Cấu hình](#configuration)
+    - [Model có thể thanh toán](#billable-model)
+    - [Khóa API](#api-keys)
+    - [Cấu hình tiền tệ](#currency-configuration)
+    - [Cấu hình thuế](#tax-configuration)
+    - [Ghi log](#logging)
+    - [Sử dụng model tùy chỉnh](#using-custom-models)
+- [Bắt đầu nhanh](#quickstart)
+    - [Bán sản phẩm](#quickstart-selling-products)
+    - [Bán gói đăng ký](#quickstart-selling-subscriptions)
+- [Khách hàng](#customers)
+    - [Truy xuất khách hàng](#retrieving-customers)
+    - [Tạo khách hàng](#creating-customers)
+    - [Cập nhật khách hàng](#updating-customers)
+    - [Số dư](#balances)
+    - [Mã số thuế](#tax-ids)
+    - [Đồng bộ dữ liệu khách hàng với Stripe](#syncing-customer-data-with-stripe)
+    - [Cổng thanh toán](#billing-portal)
 - [Payment Methods](#payment-methods)
     - [Storing Payment Methods](#storing-payment-methods)
     - [Retrieving Payment Methods](#retrieving-payment-methods)
@@ -72,59 +72,59 @@
 - [Testing](#testing)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-[Laravel Cashier Stripe](https://github.com/laravel/cashier-stripe) provides an expressive, fluent interface to [Stripe's](https://stripe.com) subscription billing services. It handles almost all of the boilerplate subscription billing code you are dreading writing. In addition to basic subscription management, Cashier can handle coupons, swapping subscription, subscription "quantities", cancellation grace periods, and even generate invoice PDFs.
+[Laravel Cashier Stripe](https://github.com/laravel/cashier-stripe) cung cấp một giao diện biểu đạt, fluent để làm việc với các dịch vụ thanh toán theo gói đăng ký của [Stripe](https://stripe.com). Cashier xử lý gần như toàn bộ phần mã thanh toán đăng ký lặp lại mà bạn thường phải tự viết. Ngoài việc quản lý gói đăng ký cơ bản, Cashier còn hỗ trợ coupon, chuyển đổi gói đăng ký, số lượng đăng ký, thời gian gia hạn khi hủy và thậm chí tạo hóa đơn PDF.
 
 <a name="upgrading-cashier"></a>
-## Upgrading Cashier
+## Nâng cấp Cashier
 
-When upgrading to a new version of Cashier, it's important that you carefully review [the upgrade guide](https://github.com/laravel/cashier-stripe/blob/16.x/UPGRADE.md).
+Khi nâng cấp lên phiên bản Cashier mới, điều quan trọng là bạn cần xem xét kỹ [hướng dẫn nâng cấp](https://github.com/laravel/cashier-stripe/blob/16.x/UPGRADE.md).
 
 > [!WARNING]
-> To prevent breaking changes, Cashier uses a fixed Stripe API version. Cashier 16 utilizes Stripe API version `2025-06-30.basil`. The Stripe API version will be updated on minor releases in order to make use of new Stripe features and improvements.
+> Để tránh các breaking change, Cashier sử dụng một phiên bản Stripe API cố định. Cashier 16 sử dụng Stripe API phiên bản `2025-06-30.basil`. Phiên bản Stripe API sẽ được cập nhật trong các bản phát hành minor để tận dụng các tính năng và cải tiến mới của Stripe.
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
-First, install the Cashier package for Stripe using the Composer package manager:
+Trước tiên, hãy cài đặt package Cashier cho Stripe bằng trình quản lý package Composer:
 
 ```shell
 composer require laravel/cashier
 ```
 
-After installing the package, publish Cashier's migrations using the `vendor:publish` Artisan command:
+Sau khi cài đặt package, hãy publish các migration của Cashier bằng lệnh Artisan `vendor:publish`:
 
 ```shell
 php artisan vendor:publish --tag="cashier-migrations"
 ```
 
-Then, migrate your database:
+Sau đó, hãy chạy migration cho cơ sở dữ liệu:
 
 ```shell
 php artisan migrate
 ```
 
-Cashier's migrations will add several columns to your `users` table. They will also create a new `subscriptions` table to hold all of your customer's subscriptions and a `subscription_items` table for subscriptions with multiple prices.
+Các migration của Cashier sẽ thêm một số cột vào bảng `users`. Chúng cũng tạo bảng `subscriptions` mới để lưu toàn bộ gói đăng ký của khách hàng và bảng `subscription_items` dành cho các gói đăng ký có nhiều mức giá.
 
-If you wish, you can also publish Cashier's configuration file using the `vendor:publish` Artisan command:
+Nếu muốn, bạn cũng có thể publish file cấu hình của Cashier bằng lệnh Artisan `vendor:publish`:
 
 ```shell
 php artisan vendor:publish --tag="cashier-config"
 ```
 
-Lastly, to ensure Cashier properly handles all Stripe events, remember to [configure Cashier's webhook handling](#handling-stripe-webhooks).
+Cuối cùng, để bảo đảm Cashier xử lý đúng tất cả sự kiện Stripe, hãy nhớ [cấu hình xử lý webhook của Cashier](#handling-stripe-webhooks).
 
 > [!WARNING]
-> Stripe recommends that any column used for storing Stripe identifiers should be case-sensitive. Therefore, you should ensure the column collation for the `stripe_id` column is set to `utf8_bin` when using MySQL. More information regarding this can be found in the [Stripe documentation](https://stripe.com/docs/upgrades#what-changes-does-stripe-consider-to-be-backwards-compatible).
+> Stripe khuyến nghị mọi cột dùng để lưu định danh Stripe nên phân biệt chữ hoa chữ thường. Vì vậy, khi sử dụng MySQL, bạn nên bảo đảm collation của cột `stripe_id` được đặt thành `utf8_bin`. Bạn có thể xem thêm thông tin trong [tài liệu Stripe](https://stripe.com/docs/upgrades#what-changes-does-stripe-consider-to-be-backwards-compatible).
 
 <a name="configuration"></a>
-## Configuration
+## Cấu hình
 
 <a name="billable-model"></a>
-### Billable Model
+### Model có thể thanh toán
 
-Before using Cashier, add the `Billable` trait to your billable model definition. Typically, this will be the `App\Models\User` model. This trait provides various methods to allow you to perform common billing tasks, such as creating subscriptions, applying coupons, and updating payment method information:
+Trước khi sử dụng Cashier, hãy thêm trait `Billable` vào định nghĩa model có thể thanh toán. Thông thường đây sẽ là model `App\Models\User`. Trait này cung cấp nhiều phương thức để thực hiện các tác vụ thanh toán phổ biến như tạo gói đăng ký, áp dụng coupon và cập nhật thông tin phương thức thanh toán:
 
 ```php
 use Laravel\Cashier\Billable;
@@ -135,7 +135,7 @@ class User extends Authenticatable
 }
 ```
 
-Cashier assumes your billable model will be the `App\Models\User` class that ships with Laravel. If you wish to change this you may specify a different model via the `useCustomerModel` method. This method should typically be called in the `boot` method of your `AppServiceProvider` class:
+Cashier mặc định model có thể thanh toán của bạn là class `App\Models\User` đi kèm Laravel. Nếu muốn thay đổi, bạn có thể chỉ định model khác thông qua phương thức `useCustomerModel`. Phương thức này thường nên được gọi trong phương thức `boot` của class `AppServiceProvider`:
 
 ```php
 use App\Models\Cashier\User;
@@ -151,12 +151,12 @@ public function boot(): void
 ```
 
 > [!WARNING]
-> If you're using a model other than Laravel's supplied `App\Models\User` model, you'll need to publish and alter the [Cashier migrations](#installation) provided to match your alternative model's table name.
+> Nếu sử dụng model khác với `App\Models\User` do Laravel cung cấp, bạn cần publish và chỉnh sửa các [migration của Cashier](#installation) để khớp với tên bảng của model thay thế.
 
 <a name="api-keys"></a>
-### API Keys
+### Khóa API
 
-Next, you should configure your Stripe API keys in your application's `.env` file. You can retrieve your Stripe API keys from the Stripe control panel:
+Tiếp theo, bạn nên cấu hình các khóa Stripe API trong file `.env` của ứng dụng. Bạn có thể lấy các khóa Stripe API từ bảng điều khiển Stripe:
 
 ```ini
 STRIPE_KEY=your-stripe-key
@@ -165,30 +165,30 @@ STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
 ```
 
 > [!WARNING]
-> You should ensure that the `STRIPE_WEBHOOK_SECRET` environment variable is defined in your application's `.env` file, as this variable is used to ensure that incoming webhooks are actually from Stripe.
+> Bạn cần bảo đảm biến môi trường `STRIPE_WEBHOOK_SECRET` được khai báo trong file `.env` của ứng dụng, vì biến này được dùng để xác minh các webhook gửi đến thực sự đến từ Stripe.
 
 <a name="currency-configuration"></a>
-### Currency Configuration
+### Cấu hình tiền tệ
 
-The default Cashier currency is United States Dollars (USD). You can change the default currency by setting the `CASHIER_CURRENCY` environment variable within your application's `.env` file:
+Tiền tệ mặc định của Cashier là đô la Mỹ (USD). Bạn có thể thay đổi tiền tệ mặc định bằng cách đặt biến môi trường `CASHIER_CURRENCY` trong file `.env` của ứng dụng:
 
 ```ini
 CASHIER_CURRENCY=eur
 ```
 
-In addition to configuring Cashier's currency, you may also specify a locale to be used when formatting money values for display on invoices. Internally, Cashier utilizes [PHP's `NumberFormatter` class](https://www.php.net/manual/en/class.numberformatter.php) to set the currency locale:
+Ngoài việc cấu hình tiền tệ của Cashier, bạn cũng có thể chỉ định locale dùng khi định dạng giá trị tiền để hiển thị trên hóa đơn. Bên trong, Cashier sử dụng [class `NumberFormatter` của PHP](https://www.php.net/manual/en/class.numberformatter.php) để thiết lập locale tiền tệ:
 
 ```ini
 CASHIER_CURRENCY_LOCALE=nl_BE
 ```
 
 > [!WARNING]
-> In order to use locales other than `en`, ensure the `ext-intl` PHP extension is installed and configured on your server.
+> Để sử dụng locale khác `en`, hãy bảo đảm extension PHP `ext-intl` đã được cài đặt và cấu hình trên máy chủ.
 
 <a name="tax-configuration"></a>
-### Tax Configuration
+### Cấu hình thuế
 
-Thanks to [Stripe Tax](https://stripe.com/tax), it's possible to automatically calculate taxes for all invoices generated by Stripe. You can enable automatic tax calculation by invoking the `calculateTaxes` method in the `boot` method of your application's `App\Providers\AppServiceProvider` class:
+Nhờ [Stripe Tax](https://stripe.com/tax), bạn có thể tự động tính thuế cho mọi hóa đơn do Stripe tạo. Bạn có thể bật tính thuế tự động bằng cách gọi phương thức `calculateTaxes` trong phương thức `boot` của class `App\Providers\AppServiceProvider`:
 
 ```php
 use Laravel\Cashier\Cashier;
@@ -202,25 +202,25 @@ public function boot(): void
 }
 ```
 
-Once tax calculation has been enabled, any new subscriptions and any one-off invoices that are generated will receive automatic tax calculation.
+Sau khi bật tính thuế, mọi gói đăng ký mới và hóa đơn một lần được tạo sẽ được tự động tính thuế.
 
-For this feature to work properly, your customer's billing details, such as the customer's name, address, and tax ID, need to be synced to Stripe. You may use the [customer data synchronization](#syncing-customer-data-with-stripe) and [Tax ID](#tax-ids) methods offered by Cashier to accomplish this.
+Để tính năng này hoạt động chính xác, thông tin thanh toán của khách hàng như tên, địa chỉ và mã số thuế cần được đồng bộ với Stripe. Bạn có thể sử dụng các phương thức [đồng bộ dữ liệu khách hàng](#syncing-customer-data-with-stripe) và [Tax ID](#tax-ids) do Cashier cung cấp để thực hiện việc này.
 
 <a name="logging"></a>
-### Logging
+### Ghi log
 
-Cashier allows you to specify the log channel to be used when logging fatal Stripe errors. You may specify the log channel by defining the `CASHIER_LOGGER` environment variable within your application's `.env` file:
+Cashier cho phép bạn chỉ định log channel dùng khi ghi lại các lỗi Stripe nghiêm trọng. Bạn có thể chỉ định log channel bằng biến môi trường `CASHIER_LOGGER` trong file `.env` của ứng dụng:
 
 ```ini
 CASHIER_LOGGER=stack
 ```
 
-Exceptions that are generated by API calls to Stripe will be logged through your application's default log channel.
+Các exception phát sinh từ lời gọi API đến Stripe sẽ được ghi qua log channel mặc định của ứng dụng.
 
 <a name="using-custom-models"></a>
-### Using Custom Models
+### Sử dụng model tùy chỉnh
 
-You are free to extend the models used internally by Cashier by defining your own model and extending the corresponding Cashier model:
+Bạn có thể mở rộng các model mà Cashier sử dụng nội bộ bằng cách định nghĩa model riêng và kế thừa model Cashier tương ứng:
 
 ```php
 use Laravel\Cashier\Subscription as CashierSubscription;
@@ -231,7 +231,7 @@ class Subscription extends CashierSubscription
 }
 ```
 
-After defining your model, you may instruct Cashier to use your custom model via the `Laravel\Cashier\Cashier` class. Typically, you should inform Cashier about your custom models in the `boot` method of your application's `App\Providers\AppServiceProvider` class:
+Sau khi định nghĩa model, bạn có thể yêu cầu Cashier sử dụng model tùy chỉnh thông qua class `Laravel\Cashier\Cashier`. Thông thường, bạn nên khai báo các model tùy chỉnh cho Cashier trong phương thức `boot` của class `App\Providers\AppServiceProvider` của ứng dụng:
 
 ```php
 use App\Models\Cashier\Subscription;
@@ -248,17 +248,17 @@ public function boot(): void
 ```
 
 <a name="quickstart"></a>
-## Quickstart
+## Bắt đầu nhanh
 
 <a name="quickstart-selling-products"></a>
-### Selling Products
+### Bán sản phẩm
 
 > [!NOTE]
-> Before utilizing Stripe Checkout, you should define Products with fixed prices in your Stripe dashboard. In addition, you should [configure Cashier's webhook handling](#handling-stripe-webhooks).
+> Trước khi sử dụng Stripe Checkout, bạn nên định nghĩa các Product với mức giá cố định trong Stripe dashboard. Ngoài ra, bạn cần [cấu hình xử lý webhook của Cashier](#handling-stripe-webhooks).
 
-Offering product and subscription billing via your application can be intimidating. However, thanks to Cashier and [Stripe Checkout](https://stripe.com/payments/checkout), you can easily build modern, robust payment integrations.
+Việc cung cấp thanh toán sản phẩm và gói đăng ký trong ứng dụng có thể khá phức tạp. Tuy nhiên, nhờ Cashier và [Stripe Checkout](https://stripe.com/payments/checkout), bạn có thể dễ dàng xây dựng tích hợp thanh toán hiện đại và vững chắc.
 
-To charge customers for non-recurring, single-charge products, we'll utilize Cashier to direct customers to Stripe Checkout, where they will provide their payment details and confirm their purchase. Once the payment has been made via Checkout, the customer will be redirected to a success URL of your choosing within your application:
+Để thu tiền khách hàng cho các sản phẩm thanh toán một lần, không lặp lại, chúng ta sẽ dùng Cashier để chuyển khách hàng đến Stripe Checkout, nơi họ cung cấp thông tin thanh toán và xác nhận giao dịch mua. Sau khi thanh toán qua Checkout hoàn tất, khách hàng sẽ được chuyển hướng đến URL thành công do bạn lựa chọn trong ứng dụng:
 
 ```php
 use Illuminate\Http\Request;
@@ -278,16 +278,16 @@ Route::view('/checkout/success', 'checkout.success')->name('checkout-success');
 Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout-cancel');
 ```
 
-As you can see in the example above, we will utilize Cashier's provided `checkout` method to redirect the customer to Stripe Checkout for a given "price identifier". When using Stripe, "prices" refer to [defined prices for specific products](https://stripe.com/docs/products-prices/how-products-and-prices-work).
+Như ví dụ trên, chúng ta sử dụng phương thức `checkout` do Cashier cung cấp để chuyển khách hàng đến Stripe Checkout với một "price identifier" cụ thể. Trong Stripe, "price" là [mức giá đã được định nghĩa cho một sản phẩm cụ thể](https://stripe.com/docs/products-prices/how-products-and-prices-work).
 
-If necessary, the `checkout` method will automatically create a customer in Stripe and connect that Stripe customer record to the corresponding user in your application's database. After completing the checkout session, the customer will be redirected to a dedicated success or cancellation page where you can display an informational message to the customer.
+Nếu cần, phương thức `checkout` sẽ tự động tạo khách hàng trong Stripe và liên kết bản ghi khách hàng Stripe đó với user tương ứng trong cơ sở dữ liệu của ứng dụng. Sau khi hoàn tất phiên checkout, khách hàng sẽ được chuyển đến trang thành công hoặc hủy riêng, nơi bạn có thể hiển thị thông báo phù hợp.
 
 <a name="providing-meta-data-to-stripe-checkout"></a>
-#### Providing Meta Data to Stripe Checkout
+#### Cung cấp metadata cho Stripe Checkout
 
-When selling products, it's common to keep track of completed orders and purchased products via `Cart` and `Order` models defined by your own application. When redirecting customers to Stripe Checkout to complete a purchase, you may need to provide an existing order identifier so that you can associate the completed purchase with the corresponding order when the customer is redirected back to your application.
+Khi bán sản phẩm, thông thường ứng dụng sẽ theo dõi các đơn hàng đã hoàn tất và sản phẩm đã mua thông qua các model `Cart` và `Order` do chính ứng dụng định nghĩa. Khi chuyển khách hàng đến Stripe Checkout để hoàn tất giao dịch, bạn có thể cần cung cấp định danh của đơn hàng hiện có để liên kết giao dịch đã hoàn tất với đúng đơn hàng khi khách hàng được chuyển trở lại ứng dụng.
 
-To accomplish this, you may provide an array of `metadata` to the `checkout` method. Let's imagine that a pending `Order` is created within our application when a user begins the checkout process. Remember, the `Cart` and `Order` models in this example are illustrative and not provided by Cashier. You are free to implement these concepts based on the needs of your own application:
+Để thực hiện việc này, bạn có thể truyền một mảng `metadata` vào phương thức `checkout`. Giả sử một `Order` ở trạng thái chờ được tạo trong ứng dụng khi user bắt đầu quy trình checkout. Lưu ý rằng các model `Cart` và `Order` trong ví dụ chỉ mang tính minh họa và không được Cashier cung cấp. Bạn có thể tự triển khai các khái niệm này theo nhu cầu của ứng dụng:
 
 ```php
 use App\Models\Cart;
@@ -309,9 +309,9 @@ Route::get('/cart/{cart}/checkout', function (Request $request, Cart $cart) {
 })->name('checkout');
 ```
 
-As you can see in the example above, when a user begins the checkout process, we will provide all of the cart / order's associated Stripe price identifiers to the `checkout` method. Of course, your application is responsible for associating these items with the "shopping cart" or order as a customer adds them. We also provide the order's ID to the Stripe Checkout session via the `metadata` array. Finally, we have added the `CHECKOUT_SESSION_ID` template variable to the Checkout success route. When Stripe redirects customers back to your application, this template variable will automatically be populated with the Checkout session ID.
+Như ví dụ trên, khi user bắt đầu quy trình checkout, chúng ta truyền toàn bộ Stripe price identifier liên quan đến giỏ hàng / đơn hàng vào phương thức `checkout`. Ứng dụng của bạn chịu trách nhiệm liên kết các mục này với "shopping cart" hoặc đơn hàng khi khách hàng thêm chúng. Chúng ta cũng truyền ID của đơn hàng vào phiên Stripe Checkout qua mảng `metadata`. Cuối cùng, biến template `CHECKOUT_SESSION_ID` được thêm vào route thành công của Checkout. Khi Stripe chuyển khách hàng trở lại ứng dụng, biến template này sẽ tự động được điền bằng ID của phiên Checkout.
 
-Next, let's build the Checkout success route. This is the route that users will be redirected to after their purchase has been completed via Stripe Checkout. Within this route, we can retrieve the Stripe Checkout session ID and the associated Stripe Checkout instance in order to access our provided meta data and update our customer's order accordingly:
+Tiếp theo, hãy xây dựng route thành công của Checkout. Đây là route mà user được chuyển đến sau khi giao dịch mua hoàn tất qua Stripe Checkout. Trong route này, chúng ta có thể lấy ID phiên Stripe Checkout và instance Stripe Checkout tương ứng để truy cập metadata đã cung cấp và cập nhật đơn hàng của khách hàng:
 
 ```php
 use App\Models\Order;
@@ -341,19 +341,19 @@ Route::get('/checkout/success', function (Request $request) {
 })->name('checkout-success');
 ```
 
-Please refer to Stripe's documentation for more information on the [data contained by the Checkout session object](https://stripe.com/docs/api/checkout/sessions/object).
+Hãy tham khảo tài liệu Stripe để biết thêm về [dữ liệu có trong đối tượng Checkout session](https://stripe.com/docs/api/checkout/sessions/object).
 
 <a name="quickstart-selling-subscriptions"></a>
-### Selling Subscriptions
+### Bán gói đăng ký
 
 > [!NOTE]
-> Before utilizing Stripe Checkout, you should define Products with fixed prices in your Stripe dashboard. In addition, you should [configure Cashier's webhook handling](#handling-stripe-webhooks).
+> Trước khi sử dụng Stripe Checkout, bạn nên định nghĩa các Product với mức giá cố định trong Stripe dashboard. Ngoài ra, bạn cần [cấu hình xử lý webhook của Cashier](#handling-stripe-webhooks).
 
-Offering product and subscription billing via your application can be intimidating. However, thanks to Cashier and [Stripe Checkout](https://stripe.com/payments/checkout), you can easily build modern, robust payment integrations.
+Việc cung cấp thanh toán sản phẩm và gói đăng ký trong ứng dụng có thể khá phức tạp. Tuy nhiên, nhờ Cashier và [Stripe Checkout](https://stripe.com/payments/checkout), bạn có thể dễ dàng xây dựng tích hợp thanh toán hiện đại và vững chắc.
 
-To learn how to sell subscriptions using Cashier and Stripe Checkout, let's consider the simple scenario of a subscription service with a basic monthly (`price_basic_monthly`) and yearly (`price_basic_yearly`) plan. These two prices could be grouped under a "Basic" product (`pro_basic`) in our Stripe dashboard. In addition, our subscription service might offer an Expert plan as `pro_expert`.
+Để tìm hiểu cách bán gói đăng ký bằng Cashier và Stripe Checkout, hãy xét một dịch vụ đăng ký đơn giản có gói Basic theo tháng (`price_basic_monthly`) và theo năm (`price_basic_yearly`). Hai mức giá này có thể được nhóm dưới một sản phẩm "Basic" (`pro_basic`) trong Stripe dashboard. Ngoài ra, dịch vụ có thể cung cấp gói Expert dưới dạng `pro_expert`.
 
-First, let's discover how a customer can subscribe to our services. Of course, you can imagine the customer might click a "subscribe" button for the Basic plan on our application's pricing page. This button or link should direct the user to a Laravel route which creates the Stripe Checkout session for their chosen plan:
+Trước tiên, hãy xem cách khách hàng đăng ký dịch vụ. Chẳng hạn, khách hàng có thể nhấn nút "subscribe" cho gói Basic trên trang giá của ứng dụng. Nút hoặc liên kết này nên chuyển user đến một route Laravel để tạo phiên Stripe Checkout cho gói họ đã chọn:
 
 ```php
 use Illuminate\Http\Request;
@@ -370,9 +370,9 @@ Route::get('/subscription-checkout', function (Request $request) {
 });
 ```
 
-As you can see in the example above, we will redirect the customer to a Stripe Checkout session which will allow them to subscribe to our Basic plan. After a successful checkout or cancellation, the customer will be redirected back to the URL we provided to the `checkout` method. To know when their subscription has actually started (since some payment methods require a few seconds to process), we'll also need to [configure Cashier's webhook handling](#handling-stripe-webhooks).
+Như ví dụ trên, chúng ta chuyển khách hàng đến một phiên Stripe Checkout để họ đăng ký gói Basic. Sau khi checkout thành công hoặc bị hủy, khách hàng sẽ được chuyển trở lại URL đã truyền cho phương thức `checkout`. Để biết chính xác khi nào gói đăng ký thực sự bắt đầu (vì một số phương thức thanh toán cần vài giây để xử lý), chúng ta cũng cần [cấu hình xử lý webhook của Cashier](#handling-stripe-webhooks).
 
-Now that customers can start subscriptions, we need to restrict certain portions of our application so that only subscribed users can access them. Of course, we can always determine a user's current subscription status via the `subscribed` method provided by Cashier's `Billable` trait:
+Khi khách hàng đã có thể bắt đầu đăng ký, chúng ta cần giới hạn một số phần của ứng dụng để chỉ user đã đăng ký mới truy cập được. Bạn luôn có thể xác định trạng thái đăng ký hiện tại của user thông qua phương thức `subscribed` do trait `Billable` của Cashier cung cấp:
 
 ```blade
 @if ($user->subscribed())
@@ -380,7 +380,7 @@ Now that customers can start subscriptions, we need to restrict certain portions
 @endif
 ```
 
-We can even easily determine if a user is subscribed to specific product or price:
+Chúng ta cũng có thể dễ dàng xác định user có đăng ký một sản phẩm hoặc mức giá cụ thể hay không:
 
 ```blade
 @if ($user->subscribedToProduct('pro_basic'))
@@ -393,9 +393,9 @@ We can even easily determine if a user is subscribed to specific product or pric
 ```
 
 <a name="quickstart-building-a-subscribed-middleware"></a>
-#### Building a Subscribed Middleware
+#### Xây dựng middleware kiểm tra đăng ký
 
-For convenience, you may wish to create a [middleware](/docs/{{version}}/middleware) which determines if the incoming request is from a subscribed user. Once this middleware has been defined, you may easily assign it to a route to prevent users that are not subscribed from accessing the route:
+Để thuận tiện, bạn có thể tạo một [middleware](/docs/{{version}}/middleware) để xác định request gửi đến có thuộc về user đã đăng ký hay không. Sau khi định nghĩa middleware, bạn có thể gán nó cho route để ngăn user chưa đăng ký truy cập route đó:
 
 ```php
 <?php
@@ -423,7 +423,7 @@ class Subscribed
 }
 ```
 
-Once the middleware has been defined, you may assign it to a route:
+Sau khi định nghĩa middleware, bạn có thể gán nó cho một route:
 
 ```php
 use App\Http\Middleware\Subscribed;
@@ -434,11 +434,11 @@ Route::get('/dashboard', function () {
 ```
 
 <a name="quickstart-allowing-customers-to-manage-their-billing-plan"></a>
-#### Allowing Customers to Manage Their Billing Plan
+#### Cho phép khách hàng quản lý gói thanh toán
 
-Of course, customers may want to change their subscription plan to another product or "tier". The easiest way to allow this is by directing customers to Stripe's [Customer Billing Portal](https://stripe.com/docs/no-code/customer-portal), which provides a hosted user interface that allows customers to download invoices, update their payment method, and change subscription plans.
+Khách hàng có thể muốn chuyển gói đăng ký sang một sản phẩm hoặc "tier" khác. Cách đơn giản nhất là chuyển họ đến [Customer Billing Portal](https://stripe.com/docs/no-code/customer-portal) của Stripe, giao diện do Stripe host cho phép khách hàng tải hóa đơn, cập nhật phương thức thanh toán và thay đổi gói đăng ký.
 
-First, define a link or button within your application that directs users to a Laravel route which we will utilize to initiate a Billing Portal session:
+Trước tiên, hãy định nghĩa một liên kết hoặc nút trong ứng dụng để chuyển user đến route Laravel dùng để khởi tạo phiên Billing Portal:
 
 ```blade
 <a href="{{ route('billing') }}">
@@ -446,7 +446,7 @@ First, define a link or button within your application that directs users to a L
 </a>
 ```
 
-Next, let's define the route that initiates a Stripe Customer Billing Portal session and redirects the user to the Portal. The `redirectToBillingPortal` method accepts the URL that users should be returned to when exiting the Portal:
+Tiếp theo, hãy định nghĩa route khởi tạo phiên Stripe Customer Billing Portal và chuyển user đến Portal. Phương thức `redirectToBillingPortal` nhận URL mà user sẽ được chuyển về khi rời Portal:
 
 ```php
 use Illuminate\Http\Request;
@@ -457,15 +457,15 @@ Route::get('/billing', function (Request $request) {
 ```
 
 > [!NOTE]
-> As long as you have configured Cashier's webhook handling, Cashier will automatically keep your application's Cashier-related database tables in sync by inspecting the incoming webhooks from Stripe. So, for example, when a user cancels their subscription via Stripe's Customer Billing Portal, Cashier will receive the corresponding webhook and mark the subscription as "canceled" in your application's database.
+> Miễn là bạn đã cấu hình xử lý webhook của Cashier, Cashier sẽ tự động giữ các bảng cơ sở dữ liệu liên quan đến Cashier trong ứng dụng đồng bộ bằng cách kiểm tra webhook gửi đến từ Stripe. Ví dụ, khi user hủy gói đăng ký qua Stripe Customer Billing Portal, Cashier sẽ nhận webhook tương ứng và đánh dấu gói đăng ký là "canceled" trong cơ sở dữ liệu của ứng dụng.
 
 <a name="customers"></a>
-## Customers
+## Khách hàng
 
 <a name="retrieving-customers"></a>
-### Retrieving Customers
+### Truy xuất khách hàng
 
-You can retrieve a customer by their Stripe ID using the `Cashier::findBillable` method. This method will return an instance of the billable model:
+Bạn có thể truy xuất khách hàng theo Stripe ID bằng phương thức `Cashier::findBillable`. Phương thức này trả về một instance của model có thể thanh toán:
 
 ```php
 use Laravel\Cashier\Cashier;
@@ -474,63 +474,63 @@ $user = Cashier::findBillable($stripeId);
 ```
 
 <a name="creating-customers"></a>
-### Creating Customers
+### Tạo khách hàng
 
-Occasionally, you may wish to create a Stripe customer without beginning a subscription. You may accomplish this using the `createAsStripeCustomer` method:
+Đôi khi bạn có thể muốn tạo khách hàng Stripe mà chưa bắt đầu gói đăng ký. Bạn có thể thực hiện việc này bằng phương thức `createAsStripeCustomer`:
 
 ```php
 $stripeCustomer = $user->createAsStripeCustomer();
 ```
 
-Once the customer has been created in Stripe, you may begin a subscription at a later date. You may provide an optional `$options` array to pass in any additional [customer creation parameters that are supported by the Stripe API](https://stripe.com/docs/api/customers/create):
+Sau khi khách hàng được tạo trong Stripe, bạn có thể bắt đầu gói đăng ký vào thời điểm sau. Bạn có thể truyền mảng `$options` tùy chọn chứa các [tham số tạo khách hàng bổ sung được Stripe API hỗ trợ](https://stripe.com/docs/api/customers/create):
 
 ```php
 $stripeCustomer = $user->createAsStripeCustomer($options);
 ```
 
-You may use the `asStripeCustomer` method if you want to return the Stripe customer object for a billable model:
+Bạn có thể dùng phương thức `asStripeCustomer` nếu muốn trả về đối tượng khách hàng Stripe cho một model có thể thanh toán:
 
 ```php
 $stripeCustomer = $user->asStripeCustomer();
 ```
 
-The `createOrGetStripeCustomer` method may be used if you would like to retrieve the Stripe customer object for a given billable model but are not sure whether the billable model is already a customer within Stripe. This method will create a new customer in Stripe if one does not already exist:
+Có thể dùng phương thức `createOrGetStripeCustomer` khi bạn muốn lấy đối tượng khách hàng Stripe cho một model có thể thanh toán nhưng không chắc model đó đã là khách hàng trong Stripe hay chưa. Phương thức này sẽ tạo khách hàng mới trong Stripe nếu chưa tồn tại:
 
 ```php
 $stripeCustomer = $user->createOrGetStripeCustomer();
 ```
 
 <a name="updating-customers"></a>
-### Updating Customers
+### Cập nhật khách hàng
 
-Occasionally, you may wish to update the Stripe customer directly with additional information. You may accomplish this using the `updateStripeCustomer` method. This method accepts an array of [customer update options supported by the Stripe API](https://stripe.com/docs/api/customers/update):
+Đôi khi bạn có thể muốn cập nhật trực tiếp khách hàng Stripe với thông tin bổ sung. Bạn có thể thực hiện bằng phương thức `updateStripeCustomer`. Phương thức này nhận một mảng [tùy chọn cập nhật khách hàng được Stripe API hỗ trợ](https://stripe.com/docs/api/customers/update):
 
 ```php
 $stripeCustomer = $user->updateStripeCustomer($options);
 ```
 
 <a name="balances"></a>
-### Balances
+### Số dư
 
-Stripe allows you to credit or debit a customer's "balance". Later, this balance will be credited or debited on new invoices. To check the customer's total balance you may use the `balance` method that is available on your billable model. The `balance` method will return a formatted string representation of the balance in the customer's currency:
+Stripe cho phép bạn ghi có hoặc ghi nợ vào "số dư" của khách hàng. Sau đó, số dư này sẽ được ghi có hoặc ghi nợ trên các hóa đơn mới. Để kiểm tra tổng số dư của khách hàng, bạn có thể dùng phương thức `balance` có trên billable model. Phương thức `balance` trả về chuỗi số dư đã được định dạng theo đơn vị tiền tệ của khách hàng:
 
 ```php
 $balance = $user->balance();
 ```
 
-To credit a customer's balance, you may provide a value to the `creditBalance` method. If you wish, you may also provide a description:
+Để ghi có vào số dư của khách hàng, hãy truyền một giá trị cho phương thức `creditBalance`. Nếu muốn, bạn cũng có thể cung cấp mô tả:
 
 ```php
 $user->creditBalance(500, 'Premium customer top-up.');
 ```
 
-Providing a value to the `debitBalance` method will debit the customer's balance:
+Truyền một giá trị cho phương thức `debitBalance` sẽ ghi nợ vào số dư của khách hàng:
 
 ```php
 $user->debitBalance(300, 'Bad usage penalty.');
 ```
 
-The `applyBalance` method will create new customer balance transactions for the customer. You may retrieve these transaction records using the `balanceTransactions` method, which may be useful in order to provide a log of credits and debits for the customer to review:
+Phương thức `applyBalance` sẽ tạo các giao dịch số dư khách hàng mới. Bạn có thể truy xuất các bản ghi giao dịch này bằng phương thức `balanceTransactions`, hữu ích khi cần cung cấp lịch sử ghi có và ghi nợ để khách hàng xem lại:
 
 ```php
 // Retrieve all transactions...
@@ -546,40 +546,40 @@ foreach ($transactions as $transaction) {
 ```
 
 <a name="tax-ids"></a>
-### Tax IDs
+### Mã số thuế
 
-Cashier offers an easy way to manage a customer's tax IDs. For example, the `taxIds` method may be used to retrieve all of the [tax IDs](https://stripe.com/docs/api/customer_tax_ids/object) that are assigned to a customer as a collection:
+Cashier cung cấp cách thuận tiện để quản lý Tax ID của khách hàng. Ví dụ, phương thức `taxIds` có thể được dùng để truy xuất tất cả [Tax ID](https://stripe.com/docs/api/customer_tax_ids/object) đã gán cho khách hàng dưới dạng collection:
 
 ```php
 $taxIds = $user->taxIds();
 ```
 
-You can also retrieve a specific tax ID for a customer by its identifier:
+Bạn cũng có thể truy xuất một Tax ID cụ thể của khách hàng theo identifier:
 
 ```php
 $taxId = $user->findTaxId('txi_belgium');
 ```
 
-You may create a new Tax ID by providing a valid [type](https://stripe.com/docs/api/customer_tax_ids/object#tax_id_object-type) and value to the `createTaxId` method:
+Bạn có thể tạo Tax ID mới bằng cách truyền [type](https://stripe.com/docs/api/customer_tax_ids/object#tax_id_object-type) hợp lệ và value cho phương thức `createTaxId`:
 
 ```php
 $taxId = $user->createTaxId('eu_vat', 'BE0123456789');
 ```
 
-The `createTaxId` method will immediately add the VAT ID to the customer's account. [Verification of VAT IDs is also done by Stripe](https://stripe.com/docs/invoicing/customer/tax-ids#validation); however, this is an asynchronous process. You can be notified of verification updates by subscribing to the `customer.tax_id.updated` webhook event and inspecting [the VAT IDs `verification` parameter](https://stripe.com/docs/api/customer_tax_ids/object#tax_id_object-verification). For more information on handling webhooks, please consult the [documentation on defining webhook handlers](#handling-stripe-webhooks).
+Phương thức `createTaxId` sẽ ngay lập tức thêm VAT ID vào tài khoản khách hàng. [Stripe cũng thực hiện xác minh VAT ID](https://stripe.com/docs/invoicing/customer/tax-ids#validation); tuy nhiên, đây là quá trình bất đồng bộ. Bạn có thể nhận thông báo về cập nhật xác minh bằng cách đăng ký webhook event `customer.tax_id.updated` và kiểm tra [tham số `verification` của VAT ID](https://stripe.com/docs/api/customer_tax_ids/object#tax_id_object-verification). Để biết thêm về xử lý webhook, hãy xem [tài liệu định nghĩa webhook handler](#handling-stripe-webhooks).
 
-You may delete a tax ID using the `deleteTaxId` method:
+Bạn có thể xóa Tax ID bằng phương thức `deleteTaxId`:
 
 ```php
 $user->deleteTaxId('txi_belgium');
 ```
 
 <a name="syncing-customer-data-with-stripe"></a>
-### Syncing Customer Data With Stripe
+### Đồng bộ dữ liệu khách hàng với Stripe
 
-Typically, when your application's users update their name, email address, or other information that is also stored by Stripe, you should inform Stripe of the updates. By doing so, Stripe's copy of the information will be in sync with your application's.
+Thông thường, khi người dùng cập nhật tên, địa chỉ email hoặc thông tin khác cũng được Stripe lưu trữ, bạn nên thông báo các thay đổi này cho Stripe. Nhờ đó, bản sao dữ liệu tại Stripe sẽ đồng bộ với dữ liệu của ứng dụng.
 
-To automate this, you may define an event listener on your billable model that reacts to the model's `updated` event. Then, within your event listener, you may invoke the `syncStripeCustomerDetails` method on the model:
+Để tự động hóa việc này, bạn có thể định nghĩa event listener trên billable model để phản ứng với event `updated` của model. Sau đó, trong event listener, hãy gọi phương thức `syncStripeCustomerDetails` trên model:
 
 ```php
 use App\Models\User;
@@ -598,9 +598,9 @@ protected static function booted(): void
 }
 ```
 
-Now, every time your customer model is updated, its information will be synced with Stripe. For convenience, Cashier will automatically sync your customer's information with Stripe on the initial creation of the customer.
+Từ đây, mỗi khi customer model được cập nhật, thông tin của nó sẽ được đồng bộ với Stripe. Để thuận tiện, Cashier cũng tự động đồng bộ thông tin khách hàng với Stripe khi khách hàng được tạo lần đầu.
 
-You may customize the columns used for syncing customer information to Stripe by overriding a variety of methods provided by Cashier. For example, you may override the `stripeName` method to customize the attribute that should be considered the customer's "name" when Cashier syncs customer information to Stripe:
+Bạn có thể tùy chỉnh các cột dùng để đồng bộ thông tin khách hàng với Stripe bằng cách override nhiều phương thức do Cashier cung cấp. Ví dụ, bạn có thể override phương thức `stripeName` để tùy chỉnh attribute được xem là "tên" khách hàng khi Cashier đồng bộ thông tin với Stripe:
 
 ```php
 /**
@@ -612,12 +612,12 @@ public function stripeName(): string|null
 }
 ```
 
-Similarly, you may override the `stripeEmail`, `stripePhone` (20 character maximum), `stripeAddress`, and `stripePreferredLocales` methods. These methods will sync information to their corresponding customer parameters when [updating the Stripe customer object](https://stripe.com/docs/api/customers/update). If you wish to take total control over the customer information sync process, you may override the `syncStripeCustomerDetails` method.
+Tương tự, bạn có thể override các phương thức `stripeEmail`, `stripePhone` (tối đa 20 ký tự), `stripeAddress` và `stripePreferredLocales`. Các phương thức này sẽ đồng bộ thông tin vào tham số customer tương ứng khi [cập nhật Stripe customer object](https://stripe.com/docs/api/customers/update). Nếu muốn kiểm soát hoàn toàn quá trình đồng bộ thông tin khách hàng, bạn có thể override phương thức `syncStripeCustomerDetails`.
 
 <a name="billing-portal"></a>
-### Billing Portal
+### Cổng thanh toán
 
-Stripe offers [an easy way to set up a billing portal](https://stripe.com/docs/billing/subscriptions/customer-portal) so that your customer can manage their subscription, payment methods, and view their billing history. You can redirect your users to the billing portal by invoking the `redirectToBillingPortal` method on the billable model from a controller or route:
+Stripe cung cấp [cách thuận tiện để thiết lập billing portal](https://stripe.com/docs/billing/subscriptions/customer-portal), cho phép khách hàng quản lý subscription, phương thức thanh toán và xem lịch sử billing. Bạn có thể chuyển hướng người dùng đến billing portal bằng cách gọi phương thức `redirectToBillingPortal` trên billable model từ controller hoặc route:
 
 ```php
 use Illuminate\Http\Request;
@@ -627,7 +627,7 @@ Route::get('/billing-portal', function (Request $request) {
 });
 ```
 
-By default, when the user is finished managing their subscription, they will be able to return to the `home` route of your application via a link within the Stripe billing portal. You may provide a custom URL that the user should return to by passing the URL as an argument to the `redirectToBillingPortal` method:
+Theo mặc định, khi người dùng quản lý subscription xong, họ có thể quay lại route `home` của ứng dụng qua một liên kết trong Stripe billing portal. Bạn có thể cung cấp URL tùy chỉnh để người dùng quay lại bằng cách truyền URL làm đối số cho phương thức `redirectToBillingPortal`:
 
 ```php
 use Illuminate\Http\Request;
@@ -637,26 +637,26 @@ Route::get('/billing-portal', function (Request $request) {
 });
 ```
 
-If you would like to generate the URL to the billing portal without generating an HTTP redirect response, you may invoke the `billingPortalUrl` method:
+Nếu muốn tạo URL đến cổng thanh toán mà không tạo HTTP redirect response, bạn có thể gọi phương thức `billingPortalUrl`:
 
 ```php
 $url = $request->user()->billingPortalUrl(route('billing'));
 ```
 
 <a name="payment-methods"></a>
-## Payment Methods
+## Phương thức thanh toán
 
 <a name="storing-payment-methods"></a>
-### Storing Payment Methods
+### Lưu phương thức thanh toán
 
-In order to create subscriptions or perform "one-off" charges with Stripe, your application will need to securely collect payment details from the customer. The approach used to accomplish this differs based on whether you plan to store the payment method for future subscriptions or immediately process a single charge, so we will examine both below.
+Để tạo gói đăng ký hoặc thực hiện các khoản thanh toán "một lần" với Stripe, ứng dụng của bạn cần thu thập thông tin thanh toán của khách hàng một cách an toàn. Cách thực hiện sẽ khác nhau tùy vào việc bạn muốn lưu phương thức thanh toán cho các gói đăng ký trong tương lai hay xử lý ngay một khoản thanh toán đơn lẻ, vì vậy chúng ta sẽ xem xét cả hai trường hợp bên dưới.
 
-Stripe's [Payment Element](https://stripe.com/docs/payments/payment-element) may be used to support multiple payment methods, such as cards, Apple Pay, Google Pay, and iDEAL.
+Bạn có thể sử dụng [Payment Element](https://stripe.com/docs/payments/payment-element) của Stripe để hỗ trợ nhiều phương thức thanh toán như thẻ, Apple Pay, Google Pay và iDEAL.
 
 <a name="payment-element-for-subscriptions"></a>
-#### Payment Element for Subscriptions
+#### Payment Element cho gói đăng ký
 
-First, create a Setup Intent and pass it to your view:
+Trước tiên, hãy tạo một Setup Intent và truyền nó vào view của bạn:
 
 ```php
 return view('subscribe', [
@@ -664,7 +664,7 @@ return view('subscribe', [
 ]);
 ```
 
-Mount the Payment Element using the Setup Intent's `client_secret`:
+Mount Payment Element bằng `client_secret` của Setup Intent:
 
 ```html
 <div id="payment-element"></div>
@@ -697,7 +697,7 @@ Mount the Payment Element using the Setup Intent's `client_secret`:
 </script>
 ```
 
-After Stripe redirects to your `return_url`, the `setup_intent` ID will be available as a query string parameter. You may use this value to retrieve the payment method and create the subscription:
+Sau khi Stripe chuyển hướng về `return_url`, ID `setup_intent` sẽ có trong tham số query string. Bạn có thể dùng giá trị này để truy xuất phương thức thanh toán và tạo gói đăng ký:
 
 ```php
 use Illuminate\Http\Request;
@@ -717,12 +717,12 @@ Route::get('/subscription/complete', function (Request $request) {
 })->name('subscription.complete');
 ```
 
-If you are using the Payment Element to update a customer's default payment method instead of creating a subscription, you may pass the payment method identifier to the [`updateDefaultPaymentMethod`](#updating-the-default-payment-method) method.
+Nếu bạn dùng Payment Element để cập nhật phương thức thanh toán mặc định của khách hàng thay vì tạo gói đăng ký, bạn có thể truyền định danh phương thức thanh toán vào phương thức [`updateDefaultPaymentMethod`](#updating-the-default-payment-method).
 
 <a name="payment-element-for-single-charges"></a>
-#### Payment Element for Single Charges
+#### Payment Element cho khoản thanh toán một lần
 
-For one-off payments, create a Payment Intent using Cashier's `pay` method. Typically, you should store the Payment Intent ID on your application's corresponding order so that the order can be retrieved after Stripe redirects the customer back to your application. The following example assumes your application has an `Order` model with `user_id`, `amount`, `status`, and `stripe_payment_intent_id` columns:
+Đối với khoản thanh toán một lần, hãy tạo Payment Intent bằng phương thức `pay` của Cashier. Thông thường, bạn nên lưu ID Payment Intent vào đơn hàng tương ứng trong ứng dụng để có thể truy xuất đơn hàng sau khi Stripe chuyển hướng khách hàng trở lại ứng dụng. Ví dụ sau giả định ứng dụng có model `Order` với các cột `user_id`, `amount`, `status` và `stripe_payment_intent_id`:
 
 ```php
 use App\Models\Order;
@@ -747,7 +747,7 @@ Route::post('/pay', function (Request $request) {
 });
 ```
 
-Then, mount the Payment Element and confirm the payment:
+Sau đó, mount Payment Element và xác nhận thanh toán:
 
 ```html
 <div id="payment-element"></div>
@@ -780,7 +780,7 @@ Then, mount the Payment Element and confirm the payment:
 </script>
 ```
 
-After the redirect, you may use the `payment_intent` query string parameter to retrieve the corresponding order and Payment Intent. Before fulfilling the order, you should verify that the order belongs to the authenticated customer and that the Payment Intent belongs to the authenticated customer and has succeeded:
+Sau khi chuyển hướng, bạn có thể dùng tham số query string `payment_intent` để truy xuất đơn hàng và Payment Intent tương ứng. Trước khi hoàn tất đơn hàng, bạn nên xác minh rằng đơn hàng thuộc về khách hàng đã xác thực, đồng thời Payment Intent cũng thuộc về khách hàng đó và đã thanh toán thành công:
 
 ```php
 use App\Models\Order;
@@ -808,36 +808,36 @@ Route::get('/payment/complete', function (Request $request) {
 ```
 
 <a name="retrieving-payment-methods"></a>
-### Retrieving Payment Methods
+### Truy xuất phương thức thanh toán
 
-The `paymentMethods` method on the billable model instance returns a collection of `Laravel\Cashier\PaymentMethod` instances:
+Phương thức `paymentMethods` trên instance model có thể thanh toán trả về một collection các instance `Laravel\Cashier\PaymentMethod`:
 
 ```php
 $paymentMethods = $user->paymentMethods();
 ```
 
-By default, this method will return payment methods of every type. To retrieve payment methods of a specific type, you may pass the `type` as an argument to the method:
+Mặc định, phương thức này trả về các phương thức thanh toán thuộc mọi loại. Để truy xuất phương thức thanh toán của một loại cụ thể, bạn có thể truyền `type` làm đối số:
 
 ```php
 $paymentMethods = $user->paymentMethods('sepa_debit');
 ```
 
-To retrieve the customer's default payment method, the `defaultPaymentMethod` method may be used:
+Để truy xuất phương thức thanh toán mặc định của khách hàng, bạn có thể dùng phương thức `defaultPaymentMethod`:
 
 ```php
 $paymentMethod = $user->defaultPaymentMethod();
 ```
 
-You can retrieve a specific payment method that is attached to the billable model using the `findPaymentMethod` method:
+Bạn có thể truy xuất một phương thức thanh toán cụ thể đã gắn với model có thể thanh toán bằng phương thức `findPaymentMethod`:
 
 ```php
 $paymentMethod = $user->findPaymentMethod($paymentMethodId);
 ```
 
 <a name="payment-method-presence"></a>
-### Payment Method Presence
+### Kiểm tra sự tồn tại của phương thức thanh toán
 
-To determine if a billable model has a default payment method attached to their account, invoke the `hasDefaultPaymentMethod` method:
+Để xác định model có thể thanh toán đã có phương thức thanh toán mặc định gắn với tài khoản hay chưa, hãy gọi phương thức `hasDefaultPaymentMethod`:
 
 ```php
 if ($user->hasDefaultPaymentMethod()) {
@@ -845,7 +845,7 @@ if ($user->hasDefaultPaymentMethod()) {
 }
 ```
 
-You may use the `hasPaymentMethod` method to determine if a billable model has at least one payment method attached to their account:
+Bạn có thể dùng phương thức `hasPaymentMethod` để xác định model có thể thanh toán có ít nhất một phương thức thanh toán gắn với tài khoản hay không:
 
 ```php
 if ($user->hasPaymentMethod()) {
@@ -853,7 +853,7 @@ if ($user->hasPaymentMethod()) {
 }
 ```
 
-This method will determine if the billable model has any payment method at all. To determine if a payment method of a specific type exists for the model, you may pass the `type` as an argument to the method:
+Phương thức này xác định model có thể thanh toán có bất kỳ phương thức thanh toán nào hay không. Để kiểm tra một phương thức thanh toán thuộc loại cụ thể có tồn tại cho model hay không, bạn có thể truyền `type` làm đối số:
 
 ```php
 if ($user->hasPaymentMethod('sepa_debit')) {
@@ -862,74 +862,74 @@ if ($user->hasPaymentMethod('sepa_debit')) {
 ```
 
 <a name="updating-the-default-payment-method"></a>
-### Updating the Default Payment Method
+### Cập nhật phương thức thanh toán mặc định
 
-The `updateDefaultPaymentMethod` method may be used to update a customer's default payment method information. This method accepts a Stripe payment method identifier and will assign the new payment method as the default billing payment method:
+Phương thức `updateDefaultPaymentMethod` có thể được dùng để cập nhật thông tin phương thức thanh toán mặc định của khách hàng. Phương thức này nhận định danh phương thức thanh toán của Stripe và gán phương thức mới làm phương thức thanh toán mặc định:
 
 ```php
 $user->updateDefaultPaymentMethod($paymentMethod);
 ```
 
-To sync your default payment method information with the customer's default payment method information in Stripe, you may use the `updateDefaultPaymentMethodFromStripe` method:
+Để đồng bộ thông tin phương thức thanh toán mặc định với thông tin phương thức thanh toán mặc định của khách hàng trên Stripe, bạn có thể dùng phương thức `updateDefaultPaymentMethodFromStripe`:
 
 ```php
 $user->updateDefaultPaymentMethodFromStripe();
 ```
 
 > [!WARNING]
-> The default payment method on a customer can only be used for invoicing and creating new subscriptions. Due to limitations imposed by Stripe, it may not be used for single charges.
+> Phương thức thanh toán mặc định của khách hàng chỉ có thể được dùng để lập hóa đơn và tạo gói đăng ký mới. Do giới hạn của Stripe, phương thức này không thể được dùng cho các khoản thanh toán đơn lẻ.
 
 <a name="adding-payment-methods"></a>
-### Adding Payment Methods
+### Thêm phương thức thanh toán
 
-To add a new payment method, you may call the `addPaymentMethod` method on the billable model, passing the payment method identifier:
+Để thêm phương thức thanh toán mới, bạn có thể gọi phương thức `addPaymentMethod` trên model có thể thanh toán và truyền vào định danh phương thức thanh toán:
 
 ```php
 $user->addPaymentMethod($paymentMethod);
 ```
 
 > [!NOTE]
-> To learn how to retrieve payment method identifiers please review the [payment method storage documentation](#storing-payment-methods).
+> Để tìm hiểu cách truy xuất định danh phương thức thanh toán, hãy xem [tài liệu về lưu phương thức thanh toán](#storing-payment-methods).
 
 <a name="deleting-payment-methods"></a>
-### Deleting Payment Methods
+### Xóa phương thức thanh toán
 
-To delete a payment method, you may call the `delete` method on the `Laravel\Cashier\PaymentMethod` instance you wish to delete:
+Để xóa một phương thức thanh toán, bạn có thể gọi phương thức `delete` trên instance `Laravel\Cashier\PaymentMethod` mà bạn muốn xóa:
 
 ```php
 $paymentMethod->delete();
 ```
 
-The `deletePaymentMethod` method will delete a specific payment method from the billable model:
+Phương thức `deletePaymentMethod` sẽ xóa một phương thức thanh toán cụ thể khỏi model có thể thanh toán:
 
 ```php
 $user->deletePaymentMethod('pm_visa');
 ```
 
-The `deletePaymentMethods` method will delete all of the payment method information for the billable model:
+Phương thức `deletePaymentMethods` sẽ xóa toàn bộ thông tin phương thức thanh toán của model có thể thanh toán:
 
 ```php
 $user->deletePaymentMethods();
 ```
 
-By default, this method will delete payment methods of every type. To delete payment methods of a specific type you can pass the `type` as an argument to the method:
+Mặc định, phương thức này sẽ xóa phương thức thanh toán thuộc mọi loại. Để xóa phương thức thanh toán của một loại cụ thể, bạn có thể truyền `type` làm đối số:
 
 ```php
 $user->deletePaymentMethods('sepa_debit');
 ```
 
 > [!WARNING]
-> If a user has an active subscription, your application should not allow them to delete their default payment method.
+> Nếu người dùng đang có gói đăng ký hoạt động, ứng dụng của bạn không nên cho phép họ xóa phương thức thanh toán mặc định.
 
 <a name="subscriptions"></a>
-## Subscriptions
+## Gói đăng ký
 
-Subscriptions provide a way to set up recurring payments for your customers. Stripe subscriptions managed by Cashier provide support for multiple subscription prices, subscription quantities, trials, and more.
+Gói đăng ký cung cấp cách thiết lập các khoản thanh toán định kỳ cho khách hàng. Các gói đăng ký Stripe do Cashier quản lý hỗ trợ nhiều mức giá, số lượng, thời gian dùng thử và nhiều tính năng khác.
 
 <a name="creating-subscriptions"></a>
-### Creating Subscriptions
+### Tạo gói đăng ký
 
-To create a subscription, first retrieve an instance of your billable model, which typically will be an instance of `App\Models\User`. Once you have retrieved the model instance, you may use the `newSubscription` method to create the model's subscription:
+Để tạo gói đăng ký, trước tiên hãy truy xuất một instance của model có khả năng thanh toán, thường là một instance của `App\Models\User`. Sau khi có instance model, bạn có thể sử dụng phương thức `newSubscription` để tạo gói đăng ký cho model:
 
 ```php
 use Illuminate\Http\Request;
@@ -943,23 +943,23 @@ Route::post('/user/subscribe', function (Request $request) {
 });
 ```
 
-The first argument passed to the `newSubscription` method should be the internal type of the subscription. If your application only offers a single subscription, you might call this `default` or `primary`. This subscription type is only for internal application usage and is not meant to be shown to users. In addition, it should not contain spaces and it should never be changed after creating the subscription. The second argument is the specific price the user is subscribing to. This value should correspond to the price's identifier in Stripe.
+Đối số đầu tiên truyền vào phương thức `newSubscription` phải là loại nội bộ của gói đăng ký. Nếu ứng dụng chỉ cung cấp một gói đăng ký, bạn có thể đặt tên là `default` hoặc `primary`. Loại gói đăng ký này chỉ được dùng nội bộ trong ứng dụng và không nhằm hiển thị cho người dùng. Ngoài ra, giá trị này không được chứa khoảng trắng và không nên thay đổi sau khi gói đăng ký đã được tạo. Đối số thứ hai là price cụ thể mà người dùng đăng ký. Giá trị này phải tương ứng với identifier của price trên Stripe.
 
-The `create` method, which accepts [a Stripe payment method identifier](#storing-payment-methods) or Stripe `PaymentMethod` object, will begin the subscription as well as update your database with the billable model's Stripe customer ID and other relevant billing information.
+Phương thức `create`, nhận [identifier của phương thức thanh toán Stripe](#storing-payment-methods) hoặc object `PaymentMethod` của Stripe, sẽ khởi tạo gói đăng ký đồng thời cập nhật cơ sở dữ liệu với Stripe customer ID của model có khả năng thanh toán và các thông tin thanh toán liên quan khác.
 
 > [!WARNING]
-> Passing a payment method identifier directly to the `create` subscription method will also automatically add it to the user's stored payment methods.
+> Việc truyền trực tiếp identifier của phương thức thanh toán vào phương thức `create` của gói đăng ký cũng sẽ tự động thêm phương thức đó vào danh sách phương thức thanh toán đã lưu của người dùng.
 
 <a name="collecting-recurring-payments-via-invoice-emails"></a>
-#### Collecting Recurring Payments via Invoice Emails
+#### Thu các khoản thanh toán định kỳ qua email hóa đơn
 
-Instead of collecting a customer's recurring payments automatically, you may instruct Stripe to email an invoice to the customer each time their recurring payment is due. Then, the customer may manually pay the invoice once they receive it. The customer does not need to provide a payment method up front when collecting recurring payments via invoices:
+Thay vì tự động thu các khoản thanh toán định kỳ của khách hàng, bạn có thể yêu cầu Stripe gửi hóa đơn qua email cho khách hàng mỗi khi đến hạn thanh toán định kỳ. Sau đó, khách hàng có thể thanh toán hóa đơn thủ công khi nhận được. Khi thu khoản thanh toán định kỳ qua hóa đơn, khách hàng không cần cung cấp phương thức thanh toán từ trước:
 
 ```php
 $user->newSubscription('default', 'price_monthly')->createAndSendInvoice();
 ```
 
-The amount of time a customer has to pay their invoice before their subscription is canceled is determined by the `days_until_due` option. By default, this is 30 days; however, you may provide a specific value for this option if you wish:
+Khoảng thời gian khách hàng có thể thanh toán hóa đơn trước khi gói đăng ký bị hủy được xác định bởi tùy chọn `days_until_due`. Mặc định là 30 ngày; tuy nhiên, bạn có thể cung cấp một giá trị cụ thể cho tùy chọn này:
 
 ```php
 $user->newSubscription('default', 'price_monthly')->createAndSendInvoice([], [
@@ -968,9 +968,9 @@ $user->newSubscription('default', 'price_monthly')->createAndSendInvoice([], [
 ```
 
 <a name="subscription-quantities"></a>
-#### Quantities
+#### Số lượng
 
-If you would like to set a specific [quantity](https://stripe.com/docs/billing/subscriptions/quantities) for the price when creating the subscription, you should invoke the `quantity` method on the subscription builder before creating the subscription:
+Nếu muốn đặt một [số lượng](https://stripe.com/docs/billing/subscriptions/quantities) cụ thể cho price khi tạo gói đăng ký, bạn nên gọi phương thức `quantity` trên subscription builder trước khi tạo gói đăng ký:
 
 ```php
 $user->newSubscription('default', 'price_monthly')
@@ -979,9 +979,9 @@ $user->newSubscription('default', 'price_monthly')
 ```
 
 <a name="additional-details"></a>
-#### Additional Details
+#### Thông tin bổ sung
 
-If you would like to specify additional [customer](https://stripe.com/docs/api/customers/create) or [subscription](https://stripe.com/docs/api/subscriptions/create) options supported by Stripe, you may do so by passing them as the second and third arguments to the `create` method:
+Nếu muốn chỉ định thêm các tùy chọn [customer](https://stripe.com/docs/api/customers/create) hoặc [subscription](https://stripe.com/docs/api/subscriptions/create) mà Stripe hỗ trợ, bạn có thể truyền chúng lần lượt làm đối số thứ hai và thứ ba của phương thức `create`:
 
 ```php
 $user->newSubscription('default', 'price_monthly')->create($paymentMethod, [
@@ -992,9 +992,9 @@ $user->newSubscription('default', 'price_monthly')->create($paymentMethod, [
 ```
 
 <a name="coupons"></a>
-#### Coupons
+#### Coupon
 
-If you would like to apply a coupon when creating the subscription, you may use the `withCoupon` method:
+Nếu muốn áp dụng coupon khi tạo gói đăng ký, bạn có thể sử dụng phương thức `withCoupon`:
 
 ```php
 $user->newSubscription('default', 'price_monthly')
@@ -1002,7 +1002,7 @@ $user->newSubscription('default', 'price_monthly')
     ->create($paymentMethod);
 ```
 
-Or, if you would like to apply a [Stripe promotion code](https://stripe.com/docs/billing/subscriptions/discounts/codes), you may use the `withPromotionCode` method:
+Hoặc, nếu muốn áp dụng [promotion code của Stripe](https://stripe.com/docs/billing/subscriptions/discounts/codes), bạn có thể sử dụng phương thức `withPromotionCode`:
 
 ```php
 $user->newSubscription('default', 'price_monthly')
@@ -1010,7 +1010,7 @@ $user->newSubscription('default', 'price_monthly')
     ->create($paymentMethod);
 ```
 
-The given promotion code ID should be the Stripe API ID assigned to the promotion code and not the customer facing promotion code. If you need to find a promotion code ID based on a given customer facing promotion code, you may use the `findPromotionCode` method:
+Promotion code ID được cung cấp phải là Stripe API ID được gán cho promotion code, không phải mã khuyến mãi hiển thị cho khách hàng. Nếu cần tìm promotion code ID dựa trên mã mà khách hàng nhìn thấy, bạn có thể sử dụng phương thức `findPromotionCode`:
 
 ```php
 // Find a promotion code ID by its customer facing code...
@@ -1020,13 +1020,13 @@ $promotionCode = $user->findPromotionCode('SUMMERSALE');
 $promotionCode = $user->findActivePromotionCode('SUMMERSALE');
 ```
 
-In the example above, the returned `$promotionCode` object is an instance of `Laravel\Cashier\PromotionCode`. This class decorates an underlying `Stripe\PromotionCode` object. You can retrieve the coupon related to the promotion code by invoking the `coupon` method:
+Trong ví dụ trên, object `$promotionCode` được trả về là một instance của `Laravel\Cashier\PromotionCode`. Class này bao bọc object `Stripe\PromotionCode` bên dưới. Bạn có thể truy xuất coupon liên quan đến promotion code bằng cách gọi phương thức `coupon`:
 
 ```php
 $coupon = $user->findPromotionCode('SUMMERSALE')->coupon();
 ```
 
-The coupon instance allows you to determine the discount amount and whether the coupon represents a fixed discount or percentage based discount:
+Instance coupon cho phép bạn xác định mức giảm giá và coupon đó biểu thị mức giảm cố định hay giảm theo phần trăm:
 
 ```php
 if ($coupon->isPercentage()) {
@@ -1036,7 +1036,7 @@ if ($coupon->isPercentage()) {
 }
 ```
 
-You can also retrieve the discounts that are currently applied to a customer or subscription:
+Bạn cũng có thể truy xuất các khoản giảm giá hiện đang được áp dụng cho khách hàng hoặc gói đăng ký:
 
 ```php
 $discount = $billable->discount();
@@ -1044,13 +1044,13 @@ $discount = $billable->discount();
 $discount = $subscription->discount();
 ```
 
-The returned `Laravel\Cashier\Discount` instances decorate an underlying `Stripe\Discount` object instance. You may retrieve the coupon related to this discount by invoking the `coupon` method:
+Các instance `Laravel\Cashier\Discount` được trả về bao bọc instance object `Stripe\Discount` bên dưới. Bạn có thể truy xuất coupon liên quan đến khoản giảm giá này bằng cách gọi phương thức `coupon`:
 
 ```php
 $coupon = $subscription->discount()->coupon();
 ```
 
-If you would like to apply a new coupon or promotion code to a customer or subscription, you may do so via the `applyCoupon` or `applyPromotionCode` methods:
+Nếu muốn áp dụng coupon hoặc promotion code mới cho khách hàng hay gói đăng ký, bạn có thể thực hiện thông qua các phương thức `applyCoupon` hoặc `applyPromotionCode`:
 
 ```php
 $billable->applyCoupon('coupon_id');
@@ -1060,14 +1060,14 @@ $subscription->applyCoupon('coupon_id');
 $subscription->applyPromotionCode('promotion_code_id');
 ```
 
-Remember, you should use the Stripe API ID assigned to the promotion code and not the customer facing promotion code. Only one coupon or promotion code can be applied to a customer or subscription at a given time.
+Hãy nhớ rằng bạn nên sử dụng Stripe API ID được gán cho promotion code, không phải mã khuyến mãi hiển thị cho khách hàng. Tại một thời điểm, chỉ có thể áp dụng một coupon hoặc promotion code cho một khách hàng hay gói đăng ký.
 
-For more info on this subject, please consult the Stripe documentation regarding [coupons](https://stripe.com/docs/billing/subscriptions/coupons) and [promotion codes](https://stripe.com/docs/billing/subscriptions/coupons/codes).
+Để biết thêm thông tin về chủ đề này, hãy tham khảo tài liệu Stripe về [coupon](https://stripe.com/docs/billing/subscriptions/coupons) và [promotion code](https://stripe.com/docs/billing/subscriptions/coupons/codes).
 
 <a name="adding-subscriptions"></a>
-#### Adding Subscriptions
+#### Thêm gói đăng ký
 
-If you would like to add a subscription to a customer who already has a default payment method you may invoke the `add` method on the subscription builder:
+Nếu muốn thêm gói đăng ký cho khách hàng đã có phương thức thanh toán mặc định, bạn có thể gọi phương thức `add` trên subscription builder:
 
 ```php
 use App\Models\User;
@@ -1078,18 +1078,18 @@ $user->newSubscription('default', 'price_monthly')->add();
 ```
 
 <a name="creating-subscriptions-from-the-stripe-dashboard"></a>
-#### Creating Subscriptions From the Stripe Dashboard
+#### Tạo gói đăng ký từ Stripe Dashboard
 
-You may also create subscriptions from the Stripe dashboard itself. When doing so, Cashier will sync newly added subscriptions and assign them a type of `default`. To customize the subscription type that is assigned to dashboard created subscriptions, [define webhook event handlers](#defining-webhook-event-handlers).
+Bạn cũng có thể tạo gói đăng ký trực tiếp từ Stripe Dashboard. Khi đó, Cashier sẽ đồng bộ các gói đăng ký mới được thêm và gán cho chúng loại `default`. Để tùy chỉnh loại gói đăng ký được gán cho các gói tạo từ dashboard, hãy [định nghĩa webhook event handler](#defining-webhook-event-handlers).
 
-In addition, you may only create one type of subscription via the Stripe dashboard. If your application offers multiple subscriptions that use different types, only one type of subscription may be added through the Stripe dashboard.
+Ngoài ra, bạn chỉ có thể tạo một loại gói đăng ký thông qua Stripe Dashboard. Nếu ứng dụng cung cấp nhiều gói đăng ký sử dụng các loại khác nhau, chỉ một loại gói đăng ký có thể được thêm qua Stripe Dashboard.
 
-Finally, you should always make sure to only add one active subscription per type of subscription offered by your application. If a customer has two `default` subscriptions, only the most recently added subscription will be used by Cashier even though both would be synced with your application's database.
+Cuối cùng, bạn nên luôn bảo đảm chỉ thêm một gói đăng ký đang hoạt động cho mỗi loại gói đăng ký mà ứng dụng cung cấp. Nếu khách hàng có hai gói đăng ký `default`, Cashier chỉ sử dụng gói được thêm gần nhất dù cả hai đều được đồng bộ với cơ sở dữ liệu của ứng dụng.
 
 <a name="checking-subscription-status"></a>
-### Checking Subscription Status
+### Kiểm tra trạng thái gói đăng ký
 
-Once a customer is subscribed to your application, you may easily check their subscription status using a variety of convenient methods. First, the `subscribed` method returns `true` if the customer has an active subscription, even if the subscription is currently within its trial period. The `subscribed` method accepts the type of the subscription as its first argument:
+Sau khi khách hàng đăng ký ứng dụng, bạn có thể dễ dàng kiểm tra trạng thái gói đăng ký bằng nhiều phương thức tiện lợi. Trước tiên, phương thức `subscribed` trả về `true` nếu khách hàng có gói đăng ký đang hoạt động, kể cả khi gói đó đang trong thời gian dùng thử. Phương thức `subscribed` nhận loại gói đăng ký làm đối số đầu tiên:
 
 ```php
 if ($user->subscribed('default')) {
@@ -1097,7 +1097,7 @@ if ($user->subscribed('default')) {
 }
 ```
 
-The `subscribed` method also makes a great candidate for a [route middleware](/docs/{{version}}/middleware), allowing you to filter access to routes and controllers based on the user's subscription status:
+Phương thức `subscribed` cũng rất phù hợp để sử dụng trong [route middleware](/docs/{{version}}/middleware), cho phép bạn lọc quyền truy cập vào route và controller dựa trên trạng thái gói đăng ký của người dùng:
 
 ```php
 <?php
@@ -1127,7 +1127,7 @@ class EnsureUserIsSubscribed
 }
 ```
 
-If you would like to determine if a user is still within their trial period, you may use the `onTrial` method. This method can be useful for determining if you should display a warning to the user that they are still on their trial period:
+Nếu muốn xác định người dùng có còn trong thời gian dùng thử hay không, bạn có thể sử dụng phương thức `onTrial`. Phương thức này hữu ích khi cần quyết định có nên hiển thị cảnh báo rằng người dùng vẫn đang trong thời gian dùng thử hay không:
 
 ```php
 if ($user->subscription('default')->onTrial()) {
@@ -1135,7 +1135,7 @@ if ($user->subscription('default')->onTrial()) {
 }
 ```
 
-The `subscribedToProduct` method may be used to determine if the user is subscribed to a given product based on a given Stripe product's identifier. In Stripe, products are collections of prices. In this example, we will determine if the user's `default` subscription is actively subscribed to the application's "premium" product. The given Stripe product identifier should correspond to one of your product's identifiers in the Stripe dashboard:
+Phương thức `subscribedToProduct` có thể được dùng để xác định người dùng có đăng ký một sản phẩm nhất định dựa trên identifier của Stripe product hay không. Trong Stripe, product là tập hợp các price. Trong ví dụ này, chúng ta sẽ xác định gói đăng ký `default` của người dùng có đang đăng ký sản phẩm "premium" của ứng dụng hay không. Stripe product identifier được cung cấp phải tương ứng với một identifier của sản phẩm trên Stripe Dashboard:
 
 ```php
 if ($user->subscribedToProduct('prod_premium', 'default')) {
@@ -1143,7 +1143,7 @@ if ($user->subscribedToProduct('prod_premium', 'default')) {
 }
 ```
 
-By passing an array to the `subscribedToProduct` method, you may determine if the user's `default` subscription is actively subscribed to the application's "basic" or "premium" product:
+Bằng cách truyền một mảng vào phương thức `subscribedToProduct`, bạn có thể xác định gói đăng ký `default` của người dùng có đang đăng ký sản phẩm "basic" hoặc "premium" của ứng dụng hay không:
 
 ```php
 if ($user->subscribedToProduct(['prod_basic', 'prod_premium'], 'default')) {
@@ -1151,7 +1151,7 @@ if ($user->subscribedToProduct(['prod_basic', 'prod_premium'], 'default')) {
 }
 ```
 
-The `subscribedToPrice` method may be used to determine if a customer's subscription corresponds to a given price ID:
+Phương thức `subscribedToPrice` có thể được dùng để xác định gói đăng ký của khách hàng có tương ứng với một price ID nhất định hay không:
 
 ```php
 if ($user->subscribedToPrice('price_basic_monthly', 'default')) {
@@ -1159,7 +1159,7 @@ if ($user->subscribedToPrice('price_basic_monthly', 'default')) {
 }
 ```
 
-The `recurring` method may be used to determine if the user is currently subscribed and is no longer within their trial period:
+Phương thức `recurring` có thể được dùng để xác định người dùng hiện đang đăng ký và không còn trong thời gian dùng thử hay không:
 
 ```php
 if ($user->subscription('default')->recurring()) {
@@ -1168,12 +1168,12 @@ if ($user->subscription('default')->recurring()) {
 ```
 
 > [!WARNING]
-> If a user has two subscriptions with the same type, the most recent subscription will always be returned by the `subscription` method. For example, a user might have two subscription records with the type of `default`; however, one of the subscriptions may be an old, expired subscription, while the other is the current, active subscription. The most recent subscription will always be returned while older subscriptions are kept in the database for historical review.
+> Nếu người dùng có hai gói đăng ký cùng loại, phương thức `subscription` sẽ luôn trả về gói đăng ký gần nhất. Ví dụ, người dùng có thể có hai bản ghi gói đăng ký loại `default`; tuy nhiên, một gói có thể đã cũ và hết hạn, trong khi gói còn lại là gói hiện tại đang hoạt động. Gói gần nhất luôn được trả về, còn các gói cũ hơn vẫn được giữ trong cơ sở dữ liệu để tra cứu lịch sử.
 
 <a name="cancelled-subscription-status"></a>
-#### Canceled Subscription Status
+#### Trạng thái gói đăng ký đã hủy
 
-To determine if the user was once an active subscriber but has canceled their subscription, you may use the `canceled` method:
+Để xác định người dùng từng là subscriber đang hoạt động nhưng đã hủy gói đăng ký, bạn có thể sử dụng phương thức `canceled`:
 
 ```php
 if ($user->subscription('default')->canceled()) {
@@ -1181,7 +1181,7 @@ if ($user->subscription('default')->canceled()) {
 }
 ```
 
-You may also determine if a user has canceled their subscription but are still on their "grace period" until the subscription fully expires. For example, if a user cancels a subscription on March 5th that was originally scheduled to expire on March 10th, the user is on their "grace period" until March 10th. Note that the `subscribed` method still returns `true` during this time:
+Bạn cũng có thể xác định người dùng đã hủy gói đăng ký nhưng vẫn đang trong "thời gian gia hạn" cho đến khi gói hết hạn hoàn toàn. Ví dụ, nếu người dùng hủy gói vào ngày 5 tháng 3 trong khi gói ban đầu dự kiến hết hạn ngày 10 tháng 3, người dùng sẽ ở trong "thời gian gia hạn" cho đến ngày 10 tháng 3. Lưu ý rằng phương thức `subscribed` vẫn trả về `true` trong khoảng thời gian này:
 
 ```php
 if ($user->subscription('default')->onGracePeriod()) {
@@ -1189,7 +1189,7 @@ if ($user->subscription('default')->onGracePeriod()) {
 }
 ```
 
-To determine if the user has canceled their subscription and is no longer within their "grace period", you may use the `ended` method:
+Để xác định người dùng đã hủy gói đăng ký và không còn trong "thời gian gia hạn", bạn có thể sử dụng phương thức `ended`:
 
 ```php
 if ($user->subscription('default')->ended()) {
@@ -1198,11 +1198,11 @@ if ($user->subscription('default')->ended()) {
 ```
 
 <a name="incomplete-and-past-due-status"></a>
-#### Incomplete and Past Due Status
+#### Trạng thái chưa hoàn tất và quá hạn
 
-If a subscription requires a secondary payment action after creation the subscription will be marked as `incomplete`. Subscription statuses are stored in the `stripe_status` column of Cashier's `subscriptions` database table.
+Nếu gói đăng ký yêu cầu một hành động thanh toán bổ sung sau khi tạo, gói sẽ được đánh dấu là `incomplete`. Trạng thái gói đăng ký được lưu trong cột `stripe_status` của bảng `subscriptions` do Cashier sử dụng.
 
-Similarly, if a secondary payment action is required when swapping prices the subscription will be marked as `past_due`. When your subscription is in either of these states it will not be active until the customer has confirmed their payment. Determining if a subscription has an incomplete payment may be accomplished using the `hasIncompletePayment` method on the billable model or a subscription instance:
+Tương tự, nếu cần hành động thanh toán bổ sung khi đổi price, gói đăng ký sẽ được đánh dấu là `past_due`. Khi gói ở một trong hai trạng thái này, nó sẽ không hoạt động cho đến khi khách hàng xác nhận thanh toán. Bạn có thể xác định gói đăng ký có khoản thanh toán chưa hoàn tất hay không bằng phương thức `hasIncompletePayment` trên model có khả năng thanh toán hoặc trên instance gói đăng ký:
 
 ```php
 if ($user->hasIncompletePayment('default')) {
@@ -1214,7 +1214,7 @@ if ($user->subscription('default')->hasIncompletePayment()) {
 }
 ```
 
-When a subscription has an incomplete payment, you should direct the user to Cashier's payment confirmation page, passing the `latestPayment` identifier. You may use the `latestPayment` method available on subscription instance to retrieve this identifier:
+Khi gói đăng ký có khoản thanh toán chưa hoàn tất, bạn nên chuyển người dùng đến trang xác nhận thanh toán của Cashier và truyền identifier `latestPayment`. Bạn có thể sử dụng phương thức `latestPayment` trên instance gói đăng ký để truy xuất identifier này:
 
 ```html
 <a href="{{ route('cashier.payment', $subscription->latestPayment()->id) }}">
@@ -1222,7 +1222,7 @@ When a subscription has an incomplete payment, you should direct the user to Cas
 </a>
 ```
 
-If you would like the subscription to still be considered active when it's in a `past_due` or `incomplete` state, you may use the `keepPastDueSubscriptionsActive` and `keepIncompleteSubscriptionsActive` methods provided by Cashier. Typically, these methods should be called in the `register` method of your `App\Providers\AppServiceProvider`:
+Nếu muốn gói đăng ký vẫn được xem là đang hoạt động khi ở trạng thái `past_due` hoặc `incomplete`, bạn có thể sử dụng các phương thức `keepPastDueSubscriptionsActive` và `keepIncompleteSubscriptionsActive` do Cashier cung cấp. Thông thường, các phương thức này nên được gọi trong phương thức `register` của `App\Providers\AppServiceProvider`:
 
 ```php
 use Laravel\Cashier\Cashier;
@@ -1238,12 +1238,12 @@ public function register(): void
 ```
 
 > [!WARNING]
-> When a subscription is in an `incomplete` state it cannot be changed until the payment is confirmed. Therefore, the `swap` and `updateQuantity` methods will throw an exception when the subscription is in an `incomplete` state.
+> Khi gói đăng ký ở trạng thái `incomplete`, bạn không thể thay đổi nó cho đến khi khoản thanh toán được xác nhận. Vì vậy, các phương thức `swap` và `updateQuantity` sẽ ném exception khi gói đăng ký đang ở trạng thái `incomplete`.
 
 <a name="subscription-scopes"></a>
-#### Subscription Scopes
+#### Scope của gói đăng ký
 
-Most subscription states are also available as query scopes so that you may easily query your database for subscriptions that are in a given state:
+Hầu hết trạng thái gói đăng ký cũng được cung cấp dưới dạng query scope để bạn có thể dễ dàng truy vấn cơ sở dữ liệu cho các gói đang ở một trạng thái nhất định:
 
 ```php
 // Get all active subscriptions...
@@ -1253,7 +1253,7 @@ $subscriptions = Subscription::query()->active()->get();
 $subscriptions = $user->subscriptions()->canceled()->get();
 ```
 
-A complete list of available scopes is available below:
+Danh sách đầy đủ các scope khả dụng được trình bày bên dưới:
 
 ```php
 Subscription::query()->active();
@@ -1270,9 +1270,9 @@ Subscription::query()->recurring();
 ```
 
 <a name="changing-prices"></a>
-### Changing Prices
+### Thay đổi price
 
-After a customer is subscribed to your application, they may occasionally want to change to a new subscription price. To swap a customer to a new price, pass the Stripe price's identifier to the `swap` method. When swapping prices, it is assumed that the user would like to re-activate their subscription if it was previously canceled. The given price identifier should correspond to a Stripe price identifier available in the Stripe dashboard:
+Sau khi khách hàng đăng ký ứng dụng, đôi khi họ có thể muốn chuyển sang một price mới. Để chuyển khách hàng sang price mới, hãy truyền identifier của Stripe price vào phương thức `swap`. Khi đổi price, Cashier giả định người dùng muốn kích hoạt lại gói đăng ký nếu trước đó gói đã bị hủy. Price identifier được cung cấp phải tương ứng với một Stripe price identifier có trên Stripe Dashboard:
 
 ```php
 use App\Models\User;
@@ -1282,9 +1282,9 @@ $user = App\Models\User::find(1);
 $user->subscription('default')->swap('price_yearly');
 ```
 
-If the customer is on trial, the trial period will be maintained. Additionally, if a "quantity" exists for the subscription, that quantity will also be maintained.
+Nếu khách hàng đang trong thời gian dùng thử, thời gian dùng thử sẽ được giữ nguyên. Ngoài ra, nếu gói đăng ký có "quantity", số lượng đó cũng sẽ được giữ nguyên.
 
-If you would like to swap prices and cancel any trial period the customer is currently on, you may invoke the `skipTrial` method:
+Nếu muốn đổi price đồng thời hủy thời gian dùng thử hiện tại của khách hàng, bạn có thể gọi phương thức `skipTrial`:
 
 ```php
 $user->subscription('default')
@@ -1292,7 +1292,7 @@ $user->subscription('default')
     ->swap('price_yearly');
 ```
 
-If you would like to swap prices and immediately invoice the customer instead of waiting for their next billing cycle, you may use the `swapAndInvoice` method:
+Nếu muốn đổi price và lập hóa đơn cho khách hàng ngay lập tức thay vì chờ chu kỳ thanh toán tiếp theo, bạn có thể sử dụng phương thức `swapAndInvoice`:
 
 ```php
 $user = User::find(1);
@@ -1301,23 +1301,23 @@ $user->subscription('default')->swapAndInvoice('price_yearly');
 ```
 
 <a name="prorations"></a>
-#### Prorations
+#### Phân bổ theo tỷ lệ
 
-By default, Stripe prorates charges when swapping between prices. The `noProrate` method may be used to update the subscription's price without prorating the charges:
+Mặc định, Stripe sẽ phân bổ khoản phí theo tỷ lệ khi chuyển đổi giữa các price. Bạn có thể sử dụng phương thức `noProrate` để cập nhật price của gói đăng ký mà không phân bổ khoản phí theo tỷ lệ:
 
 ```php
 $user->subscription('default')->noProrate()->swap('price_yearly');
 ```
 
-For more information on subscription proration, consult the [Stripe documentation](https://stripe.com/docs/billing/subscriptions/prorations).
+Để biết thêm thông tin về phân bổ theo tỷ lệ của gói đăng ký, hãy tham khảo [tài liệu Stripe](https://stripe.com/docs/billing/subscriptions/prorations).
 
 > [!WARNING]
-> Executing the `noProrate` method before the `swapAndInvoice` method will have no effect on proration. An invoice will always be issued.
+> Việc gọi phương thức `noProrate` trước `swapAndInvoice` sẽ không ảnh hưởng đến việc phân bổ theo tỷ lệ. Hóa đơn vẫn luôn được phát hành.
 
 <a name="subscription-quantity"></a>
-### Subscription Quantity
+### Số lượng gói đăng ký
 
-Sometimes subscriptions are affected by "quantity". For example, a project management application might charge $10 per month per project. You may use the `incrementQuantity` and `decrementQuantity` methods to easily increment or decrement your subscription quantity:
+Đôi khi gói đăng ký chịu ảnh hưởng bởi "quantity". Ví dụ, một ứng dụng quản lý dự án có thể tính phí 10 USD mỗi tháng cho mỗi dự án. Bạn có thể sử dụng các phương thức `incrementQuantity` và `decrementQuantity` để dễ dàng tăng hoặc giảm số lượng của gói đăng ký:
 
 ```php
 use App\Models\User;
@@ -1335,35 +1335,35 @@ $user->subscription('default')->decrementQuantity();
 $user->subscription('default')->decrementQuantity(5);
 ```
 
-Alternatively, you may set a specific quantity using the `updateQuantity` method:
+Ngoài ra, bạn có thể đặt một số lượng cụ thể bằng phương thức `updateQuantity`:
 
 ```php
 $user->subscription('default')->updateQuantity(10);
 ```
 
-The `noProrate` method may be used to update the subscription's quantity without prorating the charges:
+Bạn có thể sử dụng phương thức `noProrate` để cập nhật số lượng gói đăng ký mà không phân bổ khoản phí theo tỷ lệ:
 
 ```php
 $user->subscription('default')->noProrate()->updateQuantity(10);
 ```
 
-For more information on subscription quantities, consult the [Stripe documentation](https://stripe.com/docs/subscriptions/quantities).
+Để biết thêm thông tin về số lượng gói đăng ký, hãy tham khảo [tài liệu Stripe](https://stripe.com/docs/subscriptions/quantities).
 
 <a name="quantities-for-subscription-with-multiple-products"></a>
-#### Quantities for Subscriptions With Multiple Products
+#### Số lượng cho gói đăng ký có nhiều sản phẩm
 
-If your subscription is a [subscription with multiple products](#subscriptions-with-multiple-products), you should pass the ID of the price whose quantity you wish to increment or decrement as the second argument to the increment / decrement methods:
+Nếu gói đăng ký là [gói đăng ký có nhiều sản phẩm](#subscriptions-with-multiple-products), bạn nên truyền ID của price cần tăng hoặc giảm số lượng làm đối số thứ hai cho các phương thức tăng / giảm:
 
 ```php
 $user->subscription('default')->incrementQuantity(1, 'price_chat');
 ```
 
 <a name="subscriptions-with-multiple-products"></a>
-### Subscriptions With Multiple Products
+### Gói đăng ký có nhiều sản phẩm
 
-[Subscription with multiple products](https://stripe.com/docs/billing/subscriptions/multiple-products) allow you to assign multiple billing products to a single subscription. For example, imagine you are building a customer service "helpdesk" application that has a base subscription price of $10 per month but offers a live chat add-on product for an additional $15 per month. Information for subscriptions with multiple products is stored in Cashier's `subscription_items` database table.
+[Gói đăng ký có nhiều sản phẩm](https://stripe.com/docs/billing/subscriptions/multiple-products) cho phép bạn gán nhiều sản phẩm thanh toán vào một gói đăng ký duy nhất. Ví dụ, hãy tưởng tượng bạn đang xây dựng ứng dụng "helpdesk" chăm sóc khách hàng có giá gói cơ bản 10 USD mỗi tháng và cung cấp thêm sản phẩm live chat với giá 15 USD mỗi tháng. Thông tin của các gói đăng ký có nhiều sản phẩm được lưu trong bảng `subscription_items` của Cashier.
 
-You may specify multiple products for a given subscription by passing an array of prices as the second argument to the `newSubscription` method:
+Bạn có thể chỉ định nhiều sản phẩm cho một gói đăng ký bằng cách truyền một mảng price làm đối số thứ hai cho phương thức `newSubscription`:
 
 ```php
 use Illuminate\Http\Request;
@@ -1378,7 +1378,7 @@ Route::post('/user/subscribe', function (Request $request) {
 });
 ```
 
-In the example above, the customer will have two prices attached to their `default` subscription. Both prices will be charged on their respective billing intervals. If necessary, you may use the `quantity` method to indicate a specific quantity for each price:
+Trong ví dụ trên, khách hàng sẽ có hai price gắn với gói đăng ký `default`. Cả hai price sẽ được tính phí theo chu kỳ thanh toán tương ứng. Nếu cần, bạn có thể sử dụng phương thức `quantity` để chỉ định số lượng cụ thể cho từng price:
 
 ```php
 $user = User::find(1);
@@ -1388,7 +1388,7 @@ $user->newSubscription('default', ['price_monthly', 'price_chat'])
     ->create($paymentMethod);
 ```
 
-If you would like to add another price to an existing subscription, you may invoke the subscription's `addPrice` method:
+Nếu muốn thêm một price khác vào gói đăng ký hiện có, bạn có thể gọi phương thức `addPrice` của gói đăng ký:
 
 ```php
 $user = User::find(1);
@@ -1396,13 +1396,13 @@ $user = User::find(1);
 $user->subscription('default')->addPrice('price_chat');
 ```
 
-The example above will add the new price and the customer will be billed for it on their next billing cycle. If you would like to bill the customer immediately you may use the `addPriceAndInvoice` method:
+Ví dụ trên sẽ thêm price mới và khách hàng sẽ được tính phí cho price đó trong chu kỳ thanh toán tiếp theo. Nếu muốn tính phí khách hàng ngay lập tức, bạn có thể sử dụng phương thức `addPriceAndInvoice`:
 
 ```php
 $user->subscription('default')->addPriceAndInvoice('price_chat');
 ```
 
-If you would like to add a price with a specific quantity, you can pass the quantity as the second argument of the `addPrice` or `addPriceAndInvoice` methods:
+Nếu muốn thêm price với số lượng cụ thể, bạn có thể truyền số lượng làm đối số thứ hai của phương thức `addPrice` hoặc `addPriceAndInvoice`:
 
 ```php
 $user = User::find(1);
@@ -1410,19 +1410,19 @@ $user = User::find(1);
 $user->subscription('default')->addPrice('price_chat', 5);
 ```
 
-You may remove prices from subscriptions using the `removePrice` method:
+Bạn có thể xóa price khỏi gói đăng ký bằng phương thức `removePrice`:
 
 ```php
 $user->subscription('default')->removePrice('price_chat');
 ```
 
 > [!WARNING]
-> You may not remove the last price on a subscription. Instead, you should simply cancel the subscription.
+> Bạn không thể xóa price cuối cùng của một gói đăng ký. Thay vào đó, bạn nên hủy gói đăng ký.
 
 <a name="swapping-prices"></a>
-#### Swapping Prices
+#### Chuyển đổi price
 
-You may also change the prices attached to a subscription with multiple products. For example, imagine a customer has a `price_basic` subscription with a `price_chat` add-on product and you want to upgrade the customer from the `price_basic` to the `price_pro` price:
+Bạn cũng có thể thay đổi các price gắn với gói đăng ký có nhiều sản phẩm. Ví dụ, hãy tưởng tượng khách hàng có gói `price_basic` cùng sản phẩm bổ sung `price_chat` và bạn muốn nâng cấp khách hàng từ price `price_basic` lên `price_pro`:
 
 ```php
 use App\Models\User;
@@ -1432,9 +1432,9 @@ $user = User::find(1);
 $user->subscription('default')->swap(['price_pro', 'price_chat']);
 ```
 
-When executing the example above, the underlying subscription item with the `price_basic` is deleted and the one with the `price_chat` is preserved. Additionally, a new subscription item for the `price_pro` is created.
+Khi thực thi ví dụ trên, subscription item bên dưới có `price_basic` sẽ bị xóa và item có `price_chat` được giữ lại. Đồng thời, một subscription item mới cho `price_pro` sẽ được tạo.
 
-You can also specify subscription item options by passing an array of key / value pairs to the `swap` method. For example, you may need to specify the subscription price quantities:
+Bạn cũng có thể chỉ định các tùy chọn cho subscription item bằng cách truyền một mảng cặp key / value vào phương thức `swap`. Ví dụ, bạn có thể cần chỉ định số lượng cho các price của gói đăng ký:
 
 ```php
 $user = User::find(1);
@@ -1445,7 +1445,7 @@ $user->subscription('default')->swap([
 ]);
 ```
 
-If you want to swap a single price on a subscription, you may do so using the `swap` method on the subscription item itself. This approach is particularly useful if you would like to preserve all of the existing metadata on the subscription's other prices:
+Nếu muốn chuyển đổi một price duy nhất trong gói đăng ký, bạn có thể sử dụng phương thức `swap` ngay trên subscription item. Cách này đặc biệt hữu ích khi bạn muốn giữ nguyên toàn bộ metadata hiện có của các price khác trong gói đăng ký:
 
 ```php
 $user = User::find(1);
@@ -1456,18 +1456,18 @@ $user->subscription('default')
 ```
 
 <a name="proration"></a>
-#### Proration
+#### Phân bổ theo tỷ lệ
 
-By default, Stripe will prorate charges when adding or removing prices from a subscription with multiple products. If you would like to make a price adjustment without proration, you should chain the `noProrate` method onto your price operation:
+Mặc định, Stripe sẽ phân bổ khoản phí theo tỷ lệ khi thêm hoặc xóa price khỏi gói đăng ký có nhiều sản phẩm. Nếu muốn điều chỉnh price mà không phân bổ theo tỷ lệ, bạn nên chain phương thức `noProrate` vào thao tác price:
 
 ```php
 $user->subscription('default')->noProrate()->removePrice('price_chat');
 ```
 
 <a name="swapping-quantities"></a>
-#### Quantities
+#### Số lượng
 
-If you would like to update quantities on individual subscription prices, you may do so using the [existing quantity methods](#subscription-quantity) by passing the ID of the price as an additional argument to the method:
+Nếu muốn cập nhật số lượng trên từng price riêng lẻ của gói đăng ký, bạn có thể sử dụng [các phương thức số lượng hiện có](#subscription-quantity) và truyền ID của price làm đối số bổ sung cho phương thức:
 
 ```php
 $user = User::find(1);
@@ -1480,12 +1480,12 @@ $user->subscription('default')->updateQuantity(10, 'price_chat');
 ```
 
 > [!WARNING]
-> When a subscription has multiple prices the `stripe_price` and `quantity` attributes on the `Subscription` model will be `null`. To access the individual price attributes, you should use the `items` relationship available on the `Subscription` model.
+> Khi một gói đăng ký có nhiều price, các thuộc tính `stripe_price` và `quantity` trên model `Subscription` sẽ là `null`. Để truy cập thuộc tính của từng price riêng lẻ, bạn nên sử dụng relationship `items` có trên model `Subscription`.
 
 <a name="subscription-items"></a>
-#### Subscription Items
+#### Subscription item
 
-When a subscription has multiple prices, it will have multiple subscription "items" stored in your database's `subscription_items` table. You may access these via the `items` relationship on the subscription:
+Khi một gói đăng ký có nhiều price, nó sẽ có nhiều "item" gói đăng ký được lưu trong bảng `subscription_items` của cơ sở dữ liệu. Bạn có thể truy cập các item này thông qua relationship `items` trên gói đăng ký:
 
 ```php
 use App\Models\User;
@@ -1499,7 +1499,7 @@ $stripePrice = $subscriptionItem->stripe_price;
 $quantity = $subscriptionItem->quantity;
 ```
 
-You can also retrieve a specific price using the `findItemOrFail` method:
+Bạn cũng có thể truy xuất một price cụ thể bằng phương thức `findItemOrFail`:
 
 ```php
 $user = User::find(1);
@@ -1508,11 +1508,11 @@ $subscriptionItem = $user->subscription('default')->findItemOrFail('price_chat')
 ```
 
 <a name="multiple-subscriptions"></a>
-### Multiple Subscriptions
+### Nhiều gói đăng ký
 
-Stripe allows your customers to have multiple subscriptions simultaneously. For example, you may run a gym that offers a swimming subscription and a weight-lifting subscription, and each subscription may have different pricing. Of course, customers should be able to subscribe to either or both plans.
+Stripe cho phép khách hàng của bạn có nhiều gói đăng ký cùng lúc. Ví dụ, bạn có thể vận hành một phòng gym cung cấp gói đăng ký bơi lội và gói đăng ký tập tạ, mỗi gói có mức giá khác nhau. Tất nhiên, khách hàng có thể đăng ký một hoặc cả hai gói.
 
-When your application creates subscriptions, you may provide the type of the subscription to the `newSubscription` method. The type may be any string that represents the type of subscription the user is initiating:
+Khi ứng dụng tạo gói đăng ký, bạn có thể truyền loại gói đăng ký vào phương thức `newSubscription`. Loại này có thể là bất kỳ chuỗi nào đại diện cho loại gói đăng ký mà người dùng đang khởi tạo:
 
 ```php
 use Illuminate\Http\Request;
@@ -1526,24 +1526,24 @@ Route::post('/swimming/subscribe', function (Request $request) {
 });
 ```
 
-In this example, we initiated a monthly swimming subscription for the customer. However, they may want to swap to a yearly subscription at a later time. When adjusting the customer's subscription, we can simply swap the price on the `swimming` subscription:
+Trong ví dụ này, chúng ta đã khởi tạo gói đăng ký bơi theo tháng cho khách hàng. Tuy nhiên, sau đó họ có thể muốn chuyển sang gói theo năm. Khi điều chỉnh gói đăng ký của khách hàng, chúng ta chỉ cần chuyển price trên gói `swimming`:
 
 ```php
 $user->subscription('swimming')->swap('price_swimming_yearly');
 ```
 
-Of course, you may also cancel the subscription entirely:
+Tất nhiên, bạn cũng có thể hủy hoàn toàn gói đăng ký:
 
 ```php
 $user->subscription('swimming')->cancel();
 ```
 
 <a name="usage-based-billing"></a>
-### Usage Based Billing
+### Thanh toán dựa trên mức sử dụng
 
-[Usage based billing](https://stripe.com/docs/billing/subscriptions/metered-billing) allows you to charge customers based on their product usage during a billing cycle. For example, you may charge customers based on the number of text messages or emails they send per month.
+[Thanh toán dựa trên mức sử dụng](https://stripe.com/docs/billing/subscriptions/metered-billing) cho phép bạn tính phí khách hàng dựa trên mức sử dụng sản phẩm của họ trong một chu kỳ thanh toán. Ví dụ, bạn có thể tính phí dựa trên số tin nhắn văn bản hoặc email mà khách hàng gửi mỗi tháng.
 
-To start using usage billing, you will first need to create a new product in your Stripe dashboard with a [usage based billing model](https://docs.stripe.com/billing/subscriptions/usage-based/implementation-guide) and a [meter](https://docs.stripe.com/billing/subscriptions/usage-based/recording-usage#configure-meter). After creating the meter, store the associated event name and meter ID, which you will need to report and retrieve usage. Then, use the `meteredPrice` method to add the metered price ID to a customer subscription:
+Để bắt đầu sử dụng hình thức thanh toán theo mức sử dụng, trước tiên bạn cần tạo một sản phẩm mới trong Stripe dashboard với [mô hình thanh toán dựa trên mức sử dụng](https://docs.stripe.com/billing/subscriptions/usage-based/implementation-guide) và một [meter](https://docs.stripe.com/billing/subscriptions/usage-based/recording-usage#configure-meter). Sau khi tạo meter, hãy lưu tên event và ID meter tương ứng vì bạn sẽ cần chúng để báo cáo và truy xuất mức sử dụng. Sau đó, sử dụng phương thức `meteredPrice` để thêm ID của metered price vào gói đăng ký của khách hàng:
 
 ```php
 use Illuminate\Http\Request;
@@ -1557,7 +1557,7 @@ Route::post('/user/subscribe', function (Request $request) {
 });
 ```
 
-You may also start a metered subscription via [Stripe Checkout](#checkout):
+Bạn cũng có thể bắt đầu một metered subscription thông qua [Stripe Checkout](#checkout):
 
 ```php
 $checkout = Auth::user()
@@ -1571,9 +1571,9 @@ return view('your-checkout-view', [
 ```
 
 <a name="reporting-usage"></a>
-#### Reporting Usage
+#### Báo cáo mức sử dụng
 
-As your customer uses your application, you will report their usage to Stripe so that they can be billed accurately. To report the usage of a metered event, you may use the `reportMeterEvent` method on your `Billable` model:
+Khi khách hàng sử dụng ứng dụng, bạn sẽ báo cáo mức sử dụng của họ cho Stripe để khoản phí được tính chính xác. Để báo cáo mức sử dụng của một metered event, bạn có thể dùng phương thức `reportMeterEvent` trên model `Billable`:
 
 ```php
 $user = User::find(1);
@@ -1581,7 +1581,7 @@ $user = User::find(1);
 $user->reportMeterEvent('emails-sent');
 ```
 
-By default, a "usage quantity" of 1 is added to the billing period. Alternatively, you may pass a specific amount of "usage" to add to the customer's usage for the billing period:
+Mặc định, "usage quantity" bằng 1 sẽ được cộng vào kỳ thanh toán. Ngoài ra, bạn có thể truyền một lượng "usage" cụ thể để cộng vào mức sử dụng của khách hàng trong kỳ thanh toán:
 
 ```php
 $user = User::find(1);
@@ -1589,7 +1589,7 @@ $user = User::find(1);
 $user->reportMeterEvent('emails-sent', quantity: 15);
 ```
 
-To retrieve a customer's event summary for a meter, you may use a `Billable` instance's `meterEventSummaries` method:
+Để truy xuất tổng hợp event của khách hàng cho một meter, bạn có thể sử dụng phương thức `meterEventSummaries` trên một instance `Billable`:
 
 ```php
 $user = User::find(1);
@@ -1599,9 +1599,9 @@ $meterUsage = $user->meterEventSummaries($meterId);
 $meterUsage->first()->aggregated_value // 10
 ```
 
-Please refer to Stripe's [Meter Event Summary object documentation](https://docs.stripe.com/api/billing/meter-event_summary/object) for more information on meter event summaries.
+Hãy tham khảo [tài liệu đối tượng Meter Event Summary](https://docs.stripe.com/api/billing/meter-event_summary/object) của Stripe để biết thêm thông tin về các bản tổng hợp meter event.
 
-To [list all meters](https://docs.stripe.com/api/billing/meter/list), you may use a `Billable` instance's `meters` method:
+Để [liệt kê tất cả meter](https://docs.stripe.com/api/billing/meter/list), bạn có thể sử dụng phương thức `meters` trên một instance `Billable`:
 
 ```php
 $user = User::find(1);
@@ -1610,12 +1610,12 @@ $user->meters();
 ```
 
 <a name="subscription-taxes"></a>
-### Subscription Taxes
+### Thuế của gói đăng ký
 
 > [!WARNING]
-> Instead of calculating Tax Rates manually, you can [automatically calculate taxes using Stripe Tax](#tax-configuration)
+Thay vì tự tính Tax Rate, bạn có thể [tự động tính thuế bằng Stripe Tax](#tax-configuration)
 
-To specify the tax rates a user pays on a subscription, you should implement the `taxRates` method on your billable model and return an array containing the Stripe tax rate IDs. You can define these tax rates in [your Stripe dashboard](https://dashboard.stripe.com/test/tax-rates):
+Để chỉ định các mức thuế mà người dùng phải trả cho một gói đăng ký, bạn nên triển khai phương thức `taxRates` trên billable model và trả về một mảng chứa các Stripe tax rate ID. Bạn có thể định nghĩa các mức thuế này trong [Stripe dashboard](https://dashboard.stripe.com/test/tax-rates):
 
 ```php
 /**
@@ -1629,9 +1629,9 @@ public function taxRates(): array
 }
 ```
 
-The `taxRates` method enables you to apply a tax rate on a customer-by-customer basis, which may be helpful for a user base that spans multiple countries and tax rates.
+Phương thức `taxRates` cho phép bạn áp dụng mức thuế theo từng khách hàng, hữu ích khi tập người dùng trải rộng trên nhiều quốc gia và chịu các mức thuế khác nhau.
 
-If you're offering subscriptions with multiple products, you may define different tax rates for each price by implementing a `priceTaxRates` method on your billable model:
+Nếu cung cấp gói đăng ký có nhiều sản phẩm, bạn có thể định nghĩa mức thuế khác nhau cho từng price bằng cách triển khai phương thức `priceTaxRates` trên billable model:
 
 ```php
 /**
@@ -1648,23 +1648,23 @@ public function priceTaxRates(): array
 ```
 
 > [!WARNING]
-> The `taxRates` method only applies to subscription charges. If you use Cashier to make "one-off" charges, you will need to manually specify the tax rate at that time.
+Phương thức `taxRates` chỉ áp dụng cho các khoản phí của gói đăng ký. Nếu dùng Cashier để thực hiện khoản phí "một lần", bạn sẽ cần chỉ định mức thuế thủ công tại thời điểm đó.
 
 <a name="syncing-tax-rates"></a>
-#### Syncing Tax Rates
+#### Đồng bộ mức thuế
 
-When changing the hard-coded tax rate IDs returned by the `taxRates` method, the tax settings on any existing subscriptions for the user will remain the same. If you wish to update the tax value for existing subscriptions with the new `taxRates` values, you should call the `syncTaxRates` method on the user's subscription instance:
+Khi thay đổi các tax rate ID được hard-code mà phương thức `taxRates` trả về, cấu hình thuế trên các gói đăng ký hiện có của người dùng vẫn giữ nguyên. Nếu muốn cập nhật giá trị thuế cho các gói đăng ký hiện có theo các giá trị `taxRates` mới, bạn nên gọi phương thức `syncTaxRates` trên instance gói đăng ký của người dùng:
 
 ```php
 $user->subscription('default')->syncTaxRates();
 ```
 
-This will also sync any item tax rates for a subscription with multiple products. If your application is offering subscriptions with multiple products, you should ensure that your billable model implements the `priceTaxRates` method [discussed above](#subscription-taxes).
+Thao tác này cũng đồng bộ mức thuế của từng item đối với gói đăng ký có nhiều sản phẩm. Nếu ứng dụng cung cấp gói đăng ký nhiều sản phẩm, hãy đảm bảo billable model triển khai phương thức `priceTaxRates` [đã trình bày ở trên](#subscription-taxes).
 
 <a name="tax-exemption"></a>
-#### Tax Exemption
+#### Miễn thuế
 
-Cashier also offers the `isNotTaxExempt`, `isTaxExempt`, and `reverseChargeApplies` methods to determine if the customer is tax exempt. These methods will call the Stripe API to determine a customer's tax exemption status:
+Cashier cũng cung cấp các phương thức `isNotTaxExempt`, `isTaxExempt` và `reverseChargeApplies` để xác định khách hàng có được miễn thuế hay không. Các phương thức này sẽ gọi Stripe API để xác định trạng thái miễn thuế của khách hàng:
 
 ```php
 use App\Models\User;
@@ -1677,12 +1677,12 @@ $user->reverseChargeApplies();
 ```
 
 > [!WARNING]
-> These methods are also available on any `Laravel\Cashier\Invoice` object. However, when invoked on an `Invoice` object, the methods will determine the exemption status at the time the invoice was created.
+Các phương thức này cũng có trên mọi đối tượng `Laravel\Cashier\Invoice`. Tuy nhiên, khi được gọi trên đối tượng `Invoice`, chúng sẽ xác định trạng thái miễn thuế tại thời điểm hóa đơn được tạo.
 
 <a name="subscription-anchor-date"></a>
-### Subscription Anchor Date
+### Ngày neo chu kỳ gói đăng ký
 
-By default, the billing cycle anchor is the date the subscription was created or, if a trial period is used, the date that the trial ends. If you would like to modify the billing anchor date, you may use the `anchorBillingCycleOn` method:
+Mặc định, mốc neo chu kỳ thanh toán là ngày gói đăng ký được tạo hoặc, nếu có thời gian dùng thử, là ngày thời gian dùng thử kết thúc. Nếu muốn thay đổi ngày neo thanh toán, bạn có thể sử dụng phương thức `anchorBillingCycleOn`:
 
 ```php
 use Illuminate\Http\Request;
@@ -1698,22 +1698,22 @@ Route::post('/user/subscribe', function (Request $request) {
 });
 ```
 
-For more information on managing subscription billing cycles, consult the [Stripe billing cycle documentation](https://stripe.com/docs/billing/subscriptions/billing-cycle)
+Để biết thêm thông tin về quản lý chu kỳ thanh toán của gói đăng ký, hãy tham khảo [tài liệu chu kỳ thanh toán của Stripe](https://stripe.com/docs/billing/subscriptions/billing-cycle)
 
 <a name="cancelling-subscriptions"></a>
-### Cancelling Subscriptions
+### Hủy gói đăng ký
 
-To cancel a subscription, call the `cancel` method on the user's subscription:
+Để hủy một gói đăng ký, hãy gọi phương thức `cancel` trên gói đăng ký của người dùng:
 
 ```php
 $user->subscription('default')->cancel();
 ```
 
-When a subscription is canceled, Cashier will automatically set the `ends_at` column in your `subscriptions` database table. This column is used to know when the `subscribed` method should begin returning `false`.
+Khi một gói đăng ký bị hủy, Cashier sẽ tự động thiết lập cột `ends_at` trong bảng `subscriptions` của cơ sở dữ liệu. Cột này được dùng để xác định thời điểm phương thức `subscribed` bắt đầu trả về `false`.
 
-For example, if a customer cancels a subscription on March 1st, but the subscription was not scheduled to end until March 5th, the `subscribed` method will continue to return `true` until March 5th. This is done because a user is typically allowed to continue using an application until the end of their billing cycle.
+Ví dụ, nếu khách hàng hủy gói đăng ký vào ngày 1 tháng 3 nhưng gói được lên lịch kết thúc vào ngày 5 tháng 3, phương thức `subscribed` vẫn trả về `true` cho đến ngày 5 tháng 3. Điều này là do người dùng thường được phép tiếp tục sử dụng ứng dụng cho đến hết chu kỳ thanh toán.
 
-You may determine if a user has canceled their subscription but are still on their "grace period" using the `onGracePeriod` method:
+Bạn có thể dùng phương thức `onGracePeriod` để xác định người dùng đã hủy gói đăng ký nhưng vẫn đang trong "thời gian gia hạn":
 
 ```php
 if ($user->subscription('default')->onGracePeriod()) {
@@ -1721,19 +1721,19 @@ if ($user->subscription('default')->onGracePeriod()) {
 }
 ```
 
-If you wish to cancel a subscription immediately, call the `cancelNow` method on the user's subscription:
+Nếu muốn hủy gói đăng ký ngay lập tức, hãy gọi phương thức `cancelNow` trên gói đăng ký của người dùng:
 
 ```php
 $user->subscription('default')->cancelNow();
 ```
 
-If you wish to cancel a subscription immediately and invoice any remaining un-invoiced metered usage or new / pending proration invoice items, call the `cancelNowAndInvoice` method on the user's subscription:
+Nếu muốn hủy gói đăng ký ngay lập tức và lập hóa đơn cho phần metered usage chưa được lập hóa đơn còn lại hoặc các proration invoice item mới / đang chờ xử lý, hãy gọi phương thức `cancelNowAndInvoice` trên gói đăng ký của người dùng:
 
 ```php
 $user->subscription('default')->cancelNowAndInvoice();
 ```
 
-You may also choose to cancel the subscription at a specific moment in time:
+Bạn cũng có thể chọn hủy gói đăng ký tại một thời điểm cụ thể:
 
 ```php
 $user->subscription('default')->cancelAt(
@@ -1741,7 +1741,7 @@ $user->subscription('default')->cancelAt(
 );
 ```
 
-Finally, you should always cancel user subscriptions before deleting the associated user model:
+Cuối cùng, bạn luôn nên hủy các gói đăng ký của người dùng trước khi xóa user model tương ứng:
 
 ```php
 $user->subscription('default')->cancelNow();
@@ -1750,23 +1750,23 @@ $user->delete();
 ```
 
 <a name="resuming-subscriptions"></a>
-### Resuming Subscriptions
+### Tiếp tục gói đăng ký
 
-If a customer has canceled their subscription and you wish to resume it, you may invoke the `resume` method on the subscription. The customer must still be within their "grace period" in order to resume a subscription:
+Nếu khách hàng đã hủy gói đăng ký và bạn muốn tiếp tục gói đó, bạn có thể gọi phương thức `resume` trên gói đăng ký. Khách hàng phải vẫn còn trong "thời gian gia hạn" thì mới có thể tiếp tục gói đăng ký:
 
 ```php
 $user->subscription('default')->resume();
 ```
 
-If the customer cancels a subscription and then resumes that subscription before the subscription has fully expired the customer will not be billed immediately. Instead, their subscription will be re-activated and they will be billed on the original billing cycle.
+Nếu khách hàng hủy rồi tiếp tục gói đăng ký trước khi gói hết hạn hoàn toàn, họ sẽ không bị tính phí ngay. Thay vào đó, gói đăng ký được kích hoạt lại và khách hàng sẽ được tính phí theo chu kỳ thanh toán ban đầu.
 
 <a name="subscription-trials"></a>
-## Subscription Trials
+## Thời gian dùng thử gói đăng ký
 
 <a name="with-payment-method-up-front"></a>
-### With Payment Method Up Front
+### Thu thập phương thức thanh toán từ đầu
 
-If you would like to offer trial periods to your customers while still collecting payment method information up front, you should use the `trialDays` method when creating your subscriptions:
+Nếu muốn cung cấp thời gian dùng thử cho khách hàng nhưng vẫn thu thập thông tin phương thức thanh toán từ đầu, bạn nên sử dụng phương thức `trialDays` khi tạo gói đăng ký:
 
 ```php
 use Illuminate\Http\Request;
@@ -1780,12 +1780,12 @@ Route::post('/user/subscribe', function (Request $request) {
 });
 ```
 
-This method will set the trial period ending date on the subscription record within the database and instruct Stripe to not begin billing the customer until after this date. When using the `trialDays` method, Cashier will overwrite any default trial period configured for the price in Stripe.
+Phương thức này sẽ đặt ngày kết thúc thời gian dùng thử trên bản ghi gói đăng ký trong cơ sở dữ liệu và yêu cầu Stripe chưa bắt đầu tính phí khách hàng cho đến sau ngày đó. Khi dùng `trialDays`, Cashier sẽ ghi đè mọi thời gian dùng thử mặc định đã cấu hình cho price trong Stripe.
 
 > [!WARNING]
-> If the customer's subscription is not canceled before the trial ending date they will be charged as soon as the trial expires, so you should be sure to notify your users of their trial ending date.
+Nếu gói đăng ký của khách hàng không được hủy trước ngày kết thúc dùng thử, họ sẽ bị tính phí ngay khi thời gian dùng thử hết hạn. Vì vậy, hãy đảm bảo thông báo cho người dùng về ngày kết thúc dùng thử.
 
-The `trialUntil` method allows you to provide a `DateTime` instance that specifies when the trial period should end:
+Phương thức `trialUntil` cho phép bạn cung cấp một instance `DateTime` để chỉ định thời điểm kết thúc thời gian dùng thử:
 
 ```php
 use Illuminate\Support\Carbon;
@@ -1795,7 +1795,7 @@ $user->newSubscription('default', 'price_monthly')
     ->create($paymentMethod);
 ```
 
-You may determine if a user is within their trial period using either the `onTrial` method of the user instance or the `onTrial` method of the subscription instance. The two examples below are equivalent:
+Bạn có thể xác định người dùng có đang trong thời gian dùng thử hay không bằng phương thức `onTrial` của user instance hoặc phương thức `onTrial` của subscription instance. Hai ví dụ dưới đây tương đương nhau:
 
 ```php
 if ($user->onTrial('default')) {
@@ -1807,13 +1807,13 @@ if ($user->subscription('default')->onTrial()) {
 }
 ```
 
-You may use the `endTrial` method to immediately end a subscription trial:
+Bạn có thể sử dụng phương thức `endTrial` để kết thúc ngay thời gian dùng thử của gói đăng ký:
 
 ```php
 $user->subscription('default')->endTrial();
 ```
 
-To determine if an existing trial has expired, you may use the `hasExpiredTrial` methods:
+Để xác định một thời gian dùng thử hiện có đã hết hạn hay chưa, bạn có thể sử dụng các phương thức `hasExpiredTrial`:
 
 ```php
 if ($user->hasExpiredTrial('default')) {
@@ -1826,14 +1826,14 @@ if ($user->subscription('default')->hasExpiredTrial()) {
 ```
 
 <a name="defining-trial-days-in-stripe-cashier"></a>
-#### Defining Trial Days in Stripe / Cashier
+#### Định nghĩa số ngày dùng thử trong Stripe / Cashier
 
-You may choose to define how many trial days your price's receive in the Stripe dashboard or always pass them explicitly using Cashier. If you choose to define your price's trial days in Stripe you should be aware that new subscriptions, including new subscriptions for a customer that had a subscription in the past, will always receive a trial period unless you explicitly call the `skipTrial()` method.
+Bạn có thể chọn định nghĩa số ngày dùng thử mà price nhận được trong Stripe dashboard hoặc luôn truyền rõ số ngày bằng Cashier. Nếu chọn định nghĩa số ngày dùng thử của price trong Stripe, cần lưu ý rằng các gói đăng ký mới, bao gồm gói mới của khách hàng từng có gói đăng ký trước đây, luôn nhận thời gian dùng thử trừ khi bạn gọi rõ phương thức `skipTrial()`.
 
 <a name="without-payment-method-up-front"></a>
-### Without Payment Method Up Front
+### Không thu thập phương thức thanh toán từ đầu
 
-If you would like to offer trial periods without collecting the user's payment method information up front, you may set the `trial_ends_at` column on the user record to your desired trial ending date. This is typically done during user registration:
+Nếu muốn cung cấp thời gian dùng thử mà không thu thập thông tin phương thức thanh toán của người dùng từ đầu, bạn có thể đặt cột `trial_ends_at` trên bản ghi người dùng thành ngày kết thúc dùng thử mong muốn. Việc này thường được thực hiện khi đăng ký người dùng:
 
 ```php
 use App\Models\User;
@@ -1845,9 +1845,9 @@ $user = User::create([
 ```
 
 > [!WARNING]
-> Be sure to add a [date cast](/docs/{{version}}/eloquent-mutators#date-casting) for the `trial_ends_at` attribute within your billable model's class definition.
+Hãy đảm bảo thêm [date cast](/docs/{{version}}/eloquent-mutators#date-casting) cho thuộc tính `trial_ends_at` trong định nghĩa class của billable model.
 
-Cashier refers to this type of trial as a "generic trial", since it is not attached to any existing subscription. The `onTrial` method on the billable model instance will return `true` if the current date is not past the value of `trial_ends_at`:
+Cashier gọi kiểu dùng thử này là "generic trial" vì nó không gắn với bất kỳ gói đăng ký hiện có nào. Phương thức `onTrial` trên instance của billable model sẽ trả về `true` nếu ngày hiện tại chưa vượt quá giá trị `trial_ends_at`:
 
 ```php
 if ($user->onTrial()) {
@@ -1855,7 +1855,7 @@ if ($user->onTrial()) {
 }
 ```
 
-Once you are ready to create an actual subscription for the user, you may use the `newSubscription` method as usual:
+Khi đã sẵn sàng tạo gói đăng ký thực tế cho người dùng, bạn có thể sử dụng phương thức `newSubscription` như bình thường:
 
 ```php
 $user = User::find(1);
@@ -1863,7 +1863,7 @@ $user = User::find(1);
 $user->newSubscription('default', 'price_monthly')->create($paymentMethod);
 ```
 
-To retrieve the user's trial ending date, you may use the `trialEndsAt` method. This method will return a Carbon date instance if a user is on a trial or `null` if they aren't. You may also pass an optional subscription type parameter if you would like to get the trial ending date for a specific subscription other than the default one:
+Để truy xuất ngày kết thúc dùng thử của người dùng, bạn có thể sử dụng phương thức `trialEndsAt`. Phương thức này trả về một instance ngày Carbon nếu người dùng đang dùng thử hoặc `null` nếu không. Bạn cũng có thể truyền tham số loại gói đăng ký tùy chọn nếu muốn lấy ngày kết thúc dùng thử cho một gói cụ thể khác gói mặc định:
 
 ```php
 if ($user->onTrial()) {
@@ -1871,7 +1871,7 @@ if ($user->onTrial()) {
 }
 ```
 
-You may also use the `onGenericTrial` method if you wish to know specifically that the user is within their "generic" trial period and has not yet created an actual subscription:
+Bạn cũng có thể dùng phương thức `onGenericTrial` nếu muốn xác định cụ thể rằng người dùng đang trong thời gian "generic trial" và chưa tạo gói đăng ký thực tế:
 
 ```php
 if ($user->onGenericTrial()) {
@@ -1880,9 +1880,9 @@ if ($user->onGenericTrial()) {
 ```
 
 <a name="extending-trials"></a>
-### Extending Trials
+### Gia hạn thời gian dùng thử
 
-The `extendTrial` method allows you to extend the trial period of a subscription after the subscription has been created. If the trial has already expired and the customer is already being billed for the subscription, you can still offer them an extended trial. The time spent within the trial period will be deducted from the customer's next invoice:
+Phương thức `extendTrial` cho phép bạn gia hạn thời gian dùng thử của gói đăng ký sau khi gói đã được tạo. Nếu thời gian dùng thử đã hết và khách hàng đã bị tính phí cho gói đăng ký, bạn vẫn có thể cung cấp thêm thời gian dùng thử. Khoảng thời gian dùng thử này sẽ được khấu trừ khỏi hóa đơn tiếp theo của khách hàng:
 
 ```php
 use App\Models\User;
@@ -1901,16 +1901,16 @@ $subscription->extendTrial(
 ```
 
 <a name="handling-stripe-webhooks"></a>
-## Handling Stripe Webhooks
+## Xử lý Stripe Webhooks
 
 > [!NOTE]
-> You may use [the Stripe CLI](https://stripe.com/docs/stripe-cli) to help test webhooks during local development.
+> Bạn có thể sử dụng [Stripe CLI](https://stripe.com/docs/stripe-cli) để hỗ trợ kiểm thử webhook trong quá trình phát triển cục bộ.
 
-Stripe can notify your application of a variety of events via webhooks. By default, a route that points to Cashier's webhook controller is automatically registered by the Cashier service provider. This controller will handle all incoming webhook requests.
+Stripe có thể thông báo cho ứng dụng của bạn về nhiều loại sự kiện thông qua webhook. Theo mặc định, service provider của Cashier tự động đăng ký một route trỏ đến webhook controller của Cashier. Controller này sẽ xử lý mọi webhook request gửi đến.
 
-By default, the Cashier webhook controller will automatically handle cancelling subscriptions that have too many failed charges (as defined by your Stripe settings), customer updates, customer deletions, subscription updates, and payment method changes; however, as we'll soon discover, you can extend this controller to handle any Stripe webhook event you like.
+Theo mặc định, webhook controller của Cashier sẽ tự động xử lý việc hủy các gói đăng ký có quá nhiều lần thanh toán thất bại (theo cấu hình Stripe của bạn), cập nhật khách hàng, xóa khách hàng, cập nhật gói đăng ký và thay đổi phương thức thanh toán. Tuy nhiên, bạn có thể mở rộng controller này để xử lý bất kỳ sự kiện Stripe webhook nào mình muốn.
 
-To ensure your application can handle Stripe webhooks, be sure to configure the webhook URL in the Stripe control panel. By default, Cashier's webhook controller responds to the `/stripe/webhook` URL path. The full list of all webhooks you should enable in the Stripe control panel are:
+Để bảo đảm ứng dụng có thể xử lý Stripe webhook, hãy cấu hình URL webhook trong bảng điều khiển Stripe. Theo mặc định, webhook controller của Cashier phản hồi tại đường dẫn `/stripe/webhook`. Danh sách đầy đủ các webhook bạn nên bật trong bảng điều khiển Stripe gồm:
 
 - `customer.subscription.created`
 - `customer.subscription.updated`
@@ -1921,37 +1921,37 @@ To ensure your application can handle Stripe webhooks, be sure to configure the 
 - `invoice.payment_action_required`
 - `invoice.payment_succeeded`
 
-For convenience, Cashier includes a `cashier:webhook` Artisan command. This command will create a webhook in Stripe that listens to all of the events required by Cashier:
+Để thuận tiện, Cashier cung cấp lệnh Artisan `cashier:webhook`. Lệnh này sẽ tạo một webhook trong Stripe để lắng nghe tất cả sự kiện mà Cashier yêu cầu:
 
 ```shell
 php artisan cashier:webhook
 ```
 
-By default, the created webhook will point to the URL defined by the `APP_URL` environment variable and the `cashier.webhook` route that is included with Cashier. You may provide the `--url` option when invoking the command if you would like to use a different URL:
+Theo mặc định, webhook được tạo sẽ trỏ đến URL được định nghĩa bởi biến môi trường `APP_URL` và route `cashier.webhook` đi kèm Cashier. Nếu muốn dùng URL khác, bạn có thể truyền tùy chọn `--url` khi chạy lệnh:
 
 ```shell
 php artisan cashier:webhook --url "https://example.com/stripe/webhook"
 ```
 
-The webhook that is created will use the Stripe API version that your version of Cashier is compatible with. If you would like to use a different Stripe version, you may provide the `--api-version` option:
+Webhook được tạo sẽ sử dụng phiên bản Stripe API tương thích với phiên bản Cashier của bạn. Nếu muốn dùng phiên bản Stripe khác, bạn có thể truyền tùy chọn `--api-version`:
 
 ```shell
 php artisan cashier:webhook --api-version="2019-12-03"
 ```
 
-After creation, the webhook will be immediately active. If you wish to create the webhook but have it disabled until you're ready, you may provide the `--disabled` option when invoking the command:
+Sau khi tạo, webhook sẽ hoạt động ngay lập tức. Nếu muốn tạo webhook nhưng giữ trạng thái vô hiệu hóa cho đến khi sẵn sàng, bạn có thể truyền tùy chọn `--disabled` khi chạy lệnh:
 
 ```shell
 php artisan cashier:webhook --disabled
 ```
 
 > [!WARNING]
-> Make sure you protect incoming Stripe webhook requests with Cashier's included [webhook signature verification](#verifying-webhook-signatures) middleware.
+> Hãy bảo vệ các Stripe webhook request gửi đến bằng middleware [xác minh chữ ký webhook](#verifying-webhook-signatures) đi kèm Cashier.
 
 <a name="webhooks-csrf-protection"></a>
-#### Webhooks and CSRF Protection
+#### Webhook và bảo vệ CSRF
 
-Since Stripe webhooks need to bypass Laravel's [CSRF protection](/docs/{{version}}/csrf), you should ensure that Laravel does not attempt to validate the CSRF token for incoming Stripe webhooks. To accomplish this, you should exclude `stripe/*` from CSRF protection in your application's `bootstrap/app.php` file:
+Vì Stripe webhook cần bỏ qua [cơ chế bảo vệ CSRF](/docs/{{version}}/csrf) của Laravel, bạn cần bảo đảm Laravel không cố xác thực CSRF token đối với các Stripe webhook gửi đến. Để thực hiện điều này, hãy loại trừ `stripe/*` khỏi bảo vệ CSRF trong file `bootstrap/app.php` của ứng dụng:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -1962,14 +1962,14 @@ Since Stripe webhooks need to bypass Laravel's [CSRF protection](/docs/{{version
 ```
 
 <a name="defining-webhook-event-handlers"></a>
-### Defining Webhook Event Handlers
+### Định nghĩa trình xử lý sự kiện Webhook
 
-Cashier automatically handles subscription cancellations for failed charges and other common Stripe webhook events. However, if you have additional webhook events you would like to handle, you may do so by listening to the following events that are dispatched by Cashier:
+Cashier tự động xử lý việc hủy gói đăng ký do thanh toán thất bại và các sự kiện Stripe webhook phổ biến khác. Tuy nhiên, nếu có thêm các webhook event cần xử lý, bạn có thể lắng nghe những sự kiện sau do Cashier dispatch:
 
 - `Laravel\Cashier\Events\WebhookReceived`
 - `Laravel\Cashier\Events\WebhookHandled`
 
-Both events contain the full payload of the Stripe webhook. For example, if you wish to handle the `invoice.payment_succeeded` webhook, you may register a [listener](/docs/{{version}}/events#defining-listeners) that will handle the event:
+Cả hai sự kiện đều chứa toàn bộ payload của Stripe webhook. Ví dụ, nếu muốn xử lý webhook `invoice.payment_succeeded`, bạn có thể đăng ký một [listener](/docs/{{version}}/events#defining-listeners) để xử lý sự kiện:
 
 ```php
 <?php
@@ -1993,19 +1993,19 @@ class StripeEventListener
 ```
 
 <a name="verifying-webhook-signatures"></a>
-### Verifying Webhook Signatures
+### Xác minh chữ ký Webhook
 
-To secure your webhooks, you may use [Stripe's webhook signatures](https://stripe.com/docs/webhooks/signatures). For convenience, Cashier automatically includes a middleware which validates that the incoming Stripe webhook request is valid.
+Để bảo mật webhook, bạn có thể sử dụng [chữ ký webhook của Stripe](https://stripe.com/docs/webhooks/signatures). Cashier đã tích hợp sẵn middleware để xác minh Stripe webhook request gửi đến là hợp lệ.
 
-To enable webhook verification, ensure that the `STRIPE_WEBHOOK_SECRET` environment variable is set in your application's `.env` file. The webhook `secret` may be retrieved from your Stripe account dashboard.
+Để bật xác minh webhook, hãy bảo đảm biến môi trường `STRIPE_WEBHOOK_SECRET` được thiết lập trong file `.env` của ứng dụng. Bạn có thể lấy `secret` của webhook từ dashboard tài khoản Stripe.
 
 <a name="single-charges"></a>
-## Single Charges
+## Thanh toán một lần
 
 <a name="simple-charge"></a>
-### Simple Charge
+### Thanh toán đơn giản
 
-If you would like to make a one-time charge against a customer using a payment method identifier, you may use the `charge` method on a billable model instance. If you need to collect payment details from a customer before processing a one-time charge, see the [Payment Element for Single Charges](#payment-element-for-single-charges) documentation:
+Nếu muốn thực hiện một khoản thanh toán một lần cho khách hàng bằng mã định danh phương thức thanh toán, bạn có thể sử dụng phương thức `charge` trên một billable model. Nếu cần thu thập thông tin thanh toán trước khi xử lý khoản thanh toán một lần, hãy xem tài liệu [Payment Element cho thanh toán một lần](#payment-element-for-single-charges):
 
 ```php
 use Illuminate\Http\Request;
@@ -2019,7 +2019,7 @@ Route::post('/purchase', function (Request $request) {
 });
 ```
 
-The `charge` method accepts an array as its third argument, allowing you to pass any options you wish to the underlying Stripe Payment Intent creation. More information regarding the options available to you when creating Payment Intents may be found in the [Stripe documentation](https://stripe.com/docs/api/payment_intents/create):
+Phương thức `charge` nhận một mảng làm đối số thứ ba, cho phép bạn truyền các tùy chọn mong muốn xuống quá trình tạo Stripe Payment Intent bên dưới. Thông tin chi tiết về các tùy chọn khi tạo Payment Intent có trong [tài liệu Stripe](https://stripe.com/docs/api/payment_intents/create):
 
 ```php
 $user->charge(100, $paymentMethod, [
@@ -2027,7 +2027,7 @@ $user->charge(100, $paymentMethod, [
 ]);
 ```
 
-You may also use the `charge` method without an underlying customer or user. To accomplish this, invoke the `charge` method on a new instance of your application's billable model:
+Bạn cũng có thể sử dụng `charge` mà không cần customer hoặc user tương ứng. Để làm vậy, hãy gọi `charge` trên một instance mới của billable model trong ứng dụng:
 
 ```php
 use App\Models\User;
@@ -2035,7 +2035,7 @@ use App\Models\User;
 $payment = (new User)->charge(100, $paymentMethod);
 ```
 
-The `charge` method will throw an exception if the charge fails. If the charge is successful, an instance of `Laravel\Cashier\Payment` will be returned from the method:
+Phương thức `charge` sẽ ném exception nếu giao dịch thất bại. Nếu thành công, phương thức sẽ trả về một instance của `Laravel\Cashier\Payment`:
 
 ```php
 try {
@@ -2046,18 +2046,18 @@ try {
 ```
 
 > [!WARNING]
-> The `charge` method accepts the payment amount in the lowest denominator of the currency used by your application. For example, if customers are paying in United States Dollars, amounts should be specified in pennies.
+> Phương thức `charge` nhận số tiền theo đơn vị nhỏ nhất của loại tiền tệ mà ứng dụng sử dụng. Ví dụ, nếu khách hàng thanh toán bằng đô la Mỹ, số tiền phải được chỉ định theo cent.
 
 <a name="charge-with-invoice"></a>
-### Charge With Invoice
+### Thanh toán kèm hóa đơn
 
-Sometimes you may need to make a one-time charge and offer a PDF invoice to your customer. The `invoicePrice` method lets you do just that. For example, let's invoice a customer for five new shirts:
+Đôi khi bạn cần thực hiện một khoản thanh toán một lần đồng thời cung cấp hóa đơn PDF cho khách hàng. Phương thức `invoicePrice` cho phép thực hiện việc này. Ví dụ, hãy lập hóa đơn cho năm chiếc áo mới:
 
 ```php
 $user->invoicePrice('price_tshirt', 5);
 ```
 
-The invoice will be immediately charged against the user's default payment method. The `invoicePrice` method also accepts an array as its third argument. This array contains the billing options for the invoice item. The fourth argument accepted by the method is also an array which should contain the billing options for the invoice itself:
+Hóa đơn sẽ được thu tiền ngay qua phương thức thanh toán mặc định của người dùng. `invoicePrice` cũng nhận một mảng làm đối số thứ ba chứa các tùy chọn thanh toán cho invoice item. Đối số thứ tư cũng là một mảng chứa các tùy chọn thanh toán cho chính hóa đơn:
 
 ```php
 $user->invoicePrice('price_tshirt', 5, [
@@ -2069,7 +2069,7 @@ $user->invoicePrice('price_tshirt', 5, [
 ]);
 ```
 
-Similarly to `invoicePrice`, you may use the `tabPrice` method to create a one-time charge for multiple items (up to 250 items per invoice) by adding them to the customer's "tab" and then invoicing the customer. For example, we may invoice a customer for five shirts and two mugs:
+Tương tự `invoicePrice`, bạn có thể dùng `tabPrice` để tạo khoản thanh toán một lần cho nhiều mặt hàng (tối đa 250 item mỗi hóa đơn) bằng cách thêm chúng vào "tab" của khách hàng rồi lập hóa đơn. Ví dụ, ta có thể lập hóa đơn cho năm chiếc áo và hai chiếc cốc:
 
 ```php
 $user->tabPrice('price_tshirt', 5);
@@ -2077,21 +2077,21 @@ $user->tabPrice('price_mug', 2);
 $user->invoice();
 ```
 
-Alternatively, you may use the `invoiceFor` method to make a "one-off" charge against the customer's default payment method:
+Ngoài ra, bạn có thể dùng `invoiceFor` để thực hiện khoản thu "một lần" trên phương thức thanh toán mặc định của khách hàng:
 
 ```php
 $user->invoiceFor('One Time Fee', 500);
 ```
 
-Although the `invoiceFor` method is available for you to use, it is recommended that you use the `invoicePrice` and `tabPrice` methods with pre-defined prices. By doing so, you will have access to better analytics and data within your Stripe dashboard regarding your sales on a per-product basis.
+Mặc dù có thể sử dụng `invoiceFor`, bạn nên ưu tiên `invoicePrice` và `tabPrice` với các price được định nghĩa trước. Cách này giúp bạn có dữ liệu và phân tích tốt hơn trong Stripe dashboard về doanh số theo từng sản phẩm.
 
 > [!WARNING]
-> The `invoice`, `invoicePrice`, and `invoiceFor` methods will create a Stripe invoice which will retry failed billing attempts. If you do not want invoices to retry failed charges, you will need to close them using the Stripe API after the first failed charge.
+> Các phương thức `invoice`, `invoicePrice` và `invoiceFor` sẽ tạo Stripe invoice có cơ chế thử lại các lần thu tiền thất bại. Nếu không muốn hóa đơn thử lại, bạn cần đóng hóa đơn bằng Stripe API sau lần thanh toán thất bại đầu tiên.
 
 <a name="creating-payment-intents"></a>
-### Creating Payment Intents
+### Tạo Payment Intent
 
-You can create a new Stripe payment intent by invoking the `pay` method on a billable model instance. Calling this method will create a payment intent that is wrapped in a `Laravel\Cashier\Payment` instance:
+Bạn có thể tạo Stripe Payment Intent mới bằng cách gọi `pay` trên billable model. Phương thức này tạo một Payment Intent được bọc trong instance `Laravel\Cashier\Payment`:
 
 ```php
 use Illuminate\Http\Request;
@@ -2105,9 +2105,9 @@ Route::post('/pay', function (Request $request) {
 });
 ```
 
-After creating the payment intent, you can return the client secret to your application's frontend so that the user can complete the payment in their browser. To read more about building entire payment flows using Stripe payment intents, please consult the [Stripe documentation](https://stripe.com/docs/payments/accept-a-payment?platform=web).
+Sau khi tạo Payment Intent, bạn có thể trả client secret về frontend để người dùng hoàn tất thanh toán trong trình duyệt. Để tìm hiểu thêm về việc xây dựng toàn bộ luồng thanh toán bằng Stripe Payment Intent, hãy xem [tài liệu Stripe](https://stripe.com/docs/payments/accept-a-payment?platform=web).
 
-When using the `pay` method, the default payment methods that are enabled within your Stripe dashboard will be available to the customer. Alternatively, if you only want to allow for some specific payment methods to be used, you may use the `payWith` method:
+Khi sử dụng `pay`, các phương thức thanh toán mặc định được bật trong Stripe dashboard sẽ khả dụng cho khách hàng. Nếu chỉ muốn cho phép một số phương thức thanh toán cụ thể, bạn có thể dùng `payWith`:
 
 ```php
 use Illuminate\Http\Request;
@@ -2122,12 +2122,12 @@ Route::post('/pay', function (Request $request) {
 ```
 
 > [!WARNING]
-> The `pay` and `payWith` methods accept the payment amount in the lowest denominator of the currency used by your application. For example, if customers are paying in United States Dollars, amounts should be specified in pennies.
+> Các phương thức `pay` và `payWith` nhận số tiền thanh toán theo đơn vị nhỏ nhất của loại tiền tệ mà ứng dụng sử dụng. Ví dụ, nếu khách hàng thanh toán bằng đô la Mỹ, số tiền phải được chỉ định theo cent.
 
 <a name="refunding-charges"></a>
-### Refunding Charges
+### Hoàn tiền giao dịch
 
-If you need to refund a Stripe payment, you may use the `refund` method. This method accepts the Stripe Payment Intent ID as its first argument:
+Nếu cần hoàn tiền một khoản thanh toán Stripe, bạn có thể sử dụng phương thức `refund`. Phương thức này nhận Stripe Payment Intent ID làm đối số đầu tiên:
 
 ```php
 $payment = $user->charge(100, $paymentMethodId);
@@ -2136,33 +2136,33 @@ $user->refund($payment->id);
 ```
 
 <a name="invoices"></a>
-## Invoices
+## Hóa đơn
 
 <a name="retrieving-invoices"></a>
-### Retrieving Invoices
+### Truy xuất hóa đơn
 
-You may easily retrieve an array of a billable model's invoices using the `invoices` method. The `invoices` method returns a collection of `Laravel\Cashier\Invoice` instances:
+Bạn có thể dễ dàng truy xuất các hóa đơn của billable model bằng phương thức `invoices`. Phương thức này trả về một collection các instance `Laravel\Cashier\Invoice`:
 
 ```php
 $invoices = $user->invoices();
 ```
 
-If you would like to include pending invoices in the results, you may use the `invoicesIncludingPending` method:
+Nếu muốn bao gồm cả các hóa đơn đang chờ xử lý trong kết quả, bạn có thể sử dụng `invoicesIncludingPending`:
 
 ```php
 $invoices = $user->invoicesIncludingPending();
 ```
 
-You may use the `findInvoice` method to retrieve a specific invoice by its ID:
+Bạn có thể dùng `findInvoice` để truy xuất một hóa đơn cụ thể theo ID:
 
 ```php
 $invoice = $user->findInvoice($invoiceId);
 ```
 
 <a name="displaying-invoice-information"></a>
-#### Displaying Invoice Information
+#### Hiển thị thông tin hóa đơn
 
-When listing the invoices for the customer, you may use the invoice's methods to display the relevant invoice information. For example, you may wish to list every invoice in a table, allowing the user to easily download any of them:
+Khi liệt kê hóa đơn của khách hàng, bạn có thể dùng các phương thức trên invoice để hiển thị thông tin liên quan. Ví dụ, bạn có thể liệt kê mọi hóa đơn trong một bảng để người dùng dễ dàng tải xuống bất kỳ hóa đơn nào:
 
 ```blade
 <table>
@@ -2177,45 +2177,45 @@ When listing the invoices for the customer, you may use the invoice's methods to
 ```
 
 <a name="upcoming-invoices"></a>
-### Upcoming Invoices
+### Hóa đơn sắp tới
 
-To retrieve the upcoming invoice for a customer, you may use the `upcomingInvoice` method:
+Để truy xuất hóa đơn sắp tới của khách hàng, bạn có thể sử dụng phương thức `upcomingInvoice`:
 
 ```php
 $invoice = $user->upcomingInvoice();
 ```
 
-Similarly, if the customer has multiple subscriptions, you can also retrieve the upcoming invoice for a specific subscription:
+Tương tự, nếu khách hàng có nhiều gói đăng ký, bạn cũng có thể truy xuất hóa đơn sắp tới của một gói đăng ký cụ thể:
 
 ```php
 $invoice = $user->subscription('default')->upcomingInvoice();
 ```
 
 <a name="previewing-subscription-invoices"></a>
-### Previewing Subscription Invoices
+### Xem trước hóa đơn gói đăng ký
 
-Using the `previewInvoice` method, you can preview an invoice before making price changes. This will allow you to determine what your customer's invoice will look like when a given price change is made:
+Bằng phương thức `previewInvoice`, bạn có thể xem trước hóa đơn trước khi thay đổi price. Điều này giúp xác định hóa đơn của khách hàng sẽ trông như thế nào khi áp dụng một thay đổi price cụ thể:
 
 ```php
 $invoice = $user->subscription('default')->previewInvoice('price_yearly');
 ```
 
-You may pass an array of prices to the `previewInvoice` method in order to preview invoices with multiple new prices:
+Bạn có thể truyền một mảng price vào `previewInvoice` để xem trước hóa đơn với nhiều price mới:
 
 ```php
 $invoice = $user->subscription('default')->previewInvoice(['price_yearly', 'price_metered']);
 ```
 
 <a name="generating-invoice-pdfs"></a>
-### Generating Invoice PDFs
+### Tạo PDF hóa đơn
 
-Before generating invoice PDFs, you should use Composer to install the Dompdf library, which is the default invoice renderer for Cashier:
+Trước khi tạo PDF hóa đơn, bạn nên dùng Composer để cài thư viện Dompdf, đây là invoice renderer mặc định của Cashier:
 
 ```shell
 composer require dompdf/dompdf
 ```
 
-From within a route or controller, you may use the `downloadInvoice` method to generate a PDF download of a given invoice. This method will automatically generate the proper HTTP response needed to download the invoice:
+Trong route hoặc controller, bạn có thể dùng `downloadInvoice` để tạo bản tải xuống PDF cho một hóa đơn cụ thể. Phương thức này tự động tạo HTTP response phù hợp để tải hóa đơn:
 
 ```php
 use Illuminate\Http\Request;
@@ -2225,7 +2225,7 @@ Route::get('/user/invoice/{invoice}', function (Request $request, string $invoic
 });
 ```
 
-By default, all data on the invoice is derived from the customer and invoice data stored in Stripe. The filename is based on your `app.name` config value. However, you can customize some of this data by providing an array as the second argument to the `downloadInvoice` method. This array allows you to customize information such as your company and product details:
+Theo mặc định, toàn bộ dữ liệu trên hóa đơn được lấy từ dữ liệu customer và invoice lưu trong Stripe. Tên file dựa trên giá trị cấu hình `app.name`. Tuy nhiên, bạn có thể tùy chỉnh một phần dữ liệu bằng cách truyền mảng làm đối số thứ hai cho `downloadInvoice`. Mảng này cho phép tùy chỉnh các thông tin như công ty và chi tiết sản phẩm:
 
 ```php
 return $request->user()->downloadInvoice($invoiceId, [
@@ -2240,16 +2240,16 @@ return $request->user()->downloadInvoice($invoiceId, [
 ]);
 ```
 
-The `downloadInvoice` method also allows for a custom filename via its third argument. This filename will automatically be suffixed with `.pdf`:
+`downloadInvoice` cũng cho phép chỉ định tên file tùy chỉnh qua đối số thứ ba. Tên file sẽ tự động được thêm hậu tố `.pdf`:
 
 ```php
 return $request->user()->downloadInvoice($invoiceId, [], 'my-invoice');
 ```
 
 <a name="custom-invoice-render"></a>
-#### Custom Invoice Renderer
+#### Trình render hóa đơn tùy chỉnh
 
-Cashier also makes it possible to use a custom invoice renderer. By default, Cashier uses the `DompdfInvoiceRenderer` implementation, which utilizes the [dompdf](https://github.com/dompdf/dompdf) PHP library to generate Cashier's invoices. However, you may use any renderer you wish by implementing the `Laravel\Cashier\Contracts\InvoiceRenderer` interface. For example, you may wish to render an invoice PDF using an API call to a third-party PDF rendering service:
+Cashier cũng cho phép sử dụng invoice renderer tùy chỉnh. Theo mặc định, Cashier dùng implementation `DompdfInvoiceRenderer`, dựa trên thư viện PHP [dompdf](https://github.com/dompdf/dompdf) để tạo hóa đơn của Cashier. Tuy nhiên, bạn có thể dùng bất kỳ renderer nào bằng cách implement interface `Laravel\Cashier\Contracts\InvoiceRenderer`. Ví dụ, bạn có thể render PDF hóa đơn thông qua API của một dịch vụ render PDF bên thứ ba:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -2270,19 +2270,19 @@ class ApiInvoiceRenderer implements InvoiceRenderer
 }
 ```
 
-Once you have implemented the invoice renderer contract, you should update the `cashier.invoices.renderer` configuration value in your application's `config/cashier.php` configuration file. This configuration value should be set to the class name of your custom renderer implementation.
+Sau khi implement contract invoice renderer, hãy cập nhật giá trị cấu hình `cashier.invoices.renderer` trong file `config/cashier.php` của ứng dụng. Giá trị này phải là tên class của implementation renderer tùy chỉnh.
 
 <a name="checkout"></a>
 ## Checkout
 
-Cashier Stripe also provides support for [Stripe Checkout](https://stripe.com/payments/checkout). Stripe Checkout takes the pain out of implementing custom pages to accept payments by providing a pre-built, hosted payment page.
+Cashier Stripe cũng hỗ trợ [Stripe Checkout](https://stripe.com/payments/checkout). Stripe Checkout giúp bạn không phải tự xây dựng các trang thanh toán tùy chỉnh bằng cách cung cấp một trang thanh toán dựng sẵn và được Stripe lưu trữ.
 
-The following documentation contains information on how to get started using Stripe Checkout with Cashier. To learn more about Stripe Checkout, you should also consider reviewing [Stripe's own documentation on Checkout](https://stripe.com/docs/payments/checkout).
+Phần tài liệu sau trình bày cách bắt đầu sử dụng Stripe Checkout với Cashier. Để tìm hiểu sâu hơn về Stripe Checkout, bạn cũng nên tham khảo [tài liệu Checkout của Stripe](https://stripe.com/docs/payments/checkout).
 
 <a name="product-checkouts"></a>
-### Product Checkouts
+### Checkout sản phẩm
 
-You may perform a checkout for an existing product that has been created within your Stripe dashboard using the `checkout` method on a billable model. The `checkout` method will initiate a new Stripe Checkout session. By default, you're required to pass a Stripe Price ID:
+Bạn có thể thực hiện checkout cho một sản phẩm hiện có đã được tạo trong Stripe Dashboard bằng phương thức `checkout` trên billable model. Phương thức `checkout` sẽ khởi tạo một Stripe Checkout session mới. Theo mặc định, bạn cần truyền Stripe Price ID:
 
 ```php
 use Illuminate\Http\Request;
@@ -2292,7 +2292,7 @@ Route::get('/product-checkout', function (Request $request) {
 });
 ```
 
-If needed, you may also specify a product quantity:
+Nếu cần, bạn cũng có thể chỉ định số lượng sản phẩm:
 
 ```php
 use Illuminate\Http\Request;
@@ -2302,7 +2302,7 @@ Route::get('/product-checkout', function (Request $request) {
 });
 ```
 
-When a customer visits this route they will be redirected to Stripe's Checkout page. By default, when a user successfully completes or cancels a purchase they will be redirected to your `home` route location, but you may specify custom callback URLs using the `success_url` and `cancel_url` options:
+Khi khách hàng truy cập route này, họ sẽ được chuyển hướng đến trang Checkout của Stripe. Theo mặc định, sau khi người dùng hoàn tất hoặc hủy giao dịch mua, họ sẽ được chuyển hướng về route `home`; tuy nhiên, bạn có thể chỉ định URL callback tùy chỉnh bằng các tùy chọn `success_url` và `cancel_url`:
 
 ```php
 use Illuminate\Http\Request;
@@ -2315,7 +2315,7 @@ Route::get('/product-checkout', function (Request $request) {
 });
 ```
 
-When defining your `success_url` checkout option, you may instruct Stripe to add the checkout session ID as a query string parameter when invoking your URL. To do so, add the literal string `{CHECKOUT_SESSION_ID}` to your `success_url` query string. Stripe will replace this placeholder with the actual checkout session ID:
+Khi định nghĩa tùy chọn checkout `success_url`, bạn có thể yêu cầu Stripe thêm checkout session ID dưới dạng tham số query string khi gọi URL của bạn. Để làm điều này, hãy thêm chuỗi literal `{CHECKOUT_SESSION_ID}` vào query string của `success_url`. Stripe sẽ thay placeholder này bằng checkout session ID thực tế:
 
 ```php
 use Illuminate\Http\Request;
@@ -2337,9 +2337,9 @@ Route::get('/checkout-success', function (Request $request) {
 ```
 
 <a name="checkout-promotion-codes"></a>
-#### Promotion Codes
+#### Mã khuyến mãi
 
-By default, Stripe Checkout does not allow [user redeemable promotion codes](https://stripe.com/docs/billing/subscriptions/discounts/codes). Luckily, there's an easy way to enable these for your Checkout page. To do so, you may invoke the `allowPromotionCodes` method:
+Theo mặc định, Stripe Checkout không cho phép [người dùng sử dụng mã khuyến mãi](https://stripe.com/docs/billing/subscriptions/discounts/codes). Bạn có thể dễ dàng bật tính năng này cho trang Checkout bằng cách gọi phương thức `allowPromotionCodes`:
 
 ```php
 use Illuminate\Http\Request;
@@ -2352,9 +2352,9 @@ Route::get('/product-checkout', function (Request $request) {
 ```
 
 <a name="single-charge-checkouts"></a>
-### Single Charge Checkouts
+### Checkout thanh toán một lần
 
-You can also perform a simple charge for an ad-hoc product that has not been created in your Stripe dashboard. To do so you may use the `checkoutCharge` method on a billable model and pass it a chargeable amount, a product name, and an optional quantity. When a customer visits this route they will be redirected to Stripe's Checkout page:
+Bạn cũng có thể thực hiện một khoản thanh toán đơn giản cho sản phẩm ad-hoc chưa được tạo trong Stripe Dashboard. Để làm điều này, hãy dùng phương thức `checkoutCharge` trên billable model và truyền số tiền cần thu, tên sản phẩm cùng số lượng tùy chọn. Khi khách hàng truy cập route này, họ sẽ được chuyển hướng đến trang Checkout của Stripe:
 
 ```php
 use Illuminate\Http\Request;
@@ -2365,15 +2365,15 @@ Route::get('/charge-checkout', function (Request $request) {
 ```
 
 > [!WARNING]
-> When using the `checkoutCharge` method, Stripe will always create a new product and price in your Stripe dashboard. Therefore, we recommend that you create the products up front in your Stripe dashboard and use the `checkout` method instead.
+> Khi sử dụng phương thức `checkoutCharge`, Stripe luôn tạo một product và price mới trong Stripe Dashboard. Vì vậy, chúng tôi khuyến nghị bạn tạo trước các product trong Stripe Dashboard và sử dụng phương thức `checkout` thay thế.
 
 <a name="subscription-checkouts"></a>
-### Subscription Checkouts
+### Checkout gói đăng ký
 
 > [!WARNING]
-> Using Stripe Checkout for subscriptions requires you to enable the `customer.subscription.created` webhook in your Stripe dashboard. This webhook will create the subscription record in your database and store all of the relevant subscription items.
+> Việc sử dụng Stripe Checkout cho gói đăng ký yêu cầu bạn bật webhook `customer.subscription.created` trong Stripe Dashboard. Webhook này sẽ tạo bản ghi subscription trong cơ sở dữ liệu và lưu tất cả subscription item liên quan.
 
-You may also use Stripe Checkout to initiate subscriptions. After defining your subscription with Cashier's subscription builder methods, you may call the `checkout `method. When a customer visits this route they will be redirected to Stripe's Checkout page:
+Bạn cũng có thể dùng Stripe Checkout để khởi tạo gói đăng ký. Sau khi định nghĩa subscription bằng các phương thức subscription builder của Cashier, bạn có thể gọi phương thức `checkout`. Khi khách hàng truy cập route này, họ sẽ được chuyển hướng đến trang Checkout của Stripe:
 
 ```php
 use Illuminate\Http\Request;
@@ -2385,7 +2385,7 @@ Route::get('/subscription-checkout', function (Request $request) {
 });
 ```
 
-Just as with product checkouts, you may customize the success and cancellation URLs:
+Tương tự checkout sản phẩm, bạn có thể tùy chỉnh URL thành công và URL hủy:
 
 ```php
 use Illuminate\Http\Request;
@@ -2400,7 +2400,7 @@ Route::get('/subscription-checkout', function (Request $request) {
 });
 ```
 
-Of course, you can also enable promotion codes for subscription checkouts:
+Bạn cũng có thể bật mã khuyến mãi cho checkout gói đăng ký:
 
 ```php
 use Illuminate\Http\Request;
@@ -2414,12 +2414,12 @@ Route::get('/subscription-checkout', function (Request $request) {
 ```
 
 > [!WARNING]
-> Unfortunately Stripe Checkout does not support all subscription billing options when starting subscriptions. Using the `anchorBillingCycleOn` method on the subscription builder, setting proration behavior, or setting payment behavior will not have any effect during Stripe Checkout sessions. Please consult [the Stripe Checkout Session API documentation](https://stripe.com/docs/api/checkout/sessions/create) to review which parameters are available.
+> Stripe Checkout không hỗ trợ tất cả tùy chọn billing của subscription khi khởi tạo gói đăng ký. Việc sử dụng `anchorBillingCycleOn` trên subscription builder, thiết lập hành vi proration hoặc payment behavior sẽ không có hiệu lực trong Stripe Checkout session. Hãy tham khảo [tài liệu Stripe Checkout Session API](https://stripe.com/docs/api/checkout/sessions/create) để xem các tham số khả dụng.
 
 <a name="stripe-checkout-trial-periods"></a>
-#### Stripe Checkout and Trial Periods
+#### Stripe Checkout và thời gian dùng thử
 
-Of course, you can define a trial period when building a subscription that will be completed using Stripe Checkout:
+Bạn có thể định nghĩa thời gian dùng thử khi xây dựng subscription sẽ được hoàn tất thông qua Stripe Checkout:
 
 ```php
 $checkout = Auth::user()->newSubscription('default', 'price_monthly')
@@ -2427,31 +2427,31 @@ $checkout = Auth::user()->newSubscription('default', 'price_monthly')
     ->checkout();
 ```
 
-However, the trial period must be at least 48 hours, which is the minimum amount of trial time supported by Stripe Checkout.
+Tuy nhiên, thời gian dùng thử phải ít nhất 48 giờ, đây là thời lượng dùng thử tối thiểu mà Stripe Checkout hỗ trợ.
 
 <a name="stripe-checkout-subscriptions-and-webhooks"></a>
-#### Subscriptions and Webhooks
+#### Gói đăng ký và Webhook
 
-Remember, Stripe and Cashier update subscription statuses via webhooks, so there's a possibility a subscription might not yet be active when the customer returns to the application after entering their payment information. To handle this scenario, you may wish to display a message informing the user that their payment or subscription is pending.
+Hãy nhớ rằng Stripe và Cashier cập nhật trạng thái subscription thông qua webhook, vì vậy subscription có thể chưa active ngay khi khách hàng quay lại ứng dụng sau khi nhập thông tin thanh toán. Để xử lý tình huống này, bạn có thể hiển thị thông báo cho người dùng rằng khoản thanh toán hoặc gói đăng ký của họ đang chờ xử lý.
 
 <a name="collecting-tax-ids"></a>
-### Collecting Tax IDs
+### Thu thập Tax ID
 
-Checkout also supports collecting a customer's Tax ID. To enable this on a checkout session, invoke the `collectTaxIds` method when creating the session:
+Checkout cũng hỗ trợ thu thập Tax ID của khách hàng. Để bật tính năng này cho checkout session, hãy gọi phương thức `collectTaxIds` khi tạo session:
 
 ```php
 $checkout = $user->collectTaxIds()->checkout('price_tshirt');
 ```
 
-When this method is invoked, a new checkbox will be available to the customer that allows them to indicate if they're purchasing as a company. If so, they will have the opportunity to provide their Tax ID number.
+Khi phương thức này được gọi, khách hàng sẽ thấy một checkbox mới cho phép họ cho biết giao dịch mua được thực hiện dưới danh nghĩa công ty hay không. Nếu có, họ sẽ có thể cung cấp số Tax ID.
 
 > [!WARNING]
-> If you have already configured [automatic tax collection](#tax-configuration) in your application's service provider then this feature will be enabled automatically and there is no need to invoke the `collectTaxIds` method.
+> Nếu bạn đã cấu hình [tự động thu thuế](#tax-configuration) trong service provider của ứng dụng, tính năng này sẽ tự động được bật và bạn không cần gọi phương thức `collectTaxIds`.
 
 <a name="guest-checkouts"></a>
-### Guest Checkouts
+### Checkout cho khách
 
-Using the `Checkout::guest` method, you may initiate checkout sessions for guests of your application that do not have an "account":
+Sử dụng phương thức `Checkout::guest`, bạn có thể khởi tạo checkout session cho khách truy cập ứng dụng chưa có "tài khoản":
 
 ```php
 use Illuminate\Http\Request;
@@ -2465,7 +2465,7 @@ Route::get('/product-checkout', function (Request $request) {
 });
 ```
 
-Similarly to when creating checkout sessions for existing users, you may utilize additional methods available on the `Laravel\Cashier\CheckoutBuilder` instance to customize the guest checkout session:
+Tương tự khi tạo checkout session cho người dùng hiện có, bạn có thể sử dụng các phương thức bổ sung trên instance `Laravel\Cashier\CheckoutBuilder` để tùy chỉnh guest checkout session:
 
 ```php
 use Illuminate\Http\Request;
@@ -2481,14 +2481,14 @@ Route::get('/product-checkout', function (Request $request) {
 });
 ```
 
-After a guest checkout has been completed, Stripe can dispatch a `checkout.session.completed` webhook event, so make sure to [configure your Stripe webhook](https://dashboard.stripe.com/webhooks) to actually send this event to your application. Once the webhook has been enabled within the Stripe dashboard, you may [handle the webhook with Cashier](#handling-stripe-webhooks). The object contained in the webhook payload will be a [checkout object](https://stripe.com/docs/api/checkout/sessions/object) that you may inspect in order to fulfill your customer's order.
+Sau khi guest checkout hoàn tất, Stripe có thể gửi webhook event `checkout.session.completed`, vì vậy hãy đảm bảo [cấu hình Stripe webhook](https://dashboard.stripe.com/webhooks) để gửi event này đến ứng dụng. Khi webhook đã được bật trong Stripe Dashboard, bạn có thể [xử lý webhook bằng Cashier](#handling-stripe-webhooks). Object trong webhook payload sẽ là một [checkout object](https://stripe.com/docs/api/checkout/sessions/object) mà bạn có thể kiểm tra để hoàn tất đơn hàng của khách.
 
 <a name="handling-failed-payments"></a>
-## Handling Failed Payments
+## Xử lý thanh toán thất bại
 
-Sometimes, payments for subscriptions or single charges can fail. When this happens, Cashier will throw an `Laravel\Cashier\Exceptions\IncompletePayment` exception that informs you that this happened. After catching this exception, you have two options on how to proceed.
+Đôi khi thanh toán cho gói đăng ký hoặc khoản thanh toán một lần có thể thất bại. Khi điều này xảy ra, Cashier sẽ ném exception `Laravel\Cashier\Exceptions\IncompletePayment` để thông báo cho bạn. Sau khi bắt exception này, bạn có hai cách để tiếp tục xử lý.
 
-First, you could redirect your customer to the dedicated payment confirmation page which is included with Cashier. This page already has an associated named route that is registered via Cashier's service provider. So, you may catch the `IncompletePayment` exception and redirect the user to the payment confirmation page:
+Đầu tiên, bạn có thể chuyển hướng khách hàng đến trang xác nhận thanh toán chuyên dụng đi kèm Cashier. Trang này đã có named route tương ứng được đăng ký thông qua service provider của Cashier. Vì vậy, bạn có thể bắt exception `IncompletePayment` và chuyển người dùng đến trang xác nhận thanh toán:
 
 ```php
 use Laravel\Cashier\Exceptions\IncompletePayment;
@@ -2504,7 +2504,7 @@ try {
 }
 ```
 
-On the payment confirmation page, the customer will be prompted to enter their credit card information again and perform any additional actions required by Stripe, such as "3D Secure" confirmation. After confirming their payment, the user will be redirected to the URL provided by the `redirect` parameter specified above. Upon redirection, `message` (string) and `success` (integer) query string variables will be added to the URL. The payment page currently supports the following payment method types:
+Trên trang xác nhận thanh toán, khách hàng sẽ được yêu cầu nhập lại thông tin thẻ tín dụng và thực hiện các thao tác bổ sung mà Stripe yêu cầu, chẳng hạn xác nhận "3D Secure". Sau khi xác nhận thanh toán, người dùng sẽ được chuyển hướng đến URL được cung cấp qua tham số `redirect` ở trên. Khi chuyển hướng, các biến query string `message` (string) và `success` (integer) sẽ được thêm vào URL. Trang thanh toán hiện hỗ trợ các loại phương thức thanh toán sau:
 
 <div class="content-list" markdown="1">
 
@@ -2519,11 +2519,11 @@ On the payment confirmation page, the customer will be prompted to enter their c
 
 </div>
 
-Alternatively, you could allow Stripe to handle the payment confirmation for you. In this case, instead of redirecting to the payment confirmation page, you may [set up Stripe's automatic billing emails](https://dashboard.stripe.com/account/billing/automatic) in your Stripe dashboard. However, if an `IncompletePayment` exception is caught, you should still inform the user they will receive an email with further payment confirmation instructions.
+Ngoài ra, bạn có thể để Stripe xử lý việc xác nhận thanh toán. Trong trường hợp này, thay vì chuyển hướng đến trang xác nhận thanh toán, bạn có thể [thiết lập email billing tự động của Stripe](https://dashboard.stripe.com/account/billing/automatic) trong Stripe Dashboard. Tuy nhiên, nếu bắt được exception `IncompletePayment`, bạn vẫn nên thông báo rằng người dùng sẽ nhận email chứa hướng dẫn xác nhận thanh toán tiếp theo.
 
-Payment exceptions may be thrown for the following methods: `charge`, `invoiceFor`, and `invoice` on models using the `Billable` trait. When interacting with subscriptions, the `create` method on the `SubscriptionBuilder`, and the `incrementAndInvoice` and `swapAndInvoice` methods on the `Subscription` and `SubscriptionItem` models may throw incomplete payment exceptions.
+Payment exception có thể được ném từ các phương thức `charge`, `invoiceFor` và `invoice` trên model sử dụng trait `Billable`. Khi làm việc với subscription, phương thức `create` trên `SubscriptionBuilder`, cùng các phương thức `incrementAndInvoice` và `swapAndInvoice` trên model `Subscription` và `SubscriptionItem`, có thể ném incomplete payment exception.
 
-Determining if an existing subscription has an incomplete payment may be accomplished using the `hasIncompletePayment` method on the billable model or a subscription instance:
+Bạn có thể xác định một subscription hiện có có khoản thanh toán chưa hoàn tất hay không bằng phương thức `hasIncompletePayment` trên billable model hoặc subscription instance:
 
 ```php
 if ($user->hasIncompletePayment('default')) {
@@ -2535,7 +2535,7 @@ if ($user->subscription('default')->hasIncompletePayment()) {
 }
 ```
 
-You can derive the specific status of an incomplete payment by inspecting the `payment` property on the exception instance:
+Bạn có thể xác định trạng thái cụ thể của khoản thanh toán chưa hoàn tất bằng cách kiểm tra property `payment` trên exception instance:
 
 ```php
 use Laravel\Cashier\Exceptions\IncompletePayment;
@@ -2556,9 +2556,9 @@ try {
 ```
 
 <a name="confirming-payments"></a>
-### Confirming Payments
+### Xác nhận thanh toán
 
-Some payment methods require additional data in order to confirm payments. For example, SEPA payment methods require additional "mandate" data during the payment process. You may provide this data to Cashier using the `withPaymentConfirmationOptions` method:
+Một số phương thức thanh toán yêu cầu dữ liệu bổ sung để xác nhận thanh toán. Ví dụ, phương thức thanh toán SEPA yêu cầu thêm dữ liệu "mandate" trong quá trình thanh toán. Bạn có thể cung cấp dữ liệu này cho Cashier bằng phương thức `withPaymentConfirmationOptions`:
 
 ```php
 $subscription->withPaymentConfirmationOptions([
@@ -2566,48 +2566,48 @@ $subscription->withPaymentConfirmationOptions([
 ])->swap('price_xxx');
 ```
 
-You may consult the [Stripe API documentation](https://stripe.com/docs/api/payment_intents/confirm) to review all of the options accepted when confirming payments.
+Bạn có thể tham khảo [tài liệu Stripe API](https://stripe.com/docs/api/payment_intents/confirm) để xem tất cả tùy chọn được chấp nhận khi xác nhận thanh toán.
 
 <a name="strong-customer-authentication"></a>
 ## Strong Customer Authentication
 
-If your business or one of your customers is based in Europe you will need to abide by the EU's Strong Customer Authentication (SCA) regulations. These regulations were imposed in September 2019 by the European Union to prevent payment fraud. Luckily, Stripe and Cashier are prepared for building SCA compliant applications.
+Nếu doanh nghiệp của bạn hoặc một trong các khách hàng của bạn đặt tại châu Âu, bạn cần tuân thủ quy định Strong Customer Authentication (SCA) của EU. Liên minh châu Âu áp dụng các quy định này từ tháng 9/2019 nhằm ngăn chặn gian lận thanh toán. Stripe và Cashier đã hỗ trợ việc xây dựng ứng dụng tuân thủ SCA.
 
 > [!WARNING]
-> Before getting started, review [Stripe's guide on PSD2 and SCA](https://stripe.com/guides/strong-customer-authentication) as well as their [documentation on the new SCA APIs](https://stripe.com/docs/strong-customer-authentication).
+> Trước khi bắt đầu, hãy xem [hướng dẫn của Stripe về PSD2 và SCA](https://stripe.com/guides/strong-customer-authentication), cũng như [tài liệu về các SCA API mới](https://stripe.com/docs/strong-customer-authentication).
 
 <a name="payments-requiring-additional-confirmation"></a>
-### Payments Requiring Additional Confirmation
+### Thanh toán yêu cầu xác nhận bổ sung
 
-SCA regulations often require extra verification in order to confirm and process a payment. When this happens, Cashier will throw a `Laravel\Cashier\Exceptions\IncompletePayment` exception that informs you that extra verification is needed. More information on how to handle these exceptions can be found in the documentation on [handling failed payments](#handling-failed-payments).
+Quy định SCA thường yêu cầu xác minh bổ sung để xác nhận và xử lý thanh toán. Khi điều này xảy ra, Cashier sẽ ném exception `Laravel\Cashier\Exceptions\IncompletePayment` để thông báo rằng cần xác minh thêm. Bạn có thể xem thêm cách xử lý exception này trong phần [xử lý thanh toán thất bại](#handling-failed-payments).
 
-Payment confirmation screens presented by Stripe or Cashier may be tailored to a specific bank or card issuer's payment flow and can include additional card confirmation, a temporary small charge, separate device authentication, or other forms of verification.
+Màn hình xác nhận thanh toán do Stripe hoặc Cashier hiển thị có thể được tùy chỉnh theo luồng thanh toán của từng ngân hàng hoặc đơn vị phát hành thẻ, và có thể bao gồm xác nhận thẻ bổ sung, một khoản thu nhỏ tạm thời, xác thực trên thiết bị riêng hoặc các hình thức xác minh khác.
 
 <a name="incomplete-and-past-due-state"></a>
-#### Incomplete and Past Due State
+#### Trạng thái Incomplete và Past Due
 
-When a payment needs additional confirmation, the subscription will remain in an `incomplete` or `past_due` state as indicated by its `stripe_status` database column. Cashier will automatically activate the customer's subscription as soon as payment confirmation is complete and your application is notified by Stripe via webhook of its completion.
+Khi một khoản thanh toán cần xác nhận bổ sung, subscription sẽ duy trì trạng thái `incomplete` hoặc `past_due`, thể hiện qua cột `stripe_status` trong cơ sở dữ liệu. Cashier sẽ tự động kích hoạt subscription của khách hàng ngay khi xác nhận thanh toán hoàn tất và ứng dụng nhận được thông báo hoàn tất từ Stripe qua webhook.
 
-For more information on `incomplete` and `past_due` states, please refer to [our additional documentation on these states](#incomplete-and-past-due-status).
+Để biết thêm về trạng thái `incomplete` và `past_due`, hãy xem [tài liệu bổ sung về các trạng thái này](#incomplete-and-past-due-status).
 
 <a name="off-session-payment-notifications"></a>
-### Off-Session Payment Notifications
+### Thông báo thanh toán Off-Session
 
-Since SCA regulations require customers to occasionally verify their payment details even while their subscription is active, Cashier can send a notification to the customer when off-session payment confirmation is required. For example, this may occur when a subscription is renewing. Cashier's payment notification can be enabled by setting the `CASHIER_PAYMENT_NOTIFICATION` environment variable to a notification class. By default, this notification is disabled. Of course, Cashier includes a notification class you may use for this purpose, but you are free to provide your own notification class if desired:
+Vì quy định SCA đôi khi yêu cầu khách hàng xác minh thông tin thanh toán ngay cả khi subscription đang active, Cashier có thể gửi thông báo cho khách hàng khi cần xác nhận thanh toán off-session. Ví dụ, điều này có thể xảy ra khi subscription được gia hạn. Bạn có thể bật payment notification của Cashier bằng cách đặt biến môi trường `CASHIER_PAYMENT_NOTIFICATION` thành một notification class. Theo mặc định, thông báo này bị tắt. Cashier cung cấp sẵn một notification class cho mục đích này, nhưng bạn cũng có thể cung cấp notification class riêng:
 
 ```ini
 CASHIER_PAYMENT_NOTIFICATION=Laravel\Cashier\Notifications\ConfirmPayment
 ```
 
-To ensure that off-session payment confirmation notifications are delivered, verify that [Stripe webhooks are configured](#handling-stripe-webhooks) for your application and the `invoice.payment_action_required` webhook is enabled in your Stripe dashboard. In addition, your `Billable` model should also use Laravel's `Illuminate\Notifications\Notifiable` trait.
+Để đảm bảo thông báo xác nhận thanh toán off-session được gửi, hãy kiểm tra rằng [Stripe webhook đã được cấu hình](#handling-stripe-webhooks) cho ứng dụng và webhook `invoice.payment_action_required` đã được bật trong Stripe Dashboard. Ngoài ra, model `Billable` cũng nên sử dụng trait `Illuminate\Notifications\Notifiable` của Laravel.
 
 > [!WARNING]
-> Notifications will be sent even when customers are manually making a payment that requires additional confirmation. Unfortunately, there is no way for Stripe to know that the payment was done manually or "off-session". But, a customer will simply see a "Payment Successful" message if they visit the payment page after already confirming their payment. The customer will not be allowed to accidentally confirm the same payment twice and incur an accidental second charge.
+> Thông báo vẫn được gửi ngay cả khi khách hàng đang thực hiện thủ công một khoản thanh toán cần xác nhận bổ sung. Stripe không thể biết khoản thanh toán được thực hiện thủ công hay "off-session". Tuy nhiên, nếu khách hàng truy cập trang thanh toán sau khi đã xác nhận khoản thanh toán, họ chỉ thấy thông báo "Payment Successful". Khách hàng sẽ không thể vô tình xác nhận cùng một khoản thanh toán hai lần và bị tính phí lần thứ hai.
 
 <a name="stripe-sdk"></a>
 ## Stripe SDK
 
-Many of Cashier's objects are wrappers around Stripe SDK objects. If you would like to interact with the Stripe objects directly, you may conveniently retrieve them using the `asStripe` method:
+Nhiều object của Cashier là wrapper quanh các object của Stripe SDK. Nếu muốn tương tác trực tiếp với Stripe object, bạn có thể thuận tiện truy xuất chúng bằng phương thức `asStripe`:
 
 ```php
 $stripeSubscription = $subscription->asStripeSubscription();
@@ -2617,13 +2617,13 @@ $stripeSubscription->application_fee_percent = 5;
 $stripeSubscription->save();
 ```
 
-You may also use the `updateStripeSubscription` method to update a Stripe subscription directly:
+Bạn cũng có thể dùng phương thức `updateStripeSubscription` để cập nhật trực tiếp Stripe subscription:
 
 ```php
 $subscription->updateStripeSubscription(['application_fee_percent' => 5]);
 ```
 
-You may invoke the `stripe` method on the `Cashier` class if you would like to use the `Stripe\StripeClient` client directly. For example, you could use this method to access the `StripeClient` instance and retrieve a list of prices from your Stripe account:
+Bạn có thể gọi phương thức `stripe` trên class `Cashier` nếu muốn sử dụng trực tiếp client `Stripe\StripeClient`. Ví dụ, bạn có thể dùng phương thức này để truy cập instance `StripeClient` và lấy danh sách price từ tài khoản Stripe:
 
 ```php
 use Laravel\Cashier\Cashier;
@@ -2632,22 +2632,24 @@ $prices = Cashier::stripe()->prices->all();
 ```
 
 <a name="testing"></a>
-## Testing
+## Kiểm thử
 
-When testing an application that uses Cashier, you may mock the actual HTTP requests to the Stripe API; however, this requires you to partially re-implement Cashier's own behavior. Therefore, we recommend allowing your tests to hit the actual Stripe API. While this is slower, it provides more confidence that your application is working as expected and any slow tests may be placed within their own Pest / PHPUnit testing group.
+Khi kiểm thử ứng dụng sử dụng Cashier, bạn có thể mock các HTTP request thực tế đến Stripe API; tuy nhiên, cách này yêu cầu bạn tự tái hiện một phần hành vi của Cashier. Vì vậy, chúng tôi khuyến nghị cho phép test gọi Stripe API thực tế. Mặc dù chậm hơn, cách này mang lại độ tin cậy cao hơn rằng ứng dụng hoạt động đúng như mong đợi; các test chậm có thể được đặt trong testing group Pest / PHPUnit riêng.
 
-When testing, remember that Cashier itself already has a great test suite, so you should only focus on testing the subscription and payment flow of your own application and not every underlying Cashier behavior.
+Khi kiểm thử, hãy nhớ rằng bản thân Cashier đã có một test suite rất tốt, vì vậy bạn chỉ nên tập trung kiểm thử luồng subscription và payment của ứng dụng, thay vì kiểm thử lại mọi hành vi nền tảng của Cashier.
 
-To get started, add the **testing** version of your Stripe secret to your `phpunit.xml` file:
+Để bắt đầu, hãy thêm phiên bản **testing** của Stripe secret vào file `phpunit.xml`:
 
 ```xml
 <env name="STRIPE_SECRET" value="sk_test_<your-key>"/>
 ```
 
-Now, whenever you interact with Cashier while testing, it will send actual API requests to your Stripe testing environment. For convenience, you should pre-fill your Stripe testing account with subscriptions / prices that you may use during testing.
+Từ đây, mỗi khi bạn tương tác với Cashier trong lúc kiểm thử, Cashier sẽ gửi API request thực tế đến môi trường Stripe testing. Để thuận tiện, bạn nên tạo sẵn các subscription / price trong tài khoản Stripe testing để sử dụng khi chạy test.
 
 > [!NOTE]
-> In order to test a variety of billing scenarios, such as credit card denials and failures, you may use the vast range of [testing card numbers and tokens](https://stripe.com/docs/testing) provided by Stripe.
+> Để kiểm thử nhiều tình huống billing khác nhau, chẳng hạn thẻ tín dụng bị từ chối hoặc thanh toán thất bại, bạn có thể sử dụng nhiều [số thẻ và token dành cho testing](https://stripe.com/docs/testing) do Stripe cung cấp.
+
+---
 
 ## Tài liệu chính thức
 

@@ -1,38 +1,38 @@
-# HTTP Requests
+# HTTP Request
 
-- [Introduction](#introduction)
-- [Interacting With The Request](#interacting-with-the-request)
-    - [Accessing the Request](#accessing-the-request)
-    - [Request Path, Host, and Method](#request-path-and-method)
-    - [Request Headers](#request-headers)
-    - [Request IP Address](#request-ip-address)
+- [Giới thiệu](#introduction)
+- [Tương tác với Request](#interacting-with-the-request)
+    - [Truy cập Request](#accessing-the-request)
+    - [Path, Host và Method của Request](#request-path-and-method)
+    - [Header của Request](#request-headers)
+    - [Địa chỉ IP của Request](#request-ip-address)
     - [Content Negotiation](#content-negotiation)
     - [PSR-7 Requests](#psr7-requests)
-- [Input](#input)
-    - [Retrieving Input](#retrieving-input)
-    - [Input Presence](#input-presence)
-    - [Merging Additional Input](#merging-additional-input)
-    - [Old Input](#old-input)
+- [Dữ liệu đầu vào](#input)
+    - [Lấy dữ liệu đầu vào](#retrieving-input)
+    - [Kiểm tra sự tồn tại của dữ liệu đầu vào](#input-presence)
+    - [Gộp thêm dữ liệu đầu vào](#merging-additional-input)
+    - [Dữ liệu đầu vào cũ](#old-input)
     - [Cookies](#cookies)
-    - [Input Trimming and Normalization](#input-trimming-and-normalization)
-- [Files](#files)
-    - [Retrieving Uploaded Files](#retrieving-uploaded-files)
-    - [Storing Uploaded Files](#storing-uploaded-files)
-- [Configuring Trusted Proxies](#configuring-trusted-proxies)
-- [Configuring Trusted Hosts](#configuring-trusted-hosts)
+    - [Cắt khoảng trắng và chuẩn hóa dữ liệu đầu vào](#input-trimming-and-normalization)
+- [File](#files)
+    - [Lấy file đã upload](#retrieving-uploaded-files)
+    - [Lưu file đã upload](#storing-uploaded-files)
+- [Cấu hình Trusted Proxy](#configuring-trusted-proxies)
+- [Cấu hình Trusted Host](#configuring-trusted-hosts)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel's `Illuminate\Http\Request` class provides an object-oriented way to interact with the current HTTP request being handled by your application as well as retrieve the input, cookies, and files that were submitted with the request.
+Class `Illuminate\Http\Request` của Laravel cung cấp cách tiếp cận hướng đối tượng để tương tác với HTTP request hiện tại mà ứng dụng đang xử lý, đồng thời lấy dữ liệu đầu vào, cookie và file được gửi kèm request.
 
 <a name="interacting-with-the-request"></a>
-## Interacting With The Request
+## Tương tác với Request
 
 <a name="accessing-the-request"></a>
-### Accessing the Request
+### Truy cập Request
 
-To obtain an instance of the current HTTP request via dependency injection, you should type-hint the `Illuminate\Http\Request` class on your route closure or controller method. The incoming request instance will automatically be injected by the Laravel [service container](/docs/{{version}}/container):
+Để nhận instance của HTTP request hiện tại thông qua dependency injection, hãy type-hint class `Illuminate\Http\Request` trong route closure hoặc controller method. Laravel [service container](/docs/{{version}}/container) sẽ tự động inject instance của request đến:
 
 ```php
 <?php
@@ -58,7 +58,7 @@ class UserController extends Controller
 }
 ```
 
-As mentioned, you may also type-hint the `Illuminate\Http\Request` class on a route closure. The service container will automatically inject the incoming request into the closure when it is executed:
+Tương tự, bạn cũng có thể type-hint `Illuminate\Http\Request` trong route closure. Service container sẽ tự động inject request đến vào closure khi closure được thực thi:
 
 ```php
 use Illuminate\Http\Request;
@@ -69,9 +69,9 @@ Route::get('/', function (Request $request) {
 ```
 
 <a name="dependency-injection-route-parameters"></a>
-#### Dependency Injection and Route Parameters
+#### Dependency Injection và Route Parameter
 
-If your controller method is also expecting input from a route parameter you should list your route parameters after your other dependencies. For example, if your route is defined like so:
+Nếu controller method đồng thời nhận dữ liệu từ route parameter, bạn nên khai báo các route parameter sau những dependency khác. Ví dụ, với route sau:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -79,7 +79,7 @@ use App\Http\Controllers\UserController;
 Route::put('/user/{id}', [UserController::class, 'update']);
 ```
 
-You may still type-hint the `Illuminate\Http\Request` and access your `id` route parameter by defining your controller method as follows:
+Bạn vẫn có thể type-hint `Illuminate\Http\Request` và truy cập route parameter `id` bằng cách định nghĩa controller method như sau:
 
 ```php
 <?php
@@ -104,23 +104,23 @@ class UserController extends Controller
 ```
 
 <a name="request-path-and-method"></a>
-### Request Path, Host, and Method
+### Path, Host và Method của Request
 
-The `Illuminate\Http\Request` instance provides a variety of methods for examining the incoming HTTP request and extends the `Symfony\Component\HttpFoundation\Request` class. We will discuss a few of the most important methods below.
+Instance `Illuminate\Http\Request` cung cấp nhiều method để kiểm tra HTTP request đến và kế thừa class `Symfony\Component\HttpFoundation\Request`. Dưới đây là một số method quan trọng nhất.
 
 <a name="retrieving-the-request-path"></a>
-#### Retrieving the Request Path
+#### Lấy path của Request
 
-The `path` method returns the request's path information. So, if the incoming request is targeted at `http://example.com/foo/bar`, the `path` method will return `foo/bar`:
+Method `path` trả về thông tin path của request. Ví dụ, nếu request đến `http://example.com/foo/bar`, method `path` sẽ trả về `foo/bar`:
 
 ```php
 $uri = $request->path();
 ```
 
 <a name="inspecting-the-request-path"></a>
-#### Inspecting the Request Path / Route
+#### Kiểm tra Request Path / Route
 
-The `is` method allows you to verify that the incoming request path matches a given pattern. You may use the `*` character as a wildcard when utilizing this method:
+Method `is` cho phép kiểm tra path của request đến có khớp với một pattern cho trước hay không. Bạn có thể dùng ký tự `*` làm wildcard:
 
 ```php
 if ($request->is('admin/*')) {
@@ -128,7 +128,7 @@ if ($request->is('admin/*')) {
 }
 ```
 
-Using the `routeIs` method, you may determine if the incoming request has matched a [named route](/docs/{{version}}/routing#named-routes):
+Với method `routeIs`, bạn có thể xác định request đến có khớp với một [named route](/docs/{{version}}/routing#named-routes) hay không:
 
 ```php
 if ($request->routeIs('admin.*')) {
@@ -137,9 +137,9 @@ if ($request->routeIs('admin.*')) {
 ```
 
 <a name="retrieving-the-request-url"></a>
-#### Retrieving the Request URL
+#### Lấy URL của Request
 
-To retrieve the full URL for the incoming request you may use the `url` or `fullUrl` methods. The `url` method will return the URL without the query string, while the `fullUrl` method includes the query string:
+Để lấy URL đầy đủ của request đến, bạn có thể dùng method `url` hoặc `fullUrl`. `url` trả về URL không bao gồm query string, trong khi `fullUrl` bao gồm cả query string:
 
 ```php
 $url = $request->url();
@@ -147,22 +147,22 @@ $url = $request->url();
 $urlWithQueryString = $request->fullUrl();
 ```
 
-If you would like to append query string data to the current URL, you may call the `fullUrlWithQuery` method. This method merges the given array of query string variables with the current query string:
+Nếu muốn thêm dữ liệu query string vào URL hiện tại, bạn có thể gọi `fullUrlWithQuery`. Method này gộp mảng biến query string được truyền vào với query string hiện tại:
 
 ```php
 $request->fullUrlWithQuery(['type' => 'phone']);
 ```
 
-If you would like to get the current URL without a given query string parameter, you may utilize the `fullUrlWithoutQuery` method:
+Nếu muốn lấy URL hiện tại nhưng loại bỏ một query string parameter cụ thể, bạn có thể dùng `fullUrlWithoutQuery`:
 
 ```php
 $request->fullUrlWithoutQuery(['type']);
 ```
 
 <a name="retrieving-the-request-host"></a>
-#### Retrieving the Request Host
+#### Lấy Host của Request
 
-You may retrieve the "host" of the incoming request via the `host`, `httpHost`, and `schemeAndHttpHost` methods:
+Bạn có thể lấy "host" của request đến thông qua các method `host`, `httpHost` và `schemeAndHttpHost`:
 
 ```php
 // http://localhost:8000
@@ -172,9 +172,9 @@ $request->schemeAndHttpHost(); // http://localhost:8000
 ```
 
 <a name="retrieving-the-request-method"></a>
-#### Retrieving the Request Method
+#### Lấy HTTP Method của Request
 
-The `method` method will return the HTTP verb for the request. You may use the `isMethod` method to verify that the HTTP verb matches a given string:
+Method `method` trả về HTTP verb của request. Bạn có thể dùng `isMethod` để kiểm tra HTTP verb có khớp với chuỗi cho trước hay không:
 
 ```php
 $method = $request->method();
@@ -185,9 +185,9 @@ if ($request->isMethod('post')) {
 ```
 
 <a name="request-headers"></a>
-### Request Headers
+### Header của Request
 
-You may retrieve a request header from the `Illuminate\Http\Request` instance using the `header` method. If the header is not present on the request, `null` will be returned. However, the `header` method accepts an optional second argument that will be returned if the header is not present on the request:
+Bạn có thể lấy header từ instance `Illuminate\Http\Request` bằng method `header`. Nếu header không tồn tại trong request, method trả về `null`. Tuy nhiên, `header` nhận đối số thứ hai tùy chọn để làm giá trị mặc định khi header không tồn tại:
 
 ```php
 $value = $request->header('X-Header-Name');
@@ -195,7 +195,7 @@ $value = $request->header('X-Header-Name');
 $value = $request->header('X-Header-Name', 'default');
 ```
 
-The `hasHeader` method may be used to determine if the request contains a given header:
+Method `hasHeader` có thể được dùng để xác định request có chứa một header cụ thể hay không:
 
 ```php
 if ($request->hasHeader('X-Header-Name')) {
@@ -203,39 +203,39 @@ if ($request->hasHeader('X-Header-Name')) {
 }
 ```
 
-For convenience, the `bearerToken` method may be used to retrieve a bearer token from the `Authorization` header. If no such header is present, an empty string will be returned:
+Để thuận tiện, method `bearerToken` có thể được dùng để lấy bearer token từ header `Authorization`. Nếu header này không tồn tại, một chuỗi rỗng sẽ được trả về:
 
 ```php
 $token = $request->bearerToken();
 ```
 
 <a name="request-ip-address"></a>
-### Request IP Address
+### Địa chỉ IP của Request
 
-The `ip` method may be used to retrieve the IP address of the client that made the request to your application:
+Method `ip` có thể được dùng để lấy địa chỉ IP của client đã gửi request đến ứng dụng:
 
 ```php
 $ipAddress = $request->ip();
 ```
 
-If you would like to retrieve an array of IP addresses, including all of the client IP addresses that were forwarded by proxies, you may use the `ips` method. The "original" client IP address will be at the end of the array:
+Nếu muốn lấy mảng địa chỉ IP, bao gồm toàn bộ địa chỉ IP client được proxy chuyển tiếp, bạn có thể dùng method `ips`. Địa chỉ IP client "gốc" sẽ nằm ở cuối mảng:
 
 ```php
 $ipAddresses = $request->ips();
 ```
 
-In general, IP addresses should be considered untrusted, user-controlled input and be used for informational purposes only.
+Nhìn chung, địa chỉ IP nên được xem là dữ liệu đầu vào không đáng tin cậy và có thể bị người dùng kiểm soát; chỉ nên sử dụng cho mục đích cung cấp thông tin.
 
 <a name="content-negotiation"></a>
 ### Content Negotiation
 
-Laravel provides several methods for inspecting the incoming request's requested content types via the `Accept` header. First, the `getAcceptableContentTypes` method will return an array containing all of the content types accepted by the request:
+Laravel cung cấp một số method để kiểm tra các content type mà request yêu cầu thông qua header `Accept`. Trước tiên, `getAcceptableContentTypes` trả về mảng chứa tất cả content type mà request chấp nhận:
 
 ```php
 $contentTypes = $request->getAcceptableContentTypes();
 ```
 
-The `accepts` method accepts an array of content types and returns `true` if any of the content types are accepted by the request. Otherwise, `false` will be returned:
+Method `accepts` nhận một mảng content type và trả về `true` nếu request chấp nhận ít nhất một content type trong số đó. Ngược lại, method trả về `false`:
 
 ```php
 if ($request->accepts(['text/html', 'application/json'])) {
@@ -243,13 +243,13 @@ if ($request->accepts(['text/html', 'application/json'])) {
 }
 ```
 
-You may use the `prefers` method to determine which content type out of a given array of content types is most preferred by the request. If none of the provided content types are accepted by the request, `null` will be returned:
+Bạn có thể dùng `prefers` để xác định content type nào trong mảng được request ưu tiên nhất. Nếu request không chấp nhận content type nào được cung cấp, method trả về `null`:
 
 ```php
 $preferred = $request->prefers(['text/html', 'application/json']);
 ```
 
-Since many applications only serve HTML or JSON, you may use the `expectsJson` method to quickly determine if the incoming request expects a JSON response:
+Vì nhiều ứng dụng chỉ phục vụ HTML hoặc JSON, bạn có thể dùng `expectsJson` để nhanh chóng xác định request đến có mong đợi JSON response hay không:
 
 ```php
 if ($request->expectsJson()) {
@@ -257,7 +257,7 @@ if ($request->expectsJson()) {
 }
 ```
 
-If you need to determine whether the request specifically prefers Markdown or will accept Markdown among other content types, such as when serving AI agents or other clients that consume Markdown responses, you may use the `wantsMarkdown` and `acceptsMarkdown` methods:
+Nếu cần xác định request có ưu tiên riêng Markdown hay chấp nhận Markdown cùng các content type khác — chẳng hạn khi phục vụ AI agent hoặc client tiêu thụ Markdown response — bạn có thể dùng `wantsMarkdown` và `acceptsMarkdown`:
 
 ```php
 if ($request->wantsMarkdown()) {
@@ -270,16 +270,16 @@ if ($request->acceptsMarkdown()) {
 ```
 
 <a name="psr7-requests"></a>
-### PSR-7 Requests
+### PSR-7 Request
 
-The [PSR-7 standard](https://www.php-fig.org/psr/psr-7/) specifies interfaces for HTTP messages, including requests and responses. If you would like to obtain an instance of a PSR-7 request instead of a Laravel request, you will first need to install a few libraries. Laravel uses the *Symfony HTTP Message Bridge* component to convert typical Laravel requests and responses into PSR-7 compatible implementations:
+[Tiêu chuẩn PSR-7](https://www.php-fig.org/psr/psr-7/) định nghĩa các interface cho HTTP message, bao gồm request và response. Nếu muốn nhận một instance PSR-7 request thay vì Laravel request, trước tiên bạn cần cài đặt một số thư viện. Laravel sử dụng component *Symfony HTTP Message Bridge* để chuyển đổi request và response Laravel thông thường thành các implementation tương thích PSR-7:
 
 ```shell
 composer require symfony/psr-http-message-bridge
 composer require nyholm/psr7
 ```
 
-Once you have installed these libraries, you may obtain a PSR-7 request by type-hinting the request interface on your route closure or controller method:
+Sau khi cài đặt các thư viện này, bạn có thể nhận PSR-7 request bằng cách type-hint request interface trong route closure hoặc controller method:
 
 ```php
 use Psr\Http\Message\ServerRequestInterface;
@@ -290,30 +290,30 @@ Route::get('/', function (ServerRequestInterface $request) {
 ```
 
 > [!NOTE]
-> If you return a PSR-7 response instance from a route or controller, it will automatically be converted back to a Laravel response instance and be displayed by the framework.
+> Nếu trả về một instance PSR-7 response từ route hoặc controller, Laravel sẽ tự động chuyển đổi nó trở lại thành Laravel response trước khi framework gửi response đến client.
 
 <a name="input"></a>
-## Input
+## Dữ liệu đầu vào
 
 <a name="retrieving-input"></a>
-### Retrieving Input
+### Lấy dữ liệu đầu vào
 
 <a name="retrieving-all-input-data"></a>
-#### Retrieving All Input Data
+#### Lấy toàn bộ dữ liệu đầu vào
 
-You may retrieve all of the incoming request's input data as an `array` using the `all` method. This method may be used regardless of whether the incoming request is from an HTML form or is an XHR request:
+Bạn có thể lấy toàn bộ dữ liệu đầu vào của request dưới dạng `array` bằng method `all`. Method này có thể được sử dụng bất kể request đến từ HTML form hay là XHR request:
 
 ```php
 $input = $request->all();
 ```
 
-Using the `collect` method, you may retrieve all of the incoming request's input data as a [collection](/docs/{{version}}/collections):
+Với method `collect`, bạn có thể lấy toàn bộ dữ liệu đầu vào của request dưới dạng [collection](/docs/{{version}}/collections):
 
 ```php
 $input = $request->collect();
 ```
 
-The `collect` method also allows you to retrieve a subset of the incoming request's input as a collection:
+Method `collect` cũng cho phép lấy một phần dữ liệu đầu vào của request dưới dạng collection:
 
 ```php
 $request->collect('users')->each(function (string $user) {
@@ -322,21 +322,21 @@ $request->collect('users')->each(function (string $user) {
 ```
 
 <a name="retrieving-an-input-value"></a>
-#### Retrieving an Input Value
+#### Lấy một giá trị đầu vào
 
-Using a few simple methods, you may access all of the user input from your `Illuminate\Http\Request` instance without worrying about which HTTP verb was used for the request. Regardless of the HTTP verb, the `input` method may be used to retrieve user input:
+Thông qua một số method đơn giản, bạn có thể truy cập toàn bộ dữ liệu đầu vào của người dùng từ instance `Illuminate\Http\Request` mà không cần quan tâm request sử dụng HTTP verb nào. Bất kể HTTP verb là gì, method `input` đều có thể được dùng để lấy dữ liệu đầu vào:
 
 ```php
 $name = $request->input('name');
 ```
 
-You may pass a default value as the second argument to the `input` method. This value will be returned if the requested input value is not present on the request:
+Bạn có thể truyền giá trị mặc định làm argument thứ hai cho method `input`. Giá trị này sẽ được trả về nếu request không chứa input được yêu cầu:
 
 ```php
 $name = $request->input('name', 'Sally');
 ```
 
-When working with forms that contain array inputs, use "dot" notation to access the arrays:
+Khi làm việc với form chứa input dạng array, hãy sử dụng cú pháp "dot" để truy cập các phần tử:
 
 ```php
 $name = $request->input('products.0.name');
@@ -344,105 +344,105 @@ $name = $request->input('products.0.name');
 $names = $request->input('products.*.name');
 ```
 
-You may call the `input` method without any arguments in order to retrieve all of the input values as an associative array:
+Bạn có thể gọi method `input` mà không truyền argument để lấy toàn bộ giá trị đầu vào dưới dạng associative array:
 
 ```php
 $input = $request->input();
 ```
 
 <a name="retrieving-input-from-the-query-string"></a>
-#### Retrieving Input From the Query String
+#### Lấy dữ liệu đầu vào từ Query String
 
-While the `input` method retrieves values from the entire request payload (including the query string), the `query` method will only retrieve values from the query string:
+Trong khi method `input` lấy giá trị từ toàn bộ request payload, bao gồm cả query string, method `query` chỉ lấy các giá trị từ query string:
 
 ```php
 $name = $request->query('name');
 ```
 
-If the requested query string value data is not present, the second argument to this method will be returned:
+Nếu query string không chứa giá trị được yêu cầu, argument thứ hai của method sẽ được trả về:
 
 ```php
 $name = $request->query('name', 'Helen');
 ```
 
-You may call the `query` method without any arguments in order to retrieve all of the query string values as an associative array:
+Bạn có thể gọi method `query` mà không truyền argument để lấy toàn bộ giá trị query string dưới dạng associative array:
 
 ```php
 $query = $request->query();
 ```
 
 <a name="retrieving-json-input-values"></a>
-#### Retrieving JSON Input Values
+#### Lấy giá trị đầu vào JSON
 
-When sending JSON requests to your application, you may access the JSON data via the `input` method as long as the `Content-Type` header of the request is properly set to `application/json`. You may even use "dot" syntax to retrieve values that are nested within JSON arrays / objects:
+Khi gửi JSON request đến ứng dụng, bạn có thể truy cập dữ liệu JSON thông qua method `input`, miễn là header `Content-Type` của request được đặt chính xác thành `application/json`. Bạn cũng có thể dùng cú pháp "dot" để lấy các giá trị lồng bên trong JSON array / object:
 
 ```php
 $name = $request->input('user.name');
 ```
 
 <a name="retrieving-stringable-input-values"></a>
-#### Retrieving Stringable Input Values
+#### Lấy giá trị đầu vào dạng Stringable
 
-Instead of retrieving the request's input data as a primitive `string`, you may use the `string` method to retrieve the request data as an instance of [Illuminate\Support\Stringable](/docs/{{version}}/strings):
+Thay vì lấy dữ liệu đầu vào của request dưới dạng `string` nguyên thủy, bạn có thể dùng method `string` để nhận dữ liệu dưới dạng instance [Illuminate\Support\Stringable](/docs/{{version}}/strings):
 
 ```php
 $name = $request->string('name')->trim();
 ```
 
 <a name="retrieving-integer-input-values"></a>
-#### Retrieving Integer Input Values
+#### Lấy giá trị đầu vào dạng Integer
 
-To retrieve input values as integers, you may use the `integer` method. This method will attempt to cast the input value to an integer. If the input is not present or the cast fails, it will return the default value you specify. This is particularly useful for pagination or other numeric inputs:
+Để lấy giá trị đầu vào dưới dạng integer, bạn có thể dùng method `integer`. Method này sẽ cố gắng cast giá trị đầu vào thành integer. Nếu input không tồn tại hoặc việc cast thất bại, method sẽ trả về giá trị mặc định mà bạn chỉ định. Điều này đặc biệt hữu ích với pagination hoặc các input dạng số khác:
 
 ```php
 $perPage = $request->integer('per_page');
 ```
 
 <a name="retrieving-boolean-input-values"></a>
-#### Retrieving Boolean Input Values
+#### Lấy giá trị đầu vào dạng Boolean
 
-When dealing with HTML elements like checkboxes, your application may receive "truthy" values that are actually strings. For example, "true" or "on". For convenience, you may use the `boolean` method to retrieve these values as booleans. The `boolean` method returns `true` for 1, "1", true, "true", "on", and "yes". All other values will return `false`:
+Khi xử lý các phần tử HTML như checkbox, ứng dụng có thể nhận những giá trị mang nghĩa đúng nhưng thực tế lại là string, chẳng hạn `"true"` hoặc `"on"`. Để thuận tiện, bạn có thể dùng method `boolean` để lấy các giá trị này dưới dạng boolean. Method `boolean` trả về `true` đối với `1`, `"1"`, `true`, `"true"`, `"on"` và `"yes"`; mọi giá trị khác sẽ trả về `false`:
 
 ```php
 $archived = $request->boolean('archived');
 ```
 
 <a name="retrieving-array-input-values"></a>
-#### Retrieving Array Input Values
+#### Lấy giá trị đầu vào dạng Array
 
-Input values containing arrays may be retrieved using the `array` method. This method will always cast the input value to an array. If the request does not contain an input value with the given name, an empty array will be returned:
+Các giá trị đầu vào chứa array có thể được lấy bằng method `array`. Method này luôn cast giá trị đầu vào thành array. Nếu request không chứa input với tên đã cho, một array rỗng sẽ được trả về:
 
 ```php
 $versions = $request->array('versions');
 ```
 
 <a name="retrieving-date-input-values"></a>
-#### Retrieving Date Input Values
+#### Lấy giá trị đầu vào dạng Date
 
-For convenience, input values containing dates / times may be retrieved as Carbon instances using the `date` method. If the request does not contain an input value with the given name, `null` will be returned:
+Để thuận tiện, các input chứa ngày / giờ có thể được lấy dưới dạng Carbon instance bằng method `date`. Nếu request không chứa input với tên đã cho, `null` sẽ được trả về:
 
 ```php
 $birthday = $request->date('birthday');
 ```
 
-The second and third arguments accepted by the `date` method may be used to specify the date's format and timezone, respectively:
+Argument thứ hai và thứ ba của method `date` lần lượt được dùng để chỉ định format và timezone của ngày:
 
 ```php
 $elapsed = $request->date('elapsed', '!H:i', 'Europe/Madrid');
 ```
 
-If the input value is present but has an invalid format, an `InvalidArgumentException` will be thrown; therefore, it is recommended that you validate the input before invoking the `date` method.
+Nếu input tồn tại nhưng có format không hợp lệ, `InvalidArgumentException` sẽ được throw; vì vậy, bạn nên validate input trước khi gọi method `date`.
 
 <a name="retrieving-interval-input-values"></a>
-#### Retrieving Interval Input Values
+#### Lấy giá trị đầu vào dạng Interval
 
-Input values containing durations may be retrieved as `CarbonInterval` instances using the `interval` method. If the request does not contain an input value with the given name, `null` will be returned:
+Các input biểu diễn khoảng thời gian có thể được lấy dưới dạng instance `CarbonInterval` bằng method `interval`. Nếu request không chứa input với tên đã cho, `null` sẽ được trả về:
 
 ```php
 $duration = $request->interval('duration');
 ```
 
-If the input value is numeric, you may provide a unit as the second argument. The unit may be a string such as `second`, `minute`, or `day`, or a `Carbon\Unit` enum instance:
+Nếu input là giá trị số, bạn có thể truyền đơn vị làm argument thứ hai. Đơn vị có thể là string như `second`, `minute`, `day`, hoặc một instance enum `Carbon\Unit`:
 
 ```php
 use Carbon\Unit;
@@ -452,12 +452,12 @@ $timeout = $request->interval('timeout', 'second');
 $delay = $request->interval('delay', Unit::Minute);
 ```
 
-If the input value is present but has an invalid format, an `InvalidArgumentException` will be thrown; therefore, it is recommended that you validate the input before invoking the `interval` method.
+Nếu input tồn tại nhưng có format không hợp lệ, `InvalidArgumentException` sẽ được throw; vì vậy, bạn nên validate input trước khi gọi method `interval`.
 
 <a name="retrieving-enum-input-values"></a>
-#### Retrieving Enum Input Values
+#### Lấy giá trị đầu vào dạng Enum
 
-Input values that correspond to [PHP enums](https://www.php.net/manual/en/language.types.enumerations.php) may also be retrieved from the request. If the request does not contain an input value with the given name or the enum does not have a backing value that matches the input value, `null` will be returned. The `enum` method accepts the name of the input value and the enum class as its first and second arguments:
+Các input tương ứng với [PHP enum](https://www.php.net/manual/en/language.types.enumerations.php) cũng có thể được lấy trực tiếp từ request. Nếu request không chứa input với tên đã cho hoặc enum không có backing value khớp với input, `null` sẽ được trả về. Method `enum` nhận tên input và enum class lần lượt làm argument thứ nhất và thứ hai:
 
 ```php
 use App\Enums\Status;
@@ -465,13 +465,13 @@ use App\Enums\Status;
 $status = $request->enum('status', Status::class);
 ```
 
-You may also provide a default value that will be returned if the value is missing or invalid:
+Bạn cũng có thể cung cấp giá trị mặc định để trả về khi input bị thiếu hoặc không hợp lệ:
 
 ```php
 $status = $request->enum('status', Status::class, Status::Pending);
 ```
 
-If the input value is an array of values that correspond to a PHP enum, you may use the `enums` method to retrieve the array of values as enum instances:
+Nếu input là một array các giá trị tương ứng với PHP enum, bạn có thể dùng method `enums` để lấy array đó dưới dạng các enum instance:
 
 ```php
 use App\Enums\Product;
@@ -480,20 +480,20 @@ $products = $request->enums('products', Product::class);
 ```
 
 <a name="retrieving-input-via-dynamic-properties"></a>
-#### Retrieving Input via Dynamic Properties
+#### Lấy dữ liệu đầu vào qua Dynamic Property
 
-You may also access user input using dynamic properties on the `Illuminate\Http\Request` instance. For example, if one of your application's forms contains a `name` field, you may access the value of the field like so:
+Bạn cũng có thể truy cập input của người dùng thông qua dynamic property trên instance `Illuminate\Http\Request`. Ví dụ, nếu một form của ứng dụng có field `name`, bạn có thể truy cập giá trị của field như sau:
 
 ```php
 $name = $request->name;
 ```
 
-When using dynamic properties, Laravel will first look for the parameter's value in the request payload. If it is not present, Laravel will search for the field in the matched route's parameters.
+Khi sử dụng dynamic property, Laravel trước tiên tìm giá trị của parameter trong request payload. Nếu không tồn tại, Laravel sẽ tiếp tục tìm field đó trong parameter của route đã match.
 
 <a name="retrieving-a-portion-of-the-input-data"></a>
-#### Retrieving a Portion of the Input Data
+#### Lấy một phần dữ liệu đầu vào
 
-If you need to retrieve a subset of the input data, you may use the `only` and `except` methods. Both of these methods accept a single `array` or a dynamic list of arguments:
+Nếu chỉ cần lấy một phần dữ liệu đầu vào, bạn có thể dùng các method `only` và `except`. Cả hai method đều nhận một `array` hoặc danh sách argument động:
 
 ```php
 $input = $request->only(['username', 'password']);
@@ -506,12 +506,12 @@ $input = $request->except('credit_card');
 ```
 
 > [!WARNING]
-> The `only` method returns all of the key / value pairs that you request; however, it will not return key / value pairs that are not present on the request.
+> Method `only` trả về các cặp key / value mà bạn yêu cầu; tuy nhiên, nó sẽ không trả về những cặp key / value không tồn tại trong request.
 
 <a name="input-presence"></a>
-### Input Presence
+### Kiểm tra sự tồn tại của dữ liệu đầu vào
 
-You may use the `has` method to determine if a value is present on the request. The `has` method returns `true` if the value is present on the request:
+Bạn có thể dùng method `has` để xác định một giá trị có tồn tại trong request hay không. Method `has` trả về `true` nếu giá trị tồn tại trong request:
 
 ```php
 if ($request->has('name')) {
@@ -519,7 +519,7 @@ if ($request->has('name')) {
 }
 ```
 
-When given an array, the `has` method will determine if all of the specified values are present:
+Khi nhận một array, method `has` sẽ xác định liệu tất cả các giá trị được chỉ định có tồn tại hay không:
 
 ```php
 if ($request->has(['name', 'email'])) {
@@ -527,7 +527,7 @@ if ($request->has(['name', 'email'])) {
 }
 ```
 
-The `hasAny` method returns `true` if any of the specified values are present:
+Method `hasAny` trả về `true` nếu có ít nhất một trong các giá trị được chỉ định tồn tại:
 
 ```php
 if ($request->hasAny(['name', 'email'])) {
@@ -535,7 +535,7 @@ if ($request->hasAny(['name', 'email'])) {
 }
 ```
 
-The `whenHas` method will execute the given closure if a value is present on the request:
+Method `whenHas` sẽ thực thi closure được cung cấp nếu giá trị tồn tại trong request:
 
 ```php
 $request->whenHas('name', function (string $input) {
@@ -543,7 +543,7 @@ $request->whenHas('name', function (string $input) {
 });
 ```
 
-A second closure may be passed to the `whenHas` method that will be executed if the specified value is not present on the request:
+Bạn có thể truyền closure thứ hai cho method `whenHas`; closure này sẽ được thực thi nếu giá trị được chỉ định không tồn tại trong request:
 
 ```php
 $request->whenHas('name', function (string $input) {
@@ -553,7 +553,7 @@ $request->whenHas('name', function (string $input) {
 });
 ```
 
-If you would like to determine if a value is present on the request and is not an empty string, you may use the `filled` method:
+Nếu muốn xác định một giá trị vừa tồn tại trong request vừa không phải string rỗng, bạn có thể dùng method `filled`:
 
 ```php
 if ($request->filled('name')) {
@@ -561,7 +561,7 @@ if ($request->filled('name')) {
 }
 ```
 
-If you would like to determine if a value is missing from the request or is an empty string, you may use the `isNotFilled` method:
+Nếu muốn xác định một giá trị không tồn tại trong request hoặc là string rỗng, bạn có thể dùng method `isNotFilled`:
 
 ```php
 if ($request->isNotFilled('name')) {
@@ -569,7 +569,7 @@ if ($request->isNotFilled('name')) {
 }
 ```
 
-When given an array, the `isNotFilled` method will determine if all of the specified values are missing or empty:
+Khi nhận một array, method `isNotFilled` sẽ xác định liệu tất cả các giá trị được chỉ định đều bị thiếu hoặc rỗng hay không:
 
 ```php
 if ($request->isNotFilled(['name', 'email'])) {
@@ -577,7 +577,7 @@ if ($request->isNotFilled(['name', 'email'])) {
 }
 ```
 
-The `anyFilled` method returns `true` if any of the specified values is not an empty string:
+Method `anyFilled` trả về `true` nếu có ít nhất một giá trị được chỉ định không phải string rỗng:
 
 ```php
 if ($request->anyFilled(['name', 'email'])) {
@@ -585,7 +585,7 @@ if ($request->anyFilled(['name', 'email'])) {
 }
 ```
 
-The `whenFilled` method will execute the given closure if a value is present on the request and is not an empty string:
+Method `whenFilled` sẽ thực thi closure được cung cấp nếu giá trị tồn tại trong request và không phải string rỗng:
 
 ```php
 $request->whenFilled('name', function (string $input) {
@@ -593,7 +593,7 @@ $request->whenFilled('name', function (string $input) {
 });
 ```
 
-A second closure may be passed to the `whenFilled` method that will be executed if the specified value is not "filled":
+Bạn có thể truyền closure thứ hai cho method `whenFilled`; closure này sẽ được thực thi nếu giá trị được chỉ định không ở trạng thái "filled":
 
 ```php
 $request->whenFilled('name', function (string $input) {
@@ -603,7 +603,7 @@ $request->whenFilled('name', function (string $input) {
 });
 ```
 
-To determine if a given key is absent from the request, you may use the `missing` and `whenMissing` methods:
+Để xác định một key có vắng mặt trong request hay không, bạn có thể dùng các method `missing` và `whenMissing`:
 
 ```php
 if ($request->missing('name')) {
@@ -618,35 +618,35 @@ $request->whenMissing('name', function () {
 ```
 
 <a name="merging-additional-input"></a>
-### Merging Additional Input
+### Gộp thêm dữ liệu đầu vào
 
-Sometimes you may need to manually merge additional input into the request's existing input data. To accomplish this, you may use the `merge` method. If a given input key already exists on the request, it will be overwritten by the data provided to the `merge` method:
+Đôi khi bạn cần gộp thủ công dữ liệu đầu vào bổ sung vào dữ liệu hiện có của request. Bạn có thể dùng method `merge` cho mục đích này. Nếu một input key đã tồn tại trong request, giá trị của nó sẽ bị ghi đè bởi dữ liệu truyền vào `merge`:
 
 ```php
 $request->merge(['votes' => 0]);
 ```
 
-The `mergeIfMissing` method may be used to merge input into the request if the corresponding keys do not already exist within the request's input data:
+Method `mergeIfMissing` có thể được dùng để gộp input vào request nếu các key tương ứng chưa tồn tại trong dữ liệu đầu vào của request:
 
 ```php
 $request->mergeIfMissing(['votes' => 0]);
 ```
 
 <a name="old-input"></a>
-### Old Input
+### Dữ liệu đầu vào cũ
 
-Laravel allows you to keep input from one request during the next request. This feature is particularly useful for re-populating forms after detecting validation errors. However, if you are using Laravel's included [validation features](/docs/{{version}}/validation), it is possible that you will not need to manually use these session input flashing methods directly, as some of Laravel's built-in validation facilities will call them automatically.
+Laravel cho phép giữ lại dữ liệu đầu vào của một request để sử dụng trong request kế tiếp. Tính năng này đặc biệt hữu ích khi cần điền lại form sau khi phát hiện lỗi validation. Tuy nhiên, nếu đang sử dụng [các tính năng validation](/docs/{{version}}/validation) có sẵn của Laravel, bạn có thể không cần gọi trực tiếp các method flash input vào session vì một số cơ chế validation tích hợp sẵn sẽ tự động thực hiện việc này.
 
 <a name="flashing-input-to-the-session"></a>
-#### Flashing Input to the Session
+#### Flash dữ liệu đầu vào vào Session
 
-The `flash` method on the `Illuminate\Http\Request` class will flash the current input to the [session](/docs/{{version}}/session) so that it is available during the user's next request to the application:
+Method `flash` trên class `Illuminate\Http\Request` sẽ flash dữ liệu đầu vào hiện tại vào [session](/docs/{{version}}/session), nhờ đó dữ liệu có thể được sử dụng trong request kế tiếp của người dùng:
 
 ```php
 $request->flash();
 ```
 
-You may also use the `flashOnly` and `flashExcept` methods to flash a subset of the request data to the session. These methods are useful for keeping sensitive information such as passwords out of the session:
+Bạn cũng có thể dùng `flashOnly` và `flashExcept` để chỉ flash một phần dữ liệu request vào session. Các method này hữu ích khi cần tránh lưu thông tin nhạy cảm như password vào session:
 
 ```php
 $request->flashOnly(['username', 'email']);
@@ -655,9 +655,9 @@ $request->flashExcept('password');
 ```
 
 <a name="flashing-input-then-redirecting"></a>
-#### Flashing Input Then Redirecting
+#### Flash dữ liệu đầu vào rồi Redirect
 
-Since you often will want to flash input to the session and then redirect to the previous page, you may easily chain input flashing onto a redirect using the `withInput` method:
+Vì bạn thường cần flash input vào session rồi redirect về trang trước, có thể chain việc flash input trực tiếp vào redirect bằng method `withInput`:
 
 ```php
 return redirect('/form')->withInput();
@@ -670,15 +670,15 @@ return redirect('/form')->withInput(
 ```
 
 <a name="retrieving-old-input"></a>
-#### Retrieving Old Input
+#### Lấy dữ liệu đầu vào cũ
 
-To retrieve flashed input from the previous request, invoke the `old` method on an instance of `Illuminate\Http\Request`. The `old` method will pull the previously flashed input data from the [session](/docs/{{version}}/session):
+Để lấy dữ liệu đầu vào đã được flash từ request trước, hãy gọi method `old` trên instance `Illuminate\Http\Request`. Method `old` sẽ lấy dữ liệu đã flash trước đó từ [session](/docs/{{version}}/session):
 
 ```php
 $username = $request->old('username');
 ```
 
-Laravel also provides a global `old` helper. If you are displaying old input within a [Blade template](/docs/{{version}}/blade), it is more convenient to use the `old` helper to repopulate the form. If no old input exists for the given field, `null` will be returned:
+Laravel cũng cung cấp helper global `old`. Khi hiển thị dữ liệu đầu vào cũ trong [Blade template](/docs/{{version}}/blade), sử dụng helper `old` sẽ thuận tiện hơn để điền lại form. Nếu field không có dữ liệu cũ, `null` sẽ được trả về:
 
 ```blade
 <input type="text" name="username" value="{{ old('username') }}">
@@ -688,22 +688,22 @@ Laravel also provides a global `old` helper. If you are displaying old input wit
 ### Cookies
 
 <a name="retrieving-cookies-from-requests"></a>
-#### Retrieving Cookies From Requests
+#### Lấy Cookie từ Request
 
-All cookies created by the Laravel framework are encrypted and signed with an authentication code, meaning they will be considered invalid if they have been changed by the client. To retrieve a cookie value from the request, use the `cookie` method on an `Illuminate\Http\Request` instance:
+Tất cả cookie do Laravel tạo đều được mã hóa và ký bằng authentication code, vì vậy chúng sẽ bị xem là không hợp lệ nếu đã bị client thay đổi. Để lấy giá trị cookie từ request, hãy dùng method `cookie` trên instance `Illuminate\Http\Request`:
 
 ```php
 $value = $request->cookie('name');
 ```
 
 <a name="input-trimming-and-normalization"></a>
-## Input Trimming and Normalization
+## Cắt khoảng trắng và chuẩn hóa dữ liệu đầu vào
 
-By default, Laravel includes the `Illuminate\Foundation\Http\Middleware\TrimStrings` and `Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull` middleware in your application's global middleware stack. These middleware will automatically trim all incoming string fields on the request, as well as convert any empty string fields to `null`. This allows you to not have to worry about these normalization concerns in your routes and controllers.
+Mặc định, Laravel bao gồm middleware `Illuminate\Foundation\Http\Middleware\TrimStrings` và `Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull` trong global middleware stack của ứng dụng. Các middleware này tự động trim mọi field dạng string trong request và chuyển các string rỗng thành `null`. Nhờ đó, bạn không cần tự xử lý các vấn đề chuẩn hóa này trong route và controller.
 
-#### Disabling Input Normalization
+#### Tắt chuẩn hóa dữ liệu đầu vào
 
-If you would like to disable this behavior for all requests, you may remove the two middleware from your application's middleware stack by invoking the `$middleware->remove` method in your application's `bootstrap/app.php` file:
+Nếu muốn tắt hành vi này cho mọi request, bạn có thể loại bỏ hai middleware khỏi middleware stack bằng cách gọi `$middleware->remove` trong file `bootstrap/app.php`:
 
 ```php
 use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
@@ -717,7 +717,7 @@ use Illuminate\Foundation\Http\Middleware\TrimStrings;
 })
 ```
 
-If you would like to disable string trimming and empty string conversion for a subset of requests to your application, you may use the `trimStrings` and `convertEmptyStringsToNull` middleware methods within your application's `bootstrap/app.php` file. Both methods accept an array of closures, which should return `true` or `false` to indicate whether input normalization should be skipped:
+Nếu chỉ muốn tắt việc trim string và chuyển string rỗng thành `null` cho một nhóm request, bạn có thể dùng các method middleware `trimStrings` và `convertEmptyStringsToNull` trong `bootstrap/app.php`. Cả hai method nhận một array closure; mỗi closure cần trả về `true` hoặc `false` để cho biết có bỏ qua việc chuẩn hóa input hay không:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -732,12 +732,12 @@ If you would like to disable string trimming and empty string conversion for a s
 ```
 
 <a name="files"></a>
-## Files
+## File
 
 <a name="retrieving-uploaded-files"></a>
-### Retrieving Uploaded Files
+### Lấy file đã upload
 
-You may retrieve uploaded files from an `Illuminate\Http\Request` instance using the `file` method or using dynamic properties. The `file` method returns an instance of the `Illuminate\Http\UploadedFile` class, which extends the PHP `SplFileInfo` class and provides a variety of methods for interacting with the file:
+Bạn có thể lấy file đã upload từ instance `Illuminate\Http\Request` bằng method `file` hoặc dynamic property. Method `file` trả về instance của class `Illuminate\Http\UploadedFile`, class này kế thừa PHP `SplFileInfo` và cung cấp nhiều method để tương tác với file:
 
 ```php
 $file = $request->file('photo');
@@ -745,7 +745,7 @@ $file = $request->file('photo');
 $file = $request->photo;
 ```
 
-You may determine if a file is present on the request using the `hasFile` method:
+Bạn có thể xác định một file có tồn tại trong request hay không bằng method `hasFile`:
 
 ```php
 if ($request->hasFile('photo')) {
@@ -753,18 +753,18 @@ if ($request->hasFile('photo')) {
 }
 ```
 
-If the uploaded file is an image that you need to manipulate before storing, you may use the `image` method to retrieve an `Illuminate\Image\Image` instance, or `null` if the file is not present:
+Nếu file upload là hình ảnh cần xử lý trước khi lưu, bạn có thể dùng method `image` để lấy instance `Illuminate\Image\Image`, hoặc `null` nếu file không tồn tại:
 
 ```php
 $image = $request->image('photo');
 ```
 
-For more information on manipulating images, please consult the complete [image manipulation documentation](/docs/{{version}}/images).
+Để biết thêm về xử lý hình ảnh, hãy xem [tài liệu xử lý hình ảnh](/docs/{{version}}/images) đầy đủ.
 
 <a name="validating-successful-uploads"></a>
-#### Validating Successful Uploads
+#### Kiểm tra upload thành công
 
-In addition to checking if the file is present, you may verify that there were no problems uploading the file via the `isValid` method:
+Ngoài việc kiểm tra file có tồn tại, bạn có thể xác minh quá trình upload không gặp lỗi bằng method `isValid`:
 
 ```php
 if ($request->file('photo')->isValid()) {
@@ -773,9 +773,9 @@ if ($request->file('photo')->isValid()) {
 ```
 
 <a name="file-paths-extensions"></a>
-#### File Paths and Extensions
+#### Path và extension của file
 
-The `UploadedFile` class also contains methods for accessing the file's fully-qualified path and its extension. The `extension` method will attempt to guess the file's extension based on its contents. This extension may be different from the extension that was supplied by the client:
+Class `UploadedFile` cũng cung cấp các method để truy cập path đầy đủ và extension của file. Method `extension` sẽ cố gắng xác định extension dựa trên nội dung file. Extension này có thể khác với extension do client cung cấp:
 
 ```php
 $path = $request->photo->path();
@@ -784,18 +784,18 @@ $extension = $request->photo->extension();
 ```
 
 <a name="other-file-methods"></a>
-#### Other File Methods
+#### Các method khác của File
 
-There are a variety of other methods available on `UploadedFile` instances. Check out the [API documentation for the class](https://github.com/symfony/symfony/blob/6.0/src/Symfony/Component/HttpFoundation/File/UploadedFile.php) for more information regarding these methods.
+Instance `UploadedFile` còn cung cấp nhiều method khác. Hãy xem [tài liệu API của class](https://github.com/symfony/symfony/blob/6.0/src/Symfony/Component/HttpFoundation/File/UploadedFile.php) để biết thêm chi tiết.
 
 <a name="storing-uploaded-files"></a>
-### Storing Uploaded Files
+### Lưu file đã upload
 
-To store an uploaded file, you will typically use one of your configured [filesystems](/docs/{{version}}/filesystem). The `UploadedFile` class has a `store` method that will move an uploaded file to one of your disks, which may be a location on your local filesystem or a cloud storage location like Amazon S3.
+Để lưu file đã upload, thông thường bạn sẽ sử dụng một trong các [filesystem](/docs/{{version}}/filesystem) đã cấu hình. Class `UploadedFile` có method `store` để chuyển file upload vào một disk; disk này có thể nằm trên filesystem cục bộ hoặc cloud storage như Amazon S3.
 
-The `store` method accepts the path where the file should be stored relative to the filesystem's configured root directory. This path should not contain a filename, since a unique ID will automatically be generated to serve as the filename.
+Method `store` nhận path nơi file sẽ được lưu, tính tương đối từ root directory đã cấu hình của filesystem. Path này không nên chứa filename vì Laravel sẽ tự động tạo một ID duy nhất làm filename.
 
-The `store` method also accepts an optional second argument for the name of the disk that should be used to store the file. The method will return the path of the file relative to the disk's root:
+Method `store` cũng nhận argument thứ hai tùy chọn là tên disk dùng để lưu file. Method sẽ trả về path của file tính tương đối từ root của disk:
 
 ```php
 $path = $request->photo->store('images');
@@ -803,7 +803,7 @@ $path = $request->photo->store('images');
 $path = $request->photo->store('images', 's3');
 ```
 
-If you do not want a filename to be automatically generated, you may use the `storeAs` method, which accepts the path, filename, and disk name as its arguments:
+Nếu không muốn filename được tạo tự động, bạn có thể dùng method `storeAs`, nhận path, filename và tên disk làm các argument:
 
 ```php
 $path = $request->photo->storeAs('images', 'filename.jpg');
@@ -812,14 +812,14 @@ $path = $request->photo->storeAs('images', 'filename.jpg', 's3');
 ```
 
 > [!NOTE]
-> For more information about file storage in Laravel, check out the complete [file storage documentation](/docs/{{version}}/filesystem).
+> Để biết thêm về lưu trữ file trong Laravel, hãy xem [tài liệu filesystem](/docs/{{version}}/filesystem) đầy đủ.
 
 <a name="configuring-trusted-proxies"></a>
-## Configuring Trusted Proxies
+## Cấu hình Trusted Proxy
 
-When running your applications behind a load balancer that terminates TLS / SSL certificates, you may notice your application sometimes does not generate HTTPS links when using the `url` helper. Typically this is because your application is being forwarded traffic from your load balancer on port 80 and does not know it should generate secure links.
+Khi ứng dụng chạy phía sau load balancer thực hiện TLS / SSL termination, đôi khi ứng dụng có thể không tạo HTTPS link khi dùng helper `url`. Nguyên nhân thường là load balancer forward traffic đến ứng dụng qua port 80, khiến ứng dụng không biết rằng nó cần tạo secure link.
 
-To solve this, you may enable the `Illuminate\Http\Middleware\TrustProxies` middleware that is included in your Laravel application, which allows you to quickly customize the load balancers or proxies that should be trusted by your application. Your trusted proxies should be specified using the `trustProxies` middleware method in your application's `bootstrap/app.php` file:
+Để xử lý vấn đề này, bạn có thể bật middleware `Illuminate\Http\Middleware\TrustProxies` có sẵn trong Laravel. Middleware này cho phép cấu hình nhanh các load balancer hoặc proxy mà ứng dụng tin cậy. Trusted proxy được chỉ định bằng method middleware `trustProxies` trong file `bootstrap/app.php`:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -830,7 +830,7 @@ To solve this, you may enable the `Illuminate\Http\Middleware\TrustProxies` midd
 })
 ```
 
-In addition to configuring the trusted proxies, you may also configure the proxy headers that should be trusted:
+Ngoài việc cấu hình trusted proxy, bạn cũng có thể cấu hình các proxy header được tin cậy:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -844,12 +844,12 @@ In addition to configuring the trusted proxies, you may also configure the proxy
 ```
 
 > [!NOTE]
-> If you are using AWS Elastic Load Balancing, the `headers` value should be `Request::HEADER_X_FORWARDED_AWS_ELB`. If your load balancer uses the standard `Forwarded` header from [RFC 7239](https://www.rfc-editor.org/rfc/rfc7239#section-4), the `headers` value should be `Request::HEADER_FORWARDED`. For more information on the constants that may be used in the `headers` value, check out Symfony's documentation on [trusting proxies](https://symfony.com/doc/current/deployment/proxies.html).
+> Nếu sử dụng AWS Elastic Load Balancing, giá trị `headers` nên là `Request::HEADER_X_FORWARDED_AWS_ELB`. Nếu load balancer sử dụng header `Forwarded` tiêu chuẩn theo [RFC 7239](https://www.rfc-editor.org/rfc/rfc7239#section-4), giá trị `headers` nên là `Request::HEADER_FORWARDED`. Để biết thêm về các constant có thể dùng cho `headers`, hãy xem tài liệu Symfony về [trusted proxy](https://symfony.com/doc/current/deployment/proxies.html).
 
 <a name="trusting-all-proxies"></a>
-#### Trusting All Proxies
+#### Tin cậy tất cả Proxy
 
-If you are using Amazon AWS or another "cloud" load balancer provider, you may not know the IP addresses of your actual balancers. In this case, you may use `*` to trust all proxies:
+Nếu sử dụng Amazon AWS hoặc một nhà cung cấp load balancer "cloud" khác, bạn có thể không biết IP thực tế của các balancer. Trong trường hợp này, có thể dùng `*` để tin cậy tất cả proxy:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -858,13 +858,13 @@ If you are using Amazon AWS or another "cloud" load balancer provider, you may n
 ```
 
 <a name="configuring-trusted-hosts"></a>
-## Configuring Trusted Hosts
+## Cấu hình Trusted Host
 
-By default, Laravel will respond to all requests it receives regardless of the content of the HTTP request's `Host` header. In addition, the `Host` header's value will be used when generating absolute URLs to your application during a web request.
+Mặc định, Laravel phản hồi mọi request nhận được bất kể nội dung header `Host` của HTTP request. Ngoài ra, giá trị header `Host` sẽ được sử dụng khi tạo absolute URL đến ứng dụng trong quá trình xử lý web request.
 
-Typically, you should configure your web server, such as Nginx or Apache, to only send requests to your application that match a given hostname. However, if you do not have the ability to customize your web server directly and need to instruct Laravel to only respond to certain hostnames, you may do so by enabling the `Illuminate\Http\Middleware\TrustHosts` middleware for your application.
+Thông thường, bạn nên cấu hình web server như Nginx hoặc Apache chỉ chuyển đến ứng dụng các request khớp với hostname cho phép. Tuy nhiên, nếu không thể trực tiếp tùy chỉnh web server và cần yêu cầu Laravel chỉ phản hồi một số hostname nhất định, bạn có thể bật middleware `Illuminate\Http\Middleware\TrustHosts`.
 
-To enable the `TrustHosts` middleware, you should invoke the `trustHosts` middleware method in your application's `bootstrap/app.php` file. Using the `at` argument of this method, you may specify the hostnames that your application should respond to. The hostname string is treated as a regular expression. Incoming requests with other `Host` headers will be rejected:
+Để bật middleware `TrustHosts`, hãy gọi method middleware `trustHosts` trong file `bootstrap/app.php`. Thông qua argument `at`, bạn có thể chỉ định các hostname mà ứng dụng được phép phản hồi. Chuỗi hostname được xử lý như regular expression. Request có header `Host` khác sẽ bị từ chối:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -872,7 +872,7 @@ To enable the `TrustHosts` middleware, you should invoke the `trustHosts` middle
 })
 ```
 
-By default, requests coming from subdomains of the application's URL are also automatically trusted. If you would like to disable this behavior, you may use the `subdomains` argument:
+Mặc định, request đến từ subdomain của URL ứng dụng cũng tự động được tin cậy. Nếu muốn tắt hành vi này, bạn có thể dùng argument `subdomains`:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -880,13 +880,15 @@ By default, requests coming from subdomains of the application's URL are also au
 })
 ```
 
-If you need to access your application's configuration files or database to determine your trusted hosts, you may provide a closure to the `at` argument:
+Nếu cần truy cập file cấu hình hoặc database của ứng dụng để xác định trusted host, bạn có thể truyền closure cho argument `at`:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
     $middleware->trustHosts(at: fn () => config('app.trusted_hosts'));
 })
 ```
+
+---
 
 ## Tài liệu chính thức
 

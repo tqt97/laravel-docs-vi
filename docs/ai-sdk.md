@@ -1,16 +1,16 @@
 # Laravel AI SDK
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-    - [Configuration](#configuration)
-    - [Custom Base URLs](#custom-base-urls)
-    - [OpenAI-Compatible Providers](#openai-compatible-providers)
-    - [Provider Support](#provider-support)
-- [Agents](#agents)
-    - [Prompting](#prompting)
-    - [Conversation Context](#conversation-context)
-    - [Structured Output](#structured-output)
-    - [Attachments](#attachments)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+    - [Cấu hình](#configuration)
+    - [Base URL tùy chỉnh](#custom-base-urls)
+    - [Provider tương thích OpenAI](#openai-compatible-providers)
+    - [Hỗ trợ provider](#provider-support)
+- [Agent](#agents)
+    - [Gửi prompt](#prompting)
+    - [Ngữ cảnh hội thoại](#conversation-context)
+    - [Đầu ra có cấu trúc](#structured-output)
+    - [Tệp đính kèm](#attachments)
     - [Streaming](#streaming)
     - [Broadcasting](#broadcasting)
     - [Queueing](#queueing)
@@ -51,35 +51,35 @@
 - [Events](#events)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-The [Laravel AI SDK](https://github.com/laravel/ai) provides a unified, expressive API for interacting with AI providers such as OpenAI, Anthropic, Gemini, and more. With the AI SDK, you can build intelligent agents with tools and structured output, generate images, synthesize and transcribe audio, create vector embeddings, and much more — all using a consistent, Laravel-friendly interface.
+[Laravel AI SDK](https://github.com/laravel/ai) cung cấp một API thống nhất, giàu tính biểu đạt để tương tác với các AI provider như OpenAI, Anthropic, Gemini và nhiều provider khác. Với AI SDK, bạn có thể xây dựng các agent thông minh có tool và đầu ra có cấu trúc, tạo hình ảnh, tổng hợp và phiên âm âm thanh, tạo vector embedding và nhiều hơn nữa — tất cả thông qua một giao diện nhất quán, thân thiện với Laravel.
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
-You can install the Laravel AI SDK via Composer:
+Bạn có thể cài đặt Laravel AI SDK thông qua Composer:
 
 ```shell
 composer require laravel/ai
 ```
 
-Next, you should publish the AI SDK configuration and migration files using the `vendor:publish` Artisan command:
+Tiếp theo, bạn nên publish các file cấu hình và migration của AI SDK bằng lệnh Artisan `vendor:publish`:
 
 ```shell
 php artisan vendor:publish --provider="Laravel\Ai\AiServiceProvider"
 ```
 
-Finally, you should run your application's database migrations. This will create a `agent_conversations` and `agent_conversation_messages` table that the AI SDK uses to power its conversation storage:
+Cuối cùng, bạn nên chạy các database migration của ứng dụng. Thao tác này sẽ tạo các bảng `agent_conversations` và `agent_conversation_messages` mà AI SDK sử dụng để lưu trữ hội thoại:
 
 ```shell
 php artisan migrate
 ```
 
 <a name="configuration"></a>
-### Configuration
+### Cấu hình
 
-You may define your AI provider credentials in your application's `config/ai.php` configuration file or as environment variables in your application's `.env` file:
+Bạn có thể khai báo thông tin xác thực của AI provider trong file cấu hình `config/ai.php` của ứng dụng hoặc dưới dạng biến môi trường trong file `.env`:
 
 ```ini
 ANTHROPIC_API_KEY=
@@ -100,14 +100,14 @@ VOYAGEAI_API_KEY=
 XAI_API_KEY=
 ```
 
-The default models used for text, images, audio, transcription, and embeddings may also be configured in your application's `config/ai.php` configuration file.
+Các model mặc định dùng cho văn bản, hình ảnh, âm thanh, phiên âm và embedding cũng có thể được cấu hình trong file `config/ai.php` của ứng dụng.
 
 <a name="custom-base-urls"></a>
-### Custom Base URLs
+### Base URL tùy chỉnh
 
-By default, the Laravel AI SDK connects directly to each provider's public API endpoint. However, you may need to route requests through a different endpoint - for example, when using a proxy service to centralize API key management, implement rate limiting, or route traffic through a corporate gateway.
+Theo mặc định, Laravel AI SDK kết nối trực tiếp tới API endpoint công khai của từng provider. Tuy nhiên, bạn có thể cần định tuyến request qua một endpoint khác — ví dụ khi sử dụng proxy service để tập trung quản lý API key, triển khai rate limiting hoặc định tuyến traffic qua gateway của doanh nghiệp.
 
-You may configure custom base URLs by adding a `url` parameter to your provider configuration:
+Bạn có thể cấu hình base URL tùy chỉnh bằng cách thêm tham số `url` vào cấu hình provider:
 
 ```php
 'providers' => [
@@ -125,14 +125,14 @@ You may configure custom base URLs by adding a `url` parameter to your provider 
 ],
 ```
 
-This is useful when routing requests through a proxy service (such as LiteLLM or Azure OpenAI Gateway) or using alternative endpoints.
+Điều này hữu ích khi định tuyến request qua proxy service (chẳng hạn LiteLLM hoặc Azure OpenAI Gateway) hoặc khi sử dụng endpoint thay thế.
 
-Custom base URLs are supported for the following providers: OpenAI, Anthropic, Gemini, Groq, Cohere, DeepSeek, xAI, and OpenRouter.
+Base URL tùy chỉnh được hỗ trợ cho các provider sau: OpenAI, Anthropic, Gemini, Groq, Cohere, DeepSeek, xAI và OpenRouter.
 
 <a name="openai-compatible-providers"></a>
-### OpenAI-Compatible Providers
+### Provider tương thích OpenAI
 
-If you are using an OpenAI-compatible API, such as LM Studio, vLLM, Together, Fireworks, or a local gateway, you may configure an `openai-compatible` provider. The `url` option is required, while the `key` option is optional and will be sent as a bearer token when present:
+Nếu đang sử dụng một API tương thích OpenAI như LM Studio, vLLM, Together, Fireworks hoặc local gateway, bạn có thể cấu hình provider `openai-compatible`. Tùy chọn `url` là bắt buộc, còn `key` là tùy chọn và sẽ được gửi dưới dạng bearer token khi có:
 
 ```php
 'providers' => [
@@ -144,13 +144,13 @@ If you are using an OpenAI-compatible API, such as LM Studio, vLLM, Together, Fi
 ],
 ```
 
-Once configured, you may use the named provider like any other provider:
+Sau khi cấu hình, bạn có thể sử dụng provider đã đặt tên giống như bất kỳ provider nào khác:
 
 ```php
 agent()->prompt('What is Laravel?', provider: 'local', model: 'local-model');
 ```
 
-You may also configure a default text model for the provider so that you do not need to pass a model explicitly:
+Bạn cũng có thể cấu hình model văn bản mặc định cho provider để không cần truyền model một cách tường minh:
 
 ```php
 'local' => [
@@ -165,7 +165,7 @@ You may also configure a default text model for the provider so that you do not 
 ],
 ```
 
-You may add custom HTTP headers to every outgoing request for the provider by defining a `headers` array in its configuration. This is useful when an endpoint requires an additional identifying or authentication header beyond the bearer token:
+Bạn có thể thêm HTTP header tùy chỉnh vào mọi request gửi đi của provider bằng cách khai báo mảng `headers` trong cấu hình. Điều này hữu ích khi endpoint yêu cầu thêm header định danh hoặc xác thực ngoài bearer token:
 
 ```php
 'local' => [
@@ -178,12 +178,12 @@ You may add custom HTTP headers to every outgoing request for the provider by de
 ],
 ```
 
-OpenAI-compatible providers support text generation, streaming, tools, structured output, image attachments, embeddings, and transcription. If your endpoint requires additional request body fields, provide them using [provider options](#provider-options).
+Các provider tương thích OpenAI hỗ trợ tạo văn bản, streaming, tool, đầu ra có cấu trúc, tệp hình ảnh đính kèm, embedding và phiên âm. Nếu endpoint của bạn yêu cầu thêm các trường trong request body, hãy cung cấp chúng thông qua [provider options](#provider-options).
 
 <a name="openai-compatible-embeddings"></a>
-#### OpenAI-Compatible Embeddings
+#### Embedding tương thích OpenAI
 
-Since arbitrary endpoints have no known models, you must configure a default embeddings model to use `embeddings()` with an OpenAI-compatible provider. You may also configure a fixed dimensions value; if omitted, the request is sent without a `dimensions` parameter and the model's native dimensions are used.
+Vì các endpoint tùy ý không có model đã biết trước, bạn phải cấu hình một embedding model mặc định để sử dụng `embeddings()` với provider tương thích OpenAI. Bạn cũng có thể cấu hình giá trị dimensions cố định; nếu bỏ qua, request sẽ được gửi mà không có tham số `dimensions` và dimensions gốc của model sẽ được sử dụng.
 
 ```php
 'local' => [
@@ -200,9 +200,9 @@ Since arbitrary endpoints have no known models, you must configure a default emb
 ```
 
 <a name="openai-compatible-transcriptions"></a>
-#### OpenAI-Compatible Transcriptions
+#### Phiên âm tương thích OpenAI
 
-Likewise, you must configure a default transcription model to use `Transcription` with an OpenAI-compatible provider. The audio will be uploaded to the endpoint's `/audio/transcriptions` route as a standard multipart request:
+Tương tự, bạn phải cấu hình một transcription model mặc định để sử dụng `Transcription` với provider tương thích OpenAI. Audio sẽ được upload tới route `/audio/transcriptions` của endpoint dưới dạng multipart request tiêu chuẩn:
 
 ```php
 'local' => [
@@ -218,12 +218,12 @@ Likewise, you must configure a default transcription model to use `Transcription
 ```
 
 > [!NOTE]
-> OpenAI-compatible and Groq providers do not support diarization. Invoking the `diarize` method when using these providers will throw an exception.
+> Các provider tương thích OpenAI và Groq không hỗ trợ diarization. Việc gọi phương thức `diarize` khi sử dụng các provider này sẽ ném ra exception.
 
 <a name="provider-support"></a>
-### Provider Support
+### Hỗ trợ provider
 
-The AI SDK supports a variety of providers across its features. The following table summarizes which providers are available for each feature:
+AI SDK hỗ trợ nhiều provider trên các tính năng khác nhau. Bảng sau tóm tắt những provider khả dụng cho từng tính năng:
 
 <div class="overflow-auto">
 
@@ -239,7 +239,7 @@ The AI SDK supports a variety of providers across its features. The following ta
 
 </div>
 
-The `Laravel\Ai\Enums\Lab` enum may be used to reference providers throughout your code instead of using plain strings:
+Enum `Laravel\Ai\Enums\Lab` có thể được dùng để tham chiếu provider trong toàn bộ code thay vì sử dụng chuỗi thuần túy:
 
 ```php
 use Laravel\Ai\Enums\Lab;
@@ -252,11 +252,11 @@ Lab::Gemini;
 ```
 
 <a name="agents"></a>
-## Agents
+## Agent
 
-Agents are the fundamental building block for interacting with AI providers in the Laravel AI SDK. Each agent is a dedicated PHP class that encapsulates the instructions, conversation context, tools, and output schema needed to interact with a large language model. Think of an agent as a specialized assistant — a sales coach, a document analyzer, a support bot — that you configure once and prompt as needed throughout your application.
+Agent là khối xây dựng nền tảng để tương tác với AI provider trong Laravel AI SDK. Mỗi agent là một PHP class chuyên biệt đóng gói instructions, ngữ cảnh hội thoại, tool và output schema cần thiết để tương tác với large language model. Có thể xem agent như một trợ lý chuyên biệt — sales coach, công cụ phân tích tài liệu hoặc support bot — mà bạn cấu hình một lần rồi gửi prompt khi cần trong toàn bộ ứng dụng.
 
-You can create an agent via the `make:agent` Artisan command:
+Bạn có thể tạo agent bằng lệnh Artisan `make:agent`:
 
 ```shell
 php artisan make:agent SalesCoach
@@ -264,7 +264,7 @@ php artisan make:agent SalesCoach
 php artisan make:agent SalesCoach --structured
 ```
 
-Within the generated agent class, you can define the system prompt / instructions, message context, available tools, and output schema (if applicable):
+Trong agent class được tạo, bạn có thể định nghĩa system prompt / instructions, message context, các tool khả dụng và output schema (nếu áp dụng):
 
 ```php
 <?php
@@ -338,9 +338,9 @@ class SalesCoach implements Agent, Conversational, HasTools, HasStructuredOutput
 ```
 
 <a name="prompting"></a>
-### Prompting
+### Gửi prompt
 
-To prompt an agent, first create an instance using the `make` method or standard instantiation, then call `prompt`:
+Để gửi prompt cho agent, trước tiên hãy tạo instance bằng phương thức `make` hoặc khởi tạo theo cách thông thường, sau đó gọi `prompt`:
 
 ```php
 $response = (new SalesCoach)
@@ -349,13 +349,13 @@ $response = (new SalesCoach)
 return (string) $response;
 ```
 
-The `make` method resolves your agent from the container, allowing automatic dependency injection. You may also pass arguments to the agent's constructor:
+Phương thức `make` resolve agent từ container, cho phép dependency injection tự động. Bạn cũng có thể truyền argument vào constructor của agent:
 
 ```php
 $agent = SalesCoach::make(user: $user);
 ```
 
-By passing additional arguments to the `prompt` method, you may override the default provider, model, or HTTP timeout when prompting:
+Bằng cách truyền thêm argument vào phương thức `prompt`, bạn có thể ghi đè provider, model hoặc HTTP timeout mặc định khi gửi prompt:
 
 ```php
 $response = (new SalesCoach)->prompt(
@@ -367,9 +367,9 @@ $response = (new SalesCoach)->prompt(
 ```
 
 <a name="raw-http-responses"></a>
-#### Raw HTTP Responses
+#### Phản hồi HTTP thô
 
-Every response returned from a text-generating agent exposes the raw HTTP response from the underlying provider API call via a `raw` property. This gives you access to provider-specific information that isn't part of the AI SDK's generic response - rate-limit headers, request IDs, or other exact payload fields:
+Mỗi phản hồi do agent sinh văn bản trả về đều cung cấp phản hồi HTTP thô từ lời gọi API của provider bên dưới thông qua thuộc tính `raw`. Nhờ đó, bạn có thể truy cập thông tin riêng của provider không nằm trong phản hồi tổng quát của AI SDK, chẳng hạn header rate-limit, request ID hoặc các trường payload chính xác khác:
 
 ```php
 $response = (new SalesCoach)->prompt('Analyze this sales transcript...');
@@ -380,7 +380,7 @@ $response->raw->header('X-RateLimit-Remaining-Requests');
 $response->raw->json('id');
 ```
 
-In a tool-call loop, each step retains the raw response of its own request:
+Trong vòng lặp gọi tool, mỗi bước giữ lại phản hồi thô của chính request tương ứng:
 
 ```php
 foreach ($response->steps as $step) {
@@ -388,12 +388,12 @@ foreach ($response->steps as $step) {
 }
 ```
 
-> **Note:** The `raw` property is `null` when streaming a response, when using the Bedrock provider (which performs its API calls via the AWS SDK instead of an HTTP client), and on faked responses unless one is provided explicitly via `withRawResponse`.
+> **Lưu ý:** Thuộc tính `raw` là `null` khi stream phản hồi, khi sử dụng provider Bedrock (provider này thực hiện lời gọi API thông qua AWS SDK thay vì HTTP client), và trên các phản hồi giả lập trừ khi phản hồi thô được cung cấp tường minh qua `withRawResponse`.
 
 <a name="conversation-context"></a>
-### Conversation Context
+### Ngữ cảnh hội thoại
 
-If your agent implements the `Conversational` interface, you may use the `messages` method to return the previous conversation context, if applicable:
+Nếu agent triển khai interface `Conversational`, bạn có thể sử dụng phương thức `messages` để trả về ngữ cảnh hội thoại trước đó, nếu có:
 
 ```php
 use App\Models\History;
@@ -416,11 +416,11 @@ public function messages(): iterable
 ```
 
 <a name="remembering-conversations"></a>
-#### Remembering Conversations
+#### Ghi nhớ hội thoại
 
-> **Warning:** Before using the `RemembersConversations` trait, you should publish and run the AI SDK migrations using the `vendor:publish` Artisan command. These migrations will create the necessary database tables to store conversations.
+> **Cảnh báo:** Trước khi sử dụng trait `RemembersConversations`, bạn nên publish và chạy migration của AI SDK bằng lệnh Artisan `vendor:publish`. Các migration này sẽ tạo những bảng cơ sở dữ liệu cần thiết để lưu hội thoại.
 
-If you would like Laravel to automatically store and retrieve conversation history for your agent, you may use the `RemembersConversations` trait. This trait provides a simple way to persist conversation messages to the database without manually implementing the `Conversational` interface:
+Nếu muốn Laravel tự động lưu và truy xuất lịch sử hội thoại cho agent, bạn có thể sử dụng trait `RemembersConversations`. Trait này cung cấp cách đơn giản để lưu bền vững các message hội thoại vào cơ sở dữ liệu mà không cần tự triển khai interface `Conversational`:
 
 ```php
 <?php
@@ -446,9 +446,9 @@ class SalesCoach implements Agent, Conversational
 }
 ```
 
-When using the `RemembersConversations` trait, do not manually define a `messages` method in your agent class. If a `messages` method is present, it will take precedence over the trait's implementation and conversation history will not be loaded from the database.
+Khi sử dụng trait `RemembersConversations`, không tự định nghĩa phương thức `messages` trong class agent. Nếu phương thức `messages` tồn tại, nó sẽ được ưu tiên hơn phần triển khai của trait và lịch sử hội thoại sẽ không được tải từ cơ sở dữ liệu.
 
-To start a new conversation for a user, call the `forUser` method before prompting:
+Để bắt đầu hội thoại mới cho một user, hãy gọi phương thức `forUser` trước khi gửi prompt:
 
 ```php
 $response = (new SalesCoach)->forUser($user)->prompt('Hello!');
@@ -456,7 +456,7 @@ $response = (new SalesCoach)->forUser($user)->prompt('Hello!');
 $conversationId = $response->conversationId;
 ```
 
-The conversation ID is returned on the response and can be stored for future reference. If you would like to retrieve all of a user's conversations using Eloquent, you may add the `HasConversations` trait to your user model:
+Conversation ID được trả về trong response và có thể được lưu để tham chiếu sau này. Nếu muốn truy xuất toàn bộ hội thoại của một user bằng Eloquent, bạn có thể thêm trait `HasConversations` vào model user:
 
 ```php
 <?php
@@ -472,7 +472,7 @@ class User extends Authenticatable
 }
 ```
 
-Once the trait has been added to your model, you may retrieve and query the user's conversations via the `conversations` relationship:
+Sau khi thêm trait vào model, bạn có thể truy xuất và query các hội thoại của user thông qua relationship `conversations`:
 
 ```php
 $conversations = $user->conversations()
@@ -480,7 +480,7 @@ $conversations = $user->conversations()
     ->paginate(20);
 ```
 
-To continue an existing conversation, use the `continue` method:
+Để tiếp tục một hội thoại hiện có, hãy sử dụng phương thức `continue`:
 
 ```php
 $response = (new SalesCoach)
@@ -488,12 +488,12 @@ $response = (new SalesCoach)
     ->prompt('Tell me more about that.');
 ```
 
-When using the `RemembersConversations` trait, previous messages are automatically loaded and included in the conversation context when prompting. New messages (both user and assistant) are automatically stored after each interaction.
+Khi sử dụng trait `RemembersConversations`, các message trước đó sẽ tự động được tải và đưa vào ngữ cảnh hội thoại khi gửi prompt. Các message mới (cả user và assistant) cũng tự động được lưu sau mỗi lần tương tác.
 
 <a name="conversation-participants"></a>
-#### Conversation Participants
+#### Người tham gia hội thoại
 
-Although users are the most common conversation participants, conversations may belong to any Eloquent model. Use the `forParticipant` method to start a conversation for another type of model:
+Mặc dù user là đối tượng tham gia hội thoại phổ biến nhất, hội thoại có thể thuộc về bất kỳ model Eloquent nào. Sử dụng phương thức `forParticipant` để bắt đầu hội thoại cho một loại model khác:
 
 ```php
 $response = (new SalesCoach)
@@ -501,9 +501,9 @@ $response = (new SalesCoach)
     ->prompt('Review our latest sales results.');
 ```
 
-The participant's morph class and primary key are stored with the conversation. Therefore, models of different types that have the same primary key, such as `User` ID `1` and `Team` ID `1`, have separate conversation histories. The `forUser` method is an alias for `forParticipant`.
+Morph class và primary key của participant được lưu cùng hội thoại. Vì vậy, các model khác loại nhưng có cùng primary key, chẳng hạn `User` ID `1` và `Team` ID `1`, vẫn có lịch sử hội thoại riêng biệt. Phương thức `forUser` là alias của `forParticipant`.
 
-You may continue the participant's most recent conversation using the `continueLastConversation` method:
+Bạn có thể tiếp tục hội thoại gần nhất của participant bằng phương thức `continueLastConversation`:
 
 ```php
 $response = (new SalesCoach)
@@ -511,7 +511,7 @@ $response = (new SalesCoach)
     ->prompt('Tell me more about that.');
 ```
 
-When continuing a specific conversation, pass the participant to the `continue` method:
+Khi tiếp tục một hội thoại cụ thể, hãy truyền participant vào phương thức `continue`:
 
 ```php
 $response = (new SalesCoach)
@@ -519,7 +519,7 @@ $response = (new SalesCoach)
     ->prompt('Tell me more about that.');
 ```
 
-The `HasConversations` trait may be added to any Eloquent model that participates in conversations. The resulting `conversations` relationship is a polymorphic relationship scoped to that model's type and primary key. You may also access the participant that owns a conversation through its inverse relationship:
+Trait `HasConversations` có thể được thêm vào bất kỳ model Eloquent nào tham gia hội thoại. Relationship `conversations` tạo ra là một polymorphic relationship được giới hạn theo loại model và primary key của model đó. Bạn cũng có thể truy cập participant sở hữu hội thoại thông qua inverse relationship:
 
 ```php
 $conversations = $team->conversations;
@@ -527,15 +527,15 @@ $conversations = $team->conversations;
 $participant = $conversation->participant;
 ```
 
-If your application uses multiple participant model types, you should consider defining an [Eloquent morph map](/docs/{{version}}/eloquent-relationships#custom-polymorphic-types) so that stored participant types are not coupled to your model class names.
+Nếu ứng dụng sử dụng nhiều loại model participant, bạn nên cân nhắc định nghĩa [Eloquent morph map](/docs/{{version}}/eloquent-relationships#custom-polymorphic-types) để loại participant được lưu không bị phụ thuộc vào tên class model.
 
 > [!WARNING]
-> The `continue` method does not verify that the given participant owns the conversation. Your application should authorize access to the conversation before continuing it.
+> Phương thức `continue` không xác minh participant được truyền vào có sở hữu hội thoại hay không. Ứng dụng của bạn nên phân quyền truy cập hội thoại trước khi tiếp tục.
 
 <a name="structured-output"></a>
-### Structured Output
+### Đầu ra có cấu trúc
 
-If you would like your agent to return structured output, implement the `HasStructuredOutput` interface, which requires that your agent define a `schema` method:
+Nếu muốn agent trả về đầu ra có cấu trúc, hãy triển khai interface `HasStructuredOutput`; interface này yêu cầu agent định nghĩa phương thức `schema`:
 
 ```php
 <?php
@@ -565,7 +565,7 @@ class SalesCoach implements Agent, HasStructuredOutput
 }
 ```
 
-When prompting an agent that returns structured output, you can access the returned `StructuredAgentResponse` like an array:
+Khi gửi prompt đến agent trả về đầu ra có cấu trúc, bạn có thể truy cập `StructuredAgentResponse` được trả về giống như một array:
 
 ```php
 $response = (new SalesCoach)->prompt('Analyze this sales transcript...');
@@ -574,9 +574,9 @@ return $response['score'];
 ```
 
 <a name="structured-output-nested-objects"></a>
-#### Nested Objects
+#### Object lồng nhau
 
-To define nested structured output, use the `object` method with a closure:
+Để định nghĩa đầu ra có cấu trúc lồng nhau, hãy sử dụng phương thức `object` cùng một closure:
 
 ```php
 <?php
@@ -611,9 +611,9 @@ class SalesCoach implements Agent, HasStructuredOutput
 ```
 
 <a name="structured-output-arrays-of-objects"></a>
-#### Arrays of Objects
+#### Mảng object
 
-If your agent should return a list of structured items, combine the `array` and `object` methods:
+Nếu agent cần trả về danh sách các phần tử có cấu trúc, hãy kết hợp các phương thức `array` và `object`:
 
 ```php
 public function schema(JsonSchema $schema): array
@@ -631,7 +631,7 @@ public function schema(JsonSchema $schema): array
 }
 ```
 
-If a value may match one of several schemas, use the `anyOf` method:
+Nếu một giá trị có thể khớp với một trong nhiều schema, hãy sử dụng phương thức `anyOf`:
 
 ```php
 public function schema(JsonSchema $schema): array
@@ -652,9 +652,9 @@ public function schema(JsonSchema $schema): array
 ```
 
 <a name="attachments"></a>
-### Attachments
+### Tệp đính kèm
 
-When prompting, you may also pass attachments with the prompt to allow the model to inspect images and documents:
+Khi gửi prompt, bạn cũng có thể truyền tệp đính kèm cùng prompt để model có thể kiểm tra hình ảnh và tài liệu:
 
 ```php
 use App\Ai\Agents\SalesCoach;
@@ -670,7 +670,7 @@ $response = (new SalesCoach)->prompt(
 );
 ```
 
-Likewise, the `Laravel\Ai\Files\Image` class may be used to attach images to a prompt:
+Tương tự, class `Laravel\Ai\Files\Image` có thể được sử dụng để đính kèm hình ảnh vào prompt:
 
 ```php
 use App\Ai\Agents\ImageAnalyzer;
@@ -689,7 +689,7 @@ $response = (new ImageAnalyzer)->prompt(
 <a name="streaming"></a>
 ### Streaming
 
-You may stream an agent's response by invoking the `stream` method. The returned `StreamableAgentResponse` may be returned from a route to automatically send a streaming response (SSE) to the client:
+Bạn có thể stream phản hồi của agent bằng cách gọi phương thức `stream`. `StreamableAgentResponse` được trả về có thể được trả trực tiếp từ route để tự động gửi phản hồi dạng streaming (SSE) tới client:
 
 ```php
 use App\Ai\Agents\SalesCoach;
@@ -699,7 +699,7 @@ Route::get('/coach', function () {
 });
 ```
 
-The `then` method may be used to provide a closure that will be invoked when the entire response has been streamed to the client:
+Phương thức `then` có thể được dùng để cung cấp một closure sẽ được gọi sau khi toàn bộ phản hồi đã được stream tới client:
 
 ```php
 use App\Ai\Agents\SalesCoach;
@@ -714,7 +714,7 @@ Route::get('/coach', function () {
 });
 ```
 
-Alternatively, you may iterate through the streamed events manually:
+Ngoài ra, bạn có thể tự lặp qua các event được stream:
 
 ```php
 $stream = (new SalesCoach)->stream('Analyze this sales transcript...');
@@ -725,9 +725,9 @@ foreach ($stream as $event) {
 ```
 
 <a name="streaming-using-the-vercel-ai-sdk-protocol"></a>
-#### Streaming Using the Vercel AI SDK Protocol
+#### Streaming bằng giao thức Vercel AI SDK
 
-You may stream the events using the [Vercel AI SDK stream protocol](https://ai-sdk.dev/docs/ai-sdk-ui/stream-protocol) by invoking the `usingVercelDataProtocol` method on the streamable response:
+Bạn có thể stream các event bằng [giao thức stream của Vercel AI SDK](https://ai-sdk.dev/docs/ai-sdk-ui/stream-protocol) bằng cách gọi phương thức `usingVercelDataProtocol` trên phản hồi có khả năng stream:
 
 ```php
 use App\Ai\Agents\SalesCoach;
@@ -742,7 +742,7 @@ Route::get('/coach', function () {
 <a name="broadcasting"></a>
 ### Broadcasting
 
-You may broadcast streamed events in a few different ways. First, you can simply invoke the `broadcast` or `broadcastNow` method on a streamed event:
+Bạn có thể broadcast các event được stream theo một số cách khác nhau. Trước tiên, bạn có thể gọi trực tiếp phương thức `broadcast` hoặc `broadcastNow` trên một event được stream:
 
 ```php
 use App\Ai\Agents\SalesCoach;
@@ -755,7 +755,7 @@ foreach ($stream as $event) {
 }
 ```
 
-Or, you can invoke an agent's `broadcastOnQueue` method to queue the agent operation and broadcast the streamed events as they are available:
+Hoặc, bạn có thể gọi phương thức `broadcastOnQueue` của agent để đưa thao tác của agent vào queue và broadcast các event được stream ngay khi chúng sẵn sàng:
 
 ```php
 (new SalesCoach)->broadcastOnQueue(
@@ -765,9 +765,9 @@ Or, you can invoke an agent's `broadcastOnQueue` method to queue the agent opera
 ```
 
 <a name="skipping-oversized-events"></a>
-#### Skipping Oversized Events
+#### Bỏ qua các event quá lớn
 
-Some broadcasting platforms limit WebSocket messages to around 10KB. Data-heavy stream events, like large tool results, can exceed this limit and cause broadcasting to fail. You may exclude specific event types from broadcasting using the `WithoutBroadcasting` attribute:
+Một số nền tảng broadcasting giới hạn message WebSocket ở khoảng 10KB. Các stream event chứa nhiều dữ liệu, chẳng hạn kết quả tool lớn, có thể vượt giới hạn này và khiến broadcasting thất bại. Bạn có thể loại trừ các loại event cụ thể khỏi broadcasting bằng attribute `WithoutBroadcasting`:
 
 ```php
 <?php
@@ -790,12 +790,12 @@ class SearchAgent implements Agent, HasTools
 }
 ```
 
-The excluded events are never broadcast, but they are still persisted to the `agent_conversation_messages` table, so your frontend can load the full tool data after the stream completes. This works for both queued (`broadcastOnQueue`) and synchronous (`broadcast` / `broadcastNow`) broadcasting.
+Các event bị loại trừ sẽ không bao giờ được broadcast, nhưng vẫn được lưu vào bảng `agent_conversation_messages`, nhờ đó frontend có thể tải đầy đủ dữ liệu tool sau khi stream hoàn tất. Cơ chế này hoạt động với cả broadcasting qua queue (`broadcastOnQueue`) lẫn đồng bộ (`broadcast` / `broadcastNow`).
 
 <a name="queueing"></a>
-### Queueing
+### Đưa vào queue
 
-Using an agent's `queue` method, you may prompt the agent, but allow it to process the response in the background, keeping your application feeling fast and responsive. The `then` and `catch` methods may be used to register closures that will be invoked when a response is available or if an exception occurs:
+Bằng phương thức `queue` của agent, bạn có thể gửi prompt cho agent nhưng cho phép nó xử lý phản hồi ở background, giúp ứng dụng luôn nhanh và phản hồi tốt. Các phương thức `then` và `catch` có thể được dùng để đăng ký closure sẽ được gọi khi có phản hồi hoặc khi xảy ra exception:
 
 ```php
 use Illuminate\Http\Request;
@@ -819,13 +819,13 @@ Route::post('/coach', function (Request $request) {
 <a name="tools"></a>
 ### Tools
 
-Tools may be used to give agents additional functionality that they can utilize while responding to prompts. Tools can be created using the `make:tool` Artisan command:
+Tool có thể được dùng để cung cấp thêm chức năng cho agent trong quá trình phản hồi prompt. Bạn có thể tạo tool bằng lệnh Artisan `make:tool`:
 
 ```shell
 php artisan make:tool RandomNumberGenerator
 ```
 
-The generated tool will be placed in your application's `app/Ai/Tools` directory. Each tool contains a `handle` method that will be invoked by the agent when it needs to utilize the tool:
+Tool được tạo sẽ nằm trong thư mục `app/Ai/Tools` của ứng dụng. Mỗi tool chứa phương thức `handle`, phương thức này sẽ được agent gọi khi cần sử dụng tool:
 
 ```php
 <?php
@@ -868,7 +868,7 @@ class RandomNumberGenerator implements Tool
 }
 ```
 
-Once you have defined your tool, you may return it from the `tools` method of any of your agents:
+Sau khi định nghĩa tool, bạn có thể trả về tool đó từ phương thức `tools` của bất kỳ agent nào:
 
 ```php
 use App\Ai\Tools\RandomNumberGenerator;
@@ -887,9 +887,9 @@ public function tools(): iterable
 ```
 
 <a name="repairing-tool-calls"></a>
-#### Repairing Tool Calls
+#### Sửa chữa lời gọi tool
 
-Use the `RepairToolCalls` attribute to let an agent recover when a model calls an unknown local tool. Laravel returns the failed call to the model with the names of the available local tools, allowing it to correct the call:
+Sử dụng attribute `RepairToolCalls` để cho phép agent phục hồi khi model gọi một local tool không tồn tại. Laravel trả lời gọi thất bại về cho model cùng tên các local tool hiện có, cho phép model sửa lại lời gọi:
 
 ```php
 use Laravel\Ai\Attributes\RepairToolCalls;
@@ -906,14 +906,14 @@ class SupportAgent implements Agent, HasTools
 }
 ```
 
-When Laravel derives the maximum number of steps automatically, this attribute adds one step for the repaired call. Explicit `MaxSteps` limits are unchanged.
+Khi Laravel tự động xác định số bước tối đa, attribute này bổ sung thêm một bước cho lời gọi được sửa. Các giới hạn `MaxSteps` được khai báo tường minh không thay đổi.
 
 <a name="similarity-search"></a>
-#### Similarity Search
+#### Tìm kiếm tương đồng
 
-The `SimilaritySearch` tool allows agents to search for documents similar to a given query using vector embeddings stored in your database. This is useful for retrieval-augmented generation (RAG) when you want to give agents access to search your application's data.
+Tool `SimilaritySearch` cho phép agent tìm các tài liệu tương đồng với một truy vấn cho trước bằng vector embedding được lưu trong database. Điều này hữu ích cho retrieval-augmented generation (RAG) khi bạn muốn cho agent khả năng tìm kiếm dữ liệu của ứng dụng.
 
-The simplest way to create a similarity search tool is using the `usingModel` method with an Eloquent model that has vector embeddings:
+Cách đơn giản nhất để tạo tool tìm kiếm tương đồng là sử dụng phương thức `usingModel` với một Eloquent model có vector embedding:
 
 ```php
 use App\Models\Document;
@@ -927,9 +927,9 @@ public function tools(): iterable
 }
 ```
 
-The first argument is the Eloquent model class, and the second argument is the column containing the vector embeddings.
+Đối số đầu tiên là class Eloquent model và đối số thứ hai là cột chứa vector embedding.
 
-You may also provide a minimum similarity threshold between `0.0` and `1.0` and a closure to customize the query:
+Bạn cũng có thể cung cấp ngưỡng tương đồng tối thiểu từ `0.0` đến `1.0` và một closure để tùy chỉnh query:
 
 ```php
 SimilaritySearch::usingModel(
@@ -941,7 +941,7 @@ SimilaritySearch::usingModel(
 ),
 ```
 
-For more control, you may create a similarity search tool with a custom closure that returns the search results:
+Để kiểm soát nhiều hơn, bạn có thể tạo tool tìm kiếm tương đồng với một closure tùy chỉnh trả về kết quả tìm kiếm:
 
 ```php
 use App\Models\Document;
@@ -961,7 +961,7 @@ public function tools(): iterable
 }
 ```
 
-You may customize the tool's description using the `withDescription` method:
+Bạn có thể tùy chỉnh mô tả của tool bằng phương thức `withDescription`:
 
 ```php
 SimilaritySearch::usingModel(Document::class, 'embedding')
@@ -969,9 +969,9 @@ SimilaritySearch::usingModel(Document::class, 'embedding')
 ```
 
 <a name="deferred-tool-loading"></a>
-### Deferred Tool Loading
+### Tải tool trì hoãn
 
-By default, every tool an agent exposes is sent to the provider with each request. When an agent provides a large number of tools, this consumes tokens and may reduce the accuracy of the model's tool selection. Using the `ToolSearch` provider tool with OpenAI or Anthropic, you may defer tool definitions so that the provider only loads them when they are needed:
+Mặc định, mọi tool mà agent cung cấp đều được gửi tới provider trong mỗi request. Khi agent có số lượng lớn tool, việc này tiêu tốn token và có thể làm giảm độ chính xác khi model lựa chọn tool. Khi sử dụng provider tool `ToolSearch` với OpenAI hoặc Anthropic, bạn có thể trì hoãn các định nghĩa tool để provider chỉ tải chúng khi cần:
 
 ```php
 use App\Ai\Tools\RefundOrder;
@@ -991,15 +991,15 @@ public function tools(): iterable
 }
 ```
 
-The wrapped tools do not require any modification. The provider will search for and load them when they are relevant to the prompt, after which the agent may call them like any other tool.
+Các tool được bọc không cần sửa đổi. Provider sẽ tìm và tải chúng khi chúng liên quan đến prompt, sau đó agent có thể gọi chúng như bất kỳ tool nào khác.
 
-When using Anthropic, the `strategy` argument may be used to determine how the provider should search for deferred tools. The supported strategies are `regex` (default) and `bm25`:
+Khi sử dụng Anthropic, đối số `strategy` có thể được dùng để xác định cách provider tìm kiếm các tool được trì hoãn. Các strategy được hỗ trợ là `regex` (mặc định) và `bm25`:
 
 ```php
 new ToolSearch(tools: [new SearchInvoices], strategy: 'bm25'),
 ```
 
-When using Anthropic, additional provider-specific options may be passed to the search tool using the `withProviderOptions` method:
+Khi sử dụng Anthropic, các tùy chọn bổ sung dành riêng cho provider có thể được truyền vào search tool bằng phương thức `withProviderOptions`:
 
 ```php
 (new ToolSearch(tools: [new SearchInvoices]))
@@ -1007,12 +1007,12 @@ When using Anthropic, additional provider-specific options may be passed to the 
 ```
 
 > [!WARNING]
-> Providers that do not support tool search will throw an exception rather than silently discarding the deferred tools. In addition, Anthropic requires that at least one tool is provided outside of the `ToolSearch` wrapper.
+> Các provider không hỗ trợ tool search sẽ ném exception thay vì âm thầm bỏ qua các tool được trì hoãn. Ngoài ra, Anthropic yêu cầu phải có ít nhất một tool được cung cấp bên ngoài wrapper `ToolSearch`.
 
 <a name="file-storage-tools"></a>
-### File Storage Tools
+### Tool lưu trữ file
 
-The `FileStorage` tool factory allows you to give agents access to a Laravel [filesystem disk](/docs/{{version}}/filesystem). The `all` method returns tools that allow the agent to list, read, inspect, generate URLs for, write, delete, and copy files on the given disk:
+Factory tool `FileStorage` cho phép bạn cấp cho agent quyền truy cập một [filesystem disk](/docs/{{version}}/filesystem) của Laravel. Phương thức `all` trả về các tool cho phép agent liệt kê, đọc, kiểm tra, tạo URL, ghi, xóa và sao chép file trên disk đã cho:
 
 ```php
 use Laravel\Ai\Tools\FileStorage;
@@ -1023,13 +1023,13 @@ public function tools(): iterable
 }
 ```
 
-If your agent should only be able to inspect files, use the `readOnly` method:
+Nếu agent chỉ nên có khả năng kiểm tra file, hãy sử dụng phương thức `readOnly`:
 
 ```php
 return FileStorage::readOnly('local');
 ```
 
-These methods return an `Illuminate\Support\Collection`, allowing you to further filter the tools that are provided to the agent:
+Các phương thức này trả về một `Illuminate\Support\Collection`, cho phép bạn tiếp tục lọc các tool được cung cấp cho agent:
 
 ```php
 use Laravel\Ai\Tools\Filesystem\DeleteFile;
@@ -1041,12 +1041,12 @@ return FileStorage::all('s3')
 <a name="mcp-tools"></a>
 ### MCP Tools
 
-If your application uses [Laravel MCP](/docs/{{version}}/mcp), you may give your agents tools exposed by [Model Context Protocol](https://modelcontextprotocol.io) servers. Using the [Laravel MCP client](/docs/{{version}}/mcp#client), you may connect to a remote or local MCP server and pass its tools directly to your agent.
+Nếu ứng dụng sử dụng [Laravel MCP](/docs/{{version}}/mcp), bạn có thể cung cấp cho agent các tool được expose bởi server [Model Context Protocol](https://modelcontextprotocol.io). Với [Laravel MCP client](/docs/{{version}}/mcp#client), bạn có thể kết nối tới MCP server từ xa hoặc cục bộ và truyền trực tiếp các tool của server cho agent.
 
 > [!NOTE]
-> MCP tools require the [Laravel MCP](/docs/{{version}}/mcp) package to be installed in your application.
+> MCP tools yêu cầu package [Laravel MCP](/docs/{{version}}/mcp) được cài đặt trong ứng dụng.
 
-Because an MCP client's `tools` method returns a collection, spread it into your agent's `tools` array using the `...` operator:
+Vì phương thức `tools` của MCP client trả về một collection, hãy trải collection này vào mảng `tools` của agent bằng toán tử `...`:
 
 ```php
 use App\Ai\Tools\RandomNumberGenerator;
@@ -1069,7 +1069,7 @@ public function tools(): iterable
 }
 ```
 
-The AI SDK automatically wraps each MCP tool so the agent can call it like any other tool. You may also use a [named MCP client](/docs/{{version}}/mcp#named-clients):
+AI SDK tự động bọc từng MCP tool để agent có thể gọi nó giống như bất kỳ tool nào khác. Bạn cũng có thể sử dụng một [named MCP client](/docs/{{version}}/mcp#named-clients):
 
 ```php
 use Laravel\Mcp\Facades\Mcp;
@@ -1082,7 +1082,7 @@ public function tools(): iterable
 }
 ```
 
-Or connect to a [local MCP server](/docs/{{version}}/mcp#client-connecting):
+Hoặc kết nối tới một [MCP server cục bộ](/docs/{{version}}/mcp#client-connecting):
 
 ```php
 use Laravel\Mcp\Client;
@@ -1095,21 +1095,21 @@ public function tools(): iterable
 }
 ```
 
-For more information on creating and authenticating MCP clients, including bearer tokens and OAuth, consult the [MCP client documentation](/docs/{{version}}/mcp#client).
+Để biết thêm thông tin về việc tạo và xác thực MCP client, bao gồm bearer token và OAuth, hãy xem [tài liệu MCP client](/docs/{{version}}/mcp#client).
 
 <a name="provider-tools"></a>
 ### Provider Tools
 
-Provider tools are special tools implemented natively by AI providers, offering capabilities like web searching, URL fetching, and file searching. Unlike regular tools, provider tools are executed by the provider itself rather than your application.
+Provider tool là các tool đặc biệt được AI provider triển khai native, cung cấp các khả năng như tìm kiếm web, tải URL và tìm kiếm file. Khác với tool thông thường, provider tool được chính provider thực thi thay vì ứng dụng của bạn.
 
-Provider tools can be returned by your agent's `tools` method.
+Provider tool có thể được trả về từ phương thức `tools` của agent.
 
 <a name="web-search"></a>
-#### Web Search
+#### Tìm kiếm web
 
-The `WebSearch` provider tool allows agents to search the web for real-time information. This is useful for answering questions about current events, recent data, or topics that may have changed since the model's training cutoff.
+Provider tool `WebSearch` cho phép agent tìm kiếm thông tin theo thời gian thực trên web. Điều này hữu ích khi trả lời câu hỏi về sự kiện hiện tại, dữ liệu gần đây hoặc các chủ đề có thể đã thay đổi kể từ thời điểm kết thúc dữ liệu huấn luyện của model.
 
-**Supported providers:** Anthropic, OpenAI, Azure, Gemini, xAI, OpenRouter
+**Provider được hỗ trợ:** Anthropic, OpenAI, Azure, Gemini, xAI, OpenRouter
 
 ```php
 use Laravel\Ai\Providers\Tools\WebSearch;
@@ -1122,13 +1122,13 @@ public function tools(): iterable
 }
 ```
 
-You may configure the web search tool to limit the number of searches or restrict results to specific domains:
+Bạn có thể cấu hình tool tìm kiếm web để giới hạn số lần tìm kiếm hoặc giới hạn kết quả trong các domain cụ thể:
 
 ```php
 (new WebSearch)->max(5)->allow(['laravel.com', 'php.net']),
 ```
 
-To refine search results based on user location, use the `location` method:
+Để tinh chỉnh kết quả tìm kiếm dựa trên vị trí người dùng, hãy sử dụng phương thức `location`:
 
 ```php
 (new WebSearch)->location(
@@ -1141,9 +1141,9 @@ To refine search results based on user location, use the `location` method:
 <a name="web-fetch"></a>
 #### Web Fetch
 
-The `WebFetch` provider tool allows agents to fetch and read the contents of web pages. This is useful when you need the agent to analyze specific URLs or retrieve detailed information from known web pages.
+Provider tool `WebFetch` cho phép agent tải và đọc nội dung của các trang web. Điều này hữu ích khi bạn cần agent phân tích các URL cụ thể hoặc truy xuất thông tin chi tiết từ những trang web đã biết.
 
-**Supported providers:** Anthropic, Gemini, OpenRouter
+**Provider được hỗ trợ:** Anthropic, Gemini, OpenRouter
 
 ```php
 use Laravel\Ai\Providers\Tools\WebFetch;
@@ -1156,7 +1156,7 @@ public function tools(): iterable
 }
 ```
 
-You may configure the web fetch tool to limit the number of fetches or restrict to specific domains:
+Bạn có thể cấu hình tool tải web để giới hạn số lần tải hoặc giới hạn trong các domain cụ thể:
 
 ```php
 (new WebFetch)->max(3)->allow(['docs.laravel.com']),
@@ -1165,7 +1165,7 @@ You may configure the web fetch tool to limit the number of fetches or restrict 
 <a name="file-search"></a>
 #### File Search
 
-The `FileSearch` provider tool allows agents to search through [files](#files) stored in [vector stores](#vector-stores). This enables retrieval-augmented generation (RAG) by allowing the agent to search your uploaded documents for relevant information.
+Provider tool `FileSearch` cho phép agent tìm kiếm trong các [file](#files) được lưu trong [vector store](#vector-stores). Cơ chế này hỗ trợ retrieval-augmented generation (RAG) bằng cách cho phép agent tìm thông tin liên quan trong các tài liệu bạn đã tải lên.
 
 **Supported providers:** OpenAI, Gemini, xAI
 
@@ -1180,13 +1180,13 @@ public function tools(): iterable
 }
 ```
 
-You may provide multiple vector store IDs to search across multiple stores:
+Bạn có thể cung cấp nhiều vector store ID để tìm kiếm trên nhiều store:
 
 ```php
 new FileSearch(stores: ['store_1', 'store_2']);
 ```
 
-If your files have [metadata](#adding-files-to-stores), you may filter the search results by providing a `where` argument. For simple equality filters, pass an array:
+Nếu các file có [metadata](#adding-files-to-stores), bạn có thể lọc kết quả tìm kiếm bằng cách cung cấp argument `where`. Với các điều kiện bằng đơn giản, hãy truyền một array:
 
 ```php
 new FileSearch(stores: ['store_id'], where: [
@@ -1195,7 +1195,7 @@ new FileSearch(stores: ['store_id'], where: [
 ]);
 ```
 
-For more complex filters, you may pass a closure that receives a `FileSearchQuery` instance:
+Với các bộ lọc phức tạp hơn, bạn có thể truyền một closure nhận instance `FileSearchQuery`:
 
 ```php
 use Laravel\Ai\Providers\Tools\FileSearchQuery;
@@ -1210,9 +1210,9 @@ new FileSearch(stores: ['store_id'], where: fn (FileSearchQuery $query) =>
 <a name="sub-agents"></a>
 ### Sub-Agents
 
-Agents may also be returned from another agent's `tools` method. When an agent is returned as a tool, the parent agent may delegate a specific task to the sub-agent and use the sub-agent's response while answering the original prompt. This is useful when a general-purpose agent needs access to specialized agents with their own instructions, tools, model configuration, or provider preferences.
+Một agent cũng có thể được trả về từ phương thức `tools` của một agent khác. Khi agent được trả về dưới dạng tool, agent cha có thể giao một tác vụ cụ thể cho sub-agent và sử dụng phản hồi của sub-agent khi trả lời prompt ban đầu. Cách này hữu ích khi một agent đa dụng cần truy cập các agent chuyên biệt có instruction, tool, cấu hình model hoặc lựa chọn provider riêng.
 
-For example, a customer support agent could delegate refund eligibility questions to a dedicated refunds agent:
+Ví dụ, agent hỗ trợ khách hàng có thể giao các câu hỏi về điều kiện hoàn tiền cho một agent chuyên xử lý hoàn tiền:
 
 ```php
 <?php
@@ -1249,7 +1249,7 @@ class CustomerSupportAgent implements Agent, HasTools
 }
 ```
 
-To customize how the sub-agent is exposed to the parent agent, implement the `CanActAsTool` interface on the sub-agent and define a tool-facing name and description:
+Để tùy chỉnh cách sub-agent được cung cấp cho agent cha, hãy triển khai interface `CanActAsTool` trên sub-agent và định nghĩa tên cùng mô tả dành cho tool:
 
 ```php
 <?php
@@ -1307,18 +1307,18 @@ class RefundsAgent implements Agent, CanActAsTool, HasTools
 }
 ```
 
-If a sub-agent does not implement `CanActAsTool`, Laravel will use the agent's class basename as the tool name and a generic description that asks the parent agent to pass a clear, self-contained task description. Each sub-agent invocation runs in isolation and does not receive the parent agent's conversation history.
+Nếu sub-agent không triển khai `CanActAsTool`, Laravel sẽ sử dụng basename của class agent làm tên tool và một mô tả chung yêu cầu agent cha truyền vào mô tả tác vụ rõ ràng, độc lập. Mỗi lần gọi sub-agent chạy độc lập và không nhận lịch sử hội thoại của agent cha.
 
 <a name="middleware"></a>
 ### Middleware
 
-Agents support middleware, allowing you to intercept and modify prompts before they are sent to the provider. Middleware can be created using the `make:agent-middleware` Artisan command:
+Agent hỗ trợ middleware, cho phép bạn chặn và chỉnh sửa prompt trước khi chúng được gửi tới provider. Có thể tạo middleware bằng lệnh Artisan `make:agent-middleware`:
 
 ```shell
 php artisan make:agent-middleware LogPrompts
 ```
 
-The generated middleware will be placed in your application's `app/Ai/Middleware` directory. To add middleware to an agent, implement the `HasMiddleware` interface and define a `middleware` method that returns an array of middleware classes:
+Middleware được tạo sẽ nằm trong thư mục `app/Ai/Middleware` của ứng dụng. Để thêm middleware vào agent, hãy triển khai interface `HasMiddleware` và định nghĩa phương thức `middleware` trả về một mảng các class middleware:
 
 ```php
 <?php
@@ -1348,7 +1348,7 @@ class SalesCoach implements Agent, HasMiddleware
 }
 ```
 
-Each middleware class should define a `handle` method that receives the `AgentPrompt` and a `Closure` to pass the prompt to the next middleware:
+Mỗi class middleware nên định nghĩa phương thức `handle`, nhận `AgentPrompt` và một `Closure` để chuyển prompt sang middleware tiếp theo:
 
 ```php
 <?php
@@ -1372,7 +1372,7 @@ class LogPrompts
 }
 ```
 
-You may use the `then` method on the response to execute code after the agent has finished processing. This works for both synchronous and streaming responses:
+Bạn có thể sử dụng phương thức `then` trên response để thực thi code sau khi agent xử lý xong. Cơ chế này hoạt động với cả response đồng bộ và streaming:
 
 ```php
 public function handle(AgentPrompt $prompt, Closure $next)
@@ -1384,9 +1384,9 @@ public function handle(AgentPrompt $prompt, Closure $next)
 ```
 
 <a name="anonymous-agents"></a>
-### Anonymous Agents
+### Agent ẩn danh
 
-Sometimes you may want to quickly interact with a model without creating a dedicated agent class. You can create an ad-hoc, anonymous agent using the `agent` function:
+Đôi khi bạn có thể muốn tương tác nhanh với model mà không cần tạo một class agent riêng. Bạn có thể tạo một agent ẩn danh, ad-hoc bằng hàm `agent`:
 
 ```php
 use function Laravel\Ai\{agent};
@@ -1398,7 +1398,7 @@ $response = agent(
 )->prompt('Tell me about Laravel')
 ```
 
-Anonymous agents may also produce structured output:
+Agent ẩn danh cũng có thể tạo structured output:
 
 ```php
 use Illuminate\Contracts\JsonSchema\JsonSchema;
@@ -1413,19 +1413,19 @@ $response = agent(
 ```
 
 <a name="agent-configuration"></a>
-### Agent Configuration
+### Cấu hình agent
 
-You may configure text generation options for an agent using PHP attributes. The following attributes are available:
+Bạn có thể cấu hình các tùy chọn sinh văn bản cho agent bằng PHP attribute. Các attribute sau được hỗ trợ:
 
-- `MaxSteps`: The maximum number of steps the agent may take when using tools.
-- `MaxTokens`: The maximum number of tokens the model may generate.
-- `Model`: The model the agent should use.
-- `Provider`: The AI provider (or providers for failover) to use for the agent.
-- `Temperature`: The sampling temperature to use for generation (0.0 to 1.0).
-- `Timeout`: The HTTP timeout in seconds for agent requests (default: 60).
-- `TopP`: The nucleus sampling probability to use for generation (0.0 to 1.0).
-- `UseCheapestModel`: Use the provider's cheapest text model for cost optimization.
-- `UseSmartestModel`: Use the provider's most capable text model for complex tasks.
+- `MaxSteps`: Số bước tối đa agent có thể thực hiện khi sử dụng tool.
+- `MaxTokens`: Số token tối đa model có thể sinh.
+- `Model`: Model mà agent sẽ sử dụng.
+- `Provider`: AI provider (hoặc các provider dùng cho failover) mà agent sẽ sử dụng.
+- `Temperature`: Sampling temperature dùng khi sinh nội dung (0.0 đến 1.0).
+- `Timeout`: HTTP timeout tính bằng giây cho request của agent (mặc định: 60).
+- `TopP`: Xác suất nucleus sampling dùng khi sinh nội dung (0.0 đến 1.0).
+- `UseCheapestModel`: Sử dụng text model rẻ nhất của provider để tối ưu chi phí.
+- `UseSmartestModel`: Sử dụng text model mạnh nhất của provider cho các tác vụ phức tạp.
 
 ```php
 <?php
@@ -1458,7 +1458,7 @@ class SalesCoach implements Agent
 }
 ```
 
-The `UseCheapestModel` and `UseSmartestModel` attributes allow you to automatically select the most cost-effective or most capable model for a given provider without specifying a model name. This is useful when you want to optimize for cost or capability across different providers:
+Các attribute `UseCheapestModel` và `UseSmartestModel` cho phép tự động chọn model tiết kiệm chi phí nhất hoặc mạnh nhất của một provider mà không cần chỉ định tên model. Điều này hữu ích khi bạn muốn tối ưu chi phí hoặc năng lực trên nhiều provider:
 
 ```php
 use Laravel\Ai\Attributes\UseCheapestModel;
@@ -1484,12 +1484,12 @@ class ComplexReasoner implements Agent
 ```
 
 > [!NOTE]
-> The underlying model selected by `UseCheapestModel` and `UseSmartestModel` may change between releases of the Laravel AI SDK as providers release new models. Switching models can introduce behavioral changes, deprecated parameters, and significant cost differences. If you need a stable, predictable model and pricing, specify the model explicitly using the `Model` attribute.
+> Model thực tế được `UseCheapestModel` và `UseSmartestModel` chọn có thể thay đổi giữa các phiên bản Laravel AI SDK khi provider phát hành model mới. Việc đổi model có thể dẫn đến thay đổi hành vi, tham số bị deprecated và chênh lệch chi phí đáng kể. Nếu cần model và mức giá ổn định, có thể dự đoán, hãy chỉ định model rõ ràng bằng attribute `Model`.
 
 <a name="provider-options"></a>
-### Provider Options
+### Tùy chọn provider
 
-If your agent needs to pass provider-specific options (such as OpenAI reasoning effort or penalty settings), implement the `HasProviderOptions` contract and define a `providerOptions` method:
+Nếu agent cần truyền các tùy chọn riêng của provider (chẳng hạn reasoning effort hoặc penalty setting của OpenAI), hãy triển khai contract `HasProviderOptions` và định nghĩa phương thức `providerOptions`:
 
 ```php
 <?php
@@ -1528,17 +1528,17 @@ class SalesCoach implements Agent, HasProviderOptions
 }
 ```
 
-The `providerOptions` method receives the provider currently being used (`Lab` enum or string), allowing you to return different options per provider. This is especially useful when using [failover](#failover), since each fallback provider can receive its own configuration.
+Phương thức `providerOptions` nhận provider hiện đang được sử dụng (`Lab` enum hoặc string), cho phép bạn trả về các tùy chọn khác nhau cho từng provider. Điều này đặc biệt hữu ích khi dùng [failover](#failover), vì mỗi fallback provider có thể nhận cấu hình riêng.
 
-The Anthropic example above also enables [prompt caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) via `cache_control`.
+Ví dụ Anthropic ở trên cũng bật [prompt caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) thông qua `cache_control`.
 
 <a name="human-tool-approval"></a>
-## Human Tool Approval
+## Phê duyệt tool bởi con người
 
 > [!WARNING]
-> Tool approval requires a `Conversational` agent whose conversation history is persisted so the paused call can be resumed. The `RemembersConversations` trait provides the necessary persistence.
+> Việc phê duyệt tool yêu cầu một agent `Conversational` có lịch sử hội thoại được lưu bền vững để lời gọi đang tạm dừng có thể tiếp tục. Trait `RemembersConversations` cung cấp cơ chế lưu trữ cần thiết.
 
-Tools that perform sensitive or irreversible actions may require human approval before they are executed. To make a tool approvable, implement the `Approvable` contract and use the `InteractsWithApprovals` trait. Approvable tools require approval by default:
+Các tool thực hiện hành động nhạy cảm hoặc không thể hoàn tác có thể cần con người phê duyệt trước khi được thực thi. Để một tool có thể yêu cầu phê duyệt, hãy triển khai contract `Approvable` và sử dụng trait `InteractsWithApprovals`. Theo mặc định, các tool approvable sẽ yêu cầu phê duyệt:
 
 ```php
 <?php
@@ -1587,7 +1587,7 @@ class DeleteFile implements Approvable, Tool
 }
 ```
 
-To determine whether approval is needed based on the tool call's arguments, define a `needsApproval` method on the tool. This method may return a boolean or an `Approval` instance that includes a reason for the approval request:
+Để xác định có cần phê duyệt dựa trên các argument của lời gọi tool hay không, hãy định nghĩa phương thức `needsApproval` trên tool. Phương thức này có thể trả về boolean hoặc một instance `Approval` chứa lý do yêu cầu phê duyệt:
 
 ```php
 use Laravel\Ai\Approvals\Approval;
@@ -1603,7 +1603,7 @@ protected function needsApproval(Request $request): Approval|bool
 }
 ```
 
-You may override a tool's approval requirement when returning it from an agent's `tools` method:
+Bạn có thể ghi đè yêu cầu phê duyệt của tool khi trả về tool đó từ phương thức `tools` của agent:
 
 ```php
 public function tools(): iterable
@@ -1615,7 +1615,7 @@ public function tools(): iterable
 }
 ```
 
-When an approvable tool is called, the agent pauses before executing it. You may inspect the response's pending approvals, which contain each tool call's ID, tool name, arguments, and approval reason:
+Khi một approvable tool được gọi, agent sẽ tạm dừng trước khi thực thi. Bạn có thể kiểm tra các phê duyệt đang chờ trong response; mỗi mục chứa ID lời gọi tool, tên tool, argument và lý do phê duyệt:
 
 ```php
 $response = (new FileAssistant)
@@ -1632,7 +1632,7 @@ if ($response->hasPendingApprovals()) {
 }
 ```
 
-To resume the agent, continue the conversation and provide a `Decisions` instance containing a decision for each pending tool call. Decisions may approve the call, reject it, or edit its arguments before execution:
+Để tiếp tục agent, hãy tiếp tục hội thoại và cung cấp một instance `Decisions` chứa quyết định cho từng lời gọi tool đang chờ. Quyết định có thể chấp thuận, từ chối hoặc chỉnh sửa argument trước khi thực thi:
 
 ```php
 use Laravel\Ai\Approvals\Decision;
@@ -1646,7 +1646,7 @@ $response = (new FileAssistant)
     ]));
 ```
 
-The boolean values `true` and `false` may be used as shorthand for approval and rejection. Every pending tool call must receive a decision. Unknown, missing, or previously resolved tool call IDs will cause an `ApprovalMismatchException` to be thrown. You may provide a default for calls without an explicit decision using the `approveRemaining` or `rejectRemaining` methods:
+Có thể dùng các giá trị boolean `true` và `false` làm dạng viết tắt cho chấp thuận và từ chối. Mọi lời gọi tool đang chờ đều phải nhận một quyết định. ID lời gọi tool không xác định, bị thiếu hoặc đã được xử lý trước đó sẽ khiến `ApprovalMismatchException` được throw. Bạn có thể cung cấp quyết định mặc định cho các lời gọi không có quyết định rõ ràng bằng phương thức `approveRemaining` hoặc `rejectRemaining`:
 
 ```php
 $decisions = Decisions::from([
@@ -1658,20 +1658,20 @@ $response = (new FileAssistant)
     ->prompt($decisions);
 ```
 
-A rejection with a result, such as `Decision::reject('Not approved.')`, is returned to the model so it may continue responding. A rejection without a result stops the generation loop after recording the rejection.
+Một quyết định từ chối có result, chẳng hạn `Decision::reject('Not approved.')`, sẽ được trả lại cho model để model có thể tiếp tục phản hồi. Từ chối không có result sẽ dừng vòng lặp sinh nội dung sau khi ghi nhận quyết định từ chối.
 
-Tool approval is supported by the `prompt`, `stream`, `queue`, `broadcast`, `broadcastNow`, and `broadcastOnQueue` methods.
+Phê duyệt tool được hỗ trợ bởi các phương thức `prompt`, `stream`, `queue`, `broadcast`, `broadcastNow` và `broadcastOnQueue`.
 
-During streaming and broadcasting, a pause is represented by a `tool_approval_request` event. When using the [Vercel AI SDK stream protocol](#streaming-using-the-vercel-ai-sdk-protocol), approval requests and results are emitted using the protocol's native tool approval parts.
+Trong quá trình streaming và broadcasting, trạng thái tạm dừng được biểu diễn bằng event `tool_approval_request`. Khi sử dụng [Vercel AI SDK stream protocol](#streaming-using-the-vercel-ai-sdk-protocol), yêu cầu và kết quả phê duyệt được phát bằng các phần tool approval native của protocol.
 
-For queued agents, the resulting response is passed to the `then` callback, and Laravel also dispatches a `ToolApprovalRequested` event.
+Đối với agent chạy qua queue, response kết quả được truyền vào callback `then`, đồng thời Laravel cũng dispatch event `ToolApprovalRequested`.
 
-Laravel stores the result of an approved tool before asking the model to continue. If generation then fails, the approval has already been resolved. Continue the conversation with a normal text prompt instead of submitting the same approval decisions again.
+Laravel lưu kết quả của tool đã được phê duyệt trước khi yêu cầu model tiếp tục. Nếu quá trình sinh nội dung sau đó thất bại, phê duyệt đã được xử lý. Hãy tiếp tục hội thoại bằng một text prompt bình thường thay vì gửi lại cùng các quyết định phê duyệt.
 
 <a name="complete-approval-flow"></a>
-### Complete Approval Flow
+### Luồng phê duyệt hoàn chỉnh
 
-The following routes demonstrate a complete approval flow. The `GET` route returns the chat screen, while the `POST` route accepts either a new text prompt or approval decisions from the chat screen. This example assumes the application's `User` model uses the `HasConversations` trait:
+Các route sau minh họa một luồng phê duyệt hoàn chỉnh. Route `GET` trả về màn hình chat, còn route `POST` nhận một text prompt mới hoặc các quyết định phê duyệt từ màn hình chat. Ví dụ này giả định model `User` của ứng dụng sử dụng trait `HasConversations`:
 
 ```php
 use App\Ai\Agents\FileAssistant;
@@ -1723,7 +1723,7 @@ Route::post('/chat/{conversation}', function (Request $request, Conversation $co
 })->middleware('auth');
 ```
 
-When the response status is `awaiting_approval`, the chat screen should render the pending approvals and submit the user's choices to the same endpoint using the tool call ID as each decision's key:
+Khi trạng thái response là `awaiting_approval`, màn hình chat nên render các phê duyệt đang chờ và gửi lựa chọn của người dùng tới cùng endpoint, sử dụng ID lời gọi tool làm key cho từng quyết định:
 
 ```json
 {
@@ -1739,7 +1739,7 @@ When the response status is `awaiting_approval`, the chat screen should render t
 }
 ```
 
-For a normal chat message, the screen may instead submit a `message` value:
+Đối với một tin nhắn chat thông thường, màn hình có thể gửi giá trị `message` thay thế:
 
 ```json
 {
@@ -1748,9 +1748,9 @@ For a normal chat message, the screen may instead submit a `message` value:
 ```
 
 <a name="images"></a>
-## Images
+## Hình ảnh
 
-The `Laravel\Ai\Image` class may be used to generate images using the `openai`, `gemini`, or `xai` providers:
+Lớp `Laravel\Ai\Image` có thể được sử dụng để tạo hình ảnh bằng các provider `openai`, `gemini` hoặc `xai`:
 
 ```php
 use Laravel\Ai\Image;
@@ -1760,7 +1760,7 @@ $image = Image::of('A donut sitting on the kitchen counter')->generate();
 $rawContent = (string) $image;
 ```
 
-The `square`, `portrait`, and `landscape` methods may be used to control the aspect ratio of the image, while the `quality` method may be used to guide the model on final image quality (`high`, `medium`, `low`). The `timeout` method may be used to specify the HTTP timeout in seconds:
+Các phương thức `square`, `portrait` và `landscape` có thể được dùng để kiểm soát tỷ lệ khung hình, trong khi phương thức `quality` hướng dẫn model về chất lượng hình ảnh cuối cùng (`high`, `medium`, `low`). Phương thức `timeout` cho phép chỉ định HTTP timeout theo giây:
 
 ```php
 use Laravel\Ai\Image;
@@ -1772,7 +1772,7 @@ $image = Image::of('A donut sitting on the kitchen counter')
     ->generate();
 ```
 
-You may attach reference images using the `attachments` method:
+Bạn có thể đính kèm hình ảnh tham chiếu bằng phương thức `attachments`:
 
 ```php
 use Laravel\Ai\Files;
@@ -1789,7 +1789,7 @@ $image = Image::of('Update this photo of me to be in the style of an impressioni
     ->generate();
 ```
 
-Generated images may be easily stored on the default disk configured in your application's `config/filesystems.php` configuration file:
+Hình ảnh đã tạo có thể dễ dàng được lưu trên disk mặc định được cấu hình trong file `config/filesystems.php` của ứng dụng:
 
 ```php
 $image = Image::of('A donut sitting on the kitchen counter');
@@ -1800,7 +1800,7 @@ $path = $image->storePublicly();
 $path = $image->storePubliclyAs('image.jpg');
 ```
 
-Image generation may also be queued:
+Việc tạo hình ảnh cũng có thể được đưa vào queue:
 
 ```php
 use Laravel\Ai\Image;
@@ -1817,9 +1817,9 @@ Image::of('A donut sitting on the kitchen counter')
 ```
 
 <a name="audio"></a>
-## Audio
+## Âm thanh
 
-The `Laravel\Ai\Audio` class may be used to generate audio from the given text:
+Lớp `Laravel\Ai\Audio` có thể được sử dụng để tạo âm thanh từ văn bản được cung cấp:
 
 ```php
 use Laravel\Ai\Audio;
@@ -1829,7 +1829,7 @@ $audio = Audio::of('I love coding with Laravel.')->generate();
 $rawContent = (string) $audio;
 ```
 
-You may also generate audio from a string using the `toAudio` method available via Laravel's `Stringable` class:
+Bạn cũng có thể tạo âm thanh từ một chuỗi bằng phương thức `toAudio` có sẵn thông qua lớp `Stringable` của Laravel:
 
 ```php
 use Illuminate\Support\Str;
@@ -1837,7 +1837,7 @@ use Illuminate\Support\Str;
 $audio = Str::of('I love coding with Laravel.')->toAudio();
 ```
 
-The `male`, `female`, and `voice` methods may be used to determine the voice of the generated audio:
+Các phương thức `male`, `female` và `voice` có thể được dùng để xác định giọng nói của âm thanh được tạo:
 
 ```php
 $audio = Audio::of('I love coding with Laravel.')
@@ -1849,7 +1849,7 @@ $audio = Audio::of('I love coding with Laravel.')
     ->generate();
 ```
 
-Similarly, the `instructions` method may be used to dynamically coach the model on how the generated audio should sound:
+Tương tự, phương thức `instructions` có thể được dùng để hướng dẫn động cho model về cách âm thanh được tạo nên phát ra:
 
 ```php
 $audio = Audio::of('I love coding with Laravel.')
@@ -1858,7 +1858,7 @@ $audio = Audio::of('I love coding with Laravel.')
     ->generate();
 ```
 
-Generated audio may be easily stored on the default disk configured in your application's `config/filesystems.php` configuration file:
+Âm thanh đã tạo có thể dễ dàng được lưu trên disk mặc định được cấu hình trong file `config/filesystems.php` của ứng dụng:
 
 ```php
 $audio = Audio::of('I love coding with Laravel.')->generate();
@@ -1869,7 +1869,7 @@ $path = $audio->storePublicly();
 $path = $audio->storePubliclyAs('audio.mp3');
 ```
 
-Audio generation may also be queued:
+Việc tạo âm thanh cũng có thể được đưa vào queue:
 
 ```php
 use Laravel\Ai\Audio;
@@ -1885,9 +1885,9 @@ Audio::of('I love coding with Laravel.')
 ```
 
 <a name="transcription"></a>
-## Transcriptions
+## Phiên âm
 
-The `Laravel\Ai\Transcription` class may be used to generate a transcript of the given audio:
+Lớp `Laravel\Ai\Transcription` có thể được sử dụng để tạo bản phiên âm từ âm thanh được cung cấp:
 
 ```php
 use Laravel\Ai\Transcription;
@@ -1899,7 +1899,7 @@ $transcript = Transcription::fromUpload($request->file('audio'))->generate();
 return (string) $transcript;
 ```
 
-The `diarize` method may be used to indicate you would like the response to include the diarized transcript in addition to the raw text transcript, allowing you to access the segmented transcript by speaker:
+Phương thức `diarize` có thể được dùng để yêu cầu response bao gồm bản phiên âm đã phân tách người nói bên cạnh bản phiên âm văn bản thô, cho phép bạn truy cập các đoạn phiên âm theo từng người nói:
 
 ```php
 $transcript = Transcription::fromStorage('audio.mp3')
@@ -1907,7 +1907,7 @@ $transcript = Transcription::fromStorage('audio.mp3')
     ->generate();
 ```
 
-Transcription generation may also be queued:
+Việc tạo bản phiên âm cũng có thể được đưa vào queue:
 
 ```php
 use Laravel\Ai\Transcription;
@@ -1921,9 +1921,9 @@ Transcription::fromStorage('audio.mp3')
 ```
 
 <a name="text-summarization"></a>
-## Text Summarization
+## Tóm tắt văn bản
 
-You may summarize text using the `summarize` method available via Laravel's `Stringable` class. By default, the summary will contain no more than three sentences and will be generated using the configured provider's cheapest text model:
+Bạn có thể tóm tắt văn bản bằng phương thức `summarize` có sẵn thông qua lớp `Stringable` của Laravel. Theo mặc định, bản tóm tắt sẽ không quá ba câu và được tạo bằng text model rẻ nhất của provider đã cấu hình:
 
 ```php
 use Illuminate\Support\Str;
@@ -1931,7 +1931,7 @@ use Illuminate\Support\Str;
 $summary = Str::of($article)->summarize();
 ```
 
-You may specify the maximum number of sentences, provider, model, and timeout used to generate the summary. The `Str` class also offers a static version of the method:
+Bạn có thể chỉ định số câu tối đa, provider, model và timeout dùng để tạo bản tóm tắt. Lớp `Str` cũng cung cấp phiên bản static của phương thức này:
 
 ```php
 use Laravel\Ai\Enums\Lab;
@@ -1949,7 +1949,7 @@ $summary = Str::summarize($article, sentences: 4);
 <a name="embeddings"></a>
 ## Embeddings
 
-You may easily generate vector embeddings for any given string using the new `toEmbeddings` method available via Laravel's `Stringable` class:
+Bạn có thể dễ dàng tạo vector embedding cho bất kỳ chuỗi nào bằng phương thức `toEmbeddings` mới có sẵn thông qua lớp `Stringable` của Laravel:
 
 ```php
 use Illuminate\Support\Str;
@@ -1957,7 +1957,7 @@ use Illuminate\Support\Str;
 $embeddings = Str::of('Napa Valley has great wine.')->toEmbeddings();
 ```
 
-Alternatively, you may use the `Embeddings` class to generate embeddings for multiple inputs at once:
+Ngoài ra, bạn có thể dùng lớp `Embeddings` để tạo embedding cho nhiều input cùng lúc:
 
 ```php
 use Laravel\Ai\Embeddings;
@@ -1970,7 +1970,7 @@ $response = Embeddings::for([
 $response->embeddings; // [[0.123, 0.456, ...], [0.789, 0.012, ...]]
 ```
 
-You may specify the dimensions and provider for the embeddings:
+Bạn có thể chỉ định số chiều và provider cho các embedding:
 
 ```php
 $response = Embeddings::for(['Napa Valley has great wine.'])
@@ -1979,9 +1979,9 @@ $response = Embeddings::for(['Napa Valley has great wine.'])
 ```
 
 <a name="multimodal-embeddings"></a>
-### Multimodal Embeddings
+### Embedding đa phương thức
 
-In addition to strings, the `Embeddings::for` method accepts image, audio, document, and video inputs, allowing you to generate embeddings for non-text content. Gemini supports image, audio, document, and video embeddings, while VoyageAI supports image and video embeddings:
+Ngoài chuỗi, phương thức `Embeddings::for` chấp nhận input hình ảnh, âm thanh, tài liệu và video, cho phép bạn tạo embedding cho nội dung không phải văn bản. Gemini hỗ trợ embedding hình ảnh, âm thanh, tài liệu và video, trong khi VoyageAI hỗ trợ embedding hình ảnh và video:
 
 ```php
 use Laravel\Ai\Embeddings;
@@ -1996,7 +1996,7 @@ $response = Embeddings::for([
 ])->generate(Lab::Gemini);
 ```
 
-Multimodal inputs use the same [file classes used for attachments](#attachments). These files may be created from a local path, a filesystem disk, a remote URL, or Base64-encoded content. Images, documents, and videos may also be created from uploaded files, while documents may be created from raw string content:
+Input đa phương thức sử dụng cùng các [lớp file dùng cho attachment](#attachments). Các file này có thể được tạo từ đường dẫn local, filesystem disk, URL từ xa hoặc nội dung mã hóa Base64. Hình ảnh, tài liệu và video cũng có thể được tạo từ file upload, còn tài liệu có thể được tạo từ nội dung chuỗi thô:
 
 ```php
 use Laravel\Ai\Files\Audio;
@@ -2022,12 +2022,12 @@ Document::fromUpload($request->file('report'));
 ```
 
 > [!NOTE]
-> VoyageAI does not allow remote URL media and Base64-encoded media to be mixed in a single request. Local, stored, and uploaded files are sent as Base64-encoded content, and text inputs may be combined with either media source. Consult your provider's documentation to determine which multimodal models and inputs are available.
+> VoyageAI không cho phép trộn media từ URL từ xa và media mã hóa Base64 trong cùng một request. File local, file đã lưu và file upload được gửi dưới dạng nội dung mã hóa Base64, còn input văn bản có thể kết hợp với một trong hai nguồn media. Hãy tham khảo tài liệu của provider để xác định model đa phương thức và loại input nào khả dụng.
 
 <a name="querying-embeddings"></a>
-### Querying Embeddings
+### Truy vấn embedding
 
-Once you have generated embeddings, you will typically store them in a `vector` column in your database for later querying. Laravel provides native support for vector columns on PostgreSQL via the `pgvector` extension and MariaDB. To get started, define a `vector` column in your migration, specifying the number of dimensions:
+Sau khi tạo embedding, thông thường bạn sẽ lưu chúng trong một cột `vector` của database để truy vấn sau này. Laravel hỗ trợ native cho cột vector trên PostgreSQL thông qua extension `pgvector` và trên MariaDB. Để bắt đầu, hãy định nghĩa cột `vector` trong migration và chỉ định số chiều:
 
 ```php
 Schema::ensureVectorExtensionExists();
@@ -2041,13 +2041,13 @@ Schema::create('documents', function (Blueprint $table) {
 });
 ```
 
-You may also add a vector index to speed up similarity searches. When calling `index` on a vector column, Laravel will automatically create an HNSW index with cosine distance:
+Bạn cũng có thể thêm vector index để tăng tốc tìm kiếm tương đồng. Khi gọi `index` trên cột vector, Laravel sẽ tự động tạo HNSW index với cosine distance:
 
 ```php
 $table->vector('embedding', dimensions: 1536)->index();
 ```
 
-On your Eloquent model, you should cast the vector column using the `AsVector` cast:
+Trên Eloquent model, bạn nên cast cột vector bằng cast `AsVector`:
 
 ```php
 use Illuminate\Database\Eloquent\Casts\AsVector;
@@ -2060,7 +2060,7 @@ protected function casts(): array
 }
 ```
 
-To query for similar records, use the `whereVectorSimilarTo` method. This method filters results by a minimum cosine similarity (between `0.0` and `1.0`, where `1.0` is identical) and orders the results by similarity:
+Để truy vấn các record tương đồng, hãy dùng phương thức `whereVectorSimilarTo`. Phương thức này lọc kết quả theo cosine similarity tối thiểu (từ `0.0` đến `1.0`, trong đó `1.0` là giống hệt) và sắp xếp kết quả theo độ tương đồng:
 
 ```php
 use App\Models\Document;
@@ -2071,7 +2071,7 @@ $documents = Document::query()
     ->get();
 ```
 
-The `$queryEmbedding` may be an array of floats or a plain string. When a string is given, Laravel will automatically generate embeddings for it:
+`$queryEmbedding` có thể là một mảng số thực hoặc một chuỗi thuần. Khi truyền chuỗi, Laravel sẽ tự động tạo embedding cho chuỗi đó:
 
 ```php
 $documents = Document::query()
@@ -2080,7 +2080,7 @@ $documents = Document::query()
     ->get();
 ```
 
-If you need more control, you may use the lower-level `whereVectorDistanceLessThan`, `selectVectorDistance`, and `orderByVectorDistance` methods independently:
+Nếu cần kiểm soát chi tiết hơn, bạn có thể sử dụng độc lập các phương thức cấp thấp `whereVectorDistanceLessThan`, `selectVectorDistance` và `orderByVectorDistance`:
 
 ```php
 $documents = Document::query()
@@ -2092,15 +2092,15 @@ $documents = Document::query()
     ->get();
 ```
 
-If you would like to give an agent the ability to perform similarity searches as a tool, check out the [Similarity Search](#similarity-search) tool documentation.
+Nếu muốn cung cấp cho agent khả năng thực hiện tìm kiếm tương đồng dưới dạng một tool, hãy xem tài liệu tool [Similarity Search](#similarity-search).
 
 > [!NOTE]
-> Vector queries are currently supported on PostgreSQL connections using the `pgvector` extension and MariaDB 11.7 or later.
+> Truy vấn vector hiện được hỗ trợ trên kết nối PostgreSQL sử dụng extension `pgvector` và MariaDB 11.7 trở lên.
 
 <a name="caching-embeddings"></a>
-### Caching Embeddings
+### Cache embedding
 
-Embedding generation can be cached to avoid redundant API calls for identical inputs. To enable caching, set the `ai.caching.embeddings.cache` configuration option to `true`:
+Việc tạo embedding có thể được cache để tránh các API call dư thừa cho input giống nhau. Để bật cache, hãy đặt tùy chọn cấu hình `ai.caching.embeddings.cache` thành `true`:
 
 ```php
 'caching' => [
@@ -2112,9 +2112,9 @@ Embedding generation can be cached to avoid redundant API calls for identical in
 ],
 ```
 
-When caching is enabled, embeddings are cached for 30 days. The cache key is based on the provider, model, dimensions, and input content, ensuring that identical requests return cached results while different configurations generate fresh embeddings.
+Khi cache được bật, embedding được cache trong 30 ngày. Cache key dựa trên provider, model, số chiều và nội dung input, bảo đảm request giống nhau trả về kết quả đã cache trong khi cấu hình khác sẽ tạo embedding mới.
 
-You may also enable caching for a specific request using the `cache` method, even when global caching is disabled:
+Bạn cũng có thể bật cache cho một request cụ thể bằng phương thức `cache`, ngay cả khi cache toàn cục đang tắt:
 
 ```php
 $response = Embeddings::for(['Napa Valley has great wine.'])
@@ -2122,7 +2122,7 @@ $response = Embeddings::for(['Napa Valley has great wine.'])
     ->generate();
 ```
 
-You may specify a custom cache duration in seconds:
+Bạn có thể chỉ định thời lượng cache tùy chỉnh theo giây:
 
 ```php
 $response = Embeddings::for(['Napa Valley has great wine.'])
@@ -2130,7 +2130,7 @@ $response = Embeddings::for(['Napa Valley has great wine.'])
     ->generate();
 ```
 
-The `toEmbeddings` Stringable method also accepts a `cache` argument:
+Phương thức `toEmbeddings` của Stringable cũng chấp nhận đối số `cache`:
 
 ```php
 // Cache with default duration...
@@ -2143,9 +2143,9 @@ $embeddings = Str::of('Napa Valley has great wine.')->toEmbeddings(cache: 3600);
 <a name="reranking"></a>
 ## Reranking
 
-Reranking allows you to reorder a list of documents based on their relevance to a given query. This is useful for improving search results by using semantic understanding:
+Reranking cho phép bạn sắp xếp lại danh sách tài liệu dựa trên mức độ liên quan với một truy vấn nhất định. Điều này hữu ích để cải thiện kết quả tìm kiếm bằng khả năng hiểu ngữ nghĩa:
 
-The `Laravel\Ai\Reranking` class may be used to rerank documents:
+Lớp `Laravel\Ai\Reranking` có thể được sử dụng để rerank tài liệu:
 
 ```php
 use Laravel\Ai\Reranking;
@@ -2162,7 +2162,7 @@ $response->first()->score;    // 0.95
 $response->first()->index;    // 1 (original position)
 ```
 
-The `limit` method may be used to restrict the number of results returned:
+Phương thức `limit` có thể được dùng để giới hạn số lượng kết quả trả về:
 
 ```php
 $response = Reranking::of($documents)
@@ -2171,9 +2171,9 @@ $response = Reranking::of($documents)
 ```
 
 <a name="reranking-collections"></a>
-### Reranking Collections
+### Rerank collection
 
-For convenience, Laravel collections may be reranked using the `rerank` macro. The first argument specifies which field(s) to use for reranking, and the second argument is the query:
+Để thuận tiện, Laravel collection có thể được rerank bằng macro `rerank`. Đối số đầu tiên chỉ định field nào được dùng để rerank, còn đối số thứ hai là truy vấn:
 
 ```php
 // Rerank by a single field...
@@ -2190,7 +2190,7 @@ $reranked = $posts->rerank(
 );
 ```
 
-You may also limit the number of results and specify a provider:
+Bạn cũng có thể giới hạn số lượng kết quả và chỉ định provider:
 
 ```php
 $reranked = $posts->rerank(
@@ -2202,9 +2202,9 @@ $reranked = $posts->rerank(
 ```
 
 <a name="files"></a>
-## Files
+## File
 
-The `Laravel\Ai\Files` class or the individual file classes may be used to store files with your AI provider for later use in conversations. This is useful for large documents or files you want to reference multiple times without re-uploading:
+Lớp `Laravel\Ai\Files` hoặc từng lớp file riêng lẻ có thể được dùng để lưu file với AI provider nhằm sử dụng lại trong các cuộc hội thoại sau. Điều này hữu ích với tài liệu lớn hoặc file bạn muốn tham chiếu nhiều lần mà không cần upload lại:
 
 ```php
 use Laravel\Ai\Files\Document;
@@ -2225,7 +2225,7 @@ $response = Image::fromUrl('https://example.com/photo.jpg')->put();
 return $response->id;
 ```
 
-You may also store raw content or uploaded files:
+Bạn cũng có thể lưu nội dung thô hoặc file đã upload:
 
 ```php
 use Laravel\Ai\Files;
@@ -2238,7 +2238,7 @@ $stored = Document::fromString('Hello, World!', 'text/plain')->put();
 $stored = Document::fromUpload($request->file('document'))->put();
 ```
 
-Once a file has been stored, you may reference the file when generating text via agents instead of re-uploading the file:
+Sau khi file đã được lưu, bạn có thể tham chiếu file khi tạo văn bản thông qua agent thay vì upload lại file:
 
 ```php
 use App\Ai\Agents\SalesCoach;
@@ -2252,7 +2252,7 @@ $response = (new SalesCoach)->prompt(
 );
 ```
 
-To retrieve a previously stored file, use the `get` method on a file instance:
+Để lấy một file đã lưu trước đó, hãy dùng phương thức `get` trên file instance:
 
 ```php
 use Laravel\Ai\Files\Document;
@@ -2263,13 +2263,13 @@ $file->id;
 $file->mimeType();
 ```
 
-To delete a file from the provider, use the `delete` method:
+Để xóa file khỏi provider, hãy dùng phương thức `delete`:
 
 ```php
 Document::fromId('file-id')->delete();
 ```
 
-By default, the `Files` class uses the default AI provider configured in your application's `config/ai.php` configuration file. For most operations, you may specify a different provider using the `provider` argument:
+Theo mặc định, lớp `Files` sử dụng AI provider mặc định được cấu hình trong file `config/ai.php` của ứng dụng. Với hầu hết thao tác, bạn có thể chỉ định provider khác bằng đối số `provider`:
 
 ```php
 $response = Document::fromPath(
@@ -2277,7 +2277,7 @@ $response = Document::fromPath(
 )->put(provider: Lab::Anthropic);
 ```
 
-You may pass provider-specific upload options using the `withProviderOptions` method. For example, you may set OpenAI's file `purpose`:
+Bạn có thể truyền các tùy chọn upload dành riêng cho provider bằng phương thức `withProviderOptions`. Ví dụ, bạn có thể đặt `purpose` cho file của OpenAI:
 
 ```php
 use Laravel\Ai\Files\Document;
@@ -2287,7 +2287,7 @@ $response = Document::fromPath('/home/laravel/knowledge.txt')
     ->put();
 ```
 
-To scope options per provider, pass a closure that receives the current provider:
+Để giới hạn tùy chọn theo từng provider, hãy truyền một closure nhận provider hiện tại:
 
 ```php
 use Laravel\Ai\Enums\Lab;
@@ -2302,9 +2302,9 @@ $response = Document::fromPath('/home/laravel/training.jsonl')
 ```
 
 <a name="using-stored-files-in-conversations"></a>
-### Using Stored Files in Conversations
+### Sử dụng file đã lưu trong hội thoại
 
-Once a file has been stored with a provider, you may reference it in agent conversations using the `fromId` method on the `Document` or `Image` classes:
+Sau khi file đã được lưu với provider, bạn có thể tham chiếu nó trong hội thoại của agent bằng phương thức `fromId` trên các lớp `Document` hoặc `Image`:
 
 ```php
 use App\Ai\Agents\DocumentAnalyzer;
@@ -2321,7 +2321,7 @@ $response = (new DocumentAnalyzer)->prompt(
 );
 ```
 
-Similarly, stored images may be referenced using the `Image` class:
+Tương tự, hình ảnh đã lưu có thể được tham chiếu bằng lớp `Image`:
 
 ```php
 use Laravel\Ai\Files;
@@ -2338,9 +2338,9 @@ $response = (new ImageAnalyzer)->prompt(
 ```
 
 <a name="vector-stores"></a>
-## Vector Stores
+## Vector store
 
-Vector stores allow you to create searchable collections of files that can be used for retrieval-augmented generation (RAG). The `Laravel\Ai\Stores` class provides methods for creating, retrieving, and deleting vector stores:
+Vector store cho phép bạn tạo các collection file có thể tìm kiếm để sử dụng cho retrieval-augmented generation (RAG). Lớp `Laravel\Ai\Stores` cung cấp các phương thức để tạo, lấy và xóa vector store:
 
 ```php
 use Laravel\Ai\Stores;
@@ -2358,7 +2358,7 @@ $store = Stores::create(
 return $store->id;
 ```
 
-To retrieve an existing vector store by its ID, use the `get` method:
+Để lấy một vector store hiện có theo ID, hãy dùng phương thức `get`:
 
 ```php
 use Laravel\Ai\Stores;
@@ -2371,7 +2371,7 @@ $store->fileCounts;
 $store->ready;
 ```
 
-To delete a vector store, use the `delete` method on the `Stores` class or the store instance:
+Để xóa vector store, hãy dùng phương thức `delete` trên lớp `Stores` hoặc store instance:
 
 ```php
 use Laravel\Ai\Stores;
@@ -2386,9 +2386,9 @@ $store->delete();
 ```
 
 <a name="adding-files-to-stores"></a>
-### Adding Files to Stores
+### Thêm file vào store
 
-Once you have a vector store, you may add [files](#files) to it using the `add` method. Files added to a store are automatically indexed for semantic searching using the [file search provider tool](#file-search):
+Sau khi có vector store, bạn có thể thêm [file](#files) vào đó bằng phương thức `add`. File được thêm vào store sẽ tự động được index để tìm kiếm ngữ nghĩa bằng [file search provider tool](#file-search):
 
 ```php
 use Laravel\Ai\Files\Document;
@@ -2409,9 +2409,9 @@ $document->id;
 $document->fileId;
 ```
 
-> **Note:** Typically, when adding previously stored files to vector stores, the returned document ID will match the file's previously assigned ID; however, some vector storage providers may return a new, different "document ID". Therefore, it's recommended that you always store both IDs in your database for future reference.
+> **Lưu ý:** Thông thường, khi thêm file đã lưu trước đó vào vector store, document ID trả về sẽ trùng với ID đã được gán cho file; tuy nhiên, một số vector storage provider có thể trả về một "document ID" mới và khác. Vì vậy, bạn nên luôn lưu cả hai ID trong database để tham chiếu về sau.
 
-You may attach metadata to files when adding them to a store. This metadata can later be used to filter search results when using the [file search provider tool](#file-search):
+Bạn có thể gắn metadata vào file khi thêm chúng vào store. Metadata này sau đó có thể được dùng để lọc kết quả tìm kiếm khi sử dụng [file search provider tool](#file-search):
 
 ```php
 $store->add(Document::fromPath('/path/to/document.pdf'), metadata: [
@@ -2421,13 +2421,13 @@ $store->add(Document::fromPath('/path/to/document.pdf'), metadata: [
 ]);
 ```
 
-To remove a file from a store, use the `remove` method:
+Để gỡ file khỏi store, hãy dùng phương thức `remove`:
 
 ```php
 $store->remove('file_id');
 ```
 
-Removing a file from a vector store does not remove it from the provider's [file storage](#files). To remove a file from the vector store and delete it permanently from file storage, use the `deleteFile` argument:
+Việc gỡ file khỏi vector store không xóa file đó khỏi [file storage](#files) của provider. Để gỡ file khỏi vector store đồng thời xóa vĩnh viễn khỏi file storage, hãy dùng đối số `deleteFile`:
 
 ```php
 $store->remove('file_abc123', deleteFile: true);
@@ -2436,7 +2436,7 @@ $store->remove('file_abc123', deleteFile: true);
 <a name="failover"></a>
 ## Failover
 
-When prompting or generating other media, you may provide an array of providers / models to automatically failover to a backup provider / model if a service interruption or rate limit is encountered on the primary provider:
+Khi prompt hoặc tạo media khác, bạn có thể cung cấp một mảng provider / model để tự động failover sang provider / model dự phòng nếu provider chính gặp gián đoạn dịch vụ hoặc rate limit:
 
 ```php
 use App\Ai\Agents\SalesCoach;
@@ -2452,9 +2452,9 @@ $image = Image::of('A donut sitting on the kitchen counter')
     ->generate(provider: [Lab::Gemini, Lab::xAI]);
 ```
 
-Failover only occurs when a `FailoverableException` is thrown — such as a rate limit (`RateLimitedException`), an overloaded or unavailable provider (`ProviderOverloadedException`), or insufficient credits (`InsufficientCreditsException`). Ordinary errors, like a validation or bad request error, will not trigger failover.
+Failover chỉ xảy ra khi `FailoverableException` được throw — chẳng hạn rate limit (`RateLimitedException`), provider quá tải hoặc không khả dụng (`ProviderOverloadedException`), hay không đủ credit (`InsufficientCreditsException`). Các lỗi thông thường như validation error hoặc bad request sẽ không kích hoạt failover.
 
-When you pass a plain list of providers, such as `[Lab::OpenAI, Lab::Anthropic]`, each provider uses its default model. To specify a particular model for each provider in the failover chain, pass an associative array keyed by the provider, using the `Lab` enum's `value` as the key (enum cases cannot be used directly as PHP array keys):
+Khi truyền danh sách provider thuần như `[Lab::OpenAI, Lab::Anthropic]`, mỗi provider sử dụng model mặc định của nó. Để chỉ định model cụ thể cho từng provider trong chuỗi failover, hãy truyền associative array với key là provider, sử dụng `value` của enum `Lab` làm key (enum case không thể được dùng trực tiếp làm PHP array key):
 
 ```php
 use Laravel\Ai\Enums\Lab;
@@ -2469,14 +2469,14 @@ $response = (new SalesCoach)->prompt(
 ```
 
 <a name="testing"></a>
-## Testing
+## Kiểm thử
 
-When faking queued image, audio, transcription, or embeddings generation, any `then` callback registered on the queued generation will be invoked with the faked response, allowing you to test the logic contained within the callback. If you would prefer that these callbacks are not invoked, you may fake the queue using `Queue::fake()` as well.
+Khi giả lập việc tạo hình ảnh, âm thanh, phiên âm hoặc embedding đã được đưa vào queue, mọi callback `then` đã đăng ký trên tác vụ tạo trong queue sẽ được gọi với response giả lập, cho phép bạn kiểm thử logic bên trong callback. Nếu không muốn các callback này được gọi, bạn cũng có thể giả lập queue bằng `Queue::fake()`.
 
 <a name="testing-agents"></a>
-### Agents
+### Agent
 
-To fake an agent's responses during tests, call the `fake` method on the agent class. You may optionally provide an array of responses or a closure:
+Để giả lập response của agent trong quá trình kiểm thử, hãy gọi phương thức `fake` trên class agent. Bạn có thể tùy chọn cung cấp một mảng response hoặc một closure:
 
 ```php
 use App\Ai\Agents\SalesCoach;
@@ -2497,7 +2497,7 @@ SalesCoach::fake(function (AgentPrompt $prompt) {
 });
 ```
 
-When faking an agent that returns structured output, you may provide arrays as responses. The agent will return a structured response containing the given data:
+Khi giả lập một agent trả về structured output, bạn có thể cung cấp các mảng làm response. Agent sẽ trả về một structured response chứa dữ liệu đã cho:
 
 ```php
 SalesCoach::fake([
@@ -2505,7 +2505,7 @@ SalesCoach::fake([
 ]);
 ```
 
-You may also fake a response that is awaiting tool approval:
+Bạn cũng có thể giả lập một response đang chờ phê duyệt tool:
 
 ```php
 use Laravel\Ai\Approvals\PendingApproval;
@@ -2527,9 +2527,9 @@ $response = (new FileAssistant)->prompt('Delete the invoice.');
 $response->hasPendingApprovals(); // true
 ```
 
-> **Note:** When `Agent::fake()` is invoked on an agent that returns structured output and fake output was not explicitly provided, Laravel will automatically generate fake data that matches your agent's defined output schema.
+> **Lưu ý:** Khi `Agent::fake()` được gọi trên một agent trả về structured output và fake output không được cung cấp rõ ràng, Laravel sẽ tự động tạo dữ liệu giả phù hợp với output schema đã định nghĩa của agent.
 
-After prompting the agent, you may make assertions about the prompts that were received:
+Sau khi gửi prompt cho agent, bạn có thể thực hiện các assertion đối với những prompt đã nhận:
 
 ```php
 use Laravel\Ai\Prompts\AgentPrompt;
@@ -2547,7 +2547,7 @@ SalesCoach::assertNotPrompted('Missing prompt');
 SalesCoach::assertNeverPrompted();
 ```
 
-When asserting an approval continuation, you may inspect the prompt's approval decisions:
+Khi assertion một lần tiếp tục sau phê duyệt, bạn có thể kiểm tra các quyết định phê duyệt của prompt:
 
 ```php
 use Laravel\Ai\Approvals\Decisions;
@@ -2565,7 +2565,7 @@ FileAssistant::assertPrompted(function (AgentPrompt $prompt) {
 });
 ```
 
-For queued agent invocations, use the queued assertion methods:
+Đối với các lần gọi agent qua queue, hãy sử dụng các phương thức assertion dành cho queue:
 
 ```php
 use Laravel\Ai\QueuedAgentPrompt;
@@ -2581,16 +2581,16 @@ SalesCoach::assertNotQueued('Missing prompt');
 SalesCoach::assertNeverQueued();
 ```
 
-To ensure all agent invocations have a corresponding fake response, you may use `preventStrayPrompts`. If an agent is invoked without a defined fake response, an exception will be thrown:
+Để bảo đảm mọi lần gọi agent đều có fake response tương ứng, bạn có thể sử dụng `preventStrayPrompts`. Nếu một agent được gọi mà không có fake response đã định nghĩa, một exception sẽ được ném ra:
 
 ```php
 SalesCoach::fake()->preventStrayPrompts();
 ```
 
 <a name="testing-images"></a>
-### Images
+### Hình ảnh
 
-Image generations may be faked by invoking the `fake` method on the `Image` class. Once image has been faked, various assertions may be performed against the recorded image generation prompts:
+Việc tạo hình ảnh có thể được giả lập bằng cách gọi phương thức `fake` trên class `Image`. Sau khi đã giả lập hình ảnh, bạn có thể thực hiện nhiều assertion đối với các prompt tạo hình ảnh đã được ghi lại:
 
 ```php
 use Laravel\Ai\Image;
@@ -2612,7 +2612,7 @@ Image::fake(function (ImagePrompt $prompt) {
 });
 ```
 
-After generating images, you may make assertions about the prompts that were received:
+Sau khi tạo hình ảnh, bạn có thể thực hiện các assertion đối với những prompt đã nhận:
 
 ```php
 Image::assertGenerated(function (ImagePrompt $prompt) {
@@ -2624,7 +2624,7 @@ Image::assertNotGenerated('Missing prompt');
 Image::assertNothingGenerated();
 ```
 
-For queued image generations, use the queued assertion methods:
+Đối với việc tạo hình ảnh qua queue, hãy sử dụng các phương thức assertion dành cho queue:
 
 ```php
 Image::assertQueued(
@@ -2636,16 +2636,16 @@ Image::assertNotQueued('Missing prompt');
 Image::assertNothingQueued();
 ```
 
-To ensure all image generations have a corresponding fake response, you may use `preventStrayImages`. If an image is generated without a defined fake response, an exception will be thrown:
+Để bảo đảm mọi lần tạo hình ảnh đều có fake response tương ứng, bạn có thể sử dụng `preventStrayImages`. Nếu một hình ảnh được tạo mà không có fake response đã định nghĩa, một exception sẽ được ném ra:
 
 ```php
 Image::fake()->preventStrayImages();
 ```
 
 <a name="testing-audio"></a>
-### Audio
+### Âm thanh
 
-Audio generations may be faked by invoking the `fake` method on the `Audio` class. Once audio has been faked, various assertions may be performed against the recorded audio generation prompts:
+Việc tạo âm thanh có thể được giả lập bằng cách gọi phương thức `fake` trên class `Audio`. Sau khi đã giả lập âm thanh, bạn có thể thực hiện nhiều assertion đối với các prompt tạo âm thanh đã được ghi lại:
 
 ```php
 use Laravel\Ai\Audio;
@@ -2667,7 +2667,7 @@ Audio::fake(function (AudioPrompt $prompt) {
 });
 ```
 
-After generating audio, you may make assertions about the prompts that were received:
+Sau khi tạo âm thanh, bạn có thể thực hiện các assertion đối với những prompt đã nhận:
 
 ```php
 Audio::assertGenerated(function (AudioPrompt $prompt) {
@@ -2679,7 +2679,7 @@ Audio::assertNotGenerated('Missing prompt');
 Audio::assertNothingGenerated();
 ```
 
-For queued audio generations, use the queued assertion methods:
+Đối với việc tạo âm thanh qua queue, hãy sử dụng các phương thức assertion dành cho queue:
 
 ```php
 Audio::assertQueued(
@@ -2691,16 +2691,16 @@ Audio::assertNotQueued('Missing prompt');
 Audio::assertNothingQueued();
 ```
 
-To ensure all audio generations have a corresponding fake response, you may use `preventStrayAudio`. If audio is generated without a defined fake response, an exception will be thrown:
+Để bảo đảm mọi lần tạo âm thanh đều có fake response tương ứng, bạn có thể sử dụng `preventStrayAudio`. Nếu âm thanh được tạo mà không có fake response đã định nghĩa, một exception sẽ được ném ra:
 
 ```php
 Audio::fake()->preventStrayAudio();
 ```
 
 <a name="testing-transcriptions"></a>
-### Transcriptions
+### Phiên âm
 
-Transcription generations may be faked by invoking the `fake` method on the `Transcription` class. Once transcription has been faked, various assertions may be performed against the recorded transcription generation prompts:
+Việc tạo phiên âm có thể được giả lập bằng cách gọi phương thức `fake` trên class `Transcription`. Sau khi đã giả lập phiên âm, bạn có thể thực hiện nhiều assertion đối với các prompt tạo phiên âm đã được ghi lại:
 
 ```php
 use Laravel\Ai\Transcription;
@@ -2722,7 +2722,7 @@ Transcription::fake(function (TranscriptionPrompt $prompt) {
 });
 ```
 
-After generating transcriptions, you may make assertions about the prompts that were received:
+Sau khi tạo phiên âm, bạn có thể thực hiện các assertion đối với những prompt đã nhận:
 
 ```php
 Transcription::assertGenerated(function (TranscriptionPrompt $prompt) {
@@ -2736,7 +2736,7 @@ Transcription::assertNotGenerated(
 Transcription::assertNothingGenerated();
 ```
 
-For queued transcription generations, use the queued assertion methods:
+Đối với việc tạo phiên âm qua queue, hãy sử dụng các phương thức assertion dành cho queue:
 
 ```php
 Transcription::assertQueued(
@@ -2750,7 +2750,7 @@ Transcription::assertNotQueued(
 Transcription::assertNothingQueued();
 ```
 
-To ensure all transcription generations have a corresponding fake response, you may use `preventStrayTranscriptions`. If a transcription is generated without a defined fake response, an exception will be thrown:
+Để bảo đảm mọi lần tạo phiên âm đều có fake response tương ứng, bạn có thể sử dụng `preventStrayTranscriptions`. Nếu một phiên âm được tạo mà không có fake response đã định nghĩa, một exception sẽ được ném ra:
 
 ```php
 Transcription::fake()->preventStrayTranscriptions();
@@ -2759,7 +2759,7 @@ Transcription::fake()->preventStrayTranscriptions();
 <a name="testing-embeddings"></a>
 ### Embeddings
 
-Embeddings generations may be faked by invoking the `fake` method on the `Embeddings` class. Once embeddings has been faked, various assertions may be performed against the recorded embeddings generation prompts:
+Việc tạo embedding có thể được giả lập bằng cách gọi phương thức `fake` trên class `Embeddings`. Sau khi đã giả lập embedding, bạn có thể thực hiện nhiều assertion đối với các prompt tạo embedding đã được ghi lại:
 
 ```php
 use Laravel\Ai\Embeddings;
@@ -2784,7 +2784,7 @@ Embeddings::fake(function (EmbeddingsPrompt $prompt) {
 });
 ```
 
-After generating embeddings, you may make assertions about the prompts that were received:
+Sau khi tạo embedding, bạn có thể thực hiện các assertion đối với những prompt đã nhận:
 
 ```php
 Embeddings::assertGenerated(function (EmbeddingsPrompt $prompt) {
@@ -2798,7 +2798,7 @@ Embeddings::assertNotGenerated(
 Embeddings::assertNothingGenerated();
 ```
 
-For queued embeddings generations, use the queued assertion methods:
+Đối với việc tạo embedding qua queue, hãy sử dụng các phương thức assertion dành cho queue:
 
 ```php
 Embeddings::assertQueued(
@@ -2812,7 +2812,7 @@ Embeddings::assertNotQueued(
 Embeddings::assertNothingQueued();
 ```
 
-To ensure all embeddings generations have a corresponding fake response, you may use `preventStrayEmbeddings`. If embeddings are generated without a defined fake response, an exception will be thrown:
+Để bảo đảm mọi lần tạo embedding đều có fake response tương ứng, bạn có thể sử dụng `preventStrayEmbeddings`. Nếu embedding được tạo mà không có fake response đã định nghĩa, một exception sẽ được ném ra:
 
 ```php
 Embeddings::fake()->preventStrayEmbeddings();
@@ -2821,7 +2821,7 @@ Embeddings::fake()->preventStrayEmbeddings();
 <a name="testing-reranking"></a>
 ### Reranking
 
-Reranking operations may be faked by invoking the `fake` method on the `Reranking` class:
+Các thao tác reranking có thể được giả lập bằng cách gọi phương thức `fake` trên class `Reranking`:
 
 ```php
 use Laravel\Ai\Reranking;
@@ -2840,7 +2840,7 @@ Reranking::fake([
 ]);
 ```
 
-After reranking, you may make assertions about the operations that were performed:
+Sau khi reranking, bạn có thể thực hiện các assertion đối với những thao tác đã được thực hiện:
 
 ```php
 Reranking::assertReranked(function (RerankingPrompt $prompt) {
@@ -2855,9 +2855,9 @@ Reranking::assertNothingReranked();
 ```
 
 <a name="testing-files"></a>
-### Files
+### File
 
-File operations may be faked by invoking the `fake` method on the `Files` class:
+Các thao tác file có thể được giả lập bằng cách gọi phương thức `fake` trên class `Files`:
 
 ```php
 use Laravel\Ai\Files;
@@ -2865,7 +2865,7 @@ use Laravel\Ai\Files;
 Files::fake();
 ```
 
-Once file operations have been faked, you may make assertions about the uploads and deletions that occurred:
+Sau khi các thao tác file đã được giả lập, bạn có thể thực hiện các assertion đối với những lần upload và xóa đã xảy ra:
 
 ```php
 use Laravel\Ai\Contracts\Files\StorableFile;
@@ -2889,7 +2889,7 @@ Files::assertNotStored(fn (StorableFile $file) =>
 Files::assertNothingStored();
 ```
 
-For asserting against file deletions, you may pass a file ID:
+Để assertion việc xóa file, bạn có thể truyền vào ID của file:
 
 ```php
 Files::assertDeleted('file-id');
@@ -2898,9 +2898,9 @@ Files::assertNothingDeleted();
 ```
 
 <a name="testing-vector-stores"></a>
-### Vector Stores
+### Vector store
 
-Vector store operations may be faked by invoking the `fake` method on the `Stores` class. Faking stores will also fake [file operations](#files) automatically:
+Các thao tác vector store có thể được giả lập bằng cách gọi phương thức `fake` trên class `Stores`. Việc giả lập store cũng sẽ tự động giả lập [các thao tác file](#files):
 
 ```php
 use Laravel\Ai\Stores;
@@ -2908,7 +2908,7 @@ use Laravel\Ai\Stores;
 Stores::fake();
 ```
 
-Once store operations have been faked, you may make assertions about the stores that were created or deleted:
+Sau khi các thao tác store đã được giả lập, bạn có thể thực hiện các assertion đối với những store đã được tạo hoặc xóa:
 
 ```php
 use Laravel\Ai\Stores;
@@ -2928,7 +2928,7 @@ Stores::assertNotCreated('Other Store');
 Stores::assertNothingCreated();
 ```
 
-For asserting against store deletions, you may provide the store ID:
+Để assertion việc xóa store, bạn có thể cung cấp ID của store:
 
 ```php
 Stores::assertDeleted('store_id');
@@ -2936,7 +2936,7 @@ Stores::assertNotDeleted('other_store_id');
 Stores::assertNothingDeleted();
 ```
 
-To assert files were added or removed from a store, use the assertion methods on a given `Store` instance:
+Để assertion rằng file đã được thêm vào hoặc xóa khỏi một store, hãy sử dụng các phương thức assertion trên instance `Store` tương ứng:
 
 ```php
 Stores::fake();
@@ -2955,7 +2955,7 @@ $store->assertNotAdded('other_file_id');
 $store->assertNotRemoved('other_file_id');
 ```
 
-If a file is stored in the provider's [file storage](#files) and added to a vector store in the same request, you may not know the file's provider ID. In this case, you can pass a closure to the `assertAdded` method to assert against the content of the added file:
+Nếu một file được lưu trong [file storage](#files) của provider và được thêm vào vector store trong cùng một request, bạn có thể không biết provider ID của file. Trong trường hợp này, bạn có thể truyền một closure vào phương thức `assertAdded` để assertion dựa trên nội dung của file đã thêm:
 
 ```php
 use Laravel\Ai\Contracts\Files\StorableFile;
@@ -2970,7 +2970,7 @@ $store->assertAdded(fn (StorableFile $file) => $file->content() === 'Hello, Worl
 <a name="events"></a>
 ## Events
 
-The Laravel AI SDK dispatches a variety of [events](/docs/{{version}}/events), including:
+Laravel AI SDK dispatch nhiều [event](/docs/{{version}}/events), bao gồm:
 
 - `AddingFileToStore`
 - `AgentFailed`
@@ -3008,8 +3008,8 @@ The Laravel AI SDK dispatches a variety of [events](/docs/{{version}}/events), i
 - `ToolInvoked`
 - `TranscriptionGenerated`
 
-You can listen to any of these events to log or store AI SDK usage information.
+Bạn có thể lắng nghe bất kỳ event nào trong số này để ghi log hoặc lưu trữ thông tin sử dụng AI SDK.
 
 ## Tài liệu chính thức
 
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/ai-sdk). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.
+- [Laravel 13.x — AI SDK](https://laravel.com/docs/13.x/ai-sdk)

@@ -1,29 +1,21 @@
-# Eloquent: Serialization
-
-- [Introduction](#introduction)
-- [Serializing Models and Collections](#serializing-models-and-collections)
-    - [Serializing to Arrays](#serializing-to-arrays)
-    - [Serializing to JSON](#serializing-to-json)
-- [Hiding Attributes From JSON](#hiding-attributes-from-json)
-- [Appending Values to JSON](#appending-values-to-json)
-- [Date Serialization](#date-serialization)
-
+# Eloquent: Tuần tự hóa
+- [Giới thiệu](#introduction)
+- [Tuần tự hóa Model và Collection](#serializing-models-and-collections)
+    - [Tuần tự hóa thành Array](#serializing-to-arrays)
+    - [Tuần tự hóa thành JSON](#serializing-to-json)
+- [Ẩn Attribute khỏi JSON](#hiding-attributes-from-json)
+- [Bổ sung giá trị vào JSON](#appending-values-to-json)
+- [Tuần tự hóa Date](#date-serialization)
 <a name="introduction"></a>
-## Introduction
-
-When building APIs using Laravel, you will often need to convert your models and relationships to arrays or JSON. Eloquent includes convenient methods for making these conversions, as well as controlling which attributes are included in the serialized representation of your models.
-
+## Giới thiệu
+Khi xây dựng API bằng Laravel, bạn thường cần chuyển model và relationship thành array hoặc JSON. Eloquent cung cấp các phương thức thuận tiện cho những chuyển đổi này, đồng thời cho phép kiểm soát attribute nào được đưa vào biểu diễn đã tuần tự hóa của model.
 > [!NOTE]
-> For an even more robust way of handling Eloquent model and collection JSON serialization, check out the documentation on [Eloquent API resources](/docs/{{version}}/eloquent-resources).
-
+> Nếu cần cách mạnh mẽ hơn để xử lý việc serialize Eloquent model và collection thành JSON, hãy xem tài liệu [Eloquent API Resources](/docs/{{version}}/eloquent-resources).
 <a name="serializing-models-and-collections"></a>
-## Serializing Models and Collections
-
+## Tuần tự hóa Model và Collection
 <a name="serializing-to-arrays"></a>
-### Serializing to Arrays
-
-To convert a model and its loaded [relationships](/docs/{{version}}/eloquent-relationships) to an array, you should use the `toArray` method. This method is recursive, so all attributes and all relations (including the relations of relations) will be converted to arrays:
-
+### Tuần tự hóa thành Array
+Để chuyển một model cùng các [relationship](/docs/{{version}}/eloquent-relationships) đã load thành array, hãy dùng phương thức `toArray`. Phương thức này chạy đệ quy, vì vậy mọi attribute và relation — bao gồm relation của relation — đều được chuyển thành array:
 ```php
 use App\Models\User;
 
@@ -31,17 +23,13 @@ $user = User::with('roles')->first();
 
 return $user->toArray();
 ```
-
-The `attributesToArray` method may be used to convert a model's attributes to an array but not its relationships:
-
+Phương thức `attributesToArray` có thể dùng để chuyển các attribute của model thành array mà không bao gồm relationship:
 ```php
 $user = User::first();
 
 return $user->attributesToArray();
 ```
-
-You may also convert entire [collections](/docs/{{version}}/eloquent-collections) of models to arrays by calling the `toArray` method on the collection instance:
-
+Bạn cũng có thể chuyển toàn bộ [collection](/docs/{{version}}/eloquent-collections) model thành array bằng cách gọi `toArray` trên collection instance:
 ```php
 $users = User::all();
 
@@ -49,10 +37,8 @@ return $users->toArray();
 ```
 
 <a name="serializing-to-json"></a>
-### Serializing to JSON
-
-To convert a model to JSON, you should use the `toJson` method. Like `toArray`, the `toJson` method is recursive, so all attributes and relations will be converted to JSON. You may also specify any JSON encoding options that are [supported by PHP](https://secure.php.net/manual/en/function.json-encode.php):
-
+### Tuần tự hóa thành JSON
+Để chuyển model thành JSON, hãy dùng phương thức `toJson`. Tương tự `toArray`, `toJson` chạy đệ quy nên toàn bộ attribute và relation sẽ được chuyển sang JSON. Bạn cũng có thể truyền các tùy chọn JSON encoding [được PHP hỗ trợ](https://secure.php.net/manual/en/function.json-encode.php):
 ```php
 use App\Models\User;
 
@@ -62,15 +48,11 @@ return $user->toJson();
 
 return $user->toJson(JSON_PRETTY_PRINT);
 ```
-
-Alternatively, you may cast a model or collection to a string, which will automatically call the `toJson` method on the model or collection:
-
+Ngoài ra, bạn có thể cast model hoặc collection thành string; thao tác này sẽ tự động gọi `toJson` trên model hoặc collection:
 ```php
 return (string) User::find(1);
 ```
-
-Since models and collections are converted to JSON when cast to a string, you can return Eloquent objects directly from your application's routes or controllers. Laravel will automatically serialize your Eloquent models and collections to JSON when they are returned from routes or controllers:
-
+Vì model và collection được chuyển thành JSON khi cast sang string, bạn có thể trả Eloquent object trực tiếp từ route hoặc controller. Laravel sẽ tự động serialize Eloquent model và collection thành JSON khi chúng được trả về từ route hoặc controller:
 ```php
 Route::get('/users', function () {
     return User::all();
@@ -79,14 +61,10 @@ Route::get('/users', function () {
 
 <a name="relationships"></a>
 #### Relationships
-
-When an Eloquent model is converted to JSON, its loaded relationships will automatically be included as attributes on the JSON object. Also, though Eloquent relationship methods are defined using "camel case" method names, a relationship's JSON attribute will be "snake case".
-
+Khi một Eloquent model được chuyển thành JSON, các relationship đã load sẽ tự động được đưa vào dưới dạng attribute của JSON object. Ngoài ra, dù relationship method trong Eloquent được định nghĩa theo dạng "camelCase", tên attribute tương ứng trong JSON sẽ ở dạng "snake_case".
 <a name="hiding-attributes-from-json"></a>
-## Hiding Attributes From JSON
-
-Sometimes you may wish to limit the attributes, such as passwords, that are included in your model's array or JSON representation. To do so, you may use the `Hidden` attribute on your model. Attributes that are listed in the `Hidden` attribute will not be included in the serialized representation of your model:
-
+## Ẩn Attribute khỏi JSON
+Đôi khi bạn cần giới hạn những attribute — chẳng hạn password — được đưa vào biểu diễn array hoặc JSON của model. Để làm vậy, có thể dùng attribute `Hidden` trên model. Những attribute nằm trong `Hidden` sẽ không xuất hiện trong dữ liệu serialize:
 ```php
 <?php
 
@@ -104,10 +82,8 @@ class User extends Model
 
 
 > [!NOTE]
-> To hide relationships, add the relationship's method name to your Eloquent model's `Hidden` attribute.
-
-Alternatively, you may use the `Visible` attribute to define an "allow list" of attributes that should be included in your model's array and JSON representation. All attributes that are not present in the `Visible` attribute will be hidden when the model is converted to an array or JSON:
-
+> Để ẩn relationship, hãy thêm tên method của relationship vào attribute `Hidden` trên Eloquent model.
+Ngoài ra, bạn có thể dùng attribute `Visible` để định nghĩa danh sách các attribute được phép xuất hiện trong biểu diễn array và JSON. Mọi attribute không có trong `Visible` sẽ bị ẩn khi model được chuyển thành array hoặc JSON:
 ```php
 <?php
 
@@ -124,26 +100,20 @@ class User extends Model
 ```
 
 <a name="temporarily-modifying-attribute-visibility"></a>
-#### Temporarily Modifying Attribute Visibility
-
-If you would like to make some typically hidden attributes visible on a given model instance, you may use the `makeVisible` or `mergeVisible` methods. The `makeVisible` method returns the model instance:
-
+#### Tạm thời thay đổi khả năng hiển thị Attribute
+Nếu muốn làm cho một số attribute vốn bị ẩn trở nên hiển thị trên một model instance cụ thể, hãy dùng `makeVisible` hoặc `mergeVisible`. Phương thức `makeVisible` trả về chính model instance:
 ```php
 return $user->makeVisible('attribute')->toArray();
 
 return $user->mergeVisible(['name', 'email'])->toArray();
 ```
-
-Likewise, if you would like to hide some attributes that are typically visible, you may use the `makeHidden` or `mergeHidden` methods:
-
+Tương tự, nếu muốn ẩn một số attribute vốn đang hiển thị, bạn có thể dùng `makeHidden` hoặc `mergeHidden`:
 ```php
 return $user->makeHidden('attribute')->toArray();
 
 return $user->mergeHidden(['name', 'email'])->toArray();
 ```
-
-If you wish to temporarily override all of the visible or hidden attributes, you may use the `setVisible` and `setHidden` methods respectively:
-
+Nếu muốn tạm thời override toàn bộ danh sách attribute visible hoặc hidden, hãy dùng lần lượt `setVisible` và `setHidden`:
 ```php
 return $user->setVisible(['id', 'name'])->toArray();
 
@@ -151,10 +121,8 @@ return $user->setHidden(['email', 'password', 'remember_token'])->toArray();
 ```
 
 <a name="appending-values-to-json"></a>
-## Appending Values to JSON
-
-Occasionally, when converting models to arrays or JSON, you may wish to add attributes that do not have a corresponding column in your database. To do so, first define an [accessor](/docs/{{version}}/eloquent-mutators) for the value:
-
+## Bổ sung giá trị vào JSON
+Đôi khi khi chuyển model thành array hoặc JSON, bạn muốn bổ sung những attribute không có column tương ứng trong database. Trước tiên, hãy định nghĩa một [accessor](/docs/{{version}}/eloquent-mutators) cho value đó:
 ```php
 <?php
 
@@ -176,9 +144,7 @@ class User extends Model
     }
 }
 ```
-
-If you would like the accessor to always be appended to your model's array and JSON representations, you may use the `Appends` attribute on your model. Note that attribute names are typically referenced using their "snake case" serialized representation, even though the accessor's PHP method is defined using "camel case":
-
+Nếu muốn accessor luôn được thêm vào array và JSON representation của model, hãy dùng attribute `Appends`. Lưu ý rằng tên attribute thường được tham chiếu theo dạng "snake case" sau serialize, dù PHP method của accessor được định nghĩa theo "camel case":
 ```php
 <?php
 
@@ -193,14 +159,10 @@ class User extends Model
     // ...
 }
 ```
-
-Once the attribute has been added to the `appends` list, it will be included in both the model's array and JSON representations. Attributes in the `appends` array will also respect the `visible` and `hidden` settings configured on the model.
-
+Sau khi attribute được thêm vào danh sách `appends`, nó sẽ xuất hiện trong cả biểu diễn array và JSON của model. Các attribute trong `appends` cũng tuân theo thiết lập `visible` và `hidden` trên model.
 <a name="appending-at-run-time"></a>
-#### Appending at Run Time
-
-At runtime, you may instruct a model instance to append additional attributes using the `append` or `mergeAppends` methods. Or, you may use the `setAppends` method to override the entire array of appended properties for a given model instance:
-
+#### Bổ sung tại Runtime
+Tại runtime, bạn có thể yêu cầu một model instance thêm các attribute bổ sung bằng `append` hoặc `mergeAppends`. Hoặc dùng `setAppends` để override toàn bộ array property được append cho model instance đó:
 ```php
 return $user->append('is_admin')->toArray();
 
@@ -208,21 +170,16 @@ return $user->mergeAppends(['is_admin', 'status'])->toArray();
 
 return $user->setAppends(['is_admin'])->toArray();
 ```
-
-Likewise, if you would like to remove all appended properties from a model, you may use the `withoutAppends` method:
-
+Tương tự, nếu muốn loại bỏ toàn bộ property đã append khỏi model, hãy dùng `withoutAppends`:
 ```php
 return $user->withoutAppends()->toArray();
 ```
 
 <a name="date-serialization"></a>
-## Date Serialization
-
+## Tuần tự hóa Date
 <a name="customizing-the-default-date-format"></a>
-#### Customizing the Default Date Format
-
-You may customize the default serialization format by overriding the `serializeDate` method. This method does not affect how your dates are formatted for storage in the database:
-
+#### Tùy chỉnh định dạng Date mặc định
+Bạn có thể tùy chỉnh định dạng tuần tự hóa mặc định bằng cách ghi đè phương thức `serializeDate`. Phương thức này không ảnh hưởng tới cách date được format khi lưu vào database:
 ```php
 /**
  * Prepare a date for array / JSON serialization.
@@ -234,10 +191,8 @@ protected function serializeDate(DateTimeInterface $date): string
 ```
 
 <a name="customizing-the-date-format-per-attribute"></a>
-#### Customizing the Date Format per Attribute
-
-You may customize the serialization format of individual Eloquent date attributes by specifying the date format in the model's [cast declarations](/docs/{{version}}/eloquent-mutators#attribute-casting):
-
+#### Tùy chỉnh định dạng Date theo từng Attribute
+Bạn có thể tùy chỉnh định dạng tuần tự hóa của từng Eloquent date attribute bằng cách chỉ định định dạng date trong [khai báo cast](/docs/{{version}}/eloquent-mutators#attribute-casting) của model:
 ```php
 protected function casts(): array
 {

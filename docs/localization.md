@@ -1,27 +1,21 @@
-# Localization
-
-- [Introduction](#introduction)
-    - [Publishing the Language Files](#publishing-the-language-files)
-    - [Configuring the Locale](#configuring-the-locale)
-    - [Pluralization Language](#pluralization-language)
-- [Defining Translation Strings](#defining-translation-strings)
-    - [Using Short Keys](#using-short-keys)
-    - [Using Translation Strings as Keys](#using-translation-strings-as-keys)
-- [Retrieving Translation Strings](#retrieving-translation-strings)
-    - [Replacing Parameters in Translation Strings](#replacing-parameters-in-translation-strings)
-    - [Pluralization](#pluralization)
-- [Overriding Package Language Files](#overriding-package-language-files)
-
+# Đa ngôn ngữ
+- [Giới thiệu](#introduction)
+    - [Xuất bản các file ngôn ngữ](#publishing-the-language-files)
+    - [Cấu hình locale](#configuring-the-locale)
+    - [Ngôn ngữ dùng để biến đổi số ít / số nhiều](#pluralization-language)
+- [Định nghĩa chuỗi dịch](#defining-translation-strings)
+    - [Dùng key ngắn](#using-short-keys)
+    - [Dùng chính chuỗi dịch làm key](#using-translation-strings-as-keys)
+- [Lấy chuỗi dịch](#retrieving-translation-strings)
+    - [Thay thế tham số trong chuỗi dịch](#replacing-parameters-in-translation-strings)
+    - [Xử lý số ít / số nhiều](#pluralization)
+- [Ghi đè file ngôn ngữ của package](#overriding-package-language-files)
 <a name="introduction"></a>
-## Introduction
-
+## Giới thiệu
 > [!NOTE]
-> By default, the Laravel application skeleton does not include the `lang` directory. If you would like to customize Laravel's language files, you may publish them via the `lang:publish` Artisan command.
-
-Laravel's localization features provide a convenient way to retrieve strings in various languages, allowing you to easily support multiple languages within your application.
-
-Laravel provides two ways to manage translation strings. First, language strings may be stored in files within the application's `lang` directory. Within this directory, there may be subdirectories for each language supported by the application. This is the approach Laravel uses to manage translation strings for built-in Laravel features such as validation error messages:
-
+> Mặc định, bộ khung ứng dụng Laravel không có thư mục `lang`. Nếu muốn tùy biến các file ngôn ngữ của Laravel, bạn có thể xuất bản chúng bằng lệnh Artisan `lang:publish`.
+Các tính năng bản địa hóa của Laravel cung cấp một cách thuận tiện để truy xuất chuỗi bằng nhiều ngôn ngữ khác nhau, cho phép bạn dễ dàng hỗ trợ nhiều ngôn ngữ trong ứng dụng.
+Laravel cung cấp hai cách quản lý chuỗi dịch. Cách thứ nhất là lưu các chuỗi trong các file bên dưới thư mục `lang` của ứng dụng. Trong thư mục này, bạn có thể tạo một thư mục con cho từng ngôn ngữ mà ứng dụng hỗ trợ. Laravel cũng dùng cách này cho các chuỗi tích hợp sẵn, chẳng hạn thông báo lỗi validation:
 ```text
 /lang
     /en
@@ -29,35 +23,25 @@ Laravel provides two ways to manage translation strings. First, language strings
     /es
         messages.php
 ```
-
-Or, translation strings may be defined within JSON files that are placed within the `lang` directory. When taking this approach, each language supported by your application would have a corresponding JSON file within this directory. This approach is recommended for applications that have a large number of translatable strings:
-
+Hoặc, các chuỗi dịch có thể được định nghĩa trong những file JSON nằm trong thư mục `lang`. Với cách này, mỗi ngôn ngữ ứng dụng hỗ trợ sẽ có một file JSON tương ứng. Cách tiếp cận này được khuyến nghị cho các ứng dụng có số lượng lớn chuỗi cần dịch:
 ```text
 /lang
     en.json
     es.json
 ```
-
-We'll discuss each approach to managing translation strings within this documentation.
-
+Phần tài liệu này sẽ trình bày chi tiết cả hai cách quản lý chuỗi dịch.
 <a name="publishing-the-language-files"></a>
-### Publishing the Language Files
-
-By default, the Laravel application skeleton does not include the `lang` directory. If you would like to customize Laravel's language files or create your own, you should scaffold the `lang` directory via the `lang:publish` Artisan command. The `lang:publish` command will create the `lang` directory in your application and publish the default set of language files used by Laravel:
-
+### Xuất bản các file ngôn ngữ
+Mặc định, bộ khung ứng dụng Laravel không có thư mục `lang`. Nếu muốn tùy biến các file ngôn ngữ của Laravel hoặc tạo file riêng, bạn có thể tạo cấu trúc thư mục `lang` bằng lệnh Artisan `lang:publish`. Lệnh này sẽ tạo thư mục `lang` và xuất bản bộ file ngôn ngữ mặc định mà Laravel sử dụng:
 ```shell
 php artisan lang:publish
 ```
 
 <a name="configuring-the-locale"></a>
-### Configuring the Locale
-
-The default language for your application is stored in the `config/app.php` configuration file's `locale` configuration option, which is typically set using the `APP_LOCALE` environment variable. You are free to modify this value to suit the needs of your application.
-
-You may also configure a "fallback language", which will be used when the default language does not contain a given translation string. Like the default language, the fallback language is also configured in the `config/app.php` configuration file, and its value is typically set using the `APP_FALLBACK_LOCALE` environment variable.
-
-You may modify the default language for a single HTTP request at runtime using the `setLocale` method provided by the `App` facade:
-
+### Cấu hình locale
+Ngôn ngữ mặc định của ứng dụng được lưu trong tùy chọn cấu hình `locale` của file `config/app.php`, thường lấy giá trị từ biến môi trường `APP_LOCALE`. Bạn có thể thay đổi giá trị này theo nhu cầu của ứng dụng.
+Bạn cũng có thể cấu hình một "ngôn ngữ dự phòng", được sử dụng khi ngôn ngữ mặc định không chứa chuỗi dịch cần tìm. Tương tự locale mặc định, ngôn ngữ dự phòng được cấu hình trong `config/app.php` và thường lấy giá trị từ biến môi trường `APP_FALLBACK_LOCALE`.
+Bạn có thể thay đổi ngôn ngữ mặc định trong thời gian chạy cho một HTTP request bằng method `setLocale` của facade `App`:
 ```php
 use Illuminate\Support\Facades\App;
 
@@ -73,10 +57,8 @@ Route::get('/greeting/{locale}', function (string $locale) {
 ```
 
 <a name="determining-the-current-locale"></a>
-#### Determining the Current Locale
-
-You may use the `currentLocale` and `isLocale` methods on the `App` facade to determine the current locale or check if the locale is a given value:
-
+#### Xác định locale hiện tại
+Bạn có thể dùng các method `currentLocale` và `isLocale` trên facade `App` để lấy locale hiện tại hoặc kiểm tra locale có bằng một giá trị cụ thể hay không:
 ```php
 use Illuminate\Support\Facades\App;
 
@@ -88,7 +70,7 @@ if (App::isLocale('en')) {
 ```
 
 <a name="pluralization-language"></a>
-### Pluralization Language
+### Ngôn ngữ dùng để biến đổi số ít / số nhiều
 
 <style>
 .code-list-no-flex-break code {
@@ -98,8 +80,7 @@ if (App::isLocale('en')) {
 
 <div class="code-list-no-flex-break">
 
-You may instruct Laravel's "pluralizer", which is used by Eloquent and other portions of the framework to convert singular strings to plural strings, to use a language other than English. This may be accomplished by invoking the `useLanguage` method within the `boot` method of one of your application's service providers. The pluralizer's currently supported languages are: `french`, `norwegian-bokmal`, `portuguese`, `spanish`, and `turkish`:
-
+Bạn có thể yêu cầu bộ biến đổi số ít / số nhiều của Laravel — thành phần được Eloquent và các phần khác của framework sử dụng để chuyển từ dạng số ít sang số nhiều — dùng một ngôn ngữ khác tiếng Anh. Hãy gọi method `useLanguage` trong method `boot` của một service provider trong ứng dụng. Hiện tính năng này hỗ trợ các ngôn ngữ: `french`, `norwegian-bokmal`, `portuguese`, `spanish` và `turkish`:
 </div>
 
 ```php
@@ -115,18 +96,13 @@ public function boot(): void
     // ...
 }
 ```
-
 > [!WARNING]
-> If you customize the pluralizer's language, you should explicitly define your Eloquent model's [table names](/docs/{{version}}/eloquent#table-names).
-
+> Nếu tùy biến ngôn ngữ dùng để biến đổi số ít / số nhiều, bạn nên khai báo rõ [tên bảng](/docs/{{version}}/eloquent#table-names) cho các Eloquent model.
 <a name="defining-translation-strings"></a>
-## Defining Translation Strings
-
+## Định nghĩa chuỗi dịch
 <a name="using-short-keys"></a>
-### Using Short Keys
-
-Typically, translation strings are stored in files within the `lang` directory. Within this directory, there should be a subdirectory for each language supported by your application. This is the approach Laravel uses to manage translation strings for built-in Laravel features such as validation error messages:
-
+### Dùng key ngắn
+Thông thường, chuỗi dịch được lưu trong các file dưới thư mục `lang`. Thư mục này nên có một thư mục con cho mỗi ngôn ngữ ứng dụng hỗ trợ. Đây cũng là cách Laravel quản lý các chuỗi tích hợp sẵn, chẳng hạn thông báo lỗi validation:
 ```text
 /lang
     /en
@@ -134,9 +110,7 @@ Typically, translation strings are stored in files within the `lang` directory. 
     /es
         messages.php
 ```
-
-All language files return an array of keyed strings. For example:
-
+Mỗi file ngôn ngữ trả về một mảng các chuỗi được định danh bằng key. Ví dụ:
 ```php
 <?php
 
@@ -146,81 +120,56 @@ return [
     'welcome' => 'Welcome to our application!',
 ];
 ```
-
 > [!WARNING]
-> For languages that differ by territory, you should name the language directories according to the ISO 15897. For example, "en_GB" should be used for British English rather than "en-gb".
-
+> Với các ngôn ngữ khác nhau theo vùng lãnh thổ, hãy đặt tên thư mục ngôn ngữ theo chuẩn ISO 15897. Ví dụ, với tiếng Anh Anh hãy dùng `en_GB` thay vì `en-gb`.
 <a name="using-translation-strings-as-keys"></a>
-### Using Translation Strings as Keys
-
-For applications with a large number of translatable strings, defining every string with a "short key" can become confusing when referencing the keys in your views and it is cumbersome to continually invent keys for every translation string supported by your application.
-
-For this reason, Laravel also provides support for defining translation strings using the "default" translation of the string as the key. Language files that use translation strings as keys are stored as JSON files in the `lang` directory. For example, if your application has a Spanish translation, you should create a `lang/es.json` file:
-
+### Dùng chính chuỗi dịch làm key
+Với ứng dụng có rất nhiều chuỗi cần dịch, việc tự đặt "key ngắn" cho mọi chuỗi có thể khiến phần tham chiếu trong view trở nên khó hiểu, đồng thời bạn phải liên tục nghĩ ra key mới cho từng nội dung.
+Vì vậy, Laravel còn hỗ trợ dùng chính bản dịch "mặc định" của chuỗi làm key. Các file theo cách này được lưu dưới dạng JSON trong thư mục `lang`. Ví dụ, nếu ứng dụng có bản dịch tiếng Tây Ban Nha, hãy tạo file `lang/es.json`:
 ```json
 {
     "I love programming.": "Me encanta programar."
 }
 ```
-
-#### Key / File Conflicts
-
-You should not define translation string keys that conflict with other translation filenames. For example, translating `__('Action')` for the "NL" locale while a `nl/action.php` file exists but a `nl.json` file does not exist will result in the translator returning the entire contents of `nl/action.php`.
-
+#### Xung đột giữa key và tên file
+Không nên định nghĩa key chuỗi dịch trùng với tên file dịch khác. Ví dụ, nếu dịch `__('Action')` cho locale "NL" trong khi tồn tại file `nl/action.php` nhưng không có `nl.json`, translator sẽ trả về toàn bộ nội dung của `nl/action.php`.
 <a name="retrieving-translation-strings"></a>
-## Retrieving Translation Strings
-
-You may retrieve translation strings from your language files using the `__` helper function. If you are using "short keys" to define your translation strings, you should pass the file that contains the key and the key itself to the `__` function using "dot" syntax. For example, let's retrieve the `welcome` translation string from the `lang/en/messages.php` language file:
-
+## Lấy chuỗi dịch
+Bạn có thể lấy chuỗi dịch từ file ngôn ngữ bằng helper `__`. Nếu dùng "key ngắn", hãy truyền tên file chứa key và chính key đó vào `__` theo cú pháp "dot". Ví dụ, để lấy chuỗi `welcome` từ file `lang/en/messages.php`:
 ```php
 echo __('messages.welcome');
 ```
-
-If the specified translation string does not exist, the `__` function will return the translation string key. So, using the example above, the `__` function would return `messages.welcome` if the translation string does not exist.
-
-If you are using your [default translation strings as your translation keys](#using-translation-strings-as-keys), you should pass the default translation of your string to the `__` function;
-
+Nếu chuỗi dịch được chỉ định không tồn tại, hàm `__` sẽ trả về chính key được truyền vào. Với ví dụ trên, kết quả sẽ là `messages.welcome` nếu không tìm thấy chuỗi tương ứng.
+Nếu bạn dùng [chuỗi dịch mặc định làm key](#using-translation-strings-as-keys), hãy truyền chính bản dịch mặc định của chuỗi vào hàm `__`:
 ```php
 echo __('I love programming.');
 ```
-
-Again, if the translation string does not exist, the `__` function will return the translation string key that it was given.
-
-If you are using the [Blade templating engine](/docs/{{version}}/blade), you may use the `{{ }}` echo syntax to display the translation string:
-
+Tương tự, nếu chuỗi dịch không tồn tại, hàm `__` sẽ trả về key đã được truyền vào.
+Nếu sử dụng [Blade templating engine](/docs/{{version}}/blade), bạn có thể dùng cú pháp echo `{{ }}` để hiển thị chuỗi dịch:
 ```blade
 {{ __('messages.welcome') }}
 ```
 
 <a name="replacing-parameters-in-translation-strings"></a>
-### Replacing Parameters in Translation Strings
-
-If you wish, you may define placeholders in your translation strings. All placeholders are prefixed with a `:`. For example, you may define a welcome message with a placeholder name:
-
+### Thay thế tham số trong chuỗi dịch
+Bạn có thể định nghĩa placeholder trong chuỗi dịch. Mọi placeholder đều bắt đầu bằng `:`. Ví dụ, có thể tạo thông điệp chào mừng chứa placeholder cho tên:
 ```php
 'welcome' => 'Welcome, :name',
 ```
-
-To replace the placeholders when retrieving a translation string, you may pass an array of replacements as the second argument to the `__` function:
-
+Để thay thế placeholder khi lấy chuỗi dịch, truyền một mảng các giá trị thay thế làm đối số thứ hai của hàm `__`:
 ```php
 echo __('messages.welcome', ['name' => 'dayle']);
 ```
-
-If your placeholder contains all capital letters, or only has its first letter capitalized, the translated value will be capitalized accordingly:
-
+Nếu placeholder được viết toàn bộ bằng chữ hoa, hoặc chỉ viết hoa ký tự đầu, giá trị sau khi dịch cũng sẽ được điều chỉnh chữ hoa tương ứng:
 ```php
 'welcome' => 'Welcome, :NAME', // Welcome, DAYLE
 'goodbye' => 'Goodbye, :Name', // Goodbye, Dayle
 ```
 
 <a name="object-replacement-formatting"></a>
-#### Object Replacement Formatting
-
-If you attempt to provide an object as a translation placeholder, the object's `__toString` method will be invoked. The [__toString](https://www.php.net/manual/en/language.oop5.magic.php#object.tostring) method is one of PHP's built-in "magic methods". However, sometimes you may not have control over the `__toString` method of a given class, such as when the class that you are interacting with belongs to a third-party library.
-
-In these cases, Laravel allows you to register a custom formatting handler for that particular type of object. To accomplish this, you should invoke the translator's `stringable` method. The `stringable` method accepts a closure, which should type-hint the type of object that it is responsible for formatting. Typically, the `stringable` method should be invoked within the `boot` method of your application's `AppServiceProvider` class:
-
+#### Định dạng object khi thay thế
+Nếu truyền một object làm placeholder cho chuỗi dịch, method `__toString` của object sẽ được gọi. [__toString](https://www.php.net/manual/en/language.oop5.magic.php#object.tostring) là một trong các "magic method" tích hợp của PHP. Tuy nhiên, đôi khi bạn không kiểm soát được `__toString` của class, chẳng hạn class thuộc thư viện bên thứ ba.
+Trong trường hợp đó, Laravel cho phép đăng ký formatter tùy chỉnh cho một loại object cụ thể. Hãy gọi method `stringable` của translator. Method này nhận một closure; closure nên type-hint loại object mà nó chịu trách nhiệm format. Thông thường, `stringable` nên được gọi trong method `boot` của class `AppServiceProvider`:
 ```php
 use Illuminate\Support\Facades\Lang;
 use Money\Money;
@@ -237,54 +186,40 @@ public function boot(): void
 ```
 
 <a name="pluralization"></a>
-### Pluralization
-
-Pluralization is a complex problem, as different languages have a variety of complex rules for pluralization; however, Laravel can help you translate strings differently based on pluralization rules that you define. Using a `|` character, you may distinguish singular and plural forms of a string:
-
+### Xử lý số ít / số nhiều
+Việc xử lý số ít / số nhiều là một bài toán phức tạp vì mỗi ngôn ngữ có các quy tắc khác nhau. Laravel cho phép bạn định nghĩa chuỗi dịch khác nhau dựa trên số lượng. Hãy dùng ký tự `|` để phân tách dạng số ít và số nhiều:
 ```php
 'apples' => 'There is one apple|There are many apples',
 ```
-
-Of course, pluralization is also supported when using [translation strings as keys](#using-translation-strings-as-keys):
-
+Cơ chế này cũng được hỗ trợ khi bạn [dùng chuỗi dịch làm key](#using-translation-strings-as-keys):
 ```json
 {
     "There is one apple|There are many apples": "Hay una manzana|Hay muchas manzanas"
 }
 ```
-
-You may even create more complex pluralization rules which specify translation strings for multiple ranges of values:
-
+Bạn thậm chí có thể định nghĩa các quy tắc phức tạp hơn, với những chuỗi khác nhau cho nhiều khoảng giá trị:
 ```php
 'apples' => '{0} There are none|[1,19] There are some|[20,*] There are many',
 ```
-
-After defining a translation string that has pluralization options, you may use the `trans_choice` function to retrieve the line for a given "count". In this example, since the count is greater than one, the plural form of the translation string is returned:
-
+Sau khi định nghĩa chuỗi có nhiều lựa chọn theo số lượng, bạn có thể dùng hàm `trans_choice` để lấy nội dung phù hợp với một giá trị "count". Trong ví dụ này, vì `count` lớn hơn một nên dạng số nhiều được trả về:
 ```php
 echo trans_choice('messages.apples', 10);
 ```
-
-You may also define placeholder attributes in pluralization strings. These placeholders may be replaced by passing an array as the third argument to the `trans_choice` function:
-
+Bạn cũng có thể định nghĩa placeholder trong chuỗi xử lý số ít / số nhiều. Các placeholder này được thay thế bằng cách truyền một mảng làm đối số thứ ba của `trans_choice`:
 ```php
 'minutes_ago' => '{1} :value minute ago|[2,*] :value minutes ago',
 
 echo trans_choice('time.minutes_ago', 5, ['value' => 5]);
 ```
-
-If you would like to display the integer value that was passed to the `trans_choice` function, you may use the built-in `:count` placeholder:
-
+Nếu muốn hiển thị giá trị số nguyên được truyền vào `trans_choice`, bạn có thể dùng placeholder tích hợp `:count`:
 ```php
 'apples' => '{0} There are none|{1} There is one|[2,*] There are :count',
 ```
 
 <a name="overriding-package-language-files"></a>
-## Overriding Package Language Files
-
-Some packages may ship with their own language files. Instead of changing the package's core files to tweak these lines, you may override them by placing files in the `lang/vendor/{package}/{locale}` directory.
-
-So, for example, if you need to override the English translation strings in `messages.php` for a package named `skyrim/hearthfire`, you should place a language file at: `lang/vendor/hearthfire/en/messages.php`. Within this file, you should only define the translation strings you wish to override. Any translation strings you don't override will still be loaded from the package's original language files.
+## Ghi đè file ngôn ngữ của package
+Một số package đi kèm file ngôn ngữ riêng. Thay vì sửa trực tiếp các file lõi của package, bạn có thể ghi đè chúng bằng cách đặt file tương ứng trong thư mục `lang/vendor/{package}/{locale}`.
+Ví dụ, nếu cần ghi đè các chuỗi tiếng Anh trong `messages.php` của package `skyrim/hearthfire`, hãy tạo file tại `lang/vendor/hearthfire/en/messages.php`. Trong file này, chỉ cần định nghĩa những chuỗi bạn muốn ghi đè; các chuỗi còn lại vẫn được nạp từ file ngôn ngữ gốc của package.
 
 ## Tài liệu chính thức
 

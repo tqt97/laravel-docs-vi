@@ -1,22 +1,22 @@
-# Database: Getting Started
+# Cơ sở dữ liệu: Bắt đầu
 
-- [Introduction](#introduction)
-    - [Configuration](#configuration)
-    - [Read and Write Connections](#read-and-write-connections)
-    - [Pooled PostgreSQL Connections](#pooled-postgresql-connections)
-- [Running SQL Queries](#running-queries)
-    - [Using Multiple Database Connections](#using-multiple-database-connections)
-    - [Listening for Query Events](#listening-for-query-events)
-    - [Monitoring Cumulative Query Time](#monitoring-cumulative-query-time)
-- [Database Transactions](#database-transactions)
-- [Connecting to the Database CLI](#connecting-to-the-database-cli)
-- [Inspecting Your Databases](#inspecting-your-databases)
-- [Monitoring Your Databases](#monitoring-your-databases)
+- [Giới thiệu](#introduction)
+    - [Cấu hình](#configuration)
+    - [Kết nối đọc và ghi](#read-and-write-connections)
+    - [Kết nối PostgreSQL qua connection pool](#pooled-postgresql-connections)
+- [Thực thi truy vấn SQL](#running-queries)
+    - [Sử dụng nhiều kết nối cơ sở dữ liệu](#using-multiple-database-connections)
+    - [Lắng nghe sự kiện truy vấn](#listening-for-query-events)
+    - [Theo dõi tổng thời gian truy vấn](#monitoring-cumulative-query-time)
+- [Transaction cơ sở dữ liệu](#database-transactions)
+- [Kết nối đến CLI của cơ sở dữ liệu](#connecting-to-the-database-cli)
+- [Kiểm tra cơ sở dữ liệu](#inspecting-your-databases)
+- [Giám sát cơ sở dữ liệu](#monitoring-your-databases)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Almost every modern web application interacts with a database. Laravel makes interacting with databases extremely simple across a variety of supported databases using raw SQL, a [fluent query builder](/docs/{{version}}/queries), and the [Eloquent ORM](/docs/{{version}}/eloquent). Currently, Laravel provides first-party support for five databases:
+Hầu hết mọi ứng dụng web hiện đại đều tương tác với cơ sở dữ liệu. Laravel giúp việc làm việc với nhiều hệ quản trị cơ sở dữ liệu được hỗ trợ trở nên rất đơn giản thông qua SQL thuần, [Query Builder với API fluent](/docs/{{version}}/queries) và [Eloquent ORM](/docs/{{version}}/eloquent). Hiện tại, Laravel cung cấp hỗ trợ first-party cho năm hệ cơ sở dữ liệu:
 
 <div class="content-list" markdown="1">
 
@@ -28,64 +28,64 @@ Almost every modern web application interacts with a database. Laravel makes int
 
 </div>
 
-Additionally, MongoDB is supported via the `mongodb/laravel-mongodb` package, which is officially maintained by MongoDB. Check out the [Laravel MongoDB](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/) documentation for more information.
+Ngoài ra, MongoDB được hỗ trợ thông qua package `mongodb/laravel-mongodb`, do chính MongoDB duy trì chính thức. Xem tài liệu [Laravel MongoDB](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/) để biết thêm thông tin.
 
 <a name="configuration"></a>
-### Configuration
+### Cấu hình
 
-The configuration for Laravel's database services is located in your application's `config/database.php` configuration file. In this file, you may define all of your database connections, as well as specify which connection should be used by default. Most of the configuration options within this file are driven by the values of your application's environment variables. Examples for most of Laravel's supported database systems are provided in this file.
+Cấu hình cho các dịch vụ cơ sở dữ liệu của Laravel nằm trong file `config/database.php` của ứng dụng. Tại đây, bạn có thể định nghĩa toàn bộ kết nối cơ sở dữ liệu và chỉ định kết nối nào được sử dụng mặc định. Phần lớn tùy chọn trong file này lấy giá trị từ các biến môi trường của ứng dụng. Laravel cũng cung cấp sẵn cấu hình mẫu cho hầu hết các hệ cơ sở dữ liệu được hỗ trợ.
 
-By default, Laravel's sample [environment configuration](/docs/{{version}}/configuration#environment-configuration) is ready to use with [Laravel Sail](/docs/{{version}}/sail), which is a Docker configuration for developing Laravel applications on your local machine. However, you are free to modify your database configuration as needed for your local database.
+Mặc định, [cấu hình môi trường](/docs/{{version}}/configuration#environment-configuration) mẫu của Laravel đã sẵn sàng để sử dụng với [Laravel Sail](/docs/{{version}}/sail), môi trường Docker dành cho việc phát triển ứng dụng Laravel trên máy local. Tuy nhiên, bạn hoàn toàn có thể điều chỉnh cấu hình cơ sở dữ liệu để phù hợp với cơ sở dữ liệu đang chạy trên môi trường phát triển của mình.
 
 <a name="sqlite-configuration"></a>
-#### SQLite Configuration
+#### Cấu hình SQLite
 
-SQLite databases are contained within a single file on your filesystem. You can create a new SQLite database using the `touch` command in your terminal: `touch database/database.sqlite`. After the database has been created, you may easily configure your environment variables to point to this database by placing the absolute path to the database in the `DB_DATABASE` environment variable:
+Cơ sở dữ liệu SQLite được lưu trong một file duy nhất trên filesystem. Bạn có thể tạo cơ sở dữ liệu SQLite mới bằng lệnh `touch` trong terminal: `touch database/database.sqlite`. Sau khi tạo database, hãy cấu hình biến môi trường trỏ đến database này bằng cách đặt đường dẫn tuyệt đối của file vào biến `DB_DATABASE`:
 
 ```ini
 DB_CONNECTION=sqlite
 DB_DATABASE=/absolute/path/to/database.sqlite
 ```
 
-By default, foreign key constraints are enabled for SQLite connections. If you would like to disable them, you should set the `DB_FOREIGN_KEYS` environment variable to `false`:
+Mặc định, ràng buộc khóa ngoại được bật đối với các kết nối SQLite. Nếu muốn tắt chúng, hãy đặt biến môi trường `DB_FOREIGN_KEYS` thành `false`:
 
 ```ini
 DB_FOREIGN_KEYS=false
 ```
 
 > [!NOTE]
-> If you use the [Laravel installer](/docs/{{version}}/installation#creating-a-laravel-project) to create your Laravel application and select SQLite as your database, Laravel will automatically create a `database/database.sqlite` file and run the default [database migrations](/docs/{{version}}/migrations) for you.
+> Nếu sử dụng [Laravel installer](/docs/{{version}}/installation#creating-a-laravel-project) để tạo ứng dụng và chọn SQLite làm cơ sở dữ liệu, Laravel sẽ tự động tạo file `database/database.sqlite` và chạy các [database migration](/docs/{{version}}/migrations) mặc định cho bạn.
 
 <a name="mssql-configuration"></a>
-#### Microsoft SQL Server Configuration
+#### Cấu hình Microsoft SQL Server
 
-To use a Microsoft SQL Server database, you should ensure that you have the `sqlsrv` and `pdo_sqlsrv` PHP extensions installed as well as any dependencies they may require such as the Microsoft SQL ODBC driver.
+Để sử dụng Microsoft SQL Server, hãy bảo đảm các PHP extension `sqlsrv` và `pdo_sqlsrv` đã được cài đặt cùng những dependency cần thiết, chẳng hạn Microsoft SQL ODBC driver.
 
 <a name="configuration-using-urls"></a>
-#### Configuration Using URLs
+#### Cấu hình bằng URL
 
-Typically, database connections are configured using multiple configuration values such as `host`, `database`, `username`, `password`, etc. Each of these configuration values has its own corresponding environment variable. This means that when configuring your database connection information on a production server, you need to manage several environment variables.
+Thông thường, một kết nối cơ sở dữ liệu được cấu hình bằng nhiều giá trị như `host`, `database`, `username`, `password`, v.v. Mỗi giá trị cấu hình có một biến môi trường tương ứng. Vì vậy, khi cấu hình thông tin kết nối cơ sở dữ liệu trên server production, bạn thường phải quản lý nhiều biến môi trường.
 
-Some managed database providers such as AWS and Heroku provide a single database "URL" that contains all of the connection information for the database in a single string. An example database URL may look something like the following:
+Một số nhà cung cấp cơ sở dữ liệu managed như AWS và Heroku cung cấp một "URL" duy nhất chứa toàn bộ thông tin kết nối trong một chuỗi. Ví dụ, database URL có thể có dạng như sau:
 
 ```html
 mysql://root:password@127.0.0.1/forge?charset=UTF-8
 ```
 
-These URLs typically follow a standard schema convention:
+Các URL này thường tuân theo một schema chuẩn như sau:
 
 ```html
 driver://username:password@host:port/database?options
 ```
 
-For convenience, Laravel supports these URLs as an alternative to configuring your database with multiple configuration options. If the `url` (or corresponding `DB_URL` environment variable) configuration option is present, it will be used to extract the database connection and credential information.
+Để thuận tiện, Laravel hỗ trợ URL này như một lựa chọn thay thế cho việc cấu hình kết nối bằng nhiều tùy chọn riêng lẻ. Nếu tùy chọn `url` (hoặc biến môi trường tương ứng `DB_URL`) tồn tại, Laravel sẽ dùng nó để trích xuất thông tin kết nối và thông tin xác thực của cơ sở dữ liệu.
 
 <a name="read-and-write-connections"></a>
-### Read and Write Connections
+### Kết nối đọc và ghi
 
-Sometimes you may wish to use one database connection for SELECT statements, and another for INSERT, UPDATE, and DELETE statements. Laravel makes this a breeze, and the proper connections will always be used whether you are using raw queries, the query builder, or the Eloquent ORM.
+Trong một số trường hợp, bạn có thể muốn dùng một kết nối cơ sở dữ liệu cho các câu lệnh SELECT và một kết nối khác cho INSERT, UPDATE và DELETE. Laravel hỗ trợ mô hình này trực tiếp và luôn chọn đúng kết nối, bất kể bạn đang sử dụng truy vấn SQL thuần, Query Builder hay Eloquent ORM.
 
-To see how read / write connections should be configured, let's look at this example:
+Hãy xem ví dụ sau để hiểu cách cấu hình các kết nối đọc / ghi:
 
 ```php
 'mysql' => [
@@ -121,21 +121,21 @@ To see how read / write connections should be configured, let's look at this exa
 ],
 ```
 
-Note that three keys have been added to the configuration array: `read`, `write` and `sticky`. The `read` and `write` keys have array values containing a single key: `host`. The rest of the database options for the `read` and `write` connections will be merged from the main `mysql` configuration array.
+Lưu ý rằng ba key đã được thêm vào mảng cấu hình: `read`, `write` và `sticky`. Hai key `read` và `write` chứa các mảng có một key là `host`. Những tùy chọn cơ sở dữ liệu còn lại của kết nối `read` và `write` sẽ được hợp nhất từ mảng cấu hình `mysql` chính.
 
-You only need to place items in the `read` and `write` arrays if you wish to override the values from the main `mysql` array. So, in this case, `192.168.1.1` will be used as the host for the "read" connection, while `192.168.1.3` will be used for the "write" connection. The database credentials, prefix, character set, and all other options in the main `mysql` array will be shared across both connections. When multiple values exist in the `host` configuration array, a database host will be randomly chosen for each request.
+Bạn chỉ cần khai báo giá trị trong các mảng `read` và `write` khi muốn ghi đè giá trị từ mảng `mysql` chính. Trong ví dụ này, `192.168.1.1` được dùng làm host cho kết nối "read", còn `192.168.1.3` được dùng cho kết nối "write". Thông tin xác thực cơ sở dữ liệu, prefix, character set và các tùy chọn khác trong mảng `mysql` chính được dùng chung cho cả hai kết nối. Khi mảng cấu hình `host` chứa nhiều giá trị, Laravel sẽ chọn ngẫu nhiên một database host cho mỗi request.
 
 <a name="the-sticky-option"></a>
-#### The `sticky` Option
+#### Tùy chọn `sticky`
 
-The `sticky` option is an *optional* value that can be used to allow the immediate reading of records that have been written to the database during the current request cycle. If the `sticky` option is enabled and a "write" operation has been performed against the database during the current request cycle, any further "read" operations will use the "write" connection. This ensures that any data written during the request cycle can be immediately read back from the database during that same request. It is up to you to decide if this is the desired behavior for your application.
+Tùy chọn `sticky` là một giá trị *không bắt buộc*, cho phép đọc ngay các bản ghi vừa được ghi vào cơ sở dữ liệu trong cùng request hiện tại. Nếu `sticky` được bật và một thao tác "write" đã xảy ra trong request đó, mọi thao tác "read" tiếp theo sẽ sử dụng chính kết nối "write". Cơ chế này bảo đảm dữ liệu vừa ghi trong request có thể được đọc lại ngay trong cùng request, tránh độ trễ đồng bộ thường gặp khi đọc từ replica. Bạn cần tự quyết định liệu hành vi này có phù hợp với ứng dụng của mình hay không.
 
 <a name="pooled-postgresql-connections"></a>
-### Pooled PostgreSQL Connections
+### Kết nối PostgreSQL qua connection pool
 
-Many managed PostgreSQL providers offer transaction-mode connection pooling through services such as PgBouncer or connection proxying. These poolers are ideal for application queries, but some schema operations, migrations, and maintenance commands require a direct database connection.
+Nhiều nhà cung cấp PostgreSQL managed hỗ trợ connection pooling ở chế độ transaction thông qua các dịch vụ như PgBouncer hoặc connection proxy. Các pooler này rất phù hợp cho truy vấn của ứng dụng, nhưng một số thao tác schema, migration và lệnh bảo trì cần kết nối trực tiếp đến cơ sở dữ liệu.
 
-To use a transaction pooler with PostgreSQL, configure the pooled connection as usual and provide direct connection details via the `direct` configuration option:
+Để sử dụng transaction pooler với PostgreSQL, hãy cấu hình pooled connection như bình thường và cung cấp thông tin kết nối trực tiếp thông qua tùy chọn `direct`:
 
 ```php
 'pgsql' => [
@@ -152,29 +152,29 @@ To use a transaction pooler with PostgreSQL, configure the pooled connection as 
 ],
 ```
 
-When a PostgreSQL connection is configured as pooled, Laravel automatically enables emulated prepares for the pooled connection. The direct connection inherits any options not explicitly defined in the `direct` configuration and uses native prepares by default.
+Khi một kết nối PostgreSQL được cấu hình ở chế độ pooled, Laravel tự động bật emulated prepares cho pooled connection. Direct connection sẽ kế thừa những tùy chọn không được khai báo rõ trong cấu hình `direct` và mặc định sử dụng native prepares.
 
-Laravel automatically uses the direct connection for migrations, schema dumps and restores, `db:wipe`, `db:show`, and `db:table`. The `db` command also uses the direct connection by default when pooled mode is enabled and a direct connection is configured; you may pass the `--pooled` option to connect to the pooled connection instead:
+Laravel tự động sử dụng direct connection cho migration, dump và restore schema, cũng như các lệnh `db:wipe`, `db:show` và `db:table`. Lệnh `db` cũng mặc định dùng direct connection khi pooled mode được bật và direct connection đã được cấu hình; bạn có thể truyền tùy chọn `--pooled` để kết nối đến pooled connection thay thế:
 
 ```shell
 php artisan db --pooled
 ```
 
-If you need to explicitly use the direct connection in your application, append the `::direct` suffix to the connection name:
+Nếu cần chủ động sử dụng direct connection trong code ứng dụng, hãy thêm hậu tố `::direct` vào tên connection:
 
 ```php
 DB::connection('pgsql::direct')->statement('create extension if not exists "uuid-ossp"');
 ```
 
 <a name="running-queries"></a>
-## Running SQL Queries
+## Thực thi truy vấn SQL
 
-Once you have configured your database connection, you may run queries using the `DB` facade. The `DB` facade provides methods for each type of query: `select`, `update`, `insert`, `delete`, and `statement`.
+Sau khi cấu hình kết nối cơ sở dữ liệu, bạn có thể thực thi truy vấn thông qua facade `DB`. Facade `DB` cung cấp các method tương ứng với từng loại truy vấn: `select`, `update`, `insert`, `delete` và `statement`.
 
 <a name="running-a-select-query"></a>
-#### Running a Select Query
+#### Thực thi truy vấn SELECT
 
-To run a basic SELECT query, you may use the `select` method on the `DB` facade:
+Để thực thi một truy vấn SELECT cơ bản, hãy sử dụng method `select` trên facade `DB`:
 
 ```php
 <?php
@@ -198,9 +198,9 @@ class UserController extends Controller
 }
 ```
 
-The first argument passed to the `select` method is the SQL query, while the second argument is any parameter bindings that need to be bound to the query. Typically, these are the values of the `where` clause constraints. Parameter binding provides protection against SQL injection.
+Đối số đầu tiên truyền vào method `select` là câu SQL, còn đối số thứ hai chứa các parameter binding cần bind vào truy vấn. Thông thường đây là các giá trị dùng trong điều kiện của mệnh đề `where`. Parameter binding giúp bảo vệ truy vấn trước SQL injection.
 
-The `select` method will always return an `array` of results. Each result within the array will be a PHP `stdClass` object representing a record from the database:
+Method `select` luôn trả về một `array` kết quả. Mỗi phần tử trong mảng là một object PHP `stdClass` đại diện cho một bản ghi trong cơ sở dữ liệu:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -213,9 +213,9 @@ foreach ($users as $user) {
 ```
 
 <a name="selecting-scalar-values"></a>
-#### Selecting Scalar Values
+#### Lấy giá trị scalar
 
-Sometimes your database query may result in a single, scalar value. Instead of being required to retrieve the query's scalar result from a record object, Laravel allows you to retrieve this value directly using the `scalar` method:
+Đôi khi truy vấn cơ sở dữ liệu chỉ trả về một giá trị scalar duy nhất. Thay vì phải lấy giá trị này từ object đại diện cho bản ghi, Laravel cho phép bạn nhận trực tiếp giá trị đó bằng method `scalar`:
 
 ```php
 $burgers = DB::scalar(
@@ -224,9 +224,9 @@ $burgers = DB::scalar(
 ```
 
 <a name="selecting-multiple-result-sets"></a>
-#### Selecting Multiple Result Sets
+#### Lấy nhiều result set
 
-If your application calls stored procedures that return multiple result sets, you may use the `selectResultSets` method to retrieve all of the result sets returned by the stored procedure:
+Nếu ứng dụng gọi stored procedure trả về nhiều result set, bạn có thể sử dụng method `selectResultSets` để lấy toàn bộ các result set mà stored procedure trả về:
 
 ```php
 [$options, $notifications] = DB::selectResultSets(
@@ -235,18 +235,18 @@ If your application calls stored procedures that return multiple result sets, yo
 ```
 
 <a name="using-named-bindings"></a>
-#### Using Named Bindings
+#### Sử dụng named binding
 
-Instead of using `?` to represent your parameter bindings, you may execute a query using named bindings:
+Thay vì dùng `?` để biểu diễn parameter binding, bạn có thể thực thi truy vấn bằng named binding:
 
 ```php
 $results = DB::select('select * from users where id = :id', ['id' => 1]);
 ```
 
 <a name="running-an-insert-statement"></a>
-#### Running an Insert Statement
+#### Thực thi câu lệnh INSERT
 
-To execute an `insert` statement, you may use the `insert` method on the `DB` facade. Like `select`, this method accepts the SQL query as its first argument and bindings as its second argument:
+Để thực thi câu lệnh `insert`, hãy sử dụng method `insert` trên facade `DB`. Tương tự `select`, method này nhận câu SQL làm đối số đầu tiên và các binding làm đối số thứ hai:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -255,9 +255,9 @@ DB::insert('insert into users (id, name) values (?, ?)', [1, 'Marc']);
 ```
 
 <a name="running-an-update-statement"></a>
-#### Running an Update Statement
+#### Thực thi câu lệnh UPDATE
 
-The `update` method should be used to update existing records in the database. The number of rows affected by the statement is returned by the method:
+Method `update` được dùng để cập nhật các bản ghi hiện có trong cơ sở dữ liệu. Method sẽ trả về số lượng dòng bị tác động bởi câu lệnh:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -269,9 +269,9 @@ $affected = DB::update(
 ```
 
 <a name="running-a-delete-statement"></a>
-#### Running a Delete Statement
+#### Thực thi câu lệnh DELETE
 
-The `delete` method should be used to delete records from the database. Like `update`, the number of rows affected will be returned by the method:
+Method `delete` được dùng để xóa các bản ghi khỏi cơ sở dữ liệu. Tương tự `update`, method này trả về số lượng dòng bị tác động:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -280,41 +280,41 @@ $deleted = DB::delete('delete from users');
 ```
 
 <a name="running-a-general-statement"></a>
-#### Running a General Statement
+#### Thực thi câu lệnh SQL thông thường
 
-Some database statements do not return any value. For these types of operations, you may use the `statement` method on the `DB` facade:
+Một số câu lệnh cơ sở dữ liệu không trả về giá trị. Với những thao tác dạng này, bạn có thể sử dụng method `statement` của facade `DB`:
 
 ```php
 DB::statement('drop table users');
 ```
 
 <a name="running-an-unprepared-statement"></a>
-#### Running an Unprepared Statement
+#### Thực thi câu lệnh không qua prepared statement
 
-Sometimes you may want to execute an SQL statement without binding any values. You may use the `DB` facade's `unprepared` method to accomplish this:
+Đôi khi bạn cần thực thi một câu lệnh SQL mà không binding bất kỳ giá trị nào. Bạn có thể sử dụng method `unprepared` của facade `DB` cho trường hợp này:
 
 ```php
 DB::unprepared('update users set votes = 100 where name = "Dries"');
 ```
 
 > [!WARNING]
-> Since unprepared statements do not bind parameters, they may be vulnerable to SQL injection. You should never allow user controlled values within an unprepared statement.
+> Vì các câu lệnh `unprepared` không binding tham số, chúng có thể tạo ra lỗ hổng SQL injection. Tuyệt đối không đưa giá trị do người dùng kiểm soát trực tiếp vào một câu lệnh `unprepared`.
 
 <a name="implicit-commits-in-transactions"></a>
-#### Implicit Commits
+#### Commit ngầm định
 
-When using the `DB` facade's `statement` and `unprepared` methods within transactions you must be careful to avoid statements that cause [implicit commits](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html). These statements will cause the database engine to indirectly commit the entire transaction, leaving Laravel unaware of the database's transaction level. An example of such a statement is creating a database table:
+Khi sử dụng các method `statement` và `unprepared` của facade `DB` bên trong transaction, bạn phải tránh những câu lệnh gây ra [implicit commit](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html). Các câu lệnh này khiến database engine tự commit toàn bộ transaction mà Laravel không nhận biết được trạng thái transaction thực tế của database. Ví dụ, việc tạo một bảng cơ sở dữ liệu có thể gây ra hành vi này:
 
 ```php
 DB::unprepared('create table a (col varchar(1) null)');
 ```
 
-Please refer to the MySQL manual for [a list of all statements](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html) that trigger implicit commits.
+Hãy tham khảo tài liệu MySQL để xem [danh sách đầy đủ các câu lệnh](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html) có thể kích hoạt implicit commit.
 
 <a name="using-multiple-database-connections"></a>
-### Using Multiple Database Connections
+### Sử dụng nhiều kết nối cơ sở dữ liệu
 
-If your application defines multiple connections in your `config/database.php` configuration file, you may access each connection via the `connection` method provided by the `DB` facade. The connection name passed to the `connection` method should correspond to one of the connections listed in your `config/database.php` configuration file or configured at runtime using the `config` helper:
+Nếu ứng dụng định nghĩa nhiều connection trong file cấu hình `config/database.php`, bạn có thể truy cập từng connection thông qua method `connection` của facade `DB`. Tên connection truyền vào method `connection` phải tương ứng với một connection được khai báo trong `config/database.php`, hoặc một connection được cấu hình tại runtime bằng helper `config`:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -322,16 +322,16 @@ use Illuminate\Support\Facades\DB;
 $users = DB::connection('sqlite')->select(/* ... */);
 ```
 
-You may access the raw, underlying PDO instance of a connection using the `getPdo` method on a connection instance:
+Bạn có thể truy cập trực tiếp PDO instance nằm bên dưới một connection bằng method `getPdo` trên connection instance đó:
 
 ```php
 $pdo = DB::connection()->getPdo();
 ```
 
 <a name="listening-for-query-events"></a>
-### Listening for Query Events
+### Lắng nghe sự kiện truy vấn
 
-If you would like to specify a closure that is invoked for each SQL query executed by your application, you may use the `DB` facade's `listen` method. This method can be useful for logging queries or debugging. You may register your query listener closure in the `boot` method of a [service provider](/docs/{{version}}/providers):
+Nếu muốn một closure được gọi mỗi khi ứng dụng thực thi một truy vấn SQL, bạn có thể sử dụng method `listen` của facade `DB`. Cơ chế này hữu ích khi ghi log truy vấn hoặc debug. Bạn có thể đăng ký closure lắng nghe truy vấn trong method `boot` của một [service provider](/docs/{{version}}/providers):
 
 ```php
 <?php
@@ -368,9 +368,9 @@ class AppServiceProvider extends ServiceProvider
 ```
 
 <a name="monitoring-cumulative-query-time"></a>
-### Monitoring Cumulative Query Time
+### Theo dõi tổng thời gian truy vấn
 
-A common performance bottleneck of modern web applications is the amount of time they spend querying databases. Thankfully, Laravel can invoke a closure or callback of your choice when it spends too much time querying the database during a single request. To get started, provide a query time threshold (in milliseconds) and closure to the `whenQueryingForLongerThan` method. You may invoke this method in the `boot` method of a [service provider](/docs/{{version}}/providers):
+Một nút thắt hiệu năng phổ biến của các ứng dụng web hiện đại là tổng thời gian dành cho việc truy vấn cơ sở dữ liệu. Laravel có thể gọi closure hoặc callback do bạn chỉ định khi tổng thời gian truy vấn database trong một request vượt quá ngưỡng cho phép. Để sử dụng, hãy truyền ngưỡng thời gian truy vấn (tính bằng mili giây) cùng closure vào method `whenQueryingForLongerThan`. Bạn có thể gọi method này trong `boot` của một [service provider](/docs/{{version}}/providers):
 
 ```php
 <?php
@@ -405,9 +405,9 @@ class AppServiceProvider extends ServiceProvider
 ```
 
 <a name="database-transactions"></a>
-## Database Transactions
+## Transaction cơ sở dữ liệu
 
-You may use the `transaction` method provided by the `DB` facade to run a set of operations within a database transaction. If an exception is thrown within the transaction closure, the transaction will automatically be rolled back and the exception is re-thrown. If the closure executes successfully, the transaction will automatically be committed. You don't need to worry about manually rolling back or committing while using the `transaction` method:
+Bạn có thể sử dụng method `transaction` của facade `DB` để thực thi một nhóm thao tác bên trong database transaction. Nếu closure của transaction phát sinh exception, transaction sẽ tự động rollback và exception được ném lại. Nếu closure thực thi thành công, transaction sẽ tự động commit. Vì vậy, khi sử dụng `transaction`, bạn không cần tự xử lý `rollback` hoặc `commit` thủ công:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -420,9 +420,9 @@ DB::transaction(function () {
 ```
 
 <a name="handling-deadlocks"></a>
-#### Handling Deadlocks
+#### Xử lý deadlock
 
-The `transaction` method accepts an optional second argument which defines the number of times a transaction should be retried when a deadlock occurs. Once these attempts have been exhausted, an exception will be thrown:
+Method `transaction` nhận đối số thứ hai tùy chọn để xác định số lần Laravel sẽ thử lại transaction khi xảy ra deadlock. Khi đã sử dụng hết số lần thử, một exception sẽ được ném ra:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -435,9 +435,9 @@ DB::transaction(function () {
 ```
 
 <a name="manually-using-transactions"></a>
-#### Manually Using Transactions
+#### Điều khiển transaction thủ công
 
-If you would like to begin a transaction manually and have complete control over rollbacks and commits, you may use the `beginTransaction` method provided by the `DB` facade:
+Nếu muốn tự bắt đầu transaction và kiểm soát hoàn toàn việc rollback cũng như commit, bạn có thể sử dụng method `beginTransaction` của facade `DB`:
 
 ```php
 use Illuminate\Support\Facades\DB;
@@ -445,58 +445,58 @@ use Illuminate\Support\Facades\DB;
 DB::beginTransaction();
 ```
 
-You can rollback the transaction via the `rollBack` method:
+Bạn có thể rollback transaction bằng method `rollBack`:
 
 ```php
 DB::rollBack();
 ```
 
-Lastly, you can commit a transaction via the `commit` method:
+Cuối cùng, bạn có thể commit transaction bằng method `commit`:
 
 ```php
 DB::commit();
 ```
 
 > [!NOTE]
-> The `DB` facade's transaction methods control the transactions for both the [query builder](/docs/{{version}}/queries) and [Eloquent ORM](/docs/{{version}}/eloquent).
+> Các method transaction của facade `DB` kiểm soát transaction cho cả [Query Builder](/docs/{{version}}/queries) và [Eloquent ORM](/docs/{{version}}/eloquent).
 
 <a name="connecting-to-the-database-cli"></a>
-## Connecting to the Database CLI
+## Kết nối tới CLI của cơ sở dữ liệu
 
-If you would like to connect to your database's CLI, you may use the `db` Artisan command:
+Nếu muốn kết nối tới CLI của cơ sở dữ liệu, bạn có thể sử dụng Artisan command `db`:
 
 ```shell
 php artisan db
 ```
 
-If needed, you may specify a database connection name to connect to a database connection that is not the default connection:
+Khi cần, bạn có thể chỉ định tên database connection để kết nối tới một connection khác với connection mặc định:
 
 ```shell
 php artisan db mysql
 ```
 
 <a name="inspecting-your-databases"></a>
-## Inspecting Your Databases
+## Kiểm tra cơ sở dữ liệu
 
-Using the `db:show` and `db:table` Artisan commands, you can get valuable insight into your database and its associated tables. To see an overview of your database, including its size, type, number of open connections, and a summary of its tables, you may use the `db:show` command:
+Các Artisan command `db:show` và `db:table` cung cấp thông tin hữu ích về cơ sở dữ liệu và các bảng liên quan. Để xem tổng quan database, bao gồm dung lượng, loại database, số connection đang mở và thông tin tóm tắt về các bảng, bạn có thể sử dụng command `db:show`:
 
 ```shell
 php artisan db:show
 ```
 
-You may specify which database connection should be inspected by providing the database connection name to the command via the `--database` option:
+Bạn có thể chỉ định database connection cần kiểm tra bằng cách truyền tên connection qua option `--database`:
 
 ```shell
 php artisan db:show --database=pgsql
 ```
 
-If you would like to include table row counts and database view details within the output of the command, you may provide the `--counts` and `--views` options, respectively. On large databases, retrieving row counts and view details can be slow:
+Nếu muốn output bao gồm số lượng dòng của các bảng và thông tin chi tiết về database view, hãy lần lượt sử dụng các option `--counts` và `--views`. Với database lớn, việc lấy row count và thông tin view có thể mất nhiều thời gian:
 
 ```shell
 php artisan db:show --counts --views
 ```
 
-In addition, you may use the following `Schema` methods to inspect your database:
+Ngoài ra, bạn có thể sử dụng các method sau của `Schema` để kiểm tra database:
 
 ```php
 use Illuminate\Support\Facades\Schema;
@@ -508,33 +508,33 @@ $indexes = Schema::getIndexes('users');
 $foreignKeys = Schema::getForeignKeys('users');
 ```
 
-If you would like to inspect a database connection that is not your application's default connection, you may use the `connection` method:
+Nếu muốn kiểm tra một database connection không phải connection mặc định của ứng dụng, bạn có thể sử dụng method `connection`:
 
 ```php
 $columns = Schema::connection('sqlite')->getColumns('users');
 ```
 
 <a name="table-overview"></a>
-#### Table Overview
+#### Tổng quan bảng
 
-If you would like to get an overview of an individual table within your database, you may execute the `db:table` Artisan command. This command provides a general overview of a database table, including its columns, types, attributes, keys, and indexes:
+Nếu muốn xem tổng quan một bảng cụ thể trong database, bạn có thể chạy Artisan command `db:table`. Command này cung cấp thông tin tổng quan về bảng, bao gồm các column, type, attribute, key và index:
 
 ```shell
 php artisan db:table users
 ```
 
 <a name="monitoring-your-databases"></a>
-## Monitoring Your Databases
+## Theo dõi cơ sở dữ liệu
 
-Using the `db:monitor` Artisan command, you can instruct Laravel to dispatch an `Illuminate\Database\Events\DatabaseBusy` event if your database is managing more than a specified number of open connections.
+Với Artisan command `db:monitor`, bạn có thể yêu cầu Laravel dispatch event `Illuminate\Database\Events\DatabaseBusy` khi database đang quản lý số lượng connection mở vượt quá ngưỡng được chỉ định.
 
-To get started, you should schedule the `db:monitor` command to [run every minute](/docs/{{version}}/scheduling). The command accepts the names of the database connection configurations that you wish to monitor as well as the maximum number of open connections that should be tolerated before dispatching an event:
+Để bắt đầu, bạn nên lên lịch cho command `db:monitor` [chạy mỗi phút](/docs/{{version}}/scheduling). Command nhận danh sách tên các database connection cần theo dõi cùng số connection mở tối đa được chấp nhận trước khi dispatch event:
 
 ```shell
 php artisan db:monitor --databases=mysql,pgsql --max=100
 ```
 
-Scheduling this command alone is not enough to trigger a notification alerting you of the number of open connections. When the command encounters a database that has an open connection count that exceeds your threshold, a `DatabaseBusy` event will be dispatched. You should listen for this event within your application's `AppServiceProvider` in order to send a notification to you or your development team:
+Chỉ lên lịch command này chưa đủ để gửi notification cảnh báo về số lượng connection đang mở. Khi command phát hiện một database có số connection mở vượt quá ngưỡng, event `DatabaseBusy` sẽ được dispatch. Bạn nên lắng nghe event này trong `AppServiceProvider` của ứng dụng để gửi notification cho bạn hoặc đội ngũ phát triển:
 
 ```php
 use App\Notifications\DatabaseApproachingMaxConnections;
@@ -556,6 +556,8 @@ public function boot(): void
     });
 }
 ```
+
+---
 
 ## Tài liệu chính thức
 

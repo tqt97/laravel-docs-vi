@@ -1,13 +1,13 @@
-# Controllers
+# Controller
 
-- [Introduction](#introduction)
-- [Writing Controllers](#writing-controllers)
-    - [Basic Controllers](#basic-controllers)
-    - [Single Action Controllers](#single-action-controllers)
-- [Controller Middleware](#controller-middleware)
-    - [Middleware Attributes](#middleware-attributes)
-    - [Authorization Attributes](#authorization-attributes)
-- [Resource Controllers](#resource-controllers)
+- [Giới thiệu](#introduction)
+- [Viết Controller](#writing-controllers)
+    - [Controller cơ bản](#basic-controllers)
+    - [Controller một hành động](#single-action-controllers)
+- [Middleware của Controller](#controller-middleware)
+    - [Attribute Middleware](#middleware-attributes)
+    - [Attribute phân quyền](#authorization-attributes)
+- [Resource Controller](#resource-controllers)
     - [Partial Resource Routes](#restful-partial-resource-routes)
     - [Nested Resources](#restful-nested-resources)
     - [Naming Resource Routes](#restful-naming-resource-routes)
@@ -17,26 +17,26 @@
     - [Supplementing Resource Controllers](#restful-supplementing-resource-controllers)
     - [Singleton Resource Controllers](#singleton-resource-controllers)
     - [Middleware and Resource Controllers](#middleware-and-resource-controllers)
-- [Dependency Injection and Controllers](#dependency-injection-and-controllers)
+- [Dependency Injection và Controller](#dependency-injection-and-controllers)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Instead of defining all of your request handling logic as closures in your route files, you may wish to organize this behavior using "controller" classes. Controllers can group related request handling logic into a single class. For example, a `UserController` class might handle all incoming requests related to users, including showing, creating, updating, and deleting users. By default, controllers are stored in the `app/Http/Controllers` directory.
+Thay vì định nghĩa toàn bộ logic xử lý request dưới dạng closure trong các file route, bạn có thể tổ chức logic này bằng các lớp "controller". Controller cho phép gom những logic xử lý request có liên quan vào cùng một lớp. Ví dụ, lớp `UserController` có thể xử lý toàn bộ request liên quan đến người dùng, bao gồm hiển thị, tạo mới, cập nhật và xóa người dùng. Theo mặc định, các controller được lưu trong thư mục `app/Http/Controllers`.
 
 <a name="writing-controllers"></a>
-## Writing Controllers
+## Viết Controller
 
 <a name="basic-controllers"></a>
-### Basic Controllers
+### Controller cơ bản
 
-To quickly generate a new controller, you may run the `make:controller` Artisan command. By default, all of the controllers for your application are stored in the `app/Http/Controllers` directory:
+Để tạo nhanh một controller mới, bạn có thể chạy lệnh Artisan `make:controller`. Theo mặc định, toàn bộ controller của ứng dụng được lưu trong thư mục `app/Http/Controllers`:
 
 ```shell
 php artisan make:controller UserController
 ```
 
-Let's take a look at an example of a basic controller. A controller may have any number of public methods which will respond to incoming HTTP requests:
+Hãy xem một ví dụ về controller cơ bản. Một controller có thể chứa nhiều phương thức `public`; mỗi phương thức có thể phản hồi các HTTP request gửi đến ứng dụng:
 
 ```php
 <?php
@@ -60,7 +60,7 @@ class UserController extends Controller
 }
 ```
 
-Once you have written a controller class and method, you may define a route to the controller method like so:
+Sau khi đã viết lớp controller và phương thức tương ứng, bạn có thể định nghĩa route trỏ đến phương thức controller như sau:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -68,15 +68,15 @@ use App\Http\Controllers\UserController;
 Route::get('/user/{id}', [UserController::class, 'show']);
 ```
 
-When an incoming request matches the specified route URI, the `show` method on the `App\Http\Controllers\UserController` class will be invoked and the route parameters will be passed to the method.
+Khi một request gửi đến khớp với URI của route đã định nghĩa, phương thức `show` trên lớp `App\Http\Controllers\UserController` sẽ được gọi và các tham số của route sẽ được truyền vào phương thức này.
 
 > [!NOTE]
-> Controllers are not **required** to extend a base class. However, it is sometimes convenient to extend a base controller class that contains methods that should be shared across all of your controllers.
+> Controller **không bắt buộc** phải kế thừa một lớp cơ sở. Tuy nhiên, trong một số trường hợp, việc kế thừa một lớp controller cơ sở chứa các phương thức dùng chung cho tất cả controller sẽ thuận tiện hơn.
 
 <a name="single-action-controllers"></a>
-### Single Action Controllers
+### Controller một hành động
 
-If a controller action is particularly complex, you might find it convenient to dedicate an entire controller class to that single action. To accomplish this, you may define a single `__invoke` method within the controller:
+Nếu một action của controller đặc biệt phức tạp, bạn có thể dành riêng toàn bộ một lớp controller cho action đó. Để thực hiện, hãy định nghĩa duy nhất phương thức `__invoke` trong controller:
 
 ```php
 <?php
@@ -95,7 +95,7 @@ class ProvisionServer extends Controller
 }
 ```
 
-When registering routes for single action controllers, you do not need to specify a controller method. Instead, you may simply pass the name of the controller to the router:
+Khi đăng ký route cho controller một hành động, bạn không cần chỉ định phương thức controller. Thay vào đó, chỉ cần truyền tên lớp controller cho router:
 
 ```php
 use App\Http\Controllers\ProvisionServer;
@@ -103,25 +103,25 @@ use App\Http\Controllers\ProvisionServer;
 Route::post('/server', ProvisionServer::class);
 ```
 
-You may generate an invokable controller by using the `--invokable` option of the `make:controller` Artisan command:
+Bạn có thể tạo một invokable controller bằng option `--invokable` của lệnh Artisan `make:controller`:
 
 ```shell
 php artisan make:controller ProvisionServer --invokable
 ```
 
 > [!NOTE]
-> Controller stubs may be customized using [stub publishing](/docs/{{version}}/artisan#stub-customization).
+> Bạn có thể tùy biến stub của controller thông qua [cơ chế publish stub](/docs/{{version}}/artisan#stub-customization).
 
 <a name="controller-middleware"></a>
-## Controller Middleware
+## Middleware của Controller
 
-[Middleware](/docs/{{version}}/middleware) may be assigned to the controller's routes in your route files:
+[Middleware](/docs/{{version}}/middleware) có thể được gán cho các route của controller ngay trong file route:
 
 ```php
 Route::get('/profile', [UserController::class, 'show'])->middleware('auth');
 ```
 
-Or, you may find it convenient to specify middleware within your controller class. To do so, your controller should implement the `HasMiddleware` interface, which dictates that the controller should have a static `middleware` method. From this method, you may return an array of middleware that should be applied to the controller's actions:
+Hoặc, bạn có thể khai báo middleware ngay trong lớp controller. Để làm vậy, controller cần implement interface `HasMiddleware`; interface này yêu cầu controller cung cấp phương thức static `middleware`. Phương thức này trả về một mảng middleware sẽ được áp dụng cho các action của controller:
 
 ```php
 <?php
@@ -149,7 +149,7 @@ class UserController implements HasMiddleware
 }
 ```
 
-You may also define controller middleware as closures, which provides a convenient way to define an inline middleware without writing an entire middleware class:
+Bạn cũng có thể định nghĩa middleware của controller bằng closure. Cách này hữu ích khi cần một middleware inline mà không phải tạo riêng cả một lớp middleware:
 
 ```php
 use Closure;
@@ -169,9 +169,9 @@ public static function middleware(): array
 ```
 
 <a name="middleware-attributes"></a>
-### Middleware Attributes
+### Attribute Middleware
 
-You may also assign middleware to controllers using PHP attributes:
+Bạn cũng có thể gán middleware cho controller bằng PHP attribute:
 
 ```php
 <?php
@@ -189,7 +189,7 @@ class UserController
 }
 ```
 
-You may place middleware attributes on individual controller methods as well. Middleware assigned to methods will be merged with middleware assigned at the class level:
+Middleware attribute cũng có thể được đặt trên từng phương thức controller. Middleware được gán ở cấp phương thức sẽ được hợp nhất với middleware được gán ở cấp lớp:
 
 ```php
 <?php
@@ -222,7 +222,7 @@ class UserController
 }
 ```
 
-To exclude middleware from a controller or individual controller methods, use the `WithoutMiddleware` attribute. You may use the `only` and `except` arguments to limit a class-level attribute to particular controller methods:
+Để loại middleware khỏi một controller hoặc khỏi từng phương thức cụ thể, hãy dùng attribute `WithoutMiddleware`. Bạn có thể dùng các đối số `only` và `except` để giới hạn attribute ở cấp lớp cho những phương thức controller nhất định:
 
 ```php
 <?php
@@ -248,12 +248,12 @@ class UserController
 }
 ```
 
-Class-level `WithoutMiddleware` attributes are inherited by child controllers. The attribute can only remove route middleware and does not apply to [global middleware](/docs/{{version}}/middleware#global-middleware).
+Attribute `WithoutMiddleware` ở cấp lớp được các controller con kế thừa. Attribute này chỉ có thể loại bỏ route middleware và không áp dụng cho [global middleware](/docs/{{version}}/middleware#global-middleware).
 
 <a name="authorization-attributes"></a>
-### Authorization Attributes
+### Attribute phân quyền
 
-If you are authorizing controller actions via policies, you may use the `Authorize` attribute as a convenient shortcut for the `can` middleware:
+Nếu bạn phân quyền các action của controller thông qua policy, có thể dùng attribute `Authorize` như một cách viết gọn thuận tiện cho middleware `can`:
 
 ```php
 <?php
@@ -280,20 +280,20 @@ class CommentController
 }
 ```
 
-The first argument is the ability you wish to authorize. The second argument is the model class, route parameter, or parameters that should be passed to the policy.
+Đối số thứ nhất là ability cần kiểm tra quyền. Đối số thứ hai là lớp model, route parameter hoặc các tham số cần truyền vào policy.
 
 <a name="resource-controllers"></a>
-## Resource Controllers
+## Resource Controller
 
-If you think of each Eloquent model in your application as a "resource", it is typical to perform the same sets of actions against each resource in your application. For example, imagine your application contains a `Photo` model and a `Movie` model. It is likely that users can create, read, update, or delete these resources.
+Nếu xem mỗi Eloquent model trong ứng dụng là một "resource", thông thường bạn sẽ thực hiện cùng một nhóm thao tác trên từng resource. Ví dụ, giả sử ứng dụng có model `Photo` và `Movie`; người dùng nhiều khả năng sẽ cần tạo, đọc, cập nhật hoặc xóa các resource này.
 
-Because of this common use case, Laravel resource routing assigns the typical create, read, update, and delete ("CRUD") routes to a controller with a single line of code. To get started, we can use the `make:controller` Artisan command's `--resource` option to quickly create a controller to handle these actions:
+Vì đây là trường hợp sử dụng rất phổ biến, resource routing của Laravel cho phép ánh xạ các route tạo, đọc, cập nhật và xóa ("CRUD") điển hình vào một controller chỉ bằng một dòng code. Để bắt đầu, bạn có thể dùng option `--resource` của lệnh Artisan `make:controller` để nhanh chóng tạo controller xử lý các action này:
 
 ```shell
 php artisan make:controller PhotoController --resource
 ```
 
-This command will generate a controller at `app/Http/Controllers/PhotoController.php`. The controller will contain a method for each of the available resource operations. Next, you may register a resource route that points to the controller:
+Lệnh này sẽ tạo controller tại `app/Http/Controllers/PhotoController.php`. Controller sẽ chứa một phương thức tương ứng với từng thao tác resource có sẵn. Tiếp theo, bạn có thể đăng ký một resource route trỏ đến controller:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -301,9 +301,9 @@ use App\Http\Controllers\PhotoController;
 Route::resource('photos', PhotoController::class);
 ```
 
-This single route declaration creates multiple routes to handle a variety of actions on the resource. The generated controller will already have methods stubbed for each of these actions. Remember, you can always get a quick overview of your application's routes by running the `route:list` Artisan command.
+Chỉ với một khai báo route này, Laravel sẽ tạo nhiều route để xử lý các thao tác khác nhau trên resource. Controller được tạo sẵn cũng đã có các phương thức khung tương ứng với từng action. Bạn luôn có thể xem nhanh toàn bộ route của ứng dụng bằng lệnh Artisan `route:list`.
 
-You may even register many resource controllers at once by passing an array to the `resources` method:
+Bạn cũng có thể đăng ký nhiều resource controller cùng lúc bằng cách truyền một mảng vào phương thức `resources`:
 
 ```php
 Route::resources([
@@ -312,7 +312,7 @@ Route::resources([
 ]);
 ```
 
-The `softDeletableResources` method registers many resources controllers that all use the `withTrashed` method:
+Phương thức `softDeletableResources` đăng ký nhiều resource controller và áp dụng `withTrashed` cho tất cả các resource đó:
 
 ```php
 Route::softDeletableResources([
@@ -322,7 +322,7 @@ Route::softDeletableResources([
 ```
 
 <a name="actions-handled-by-resource-controllers"></a>
-#### Actions Handled by Resource Controllers
+#### Các action được Resource Controller xử lý
 
 <div class="overflow-auto">
 
@@ -339,9 +339,9 @@ Route::softDeletableResources([
 </div>
 
 <a name="customizing-missing-model-behavior"></a>
-#### Customizing Missing Model Behavior
+#### Tùy chỉnh hành vi khi không tìm thấy Model
 
-Typically, a 404 HTTP response will be generated if an implicitly bound resource model is not found. However, you may customize this behavior by calling the `missing` method when defining your resource route. The `missing` method accepts a closure that will be invoked if an implicitly bound model cannot be found for any of the resource's routes:
+Thông thường, Laravel sẽ trả về HTTP response 404 nếu không tìm thấy resource model được bind ngầm định. Tuy nhiên, bạn có thể tùy chỉnh hành vi này bằng cách gọi phương thức `missing` khi định nghĩa resource route. Phương thức `missing` nhận một closure; closure này sẽ được gọi nếu Laravel không thể tìm thấy model được bind ngầm định cho bất kỳ route nào của resource:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -355,9 +355,9 @@ Route::resource('photos', PhotoController::class)
 ```
 
 <a name="soft-deleted-models"></a>
-#### Soft Deleted Models
+#### Model đã Soft Delete
 
-Typically, implicit model binding will not retrieve models that have been [soft deleted](/docs/{{version}}/eloquent#soft-deleting), and will instead return a 404 HTTP response. However, you can instruct the framework to allow soft deleted models by invoking the `withTrashed` method when defining your resource route:
+Theo mặc định, implicit model binding sẽ không truy xuất các model đã được [soft delete](/docs/{{version}}/eloquent#soft-deleting) mà sẽ trả về HTTP response 404. Tuy nhiên, bạn có thể yêu cầu framework cho phép lấy cả model đã soft delete bằng cách gọi `withTrashed` khi định nghĩa resource route:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -365,34 +365,34 @@ use App\Http\Controllers\PhotoController;
 Route::resource('photos', PhotoController::class)->withTrashed();
 ```
 
-Calling `withTrashed` with no arguments will allow soft deleted models for the `show`, `edit`, and `update` resource routes. You may specify a subset of these routes by passing an array to the `withTrashed` method:
+Gọi `withTrashed` mà không truyền đối số sẽ cho phép model đã soft delete trên các resource route `show`, `edit` và `update`. Bạn có thể giới hạn chỉ một số route bằng cách truyền một mảng vào `withTrashed`:
 
 ```php
 Route::resource('photos', PhotoController::class)->withTrashed(['show']);
 ```
 
 <a name="specifying-the-resource-model"></a>
-#### Specifying the Resource Model
+#### Chỉ định Resource Model
 
-If you are using [route model binding](/docs/{{version}}/routing#route-model-binding) and would like the resource controller's methods to type-hint a model instance, you may use the `--model` option when generating the controller:
+Nếu đang sử dụng [route model binding](/docs/{{version}}/routing#route-model-binding) và muốn các phương thức của resource controller type-hint một model instance, bạn có thể dùng option `--model` khi tạo controller:
 
 ```shell
 php artisan make:controller PhotoController --model=Photo --resource
 ```
 
 <a name="generating-form-requests"></a>
-#### Generating Form Requests
+#### Tạo Form Request
 
-You may provide the `--requests` option when generating a resource controller to instruct Artisan to generate [form request classes](/docs/{{version}}/validation#form-request-validation) for the controller's storage and update methods:
+Bạn có thể truyền option `--requests` khi tạo resource controller để yêu cầu Artisan tạo các [lớp form request](/docs/{{version}}/validation#form-request-validation) cho phương thức lưu mới và cập nhật của controller:
 
 ```shell
 php artisan make:controller PhotoController --model=Photo --resource --requests
 ```
 
 <a name="restful-partial-resource-routes"></a>
-### Partial Resource Routes
+### Resource Route một phần
 
-When declaring a resource route, you may specify a subset of actions the controller should handle instead of the full set of default actions:
+Khi khai báo resource route, bạn có thể chỉ định một tập con các action mà controller cần xử lý thay vì sử dụng toàn bộ action mặc định:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -407,9 +407,9 @@ Route::resource('photos', PhotoController::class)->except([
 ```
 
 <a name="api-resource-routes"></a>
-#### API Resource Routes
+#### API Resource Route
 
-When declaring resource routes that will be consumed by APIs, you will commonly want to exclude routes that present HTML templates such as `create` and `edit`. For convenience, you may use the `apiResource` method to automatically exclude these two routes:
+Khi khai báo resource route dành cho API, thông thường bạn sẽ muốn loại bỏ các route dùng để hiển thị HTML template như `create` và `edit`. Laravel cung cấp phương thức `apiResource` để tự động loại hai route này:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -417,7 +417,7 @@ use App\Http\Controllers\PhotoController;
 Route::apiResource('photos', PhotoController::class);
 ```
 
-You may register many API resource controllers at once by passing an array to the `apiResources` method:
+Bạn có thể đăng ký nhiều API resource controller cùng lúc bằng cách truyền một mảng vào phương thức `apiResources`:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -429,16 +429,16 @@ Route::apiResources([
 ]);
 ```
 
-To quickly generate an API resource controller that does not include the `create` or `edit` methods, use the `--api` switch when executing the `make:controller` command:
+Để tạo nhanh một API resource controller không chứa các phương thức `create` hoặc `edit`, hãy dùng option `--api` khi chạy lệnh `make:controller`:
 
 ```shell
 php artisan make:controller PhotoController --api
 ```
 
 <a name="restful-nested-resources"></a>
-### Nested Resources
+### Resource lồng nhau
 
-Sometimes you may need to define routes to a nested resource. For example, a photo resource may have multiple comments that may be attached to the photo. To nest the resource controllers, you may use "dot" notation in your route declaration:
+Đôi khi bạn cần định nghĩa route cho một resource lồng nhau. Ví dụ, một photo resource có thể có nhiều comment gắn với ảnh đó. Để lồng các resource controller, bạn có thể sử dụng ký pháp dấu chấm ("dot notation") trong khai báo route:
 
 ```php
 use App\Http\Controllers\PhotoCommentController;
@@ -446,21 +446,21 @@ use App\Http\Controllers\PhotoCommentController;
 Route::resource('photos.comments', PhotoCommentController::class);
 ```
 
-This route will register a nested resource that may be accessed with URIs like the following:
+Route này sẽ đăng ký một resource lồng nhau có thể được truy cập bằng URI như sau:
 
 ```text
 /photos/{photo}/comments/{comment}
 ```
 
 <a name="scoping-nested-resources"></a>
-#### Scoping Nested Resources
+#### Giới hạn phạm vi Resource lồng nhau
 
-Laravel's [implicit model binding](/docs/{{version}}/routing#implicit-model-binding-scoping) feature can automatically scope nested bindings such that the resolved child model is confirmed to belong to the parent model. By using the `scoped` method when defining your nested resource, you may enable automatic scoping as well as instruct Laravel which field the child resource should be retrieved by. For more information on how to accomplish this, please see the documentation on [scoping resource routes](#restful-scoping-resource-routes).
+Tính năng [implicit model binding](/docs/{{version}}/routing#implicit-model-binding-scoping) của Laravel có thể tự động giới hạn phạm vi của binding lồng nhau, nhờ đó model con sau khi được resolve sẽ được xác nhận là thuộc model cha. Khi dùng phương thức `scoped` lúc định nghĩa nested resource, bạn vừa có thể bật cơ chế scoping tự động, vừa chỉ định field mà Laravel dùng để truy xuất resource con. Xem thêm phần [giới hạn phạm vi resource route](#restful-scoping-resource-routes).
 
 <a name="shallow-nesting"></a>
-#### Shallow Nesting
+#### Lồng nông (Shallow Nesting)
 
-Often, it is not entirely necessary to have both the parent and the child IDs within a URI since the child ID is already a unique identifier. When using unique identifiers such as auto-incrementing primary keys to identify your models in URI segments, you may choose to use "shallow nesting":
+Trong nhiều trường hợp, URI không cần chứa đồng thời ID của resource cha và resource con vì ID của resource con vốn đã là định danh duy nhất. Khi dùng định danh duy nhất, chẳng hạn khóa chính tự tăng, để xác định model trong các segment của URI, bạn có thể sử dụng "shallow nesting":
 
 ```php
 use App\Http\Controllers\CommentController;
@@ -468,7 +468,7 @@ use App\Http\Controllers\CommentController;
 Route::resource('photos.comments', CommentController::class)->shallow();
 ```
 
-This route definition will define the following routes:
+Khai báo trên sẽ tạo các route sau:
 
 <div class="overflow-auto">
 
@@ -485,9 +485,9 @@ This route definition will define the following routes:
 </div>
 
 <a name="restful-naming-resource-routes"></a>
-### Naming Resource Routes
+### Đặt tên Resource Route
 
-By default, all resource controller actions have a route name; however, you can override these names by passing a `names` array with your desired route names:
+Theo mặc định, mọi action của resource controller đều có route name. Tuy nhiên, bạn có thể ghi đè các tên này bằng cách truyền mảng `names` chứa những route name mong muốn:
 
 ```php
 use App\Http\Controllers\PhotoController;
@@ -498,9 +498,9 @@ Route::resource('photos', PhotoController::class)->names([
 ```
 
 <a name="restful-naming-resource-route-parameters"></a>
-### Naming Resource Route Parameters
+### Đặt tên tham số của Resource Route
 
-By default, `Route::resource` will create the route parameters for your resource routes based on the "singularized" version of the resource name. You can easily override this on a per resource basis using the `parameters` method. The array passed into the `parameters` method should be an associative array of resource names and parameter names:
+Theo mặc định, `Route::resource` sẽ tạo các tham số route cho resource route dựa trên dạng số ít của tên resource. Bạn có thể dễ dàng ghi đè quy tắc này cho từng resource bằng phương thức `parameters`. Mảng truyền vào `parameters` phải là một mảng kết hợp ánh xạ tên resource với tên tham số:
 
 ```php
 use App\Http\Controllers\AdminUserController;
@@ -510,16 +510,16 @@ Route::resource('users', AdminUserController::class)->parameters([
 ]);
 ```
 
-The example above generates the following URI for the resource's `show` route:
+Ví dụ trên tạo URI sau cho route `show` của resource:
 
 ```text
 /users/{admin_user}
 ```
 
 <a name="restful-scoping-resource-routes"></a>
-### Scoping Resource Routes
+### Giới hạn phạm vi Resource Route
 
-Laravel's [scoped implicit model binding](/docs/{{version}}/routing#implicit-model-binding-scoping) feature can automatically scope nested bindings such that the resolved child model is confirmed to belong to the parent model. By using the `scoped` method when defining your nested resource, you may enable automatic scoping as well as instruct Laravel which field the child resource should be retrieved by:
+Tính năng [giới hạn phạm vi implicit model binding](/docs/{{version}}/routing#implicit-model-binding-scoping) của Laravel có thể tự động giới hạn các binding lồng nhau để bảo đảm model con được phân giải thực sự thuộc model cha. Khi dùng phương thức `scoped` để định nghĩa resource lồng nhau, bạn vừa có thể bật cơ chế giới hạn phạm vi tự động, vừa chỉ định trường mà Laravel phải dùng để truy xuất resource con:
 
 ```php
 use App\Http\Controllers\PhotoCommentController;
@@ -529,18 +529,18 @@ Route::resource('photos.comments', PhotoCommentController::class)->scoped([
 ]);
 ```
 
-This route will register a scoped nested resource that may be accessed with URIs like the following:
+Route này đăng ký một resource lồng nhau có giới hạn phạm vi, có thể được truy cập bằng URI như sau:
 
 ```text
 /photos/{photo}/comments/{comment:slug}
 ```
 
-When using a custom keyed implicit binding as a nested route parameter, Laravel will automatically scope the query to retrieve the nested model by its parent using conventions to guess the relationship name on the parent. In this case, it will be assumed that the `Photo` model has a relationship named `comments` (the plural of the route parameter name) which can be used to retrieve the `Comment` model.
+Khi dùng implicit binding với khóa tùy chỉnh cho một tham số route lồng nhau, Laravel sẽ tự động giới hạn truy vấn lấy model lồng nhau theo model cha, đồng thời dựa trên convention để suy ra tên relationship trên model cha. Trong trường hợp này, Laravel giả định model `Photo` có relationship tên `comments` (dạng số nhiều của tên tham số route) và dùng relationship đó để truy xuất model `Comment`.
 
 <a name="restful-localizing-resource-uris"></a>
-### Localizing Resource URIs
+### Bản địa hóa URI của Resource
 
-By default, `Route::resource` will create resource URIs using English verbs and plural rules. If you need to localize the `create` and `edit` action verbs, you may use the `Route::resourceVerbs` method. This may be done at the beginning of the `boot` method within your application's `App\Providers\AppServiceProvider`:
+Theo mặc định, `Route::resource` tạo URI của resource bằng các động từ và quy tắc số nhiều trong tiếng Anh. Nếu cần bản địa hóa các động từ cho action `create` và `edit`, bạn có thể dùng phương thức `Route::resourceVerbs`. Việc này có thể được thực hiện ở đầu phương thức `boot` trong `App\Providers\AppServiceProvider` của ứng dụng:
 
 ```php
 /**
@@ -555,7 +555,7 @@ public function boot(): void
 }
 ```
 
-Laravel's pluralizer supports [several different languages which you may configure based on your needs](/docs/{{version}}/localization#pluralization-language). Once the verbs and pluralization language have been customized, a resource route registration such as `Route::resource('publicacion', PublicacionController::class)` will produce the following URIs:
+Bộ chuyển đổi số nhiều của Laravel hỗ trợ [nhiều ngôn ngữ khác nhau và bạn có thể cấu hình theo nhu cầu](/docs/{{version}}/localization#pluralization-language). Sau khi tùy chỉnh các động từ và ngôn ngữ dùng cho quy tắc số nhiều, một khai báo resource route như `Route::resource('publicacion', PublicacionController::class)` sẽ tạo các URI sau:
 
 ```text
 /publicacion/crear
@@ -564,9 +564,9 @@ Laravel's pluralizer supports [several different languages which you may configu
 ```
 
 <a name="restful-supplementing-resource-controllers"></a>
-### Supplementing Resource Controllers
+### Bổ sung Route cho Resource Controller
 
-If you need to add additional routes to a resource controller beyond the default set of resource routes, you should define those routes before your call to the `Route::resource` method; otherwise, the routes defined by the `resource` method may unintentionally take precedence over your supplemental routes:
+Nếu cần thêm các route ngoài tập resource route mặc định cho một resource controller, bạn nên định nghĩa các route bổ sung đó trước khi gọi phương thức `Route::resource`; nếu không, các route do `resource` định nghĩa có thể vô tình được ưu tiên trước các route bổ sung của bạn:
 
 ```php
 use App\Http\Controller\PhotoController;
@@ -576,12 +576,12 @@ Route::resource('photos', PhotoController::class);
 ```
 
 > [!NOTE]
-> Remember to keep your controllers focused. If you find yourself routinely needing methods outside of the typical set of resource actions, consider splitting your controller into two, smaller controllers.
+> Hãy giữ controller tập trung vào một trách nhiệm rõ ràng. Nếu bạn thường xuyên phải thêm các phương thức nằm ngoài tập resource action thông thường, hãy cân nhắc tách controller thành hai controller nhỏ hơn.
 
 <a name="singleton-resource-controllers"></a>
-### Singleton Resource Controllers
+### Singleton Resource Controller
 
-Sometimes, your application will have resources that may only have a single instance. For example, a user's "profile" can be edited or updated, but a user may not have more than one "profile". Likewise, an image may have a single "thumbnail". These resources are called "singleton resources", meaning one and only one instance of the resource may exist. In these scenarios, you may register a "singleton" resource controller:
+Đôi khi ứng dụng có những resource chỉ được phép tồn tại một instance. Ví dụ, "profile" của người dùng có thể được chỉnh sửa hoặc cập nhật, nhưng mỗi người dùng không thể có nhiều hơn một "profile". Tương tự, một ảnh có thể chỉ có một "thumbnail". Những resource như vậy được gọi là "singleton resource", nghĩa là chỉ duy nhất một instance của resource được phép tồn tại. Trong các trường hợp này, bạn có thể đăng ký một singleton resource controller:
 
 ```php
 use App\Http\Controllers\ProfileController;
@@ -590,7 +590,7 @@ use Illuminate\Support\Facades\Route;
 Route::singleton('profile', ProfileController::class);
 ```
 
-The singleton resource definition above will register the following routes. As you can see, "creation" routes are not registered for singleton resources, and the registered routes do not accept an identifier since only one instance of the resource may exist:
+Định nghĩa singleton resource ở trên sẽ đăng ký các route sau. Như bạn có thể thấy, các route dùng để tạo mới không được đăng ký cho singleton resource, và các route được đăng ký cũng không nhận identifier vì resource chỉ có thể tồn tại một instance:
 
 <div class="overflow-auto">
 
@@ -602,13 +602,13 @@ The singleton resource definition above will register the following routes. As y
 
 </div>
 
-Singleton resources may also be nested within a standard resource:
+Singleton resource cũng có thể được lồng bên trong một resource thông thường:
 
 ```php
 Route::singleton('photos.thumbnail', ThumbnailController::class);
 ```
 
-In this example, the `photos` resource would receive all of the [standard resource routes](#actions-handled-by-resource-controllers); however, the `thumbnail` resource would be a singleton resource with the following routes:
+Trong ví dụ này, resource `photos` nhận đầy đủ [các resource route tiêu chuẩn](#actions-handled-by-resource-controllers); tuy nhiên, resource `thumbnail` là một singleton resource với các route sau:
 
 <div class="overflow-auto">
 
@@ -621,15 +621,15 @@ In this example, the `photos` resource would receive all of the [standard resour
 </div>
 
 <a name="creatable-singleton-resources"></a>
-#### Creatable Singleton Resources
+#### Singleton Resource có thể tạo mới
 
-Occasionally, you may want to define creation and storage routes for a singleton resource. To accomplish this, you may invoke the `creatable` method when registering the singleton resource route:
+Trong một số trường hợp, bạn có thể muốn định nghĩa thêm route tạo mới và lưu trữ cho singleton resource. Để làm điều này, hãy gọi phương thức `creatable` khi đăng ký singleton resource route:
 
 ```php
 Route::singleton('photos.thumbnail', ThumbnailController::class)->creatable();
 ```
 
-In this example, the following routes will be registered. As you can see, a `DELETE` route will also be registered for creatable singleton resources:
+Trong ví dụ này, các route sau sẽ được đăng ký. Đồng thời, một route `DELETE` cũng được đăng ký cho singleton resource có thể tạo mới:
 
 <div class="overflow-auto">
 
@@ -644,34 +644,34 @@ In this example, the following routes will be registered. As you can see, a `DEL
 
 </div>
 
-If you would like Laravel to register the `DELETE` route for a singleton resource but not register the creation or storage routes, you may utilize the `destroyable` method:
+Nếu muốn Laravel đăng ký route `DELETE` cho singleton resource nhưng không đăng ký các route tạo mới hoặc lưu trữ, bạn có thể dùng phương thức `destroyable`:
 
 ```php
 Route::singleton(...)->destroyable();
 ```
 
 <a name="api-singleton-resources"></a>
-#### API Singleton Resources
+#### API Singleton Resource
 
-The `apiSingleton` method may be used to register a singleton resource that will be manipulated via an API, thus rendering the `create` and `edit` routes unnecessary:
+Phương thức `apiSingleton` có thể được dùng để đăng ký một singleton resource được thao tác thông qua API; vì vậy các route `create` và `edit` không còn cần thiết:
 
 ```php
 Route::apiSingleton('profile', ProfileController::class);
 ```
 
-Of course, API singleton resources may also be `creatable`, which will register `store` and `destroy` routes for the resource:
+Tất nhiên, API singleton resource cũng có thể được đánh dấu là `creatable`; khi đó Laravel sẽ đăng ký các route `store` và `destroy` cho resource:
 
 ```php
 Route::apiSingleton('photos.thumbnail', ProfileController::class)->creatable();
 ```
 <a name="middleware-and-resource-controllers"></a>
-### Middleware and Resource Controllers
+### Middleware và Resource Controller
 
-Laravel allows you to assign middleware to all, or only specific, methods of resource routes using the `middleware`, `middlewareFor`, and `withoutMiddlewareFor` methods. These methods provide fine-grained control over which middleware is applied to each resource action.
+Laravel cho phép gán middleware cho toàn bộ hoặc chỉ một số phương thức cụ thể của resource route thông qua `middleware`, `middlewareFor` và `withoutMiddlewareFor`. Các phương thức này cho phép kiểm soát chi tiết middleware nào được áp dụng cho từng resource action.
 
-#### Applying Middleware to all Methods
+#### Áp dụng Middleware cho tất cả phương thức
 
-You may use the `middleware` method to assign middleware to all routes generated by a resource or singleton resource route:
+Bạn có thể dùng phương thức `middleware` để gán middleware cho tất cả route được sinh bởi resource route hoặc singleton resource route:
 
 ```php
 Route::resource('users', UserController::class)
@@ -681,9 +681,9 @@ Route::singleton('profile', ProfileController::class)
     ->middleware('auth');
 ```
 
-#### Applying Middleware to Specific Methods
+#### Áp dụng Middleware cho các phương thức cụ thể
 
-You may use the `middlewareFor` method to assign middleware to one or more specific methods of a given resource controller:
+Bạn có thể dùng phương thức `middlewareFor` để gán middleware cho một hoặc nhiều phương thức cụ thể của resource controller:
 
 ```php
 Route::resource('users', UserController::class)
@@ -700,7 +700,7 @@ Route::apiResource('users', UserController::class)
     ->middlewareFor(['show', 'update'], ['auth', 'verified']);
 ```
 
-The `middlewareFor` method may also be used in conjunction with singleton and API singleton resource controllers:
+Phương thức `middlewareFor` cũng có thể được dùng với singleton resource controller và API singleton resource controller:
 
 ```php
 Route::singleton('profile', ProfileController::class)
@@ -710,9 +710,9 @@ Route::apiSingleton('profile', ProfileController::class)
     ->middlewareFor(['show', 'update'], 'auth');
 ```
 
-#### Excluding Middleware from Specific Methods
+#### Loại trừ Middleware khỏi các phương thức cụ thể
 
-You may use the `withoutMiddlewareFor` method to exclude middleware from specific methods of a resource controller:
+Bạn có thể dùng phương thức `withoutMiddlewareFor` để loại trừ middleware khỏi các phương thức cụ thể của resource controller:
 
 ```php
 Route::middleware(['auth', 'verified', 'subscribed'])->group(function () {
@@ -724,12 +724,12 @@ Route::middleware(['auth', 'verified', 'subscribed'])->group(function () {
 ```
 
 <a name="dependency-injection-and-controllers"></a>
-## Dependency Injection and Controllers
+## Dependency Injection và Controller
 
 <a name="constructor-injection"></a>
-#### Constructor Injection
+#### Injection qua Constructor
 
-The Laravel [service container](/docs/{{version}}/container) is used to resolve all Laravel controllers. As a result, you are able to type-hint any dependencies your controller may need in its constructor. The declared dependencies will automatically be resolved and injected into the controller instance:
+Laravel sử dụng [service container](/docs/{{version}}/container) để phân giải tất cả controller. Vì vậy, bạn có thể type-hint mọi dependency mà controller cần trong constructor. Các dependency đã khai báo sẽ tự động được container phân giải và inject vào instance của controller:
 
 ```php
 <?php
@@ -750,9 +750,9 @@ class UserController extends Controller
 ```
 
 <a name="method-injection"></a>
-#### Method Injection
+#### Injection qua phương thức
 
-In addition to constructor injection, you may also type-hint dependencies on your controller's methods. A common use-case for method injection is injecting the `Illuminate\Http\Request` instance into your controller methods:
+Ngoài constructor injection, bạn cũng có thể type-hint dependency trực tiếp trên các phương thức của controller. Một trường hợp phổ biến của method injection là inject instance `Illuminate\Http\Request` vào phương thức của controller:
 
 ```php
 <?php
@@ -778,7 +778,7 @@ class UserController extends Controller
 }
 ```
 
-If your controller method is also expecting input from a route parameter, list your route arguments after your other dependencies. For example, if your route is defined like so:
+Nếu phương thức controller đồng thời nhận dữ liệu từ route parameter, hãy đặt các đối số của route sau những dependency khác. Ví dụ, nếu route được định nghĩa như sau:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -786,7 +786,7 @@ use App\Http\Controllers\UserController;
 Route::put('/user/{id}', [UserController::class, 'update']);
 ```
 
-You may still type-hint the `Illuminate\Http\Request` and access your `id` parameter by defining your controller method as follows:
+Bạn vẫn có thể type-hint `Illuminate\Http\Request` và truy cập tham số `id` bằng cách định nghĩa phương thức controller như sau:
 
 ```php
 <?php
@@ -809,6 +809,8 @@ class UserController extends Controller
     }
 }
 ```
+
+---
 
 ## Tài liệu chính thức
 

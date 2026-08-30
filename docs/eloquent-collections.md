@@ -1,16 +1,11 @@
-# Eloquent: Collections
-
-- [Introduction](#introduction)
-- [Available Methods](#available-methods)
-- [Custom Collections](#custom-collections)
-
+# Eloquent: Collection
+- [Giới thiệu](#introduction)
+- [Các phương thức có sẵn](#available-methods)
+- [Collection tùy chỉnh](#custom-collections)
 <a name="introduction"></a>
-## Introduction
-
-All Eloquent methods that return more than one model result will return instances of the `Illuminate\Database\Eloquent\Collection` class, including results retrieved via the `get` method or accessed via a relationship. The Eloquent collection object extends Laravel's [base collection](/docs/{{version}}/collections), so it naturally inherits dozens of methods used to fluently work with the underlying array of Eloquent models. Be sure to review the Laravel collection documentation to learn all about these helpful methods!
-
-All collections also serve as iterators, allowing you to loop over them as if they were simple PHP arrays:
-
+## Giới thiệu
+Mọi phương thức Eloquent trả về nhiều model đều trả về một instance của class `Illuminate\Database\Eloquent\Collection`, bao gồm kết quả được lấy bằng phương thức `get` hoặc thông qua relationship. Eloquent collection kế thừa [collection cơ sở](/docs/{{version}}/collections) của Laravel, vì vậy nó tự động cung cấp hàng chục phương thức để xử lý linh hoạt tập hợp model Eloquent bên trong. Hãy xem tài liệu Collection của Laravel để tìm hiểu đầy đủ các phương thức hữu ích này.
+Mọi collection cũng hoạt động như một iterator, vì vậy bạn có thể lặp qua chúng tương tự như với một array PHP thông thường:
 ```php
 use App\Models\User;
 
@@ -20,9 +15,7 @@ foreach ($users as $user) {
     echo $user->name;
 }
 ```
-
-However, as previously mentioned, collections are much more powerful than arrays and expose a variety of map / reduce operations that may be chained using an intuitive interface. For example, we may remove all inactive models and then gather the first name for each remaining user:
-
+Tuy nhiên, collection mạnh hơn array rất nhiều và cung cấp nhiều phép toán như map / reduce có thể nối chuỗi thông qua một API trực quan. Ví dụ, ta có thể loại bỏ tất cả model không hoạt động rồi lấy tên của từng user còn lại:
 ```php
 $names = User::all()->reject(function (User $user) {
     return $user->active === false;
@@ -32,17 +25,12 @@ $names = User::all()->reject(function (User $user) {
 ```
 
 <a name="eloquent-collection-conversion"></a>
-#### Eloquent Collection Conversion
-
-While most Eloquent collection methods return a new instance of an Eloquent collection, the `collapse`, `flatten`, `flip`, `keys`, `pluck`, and `zip` methods return a [base collection](/docs/{{version}}/collections) instance. Likewise, if a `map` operation returns a collection that does not contain any Eloquent models, it will be converted to a base collection instance.
-
+#### Chuyển đổi Eloquent collection
+Trong khi phần lớn phương thức của Eloquent collection trả về một Eloquent collection mới, các phương thức `collapse`, `flatten`, `flip`, `keys`, `pluck` và `zip` trả về một instance [collection cơ sở](/docs/{{version}}/collections). Tương tự, nếu thao tác `map` tạo ra một collection không còn chứa bất kỳ Eloquent model nào, kết quả sẽ được chuyển thành collection cơ sở.
 <a name="available-methods"></a>
-## Available Methods
-
-All Eloquent collections extend the base [Laravel collection](/docs/{{version}}/collections#available-methods) object; therefore, they inherit all of the powerful methods provided by the base collection class.
-
-In addition, the `Illuminate\Database\Eloquent\Collection` class provides a superset of methods to aid with managing your model collections. Most methods return `Illuminate\Database\Eloquent\Collection` instances; however, some methods, like `modelKeys`, return an `Illuminate\Support\Collection` instance.
-
+## Các phương thức có sẵn
+Mọi Eloquent collection đều kế thừa [collection cơ sở của Laravel](/docs/{{version}}/collections#available-methods), vì vậy chúng có toàn bộ các phương thức mạnh mẽ của class collection cơ sở.
+Ngoài ra, class `Illuminate\Database\Eloquent\Collection` cung cấp thêm một tập hợp phương thức chuyên biệt để quản lý collection model. Phần lớn các phương thức trả về instance `Illuminate\Database\Eloquent\Collection`; tuy nhiên, một số phương thức như `modelKeys` trả về `Illuminate\Support\Collection`.
 <style>
     .collection-method-list > p {
         columns: 14.4em 1; -moz-columns: 14.4em 1; -webkit-columns: 14.4em 1;
@@ -95,8 +83,7 @@ In addition, the `Illuminate\Database\Eloquent\Collection` class provides a supe
 <a name="method-append"></a>
 #### `append($attributes)` {.collection-method .first-collection-method}
 
-The `append` method may be used to indicate that an attribute should be [appended](/docs/{{version}}/eloquent-serialization#appending-values-to-json) for every model in the collection. This method accepts an array of attributes or a single attribute:
-
+Phương thức `append` dùng để chỉ định một attribute cần được [append](/docs/{{version}}/eloquent-serialization#appending-values-to-json) vào mọi model trong collection. Phương thức nhận một array attribute hoặc một attribute đơn:
 ```php
 $users->append('team');
 
@@ -106,8 +93,7 @@ $users->append(['team', 'is_admin']);
 <a name="method-contains"></a>
 #### `contains($key, $operator = null, $value = null)` {.collection-method}
 
-The `contains` method may be used to determine if a given model instance is contained by the collection. This method accepts a primary key or a model instance:
-
+Phương thức `contains` dùng để xác định collection có chứa model instance đã cho hay không. Bạn có thể truyền primary key hoặc model instance:
 ```php
 $users->contains(1);
 
@@ -117,8 +103,7 @@ $users->contains(User::find(1));
 <a name="method-diff"></a>
 #### `diff($items)` {.collection-method}
 
-The `diff` method returns all of the models that are not present in the given collection:
-
+Phương thức `diff` trả về toàn bộ model không xuất hiện trong collection được truyền vào:
 ```php
 use App\Models\User;
 
@@ -128,8 +113,7 @@ $users = $users->diff(User::whereIn('id', [1, 2, 3])->get());
 <a name="method-except"></a>
 #### `except($keys)` {.collection-method}
 
-The `except` method returns all of the models that do not have the given primary keys:
-
+Phương thức `except` trả về toàn bộ model không có primary key nằm trong danh sách đã cho:
 ```php
 $users = $users->except([1, 2, 3]);
 ```
@@ -137,8 +121,7 @@ $users = $users->except([1, 2, 3]);
 <a name="method-find"></a>
 #### `find($key)` {.collection-method}
 
-The `find` method returns the model that has a primary key matching the given key. If `$key` is a model instance, `find` will attempt to return a model matching the primary key. If `$key` is an array of keys, `find` will return all models which have a primary key in the given array:
-
+Phương thức `find` trả về model có primary key khớp với key được truyền vào. Nếu `$key` là model instance, `find` cố tìm model có cùng primary key. Nếu `$key` là array key, `find` trả về tất cả model có primary key nằm trong array đó:
 ```php
 $users = User::all();
 
@@ -148,8 +131,7 @@ $user = $users->find(1);
 <a name="method-find-or-fail"></a>
 #### `findOrFail($key)` {.collection-method}
 
-The `findOrFail` method returns the model that has a primary key matching the given key or throws an `Illuminate\Database\Eloquent\ModelNotFoundException` exception if no matching model can be found in the collection:
-
+Phương thức `findOrFail` trả về model có primary key khớp với key đã cho, hoặc throw exception `Illuminate\Database\Eloquent\ModelNotFoundException` nếu collection không chứa model phù hợp:
 ```php
 $users = User::all();
 
@@ -159,8 +141,7 @@ $user = $users->findOrFail(1);
 <a name="method-fresh"></a>
 #### `fresh($with = [])` {.collection-method}
 
-The `fresh` method retrieves a fresh instance of each model in the collection from the database. In addition, any specified relationships will be eager loaded:
-
+Phương thức `fresh` lấy lại instance mới nhất của từng model trong collection từ database. Ngoài ra, các relationship được chỉ định cũng sẽ được eager load:
 ```php
 $users = $users->fresh();
 
@@ -170,8 +151,7 @@ $users = $users->fresh('comments');
 <a name="method-intersect"></a>
 #### `intersect($items)` {.collection-method}
 
-The `intersect` method returns all of the models that are also present in the given collection:
-
+Phương thức `intersect` trả về tất cả model đồng thời xuất hiện trong collection được truyền vào:
 ```php
 use App\Models\User;
 
@@ -181,8 +161,7 @@ $users = $users->intersect(User::whereIn('id', [1, 2, 3])->get());
 <a name="method-load"></a>
 #### `load($relations)` {.collection-method}
 
-The `load` method eager loads the given relationships for all models in the collection:
-
+Phương thức `load` eager load các relationship đã cho cho toàn bộ model trong collection:
 ```php
 $users->load(['comments', 'posts']);
 
@@ -194,8 +173,7 @@ $users->load(['comments', 'posts' => fn ($query) => $query->where('active', 1)])
 <a name="method-loadMissing"></a>
 #### `loadMissing($relations)` {.collection-method}
 
-The `loadMissing` method eager loads the given relationships for all models in the collection if the relationships are not already loaded:
-
+Phương thức `loadMissing` eager load các relationship đã cho cho toàn bộ model trong collection nếu relationship đó chưa được load:
 ```php
 $users->loadMissing(['comments', 'posts']);
 
@@ -207,8 +185,7 @@ $users->loadMissing(['comments', 'posts' => fn ($query) => $query->where('active
 <a name="method-modelKeys"></a>
 #### `modelKeys()` {.collection-method}
 
-The `modelKeys` method returns the primary keys for all models in the collection:
-
+Phương thức `modelKeys` trả về primary key của tất cả model trong collection:
 ```php
 $users->modelKeys();
 
@@ -218,8 +195,7 @@ $users->modelKeys();
 <a name="method-makeVisible"></a>
 #### `makeVisible($attributes)` {.collection-method}
 
-The `makeVisible` method [makes attributes visible](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) that are typically "hidden" on each model in the collection:
-
+Phương thức `makeVisible` làm cho các attribute vốn thường bị "ẩn" trên từng model trong collection trở nên [hiển thị](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json):
 ```php
 $users = $users->makeVisible(['address', 'phone_number']);
 ```
@@ -227,8 +203,7 @@ $users = $users->makeVisible(['address', 'phone_number']);
 <a name="method-makeHidden"></a>
 #### `makeHidden($attributes)` {.collection-method}
 
-The `makeHidden` method [hides attributes](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) that are typically "visible" on each model in the collection:
-
+Phương thức `makeHidden` [ẩn các attribute](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) vốn thường đang hiển thị trên từng model trong collection:
 ```php
 $users = $users->makeHidden(['address', 'phone_number']);
 ```
@@ -236,8 +211,7 @@ $users = $users->makeHidden(['address', 'phone_number']);
 <a name="method-mergeVisible"></a>
 #### `mergeVisible($attributes)` {.collection-method}
 
-The `mergeVisible` method [makes additional attributes visible](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) while retaining existing visible attributes:
-
+Phương thức `mergeVisible` [bổ sung các attribute hiển thị](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) mà vẫn giữ lại danh sách visible hiện tại:
 ```php
 $users = $users->mergeVisible(['middle_name']);
 ```
@@ -245,8 +219,7 @@ $users = $users->mergeVisible(['middle_name']);
 <a name="method-mergeHidden"></a>
 #### `mergeHidden($attributes)` {.collection-method}
 
-The `mergeHidden` method [hides additional attributes](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) while retaining existing hidden attributes:
-
+Phương thức `mergeHidden` [bổ sung các attribute bị ẩn](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) mà vẫn giữ lại danh sách hidden hiện tại:
 ```php
 $users = $users->mergeHidden(['last_login_at']);
 ```
@@ -254,8 +227,7 @@ $users = $users->mergeHidden(['last_login_at']);
 <a name="method-only"></a>
 #### `only($keys)` {.collection-method}
 
-The `only` method returns all of the models that have the given primary keys:
-
+Phương thức `only` trả về toàn bộ model có primary key nằm trong danh sách đã cho:
 ```php
 $users = $users->only([1, 2, 3]);
 ```
@@ -263,8 +235,7 @@ $users = $users->only([1, 2, 3]);
 <a name="method-partition"></a>
 #### `partition` {.collection-method}
 
-The `partition` method returns an instance of `Illuminate\Support\Collection` containing `Illuminate\Database\Eloquent\Collection` collection instances:
-
+Phương thức `partition` trả về instance `Illuminate\Support\Collection` chứa các instance collection `Illuminate\Database\Eloquent\Collection`:
 ```php
 $partition = $users->partition(fn ($user) => $user->age > 18);
 
@@ -276,8 +247,7 @@ dump($partition[1]::class); // Illuminate\Database\Eloquent\Collection
 <a name="method-setAppends"></a>
 #### `setAppends($attributes)` {.collection-method}
 
-The `setAppends` method temporarily overrides all of the [appended attributes](/docs/{{version}}/eloquent-serialization#appending-values-to-json) on each model in the collection:
-
+Phương thức `setAppends` tạm thời ghi đè toàn bộ [attribute được append](/docs/{{version}}/eloquent-serialization#appending-values-to-json) trên từng model trong collection:
 ```php
 $users = $users->setAppends(['is_admin']);
 ```
@@ -285,8 +255,7 @@ $users = $users->setAppends(['is_admin']);
 <a name="method-setVisible"></a>
 #### `setVisible($attributes)` {.collection-method}
 
-The `setVisible` method [temporarily overrides](/docs/{{version}}/eloquent-serialization#temporarily-modifying-attribute-visibility) all of the visible attributes on each model in the collection:
-
+Phương thức `setVisible` [tạm thời ghi đè](/docs/{{version}}/eloquent-serialization#temporarily-modifying-attribute-visibility) toàn bộ attribute hiển thị trên từng model trong collection:
 ```php
 $users = $users->setVisible(['id', 'name']);
 ```
@@ -294,8 +263,7 @@ $users = $users->setVisible(['id', 'name']);
 <a name="method-setHidden"></a>
 #### `setHidden($attributes)` {.collection-method}
 
-The `setHidden` method [temporarily overrides](/docs/{{version}}/eloquent-serialization#temporarily-modifying-attribute-visibility) all of the hidden attributes on each model in the collection:
-
+Phương thức `setHidden` [tạm thời ghi đè](/docs/{{version}}/eloquent-serialization#temporarily-modifying-attribute-visibility) toàn bộ attribute bị ẩn trên từng model trong collection:
 ```php
 $users = $users->setHidden(['email', 'password', 'remember_token']);
 ```
@@ -303,8 +271,7 @@ $users = $users->setHidden(['email', 'password', 'remember_token']);
 <a name="method-toquery"></a>
 #### `toQuery()` {.collection-method}
 
-The `toQuery` method returns an Eloquent query builder instance containing a `whereIn` constraint on the collection model's primary keys:
-
+Phương thức `toQuery` trả về một Eloquent query builder có ràng buộc `whereIn` trên primary key của các model trong collection:
 ```php
 use App\Models\User;
 
@@ -318,8 +285,7 @@ $users->toQuery()->update([
 <a name="method-unique"></a>
 #### `unique($key = null, $strict = false)` {.collection-method}
 
-The `unique` method returns all of the unique models in the collection. Any models with the same primary key as another model in the collection are removed:
-
+Phương thức `unique` trả về các model duy nhất trong collection. Model có cùng primary key với một model khác trong collection sẽ bị loại bỏ:
 ```php
 $users = $users->unique();
 ```
@@ -327,17 +293,14 @@ $users = $users->unique();
 <a name="method-withoutAppends"></a>
 #### `withoutAppends()` {.collection-method}
 
-The `withoutAppends` method temporarily removes all of the [appended attributes](/docs/{{version}}/eloquent-serialization#appending-values-to-json) on each model in the collection:
-
+Phương thức `withoutAppends` tạm thời loại bỏ toàn bộ [appended attribute](/docs/{{version}}/eloquent-serialization#appending-values-to-json) khỏi từng model trong collection:
 ```php
 $users = $users->withoutAppends();
 ```
 
 <a name="custom-collections"></a>
-## Custom Collections
-
-If you would like to use a custom `Collection` object when interacting with a given model, you may add the `CollectedBy` attribute to your model:
-
+## Collection tùy chỉnh
+Nếu muốn sử dụng object `Collection` tùy chỉnh khi làm việc với một model cụ thể, bạn có thể thêm attribute `CollectedBy` vào model:
 ```php
 <?php
 
@@ -353,9 +316,7 @@ class User extends Model
     // ...
 }
 ```
-
-Alternatively, you may define a `newCollection` method on your model:
-
+Ngoài ra, bạn có thể định nghĩa phương thức `newCollection` trên model:
 ```php
 <?php
 
@@ -385,11 +346,8 @@ class User extends Model
     }
 }
 ```
-
-Once you have defined a `newCollection` method or added the `CollectedBy` attribute to your model, you will receive an instance of your custom collection anytime Eloquent would normally return an `Illuminate\Database\Eloquent\Collection` instance.
-
-If you would like to use a custom collection for every model in your application, you should define the `newCollection` method on a base model class that is extended by all of your application's models.
-
+Sau khi định nghĩa `newCollection` hoặc thêm attribute `CollectedBy`, bất cứ khi nào Eloquent thông thường trả về `Illuminate\Database\Eloquent\Collection`, bạn sẽ nhận được một instance của collection tùy chỉnh.
+Nếu muốn sử dụng collection tùy chỉnh cho mọi model trong ứng dụng, hãy định nghĩa `newCollection` trên class model cơ sở mà tất cả model của ứng dụng kế thừa.
 ## Tài liệu chính thức
 
 Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/eloquent-collections). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

@@ -1,35 +1,35 @@
 # Laravel Valet
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-    - [Upgrading Valet](#upgrading-valet)
-- [Serving Sites](#serving-sites)
-    - [The "Park" Command](#the-park-command)
-    - [The "Link" Command](#the-link-command)
-    - [Securing Sites With TLS](#securing-sites)
-    - [Serving a Default Site](#serving-a-default-site)
-    - [Per-Site PHP Versions](#per-site-php-versions)
-- [Sharing Sites](#sharing-sites)
-    - [Sharing Sites on Your Local Network](#sharing-sites-on-your-local-network)
-- [Site Specific Environment Variables](#site-specific-environment-variables)
-- [Proxying Services](#proxying-services)
-- [Custom Valet Drivers](#custom-valet-drivers)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+    - [Nâng cấp Valet](#upgrading-valet)
+- [Phục vụ các site](#serving-sites)
+    - [Lệnh "Park"](#the-park-command)
+    - [Lệnh "Link"](#the-link-command)
+    - [Bảo mật site bằng TLS](#securing-sites)
+    - [Phục vụ site mặc định](#serving-a-default-site)
+    - [Phiên bản PHP theo từng site](#per-site-php-versions)
+- [Chia sẻ site](#sharing-sites)
+    - [Chia sẻ site trên mạng cục bộ](#sharing-sites-on-your-local-network)
+- [Biến môi trường riêng cho site](#site-specific-environment-variables)
+- [Proxy dịch vụ](#proxying-services)
+- [Driver Valet tùy chỉnh](#custom-valet-drivers)
     - [Local Drivers](#local-drivers)
-- [Other Valet Commands](#other-valet-commands)
-- [Valet Directories and Files](#valet-directories-and-files)
+- [Các lệnh Valet khác](#other-valet-commands)
+- [Thư mục và file của Valet](#valet-directories-and-files)
     - [Disk Access](#disk-access)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
 > [!NOTE]
-> Looking for an even easier way to develop Laravel applications on macOS or Windows? Check out [Laravel Herd](https://herd.laravel.com). Herd includes everything you need to get started with Laravel development, including Valet, PHP, and Composer.
+> Bạn đang tìm một cách còn dễ hơn để phát triển ứng dụng Laravel trên macOS hoặc Windows? Hãy xem [Laravel Herd](https://herd.laravel.com). Herd bao gồm mọi thứ bạn cần để bắt đầu phát triển Laravel, bao gồm Valet, PHP và Composer.
 
-[Laravel Valet](https://github.com/laravel/valet) is a development environment for macOS minimalists. Laravel Valet configures your Mac to always run [Nginx](https://www.nginx.com/) in the background when your machine starts. Then, using [DnsMasq](https://en.wikipedia.org/wiki/Dnsmasq), Valet proxies all requests on the `*.test` domain to point to sites installed on your local machine.
+[Laravel Valet](https://github.com/laravel/valet) là môi trường phát triển dành cho những người dùng macOS yêu thích sự tối giản. Laravel Valet cấu hình máy Mac của bạn để luôn chạy [Nginx](https://www.nginx.com/) ở chế độ nền khi máy khởi động. Sau đó, bằng [DnsMasq](https://en.wikipedia.org/wiki/Dnsmasq), Valet proxy mọi request trên domain `*.test` tới các site được cài đặt trên máy local của bạn.
 
-In other words, Valet is a blazing fast Laravel development environment that uses roughly 7 MB of RAM. Valet isn't a complete replacement for [Sail](/docs/{{version}}/sail) or [Homestead](/docs/{{version}}/homestead), but provides a great alternative if you want flexible basics, prefer extreme speed, or are working on a machine with a limited amount of RAM.
+Nói cách khác, Valet là một môi trường phát triển Laravel cực kỳ nhanh, chỉ sử dụng khoảng 7 MB RAM. Valet không thay thế hoàn toàn [Sail](/docs/{{version}}/sail) hoặc [Homestead](/docs/{{version}}/homestead), nhưng là một lựa chọn thay thế tuyệt vời nếu bạn cần những thành phần cơ bản linh hoạt, ưu tiên tốc độ tối đa hoặc đang làm việc trên máy có lượng RAM hạn chế.
 
-Out of the box, Valet support includes, but is not limited to:
+Ngay khi cài đặt, Valet hỗ trợ nhiều nền tảng, bao gồm nhưng không giới hạn ở:
 
 <style>
     #valet-support > ul {
@@ -64,49 +64,49 @@ Out of the box, Valet support includes, but is not limited to:
 
 </div>
 
-However, you may extend Valet with your own [custom drivers](#custom-valet-drivers).
+Tuy nhiên, bạn có thể mở rộng Valet bằng các [driver tùy chỉnh](#custom-valet-drivers) của riêng mình.
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
 > [!WARNING]
-> Valet requires macOS and [Homebrew](https://brew.sh/). Before installation, you should make sure that no other programs such as Apache or Nginx are binding to your local machine's port 80.
+> Valet yêu cầu macOS và [Homebrew](https://brew.sh/). Trước khi cài đặt, bạn nên đảm bảo không có chương trình nào khác như Apache hoặc Nginx đang bind vào cổng 80 trên máy local.
 
-To get started, you first need to ensure that Homebrew is up to date using the `update` command:
+Để bắt đầu, trước tiên bạn cần đảm bảo Homebrew đã được cập nhật bằng lệnh `update`:
 
 ```shell
 brew update
 ```
 
-Next, you should use Homebrew to install PHP:
+Tiếp theo, bạn nên sử dụng Homebrew để cài đặt PHP:
 
 ```shell
 brew install php
 ```
 
-After installing PHP, you are ready to install the [Composer package manager](https://getcomposer.org). In addition, you should make sure the `$HOME/.composer/vendor/bin` directory is in your system's "PATH". After Composer has been installed, you may install Laravel Valet as a global Composer package:
+Sau khi cài đặt PHP, bạn đã sẵn sàng cài đặt [trình quản lý package Composer](https://getcomposer.org). Ngoài ra, bạn nên đảm bảo thư mục `$HOME/.composer/vendor/bin` nằm trong `PATH` của hệ thống. Sau khi Composer được cài đặt, bạn có thể cài Laravel Valet dưới dạng một Composer package global:
 
 ```shell
 composer global require laravel/valet
 ```
 
-Finally, you may execute Valet's `install` command. This will configure and install Valet and DnsMasq. In addition, the daemons Valet depends on will be configured to launch when your system starts:
+Cuối cùng, bạn có thể thực thi lệnh `install` của Valet. Lệnh này sẽ cấu hình và cài đặt Valet cùng DnsMasq. Ngoài ra, các daemon mà Valet phụ thuộc vào sẽ được cấu hình để khởi chạy khi hệ thống của bạn khởi động:
 
 ```shell
 valet install
 ```
 
-Once Valet is installed, try pinging any `*.test` domain on your terminal using a command such as `ping foobar.test`. If Valet is installed correctly you should see this domain responding on `127.0.0.1`.
+Sau khi Valet được cài đặt, hãy thử ping một domain `*.test` bất kỳ trong terminal bằng lệnh như `ping foobar.test`. Nếu Valet được cài đặt đúng, bạn sẽ thấy domain này phản hồi tại `127.0.0.1`.
 
-Valet will automatically start its required services each time your machine boots.
+Valet sẽ tự động khởi động các service cần thiết mỗi khi máy của bạn khởi động.
 
 <a name="php-versions"></a>
-#### PHP Versions
+#### Phiên bản PHP
 
 > [!NOTE]
-> Instead of modifying your global PHP version, you can instruct Valet to use per-site PHP versions via the `isolate` [command](#per-site-php-versions).
+> Thay vì thay đổi phiên bản PHP global, bạn có thể yêu cầu Valet sử dụng phiên bản PHP riêng cho từng site thông qua [lệnh](#per-site-php-versions) `isolate`.
 
-Valet allows you to switch PHP versions using the `valet use php@version` command. Valet will install the specified PHP version via Homebrew if it is not already installed:
+Valet cho phép bạn chuyển đổi phiên bản PHP bằng lệnh `valet use php@version`. Valet sẽ cài phiên bản PHP được chỉ định thông qua Homebrew nếu phiên bản đó chưa được cài đặt:
 
 ```shell
 valet use php@8.2
@@ -114,54 +114,54 @@ valet use php@8.2
 valet use php
 ```
 
-You may also create a `.valetrc` file in the root of your project. The `.valetrc` file should contain the PHP version the site should use:
+Bạn cũng có thể tạo file `.valetrc` tại thư mục gốc của project. File `.valetrc` nên chứa phiên bản PHP mà site sẽ sử dụng:
 
 ```shell
 php=php@8.2
 ```
 
-Once this file has been created, you may simply execute the `valet use` command and the command will determine the site's preferred PHP version by reading the file.
+Sau khi file này được tạo, bạn chỉ cần thực thi lệnh `valet use`; lệnh sẽ đọc file để xác định phiên bản PHP mà site ưu tiên sử dụng.
 
 > [!WARNING]
-> Valet only serves one PHP version at a time, even if you have multiple PHP versions installed.
+> Valet chỉ phục vụ một phiên bản PHP tại một thời điểm, ngay cả khi bạn đã cài đặt nhiều phiên bản PHP.
 
 <a name="database"></a>
-#### Database
+#### Cơ sở dữ liệu
 
-If your application needs a database, check out [DBngin](https://dbngin.com), which provides a free, all-in-one database management tool that includes MySQL, PostgreSQL, and Redis. After DBngin has been installed, you can connect to your database at `127.0.0.1` using the `root` username and an empty string for the password.
+Nếu ứng dụng của bạn cần cơ sở dữ liệu, hãy xem [DBngin](https://dbngin.com), một công cụ quản lý cơ sở dữ liệu miễn phí, tất cả trong một, bao gồm MySQL, PostgreSQL và Redis. Sau khi cài đặt DBngin, bạn có thể kết nối tới cơ sở dữ liệu tại `127.0.0.1` bằng username `root` và password là chuỗi rỗng.
 
 <a name="resetting-your-installation"></a>
-#### Resetting Your Installation
+#### Đặt lại cài đặt
 
-If you are having trouble getting your Valet installation to run properly, executing the `composer global require laravel/valet` command followed by `valet install` will reset your installation and can solve a variety of problems. In rare cases, it may be necessary to "hard reset" Valet by executing `valet uninstall --force` followed by `valet install`.
+Nếu gặp vấn đề khiến Valet không hoạt động đúng, việc thực thi `composer global require laravel/valet` rồi `valet install` sẽ đặt lại cài đặt và có thể giải quyết nhiều loại sự cố. Trong một số trường hợp hiếm gặp, bạn có thể cần "hard reset" Valet bằng cách chạy `valet uninstall --force`, sau đó chạy `valet install`.
 
 <a name="upgrading-valet"></a>
-### Upgrading Valet
+### Nâng cấp Valet
 
-You may update your Valet installation by executing the `composer global require laravel/valet` command in your terminal. After upgrading, it is good practice to run the `valet install` command so Valet can make additional upgrades to your configuration files if necessary.
+Bạn có thể cập nhật Valet bằng cách thực thi lệnh `composer global require laravel/valet` trong terminal. Sau khi nâng cấp, bạn nên chạy `valet install` để Valet có thể thực hiện thêm các nâng cấp cần thiết cho những file cấu hình của bạn.
 
 <a name="upgrading-to-valet-4"></a>
-#### Upgrading to Valet 4
+#### Nâng cấp lên Valet 4
 
-If you're upgrading from Valet 3 to Valet 4, take the following steps to properly upgrade your Valet installation:
+Nếu đang nâng cấp từ Valet 3 lên Valet 4, hãy thực hiện các bước sau để nâng cấp Valet đúng cách:
 
 <div class="content-list" markdown="1">
 
-- If you've added `.valetphprc` files to customize your site's PHP version, rename each `.valetphprc` file to `.valetrc`. Then, prepend `php=` to the existing content of the `.valetrc` file.
-- Update any custom drivers to match the namespace, extension, type-hints, and return type-hints of the new driver system. You may consult Valet's [SampleValetDriver](https://github.com/laravel/valet/blob/d7787c025e60abc24a5195dc7d4c5c6f2d984339/cli/stubs/SampleValetDriver.php) as an example.
-- If you use PHP 7.1 - 7.4 to serve your sites, make sure you still use Homebrew to install a version of PHP that's 8.0 or higher, as Valet will use this version, even if it's not your primary linked version, to run some of its scripts.
+- Nếu bạn đã thêm các file `.valetphprc` để tùy chỉnh phiên bản PHP của site, hãy đổi tên từng file `.valetphprc` thành `.valetrc`. Sau đó, thêm `php=` vào đầu nội dung hiện có của file `.valetrc`.
+- Cập nhật mọi custom driver để khớp namespace, extension, type-hint và return type-hint của hệ thống driver mới. Bạn có thể tham khảo [SampleValetDriver](https://github.com/laravel/valet/blob/d7787c025e60abc24a5195dc7d4c5c6f2d984339/cli/stubs/SampleValetDriver.php) của Valet làm ví dụ.
+- Nếu sử dụng PHP 7.1 - 7.4 để phục vụ các site, hãy đảm bảo bạn vẫn dùng Homebrew để cài PHP 8.0 trở lên, vì Valet sẽ dùng phiên bản này để chạy một số script, ngay cả khi đó không phải phiên bản được link chính của bạn.
 
 </div>
 
 <a name="serving-sites"></a>
-## Serving Sites
+## Phục vụ các site
 
-Once Valet is installed, you're ready to start serving your Laravel applications. Valet provides two commands to help you serve your applications: `park` and `link`.
+Sau khi Valet được cài đặt, bạn đã sẵn sàng phục vụ các ứng dụng Laravel. Valet cung cấp hai lệnh giúp bạn phục vụ ứng dụng: `park` và `link`.
 
 <a name="the-park-command"></a>
-### The `park` Command
+### Lệnh `park`
 
-The `park` command registers a directory on your machine that contains your applications. Once the directory has been "parked" with Valet, all of the directories within that directory will be accessible in your web browser at `http://<directory-name>.test`:
+Lệnh `park` đăng ký một thư mục trên máy chứa các ứng dụng của bạn. Sau khi thư mục được "park" với Valet, tất cả thư mục con bên trong sẽ có thể truy cập từ trình duyệt tại `http://<directory-name>.test`:
 
 ```shell
 cd ~/Sites
@@ -169,12 +169,12 @@ cd ~/Sites
 valet park
 ```
 
-That's all there is to it. Now, any application you create within your "parked" directory will automatically be served using the `http://<directory-name>.test` convention. So, if your parked directory contains a directory named "laravel", the application within that directory will be accessible at `http://laravel.test`. In addition, Valet automatically allows you to access the site using wildcard subdomains (`http://foo.laravel.test`).
+Chỉ vậy là xong. Từ giờ, mọi ứng dụng bạn tạo trong thư mục đã "park" sẽ tự động được phục vụ theo quy ước `http://<directory-name>.test`. Ví dụ, nếu thư mục đã park chứa thư mục tên "laravel", ứng dụng trong đó sẽ có thể truy cập tại `http://laravel.test`. Ngoài ra, Valet tự động cho phép truy cập site bằng wildcard subdomain (`http://foo.laravel.test`).
 
 <a name="the-link-command"></a>
-### The `link` Command
+### Lệnh `link`
 
-The `link` command can also be used to serve your Laravel applications. This command is useful if you want to serve a single site in a directory and not the entire directory:
+Lệnh `link` cũng có thể được dùng để phục vụ ứng dụng Laravel. Lệnh này hữu ích khi bạn muốn phục vụ một site riêng lẻ trong một thư mục thay vì toàn bộ thư mục:
 
 ```shell
 cd ~/Sites/laravel
@@ -182,9 +182,9 @@ cd ~/Sites/laravel
 valet link
 ```
 
-Once an application has been linked to Valet using the `link` command, you may access the application using its directory name. So, the site that was linked in the example above may be accessed at `http://laravel.test`. In addition, Valet automatically allows you to access the site using wildcard sub-domains (`http://foo.laravel.test`).
+Sau khi ứng dụng được link với Valet bằng lệnh `link`, bạn có thể truy cập ứng dụng bằng tên thư mục của nó. Vì vậy, site được link trong ví dụ trên có thể truy cập tại `http://laravel.test`. Ngoài ra, Valet tự động cho phép bạn truy cập site bằng wildcard subdomain (`http://foo.laravel.test`).
 
-If you would like to serve the application at a different hostname, you may pass the hostname to the `link` command. For example, you may run the following command to make an application available at `http://application.test`:
+Nếu muốn phục vụ ứng dụng bằng hostname khác, bạn có thể truyền hostname vào lệnh `link`. Ví dụ, bạn có thể chạy lệnh sau để ứng dụng khả dụng tại `http://application.test`:
 
 ```shell
 cd ~/Sites/laravel
@@ -192,19 +192,19 @@ cd ~/Sites/laravel
 valet link application
 ```
 
-Of course, you may also serve applications on subdomains using the `link` command:
+Dĩ nhiên, bạn cũng có thể phục vụ ứng dụng trên subdomain bằng lệnh `link`:
 
 ```shell
 valet link api.application
 ```
 
-You may execute the `links` command to display a list of all of your linked directories:
+Bạn có thể thực thi lệnh `links` để hiển thị danh sách tất cả thư mục đã được link:
 
 ```shell
 valet links
 ```
 
-The `unlink` command may be used to destroy the symbolic link for a site:
+Lệnh `unlink` có thể được dùng để xóa symbolic link của một site:
 
 ```shell
 cd ~/Sites/laravel
@@ -213,31 +213,31 @@ valet unlink
 ```
 
 <a name="securing-sites"></a>
-### Securing Sites With TLS
+### Bảo mật site bằng TLS
 
-By default, Valet serves sites over HTTP. However, if you would like to serve a site over encrypted TLS using HTTP/2, you may use the `secure` command. For example, if your site is being served by Valet on the `laravel.test` domain, you should run the following command to secure it:
+Mặc định, Valet phục vụ site qua HTTP. Tuy nhiên, nếu muốn phục vụ site qua TLS được mã hóa bằng HTTP/2, bạn có thể dùng lệnh `secure`. Ví dụ, nếu site đang được Valet phục vụ trên domain `laravel.test`, bạn nên chạy lệnh sau để bảo mật site:
 
 ```shell
 valet secure laravel
 ```
 
-To "unsecure" a site and revert back to serving its traffic over plain HTTP, use the `unsecure` command. Like the `secure` command, this command accepts the hostname that you wish to unsecure:
+Để bỏ chế độ bảo mật của một site và quay lại phục vụ traffic qua HTTP thông thường, hãy dùng lệnh `unsecure`. Tương tự `secure`, lệnh này nhận hostname của site bạn muốn bỏ bảo mật:
 
 ```shell
 valet unsecure laravel
 ```
 
 <a name="serving-a-default-site"></a>
-### Serving a Default Site
+### Phục vụ site mặc định
 
-Sometimes, you may wish to configure Valet to serve a "default" site instead of a `404` when visiting an unknown `test` domain. To accomplish this, you may add a `default` option to your `~/.config/valet/config.json` configuration file containing the path to the site that should serve as your default site:
+Đôi khi, bạn có thể muốn cấu hình Valet phục vụ một site "mặc định" thay vì trả về `404` khi truy cập một domain `test` không xác định. Để làm điều này, hãy thêm option `default` vào file cấu hình `~/.config/valet/config.json`, với giá trị là đường dẫn tới site sẽ được dùng làm site mặc định:
 
     "default": "/Users/Sally/Sites/example-site",
 
 <a name="per-site-php-versions"></a>
-### Per-Site PHP Versions
+### Phiên bản PHP theo từng site
 
-By default, Valet uses your global PHP installation to serve your sites. However, if you need to support multiple PHP versions across various sites, you may use the `isolate` command to specify which PHP version a particular site should use. The `isolate` command configures Valet to use the specified PHP version for the site located in your current working directory:
+Mặc định, Valet sử dụng bản PHP global để phục vụ các site. Tuy nhiên, nếu cần hỗ trợ nhiều phiên bản PHP trên các site khác nhau, bạn có thể dùng lệnh `isolate` để chỉ định phiên bản PHP cho một site cụ thể. Lệnh `isolate` cấu hình Valet sử dụng phiên bản PHP được chỉ định cho site nằm trong thư mục làm việc hiện tại:
 
 ```shell
 cd ~/Sites/example-site
@@ -245,13 +245,13 @@ cd ~/Sites/example-site
 valet isolate php@8.0
 ```
 
-If your site name does not match the name of the directory that contains it, you may specify the site name using the `--site` option:
+Nếu tên site không trùng với tên thư mục chứa nó, bạn có thể chỉ định tên site bằng option `--site`:
 
 ```shell
 valet isolate php@8.0 --site="site-name"
 ```
 
-For convenience, you may use the `valet php`, `composer`, and `which-php` commands to proxy calls to the appropriate PHP CLI or tool based on the site's configured PHP version:
+Để thuận tiện, bạn có thể dùng các lệnh `valet php`, `composer` và `which-php` để proxy lời gọi tới PHP CLI hoặc công cụ phù hợp dựa trên phiên bản PHP đã cấu hình cho site:
 
 ```shell
 valet php
@@ -259,32 +259,32 @@ valet composer
 valet which-php
 ```
 
-You may execute the `isolated` command to display a list of all of your isolated sites and their PHP versions:
+Bạn có thể chạy lệnh `isolated` để hiển thị danh sách tất cả các site đang được isolate cùng phiên bản PHP tương ứng:
 
 ```shell
 valet isolated
 ```
 
-To revert a site back to Valet's globally installed PHP version, you may invoke the `unisolate` command from the site's root directory:
+Để đưa một site trở lại phiên bản PHP được cài đặt toàn cục của Valet, bạn có thể chạy lệnh `unisolate` từ thư mục gốc của site:
 
 ```shell
 valet unisolate
 ```
 
 <a name="sharing-sites"></a>
-## Sharing Sites
+## Chia sẻ site
 
-Valet includes a command to share your local sites with the world, providing an easy way to test your site on mobile devices or share it with team members and clients.
+Valet cung cấp lệnh để chia sẻ các site cục bộ ra Internet, giúp bạn dễ dàng kiểm thử site trên thiết bị di động hoặc chia sẻ với thành viên trong nhóm và khách hàng.
 
-Out of the box, Valet supports sharing your sites via ngrok or Expose. Before sharing a site, you should update your Valet configuration using the `share-tool` command, specifying `ngrok`, `expose`, or `cloudflared`:
+Mặc định, Valet hỗ trợ chia sẻ site thông qua ngrok hoặc Expose. Trước khi chia sẻ một site, bạn nên cập nhật cấu hình Valet bằng lệnh `share-tool`, chỉ định `ngrok`, `expose` hoặc `cloudflared`:
 
 ```shell
 valet share-tool ngrok
 ```
 
-If you choose a tool and don't have it installed via Homebrew (for ngrok and cloudflared) or Composer (for Expose), Valet will automatically prompt you to install it. Of course, both tools require you to authenticate your ngrok or Expose account before you can start sharing sites.
+Nếu bạn chọn một công cụ nhưng chưa cài đặt nó qua Homebrew (đối với ngrok và cloudflared) hoặc Composer (đối với Expose), Valet sẽ tự động nhắc bạn cài đặt. Các công cụ này yêu cầu bạn xác thực tài khoản tương ứng trước khi có thể bắt đầu chia sẻ site.
 
-To share a site, navigate to the site's directory in your terminal and run Valet's `share` command. A publicly accessible URL will be placed into your clipboard and is ready to paste directly into your browser or to be shared with your team:
+Để chia sẻ một site, hãy chuyển đến thư mục của site trong terminal và chạy lệnh `share` của Valet. Một URL có thể truy cập công khai sẽ được sao chép vào clipboard để bạn dán trực tiếp vào trình duyệt hoặc chia sẻ với nhóm:
 
 ```shell
 cd ~/Sites/laravel
@@ -292,45 +292,45 @@ cd ~/Sites/laravel
 valet share
 ```
 
-To stop sharing your site, you may press `Control + C`.
+Để dừng chia sẻ site, bạn có thể nhấn `Control + C`.
 
 > [!WARNING]
-> If you're using a custom DNS server (like `1.1.1.1`), ngrok sharing may not work correctly. If this is the case on your machine, open your Mac's system settings, go to the Network settings, open the Advanced settings, then go the DNS tab and add `127.0.0.1` as your first DNS server.
+> Nếu bạn đang dùng DNS server tùy chỉnh (như `1.1.1.1`), việc chia sẻ qua ngrok có thể không hoạt động chính xác. Trong trường hợp đó, hãy mở cài đặt hệ thống của Mac, vào Network, mở Advanced, chuyển đến tab DNS và thêm `127.0.0.1` làm DNS server đầu tiên.
 
 <a name="sharing-sites-via-ngrok"></a>
-#### Sharing Sites via Ngrok
+#### Chia sẻ site via Ngrok
 
-Sharing your site using ngrok requires you to [create an ngrok account](https://dashboard.ngrok.com/signup) and [set up an authentication token](https://dashboard.ngrok.com/get-started/your-authtoken). Once you have an authentication token, you can update your Valet configuration with that token:
+Để chia sẻ site bằng ngrok, bạn cần [tạo tài khoản ngrok](https://dashboard.ngrok.com/signup) và [thiết lập authentication token](https://dashboard.ngrok.com/get-started/your-authtoken). Sau khi có token, bạn có thể cập nhật cấu hình Valet bằng token đó:
 
 ```shell
 valet set-ngrok-token YOUR_TOKEN_HERE
 ```
 
 > [!NOTE]
-> You may pass additional ngrok parameters to the share command, such as `valet share --region=eu`. For more information, consult the [ngrok documentation](https://ngrok.com/docs).
+> Bạn có thể truyền thêm các tham số ngrok cho lệnh share, chẳng hạn `valet share --region=eu`. Để biết thêm thông tin, hãy tham khảo [tài liệu ngrok](https://ngrok.com/docs).
 
 <a name="sharing-sites-via-expose"></a>
-#### Sharing Sites via Expose
+#### Chia sẻ site via Expose
 
-Sharing your site using Expose requires you to [create an Expose account](https://expose.dev/register) and [authenticate with Expose via your authentication token](https://expose.dev/docs/getting-started/getting-your-token).
+Để chia sẻ site bằng Expose, bạn cần [tạo tài khoản Expose](https://expose.dev/register) và [xác thực với Expose bằng authentication token](https://expose.dev/docs/getting-started/getting-your-token).
 
-You may consult the [Expose documentation](https://expose.dev/docs) for information regarding the additional command-line parameters it supports.
+Bạn có thể tham khảo [tài liệu Expose](https://expose.dev/docs) để biết thêm về các tham số dòng lệnh mà công cụ hỗ trợ.
 
 <a name="sharing-sites-on-your-local-network"></a>
-### Sharing Sites on Your Local Network
+### Chia sẻ site trong mạng cục bộ
 
-Valet restricts incoming traffic to the internal `127.0.0.1` interface by default so that your development machine isn't exposed to security risks from the Internet.
+Mặc định, Valet giới hạn lưu lượng truy cập đến ở interface nội bộ `127.0.0.1` để máy phát triển của bạn không bị phơi bày trước các rủi ro bảo mật từ Internet.
 
-If you wish to allow other devices on your local network to access the Valet sites on your machine via your machine's IP address (eg: `192.168.1.10/application.test`), you will need to manually edit the appropriate Nginx configuration file for that site to remove the restriction on the `listen` directive. You should remove the `127.0.0.1:` prefix on the `listen` directive for ports 80 and 443.
+Nếu muốn cho phép các thiết bị khác trong mạng cục bộ truy cập các site Valet trên máy thông qua địa chỉ IP của máy (ví dụ `192.168.1.10/application.test`), bạn cần chỉnh sửa thủ công file cấu hình Nginx tương ứng của site để bỏ giới hạn trên directive `listen`. Hãy xóa tiền tố `127.0.0.1:` khỏi directive `listen` cho các cổng 80 và 443.
 
-If you have not run `valet secure` on the project, you can open up network access for all non-HTTPS sites by editing the `/usr/local/etc/nginx/valet/valet.conf` file. However, if you're serving the project site over HTTPS (you have run `valet secure` for the site) then you should edit the `~/.config/valet/Nginx/app-name.test` file.
+Nếu chưa chạy `valet secure` cho project, bạn có thể mở quyền truy cập mạng cho tất cả site không dùng HTTPS bằng cách chỉnh sửa file `/usr/local/etc/nginx/valet/valet.conf`. Tuy nhiên, nếu site đang được phục vụ qua HTTPS (đã chạy `valet secure`), bạn nên chỉnh sửa file `~/.config/valet/Nginx/app-name.test`.
 
-Once you have updated your Nginx configuration, run the `valet restart` command to apply the configuration changes.
+Sau khi cập nhật cấu hình Nginx, hãy chạy lệnh `valet restart` để áp dụng các thay đổi.
 
 <a name="site-specific-environment-variables"></a>
-## Site Specific Environment Variables
+## Biến môi trường riêng cho từng site
 
-Some applications using other frameworks may depend on server environment variables but do not provide a way for those variables to be configured within your project. Valet allows you to configure site specific environment variables by adding a `.valet-env.php` file within the root of your project. This file should return an array of site / environment variable pairs which will be added to the global `$_SERVER` array for each site specified in the array:
+Một số ứng dụng sử dụng framework khác có thể phụ thuộc vào biến môi trường của server nhưng không cung cấp cách cấu hình các biến đó bên trong project. Valet cho phép cấu hình biến môi trường riêng cho từng site bằng cách thêm file `.valet-env.php` vào thư mục gốc của project. File này phải trả về một mảng các cặp site / biến môi trường; các giá trị này sẽ được thêm vào mảng toàn cục `$_SERVER` cho từng site được chỉ định:
 
 ```php
 <?php
@@ -349,11 +349,11 @@ return [
 ```
 
 <a name="proxying-services"></a>
-## Proxying Services
+## Proxy dịch vụ
 
-Sometimes you may wish to proxy a Valet domain to another service on your local machine. For example, you may occasionally need to run Valet while also running a separate site in Docker; however, Valet and Docker can't both bind to port 80 at the same time.
+Đôi khi bạn có thể muốn proxy một domain Valet đến một dịch vụ khác trên máy cục bộ. Ví dụ, bạn có thể cần chạy Valet đồng thời với một site riêng trong Docker; tuy nhiên Valet và Docker không thể cùng bind vào cổng 80.
 
-To solve this, you may use the `proxy` command to generate a proxy. For example, you may proxy all traffic from `http://elasticsearch.test` to `http://127.0.0.1:9200`:
+Để giải quyết vấn đề này, bạn có thể dùng lệnh `proxy` để tạo proxy. Ví dụ, bạn có thể proxy toàn bộ traffic từ `http://elasticsearch.test` đến `http://127.0.0.1:9200`:
 
 ```shell
 # Proxy over HTTP...
@@ -363,35 +363,35 @@ valet proxy elasticsearch http://127.0.0.1:9200
 valet proxy elasticsearch http://127.0.0.1:9200 --secure
 ```
 
-You may remove a proxy using the `unproxy` command:
+Bạn có thể xóa proxy bằng lệnh `unproxy`:
 
 ```shell
 valet unproxy elasticsearch
 ```
 
-You may use the `proxies` command to list all site configurations that are proxied:
+Bạn có thể dùng lệnh `proxies` để liệt kê tất cả cấu hình site đang được proxy:
 
 ```shell
 valet proxies
 ```
 
 <a name="custom-valet-drivers"></a>
-## Custom Valet Drivers
+## Driver Valet tùy chỉnh
 
-You can write your own Valet "driver" to serve PHP applications running on a framework or CMS that is not natively supported by Valet. When you install Valet, a `~/.config/valet/Drivers` directory is created which contains a `SampleValetDriver.php` file. This file contains a sample driver implementation to demonstrate how to write a custom driver. Writing a driver only requires you to implement three methods: `serves`, `isStaticFile`, and `frontControllerPath`.
+Bạn có thể tự viết "driver" Valet để phục vụ các ứng dụng PHP chạy trên framework hoặc CMS mà Valet không hỗ trợ sẵn. Khi cài Valet, thư mục `~/.config/valet/Drivers` được tạo cùng file `SampleValetDriver.php`. File này chứa một implementation mẫu minh họa cách viết driver tùy chỉnh. Để viết driver, bạn chỉ cần triển khai ba phương thức: `serves`, `isStaticFile` và `frontControllerPath`.
 
-All three methods receive the `$sitePath`, `$siteName`, and `$uri` values as their arguments. The `$sitePath` is the fully qualified path to the site being served on your machine, such as `/Users/Lisa/Sites/my-project`. The `$siteName` is the "host" / "site name" portion of the domain (`my-project`). The `$uri` is the incoming request URI (`/foo/bar`).
+Cả ba phương thức đều nhận các giá trị `$sitePath`, `$siteName` và `$uri` làm tham số. `$sitePath` là đường dẫn đầy đủ đến site đang được phục vụ trên máy, chẳng hạn `/Users/Lisa/Sites/my-project`. `$siteName` là phần "host" / "site name" của domain (`my-project`). `$uri` là URI của request đến (`/foo/bar`).
 
-Once you have completed your custom Valet driver, place it in the `~/.config/valet/Drivers` directory using the `FrameworkValetDriver.php` naming convention. For example, if you are writing a custom valet driver for WordPress, your filename should be `WordPressValetDriver.php`.
+Sau khi hoàn thành driver Valet tùy chỉnh, hãy đặt nó trong thư mục `~/.config/valet/Drivers` theo quy ước đặt tên `FrameworkValetDriver.php`. Ví dụ, nếu viết driver tùy chỉnh cho WordPress, tên file nên là `WordPressValetDriver.php`.
 
-Let's take a look at a sample implementation of each method your custom Valet driver should implement.
+Hãy xem implementation mẫu cho từng phương thức mà driver Valet tùy chỉnh cần triển khai.
 
 <a name="the-serves-method"></a>
-#### The `serves` Method
+#### Phương thức `serves`
 
-The `serves` method should return `true` if your driver should handle the incoming request. Otherwise, the method should return `false`. So, within this method, you should attempt to determine if the given `$sitePath` contains a project of the type you are trying to serve.
+Phương thức `serves` phải trả về `true` nếu driver cần xử lý request đến. Ngược lại, phương thức phải trả về `false`. Vì vậy, trong phương thức này, bạn nên xác định xem `$sitePath` được cung cấp có chứa loại project mà driver cần phục vụ hay không.
 
-For example, let's imagine we are writing a `WordPressValetDriver`. Our `serves` method might look something like this:
+Ví dụ, giả sử chúng ta đang viết `WordPressValetDriver`. Phương thức `serves` có thể trông như sau:
 
 ```php
 /**
@@ -404,9 +404,9 @@ public function serves(string $sitePath, string $siteName, string $uri): bool
 ```
 
 <a name="the-isstaticfile-method"></a>
-#### The `isStaticFile` Method
+#### Phương thức `isStaticFile`
 
-The `isStaticFile` should determine if the incoming request is for a file that is "static", such as an image or a stylesheet. If the file is static, the method should return the fully qualified path to the static file on disk. If the incoming request is not for a static file, the method should return `false`:
+Phương thức `isStaticFile` phải xác định request đến có yêu cầu một file "static", chẳng hạn hình ảnh hoặc stylesheet, hay không. Nếu là file static, phương thức phải trả về đường dẫn đầy đủ đến file trên ổ đĩa. Nếu request không dành cho file static, phương thức phải trả về `false`:
 
 ```php
 /**
@@ -425,12 +425,12 @@ public function isStaticFile(string $sitePath, string $siteName, string $uri)
 ```
 
 > [!WARNING]
-> The `isStaticFile` method will only be called if the `serves` method returns `true` for the incoming request and the request URI is not `/`.
+> Phương thức `isStaticFile` chỉ được gọi nếu `serves` trả về `true` cho request đến và URI của request không phải `/`.
 
 <a name="the-frontcontrollerpath-method"></a>
-#### The `frontControllerPath` Method
+#### Phương thức `frontControllerPath`
 
-The `frontControllerPath` method should return the fully qualified path to your application's "front controller", which is typically an "index.php" file or equivalent:
+Phương thức `frontControllerPath` phải trả về đường dẫn đầy đủ đến "front controller" của ứng dụng, thường là file `index.php` hoặc tương đương:
 
 ```php
 /**
@@ -443,9 +443,9 @@ public function frontControllerPath(string $sitePath, string $siteName, string $
 ```
 
 <a name="local-drivers"></a>
-### Local Drivers
+### Driver cục bộ
 
-If you would like to define a custom Valet driver for a single application, create a `LocalValetDriver.php` file in the application's root directory. Your custom driver may extend the base `ValetDriver` class or extend an existing application specific driver such as the `LaravelValetDriver`:
+Nếu muốn định nghĩa driver Valet tùy chỉnh cho một ứng dụng duy nhất, hãy tạo file `LocalValetDriver.php` trong thư mục gốc của ứng dụng. Driver tùy chỉnh có thể kế thừa class cơ sở `ValetDriver` hoặc một driver dành riêng cho ứng dụng đã có như `LaravelValetDriver`:
 
 ```php
 use Valet\Drivers\LaravelValetDriver;
@@ -471,93 +471,95 @@ class LocalValetDriver extends LaravelValetDriver
 ```
 
 <a name="other-valet-commands"></a>
-## Other Valet Commands
+## Các lệnh Valet khác
 
 <div class="overflow-auto">
 
 | Command | Description |
 | --- | --- |
-| `valet list` | Display a list of all Valet commands. |
-| `valet diagnose` | Output diagnostics to aid in debugging Valet. |
-| `valet directory-listing` | Determine directory-listing behavior. Default is "off", which renders a 404 page for directories. |
-| `valet forget` | Run this command from a "parked" directory to remove it from the parked directory list. |
-| `valet log` | View a list of logs which are written by Valet's services. |
-| `valet paths` | View all of your "parked" paths. |
-| `valet restart` | Restart the Valet daemons. |
-| `valet start` | Start the Valet daemons. |
-| `valet stop` | Stop the Valet daemons. |
-| `valet trust` | Add sudoers files for Brew and Valet to allow Valet commands to be run without prompting for your password. |
-| `valet uninstall` | Uninstall Valet: shows instructions for manual uninstall. Pass the `--force` option to aggressively delete all of Valet's resources. |
+| `valet list` | Hiển thị danh sách tất cả lệnh Valet. |
+| `valet diagnose` | Xuất thông tin chẩn đoán để hỗ trợ debug Valet. |
+| `valet directory-listing` | Xác định hành vi liệt kê thư mục. Mặc định là "off", khi đó thư mục sẽ trả về trang 404. |
+| `valet forget` | Chạy lệnh này từ một thư mục đã "park" để xóa nó khỏi danh sách thư mục đã park. |
+| `valet log` | Xem danh sách log được các dịch vụ của Valet ghi lại. |
+| `valet paths` | Xem tất cả đường dẫn đã "park". |
+| `valet restart` | Khởi động lại các daemon Valet. |
+| `valet start` | Khởi động các daemon Valet. |
+| `valet stop` | Dừng các daemon Valet. |
+| `valet trust` | Thêm file sudoers cho Brew và Valet để chạy các lệnh Valet mà không cần nhập mật khẩu. |
+| `valet uninstall` | Gỡ cài đặt Valet: hiển thị hướng dẫn gỡ thủ công. Truyền tùy chọn `--force` để xóa toàn bộ tài nguyên Valet một cách triệt để. |
 
 </div>
 
 <a name="valet-directories-and-files"></a>
-## Valet Directories and Files
+## Thư mục và file của Valet
 
-You may find the following directory and file information helpful while troubleshooting issues with your Valet environment:
+Thông tin về các thư mục và file sau có thể hữu ích khi bạn xử lý sự cố với môi trường Valet:
 
 #### `~/.config/valet`
 
-Contains all of Valet's configuration. You may wish to maintain a backup of this directory.
+Chứa toàn bộ cấu hình của Valet. Bạn có thể muốn duy trì một bản sao lưu của thư mục này.
 
 #### `~/.config/valet/dnsmasq.d/`
 
-This directory contains DNSMasq's configuration.
+Thư mục này chứa cấu hình của DNSMasq.
 
 #### `~/.config/valet/Drivers/`
 
-This directory contains Valet's drivers. Drivers determine how a particular framework / CMS is served.
+Thư mục này chứa các driver của Valet. Driver quyết định cách một framework / CMS cụ thể được phục vụ.
 
 #### `~/.config/valet/Nginx/`
 
-This directory contains all of Valet's Nginx site configurations. These files are rebuilt when running the `install` and `secure` commands.
+Thư mục này chứa toàn bộ cấu hình site Nginx của Valet. Các file này được tạo lại khi chạy các lệnh `install` và `secure`.
 
 #### `~/.config/valet/Sites/`
 
-This directory contains all of the symbolic links for your [linked projects](#the-link-command).
+Thư mục này chứa toàn bộ symbolic link cho các [project đã link](#the-link-command).
 
 #### `~/.config/valet/config.json`
 
-This file is Valet's master configuration file.
+Đây là file cấu hình chính của Valet.
 
 #### `~/.config/valet/valet.sock`
 
-This file is the PHP-FPM socket used by Valet's Nginx installation. This will only exist if PHP is running properly.
+Đây là PHP-FPM socket được bản cài đặt Nginx của Valet sử dụng. File này chỉ tồn tại khi PHP đang chạy đúng cách.
 
 #### `~/.config/valet/Log/fpm-php.www.log`
 
-This file is the user log for PHP errors.
+Đây là log cấp người dùng cho các lỗi PHP.
 
 #### `~/.config/valet/Log/nginx-error.log`
 
-This file is the user log for Nginx errors.
+Đây là log cấp người dùng cho các lỗi Nginx.
 
 #### `/usr/local/var/log/php-fpm.log`
 
-This file is the system log for PHP-FPM errors.
+Đây là log hệ thống cho các lỗi PHP-FPM.
 
 #### `/usr/local/var/log/nginx`
 
-This directory contains the Nginx access and error logs.
+Thư mục này chứa access log và error log của Nginx.
 
 #### `/usr/local/etc/php/X.X/conf.d`
 
-This directory contains the `*.ini` files for various PHP configuration settings.
+Thư mục này chứa các file `*.ini` cho nhiều thiết lập cấu hình PHP.
 
 #### `/usr/local/etc/php/X.X/php-fpm.d/valet-fpm.conf`
 
-This file is the PHP-FPM pool configuration file.
+Đây là file cấu hình pool PHP-FPM.
 
 #### `~/.composer/vendor/laravel/valet/cli/stubs/secure.valet.conf`
 
-This file is the default Nginx configuration used for building SSL certificates for your sites.
+Đây là cấu hình Nginx mặc định được dùng khi tạo chứng chỉ SSL cho các site.
 
 <a name="disk-access"></a>
-### Disk Access
+### Quyền truy cập ổ đĩa
 
-Since macOS 10.14, [access to some files and directories is restricted by default](https://manuals.info.apple.com/MANUALS/1000/MA1902/en_US/apple-platform-security-guide.pdf). These restrictions include the Desktop, Documents, and Downloads directories. In addition, network volume and removable volume access is restricted. Therefore, Valet recommends your site folders are located outside of these protected locations.
+Kể từ macOS 10.14, [quyền truy cập một số file và thư mục bị giới hạn theo mặc định](https://manuals.info.apple.com/MANUALS/1000/MA1902/en_US/apple-platform-security-guide.pdf). Các giới hạn này bao gồm thư mục Desktop, Documents và Downloads. Ngoài ra, quyền truy cập network volume và removable volume cũng bị hạn chế. Vì vậy, Valet khuyến nghị đặt thư mục site bên ngoài các vị trí được bảo vệ này.
 
-However, if you wish to serve sites from within one of those locations, you will need to give Nginx "Full Disk Access". Otherwise, you may encounter server errors or other unpredictable behavior from Nginx, especially when serving static assets. Typically, macOS will automatically prompt you to grant Nginx full access to these locations. Or, you may do so manually via `System Preferences` > `Security & Privacy` > `Privacy` and selecting `Full Disk Access`. Next, enable any `nginx` entries in the main window pane.
+Tuy nhiên, nếu muốn phục vụ site từ một trong các vị trí đó, bạn cần cấp cho Nginx quyền "Full Disk Access". Nếu không, bạn có thể gặp lỗi server hoặc hành vi khó dự đoán từ Nginx, đặc biệt khi phục vụ static asset. Thông thường macOS sẽ tự động yêu cầu bạn cấp quyền truy cập đầy đủ cho Nginx. Bạn cũng có thể thực hiện thủ công qua `System Preferences` > `Security & Privacy` > `Privacy`, chọn `Full Disk Access`, sau đó bật các mục `nginx` trong cửa sổ chính.
+
+---
 
 ## Tài liệu chính thức
 

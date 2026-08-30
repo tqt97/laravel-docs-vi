@@ -1,14 +1,14 @@
-# Notifications
+# Thông báo
 
-- [Introduction](#introduction)
-- [Generating Notifications](#generating-notifications)
-- [Sending Notifications](#sending-notifications)
-    - [Using the Notifiable Trait](#using-the-notifiable-trait)
-    - [Using the Notification Facade](#using-the-notification-facade)
-    - [Specifying Delivery Channels](#specifying-delivery-channels)
-    - [Queueing Notifications](#queueing-notifications)
-    - [On-Demand Notifications](#on-demand-notifications)
-- [Mail Notifications](#mail-notifications)
+- [Giới thiệu](#introduction)
+- [Tạo thông báo](#generating-notifications)
+- [Gửi thông báo](#sending-notifications)
+    - [Sử dụng trait Notifiable](#using-the-notifiable-trait)
+    - [Sử dụng facade Notification](#using-the-notification-facade)
+    - [Chỉ định kênh gửi](#specifying-delivery-channels)
+    - [Đưa thông báo vào hàng đợi](#queueing-notifications)
+    - [Thông báo theo yêu cầu](#on-demand-notifications)
+- [Thông báo qua mail](#mail-notifications)
     - [Formatting Mail Messages](#formatting-mail-messages)
     - [Customizing the Sender](#customizing-the-sender)
     - [Customizing the Recipient](#customizing-the-recipient)
@@ -51,30 +51,30 @@
 - [Custom Channels](#custom-channels)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-In addition to support for [sending email](/docs/{{version}}/mail), Laravel provides support for sending notifications across a variety of delivery channels, including email, SMS (via [Vonage](https://www.vonage.com/communications-apis/), formerly known as Nexmo), and [Slack](https://slack.com). In addition, a variety of [community built notification channels](https://laravel-notification-channels.com/about/#suggesting-a-new-channel) have been created to send notifications over dozens of different channels! Notifications may also be stored in a database so they may be displayed in your web interface.
+Ngoài khả năng [gửi email](/docs/{{version}}/mail), Laravel còn hỗ trợ gửi thông báo qua nhiều kênh khác nhau, bao gồm email, SMS (thông qua [Vonage](https://www.vonage.com/communications-apis/), trước đây được gọi là Nexmo) và [Slack](https://slack.com). Ngoài ra, cộng đồng đã xây dựng nhiều [kênh thông báo](https://laravel-notification-channels.com/about/#suggesting-a-new-channel) để gửi thông báo qua hàng chục kênh khác nhau. Thông báo cũng có thể được lưu trong cơ sở dữ liệu để hiển thị trên giao diện web của ứng dụng.
 
-Typically, notifications should be short, informational messages that notify users of something that occurred in your application. For example, if you are writing a billing application, you might send an "Invoice Paid" notification to your users via the email and SMS channels.
+Thông thường, thông báo nên là những thông điệp ngắn gọn, cung cấp thông tin về một sự kiện đã xảy ra trong ứng dụng. Ví dụ, nếu đang xây dựng ứng dụng thanh toán, bạn có thể gửi thông báo "Invoice Paid" cho người dùng qua email và SMS.
 
 <a name="generating-notifications"></a>
-## Generating Notifications
+## Tạo thông báo
 
-In Laravel, each notification is represented by a single class that is typically stored in the `app/Notifications` directory. Don't worry if you don't see this directory in your application - it will be created for you when you run the `make:notification` Artisan command:
+Trong Laravel, mỗi thông báo được biểu diễn bởi một class, thường được lưu trong thư mục `app/Notifications`. Nếu chưa thấy thư mục này trong ứng dụng, bạn không cần tạo thủ công; Laravel sẽ tạo nó khi chạy lệnh Artisan `make:notification`:
 
 ```shell
 php artisan make:notification InvoicePaid
 ```
 
-This command will place a fresh notification class in your `app/Notifications` directory. Each notification class contains a `via` method and a variable number of message building methods, such as `toMail` or `toDatabase`, that convert the notification to a message tailored for that particular channel.
+Lệnh này sẽ tạo một class thông báo mới trong thư mục `app/Notifications`. Mỗi class thông báo chứa phương thức `via` cùng một số phương thức xây dựng message như `toMail` hoặc `toDatabase`; các phương thức này chuyển thông báo thành message phù hợp với từng kênh cụ thể.
 
 <a name="sending-notifications"></a>
-## Sending Notifications
+## Gửi thông báo
 
 <a name="using-the-notifiable-trait"></a>
-### Using the Notifiable Trait
+### Sử dụng trait Notifiable
 
-Notifications may be sent in two ways: using the `notify` method of the `Notifiable` trait or using the `Notification` [facade](/docs/{{version}}/facades). The `Notifiable` trait is included on your application's `App\Models\User` model by default:
+Có hai cách để gửi thông báo: sử dụng phương thức `notify` của trait `Notifiable`, hoặc sử dụng [facade](/docs/{{version}}/facades) `Notification`. Theo mặc định, trait `Notifiable` đã được dùng trong model `App\Models\User` của ứng dụng:
 
 ```php
 <?php
@@ -90,7 +90,7 @@ class User extends Authenticatable
 }
 ```
 
-The `notify` method that is provided by this trait expects to receive a notification instance:
+Phương thức `notify` do trait này cung cấp nhận vào một instance thông báo:
 
 ```php
 use App\Notifications\InvoicePaid;
@@ -99,12 +99,12 @@ $user->notify(new InvoicePaid($invoice));
 ```
 
 > [!NOTE]
-> Remember, you may use the `Notifiable` trait on any of your models. You are not limited to only including it on your `User` model.
+> Bạn có thể sử dụng trait `Notifiable` trên bất kỳ model nào, không chỉ riêng model `User`.
 
 <a name="using-the-notification-facade"></a>
-### Using the Notification Facade
+### Sử dụng facade Notification
 
-Alternatively, you may send notifications via the `Notification` [facade](/docs/{{version}}/facades). This approach is useful when you need to send a notification to multiple notifiable entities such as a collection of users. To send notifications using the facade, pass all of the notifiable entities and the notification instance to the `send` method:
+Ngoài ra, bạn có thể gửi thông báo thông qua [facade](/docs/{{version}}/facades) `Notification`. Cách này hữu ích khi cần gửi một thông báo cho nhiều đối tượng có thể nhận thông báo, chẳng hạn một collection người dùng. Để gửi bằng facade, truyền tất cả đối tượng nhận thông báo và instance thông báo vào phương thức `send`:
 
 ```php
 use Illuminate\Support\Facades\Notification;
@@ -112,21 +112,21 @@ use Illuminate\Support\Facades\Notification;
 Notification::send($users, new InvoicePaid($invoice));
 ```
 
-You can also send notifications immediately using the `sendNow` method. This method will send the notification immediately even if the notification implements the `ShouldQueue` interface:
+Bạn cũng có thể gửi thông báo ngay lập tức bằng phương thức `sendNow`. Phương thức này sẽ gửi thông báo ngay cả khi notification triển khai interface `ShouldQueue`:
 
 ```php
 Notification::sendNow($developers, new DeploymentCompleted($deployment));
 ```
 
 <a name="specifying-delivery-channels"></a>
-### Specifying Delivery Channels
+### Chỉ định kênh gửi
 
-Every notification class has a `via` method that determines on which channels the notification will be delivered. Notifications may be sent on the `mail`, `database`, `broadcast`, `vonage`, and `slack` channels.
+Mỗi class thông báo đều có phương thức `via` để xác định các kênh mà thông báo sẽ được gửi qua. Thông báo có thể được gửi qua các kênh `mail`, `database`, `broadcast`, `vonage` và `slack`.
 
 > [!NOTE]
-> If you would like to use other delivery channels such as Telegram or Pusher, check out the community driven [Laravel Notification Channels website](http://laravel-notification-channels.com).
+> Nếu muốn sử dụng các kênh khác như Telegram hoặc Pusher, hãy tham khảo [Laravel Notification Channels](http://laravel-notification-channels.com) do cộng đồng phát triển.
 
-The `via` method receives a `$notifiable` instance, which will be an instance of the class to which the notification is being sent. You may use `$notifiable` to determine which channels the notification should be delivered on:
+Phương thức `via` nhận một instance `$notifiable`, tức instance của class mà thông báo sẽ được gửi tới. Bạn có thể sử dụng `$notifiable` để xác định những kênh cần dùng để gửi thông báo:
 
 ```php
 /**
@@ -141,12 +141,12 @@ public function via(object $notifiable): array
 ```
 
 <a name="queueing-notifications"></a>
-### Queueing Notifications
+### Đưa thông báo vào hàng đợi
 
 > [!WARNING]
-> Before queueing notifications, you should configure your queue and [start a worker](/docs/{{version}}/queues#running-the-queue-worker).
+> Trước khi đưa thông báo vào hàng đợi, bạn nên cấu hình queue và [khởi động worker](/docs/{{version}}/queues#running-the-queue-worker).
 
-Sending notifications can take time, especially if the channel needs to make an external API call to deliver the notification. To speed up your application's response time, let your notification be queued by adding the `ShouldQueue` interface and `Queueable` trait to your class. The interface and trait are already imported for all notifications generated using the `make:notification` command, so you may immediately add them to your notification class:
+Việc gửi thông báo có thể mất thời gian, đặc biệt khi kênh gửi cần gọi API bên ngoài. Để cải thiện thời gian phản hồi của ứng dụng, hãy đưa thông báo vào hàng đợi bằng cách thêm interface `ShouldQueue` và trait `Queueable` vào class. Interface và trait này đã được import trong các notification được tạo bằng lệnh `make:notification`, vì vậy bạn có thể sử dụng ngay:
 
 ```php
 <?php
@@ -165,18 +165,18 @@ class InvoicePaid extends Notification implements ShouldQueue
 }
 ```
 
-Once the `ShouldQueue` interface has been added to your notification, you may send the notification like normal. Laravel will detect the `ShouldQueue` interface on the class and automatically queue the delivery of the notification:
+Sau khi thêm interface `ShouldQueue`, bạn vẫn gửi thông báo như bình thường. Laravel sẽ phát hiện interface `ShouldQueue` trên class và tự động đưa việc gửi thông báo vào hàng đợi:
 
 ```php
 $user->notify(new InvoicePaid($invoice));
 ```
 
-When queueing notifications, a queued job will be created for each recipient and channel combination. For example, six jobs will be dispatched to the queue if your notification has three recipients and two channels.
+Khi đưa thông báo vào hàng đợi, Laravel sẽ tạo một queued job cho mỗi tổ hợp giữa người nhận và kênh gửi. Ví dụ, nếu thông báo có ba người nhận và hai kênh, sáu job sẽ được dispatch vào hàng đợi.
 
 <a name="delaying-notifications"></a>
-#### Delaying Notifications
+#### Trì hoãn thông báo
 
-If you would like to delay the delivery of the notification, you may chain the `delay` method onto your notification instantiation:
+Nếu muốn trì hoãn việc gửi thông báo, bạn có thể chain phương thức `delay` khi khởi tạo notification:
 
 ```php
 $delay = now()->plus(minutes: 10);
@@ -184,7 +184,7 @@ $delay = now()->plus(minutes: 10);
 $user->notify((new InvoicePaid($invoice))->delay($delay));
 ```
 
-You may pass an array to the `delay` method to specify the delay amount for specific channels:
+Bạn có thể truyền một mảng vào phương thức `delay` để chỉ định thời gian trì hoãn riêng cho từng kênh:
 
 ```php
 $user->notify((new InvoicePaid($invoice))->delay([
@@ -193,7 +193,7 @@ $user->notify((new InvoicePaid($invoice))->delay([
 ]));
 ```
 
-Alternatively, you may define a `withDelay` method on the notification class itself. The `withDelay` method should return an array of channel names and delay values:
+Ngoài ra, bạn có thể định nghĩa phương thức `withDelay` ngay trên class notification. Phương thức `withDelay` cần trả về một mảng gồm tên kênh và giá trị thời gian trì hoãn tương ứng:
 
 ```php
 /**
@@ -211,9 +211,9 @@ public function withDelay(object $notifiable): array
 ```
 
 <a name="customizing-the-notification-queue-connection"></a>
-#### Customizing the Notification Queue Connection
+#### Tùy chỉnh connection hàng đợi của thông báo
 
-By default, queued notifications will be queued using your application's default queue connection. If you would like to specify a different connection that should be used for a particular notification, you may call the `onConnection` method from your notification's constructor:
+Theo mặc định, thông báo trong hàng đợi sử dụng queue connection mặc định của ứng dụng. Nếu muốn chỉ định connection khác cho một notification cụ thể, bạn có thể gọi phương thức `onConnection` trong constructor của notification:
 
 ```php
 <?php
@@ -238,7 +238,7 @@ class InvoicePaid extends Notification implements ShouldQueue
 }
 ```
 
-Or, if you would like to specify a specific queue connection that should be used for each notification channel supported by the notification, you may define a `viaConnections` method on your notification. This method should return an array of channel name / queue connection name pairs:
+Hoặc, nếu muốn chỉ định queue connection riêng cho từng kênh mà notification hỗ trợ, bạn có thể định nghĩa phương thức `viaConnections`. Phương thức này cần trả về một mảng các cặp tên kênh / tên queue connection:
 
 ```php
 /**
@@ -256,9 +256,9 @@ public function viaConnections(): array
 ```
 
 <a name="customizing-notification-channel-queues"></a>
-#### Customizing Notification Channel Queues
+#### Tùy chỉnh hàng đợi cho từng kênh thông báo
 
-If you would like to specify a specific queue that should be used for each notification channel supported by the notification, you may define a `viaQueues` method on your notification. This method should return an array of channel name / queue name pairs:
+Nếu muốn chỉ định queue riêng cho từng kênh notification, bạn có thể định nghĩa phương thức `viaQueues`. Phương thức này cần trả về một mảng các cặp tên kênh / tên queue:
 
 ```php
 /**
@@ -276,9 +276,9 @@ public function viaQueues(): array
 ```
 
 <a name="customizing-queued-notification-job-properties"></a>
-#### Customizing Queued Notification Job Attributes
+#### Tùy chỉnh thuộc tính job của thông báo trong hàng đợi
 
-You may customize the behavior of the underlying queued job by defining queue attributes on your notification class. These attributes will be inherited by the queued job that sends the notification:
+Bạn có thể tùy chỉnh hành vi của queued job bên dưới bằng cách định nghĩa các queue attribute trên class notification. Các attribute này sẽ được job gửi thông báo kế thừa:
 
 ```php
 <?php
@@ -305,7 +305,7 @@ class InvoicePaid extends Notification implements ShouldQueue
 }
 ```
 
-If you would like to ensure the privacy and integrity of a queued notification's data via [encryption](/docs/{{version}}/encryption), add the `ShouldBeEncrypted` interface to your notification class:
+Nếu muốn bảo đảm tính riêng tư và toàn vẹn của dữ liệu notification trong hàng đợi bằng [mã hóa](/docs/{{version}}/encryption), hãy thêm interface `ShouldBeEncrypted` vào class notification:
 
 ```php
 <?php
@@ -325,7 +325,7 @@ class InvoicePaid extends Notification implements ShouldQueue, ShouldBeEncrypted
 }
 ```
 
-In addition to defining these attributes directly on your notification class, you may also define `backoff` and `retryUntil` methods to specify the backoff strategy and retry timeout for the queued notification job:
+Ngoài việc định nghĩa trực tiếp các attribute này trên class notification, bạn cũng có thể định nghĩa các phương thức `backoff` và `retryUntil` để chỉ định chiến lược backoff và thời điểm dừng retry cho queued notification job:
 
 ```php
 use DateTime;
@@ -348,12 +348,12 @@ public function retryUntil(): DateTime
 ```
 
 > [!NOTE]
-> For more information on these job attributes and methods, please review the documentation on [queued jobs](/docs/{{version}}/queues#max-job-attempts-and-timeout).
+> Để biết thêm về các attribute và phương thức của job, hãy xem tài liệu về [queued job](/docs/{{version}}/queues#max-job-attempts-and-timeout).
 
 <a name="queued-notification-middleware"></a>
-#### Queued Notification Middleware
+#### Middleware cho thông báo trong hàng đợi
 
-Queued notifications may define middleware [just like queued jobs](/docs/{{version}}/queues#job-middleware). To get started, define a `middleware` method on your notification class. The `middleware` method will receive `$notifiable` and `$channel` variables, which allow you to customize the returned middleware based on the notification's destination:
+Notification trong hàng đợi có thể định nghĩa middleware [tương tự queued job](/docs/{{version}}/queues#job-middleware). Để bắt đầu, hãy định nghĩa phương thức `middleware` trên class notification. Phương thức này nhận các biến `$notifiable` và `$channel`, cho phép tùy chỉnh middleware trả về dựa trên đích gửi của notification:
 
 ```php
 use Illuminate\Queue\Middleware\RateLimited;
@@ -374,11 +374,11 @@ public function middleware(object $notifiable, string $channel)
 ```
 
 <a name="queued-notifications-and-database-transactions"></a>
-#### Queued Notifications and Database Transactions
+#### Thông báo trong hàng đợi và transaction cơ sở dữ liệu
 
-When queued notifications are dispatched within database transactions, they may be processed by the queue before the database transaction has committed. When this happens, any updates you have made to models or database records during the database transaction may not yet be reflected in the database. In addition, any models or database records created within the transaction may not exist in the database. If your notification depends on these models, unexpected errors can occur when the job that sends the queued notification is processed.
+Khi notification trong hàng đợi được dispatch bên trong transaction cơ sở dữ liệu, queue có thể xử lý chúng trước khi transaction được commit. Khi đó, các thay đổi bạn đã thực hiện trên model hoặc bản ghi trong transaction có thể chưa được phản ánh trong cơ sở dữ liệu. Ngoài ra, model hoặc bản ghi được tạo bên trong transaction có thể vẫn chưa tồn tại trong cơ sở dữ liệu. Nếu notification phụ thuộc vào các model này, lỗi ngoài mong đợi có thể xảy ra khi job gửi notification được xử lý.
 
-If your queue connection's `after_commit` configuration option is set to `false`, you may still indicate that a particular queued notification should be dispatched after all open database transactions have been committed by calling the `afterCommit` method when sending the notification:
+Nếu tùy chọn cấu hình `after_commit` của queue connection được đặt thành `false`, bạn vẫn có thể chỉ định một notification cụ thể trong hàng đợi chỉ được dispatch sau khi tất cả transaction cơ sở dữ liệu đang mở đã được commit bằng cách gọi phương thức `afterCommit` khi gửi notification:
 
 ```php
 use App\Notifications\InvoicePaid;
@@ -386,7 +386,7 @@ use App\Notifications\InvoicePaid;
 $user->notify((new InvoicePaid($invoice))->afterCommit());
 ```
 
-Alternatively, you may call the `afterCommit` method from your notification's constructor:
+Ngoài ra, bạn có thể gọi phương thức `afterCommit` từ constructor của notification:
 
 ```php
 <?php
@@ -412,14 +412,14 @@ class InvoicePaid extends Notification implements ShouldQueue
 ```
 
 > [!NOTE]
-> To learn more about working around these issues, please review the documentation regarding [queued jobs and database transactions](/docs/{{version}}/queues#jobs-and-database-transactions).
+> Để tìm hiểu thêm cách xử lý các vấn đề này, hãy xem tài liệu về [queued job và transaction cơ sở dữ liệu](/docs/{{version}}/queues#jobs-and-database-transactions).
 
 <a name="determining-if-the-queued-notification-should-be-sent"></a>
-#### Determining if a Queued Notification Should Be Sent
+#### Xác định có nên gửi thông báo trong hàng đợi hay không
 
-After a queued notification has been dispatched for the queue for background processing, it will typically be accepted by a queue worker and sent to its intended recipient.
+Sau khi notification trong hàng đợi được dispatch để xử lý nền, thông thường queue worker sẽ nhận notification và gửi đến người nhận dự kiến.
 
-However, if you would like to make the final determination on whether the queued notification should be sent after it is being processed by a queue worker, you may define a `shouldSend` method on the notification class. If this method returns `false`, the notification will not be sent:
+Tuy nhiên, nếu muốn đưa ra quyết định cuối cùng về việc có gửi notification hay không sau khi queue worker bắt đầu xử lý, bạn có thể định nghĩa phương thức `shouldSend` trên class notification. Nếu phương thức này trả về `false`, notification sẽ không được gửi:
 
 ```php
 /**
@@ -432,9 +432,9 @@ public function shouldSend(object $notifiable, string $channel): bool
 ```
 
 <a name="after-sending-notifications"></a>
-#### After Sending Notifications
+#### Sau khi gửi thông báo
 
-If you would like to execute code after a notification has been sent, you may define an `afterSending` method on the notification class. This method will receive the notifiable entity, the channel name, and the response from the channel:
+Nếu muốn thực thi code sau khi notification đã được gửi, bạn có thể định nghĩa phương thức `afterSending` trên class notification. Phương thức này nhận entity có thể nhận notification, tên channel và response từ channel:
 
 ```php
 /**
@@ -447,9 +447,9 @@ public function afterSending(object $notifiable, string $channel, mixed $respons
 ```
 
 <a name="on-demand-notifications"></a>
-### On-Demand Notifications
+### Thông báo theo yêu cầu
 
-Sometimes you may need to send a notification to someone who is not stored as a "user" of your application. Using the `Notification` facade's `route` method, you may specify ad-hoc notification routing information before sending the notification:
+Đôi khi bạn cần gửi notification cho một người không được lưu dưới dạng "user" trong ứng dụng. Với phương thức `route` của facade `Notification`, bạn có thể chỉ định thông tin định tuyến notification tùy thời điểm trước khi gửi:
 
 ```php
 use Illuminate\Broadcasting\Channel;
@@ -462,7 +462,7 @@ Notification::route('mail', 'taylor@example.com')
     ->notify(new InvoicePaid($invoice));
 ```
 
-If you would like to provide the recipient's name when sending an on-demand notification to the `mail` route, you may provide an array that contains the email address as the key and the name as the value of the first element in the array:
+Nếu muốn cung cấp tên người nhận khi gửi notification theo yêu cầu đến route `mail`, bạn có thể truyền một mảng trong đó địa chỉ email là key và tên người nhận là value của phần tử đầu tiên:
 
 ```php
 Notification::route('mail', [
@@ -470,7 +470,7 @@ Notification::route('mail', [
 ])->notify(new InvoicePaid($invoice));
 ```
 
-Using the `routes` method, you may provide ad-hoc routing information for multiple notification channels at once:
+Với phương thức `routes`, bạn có thể cung cấp thông tin định tuyến tùy thời điểm cho nhiều notification channel cùng lúc:
 
 ```php
 Notification::routes([
@@ -480,14 +480,14 @@ Notification::routes([
 ```
 
 <a name="mail-notifications"></a>
-## Mail Notifications
+## Thông báo qua mail
 
 <a name="formatting-mail-messages"></a>
-### Formatting Mail Messages
+### Định dạng mail
 
-If a notification supports being sent as an email, you should define a `toMail` method on the notification class. This method will receive a `$notifiable` entity and should return an `Illuminate\Notifications\Messages\MailMessage` instance.
+Nếu notification hỗ trợ gửi qua email, bạn nên định nghĩa phương thức `toMail` trên class notification. Phương thức này nhận entity `$notifiable` và phải trả về một instance `Illuminate\Notifications\Messages\MailMessage`.
 
-The `MailMessage` class contains a few simple methods to help you build transactional email messages. Mail messages may contain lines of text as well as a "call to action". Let's take a look at an example `toMail` method:
+Class `MailMessage` cung cấp một số phương thức đơn giản để xây dựng email giao dịch. Mail message có thể chứa các dòng văn bản cũng như một lời kêu gọi hành động (call to action). Hãy xem ví dụ về phương thức `toMail`:
 
 ```php
 /**
@@ -507,19 +507,19 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 > [!NOTE]
-> Note we are using `$this->invoice->id` in our `toMail` method. You may pass any data your notification needs to generate its message into the notification's constructor.
+> Lưu ý rằng ví dụ đang sử dụng `$this->invoice->id` trong phương thức `toMail`. Bạn có thể truyền mọi dữ liệu mà notification cần để tạo message vào constructor của notification.
 
-In this example, we register a greeting, a line of text, a call to action, and then another line of text. These methods provided by the `MailMessage` object make it simple and fast to format small transactional emails. The mail channel will then translate the message components into a beautiful, responsive HTML email template with a plain-text counterpart. Here is an example of an email generated by the `mail` channel:
+Trong ví dụ này, chúng ta khai báo lời chào, một dòng văn bản, một lời kêu gọi hành động rồi thêm một dòng văn bản khác. Các phương thức do `MailMessage` cung cấp giúp định dạng các email giao dịch nhỏ một cách đơn giản và nhanh chóng. Sau đó, mail channel sẽ chuyển các thành phần của message thành template email HTML responsive, đồng thời tạo phiên bản văn bản thuần tương ứng. Dưới đây là ví dụ email được tạo bởi channel `mail`:
 
 <img src="https://laravel.com/img/docs/notification-example-2.png">
 
 > [!NOTE]
-> When sending mail notifications, be sure to set the `name` configuration option in your `config/app.php` configuration file. This value will be used in the header and footer of your mail notification messages.
+> Khi gửi notification qua mail, hãy bảo đảm đã thiết lập tùy chọn cấu hình `name` trong file `config/app.php`. Giá trị này sẽ được sử dụng trong phần header và footer của mail notification.
 
 <a name="error-messages"></a>
-#### Error Messages
+#### Thông báo lỗi
 
-Some notifications inform users of errors, such as a failed invoice payment. You may indicate that a mail message is regarding an error by calling the `error` method when building your message. When using the `error` method on a mail message, the call to action button will be red instead of black:
+Một số notification dùng để thông báo lỗi cho người dùng, chẳng hạn thanh toán hóa đơn thất bại. Bạn có thể chỉ định mail message là thông báo lỗi bằng cách gọi phương thức `error` khi xây dựng message. Khi sử dụng `error`, nút kêu gọi hành động sẽ có màu đỏ thay vì màu đen:
 
 ```php
 /**
@@ -535,9 +535,9 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 <a name="other-mail-notification-formatting-options"></a>
-#### Other Mail Notification Formatting Options
+#### Các tùy chọn định dạng mail notification khác
 
-Instead of defining the "lines" of text in the notification class, you may use the `view` method to specify a custom template that should be used to render the notification email:
+Thay vì định nghĩa các "dòng" văn bản trong class notification, bạn có thể dùng phương thức `view` để chỉ định template tùy chỉnh dùng để render email notification:
 
 ```php
 /**
@@ -551,7 +551,7 @@ public function toMail(object $notifiable): MailMessage
 }
 ```
 
-You may specify a plain-text view for the mail message by passing the view name as the second element of an array that is given to the `view` method:
+Bạn có thể chỉ định view văn bản thuần cho mail message bằng cách truyền tên view ở phần tử thứ hai của mảng được cung cấp cho phương thức `view`:
 
 ```php
 /**
@@ -566,7 +566,7 @@ public function toMail(object $notifiable): MailMessage
 }
 ```
 
-Or, if your message only has a plain-text view, you may utilize the `text` method:
+Hoặc, nếu message của bạn chỉ có view văn bản thuần, bạn có thể sử dụng phương thức `text`:
 
 ```php
 /**
@@ -581,9 +581,9 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 <a name="customizing-the-sender"></a>
-### Customizing the Sender
+### Tùy chỉnh người gửi
 
-By default, the email's sender / from address is defined in the `config/mail.php` configuration file. However, you may specify the from address for a specific notification using the `from` method:
+Theo mặc định, địa chỉ người gửi / địa chỉ `from` của email được định nghĩa trong file cấu hình `config/mail.php`. Tuy nhiên, bạn có thể chỉ định địa chỉ gửi cho một notification cụ thể bằng phương thức `from`:
 
 ```php
 /**
@@ -598,9 +598,9 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 <a name="customizing-the-recipient"></a>
-### Customizing the Recipient
+### Tùy chỉnh người nhận
 
-When sending notifications via the `mail` channel, the notification system will automatically look for an `email` property on your notifiable entity. You may customize which email address is used to deliver the notification by defining a `routeNotificationForMail` method on the notifiable entity:
+Khi gửi notification qua channel `mail`, hệ thống notification sẽ tự động tìm thuộc tính `email` trên entity notifiable. Bạn có thể tùy chỉnh địa chỉ email dùng để nhận notification bằng cách định nghĩa phương thức `routeNotificationForMail` trên entity notifiable:
 
 ```php
 <?php
@@ -632,9 +632,9 @@ class User extends Authenticatable
 ```
 
 <a name="customizing-the-subject"></a>
-### Customizing the Subject
+### Tùy chỉnh tiêu đề
 
-By default, the email's subject is the class name of the notification formatted to "Title Case". So, if your notification class is named `InvoicePaid`, the email's subject will be `Invoice Paid`. If you would like to specify a different subject for the message, you may call the `subject` method when building your message:
+Theo mặc định, tiêu đề email là tên class của notification được định dạng theo "Title Case". Vì vậy, nếu class notification có tên `InvoicePaid`, tiêu đề email sẽ là `Invoice Paid`. Nếu muốn chỉ định tiêu đề khác cho message, bạn có thể gọi phương thức `subject` khi xây dựng message:
 
 ```php
 /**
@@ -649,9 +649,9 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 <a name="customizing-the-mailer"></a>
-### Customizing the Mailer
+### Tùy chỉnh Mailer
 
-By default, the email notification will be sent using the default mailer defined in the `config/mail.php` configuration file. However, you may specify a different mailer at runtime by calling the `mailer` method when building your message:
+Theo mặc định, email notification sẽ được gửi bằng mailer mặc định được định nghĩa trong file cấu hình `config/mail.php`. Tuy nhiên, bạn có thể chỉ định mailer khác tại runtime bằng cách gọi phương thức `mailer` khi xây dựng message:
 
 ```php
 /**
@@ -666,18 +666,18 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 <a name="customizing-the-templates"></a>
-### Customizing the Templates
+### Tùy chỉnh template
 
-You can modify the HTML and plain-text template used by mail notifications by publishing the notification package's resources. After running this command, the mail notification templates will be located in the `resources/views/vendor/notifications` directory:
+Bạn có thể sửa các template HTML và văn bản thuần được mail notification sử dụng bằng cách publish resource của package notification. Sau khi chạy lệnh sau, các template mail notification sẽ nằm trong thư mục `resources/views/vendor/notifications`:
 
 ```shell
 php artisan vendor:publish --tag=laravel-notifications
 ```
 
 <a name="mail-attachments"></a>
-### Attachments
+### File đính kèm
 
-To add attachments to an email notification, use the `attach` method while building your message. The `attach` method accepts the absolute path to the file as its first argument:
+Để thêm file đính kèm vào email notification, hãy sử dụng phương thức `attach` khi xây dựng message. Phương thức `attach` nhận đường dẫn tuyệt đối tới file làm đối số đầu tiên:
 
 ```php
 /**
@@ -692,9 +692,9 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 > [!NOTE]
-> The `attach` method offered by notification mail messages also accepts [attachable objects](/docs/{{version}}/mail#attachable-objects). Please consult the comprehensive [attachable object documentation](/docs/{{version}}/mail#attachable-objects) to learn more.
+> Phương thức `attach` của notification mail message cũng chấp nhận [đối tượng có thể đính kèm](/docs/{{version}}/mail#attachable-objects). Hãy tham khảo [tài liệu đầy đủ về đối tượng có thể đính kèm](/docs/{{version}}/mail#attachable-objects) để tìm hiểu thêm.
 
-When attaching files to a message, you may also specify the display name and / or MIME type by passing an `array` as the second argument to the `attach` method:
+Khi đính kèm file vào message, bạn cũng có thể chỉ định tên hiển thị và / hoặc MIME type bằng cách truyền một `array` làm đối số thứ hai cho phương thức `attach`:
 
 ```php
 /**
@@ -711,7 +711,7 @@ public function toMail(object $notifiable): MailMessage
 }
 ```
 
-When necessary, multiple files may be attached to a message using the `attachMany` method:
+Khi cần, bạn có thể đính kèm nhiều file vào một message bằng phương thức `attachMany`:
 
 ```php
 /**
@@ -731,7 +731,7 @@ public function toMail(object $notifiable): MailMessage
 }
 ```
 
-You may use the `attachFromStorageDisk` method to attach a file that exists on a specific [filesystem disk](/docs/{{version}}/filesystem). This method accepts the disk name and the path to the file on that disk:
+Bạn có thể dùng phương thức `attachFromStorageDisk` để đính kèm file tồn tại trên một [filesystem disk](/docs/{{version}}/filesystem) cụ thể. Phương thức này nhận tên disk và đường dẫn tới file trên disk đó:
 
 ```php
 use App\Mail\InvoicePaid as InvoicePaidMailable;
@@ -750,9 +750,9 @@ public function toMail(object $notifiable): Mailable
 ```
 
 <a name="raw-data-attachments"></a>
-#### Raw Data Attachments
+#### Đính kèm dữ liệu thô
 
-The `attachData` method may be used to attach a raw string of bytes as an attachment. When calling the `attachData` method, you should provide the filename that should be assigned to the attachment:
+Phương thức `attachData` có thể được dùng để đính kèm một chuỗi byte thô. Khi gọi `attachData`, bạn cần cung cấp tên file sẽ được gán cho file đính kèm:
 
 ```php
 /**
@@ -769,9 +769,9 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 <a name="adding-tags-metadata"></a>
-### Adding Tags and Metadata
+### Thêm tag và metadata
 
-Some third-party email providers such as Mailgun and Postmark support message "tags" and "metadata", which may be used to group and track emails sent by your application. You may add tags and metadata to an email message via the `tag` and `metadata` methods:
+Một số nhà cung cấp email bên thứ ba như Mailgun và Postmark hỗ trợ "tag" và "metadata" cho message, có thể dùng để nhóm và theo dõi email do ứng dụng gửi. Bạn có thể thêm tag và metadata vào email message thông qua các phương thức `tag` và `metadata`:
 
 ```php
 /**
@@ -786,14 +786,14 @@ public function toMail(object $notifiable): MailMessage
 }
 ```
 
-If your application is using the Mailgun driver, you may consult Mailgun's documentation for more information on [tags](https://documentation.mailgun.com/docs/mailgun/user-manual/tracking-messages/#tags) and [metadata](https://documentation.mailgun.com/docs/mailgun/user-manual/sending-messages/#attaching-metadata-to-messages). Likewise, the Postmark documentation may also be consulted for more information on their support for [tags](https://postmarkapp.com/blog/tags-support-for-smtp) and [metadata](https://postmarkapp.com/support/article/1125-custom-metadata-faq).
+Nếu ứng dụng đang sử dụng driver Mailgun, bạn có thể tham khảo tài liệu Mailgun để biết thêm về [tag](https://documentation.mailgun.com/docs/mailgun/user-manual/tracking-messages/#tags) và [metadata](https://documentation.mailgun.com/docs/mailgun/user-manual/sending-messages/#attaching-metadata-to-messages). Tương tự, bạn có thể tham khảo tài liệu Postmark để biết thêm về hỗ trợ [tag](https://postmarkapp.com/blog/tags-support-for-smtp) và [metadata](https://postmarkapp.com/support/article/1125-custom-metadata-faq).
 
-If your application is using Amazon SES to send emails, you should use the `metadata` method to attach [SES "tags"](https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html) to the message.
+Nếu ứng dụng sử dụng Amazon SES để gửi email, bạn nên dùng phương thức `metadata` để gắn ["tag" của SES](https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html) vào message.
 
 <a name="customizing-the-symfony-message"></a>
-### Customizing the Symfony Message
+### Tùy chỉnh Symfony Message
 
-The `withSymfonyMessage` method of the `MailMessage` class allows you to register a closure which will be invoked with the Symfony Message instance before sending the message. This gives you an opportunity to deeply customize the message before it is delivered:
+Phương thức `withSymfonyMessage` của class `MailMessage` cho phép bạn đăng ký một closure sẽ được gọi với instance Symfony Message trước khi message được gửi. Điều này cho phép bạn tùy chỉnh sâu message trước khi nó được phân phối:
 
 ```php
 use Symfony\Component\Mime\Email;
@@ -813,9 +813,9 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 <a name="using-mailables"></a>
-### Using Mailables
+### Sử dụng Mailable
 
-If needed, you may return a full [mailable object](/docs/{{version}}/mail) from your notification's `toMail` method. When returning a `Mailable` instead of a `MailMessage`, you will need to specify the message recipient using the mailable object's `to` method:
+Nếu cần, bạn có thể trả về một [đối tượng mailable](/docs/{{version}}/mail) đầy đủ từ phương thức `toMail` của notification. Khi trả về `Mailable` thay cho `MailMessage`, bạn cần chỉ định người nhận message bằng phương thức `to` của đối tượng mailable:
 
 ```php
 use App\Mail\InvoicePaid as InvoicePaidMailable;
@@ -832,9 +832,9 @@ public function toMail(object $notifiable): Mailable
 ```
 
 <a name="mailables-and-on-demand-notifications"></a>
-#### Mailables and On-Demand Notifications
+#### Mailable và On-Demand Notification
 
-If you are sending an [on-demand notification](#on-demand-notifications), the `$notifiable` instance given to the `toMail` method will be an instance of `Illuminate\Notifications\AnonymousNotifiable`, which offers a `routeNotificationFor` method that may be used to retrieve the email address the on-demand notification should be sent to:
+Nếu đang gửi [on-demand notification](#on-demand-notifications), instance `$notifiable` được truyền vào phương thức `toMail` sẽ là một instance của `Illuminate\Notifications\AnonymousNotifiable`, cung cấp phương thức `routeNotificationFor` để lấy địa chỉ email mà on-demand notification cần được gửi tới:
 
 ```php
 use App\Mail\InvoicePaid as InvoicePaidMailable;
@@ -856,9 +856,9 @@ public function toMail(object $notifiable): Mailable
 ```
 
 <a name="previewing-mail-notifications"></a>
-### Previewing Mail Notifications
+### Xem trước Mail Notification
 
-When designing a mail notification template, it is convenient to quickly preview the rendered mail message in your browser like a typical Blade template. For this reason, Laravel allows you to return any mail message generated by a mail notification directly from a route closure or controller. When a `MailMessage` is returned, it will be rendered and displayed in the browser, allowing you to quickly preview its design without needing to send it to an actual email address:
+Khi thiết kế template mail notification, việc xem trước nhanh mail message đã render trong trình duyệt giống như một template Blade thông thường rất tiện lợi. Vì vậy, Laravel cho phép bạn trả về trực tiếp bất kỳ mail message nào do mail notification tạo ra từ route closure hoặc controller. Khi `MailMessage` được trả về, nó sẽ được render và hiển thị trong trình duyệt, giúp bạn nhanh chóng xem trước thiết kế mà không cần gửi tới một địa chỉ email thực:
 
 ```php
 use App\Models\Invoice;
@@ -873,20 +873,20 @@ Route::get('/notification', function () {
 ```
 
 <a name="markdown-mail-notifications"></a>
-## Markdown Mail Notifications
+## Mail Notification Markdown
 
-Markdown mail notifications allow you to take advantage of the pre-built templates of mail notifications, while giving you more freedom to write longer, customized messages. Since the messages are written in Markdown, Laravel is able to render beautiful, responsive HTML templates for the messages while also automatically generating a plain-text counterpart.
+Mail notification Markdown cho phép bạn tận dụng các template dựng sẵn của mail notification, đồng thời có nhiều tự do hơn khi viết các message dài và tùy chỉnh. Vì message được viết bằng Markdown, Laravel có thể render các template HTML đẹp, responsive, đồng thời tự động tạo phiên bản văn bản thuần tương ứng.
 
 <a name="generating-the-message"></a>
-### Generating the Message
+### Tạo Message
 
-To generate a notification with a corresponding Markdown template, you may use the `--markdown` option of the `make:notification` Artisan command:
+Để tạo notification kèm template Markdown tương ứng, bạn có thể sử dụng tùy chọn `--markdown` của lệnh Artisan `make:notification`:
 
 ```shell
 php artisan make:notification InvoicePaid --markdown=mail.invoice.paid
 ```
 
-Like all other mail notifications, notifications that use Markdown templates should define a `toMail` method on their notification class. However, instead of using the `line` and `action` methods to construct the notification, use the `markdown` method to specify the name of the Markdown template that should be used. An array of data you wish to make available to the template may be passed as the method's second argument:
+Giống các mail notification khác, notification sử dụng template Markdown nên định nghĩa phương thức `toMail` trên class notification. Tuy nhiên, thay vì dùng `line` và `action` để xây dựng notification, hãy dùng phương thức `markdown` để chỉ định tên template Markdown cần sử dụng. Bạn có thể truyền mảng dữ liệu muốn cung cấp cho template làm đối số thứ hai của phương thức:
 
 ```php
 /**
@@ -903,9 +903,9 @@ public function toMail(object $notifiable): MailMessage
 ```
 
 <a name="writing-the-message"></a>
-### Writing the Message
+### Viết Message
 
-Markdown mail notifications use a combination of Blade components and Markdown syntax which allow you to easily construct notifications while leveraging Laravel's pre-crafted notification components:
+Mail notification Markdown kết hợp các component Blade và cú pháp Markdown, giúp bạn dễ dàng xây dựng notification đồng thời tận dụng các component notification được Laravel chuẩn bị sẵn:
 
 ```blade
 <x-mail::message>
@@ -923,12 +923,12 @@ Thanks,<br>
 ```
 
 > [!NOTE]
-> Do not use excess indentation when writing Markdown emails. Per Markdown standards, Markdown parsers will render indented content as code blocks.
+> Không sử dụng thụt lề quá mức khi viết email Markdown. Theo chuẩn Markdown, parser Markdown sẽ render nội dung được thụt lề thành code block.
 
 <a name="button-component"></a>
-#### Button Component
+#### Component Button
 
-The button component renders a centered button link. The component accepts two arguments, a `url` and an optional `color`. Supported colors are `primary`, `green`, and `red`. You may add as many button components to a notification as you wish:
+Component button render một liên kết dạng nút được căn giữa. Component nhận hai đối số: `url` và `color` tùy chọn. Các màu được hỗ trợ là `primary`, `green` và `red`. Bạn có thể thêm bao nhiêu component button vào notification tùy ý:
 
 ```blade
 <x-mail::button :url="$url" color="green">
@@ -937,9 +937,9 @@ View Invoice
 ```
 
 <a name="panel-component"></a>
-#### Panel Component
+#### Component Panel
 
-The panel component renders the given block of text in a panel that has a slightly different background color than the rest of the notification. This allows you to draw attention to a given block of text:
+Component panel render khối văn bản được cung cấp trong một panel có màu nền hơi khác phần còn lại của notification. Điều này giúp thu hút sự chú ý vào một khối văn bản cụ thể:
 
 ```blade
 <x-mail::panel>
@@ -948,9 +948,9 @@ This is the panel content.
 ```
 
 <a name="table-component"></a>
-#### Table Component
+#### Component Table
 
-The table component allows you to transform a Markdown table into an HTML table. The component accepts the Markdown table as its content. Table column alignment is supported using the default Markdown table alignment syntax:
+Component table cho phép chuyển một bảng Markdown thành bảng HTML. Component nhận bảng Markdown làm nội dung. Việc căn chỉnh cột được hỗ trợ bằng cú pháp căn chỉnh bảng Markdown mặc định:
 
 ```blade
 <x-mail::table>
@@ -962,24 +962,24 @@ The table component allows you to transform a Markdown table into an HTML table.
 ```
 
 <a name="customizing-the-components"></a>
-### Customizing the Components
+### Tùy chỉnh component
 
-You may export all of the Markdown notification components to your own application for customization. To export the components, use the `vendor:publish` Artisan command to publish the `laravel-mail` asset tag:
+Bạn có thể export toàn bộ component Markdown notification vào ứng dụng để tùy chỉnh. Để export các component, hãy dùng lệnh Artisan `vendor:publish` để publish asset tag `laravel-mail`:
 
 ```shell
 php artisan vendor:publish --tag=laravel-mail
 ```
 
-This command will publish the Markdown mail components to the `resources/views/vendor/mail` directory. The `mail` directory will contain an `html` and a `text` directory, each containing their respective representations of every available component. You are free to customize these components however you like.
+Lệnh này sẽ publish các component Markdown mail vào thư mục `resources/views/vendor/mail`. Thư mục `mail` sẽ chứa hai thư mục `html` và `text`, mỗi thư mục chứa biểu diễn tương ứng của tất cả component có sẵn. Bạn có thể tùy chỉnh các component này theo nhu cầu.
 
 <a name="customizing-the-css"></a>
-#### Customizing the CSS
+#### Tùy biến CSS
 
-After exporting the components, the `resources/views/vendor/mail/html/themes` directory will contain a `default.css` file. You may customize the CSS in this file and your styles will automatically be in-lined within the HTML representations of your Markdown notifications.
+Sau khi export các component, thư mục `resources/views/vendor/mail/html/themes` sẽ chứa file `default.css`. Bạn có thể tùy chỉnh CSS trong file này và các style sẽ tự động được inline vào phần HTML của Markdown notification.
 
-If you would like to build an entirely new theme for Laravel's Markdown components, you may place a CSS file within the `html/themes` directory. After naming and saving your CSS file, update the `theme` option of the `mail` configuration file to match the name of your new theme.
+Nếu muốn xây dựng một theme hoàn toàn mới cho các component Markdown của Laravel, bạn có thể đặt file CSS trong thư mục `html/themes`. Sau khi đặt tên và lưu file CSS, hãy cập nhật tùy chọn `theme` trong file cấu hình `mail` để khớp với tên theme mới.
 
-To customize the theme for an individual notification, you may call the `theme` method while building the notification's mail message. The `theme` method accepts the name of the theme that should be used when sending the notification:
+Để tùy chỉnh theme cho một notification cụ thể, bạn có thể gọi phương thức `theme` khi xây dựng mail message của notification. Phương thức `theme` nhận tên theme sẽ được sử dụng khi gửi notification:
 
 ```php
 /**
@@ -998,11 +998,11 @@ public function toMail(object $notifiable): MailMessage
 ## Database Notifications
 
 <a name="database-prerequisites"></a>
-### Prerequisites
+### Điều kiện tiên quyết
 
-The `database` notification channel stores the notification information in a database table. This table will contain information such as the notification type as well as a JSON data structure that describes the notification.
+Channel notification `database` lưu thông tin notification trong một bảng database. Bảng này chứa các thông tin như loại notification cùng cấu trúc dữ liệu JSON mô tả notification.
 
-You can query the table to display the notifications in your application's user interface. But, before you can do that, you will need to create a database table to hold your notifications. You may use the `make:notifications-table` command to generate a [migration](/docs/{{version}}/migrations) with the proper table schema:
+Bạn có thể truy vấn bảng này để hiển thị notification trong giao diện người dùng của ứng dụng. Tuy nhiên, trước đó bạn cần tạo bảng database để lưu các notification. Bạn có thể dùng lệnh `make:notifications-table` để tạo một [migration](/docs/{{version}}/migrations) với schema phù hợp:
 
 ```shell
 php artisan make:notifications-table
@@ -1011,12 +1011,12 @@ php artisan migrate
 ```
 
 > [!NOTE]
-> If your notifiable models are using [UUID or ULID primary keys](/docs/{{version}}/eloquent#uuid-and-ulid-keys), you should replace the `morphs` method with [uuidMorphs](/docs/{{version}}/migrations#column-method-uuidMorphs) or [ulidMorphs](/docs/{{version}}/migrations#column-method-ulidMorphs) in the notification table migration.
+> Nếu các model có thể nhận notification của bạn sử dụng [UUID hoặc ULID làm khóa chính](/docs/{{version}}/eloquent#uuid-and-ulid-keys), bạn nên thay phương thức `morphs` bằng [uuidMorphs](/docs/{{version}}/migrations#column-method-uuidMorphs) hoặc [ulidMorphs](/docs/{{version}}/migrations#column-method-ulidMorphs) trong migration của bảng notification.
 
 <a name="formatting-database-notifications"></a>
-### Formatting Database Notifications
+### Định dạng Database Notification
 
-If a notification supports being stored in a database table, you should define a `toDatabase` or `toArray` method on the notification class. This method will receive a `$notifiable` entity and should return a plain PHP array. The returned array will be encoded as JSON and stored in the `data` column of your `notifications` table. Let's take a look at an example `toArray` method:
+Nếu một notification hỗ trợ lưu trong bảng database, bạn nên định nghĩa phương thức `toDatabase` hoặc `toArray` trên class notification. Phương thức này nhận entity `$notifiable` và trả về một PHP array thông thường. Array trả về sẽ được mã hóa thành JSON và lưu trong cột `data` của bảng `notifications`. Ví dụ với phương thức `toArray`:
 
 ```php
 /**
@@ -1033,7 +1033,7 @@ public function toArray(object $notifiable): array
 }
 ```
 
-When a notification is stored in your application's database, the `type` column will be set to the notification's class name by default, and the `read_at` column will be `null`. However, you can customize this behavior by defining the `databaseType` and `initialDatabaseReadAtValue` methods in your notification class:
+Khi một notification được lưu vào database của ứng dụng, mặc định cột `type` sẽ được đặt thành tên class của notification và cột `read_at` sẽ là `null`. Tuy nhiên, bạn có thể tùy chỉnh hành vi này bằng cách định nghĩa các phương thức `databaseType` và `initialDatabaseReadAtValue` trong class notification:
 
 ```php
 use Illuminate\Support\Carbon;
@@ -1058,12 +1058,12 @@ public function initialDatabaseReadAtValue(): ?Carbon
 <a name="todatabase-vs-toarray"></a>
 #### `toDatabase` vs. `toArray`
 
-The `toArray` method is also used by the `broadcast` channel to determine which data to broadcast to your JavaScript powered frontend. If you would like to have two different array representations for the `database` and `broadcast` channels, you should define a `toDatabase` method instead of a `toArray` method.
+Phương thức `toArray` cũng được channel `broadcast` sử dụng để xác định dữ liệu nào sẽ được broadcast tới frontend JavaScript. Nếu muốn có hai biểu diễn array khác nhau cho channel `database` và `broadcast`, bạn nên định nghĩa phương thức `toDatabase` thay vì `toArray`.
 
 <a name="accessing-the-notifications"></a>
-### Accessing the Notifications
+### Truy cập Notification
 
-Once notifications are stored in the database, you need a convenient way to access them from your notifiable entities. The `Illuminate\Notifications\Notifiable` trait, which is included on Laravel's default `App\Models\User` model, includes a `notifications` [Eloquent relationship](/docs/{{version}}/eloquent-relationships) that returns the notifications for the entity. To fetch notifications, you may access this method like any other Eloquent relationship. By default, notifications will be sorted by the `created_at` timestamp with the most recent notifications at the beginning of the collection:
+Sau khi notification được lưu trong database, bạn cần một cách thuận tiện để truy cập chúng từ các entity có thể nhận notification. Trait `Illuminate\Notifications\Notifiable`, được tích hợp trong model `App\Models\User` mặc định của Laravel, cung cấp [Eloquent relationship](/docs/{{version}}/eloquent-relationships) `notifications` trả về các notification của entity. Bạn có thể truy cập relationship này như bất kỳ Eloquent relationship nào khác. Mặc định, notification được sắp xếp theo timestamp `created_at`, với notification mới nhất nằm đầu collection:
 
 ```php
 $user = App\Models\User::find(1);
@@ -1073,7 +1073,7 @@ foreach ($user->notifications as $notification) {
 }
 ```
 
-If you want to retrieve only the "unread" notifications, you may use the `unreadNotifications` relationship. Again, these notifications will be sorted by the `created_at` timestamp with the most recent notifications at the beginning of the collection:
+Nếu chỉ muốn lấy các notification "chưa đọc", bạn có thể sử dụng relationship `unreadNotifications`. Các notification này cũng được sắp xếp theo timestamp `created_at`, với notification mới nhất nằm đầu collection:
 
 ```php
 $user = App\Models\User::find(1);
@@ -1083,7 +1083,7 @@ foreach ($user->unreadNotifications as $notification) {
 }
 ```
 
-If you want to retrieve only the "read" notifications, you may use the `readNotifications` relationship:
+Nếu chỉ muốn lấy các notification "đã đọc", bạn có thể sử dụng relationship `readNotifications`:
 
 ```php
 $user = App\Models\User::find(1);
@@ -1094,12 +1094,12 @@ foreach ($user->readNotifications as $notification) {
 ```
 
 > [!NOTE]
-> To access your notifications from your JavaScript client, you should define a notification controller for your application which returns the notifications for a notifiable entity, such as the current user. You may then make an HTTP request to that controller's URL from your JavaScript client.
+> Để truy cập notification từ JavaScript client, bạn nên định nghĩa một notification controller trong ứng dụng để trả về notification của một entity có thể nhận notification, chẳng hạn người dùng hiện tại. Sau đó, JavaScript client có thể gửi HTTP request tới URL của controller đó.
 
 <a name="marking-notifications-as-read"></a>
-### Marking Notifications as Read
+### Đánh dấu Notification là đã đọc
 
-Typically, you will want to mark a notification as "read" when a user views it. The `Illuminate\Notifications\Notifiable` trait provides a `markAsRead` method, which updates the `read_at` column on the notification's database record:
+Thông thường, bạn sẽ muốn đánh dấu notification là "đã đọc" khi người dùng xem nó. Trait `Illuminate\Notifications\Notifiable` cung cấp phương thức `markAsRead`, phương thức này cập nhật cột `read_at` trên bản ghi notification trong database:
 
 ```php
 $user = App\Models\User::find(1);
@@ -1109,13 +1109,13 @@ foreach ($user->unreadNotifications as $notification) {
 }
 ```
 
-However, instead of looping through each notification, you may use the `markAsRead` method directly on a collection of notifications:
+Tuy nhiên, thay vì lặp qua từng notification, bạn có thể gọi trực tiếp phương thức `markAsRead` trên collection notification:
 
 ```php
 $user->unreadNotifications->markAsRead();
 ```
 
-You may also use a mass-update query to mark all of the notifications as read without retrieving them from the database:
+Bạn cũng có thể dùng truy vấn cập nhật hàng loạt để đánh dấu tất cả notification là đã đọc mà không cần lấy chúng từ database:
 
 ```php
 $user = App\Models\User::find(1);
@@ -1123,7 +1123,7 @@ $user = App\Models\User::find(1);
 $user->unreadNotifications()->update(['read_at' => now()]);
 ```
 
-You may `delete` the notifications to remove them from the table entirely:
+Bạn có thể `delete` notification để xóa hoàn toàn chúng khỏi bảng:
 
 ```php
 $user->notifications()->delete();
@@ -1133,14 +1133,14 @@ $user->notifications()->delete();
 ## Broadcast Notifications
 
 <a name="broadcast-prerequisites"></a>
-### Prerequisites
+### Điều kiện tiên quyết
 
-Before broadcasting notifications, you should configure and be familiar with Laravel's [event broadcasting](/docs/{{version}}/broadcasting) services. Event broadcasting provides a way to react to server-side Laravel events from your JavaScript powered frontend.
+Trước khi broadcast notification, bạn nên cấu hình và làm quen với dịch vụ [event broadcasting](/docs/{{version}}/broadcasting) của Laravel. Event broadcasting cho phép frontend JavaScript phản ứng với các event Laravel phía server.
 
 <a name="formatting-broadcast-notifications"></a>
-### Formatting Broadcast Notifications
+### Định dạng Broadcast Notification
 
-The `broadcast` channel broadcasts notifications using Laravel's [event broadcasting](/docs/{{version}}/broadcasting) services, allowing your JavaScript powered frontend to catch notifications in realtime. If a notification supports broadcasting, you can define a `toBroadcast` method on the notification class. This method will receive a `$notifiable` entity and should return a `BroadcastMessage` instance. If the `toBroadcast` method does not exist, the `toArray` method will be used to gather the data that should be broadcast. The returned data will be encoded as JSON and broadcast to your JavaScript powered frontend. Let's take a look at an example `toBroadcast` method:
+Channel `broadcast` phát notification bằng dịch vụ [event broadcasting](/docs/{{version}}/broadcasting) của Laravel, cho phép frontend JavaScript nhận notification theo thời gian thực. Nếu notification hỗ trợ broadcasting, bạn có thể định nghĩa phương thức `toBroadcast` trên class notification. Phương thức này nhận entity `$notifiable` và trả về một instance `BroadcastMessage`. Nếu không có phương thức `toBroadcast`, phương thức `toArray` sẽ được dùng để lấy dữ liệu cần broadcast. Dữ liệu trả về được mã hóa thành JSON và broadcast tới frontend JavaScript. Ví dụ với phương thức `toBroadcast`:
 
 ```php
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -1158,9 +1158,9 @@ public function toBroadcast(object $notifiable): BroadcastMessage
 ```
 
 <a name="broadcast-queue-configuration"></a>
-#### Broadcast Queue Configuration
+#### Cấu hình Queue cho Broadcast
 
-All broadcast notifications are queued for broadcasting. If you would like to configure the queue connection or queue name that is used to queue the broadcast operation, you may use the `onConnection` and `onQueue` methods of the `BroadcastMessage`:
+Tất cả broadcast notification đều được đưa vào queue để broadcast. Nếu muốn cấu hình queue connection hoặc tên queue dùng cho thao tác broadcast, bạn có thể sử dụng các phương thức `onConnection` và `onQueue` của `BroadcastMessage`:
 
 ```php
 return (new BroadcastMessage($data))
@@ -1169,9 +1169,9 @@ return (new BroadcastMessage($data))
 ```
 
 <a name="customizing-the-notification-type"></a>
-#### Customizing the Notification Type
+#### Tùy chỉnh loại Notification
 
-In addition to the data you specify, all broadcast notifications also have a `type` field containing the full class name of the notification. If you would like to customize the notification `type`, you may define a `broadcastType` method on the notification class:
+Ngoài dữ liệu bạn chỉ định, mọi broadcast notification còn có trường `type` chứa tên class đầy đủ của notification. Nếu muốn tùy chỉnh `type` của notification, bạn có thể định nghĩa phương thức `broadcastType` trên class notification:
 
 ```php
 /**
@@ -1184,9 +1184,9 @@ public function broadcastType(): string
 ```
 
 <a name="listening-for-notifications"></a>
-### Listening for Notifications
+### Lắng nghe Notification
 
-Notifications will broadcast on a private channel formatted using a `{notifiable}.{id}` convention. So, if you are sending a notification to an `App\Models\User` instance with an ID of `1`, the notification will be broadcast on the `App.Models.User.1` private channel. When using [Laravel Echo](/docs/{{version}}/broadcasting#client-side-installation), you may easily listen for notifications on a channel using the `notification` method:
+Notification sẽ được broadcast trên private channel theo quy ước `{notifiable}.{id}`. Vì vậy, nếu bạn gửi notification tới instance `App\Models\User` có ID `1`, notification sẽ được broadcast trên private channel `App.Models.User.1`. Khi sử dụng [Laravel Echo](/docs/{{version}}/broadcasting#client-side-installation), bạn có thể dễ dàng lắng nghe notification trên channel bằng phương thức `notification`:
 
 ```js
 Echo.private('App.Models.User.' + userId)
@@ -1196,9 +1196,9 @@ Echo.private('App.Models.User.' + userId)
 ```
 
 <a name="using-react-or-vue"></a>
-#### Using React, Vue, or Svelte
+#### Sử dụng React, Vue hoặc Svelte
 
-Laravel Echo includes React, Vue, and Svelte hooks that make it painless to listen for notifications. To get started, invoke the `useEchoNotification` hook, which is used to listen for notifications. The `useEchoNotification` hook will automatically leave channels when the consuming component is unmounted:
+Laravel Echo cung cấp các hook cho React, Vue và Svelte giúp việc lắng nghe notification trở nên đơn giản. Để bắt đầu, hãy gọi hook `useEchoNotification` dùng để lắng nghe notification. Hook `useEchoNotification` sẽ tự động rời channel khi component sử dụng nó bị unmount:
 
 ```js tab=React
 import { useEchoNotification } from "@laravel/echo-react";
@@ -1237,7 +1237,7 @@ useEchoNotification(
 </script>
 ```
 
-By default, the hook listens to all notifications. To specify the notification types you would like to listen to, you can provide either a string or array of types to `useEchoNotification`:
+Theo mặc định, hook sẽ lắng nghe tất cả notification. Để chỉ định các loại notification muốn lắng nghe, bạn có thể truyền một chuỗi hoặc một mảng type vào `useEchoNotification`:
 
 ```js tab=React
 import { useEchoNotification } from "@laravel/echo-react";
@@ -1279,7 +1279,7 @@ useEchoNotification(
 </script>
 ```
 
-You may also specify the shape of the notification payload data, providing greater type safety and editing convenience:
+Bạn cũng có thể chỉ định cấu trúc dữ liệu payload của notification để tăng tính an toàn về kiểu và thuận tiện hơn khi chỉnh sửa:
 
 ```ts
 type InvoicePaidNotification = {
@@ -1299,9 +1299,9 @@ useEchoNotification<InvoicePaidNotification>(
 ```
 
 <a name="customizing-the-notification-channel"></a>
-#### Customizing the Notification Channel
+#### Tùy chỉnh channel của Notification
 
-If you would like to customize which channel that an entity's broadcast notifications are broadcast on, you may define a `receivesBroadcastNotificationsOn` method on the notifiable entity:
+Nếu muốn tùy chỉnh channel mà broadcast notification của một entity được phát trên đó, bạn có thể định nghĩa phương thức `receivesBroadcastNotificationsOn` trên notifiable entity:
 
 ```php
 <?php
@@ -1327,29 +1327,29 @@ class User extends Authenticatable
 ```
 
 <a name="sms-notifications"></a>
-## SMS Notifications
+## Notification qua SMS
 
 <a name="sms-prerequisites"></a>
-### Prerequisites
+### Điều kiện tiên quyết
 
-Sending SMS notifications in Laravel is powered by [Vonage](https://www.vonage.com/) (formerly known as Nexmo). Before you can send notifications via Vonage, you need to install the `laravel/vonage-notification-channel` and `guzzlehttp/guzzle` packages:
+Việc gửi notification SMS trong Laravel được hỗ trợ bởi [Vonage](https://www.vonage.com/) (trước đây là Nexmo). Trước khi có thể gửi notification qua Vonage, bạn cần cài đặt các package `laravel/vonage-notification-channel` và `guzzlehttp/guzzle`:
 
 ```shell
 composer require laravel/vonage-notification-channel guzzlehttp/guzzle
 ```
 
-The package includes a [configuration file](https://github.com/laravel/vonage-notification-channel/blob/3.x/config/vonage.php). However, you are not required to export this configuration file to your own application. You can simply use the `VONAGE_KEY` and `VONAGE_SECRET` environment variables to define your Vonage public and secret keys.
+Package này bao gồm một [file cấu hình](https://github.com/laravel/vonage-notification-channel/blob/3.x/config/vonage.php). Tuy nhiên, bạn không bắt buộc phải export file cấu hình này vào ứng dụng. Bạn chỉ cần sử dụng các biến môi trường `VONAGE_KEY` và `VONAGE_SECRET` để khai báo public key và secret key của Vonage.
 
-After defining your keys, you should set a `VONAGE_SMS_FROM` environment variable that defines the phone number that your SMS messages should be sent from by default. You may generate this phone number within the Vonage control panel:
+Sau khi khai báo các key, bạn nên thiết lập biến môi trường `VONAGE_SMS_FROM` để xác định số điện thoại mặc định dùng để gửi SMS. Bạn có thể tạo số điện thoại này trong bảng điều khiển Vonage:
 
 ```ini
 VONAGE_SMS_FROM=15556666666
 ```
 
 <a name="formatting-sms-notifications"></a>
-### Formatting SMS Notifications
+### Định dạng Notification SMS
 
-If a notification supports being sent as an SMS, you should define a `toVonage` method on the notification class. This method will receive a `$notifiable` entity and should return an `Illuminate\Notifications\Messages\VonageMessage` instance:
+Nếu một notification hỗ trợ gửi qua SMS, bạn nên định nghĩa phương thức `toVonage` trên class notification. Phương thức này nhận một entity `$notifiable` và phải trả về một instance `Illuminate\Notifications\Messages\VonageMessage`:
 
 ```php
 use Illuminate\Notifications\Messages\VonageMessage;
@@ -1365,9 +1365,9 @@ public function toVonage(object $notifiable): VonageMessage
 ```
 
 <a name="unicode-content"></a>
-#### Unicode Content
+#### Nội dung Unicode
 
-If your SMS message will contain unicode characters, you should call the `unicode` method when constructing the `VonageMessage` instance:
+Nếu SMS chứa ký tự Unicode, bạn nên gọi phương thức `unicode` khi tạo instance `VonageMessage`:
 
 ```php
 use Illuminate\Notifications\Messages\VonageMessage;
@@ -1384,9 +1384,9 @@ public function toVonage(object $notifiable): VonageMessage
 ```
 
 <a name="customizing-the-from-number"></a>
-### Customizing the "From" Number
+### Tùy chỉnh số điện thoại "From"
 
-If you would like to send some notifications from a phone number that is different from the phone number specified by your `VONAGE_SMS_FROM` environment variable, you may call the `from` method on a `VonageMessage` instance:
+Nếu muốn gửi một số notification từ số điện thoại khác với số được cấu hình trong biến môi trường `VONAGE_SMS_FROM`, bạn có thể gọi phương thức `from` trên instance `VonageMessage`:
 
 ```php
 use Illuminate\Notifications\Messages\VonageMessage;
@@ -1403,9 +1403,9 @@ public function toVonage(object $notifiable): VonageMessage
 ```
 
 <a name="adding-a-client-reference"></a>
-### Adding a Client Reference
+### Thêm Client Reference
 
-If you would like to keep track of costs per user, team, or client, you may add a "client reference" to the notification. Vonage will allow you to generate reports using this client reference so that you can better understand a particular customer's SMS usage. The client reference can be any string up to 40 characters:
+Nếu muốn theo dõi chi phí theo từng user, team hoặc client, bạn có thể thêm một "client reference" vào notification. Vonage cho phép tạo báo cáo dựa trên client reference này để bạn hiểu rõ hơn mức sử dụng SMS của từng khách hàng. Client reference có thể là bất kỳ chuỗi nào dài tối đa 40 ký tự:
 
 ```php
 use Illuminate\Notifications\Messages\VonageMessage;
@@ -1422,9 +1422,9 @@ public function toVonage(object $notifiable): VonageMessage
 ```
 
 <a name="routing-sms-notifications"></a>
-### Routing SMS Notifications
+### Định tuyến Notification SMS
 
-To route Vonage notifications to the proper phone number, define a `routeNotificationForVonage` method on your notifiable entity:
+Để định tuyến notification Vonage đến đúng số điện thoại, hãy định nghĩa phương thức `routeNotificationForVonage` trên notifiable entity:
 
 ```php
 <?php
@@ -1450,22 +1450,22 @@ class User extends Authenticatable
 ```
 
 <a name="slack-notifications"></a>
-## Slack Notifications
+## Notification qua Slack
 
 <a name="slack-prerequisites"></a>
-### Prerequisites
+### Điều kiện tiên quyết
 
-Before sending Slack notifications, you should install the Slack notification channel via Composer:
+Trước khi gửi notification Slack, bạn cần cài đặt Slack notification channel thông qua Composer:
 
 ```shell
 composer require laravel/slack-notification-channel
 ```
 
-Additionally, you must create a [Slack App](https://api.slack.com/apps?new_app=1) for your Slack workspace.
+Ngoài ra, bạn phải tạo một [Slack App](https://api.slack.com/apps?new_app=1) cho Slack workspace của mình.
 
-If you only need to send notifications to the same Slack workspace that the App is created in, you should ensure that your App has the `chat:write`, `chat:write.public`, and `chat:write.customize` scopes. These scopes can be added from the "OAuth & Permissions" App management tab within Slack.
+Nếu chỉ cần gửi notification đến chính Slack workspace nơi App được tạo, hãy đảm bảo App có các scope `chat:write`, `chat:write.public` và `chat:write.customize`. Bạn có thể thêm các scope này từ tab quản lý App "OAuth & Permissions" trong Slack.
 
-Next, copy the App's "Bot User OAuth Token" and place it within a `slack` configuration array in your application's `services.php` configuration file. This token can be found on the "OAuth & Permissions" tab within Slack:
+Tiếp theo, sao chép "Bot User OAuth Token" của App và đặt token đó vào mảng cấu hình `slack` trong file `services.php` của ứng dụng. Bạn có thể tìm token này trong tab "OAuth & Permissions" của Slack:
 
 ```php
 'slack' => [
@@ -1477,14 +1477,14 @@ Next, copy the App's "Bot User OAuth Token" and place it within a `slack` config
 ```
 
 <a name="slack-app-distribution"></a>
-#### App Distribution
+#### Phân phối ứng dụng
 
-If your application will be sending notifications to external Slack workspaces that are owned by your application's users, you will need to "distribute" your App via Slack. App distribution can be managed from your App's "Manage Distribution" tab within Slack. Once your App has been distributed, you may use [Socialite](/docs/{{version}}/socialite) to [obtain Slack Bot tokens](/docs/{{version}}/socialite#slack-bot-scopes) on behalf of your application's users.
+Nếu ứng dụng sẽ gửi notification đến các Slack workspace bên ngoài thuộc sở hữu của người dùng ứng dụng, bạn cần "phân phối" App thông qua Slack. Việc phân phối App có thể được quản lý từ tab "Manage Distribution" của App trong Slack. Sau khi App được phân phối, bạn có thể dùng [Socialite](/docs/{{version}}/socialite) để [lấy Slack Bot token](/docs/{{version}}/socialite#slack-bot-scopes) thay mặt người dùng ứng dụng.
 
 <a name="formatting-slack-notifications"></a>
-### Formatting Slack Notifications
+### Định dạng Notification Slack
 
-If a notification supports being sent as a Slack message, you should define a `toSlack` method on the notification class. This method will receive a `$notifiable` entity and should return an `Illuminate\Notifications\Slack\SlackMessage` instance. You can construct rich notifications using [Slack's Block Kit API](https://api.slack.com/block-kit). The following example may be previewed in [Slack's Block Kit builder](https://app.slack.com/block-kit-builder/T01KWS6K23Z#%7B%22blocks%22:%5B%7B%22type%22:%22header%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Invoice%20Paid%22%7D%7D,%7B%22type%22:%22context%22,%22elements%22:%5B%7B%22type%22:%22plain_text%22,%22text%22:%22Customer%20%231234%22%7D%5D%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22An%20invoice%20has%20been%20paid.%22%7D,%22fields%22:%5B%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20No:*%5Cn1000%22%7D,%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20Recipient:*%5Cntaylor@laravel.com%22%7D%5D%7D,%7B%22type%22:%22divider%22%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Congratulations!%22%7D%7D%5D%7D):
+Nếu một notification hỗ trợ gửi dưới dạng Slack message, bạn nên định nghĩa phương thức `toSlack` trên class notification. Phương thức này nhận một entity `$notifiable` và phải trả về instance `Illuminate\Notifications\Slack\SlackMessage`. Bạn có thể xây dựng notification phong phú bằng [Slack Block Kit API](https://api.slack.com/block-kit). Ví dụ sau có thể được xem trước trong [Slack Block Kit Builder](https://app.slack.com/block-kit-builder/T01KWS6K23Z#%7B%22blocks%22:%5B%7B%22type%22:%22header%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Invoice%20Paid%22%7D%7D,%7B%22type%22:%22context%22,%22elements%22:%5B%7B%22type%22:%22plain_text%22,%22text%22:%22Customer%20%231234%22%7D%5D%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22An%20invoice%20has%20been%20paid.%22%7D,%22fields%22:%5B%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20No:*%5Cn1000%22%7D,%7B%22type%22:%22mrkdwn%22,%22text%22:%22*Invoice%20Recipient:*%5Cntaylor@laravel.com%22%7D%5D%7D,%7B%22type%22:%22divider%22%7D,%7B%22type%22:%22section%22,%22text%22:%7B%22type%22:%22plain_text%22,%22text%22:%22Congratulations!%22%7D%7D%5D%7D):
 
 ```php
 use Illuminate\Notifications\Slack\BlockKit\Blocks\ContextBlock;
@@ -1515,9 +1515,9 @@ public function toSlack(object $notifiable): SlackMessage
 ```
 
 <a name="using-slacks-block-kit-builder-template"></a>
-#### Using Slack's Block Kit Builder Template
+#### Sử dụng template của Slack Block Kit Builder
 
-Instead of using the fluent message builder methods to construct your Block Kit message, you may provide the raw JSON payload generated by Slack's Block Kit Builder to the `usingBlockKitTemplate` method:
+Thay vì dùng các fluent method của message builder để dựng Block Kit message, bạn có thể truyền raw JSON payload do Slack Block Kit Builder tạo vào method `usingBlockKitTemplate`:
 
 ```php
 use Illuminate\Notifications\Slack\SlackMessage;
@@ -1555,11 +1555,11 @@ public function toSlack(object $notifiable): SlackMessage
 ```
 
 <a name="slack-interactivity"></a>
-### Slack Interactivity
+### Tương tác trong Slack
 
-Slack's Block Kit notification system provides powerful features to [handle user interaction](https://api.slack.com/interactivity/handling). To utilize these features, your Slack App should have "Interactivity" enabled and a "Request URL" configured that points to a URL served by your application. These settings can be managed from the "Interactivity & Shortcuts" App management tab within Slack.
+Hệ thống notification Block Kit của Slack cung cấp các tính năng mạnh để [xử lý tương tác người dùng](https://api.slack.com/interactivity/handling). Để dùng các tính năng này, Slack App của bạn cần bật "Interactivity" và cấu hình "Request URL" trỏ tới một URL do ứng dụng của bạn phục vụ. Bạn có thể quản lý các thiết lập này trong tab "Interactivity & Shortcuts" của trang quản trị Slack App.
 
-In the following example, which utilizes the `actionsBlock` method, Slack will send a `POST` request to your "Request URL" with a payload containing the Slack user who clicked the button, the ID of the clicked button, and more. Your application can then determine the action to take based on the payload. You should also [verify the request](https://api.slack.com/authentication/verifying-requests-from-slack) was made by Slack:
+Trong ví dụ sau sử dụng method `actionsBlock`, Slack sẽ gửi một `POST` request tới "Request URL" cùng payload chứa người dùng Slack đã nhấn button, ID của button đã nhấn và các dữ liệu khác. Ứng dụng của bạn sau đó có thể xác định hành động cần thực hiện dựa trên payload. Bạn cũng nên [xác minh request](https://api.slack.com/authentication/verifying-requests-from-slack) thực sự được gửi từ Slack:
 
 ```php
 use Illuminate\Notifications\Slack\BlockKit\Blocks\ActionsBlock;
@@ -1592,9 +1592,9 @@ public function toSlack(object $notifiable): SlackMessage
 ```
 
 <a name="slack-confirmation-modals"></a>
-#### Confirmation Modals
+#### Modal xác nhận
 
-If you would like users to be required to confirm an action before it is performed, you may invoke the `confirm` method when defining your button. The `confirm` method accepts a message and a closure which receives a `ConfirmObject` instance:
+Nếu muốn yêu cầu người dùng xác nhận trước khi thực hiện một action, bạn có thể gọi phương thức `confirm` khi định nghĩa button. Phương thức `confirm` nhận một message và một closure nhận instance `ConfirmObject`:
 
 ```php
 use Illuminate\Notifications\Slack\BlockKit\Blocks\ActionsBlock;
@@ -1632,9 +1632,9 @@ public function toSlack(object $notifiable): SlackMessage
 ```
 
 <a name="inspecting-slack-blocks"></a>
-#### Inspecting Slack Blocks
+#### Kiểm tra Slack Block
 
-If you would like to quickly inspect the blocks you've been building, you can invoke the `dd` method on the `SlackMessage` instance. The `dd` method will generate and dump a URL to Slack's [Block Kit Builder](https://app.slack.com/block-kit-builder/), which displays a preview of the payload and notification in your browser. You may pass `true` to the `dd` method to dump the raw payload:
+Nếu muốn kiểm tra nhanh các block đang xây dựng, bạn có thể gọi phương thức `dd` trên instance `SlackMessage`. Phương thức `dd` sẽ tạo và dump một URL đến [Block Kit Builder](https://app.slack.com/block-kit-builder/) của Slack, nơi hiển thị bản xem trước payload và notification trong trình duyệt. Bạn có thể truyền `true` vào `dd` để dump raw payload:
 
 ```php
 return (new SlackMessage)
@@ -1644,15 +1644,15 @@ return (new SlackMessage)
 ```
 
 <a name="routing-slack-notifications"></a>
-### Routing Slack Notifications
+### Định tuyến Notification Slack
 
-To direct Slack notifications to the appropriate Slack team and channel, define a `routeNotificationForSlack` method on your notifiable model. This method can return one of three values:
+Để định tuyến notification Slack đến đúng Slack team và channel, hãy định nghĩa phương thức `routeNotificationForSlack` trên notifiable model. Phương thức này có thể trả về một trong ba giá trị:
 
-- `null` - which defers routing to the channel configured in the notification itself. You may use the `to` method when building your `SlackMessage` to configure the channel within the notification.
-- A string specifying the Slack channel to send the notification to, e.g. `#support-channel`.
-- A `SlackRoute` instance, which allows you to specify an OAuth token and channel name, e.g. `SlackRoute::make($this->slack_channel, $this->slack_token)`. This method should be used to send notifications to external workspaces.
+- `null` - trì hoãn việc xác định route cho channel được cấu hình ngay trong notification. Bạn có thể dùng method `to` khi xây dựng `SlackMessage` để cấu hình channel trong notification.
+- Một string chỉ định Slack channel nhận notification, ví dụ `#support-channel`.
+- Một instance `SlackRoute`, cho phép bạn chỉ định OAuth token và channel name, ví dụ `SlackRoute::make($this->slack_channel, $this->slack_token)`. Cách này nên được dùng khi gửi notification tới workspace bên ngoài.
 
-For instance, returning `#support-channel` from the `routeNotificationForSlack` method will send the notification to the `#support-channel` channel in the workspace associated with the Bot User OAuth token located in your application's `services.php` configuration file:
+Ví dụ, trả về `#support-channel` từ phương thức `routeNotificationForSlack` sẽ gửi notification đến channel `#support-channel` trong workspace được liên kết với Bot User OAuth token nằm trong file cấu hình `services.php` của ứng dụng:
 
 ```php
 <?php
@@ -1678,14 +1678,14 @@ class User extends Authenticatable
 ```
 
 <a name="notifying-external-slack-workspaces"></a>
-### Notifying External Slack Workspaces
+### Gửi Notification đến Slack Workspace bên ngoài
 
 > [!NOTE]
-> Before sending notifications to external Slack workspaces, your Slack App must be [distributed](#slack-app-distribution).
+> Trước khi gửi notification đến Slack workspace bên ngoài, Slack App của bạn phải được [phân phối](#slack-app-distribution).
 
-Of course, you will often want to send notifications to the Slack workspaces owned by your application's users. To do so, you will first need to obtain a Slack OAuth token for the user. Thankfully, [Laravel Socialite](/docs/{{version}}/socialite) includes a Slack driver that will allow you to easily authenticate your application's users with Slack and [obtain a bot token](/docs/{{version}}/socialite#slack-bot-scopes).
+Thông thường, bạn sẽ muốn gửi notification tới các Slack workspace thuộc sở hữu của người dùng ứng dụng. Để làm điều đó, trước tiên bạn cần lấy Slack OAuth token của người dùng. May mắn là [Laravel Socialite](/docs/{{version}}/socialite) có Slack driver giúp bạn dễ dàng xác thực người dùng ứng dụng với Slack và [lấy bot token](/docs/{{version}}/socialite#slack-bot-scopes).
 
-Once you have obtained the bot token and stored it within your application's database, you may utilize the `SlackRoute::make` method to route a notification to the user's workspace. In addition, your application will likely need to offer an opportunity for the user to specify which channel notifications should be sent to:
+Sau khi lấy bot token và lưu vào database của ứng dụng, bạn có thể sử dụng phương thức `SlackRoute::make` để định tuyến notification đến workspace của người dùng. Ngoài ra, ứng dụng thường cần cho phép người dùng chỉ định channel mà notification sẽ được gửi đến:
 
 ```php
 <?php
@@ -1712,17 +1712,17 @@ class User extends Authenticatable
 ```
 
 <a name="localizing-notifications"></a>
-## Localizing Notifications
+## Bản địa hóa Notification
 
-Laravel allows you to send notifications in a locale other than the HTTP request's current locale, and will even remember this locale if the notification is queued.
+Laravel cho phép bạn gửi notification bằng locale khác với locale hiện tại của HTTP request, đồng thời vẫn ghi nhớ locale này nếu notification được đưa vào queue.
 
-To accomplish this, the `Illuminate\Notifications\Notification` class offers a `locale` method to set the desired language. The application will change into this locale when the notification is being evaluated and then revert back to the previous locale when evaluation is complete:
+Để thực hiện điều này, class `Illuminate\Notifications\Notification` cung cấp phương thức `locale` để đặt ngôn ngữ mong muốn. Ứng dụng sẽ chuyển sang locale này khi notification được xử lý, sau đó quay lại locale trước đó khi hoàn tất:
 
 ```php
 $user->notify((new InvoicePaid($invoice))->locale('es'));
 ```
 
-Localization of multiple notifiable entries may also be achieved via the `Notification` facade:
+Bạn cũng có thể bản địa hóa nhiều entity nhận notification thông qua facade `Notification`:
 
 ```php
 Notification::locale('es')->send(
@@ -1731,9 +1731,9 @@ Notification::locale('es')->send(
 ```
 
 <a name="user-preferred-locales"></a>
-#### User Preferred Locales
+#### Locale ưu tiên của người dùng
 
-Sometimes, applications store each user's preferred locale. By implementing the `HasLocalePreference` contract on your notifiable model, you may instruct Laravel to use this stored locale when sending a notification:
+Đôi khi ứng dụng lưu locale ưu tiên của từng người dùng. Bằng cách implement contract `HasLocalePreference` trên model có thể nhận notification, bạn có thể yêu cầu Laravel sử dụng locale đã lưu khi gửi notification:
 
 ```php
 use Illuminate\Contracts\Translation\HasLocalePreference;
@@ -1750,18 +1750,18 @@ class User extends Model implements HasLocalePreference
 }
 ```
 
-Once you have implemented the interface, Laravel will automatically use the preferred locale when sending notifications and mailables to the model. Therefore, there is no need to call the `locale` method when using this interface:
+Sau khi implement interface này, Laravel sẽ tự động sử dụng locale ưu tiên khi gửi notification và mailable tới model. Vì vậy, bạn không cần gọi phương thức `locale` khi sử dụng interface này:
 
 ```php
 $user->notify(new InvoicePaid($invoice));
 ```
 
 <a name="testing"></a>
-## Testing
+## Kiểm thử
 
-You may use the `Notification` facade's `fake` method to prevent notifications from being sent. Typically, sending notifications is unrelated to the code you are actually testing. Most likely, it is sufficient to simply assert that Laravel was instructed to send a given notification.
+Bạn có thể dùng phương thức `fake` của facade `Notification` để ngăn notification thực sự được gửi. Thông thường, việc gửi notification không liên quan trực tiếp đến phần code bạn đang kiểm thử. Trong đa số trường hợp, chỉ cần assert rằng Laravel đã được yêu cầu gửi một notification cụ thể là đủ.
 
-After calling the `Notification` facade's `fake` method, you may then assert that notifications were instructed to be sent to users and even inspect the data the notifications received:
+Sau khi gọi phương thức `fake` của facade `Notification`, bạn có thể assert rằng notification đã được yêu cầu gửi tới người dùng và thậm chí kiểm tra dữ liệu mà notification nhận được:
 
 ```php tab=Pest
 <?php
@@ -1834,7 +1834,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-You may pass a closure to the `assertSentTo` or `assertNotSentTo` methods in order to assert that a notification was sent that passes a given "truth test". If at least one notification was sent that passes the given truth test then the assertion will be successful:
+Bạn có thể truyền closure vào phương thức `assertSentTo` hoặc `assertNotSentTo` để assert rằng một notification thỏa mãn "truth test" đã được gửi. Nếu có ít nhất một notification được gửi và vượt qua truth test đã cho, assertion sẽ thành công:
 
 ```php
 Notification::assertSentTo(
@@ -1846,15 +1846,15 @@ Notification::assertSentTo(
 ```
 
 <a name="testing-on-demand-notifications"></a>
-#### On-Demand Notifications
+#### Thông báo theo yêu cầu
 
-If the code you are testing sends [on-demand notifications](#on-demand-notifications), you can test that the on-demand notification was sent via the `assertSentOnDemand` method:
+Nếu code đang kiểm thử gửi [notification theo yêu cầu](#on-demand-notifications), bạn có thể kiểm tra notification đó đã được gửi bằng phương thức `assertSentOnDemand`:
 
 ```php
 Notification::assertSentOnDemand(OrderShipped::class);
 ```
 
-By passing a closure as the second argument to the `assertSentOnDemand` method, you may determine if an on-demand notification was sent to the correct "route" address:
+Bằng cách truyền closure làm đối số thứ hai cho phương thức `assertSentOnDemand`, bạn có thể xác định notification theo yêu cầu có được gửi tới đúng địa chỉ "route" hay không:
 
 ```php
 Notification::assertSentOnDemand(
@@ -1866,12 +1866,12 @@ Notification::assertSentOnDemand(
 ```
 
 <a name="notification-events"></a>
-## Notification Events
+## Event của Notification
 
 <a name="notification-sending-event"></a>
-#### Notification Sending Event
+#### Event Notification Sending
 
-When a notification is sending, the `Illuminate\Notifications\Events\NotificationSending` event is dispatched by the notification system. This contains the "notifiable" entity and the notification instance itself. You may create [event listeners](/docs/{{version}}/events) for this event within your application:
+Khi một notification đang được gửi, hệ thống notification sẽ dispatch event `Illuminate\Notifications\Events\NotificationSending`. Event này chứa entity "notifiable" và chính instance notification. Bạn có thể tạo [event listener](/docs/{{version}}/events) cho event này trong ứng dụng:
 
 ```php
 use Illuminate\Notifications\Events\NotificationSending;
@@ -1888,7 +1888,7 @@ class CheckNotificationStatus
 }
 ```
 
-The notification will not be sent if an event listener for the `NotificationSending` event returns `false` from its `handle` method:
+Notification sẽ không được gửi nếu một event listener của event `NotificationSending` trả về `false` từ phương thức `handle`:
 
 ```php
 /**
@@ -1900,7 +1900,7 @@ public function handle(NotificationSending $event): bool
 }
 ```
 
-Within an event listener, you may access the `notifiable`, `notification`, and `channel` properties on the event to learn more about the notification recipient or the notification itself:
+Trong event listener, bạn có thể truy cập các thuộc tính `notifiable`, `notification` và `channel` trên event để biết thêm thông tin về người nhận hoặc chính notification:
 
 ```php
 /**
@@ -1915,9 +1915,9 @@ public function handle(NotificationSending $event): void
 ```
 
 <a name="notification-sent-event"></a>
-#### Notification Sent Event
+#### Event Notification Sent
 
-When a notification is sent, the `Illuminate\Notifications\Events\NotificationSent` [event](/docs/{{version}}/events) is dispatched by the notification system. This contains the "notifiable" entity and the notification instance itself. You may create [event listeners](/docs/{{version}}/events) for this event within your application:
+Khi một notification được gửi, hệ thống notification sẽ dispatch [event](/docs/{{version}}/events) `Illuminate\Notifications\Events\NotificationSent`. Event này chứa entity "notifiable" và chính instance notification. Bạn có thể tạo [event listener](/docs/{{version}}/events) cho event này trong ứng dụng:
 
 ```php
 use Illuminate\Notifications\Events\NotificationSent;
@@ -1934,7 +1934,7 @@ class LogNotification
 }
 ```
 
-Within an event listener, you may access the `notifiable`, `notification`, `channel`, and `response` properties on the event to learn more about the notification recipient or the notification itself:
+Trong event listener, bạn có thể truy cập các thuộc tính `notifiable`, `notification`, `channel` và `response` trên event để biết thêm thông tin về người nhận hoặc chính notification:
 
 ```php
 /**
@@ -1950,11 +1950,11 @@ public function handle(NotificationSent $event): void
 ```
 
 <a name="custom-channels"></a>
-## Custom Channels
+## Channel tùy chỉnh
 
-Laravel ships with a handful of notification channels, but you may want to write your own drivers to deliver notifications via other channels. Laravel makes it simple. To get started, define a class that contains a `send` method. The method should receive two arguments: a `$notifiable` and a `$notification`.
+Laravel cung cấp sẵn một số notification channel, nhưng bạn có thể muốn tự viết driver để gửi notification qua các channel khác. Laravel giúp việc này khá đơn giản. Để bắt đầu, hãy định nghĩa một class có phương thức `send`. Phương thức này nhận hai đối số: `$notifiable` và `$notification`.
 
-Within the `send` method, you may call methods on the notification to retrieve a message object understood by your channel and then send the notification to the `$notifiable` instance however you wish:
+Trong phương thức `send`, bạn có thể gọi các phương thức trên notification để lấy message object mà channel của bạn hiểu được, sau đó gửi notification tới instance `$notifiable` theo cách mong muốn:
 
 ```php
 <?php
@@ -1977,7 +1977,7 @@ class VoiceChannel
 }
 ```
 
-Once your notification channel class has been defined, you may return the class name from the `via` method of any of your notifications. In this example, the `toVoice` method of your notification can return whatever object you choose to represent voice messages. For example, you might define your own `VoiceMessage` class to represent these messages:
+Sau khi định nghĩa class notification channel, bạn có thể trả về tên class đó từ phương thức `via` của bất kỳ notification nào. Trong ví dụ này, phương thức `toVoice` của notification có thể trả về bất kỳ object nào bạn chọn để biểu diễn voice message. Chẳng hạn, bạn có thể tự định nghĩa class `VoiceMessage` để biểu diễn các message này:
 
 ```php
 <?php
@@ -2011,6 +2011,8 @@ class InvoicePaid extends Notification
     }
 }
 ```
+
+---
 
 ## Tài liệu chính thức
 

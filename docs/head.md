@@ -1,48 +1,48 @@
 # Laravel Head
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Quickstart](#quickstart)
-- [Resolution Precedence](#resolution-precedence)
-- [Defining Metadata](#defining-metadata)
-    - [Defaults](#defaults)
-    - [Route Metadata](#route-metadata)
-    - [Runtime Metadata](#runtime-metadata)
-    - [Error Pages](#error-pages)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+- [Bắt đầu nhanh](#quickstart)
+- [Thứ tự ưu tiên khi phân giải](#resolution-precedence)
+- [Định nghĩa metadata](#defining-metadata)
+    - [Giá trị mặc định](#defaults)
+    - [Metadata của route](#route-metadata)
+    - [Metadata tại runtime](#runtime-metadata)
+    - [Trang lỗi](#error-pages)
 - [Open Graph](#open-graph)
     - [X / Twitter Cards](#twitter-cards)
 - [Theme Colors](#theme-colors)
 - [Application Metadata and Icons](#app-metadata-and-icons)
 - [Progressive Web Apps](#progressive-web-apps)
-- [Performance and Discovery](#performance-and-discovery)
-- [Custom Tags](#custom-tags)
-- [Schemas](#schemas)
-    - [Breadcrumbs](#breadcrumbs)
-    - [FAQs](#faqs)
-    - [Custom Schemas](#custom-schemas)
-- [Rendering](#rendering)
+- [Hiệu năng và khả năng khám phá](#performance-and-discovery)
+- [Custom tag](#custom-tags)
+- [Schema](#schemas)
+    - [Breadcrumb](#breadcrumbs)
+    - [FAQ](#faqs)
+    - [Schema tùy chỉnh](#custom-schemas)
+- [Render](#rendering)
     - [Blade](#blade)
     - [Livewire](#livewire)
     - [Inertia](#inertia)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-[Laravel Head](https://github.com/laravel/head) provides a fluent API for managing your application's document `<head>` element, including title and meta tags, Open Graph metadata, canonical URLs, robots directives, performance hints, and structured data. It works with Blade, Livewire, and Inertia.
+[Laravel Head](https://github.com/laravel/head) cung cấp một fluent API để quản lý phần tử `<head>` của tài liệu trong ứng dụng, bao gồm title và meta tag, metadata Open Graph, canonical URL, chỉ thị robots, gợi ý hiệu năng và structured data. Laravel Head hoạt động với Blade, Livewire và Inertia.
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
-You may install Laravel Head using the Composer package manager:
+Bạn có thể cài đặt Laravel Head bằng trình quản lý package Composer:
 
 ```shell
 composer require laravel/head
 ```
 
 <a name="quickstart"></a>
-## Quickstart
+## Bắt đầu nhanh
 
-Register site-wide defaults in a service provider:
+Đăng ký các giá trị mặc định dùng cho toàn site trong một service provider:
 
 ```php
 use Laravel\Head\Facades\Head;
@@ -53,14 +53,14 @@ Head::defaults(fn (HeadBuilder $head) => $head
     ->description('Build something great.'));
 ```
 
-Set page-specific metadata at runtime:
+Thiết lập metadata riêng cho từng trang tại runtime:
 
 ```php
 Head::title($post->title)
     ->description($post->description);
 ```
 
-Render the resolved tags in your layout:
+Render các tag đã được phân giải trong layout:
 
 ```blade
 <head>
@@ -69,27 +69,27 @@ Render the resolved tags in your layout:
 ```
 
 <a name="resolution-precedence"></a>
-## Resolution Precedence
+## Thứ tự ưu tiên khi phân giải
 
-Page metadata resolves from five layers, listed from lowest to highest priority:
+Metadata của trang được phân giải từ năm lớp, được liệt kê theo thứ tự ưu tiên từ thấp đến cao:
 
-1. Page defaults
-2. Route group metadata
-3. Route metadata
-4. Runtime metadata
-5. Error metadata
+1. Giá trị mặc định của trang
+2. Metadata của route group
+3. Metadata của route
+4. Metadata tại runtime
+5. Metadata lỗi
 
-Higher layers replace lower layers field by field. For example, a runtime title replaces the route title without replacing the route description. The sections that follow describe how to set metadata at each layer. For information about rendering the resolved metadata in Blade, Livewire, and Inertia, see [Rendering](#rendering).
+Các lớp có mức ưu tiên cao hơn sẽ thay thế các lớp thấp hơn theo từng field. Ví dụ, title tại runtime sẽ thay thế title của route nhưng không thay thế description của route. Các phần tiếp theo mô tả cách thiết lập metadata ở từng lớp. Để biết cách render metadata đã được phân giải trong Blade, Livewire và Inertia, xem [Rendering](#rendering).
 
 <a name="defining-metadata"></a>
-## Defining Metadata
+## Định nghĩa metadata
 
-Laravel Head allows you to define metadata using site-wide defaults, route metadata, runtime calls, and error page definitions.
+Laravel Head cho phép bạn định nghĩa metadata bằng các giá trị mặc định dùng cho toàn site, metadata của route, các lời gọi tại runtime và định nghĩa cho trang lỗi.
 
 <a name="defaults"></a>
-### Defaults
+### Giá trị mặc định
 
-Register page defaults in a service provider:
+Đăng ký các giá trị mặc định của trang trong một service provider:
 
 ```php
 use Laravel\Head\Enums\OgType;
@@ -107,21 +107,21 @@ Head::defaults(function (HeadBuilder $head) {
 });
 ```
 
-Defaults are the lowest-priority page metadata layer. If no route, runtime, or error metadata sets a title, `Laravel` renders as-is. When a higher layer sets a page title, the inherited suffix is applied, so `Head::title('About')` renders `About - Laravel`. Pass `exact: true` for titles that should ignore an inherited prefix or suffix.
+Các giá trị mặc định là lớp metadata của trang có mức ưu tiên thấp nhất. Nếu metadata của route, runtime hoặc lỗi không thiết lập title, `Laravel` sẽ được render nguyên trạng. Khi một lớp cao hơn thiết lập title của trang, suffix được kế thừa sẽ được áp dụng, vì vậy `Head::title('About')` sẽ render thành `About - Laravel`. Truyền `exact: true` cho những title cần bỏ qua prefix hoặc suffix được kế thừa.
 
-Calling `Head::canonical()` renders a canonical URL using the current request URL. To set an explicit URL, pass a string such as `Head::canonical('/about')`. Canonical URLs are normalized to `https` by default; pass `forceHttps: false` to preserve the request scheme.
+Gọi `Head::canonical()` sẽ render canonical URL dựa trên URL của request hiện tại. Để thiết lập URL cụ thể, hãy truyền một chuỗi như `Head::canonical('/about')`. Theo mặc định, canonical URL được chuẩn hóa sang `https`; truyền `forceHttps: false` để giữ nguyên scheme của request.
 
-Robots directives may be passed as a raw string, as `RobotsRule` enum cases, or as a list mixing both forms. Lists are rendered as comma-separated directives, so `Head::robots([RobotsRule::NoIndex, RobotsRule::NoFollow])` renders `noindex, nofollow`.
+Chỉ thị robots có thể được truyền dưới dạng chuỗi thô, các case của enum `RobotsRule`, hoặc một danh sách kết hợp cả hai dạng. Danh sách được render thành các chỉ thị phân tách bằng dấu phẩy, vì vậy `Head::robots([RobotsRule::NoIndex, RobotsRule::NoFollow])` sẽ render `noindex, nofollow`.
 
-For convenience, the `searchableByRobots` method renders `all`, while the `hiddenFromRobots` method renders `none`.
+Để thuận tiện, method `searchableByRobots` render `all`, trong khi method `hiddenFromRobots` render `none`.
 
 <a name="route-metadata"></a>
-### Route Metadata
+### Metadata của route
 
-You may define metadata directly on routes, which is especially useful for semi-static pages whose metadata is known ahead of time.
+Bạn có thể định nghĩa metadata trực tiếp trên route, đặc biệt hữu ích với các trang bán tĩnh có metadata đã biết trước.
 
 <a name="routes-and-groups"></a>
-#### Routes and Groups
+#### Route và group
 
 ```php
 Route::view('/contact', 'contact')
@@ -132,7 +132,7 @@ Route::view('/contact', 'contact')
     );
 ```
 
-Shared route metadata may be applied to a group at any position in the chain:
+Metadata dùng chung cho các route có thể được áp dụng cho một group tại bất kỳ vị trí nào trong chuỗi gọi:
 
 ```php
 Route::withHead(robots: 'noindex, nofollow')
@@ -145,7 +145,7 @@ Route::withHead(robots: 'noindex, nofollow')
     });
 ```
 
-You may also define metadata for resource and singleton routes:
+Bạn cũng có thể định nghĩa metadata cho resource route và singleton route:
 
 ```php
 Route::resource('posts', PostController::class)->withHead(
@@ -157,9 +157,9 @@ Route::singleton('profile', ProfileController::class)->withHead(
 );
 ```
 
-The `withHead` method stores plain arrays through Laravel's native route metadata API. It is equivalent to calling the `metadata` method with the attributes nested under a `head` key, so the metadata remains compatible with cached routes.
+Method `withHead` lưu các array thuần thông qua route metadata API native của Laravel. Cách này tương đương với việc gọi method `metadata` với các attribute được lồng dưới key `head`, nhờ đó metadata vẫn tương thích với route cache.
 
-The named arguments are intentionally limited to Laravel Head's built-in route properties so editors and static analysis can catch misspelled names. Route attributes registered by custom tag builders may be passed through `extensions`:
+Các named argument được chủ đích giới hạn ở những route property tích hợp sẵn của Laravel Head để editor và static analysis có thể phát hiện tên bị viết sai. Các route attribute được đăng ký bởi custom tag builder có thể được truyền qua `extensions`:
 
 ```php
 Route::get('/article', ArticleController::class)->withHead(
@@ -169,28 +169,28 @@ Route::get('/article', ArticleController::class)->withHead(
 ```
 
 <a name="supported-properties"></a>
-#### Supported Properties
+#### Các property được hỗ trợ
 
-The supported route properties map to the same names as the fluent builder methods:
+Các route property được hỗ trợ ánh xạ tới cùng tên với các method của fluent builder:
 
-| Category | Properties |
+| Danh mục | Property |
 | --- | --- |
-| Document | `title`, `description`, `canonical`, `robots` |
-| Application metadata | `themeColor`, `applicationName`, `colorScheme`, `referrer`, `viewport`, `appleWebAppTitle`, `webAppCapable`, `appleWebAppStatusBarStyle` |
-| Social | `og`, `ogImage`, `ogVideo`, `ogAudio`, `twitter`, `twitterImage` |
-| Performance | `preload`, `prefetch`, `preconnect`, `dnsPrefetch` |
-| Discovery | `alternates`, `feed`, `icon`, `favicon`, `appleTouchIcon`, `appleTouchStartupImage`, `maskIcon`, `manifest` |
+| Tài liệu | `title`, `description`, `canonical`, `robots` |
+| Metadata ứng dụng | `themeColor`, `applicationName`, `colorScheme`, `referrer`, `viewport`, `appleWebAppTitle`, `webAppCapable`, `appleWebAppStatusBarStyle` |
+| Mạng xã hội | `og`, `ogImage`, `ogVideo`, `ogAudio`, `twitter`, `twitterImage` |
+| Hiệu năng | `preload`, `prefetch`, `preconnect`, `dnsPrefetch` |
+| Khám phá | `alternates`, `feed`, `icon`, `favicon`, `appleTouchIcon`, `appleTouchStartupImage`, `maskIcon`, `manifest` |
 | Structured data | `schema` |
-| Custom tags | `meta`, `link` |
+| Custom tag | `meta`, `link` |
 
-Nested option names use the same `camelCase` naming as the fluent API, such as `forceHttps`, `siteName`, and `secureUrl`.
+Tên các option lồng nhau sử dụng cùng quy ước `camelCase` như fluent API, chẳng hạn `forceHttps`, `siteName` và `secureUrl`.
 
-Repeatable properties, such as `ogImage`, `preload`, `feed`, `schema`, `icon`, and `appleTouchStartupImage`, accept either a single value or a list.
+Các property có thể lặp lại như `ogImage`, `preload`, `feed`, `schema`, `icon` và `appleTouchStartupImage` chấp nhận một giá trị đơn hoặc một danh sách.
 
 <a name="runtime-metadata"></a>
-### Runtime Metadata
+### Metadata tại runtime
 
-When a value isn't known until a request arrives, such as the title of a post being viewed, you may set it at runtime:
+Khi một giá trị chỉ được biết sau khi request đến, chẳng hạn title của bài viết đang được xem, bạn có thể thiết lập giá trị đó tại runtime:
 
 ```php
 use Laravel\Head\Facades\Head;
@@ -203,7 +203,7 @@ public function __invoke(Post $post): Response
 }
 ```
 
-Runtime calls made via the `Head` facade override route metadata for request-dependent data. Controllers and actions are the most common places to make these calls:
+Các lời gọi runtime thông qua facade `Head` sẽ ghi đè metadata của route đối với dữ liệu phụ thuộc vào request. Controller và action là những nơi phổ biến nhất để thực hiện các lời gọi này:
 
 ```php
 use App\Models\Post;
@@ -218,7 +218,7 @@ public function show(Post $post)
 }
 ```
 
-Multiple runtime calls are merged in the order they run. For single-value fields such as title, description, canonical URL, and robots directives, the later call takes precedence. Repeatable fields retain multiple entries, but adding the same key again updates the earlier entry. For the `ogImage` method, the URL is the key:
+Nhiều lời gọi runtime được merge theo thứ tự thực thi. Với các field đơn giá trị như title, description, canonical URL và chỉ thị robots, lời gọi sau sẽ được ưu tiên. Các field có thể lặp lại vẫn giữ nhiều entry, nhưng việc thêm lại cùng key sẽ cập nhật entry trước đó. Với method `ogImage`, URL chính là key:
 
 ```php
 Head::ogImage('/images/cover.jpg', alt: 'Draft cover')
@@ -235,9 +235,9 @@ Head::ogImage('/images/cover.jpg', alt: 'Draft cover')
 <meta property="og:image:alt" content="Gallery image">
 ```
 
-Open Graph media inherited from your defaults acts as a fallback. When route, runtime, or error metadata defines its own media of the same type, the default media is replaced instead of merged, so a page's `og:image` takes precedence over a site-wide default image.
+Media Open Graph được kế thừa từ các giá trị mặc định đóng vai trò fallback. Khi metadata của route, runtime hoặc lỗi định nghĩa media riêng cùng loại, media mặc định sẽ bị thay thế thay vì được merge, vì vậy `og:image` của trang được ưu tiên hơn ảnh mặc định dùng cho toàn site.
 
-You may fluently define conditional metadata using the `when` and `unless` methods:
+Bạn có thể định nghĩa metadata có điều kiện theo fluent style bằng các method `when` và `unless`:
 
 ```php
 Head::title($post->title)
@@ -245,9 +245,9 @@ Head::title($post->title)
 ```
 
 <a name="error-pages"></a>
-### Error Pages
+### Trang lỗi
 
-Typically, you should register error metadata within the `boot` method of your application's `AppServiceProvider` class:
+Thông thường, bạn nên đăng ký metadata lỗi trong method `boot` của class `AppServiceProvider` trong ứng dụng:
 
 ```php
 use Laravel\Head\ErrorPages;
@@ -270,7 +270,7 @@ public function boot(): void
 }
 ```
 
-The `defaults` and `status` methods also accept the same fluent builder callback used by `Head::defaults()`:
+Các method `defaults` và `status` cũng chấp nhận cùng fluent builder callback được sử dụng bởi `Head::defaults()`:
 
 ```php
 use Laravel\Head\ErrorPages;
@@ -284,14 +284,14 @@ Head::errors(function (ErrorPages $errors) {
 });
 ```
 
-When a response is rendered for a registered error status, that metadata takes precedence over every other layer.
+Khi response được render cho một HTTP status lỗi đã đăng ký, metadata đó sẽ được ưu tiên hơn mọi lớp khác.
 
-Laravel automatically detects the response status when rendering an error view or executing a respond-phase hook such as Inertia's `handleExceptionsUsing()` method. If you render an error response inside an `$exceptions->render()` callback, call `Head::status(404)` before rendering so the error metadata is applied.
+Laravel tự động phát hiện status của response khi render error view hoặc thực thi hook ở giai đoạn respond như method `handleExceptionsUsing()` của Inertia. Nếu bạn render error response bên trong callback `$exceptions->render()`, hãy gọi `Head::status(404)` trước khi render để metadata lỗi được áp dụng.
 
 <a name="open-graph"></a>
 ## Open Graph
 
-You may set Open Graph properties using the `og` method. Repeatable media may be added using the top-level methods, which accept named arguments directly:
+Bạn có thể thiết lập các thuộc tính Open Graph bằng method `og`. Các media có thể lặp lại có thể được thêm bằng các method cấp cao nhất, những method này nhận trực tiếp các named argument:
 
 ```php
 use Laravel\Head\Enums\ImageType;
@@ -308,14 +308,14 @@ Head::og(type: OgType::Article, title: $post->title)
     );
 ```
 
-The `ogImage`, `ogVideo`, and `ogAudio` methods accept a URL as their first argument, along with optional named arguments such as `alt`, `width`, `height`, `type`, and `secureUrl` where supported by the Open Graph specification.
+Các method `ogImage`, `ogVideo` và `ogAudio` nhận URL làm argument đầu tiên, cùng các named argument tùy chọn như `alt`, `width`, `height`, `type` và `secureUrl` khi được đặc tả Open Graph hỗ trợ.
 
-You may pass image MIME types as `ImageType` enum cases anywhere the API accepts an image `type`, such as `ImageType::Svg`, `ImageType::Png`, `ImageType::Jpeg`, and `ImageType::Webp`.
+Bạn có thể truyền MIME type của hình ảnh dưới dạng các case của enum `ImageType` ở bất kỳ nơi nào API nhận `type` của hình ảnh, chẳng hạn `ImageType::Svg`, `ImageType::Png`, `ImageType::Jpeg` và `ImageType::Webp`.
 
 > [!NOTE]
-> Document `title` and `description` automatically fill missing `og:title` and `og:description` values.
+> `title` và `description` của document sẽ tự động điền các giá trị `og:title` và `og:description` còn thiếu.
 
-For a single Open Graph image with no other attributes, you may pass the `image` named argument to the `og` method:
+Với một hình ảnh Open Graph duy nhất và không có thuộc tính nào khác, bạn có thể truyền named argument `image` vào method `og`:
 
 ```php
 Head::og(
@@ -326,12 +326,12 @@ Head::og(
 );
 ```
 
-The `og(image: ...)` and `ogImage(...)` calls write to the same underlying image list, so you may use whichever is more expressive at the call site. You may use the [`meta`](#custom-tags) method for custom Open Graph extensions such as product or article properties.
+Các lời gọi `og(image: ...)` và `ogImage(...)` ghi vào cùng một danh sách hình ảnh bên dưới, vì vậy bạn có thể dùng cách nào diễn đạt rõ hơn tại nơi gọi. Bạn có thể dùng method [`meta`](#custom-tags) cho các phần mở rộng Open Graph tùy chỉnh như thuộc tính product hoặc article.
 
 <a name="twitter-cards"></a>
 ### X / Twitter Cards
 
-To render X / Twitter cards from the same title, description, and image used by Open Graph, register `twitter()` in your defaults:
+Để render X / Twitter Cards từ cùng title, description và image được Open Graph sử dụng, hãy đăng ký `twitter()` trong các giá trị mặc định:
 
 ```php
 use Laravel\Head\Enums\TwitterCard;
@@ -343,7 +343,7 @@ Head::defaults(fn (HeadBuilder $head) => $head->twitter(
 ));
 ```
 
-Then set page-level metadata:
+Sau đó thiết lập metadata ở cấp trang:
 
 ```php
 Head::title('Introducing Laravel Head')
@@ -351,7 +351,7 @@ Head::title('Introducing Laravel Head')
     ->ogImage('https://example.com/social.jpg', alt: 'Introducing Laravel Head');
 ```
 
-This renders matching Twitter tags:
+Thao tác này render các thẻ Twitter tương ứng:
 
 ```html
 <meta name="twitter:card" content="summary_large_image">
@@ -361,25 +361,25 @@ This renders matching Twitter tags:
 <meta name="twitter:image:alt" content="Introducing Laravel Head">
 ```
 
-You may customize individual pages with explicit Twitter values:
+Bạn có thể tùy chỉnh từng trang bằng các giá trị Twitter tường minh:
 
 ```php
 Head::twitter(title: $post->social_title)
     ->twitterImage($post->social_image_url, alt: $post->title);
 ```
 
-Route metadata accepts `twitter` and `twitterImage`.
+Metadata của route chấp nhận `twitter` và `twitterImage`.
 
 <a name="theme-colors"></a>
-## Theme Colors
+## Màu theme
 
-You may set theme colors globally, per route, or at runtime:
+Bạn có thể thiết lập màu theme ở phạm vi toàn cục, theo từng route hoặc tại runtime:
 
 ```php
 Head::themeColor('#0f172a');
 ```
 
-This renders a `<meta name="theme-color">` tag. For media-specific theme colors, you may use the `Media` enum:
+Thao tác này render thẻ `<meta name="theme-color">`. Với màu theme dành riêng cho từng media, bạn có thể dùng enum `Media`:
 
 ```php
 use Laravel\Head\Enums\Media;
@@ -388,9 +388,9 @@ Head::themeColor('#ffffff', media: Media::Light)
     ->themeColor('#111827', media: Media::Dark);
 ```
 
-The `Media` enum also includes `Portrait` and `Landscape`. The `media` argument also accepts a custom media query string.
+Enum `Media` cũng bao gồm `Portrait` và `Landscape`. Argument `media` cũng chấp nhận một chuỗi media query tùy chỉnh.
 
-Route metadata supports a single theme color through the same `camelCase` key:
+Metadata của route hỗ trợ một màu theme duy nhất thông qua cùng key `camelCase`:
 
 ```php
 Route::view('/dashboard', 'dashboard')->withHead(
@@ -399,9 +399,9 @@ Route::view('/dashboard', 'dashboard')->withHead(
 ```
 
 <a name="app-metadata-and-icons"></a>
-## Application Metadata and Icons
+## Metadata và icon của ứng dụng
 
-Laravel Head includes methods for common browser and application metadata:
+Laravel Head cung cấp các method cho metadata phổ biến của trình duyệt và ứng dụng:
 
 ```php
 use Laravel\Head\Enums\ImageType;
@@ -422,9 +422,9 @@ Head::applicationName('Laravel')
     ->manifest('/site.webmanifest');
 ```
 
-The `favicon` method is an alias for the `icon` method and accepts the same `type`, `sizes`, and `media` arguments.
+Method `favicon` là alias của method `icon` và nhận cùng các argument `type`, `sizes` và `media`.
 
-Route metadata uses the same names:
+Metadata của route sử dụng cùng các tên này:
 
 ```php
 use Laravel\Head\Enums\ImageType;
@@ -449,7 +449,7 @@ Route::view('/dashboard', 'dashboard')->withHead(
 <a name="progressive-web-apps"></a>
 ## Progressive Web Apps
 
-The `pwa` method configures the common document `<head>` tags needed for an installable web app:
+Method `pwa` cấu hình các thẻ `<head>` phổ biến của document cần thiết cho một web app có thể cài đặt:
 
 ```php
 Head::pwa(
@@ -461,14 +461,14 @@ Head::pwa(
 );
 ```
 
-This renders the application name, web application manifest link, and iOS standalone metadata. If provided, the theme color, Apple status bar style, and Apple touch icon are also rendered. Creating the web application manifest and registering a service worker remain your application's responsibility.
+Thao tác này render tên ứng dụng, liên kết web application manifest và metadata standalone của iOS. Nếu được cung cấp, màu theme, kiểu status bar của Apple và Apple touch icon cũng được render. Việc tạo web application manifest và đăng ký service worker vẫn là trách nhiệm của ứng dụng của bạn.
 
-You may use the `pwa` method in defaults or runtime metadata. Route metadata supports the individual properties shown above.
+Bạn có thể dùng method `pwa` trong metadata mặc định hoặc metadata tại runtime. Metadata của route hỗ trợ từng property riêng lẻ được trình bày ở trên.
 
 <a name="performance-and-discovery"></a>
-## Performance and Discovery
+## Hiệu năng và khả năng khám phá
 
-Laravel Head renders performance hints, pagination links, locale alternates, and feed discovery:
+Laravel Head render các gợi ý hiệu năng, liên kết phân trang, URL thay thế theo locale và thông tin khám phá feed:
 
 ```php
 Head::preload(asset('fonts/inter.woff2'), as: 'font', crossorigin: true)
@@ -485,7 +485,7 @@ Head::preload(asset('fonts/inter.woff2'), as: 'font', crossorigin: true)
     ->feed('/feed.atom', type: 'atom', title: 'Laravel Atom');
 ```
 
-For local assets, `preloadAsset()` and `prefetchAsset()` resolve the URL through the `asset()` helper and detect the `as` attribute from the file extension. Font preloads automatically include `crossorigin`, which the preload specification requires even for same-origin fonts:
+Với asset cục bộ, `preloadAsset()` và `prefetchAsset()` phân giải URL thông qua helper `asset()` và tự phát hiện attribute `as` từ phần mở rộng của file. Các font được preload sẽ tự động bao gồm `crossorigin`, vì đặc tả preload yêu cầu attribute này ngay cả với font cùng origin:
 
 ```php
 Head::preloadAsset('fonts/inter.woff2')
@@ -497,12 +497,12 @@ Head::preloadAsset('fonts/inter.woff2')
 <link rel="prefetch" href="https://example.com/images/next.webp" as="image">
 ```
 
-You may pass `as` explicitly to override detection. The `preloadAsset` method will throw an exception when the `as` attribute cannot be detected from the extension because browsers ignore preloads without this attribute; the `prefetchAsset` method will simply omit it.
+Bạn có thể truyền `as` tường minh để ghi đè cơ chế tự phát hiện. Method `preloadAsset` sẽ ném exception khi không thể xác định attribute `as` từ phần mở rộng, vì trình duyệt bỏ qua preload nếu thiếu attribute này; còn method `prefetchAsset` sẽ đơn giản bỏ qua attribute đó.
 
 <a name="custom-tags"></a>
-## Custom Tags
+## Custom tag
 
-For tags without a dedicated method, use `meta()` and `link()`:
+Với các tag không có method chuyên dụng, hãy sử dụng `meta()` và `link()`:
 
 ```php
 Head::meta('format-detection', 'telephone=no')
@@ -514,7 +514,7 @@ Head::meta('format-detection', 'telephone=no')
     ->link('me', 'https://social.example.com/@laravel');
 ```
 
-You may include a media query on a meta tag when the browser should only apply the tag under matching conditions:
+Bạn có thể thêm media query vào meta tag khi trình duyệt chỉ nên áp dụng tag đó trong các điều kiện phù hợp:
 
 ```php
 use Laravel\Head\Enums\Media;
@@ -523,7 +523,7 @@ Head::meta('theme-color', '#ffffff', media: Media::Light)
     ->meta('theme-color', '#111827', media: Media::Dark);
 ```
 
-The `meta` method uses the `name` attribute for regular meta tags. For keys that typically use the `property` attribute, such as Open Graph (`og:`) or article metadata (`article:`), the method switches automatically:
+Method `meta` sử dụng attribute `name` cho các meta tag thông thường. Với các key thường sử dụng attribute `property`, chẳng hạn Open Graph (`og:`) hoặc metadata bài viết (`article:`), method sẽ tự động chuyển đổi:
 
 ```php
 Head::meta('description', 'About Laravel')
@@ -535,12 +535,12 @@ Head::meta('description', 'About Laravel')
 <meta property="og:title" content="About Laravel">
 ```
 
-You may pass `property: true` or `property: false` to explicitly select either attribute.
+Bạn có thể truyền `property: true` hoặc `property: false` để chọn tường minh attribute cần sử dụng.
 
 <a name="schemas"></a>
-## Schemas
+## Schema
 
-Built-in schema builders cover the common JSON-LD types:
+Các schema builder tích hợp sẵn hỗ trợ những kiểu JSON-LD phổ biến:
 
 ```php
 use Laravel\Head\Enums\OfferAvailability;
@@ -558,14 +558,14 @@ Head::schema(
 );
 ```
 
-The built-in factory methods are `article`, `blogPosting`, `product`, `offer`, `brand`, `breadcrumbs`, `faq`, `organization`, `person`, `webPage`, and `webSite`. Unknown factory methods create a generic schema object, so you can still express custom schema.org types.
+Các factory method tích hợp sẵn gồm `article`, `blogPosting`, `product`, `offer`, `brand`, `breadcrumbs`, `faq`, `organization`, `person`, `webPage` và `webSite`. Factory method không xác định sẽ tạo một schema object tổng quát, vì vậy bạn vẫn có thể biểu diễn các kiểu schema.org tùy chỉnh.
 
-When JSON-LD schema data is invalid, Laravel Head throws an exception in non-production environments and logs a warning in production.
+Khi dữ liệu schema JSON-LD không hợp lệ, Laravel Head sẽ ném exception trong môi trường không phải production và ghi warning vào log trong production.
 
 <a name="breadcrumbs"></a>
 ### Breadcrumbs
 
-Breadcrumb items may be added one at a time or in bulk. Positions are assigned automatically in the order the items are added:
+Các breadcrumb item có thể được thêm từng mục hoặc thêm hàng loạt. Vị trí được tự động gán theo thứ tự các item được thêm vào:
 
 ```php
 Head::schema(
@@ -577,7 +577,7 @@ Head::schema(
 );
 ```
 
-You may use the `item` method to append a single breadcrumb item:
+Bạn có thể sử dụng method `item` để thêm một breadcrumb item:
 
 ```php
 Schema::breadcrumbs()
@@ -586,9 +586,9 @@ Schema::breadcrumbs()
 ```
 
 <a name="faqs"></a>
-### FAQs
+### FAQ
 
-FAQ entries follow the same pattern. You may add them one at a time using the `question` method or in bulk using the `questions` method:
+Các mục FAQ tuân theo cùng một mẫu. Bạn có thể thêm từng mục bằng method `question` hoặc thêm hàng loạt bằng method `questions`:
 
 ```php
 Head::schema(
@@ -600,9 +600,9 @@ Head::schema(
 ```
 
 <a name="custom-schemas"></a>
-### Custom Schemas
+### Schema tùy chỉnh
 
-You may explicitly register custom schema types:
+Bạn có thể đăng ký tường minh các kiểu schema tùy chỉnh:
 
 ```php
 use DateTimeInterface;
@@ -634,16 +634,16 @@ Head::schema(
 ```
 
 <a name="rendering"></a>
-## Rendering
+## Render
 
-Laravel Head resolves page metadata into tags for the current response. How these tags are rendered depends on your application stack.
+Laravel Head phân giải metadata của trang thành các tag cho response hiện tại. Cách các tag này được render phụ thuộc vào stack của ứng dụng.
 
-The HTML renderer powers the `@head` directive and the rendered elements that Laravel Head shares with Inertia via the `head` prop. The array renderer powers `Head::toArray()` for applications that need the resolved metadata as structured data.
+HTML renderer cung cấp cơ chế cho directive `@head` và các element đã render mà Laravel Head chia sẻ với Inertia thông qua prop `head`. Array renderer cung cấp `Head::toArray()` cho các ứng dụng cần metadata đã phân giải dưới dạng dữ liệu có cấu trúc.
 
 <a name="blade"></a>
 ### Blade
 
-Render the accumulated tags in your layout's `<head>` with the `@head` directive:
+Render các tag đã tích lũy trong phần `<head>` của layout bằng directive `@head`:
 
 ```blade
 <head>
@@ -652,12 +652,12 @@ Render the accumulated tags in your layout's `<head>` with the `@head` directive
 </head>
 ```
 
-The `@head` directive renders synchronously, so you should define page metadata before the layout is rendered.
+Directive `@head` render đồng bộ, vì vậy bạn nên định nghĩa metadata của trang trước khi layout được render.
 
 <a name="livewire"></a>
 ### Livewire
 
-Livewire applications use the same `@head` directive in their document layout:
+Ứng dụng Livewire sử dụng cùng directive `@head` trong document layout:
 
 ```blade
 <head>
@@ -671,12 +671,12 @@ Livewire applications use the same `@head` directive in their document layout:
 </body>
 ```
 
-No Livewire-specific configuration is required. Laravel Head metadata is resolved per request, and the resolver is request-scoped. Therefore, each `wire:navigate` visit fetches a fresh document whose `@head` output reflects the destination route's metadata. Pages visited using `wire:navigate` receive the appropriate route, runtime, and error metadata without requiring component-level head code.
+Không cần cấu hình riêng cho Livewire. Metadata của Laravel Head được phân giải theo từng request và resolver có scope theo request. Vì vậy, mỗi lần điều hướng bằng `wire:navigate` sẽ lấy một document mới mà output `@head` phản ánh metadata của route đích. Các trang được truy cập bằng `wire:navigate` nhận đúng metadata của route, runtime và lỗi mà không cần code head ở cấp component.
 
 <a name="inertia"></a>
 ### Inertia
 
-Use the same `@head` directive in your Inertia root template, alongside Inertia's own components:
+Sử dụng cùng directive `@head` trong root template của Inertia, cùng với các component của chính Inertia:
 
 ```blade
 <html>
@@ -694,7 +694,7 @@ Use the same `@head` directive in your Inertia root template, alongside Inertia'
 </html>
 ```
 
-When Inertia is installed, Laravel Head automatically shares the page-managed head as an array of rendered element strings under a `head` prop on every page object:
+Khi Inertia được cài đặt, Laravel Head tự động chia sẻ phần head do trang quản lý dưới dạng một mảng các chuỗi element đã render trong prop `head` của mỗi page object:
 
 ```json
 {
@@ -707,7 +707,7 @@ When Inertia is installed, Laravel Head automatically shares the page-managed he
 }
 ```
 
-Enable Inertia's `serverHead` option wherever your application calls `createInertiaApp()`. The option is available in Inertia 3.5 and later:
+Bật option `serverHead` của Inertia ở mọi nơi ứng dụng gọi `createInertiaApp()`. Option này có từ Inertia 3.5 trở lên:
 
 ```js
 createInertiaApp({
@@ -716,14 +716,14 @@ createInertiaApp({
 });
 ```
 
-Each page-managed element has a stable `data-inertia` key. The `@head` directive renders the initial document, after which Inertia adopts those elements and keeps them synchronized during standard visits, [instant visits](https://inertiajs.com/docs/v3/the-basics/instant-visits), and back and forward navigation. The elements are present in the initial HTML response, so crawlers and link-preview bots can read them without executing JavaScript. No client-side `<Head>` component is required.
+Mỗi element do trang quản lý có một key `data-inertia` ổn định. Directive `@head` render document ban đầu, sau đó Inertia tiếp quản các element đó và giữ chúng đồng bộ trong các lần truy cập thông thường, [instant visit](https://inertiajs.com/docs/v3/the-basics/instant-visits), cũng như khi điều hướng back và forward. Các element có mặt trong HTML response ban đầu, vì vậy crawler và bot tạo link preview có thể đọc chúng mà không cần thực thi JavaScript. Không cần component `<Head>` phía client.
 
-This works with or without [server-side rendering (SSR)](https://inertiajs.com/docs/v3/advanced/server-side-rendering). If your application has a separate SSR entry point, enable `serverHead` there too. Laravel Head automatically deduplicates page-managed elements between `@head` and `<x-inertia::head />`, regardless of their order, while preserving other head elements produced by JavaScript SSR.
+Cơ chế này hoạt động cả khi có hoặc không có [server-side rendering (SSR)](https://inertiajs.com/docs/v3/advanced/server-side-rendering). Nếu ứng dụng có entry point SSR riêng, hãy bật `serverHead` tại đó. Laravel Head tự động loại bỏ các element trùng lặp do trang quản lý giữa `@head` và `<x-inertia::head />`, bất kể thứ tự của chúng, đồng thời vẫn giữ các head element khác do JavaScript SSR tạo ra.
 
 > [!NOTE]
-> When adding Laravel Head to an existing Inertia application, remove any title callbacks from `resources/js/app.tsx` and `resources/js/ssr.tsx` so Laravel Head can manage the final document title, and move tags managed by Inertia's [`<Head>` component](https://inertiajs.com/docs/v3/the-basics/title-and-meta) into Laravel Head so the two never define the same element.
+> Khi thêm Laravel Head vào một ứng dụng Inertia hiện có, hãy xóa các title callback khỏi `resources/js/app.tsx` và `resources/js/ssr.tsx` để Laravel Head có thể quản lý title cuối cùng của document, đồng thời chuyển các tag do [`<Head>` component](https://inertiajs.com/docs/v3/the-basics/title-and-meta) của Inertia quản lý sang Laravel Head để hai bên không bao giờ định nghĩa cùng một element.
 
-The `head` prop is omitted from partial reload responses, so Inertia retains the last full page's head. Instant visits likewise retain the current head until the background response arrives. If your application already uses the `head` prop, change its name in a service provider:
+Prop `head` được bỏ khỏi các partial reload response, vì vậy Inertia giữ lại head của trang đầy đủ gần nhất. Instant visit cũng giữ head hiện tại cho đến khi background response trả về. Nếu ứng dụng đã sử dụng prop `head`, hãy đổi tên prop này trong một service provider:
 
 ```php
 use Laravel\Head\Facades\Head;
@@ -734,14 +734,14 @@ public function boot(): void
 }
 ```
 
-Then point Inertia at the same prop with `serverHead: '_head'`.
+Sau đó cấu hình Inertia sử dụng cùng prop đó với `serverHead: '_head'`.
 
 <a name="static-inertia-tags"></a>
-#### Static Inertia Tags
+#### Inertia tag tĩnh
 
-Most tags should live in defaults, route metadata, or runtime metadata so Laravel Head can resolve the right value for each page. Use Inertia globals only for document tags rendered in the first HTML response and left unchanged by Inertia for the rest of the session.
+Phần lớn tag nên nằm trong defaults, metadata của route hoặc metadata tại runtime để Laravel Head có thể phân giải đúng giá trị cho từng trang. Chỉ sử dụng Inertia globals cho các document tag được render trong HTML response đầu tiên và được Inertia giữ nguyên trong phần còn lại của session.
 
-Register them in a service provider with `Head::inertiaGlobals()`:
+Đăng ký chúng trong một service provider bằng `Head::inertiaGlobals()`:
 
 ```php
 use Laravel\Head\Facades\Head;
@@ -757,9 +757,11 @@ Head::inertiaGlobals(function (HeadBuilder $head) {
 });
 ```
 
-Inertia globals are excluded from the `head` prop, rendered without `data-inertia` ownership attributes, and never updated after the first response. These globals are suitable for stable browser hints such as viewport, color scheme, favicons, touch icons, and manifests. If a tag is page-specific, SEO-relevant, or may be overridden later, put it in `defaults`, route metadata, or runtime metadata instead.
+Inertia globals không được đưa vào prop `head`, được render mà không có attribute ownership `data-inertia`, và không bao giờ được cập nhật sau response đầu tiên. Các global này phù hợp với những browser hint ổn định như viewport, color scheme, favicon, touch icon và manifest. Nếu một tag dành riêng cho từng trang, liên quan đến SEO hoặc có thể bị ghi đè về sau, hãy đặt nó trong `defaults`, metadata của route hoặc metadata tại runtime.
 
-Applications that need the resolved metadata as structured data instead of rendered tags may call `Head::toArray()`. The returned data includes titles, Open Graph values, JSON-LD schemas, and other resolved metadata.
+Các ứng dụng cần metadata đã phân giải dưới dạng dữ liệu có cấu trúc thay vì các tag đã render có thể gọi `Head::toArray()`. Dữ liệu trả về bao gồm title, giá trị Open Graph, schema JSON-LD và các metadata đã phân giải khác.
+
+---
 
 ## Tài liệu chính thức
 

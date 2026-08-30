@@ -1,75 +1,75 @@
-# Configuration
+# Cấu hình
 
-- [Introduction](#introduction)
-- [Environment Configuration](#environment-configuration)
-    - [Environment Variable Types](#environment-variable-types)
-    - [Retrieving Environment Configuration](#retrieving-environment-configuration)
-    - [Determining the Current Environment](#determining-the-current-environment)
-    - [Encrypting Environment Files](#encrypting-environment-files)
-- [Accessing Configuration Values](#accessing-configuration-values)
-- [Configuration Caching](#configuration-caching)
-- [Configuration Publishing](#configuration-publishing)
-- [Debug Mode](#debug-mode)
-- [Maintenance Mode](#maintenance-mode)
+- [Giới thiệu](#introduction)
+- [Cấu hình môi trường](#environment-configuration)
+    - [Kiểu dữ liệu của biến môi trường](#environment-variable-types)
+    - [Truy xuất cấu hình môi trường](#retrieving-environment-configuration)
+    - [Xác định môi trường hiện tại](#determining-the-current-environment)
+    - [Mã hóa file môi trường](#encrypting-environment-files)
+- [Truy cập giá trị cấu hình](#accessing-configuration-values)
+- [Cache cấu hình](#configuration-caching)
+- [Publish cấu hình](#configuration-publishing)
+- [Chế độ debug](#debug-mode)
+- [Chế độ bảo trì](#maintenance-mode)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-All of the configuration files for the Laravel framework are stored in the `config` directory. Each option is documented, so feel free to look through the files and get familiar with the options available to you.
+Tất cả file cấu hình của Laravel framework được lưu trong thư mục `config`. Mỗi tùy chọn đều có phần mô tả, vì vậy bạn nên xem qua các file này để làm quen với những tùy chọn cấu hình mà ứng dụng có thể sử dụng.
 
-These configuration files allow you to configure things like your database connection information, your mail server information, as well as various other core configuration values such as your application URL and encryption key.
+Các file cấu hình này cho phép bạn thiết lập thông tin kết nối cơ sở dữ liệu, thông tin mail server, cũng như nhiều giá trị cấu hình cốt lõi khác như URL của ứng dụng và khóa mã hóa.
 
 <a name="the-about-command"></a>
-#### The `about` Command
+#### Lệnh `about`
 
-Laravel can display an overview of your application's configuration, drivers, and environment via the `about` Artisan command.
+Laravel có thể hiển thị tổng quan về cấu hình, driver và môi trường của ứng dụng thông qua lệnh Artisan `about`.
 
 ```shell
 php artisan about
 ```
 
-If you're only interested in a particular section of the application overview output, you may filter for that section using the `--only` option:
+Nếu chỉ quan tâm đến một phần cụ thể trong kết quả tổng quan của ứng dụng, bạn có thể lọc phần đó bằng tùy chọn `--only`:
 
 ```shell
 php artisan about --only=environment
 ```
 
-Or, to explore a specific configuration file's values in detail, you may use the `config:show` Artisan command:
+Hoặc, để xem chi tiết các giá trị trong một file cấu hình cụ thể, bạn có thể sử dụng lệnh Artisan `config:show`:
 
 ```shell
 php artisan config:show database
 ```
 
 <a name="environment-configuration"></a>
-## Environment Configuration
+## Cấu hình môi trường
 
-It is often helpful to have different configuration values based on the environment where the application is running. For example, you may wish to use a different cache driver locally than you do on your production server.
+Trong thực tế, mỗi môi trường chạy ứng dụng thường cần những giá trị cấu hình khác nhau. Chẳng hạn, ở môi trường local bạn có thể muốn sử dụng cache driver khác với môi trường production.
 
-To make this a cinch, Laravel utilizes the [DotEnv](https://github.com/vlucas/phpdotenv) PHP library. In a fresh Laravel installation, the root directory of your application will contain a `.env.example` file that defines many common environment variables. During the Laravel installation process, this file will automatically be copied to `.env`.
+Để việc này trở nên đơn giản, Laravel sử dụng thư viện PHP [DotEnv](https://github.com/vlucas/phpdotenv). Trong một bản cài đặt Laravel mới, thư mục gốc của ứng dụng chứa file `.env.example`, nơi khai báo nhiều biến môi trường thông dụng. Trong quá trình cài đặt Laravel, file này sẽ tự động được sao chép thành `.env`.
 
-Laravel's default `.env` file contains some common configuration values that may differ based on whether your application is running locally or on a production web server. These values are then read by the configuration files within the `config` directory using Laravel's `env` function.
+File `.env` mặc định của Laravel chứa một số giá trị cấu hình thường thay đổi tùy theo ứng dụng đang chạy local hay trên web server production. Sau đó, các file trong thư mục `config` đọc những giá trị này thông qua hàm `env` của Laravel.
 
-If you are developing with a team, you may wish to continue including and updating the `.env.example` file with your application. By putting placeholder values in the example configuration file, other developers on your team can clearly see which environment variables are needed to run your application.
+Nếu phát triển theo nhóm, bạn nên tiếp tục đưa file `.env.example` vào source control và cập nhật file này khi cần. Bằng cách đặt các giá trị mẫu trong file cấu hình ví dụ, những thành viên khác có thể dễ dàng biết ứng dụng cần những biến môi trường nào để chạy.
 
 > [!NOTE]
-> Any variable in your `.env` file can be overridden by external environment variables such as server-level or system-level environment variables.
+> Mọi biến trong file `.env` đều có thể bị ghi đè bởi biến môi trường bên ngoài, chẳng hạn biến môi trường ở cấp server hoặc cấp hệ điều hành.
 
 <a name="environment-file-security"></a>
-#### Environment File Security
+#### Bảo mật file môi trường
 
-Your `.env` file should not be committed to your application's source control, since each developer / server using your application could require a different environment configuration. Furthermore, this would be a security risk in the event an intruder gains access to your source control repository, since any sensitive credentials would get exposed.
+Không nên commit file `.env` vào source control của ứng dụng, vì mỗi developer hoặc server có thể cần cấu hình môi trường khác nhau. Việc commit file này còn tạo ra rủi ro bảo mật: nếu kẻ tấn công truy cập được repository, các thông tin xác thực nhạy cảm trong `.env` cũng có thể bị lộ.
 
-However, it is possible to encrypt your environment file using Laravel's built-in [environment encryption](#encrypting-environment-files). Encrypted environment files may be placed in source control safely.
+Tuy nhiên, bạn có thể mã hóa file môi trường bằng tính năng [mã hóa môi trường](#encrypting-environment-files) tích hợp sẵn của Laravel. File môi trường đã mã hóa có thể được lưu trong source control một cách an toàn.
 
 <a name="additional-environment-files"></a>
-#### Additional Environment Files
+#### Các file môi trường bổ sung
 
-Before loading your application's environment variables, Laravel determines if an `APP_ENV` environment variable has been externally provided or if the `--env` CLI argument has been specified. If so, Laravel will attempt to load an `.env.[APP_ENV]` file if it exists. If it does not exist, the default `.env` file will be loaded.
+Trước khi nạp các biến môi trường của ứng dụng, Laravel kiểm tra xem biến môi trường `APP_ENV` có được cung cấp từ bên ngoài hay tham số CLI `--env` có được chỉ định hay không. Nếu có, Laravel sẽ cố gắng nạp file `.env.[APP_ENV]` tương ứng nếu file tồn tại; nếu không, framework sẽ nạp file `.env` mặc định.
 
 <a name="environment-variable-types"></a>
-### Environment Variable Types
+### Kiểu dữ liệu của biến môi trường
 
-All variables in your `.env` files are typically parsed as strings, so some reserved values have been created to allow you to return a wider range of types from the `env()` function:
+Các biến trong file `.env` thường được phân tích dưới dạng chuỗi. Vì vậy, Laravel định nghĩa một số giá trị dành riêng để hàm `env()` có thể trả về nhiều kiểu dữ liệu hơn:
 
 <div class="overflow-auto">
 
@@ -86,27 +86,27 @@ All variables in your `.env` files are typically parsed as strings, so some rese
 
 </div>
 
-If you need to define an environment variable with a value that contains spaces, you may do so by enclosing the value in double quotes:
+Nếu cần khai báo biến môi trường có giá trị chứa khoảng trắng, hãy đặt giá trị đó trong dấu ngoặc kép:
 
 ```ini
 APP_NAME="My Application"
 ```
 
 <a name="retrieving-environment-configuration"></a>
-### Retrieving Environment Configuration
+### Truy xuất cấu hình môi trường
 
-All of the variables listed in the `.env` file will be loaded into the `$_ENV` PHP super-global when your application receives a request. However, you may use the `env` function to retrieve values from these variables in your configuration files. In fact, if you review the Laravel configuration files, you will notice many of the options are already using this function:
+Khi ứng dụng nhận một request, tất cả biến được khai báo trong file `.env` sẽ được nạp vào superglobal `$_ENV` của PHP. Tuy nhiên, trong các file cấu hình, bạn có thể dùng hàm `env` để lấy giá trị của những biến này. Nếu xem các file cấu hình mặc định của Laravel, bạn sẽ thấy nhiều tùy chọn đã sử dụng hàm này:
 
 ```php
 'debug' => (bool) env('APP_DEBUG', false),
 ```
 
-The second value passed to the `env` function is the "default value". This value will be returned if no environment variable exists for the given key.
+Giá trị thứ hai truyền vào hàm `env` là "giá trị mặc định". Giá trị này sẽ được trả về khi không tồn tại biến môi trường tương ứng với key đã cho.
 
 <a name="determining-the-current-environment"></a>
-### Determining the Current Environment
+### Xác định môi trường hiện tại
 
-The current application environment is determined via the `APP_ENV` variable from your `.env` file. You may access this value via the `environment` method on the `App` [facade](/docs/{{version}}/facades):
+Môi trường hiện tại của ứng dụng được xác định bởi biến `APP_ENV` trong file `.env`. Bạn có thể truy cập giá trị này thông qua phương thức `environment` trên [facade](/docs/{{version}}/facades) `App`:
 
 ```php
 use Illuminate\Support\Facades\App;
@@ -114,7 +114,7 @@ use Illuminate\Support\Facades\App;
 $environment = App::environment();
 ```
 
-You may also pass arguments to the `environment` method to determine if the environment matches a given value. The method will return `true` if the environment matches any of the given values:
+Bạn cũng có thể truyền tham số vào phương thức `environment` để kiểm tra môi trường hiện tại có khớp với một giá trị cho trước hay không. Phương thức trả về `true` nếu môi trường khớp với bất kỳ giá trị nào được truyền vào:
 
 ```php
 if (App::environment('local')) {
@@ -127,47 +127,47 @@ if (App::environment(['local', 'staging'])) {
 ```
 
 > [!NOTE]
-> The current application environment detection can be overridden by defining a server-level `APP_ENV` environment variable.
+> Cơ chế xác định môi trường hiện tại của ứng dụng có thể bị ghi đè bằng cách khai báo biến môi trường `APP_ENV` ở cấp server.
 
 <a name="encrypting-environment-files"></a>
-### Encrypting Environment Files
+### Mã hóa file môi trường
 
-Unencrypted environment files should never be stored in source control. However, Laravel allows you to encrypt your environment files so that they may safely be added to source control with the rest of your application.
+Không bao giờ nên lưu file môi trường chưa mã hóa trong source control. Laravel cho phép mã hóa các file môi trường để bạn có thể lưu chúng an toàn cùng với phần còn lại của source code ứng dụng.
 
 <a name="encryption"></a>
-#### Encryption
+#### Mã hóa
 
-To encrypt an environment file, you may use the `env:encrypt` command:
+Để mã hóa một file môi trường, bạn có thể sử dụng lệnh `env:encrypt`:
 
 ```shell
 php artisan env:encrypt
 ```
 
-Running the `env:encrypt` command will encrypt your `.env` file and place the encrypted contents in an `.env.encrypted` file. The decryption key is presented in the output of the command and should be stored in a secure password manager. If you would like to provide your own encryption key you may use the `--key` option when invoking the command:
+Khi chạy `env:encrypt`, Laravel sẽ mã hóa file `.env` và lưu nội dung đã mã hóa vào `.env.encrypted`. Khóa giải mã được hiển thị trong output của lệnh và nên được lưu trong một trình quản lý mật khẩu an toàn. Nếu muốn cung cấp khóa mã hóa của riêng mình, bạn có thể dùng tùy chọn `--key` khi gọi lệnh:
 
 ```shell
 php artisan env:encrypt --key=3UVsEgGVK36XN82KKeyLFMhvosbZN1aF
 ```
 
 > [!NOTE]
-> The length of the key provided should match the key length required by the encryption cipher being used. By default, Laravel will use the `AES-256-CBC` cipher which requires a 32 character key. You are free to use any cipher supported by Laravel's [encrypter](/docs/{{version}}/encryption) by passing the `--cipher` option when invoking the command.
+> Độ dài của khóa phải phù hợp với độ dài mà thuật toán mã hóa đang sử dụng yêu cầu. Mặc định Laravel dùng `AES-256-CBC`, thuật toán này yêu cầu khóa dài 32 ký tự. Bạn có thể sử dụng bất kỳ cipher nào được hỗ trợ bởi encrypter của Laravel bằng cách truyền tùy chọn `--cipher` khi gọi lệnh.
 
-If your application has multiple environment files, such as `.env` and `.env.staging`, you may specify the environment file that should be encrypted by providing the environment name via the `--env` option:
+Nếu ứng dụng có nhiều file môi trường, chẳng hạn `.env` và `.env.staging`, bạn có thể chỉ định file cần mã hóa bằng cách truyền tên môi trường qua tùy chọn `--env`:
 
 ```shell
 php artisan env:encrypt --env=staging
 ```
 
 <a name="readable-variable-names"></a>
-#### Readable Variable Names
+#### Giữ tên biến ở dạng có thể đọc
 
-When encrypting your environment file, you may use the `--readable` option to retain visible variable names while encrypting their values:
+Khi mã hóa file môi trường, bạn có thể dùng tùy chọn `--readable` để giữ tên biến ở dạng có thể đọc trong khi chỉ mã hóa giá trị của chúng:
 
 ```shell
 php artisan env:encrypt --readable
 ```
 
-This will produce an encrypted file with the following format:
+Kết quả sẽ là một file mã hóa có định dạng như sau:
 
 ```ini
 APP_NAME=eyJpdiI6...
@@ -177,52 +177,52 @@ APP_DEBUG=eyJpdiI6...
 APP_URL=eyJpdiI6...
 ```
 
-Using the readable format allows you to see which environment variables exist without exposing sensitive data. It also makes reviewing pull requests much easier since you can see which variables were added, removed, or renamed without needing to decrypt the file.
+Định dạng readable cho phép bạn biết những biến môi trường nào đang tồn tại mà không làm lộ dữ liệu nhạy cảm. Cách này cũng giúp review pull request thuận tiện hơn vì có thể nhận biết biến nào được thêm, xóa hoặc đổi tên mà không cần giải mã file.
 
-When decrypting environment files, Laravel automatically detects which format was used, so no additional options are needed for the `env:decrypt` command.
+Khi giải mã file môi trường, Laravel tự động nhận biết định dạng đã được sử dụng, vì vậy lệnh `env:decrypt` không cần thêm tùy chọn nào.
 
 > [!NOTE]
-> When using the `--readable` option, comments, and blank lines from the original environment file are not included in the encrypted output.
+> Khi sử dụng tùy chọn `--readable`, comment và dòng trống trong file môi trường gốc sẽ không được đưa vào output đã mã hóa.
 
 <a name="decryption"></a>
-#### Decryption
+#### Giải mã
 
-To decrypt an environment file, you may use the `env:decrypt` command. This command requires a decryption key, which Laravel will retrieve from the `LARAVEL_ENV_ENCRYPTION_KEY` environment variable:
+Để giải mã một file môi trường, bạn có thể dùng lệnh `env:decrypt`. Lệnh này cần khóa giải mã; Laravel sẽ lấy khóa từ biến môi trường `LARAVEL_ENV_ENCRYPTION_KEY`:
 
 ```shell
 php artisan env:decrypt
 ```
 
-Or, the key may be provided directly to the command via the `--key` option:
+Hoặc bạn có thể truyền trực tiếp khóa cho lệnh bằng tùy chọn `--key`:
 
 ```shell
 php artisan env:decrypt --key=3UVsEgGVK36XN82KKeyLFMhvosbZN1aF
 ```
 
-When the `env:decrypt` command is invoked, Laravel will decrypt the contents of the `.env.encrypted` file and place the decrypted contents in the `.env` file.
+Khi gọi `env:decrypt`, Laravel sẽ giải mã nội dung của `.env.encrypted` và ghi nội dung đã giải mã vào file `.env`.
 
-The `--cipher` option may be provided to the `env:decrypt` command in order to use a custom encryption cipher:
+Bạn có thể truyền tùy chọn `--cipher` cho `env:decrypt` để sử dụng một thuật toán mã hóa tùy chỉnh:
 
 ```shell
 php artisan env:decrypt --key=qUWuNRdfuImXcKxZ --cipher=AES-128-CBC
 ```
 
-If your application has multiple environment files, such as `.env` and `.env.staging`, you may specify the environment file that should be decrypted by providing the environment name via the `--env` option:
+Nếu ứng dụng có nhiều file môi trường, chẳng hạn `.env` và `.env.staging`, bạn có thể chỉ định file cần giải mã bằng cách truyền tên môi trường qua tùy chọn `--env`:
 
 ```shell
 php artisan env:decrypt --env=staging
 ```
 
-In order to overwrite an existing environment file, you may provide the `--force` option to the `env:decrypt` command:
+Để ghi đè một file môi trường đã tồn tại, bạn có thể truyền tùy chọn `--force` cho lệnh `env:decrypt`:
 
 ```shell
 php artisan env:decrypt --force
 ```
 
 <a name="accessing-configuration-values"></a>
-## Accessing Configuration Values
+## Truy cập giá trị cấu hình
 
-You may easily access your configuration values using the `Config` facade or global `config` function from anywhere in your application. The configuration values may be accessed using "dot" syntax, which includes the name of the file and option you wish to access. A default value may also be specified and will be returned if the configuration option does not exist:
+Bạn có thể dễ dàng truy cập các giá trị cấu hình từ bất kỳ đâu trong ứng dụng bằng facade `Config` hoặc hàm global `config`. Giá trị cấu hình được truy cập bằng cú pháp "dot", trong đó bao gồm tên file và tên tùy chọn cần truy cập. Bạn cũng có thể chỉ định giá trị mặc định để trả về khi tùy chọn cấu hình không tồn tại:
 
 ```php
 use Illuminate\Support\Facades\Config;
@@ -235,7 +235,7 @@ $value = config('app.timezone');
 $value = config('app.timezone', 'Asia/Seoul');
 ```
 
-To set configuration values at runtime, you may invoke the `Config` facade's `set` method or pass an array to the `config` function:
+Để thiết lập giá trị cấu hình tại runtime, bạn có thể gọi phương thức `set` của facade `Config` hoặc truyền một mảng vào hàm `config`:
 
 ```php
 Config::set('app.timezone', 'America/Chicago');
@@ -243,7 +243,7 @@ Config::set('app.timezone', 'America/Chicago');
 config(['app.timezone' => 'America/Chicago']);
 ```
 
-To assist with static analysis, the `Config` facade also provides typed configuration retrieval methods. If the retrieved configuration value does not match the expected type, an exception will be thrown:
+Để hỗ trợ static analysis, facade `Config` còn cung cấp các phương thức truy xuất cấu hình có kiểu dữ liệu cụ thể. Nếu giá trị lấy được không khớp với kiểu mong đợi, một exception sẽ được ném ra:
 
 ```php
 Config::string('config-key');
@@ -255,31 +255,31 @@ Config::collection('config-key');
 ```
 
 <a name="configuration-caching"></a>
-## Configuration Caching
+## Cache cấu hình
 
-To give your application a speed boost, you should cache all of your configuration files into a single file using the `config:cache` Artisan command. This will combine all of the configuration options for your application into a single file which can be quickly loaded by the framework.
+Để cải thiện tốc độ ứng dụng, bạn nên cache toàn bộ file cấu hình thành một file duy nhất bằng lệnh Artisan `config:cache`. Lệnh này kết hợp tất cả tùy chọn cấu hình của ứng dụng vào một file để framework có thể nạp nhanh hơn.
 
-You should typically run the `php artisan config:cache` command as part of your production deployment process. The command should not be run during local development as configuration options will frequently need to be changed during the course of your application's development.
+Thông thường, bạn nên chạy `php artisan config:cache` như một phần của quy trình deploy production. Không nên chạy lệnh này trong quá trình phát triển local vì các tùy chọn cấu hình thường xuyên cần được thay đổi.
 
-Once the configuration has been cached, your application's `.env` file will not be loaded by the framework during requests or Artisan commands; therefore, the `env` function will only return external, system level environment variables.
+Sau khi cấu hình đã được cache, framework sẽ không nạp file `.env` của ứng dụng trong quá trình xử lý request hoặc chạy lệnh Artisan; do đó, hàm `env` lúc này chỉ trả về các biến môi trường bên ngoài ở cấp hệ thống.
 
-For this reason, you should ensure you are only calling the `env` function from within your application's configuration (`config`) files. You can see many examples of this by examining Laravel's default configuration files. Configuration values may be accessed from anywhere in your application using the `config` function [described above](#accessing-configuration-values).
+Vì lý do đó, hãy bảo đảm rằng bạn chỉ gọi hàm `env` bên trong các file cấu hình (`config`) của ứng dụng. Các file cấu hình mặc định của Laravel cung cấp nhiều ví dụ cho cách làm này. Sau khi cấu hình đã được cache, bạn có thể truy cập các giá trị từ bất kỳ đâu trong ứng dụng bằng hàm `config` đã mô tả ở trên.
 
-The `config:clear` command may be used to purge the cached configuration:
+Bạn có thể dùng lệnh `config:clear` để xóa cấu hình đã cache:
 
 ```shell
 php artisan config:clear
 ```
 
 > [!WARNING]
-> If you execute the `config:cache` command during your deployment process, you should be sure that you are only calling the `env` function from within your configuration files. Once the configuration has been cached, the `.env` file will not be loaded; therefore, the `env` function will only return external, system level environment variables.
+> Nếu chạy `config:cache` trong quá trình deploy, hãy bảo đảm hàm `env` chỉ được gọi trong các file cấu hình. Sau khi cấu hình được cache, file `.env` sẽ không được nạp; vì vậy hàm `env` chỉ trả về các biến môi trường bên ngoài ở cấp hệ thống.
 
 <a name="configuration-publishing"></a>
-## Configuration Publishing
+## Publish cấu hình
 
-Most of Laravel's configuration files are already published in your application's `config` directory; however, certain configuration files like `cors.php` and `view.php` are not published by default, as most applications will never need to modify them.
+Hầu hết file cấu hình của Laravel đã được publish vào thư mục `config` của ứng dụng. Tuy nhiên, một số file như `cors.php` và `view.php` mặc định không được publish vì phần lớn ứng dụng không cần chỉnh sửa chúng.
 
-However, you may use the `config:publish` Artisan command to publish any configuration files that are not published by default:
+Dù vậy, bạn có thể sử dụng lệnh Artisan `config:publish` để publish những file cấu hình chưa được publish mặc định:
 
 ```shell
 php artisan config:publish
@@ -288,68 +288,68 @@ php artisan config:publish --all
 ```
 
 <a name="debug-mode"></a>
-## Debug Mode
+## Chế độ debug
 
-The `debug` option in your `config/app.php` configuration file determines how much information about an error is actually displayed to the user. By default, this option is set to respect the value of the `APP_DEBUG` environment variable, which is stored in your `.env` file.
+Tùy chọn `debug` trong file cấu hình `config/app.php` quyết định lượng thông tin về lỗi được hiển thị cho người dùng. Mặc định, tùy chọn này lấy giá trị từ biến môi trường `APP_DEBUG`, được lưu trong file `.env`.
 
 > [!WARNING]
-> For local development, you should set the `APP_DEBUG` environment variable to `true`. **In your production environment, this value should always be `false`. If the variable is set to `true` in production, you risk exposing sensitive configuration values to your application's end users.**
+> Khi phát triển local, bạn nên đặt biến môi trường `APP_DEBUG` thành `true`. **Trong môi trường production, giá trị này phải luôn là `false`. Nếu đặt thành `true` trên production, bạn có nguy cơ làm lộ các giá trị cấu hình nhạy cảm cho người dùng cuối của ứng dụng.**
 
 <a name="maintenance-mode"></a>
-## Maintenance Mode
+## Chế độ bảo trì
 
-When your application is in maintenance mode, a custom view will be displayed for all requests into your application. This makes it easy to "disable" your application while it is updating or when you are performing maintenance. A maintenance mode check is included in the default middleware stack for your application. If the application is in maintenance mode, a `Symfony\Component\HttpKernel\Exception\HttpException` instance will be thrown with a status code of 503.
+Khi ứng dụng ở chế độ bảo trì, một view tùy chỉnh sẽ được hiển thị cho mọi request gửi tới ứng dụng. Nhờ đó, bạn có thể dễ dàng "tạm ngưng" ứng dụng trong lúc cập nhật hoặc thực hiện bảo trì. Middleware kiểm tra chế độ bảo trì được đưa vào middleware stack mặc định của ứng dụng. Nếu ứng dụng đang ở chế độ bảo trì, Laravel sẽ ném `Symfony\Component\HttpKernel\Exception\HttpException` với mã trạng thái 503.
 
-To enable maintenance mode, execute the `down` Artisan command:
+Để bật chế độ bảo trì, hãy chạy lệnh Artisan `down`:
 
 ```shell
 php artisan down
 ```
 
-If you would like the `Refresh` HTTP header to be sent with all maintenance mode responses, you may provide the `refresh` option when invoking the `down` command. The `Refresh` header will instruct the browser to automatically refresh the page after the specified number of seconds:
+Nếu muốn gửi HTTP header `Refresh` cùng mọi response trong chế độ bảo trì, bạn có thể truyền tùy chọn `refresh` khi gọi lệnh `down`. Header `Refresh` sẽ yêu cầu trình duyệt tự động tải lại trang sau số giây đã chỉ định:
 
 ```shell
 php artisan down --refresh=15
 ```
 
-You may also provide a `retry` option to the `down` command, which will be set as the `Retry-After` HTTP header's value, although browsers generally ignore this header:
+Bạn cũng có thể truyền tùy chọn `retry` cho lệnh `down`; giá trị này sẽ được đặt làm giá trị của HTTP header `Retry-After`, mặc dù các trình duyệt thường bỏ qua header này:
 
 ```shell
 php artisan down --retry=60
 ```
 
 <a name="bypassing-maintenance-mode"></a>
-#### Bypassing Maintenance Mode
+#### Bỏ qua chế độ bảo trì
 
-To allow maintenance mode to be bypassed using a secret token, you may use the `secret` option to specify a maintenance mode bypass token:
+Để cho phép bỏ qua chế độ bảo trì bằng một secret token, bạn có thể dùng tùy chọn `secret` để chỉ định token:
 
 ```shell
 php artisan down --secret="1630542a-246b-4b66-afa1-dd72a4c43515"
 ```
 
-After placing the application in maintenance mode, you may navigate to the application URL matching this token and Laravel will issue a maintenance mode bypass cookie to your browser:
+Sau khi đưa ứng dụng vào chế độ bảo trì, bạn có thể truy cập URL của ứng dụng tương ứng với token này. Laravel sẽ cấp một cookie cho trình duyệt để bỏ qua chế độ bảo trì:
 
 ```shell
 https://example.com/1630542a-246b-4b66-afa1-dd72a4c43515
 ```
 
-If you would like Laravel to generate the secret token for you, you may use the `with-secret` option. The secret will be displayed to you once the application is in maintenance mode:
+Nếu muốn Laravel tự tạo secret token, bạn có thể dùng tùy chọn `with-secret`. Secret sẽ được hiển thị sau khi ứng dụng được đưa vào chế độ bảo trì:
 
 ```shell
 php artisan down --with-secret
 ```
 
-When accessing this hidden route, you will then be redirected to the `/` route of the application. Once the cookie has been issued to your browser, you will be able to browse the application normally as if it was not in maintenance mode.
+Khi truy cập route ẩn này, bạn sẽ được chuyển hướng tới route `/` của ứng dụng. Sau khi cookie được cấp cho trình duyệt, bạn có thể duyệt ứng dụng bình thường như khi ứng dụng không ở chế độ bảo trì.
 
 > [!NOTE]
-> Your maintenance mode secret should typically consist of alpha-numeric characters and, optionally, dashes. You should avoid using characters that have special meaning in URLs such as `?` or `&`.
+> Secret của chế độ bảo trì thường chỉ nên gồm chữ cái, chữ số và tùy chọn dấu gạch ngang. Tránh sử dụng các ký tự có ý nghĩa đặc biệt trong URL như `?` hoặc `&`.
 
 <a name="maintenance-mode-on-multiple-servers"></a>
-#### Maintenance Mode on Multiple Servers
+#### Chế độ bảo trì trên nhiều server
 
-By default, Laravel determines if your application is in maintenance mode using a file-based system. This means to activate maintenance mode, the `php artisan down` command has to be executed on each server hosting your application.
+Mặc định, Laravel xác định ứng dụng có đang ở chế độ bảo trì hay không bằng cơ chế dựa trên file. Điều này có nghĩa là để kích hoạt chế độ bảo trì, bạn phải chạy `php artisan down` trên từng server đang host ứng dụng.
 
-Alternatively, Laravel offers a cache-based method for handling maintenance mode. This method requires running the `php artisan down` command on just one server. To use this approach, modify the maintenance mode variables in your application's `.env` file. You should select a cache `store` that is accessible by all of your servers. This ensures the maintenance mode status is consistently maintained across every server:
+Ngoài ra, Laravel cung cấp cơ chế dựa trên cache để quản lý chế độ bảo trì. Với cách này, bạn chỉ cần chạy `php artisan down` trên một server. Để sử dụng cơ chế này, hãy chỉnh các biến cấu hình maintenance mode trong file `config/app.php` của ứng dụng. Sau đó, chọn cache `store` mà tất cả server có thể truy cập. Điều này đảm bảo trạng thái maintenance mode được duy trì nhất quán trên mọi server.
 
 ```ini
 APP_MAINTENANCE_DRIVER=cache
@@ -357,47 +357,49 @@ APP_MAINTENANCE_STORE=database
 ```
 
 <a name="pre-rendering-the-maintenance-mode-view"></a>
-#### Pre-Rendering the Maintenance Mode View
+#### Render trước view chế độ bảo trì
 
-If you utilize the `php artisan down` command during deployment, your users may still occasionally encounter errors if they access the application while your Composer dependencies or other infrastructure components are updating. This occurs because a significant part of the Laravel framework must boot in order to determine your application is in maintenance mode and render the maintenance mode view using the templating engine.
+Nếu sử dụng `php artisan down` trong quá trình deploy, người dùng đôi khi vẫn có thể gặp lỗi nếu truy cập ứng dụng đúng lúc Composer dependencies hoặc các thành phần hạ tầng khác đang được cập nhật. Nguyên nhân là một phần đáng kể của Laravel framework phải khởi động để xác định ứng dụng đang ở chế độ bảo trì và render view tương ứng bằng templating engine.
 
-For this reason, Laravel allows you to pre-render a maintenance mode view that will be returned at the very beginning of the request cycle. This view is rendered before any of your application's dependencies have loaded. You may pre-render a template of your choice using the `down` command's `render` option:
+Vì vậy, Laravel cho phép render trước một maintenance mode view để trả về ngay từ đầu request lifecycle. View này được render trước khi bất kỳ dependency nào của ứng dụng được nạp. Bạn có thể render trước template mong muốn bằng tùy chọn `render` của lệnh `down`:
 
 ```shell
 php artisan down --render="errors::503"
 ```
 
 <a name="redirecting-maintenance-mode-requests"></a>
-#### Redirecting Maintenance Mode Requests
+#### Chuyển hướng request trong chế độ bảo trì
 
-While in maintenance mode, Laravel will display the maintenance mode view for all application URLs the user attempts to access. If you wish, you may instruct Laravel to redirect all requests to a specific URL. This may be accomplished using the `redirect` option. For example, you may wish to redirect all requests to the `/` URI:
+Trong chế độ bảo trì, Laravel sẽ hiển thị maintenance mode view cho mọi URL mà người dùng cố gắng truy cập. Nếu muốn, bạn có thể yêu cầu Laravel chuyển hướng tất cả request tới một URL cụ thể bằng tùy chọn `redirect`. Ví dụ, bạn có thể chuyển hướng toàn bộ request tới URI `/`:
 
 ```shell
 php artisan down --redirect=/
 ```
 
 <a name="disabling-maintenance-mode"></a>
-#### Disabling Maintenance Mode
+#### Tắt chế độ bảo trì
 
-To disable maintenance mode, use the `up` command:
+Để tắt chế độ bảo trì, hãy sử dụng lệnh `up`:
 
 ```shell
 php artisan up
 ```
 
 > [!NOTE]
-> You may customize the default maintenance mode template by defining your own template at `resources/views/errors/503.blade.php`.
+> Bạn có thể tùy chỉnh template mặc định của chế độ bảo trì bằng cách tạo template riêng tại `resources/views/errors/503.blade.php`.
 
 <a name="maintenance-mode-queues"></a>
-#### Maintenance Mode and Queues
+#### Chế độ bảo trì và Queue
 
-While your application is in maintenance mode, no [queued jobs](/docs/{{version}}/queues) will be handled. The jobs will continue to be handled as normal once the application is out of maintenance mode.
+Khi ứng dụng đang ở chế độ bảo trì, không có [queued job](/docs/{{version}}/queues) nào được xử lý. Các job sẽ tiếp tục được xử lý bình thường sau khi ứng dụng thoát khỏi chế độ bảo trì.
 
 <a name="alternatives-to-maintenance-mode"></a>
-#### Alternatives to Maintenance Mode
+#### Giải pháp thay thế chế độ bảo trì
 
-Since maintenance mode requires your application to have several seconds of downtime, consider running your applications on a fully-managed platform like [Laravel Cloud](https://cloud.laravel.com) to accomplish zero-downtime deployment with Laravel.
+Vì chế độ bảo trì khiến ứng dụng phải ngừng hoạt động trong vài giây, bạn có thể cân nhắc chạy ứng dụng trên một nền tảng được quản lý toàn diện như [Laravel Cloud](https://cloud.laravel.com) để triển khai zero-downtime với Laravel.
+
+---
 
 ## Tài liệu chính thức
 
-Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/configuration). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.
+- [Laravel 13.x — configuration](https://laravel.com/docs/13.x/configuration)

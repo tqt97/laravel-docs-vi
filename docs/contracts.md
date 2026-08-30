@@ -1,43 +1,27 @@
 # Contracts
-
-- [Introduction](#introduction)
-    - [Contracts vs. Facades](#contracts-vs-facades)
-- [When to Use Contracts](#when-to-use-contracts)
-- [How to Use Contracts](#how-to-use-contracts)
-- [Contract Reference](#contract-reference)
-
+- [Giới thiệu](#introduction)
+    - [Contracts và Facades](#contracts-vs-facades)
+- [Khi nào nên dùng Contracts](#when-to-use-contracts)
+- [Cách sử dụng Contracts](#how-to-use-contracts)
+- [Danh sách Contracts](#contract-reference)
 <a name="introduction"></a>
-## Introduction
-
-Laravel's "contracts" are a set of interfaces that define the core services provided by the framework. For example, an `Illuminate\Contracts\Queue\Queue` contract defines the methods needed for queueing jobs, while the `Illuminate\Contracts\Mail\Mailer` contract defines the methods needed for sending e-mail.
-
-Each contract has a corresponding implementation provided by the framework. For example, Laravel provides a queue implementation with a variety of drivers, and a mailer implementation that is powered by [Symfony Mailer](https://symfony.com/doc/current/mailer.html).
-
-All of the Laravel contracts live in [their own GitHub repository](https://github.com/illuminate/contracts). This provides a quick reference point for all available contracts, as well as a single, decoupled package that may be utilized when building packages that interact with Laravel services.
-
+## Giới thiệu
+"Contracts" của Laravel là tập hợp các interface định nghĩa những dịch vụ cốt lõi mà framework cung cấp. Ví dụ, contract `Illuminate\Contracts\Queue\Queue` định nghĩa các phương thức cần thiết để đưa job vào queue, còn contract `Illuminate\Contracts\Mail\Mailer` định nghĩa các phương thức cần thiết để gửi email.
+Mỗi contract đều có implementation tương ứng do framework cung cấp. Ví dụ, Laravel cung cấp implementation cho queue với nhiều driver khác nhau, và implementation cho mailer được xây dựng trên [Symfony Mailer](https://symfony.com/doc/current/mailer.html).
+Tất cả contract của Laravel nằm trong [repository GitHub riêng](https://github.com/illuminate/contracts). Repository này vừa là nơi tra cứu nhanh toàn bộ contract hiện có, vừa cung cấp một package độc lập, ít liên kết chặt, phù hợp khi xây dựng package cần tương tác với các dịch vụ của Laravel.
 <a name="contracts-vs-facades"></a>
-### Contracts vs. Facades
-
-Laravel's [facades](/docs/{{version}}/facades) and helper functions provide a simple way of utilizing Laravel's services without needing to type-hint and resolve contracts out of the service container. In most cases, each facade has an equivalent contract.
-
-Unlike facades, which do not require you to require them in your class' constructor, contracts allow you to define explicit dependencies for your classes. Some developers prefer to explicitly define their dependencies in this way and therefore prefer to use contracts, while other developers enjoy the convenience of facades. **In general, most applications can use facades without issue during development.**
-
+### Contracts và Facades
+[Facades](/docs/{{version}}/facades) và các helper function của Laravel cung cấp cách đơn giản để sử dụng dịch vụ của framework mà không cần type-hint rồi resolve contract từ service container. Trong hầu hết trường hợp, mỗi facade đều có contract tương ứng.
+Khác với facade, vốn không yêu cầu bạn khai báo dependency trong constructor của class, contract cho phép dependency của class được thể hiện một cách tường minh. Một số developer thích cách khai báo dependency rõ ràng này nên ưu tiên contract; số khác lại đánh giá cao sự tiện lợi của facade. **Nhìn chung, phần lớn ứng dụng có thể sử dụng facade trong quá trình phát triển mà không gặp vấn đề gì.**
 <a name="when-to-use-contracts"></a>
-## When to Use Contracts
-
-The decision to use contracts or facades will come down to personal taste and the tastes of your development team. Both contracts and facades can be used to create robust, well-tested Laravel applications. Contracts and facades are not mutually exclusive. Some parts of your applications may use facades while others depend on contracts. As long as you are keeping your class' responsibilities focused, you will notice very few practical differences between using contracts and facades.
-
-In general, most applications can use facades without issue during development. If you are building a package that integrates with multiple PHP frameworks you may wish to use the `illuminate/contracts` package to define your integration with Laravel's services without the need to require Laravel's concrete implementations in your package's `composer.json` file.
-
+## Khi nào nên dùng Contracts
+Việc chọn contract hay facade chủ yếu phụ thuộc vào phong cách của bạn và team phát triển. Cả hai đều có thể được dùng để xây dựng ứng dụng Laravel vững chắc và có khả năng kiểm thử tốt. Contract và facade cũng không loại trừ lẫn nhau: một số phần của ứng dụng có thể dùng facade, trong khi các phần khác phụ thuộc vào contract. Miễn là mỗi class giữ trách nhiệm đủ tập trung, khác biệt thực tế giữa hai cách tiếp cận thường không đáng kể.
+Nhìn chung, phần lớn ứng dụng có thể sử dụng facade trong quá trình phát triển mà không gặp vấn đề. Nếu bạn đang xây dựng một package tích hợp với nhiều PHP framework, có thể dùng package `illuminate/contracts` để định nghĩa điểm tích hợp với các dịch vụ Laravel mà không buộc package của bạn phải phụ thuộc vào những implementation cụ thể của Laravel trong `composer.json`.
 <a name="how-to-use-contracts"></a>
-## How to Use Contracts
-
-So, how do you get an implementation of a contract? It's actually quite simple.
-
-Many types of classes in Laravel are resolved through the [service container](/docs/{{version}}/container), including controllers, event listeners, middleware, queued jobs, and even route closures. So, to get an implementation of a contract, you can just "type-hint" the interface in the constructor of the class being resolved.
-
-For example, take a look at this event listener:
-
+## Cách sử dụng Contracts
+Vậy làm thế nào để lấy được một implementation của contract? Thực tế rất đơn giản.
+Nhiều loại class trong Laravel được resolve thông qua [service container](/docs/{{version}}/container), bao gồm controller, event listener, middleware, queued job và thậm chí cả route closure. Vì vậy, để nhận một implementation của contract, bạn chỉ cần type-hint interface đó trong constructor của class đang được resolve.
+Ví dụ, hãy xem event listener sau:
 ```php
 <?php
 
@@ -65,14 +49,10 @@ class CacheOrderInformation
     }
 }
 ```
-
-When the event listener is resolved, the service container will read the type-hints on the constructor of the class, and inject the appropriate value. To learn more about registering things in the service container, check out [its documentation](/docs/{{version}}/container).
-
+Khi event listener được resolve, service container sẽ đọc các type-hint trong constructor của class và inject giá trị phù hợp. Để tìm hiểu thêm về cách đăng ký dependency trong service container, hãy xem [tài liệu Service Container](/docs/{{version}}/container).
 <a name="contract-reference"></a>
-## Contract Reference
-
-This table provides a quick reference to all of the Laravel contracts and their equivalent facades:
-
+## Danh sách Contracts
+Bảng dưới đây giúp bạn tra cứu nhanh các contract của Laravel và facade tương ứng:
 <div class="overflow-auto">
 
 | Contract | References Facade |

@@ -1,139 +1,99 @@
 # Laravel Pint
-
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Running Pint](#running-pint)
-- [Configuring Pint](#configuring-pint)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+- [Chạy Pint](#running-pint)
+- [Cấu hình Pint](#configuring-pint)
     - [Presets](#presets)
     - [Rules](#rules)
-    - [Excluding Files / Folders](#excluding-files-or-folders)
+    - [Loại trừ File / Folder](#excluding-files-or-folders)
 - [Continuous Integration](#continuous-integration)
     - [GitHub Actions](#running-tests-on-github-actions)
-
 <a name="introduction"></a>
-## Introduction
-
-[Laravel Pint](https://github.com/laravel/pint) is an opinionated PHP code style fixer for minimalists. Pint is built on top of [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) and makes it simple to ensure that your code style stays clean and consistent.
-
-Pint is automatically installed with all new Laravel applications so you may start using it immediately. By default, Pint does not require any configuration and will fix code style issues in your code by following the opinionated coding style of Laravel.
-
+## Giới thiệu
+[Laravel Pint](https://github.com/laravel/pint) là PHP code style fixer theo convention rõ ràng, hướng tới sự tối giản. Pint được xây trên [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer), giúp giữ code style sạch và nhất quán một cách đơn giản.
+Pint được cài tự động trong mọi ứng dụng Laravel mới nên bạn có thể sử dụng ngay. Mặc định Pint không yêu cầu cấu hình và sẽ sửa các vấn đề code style theo coding style được Laravel quy định.
 <a name="installation"></a>
-## Installation
-
-Pint is included in recent releases of the Laravel framework, so installation is typically unnecessary. However, for older applications, you may install Laravel Pint via Composer:
-
+## Cài đặt
+Pint đã được bao gồm trong các phiên bản Laravel gần đây nên thường không cần cài thêm. Với ứng dụng cũ hơn, bạn có thể cài Laravel Pint qua Composer:
 ```shell
 composer require laravel/pint --dev
 ```
 
 <a name="running-pint"></a>
-## Running Pint
-
-You can instruct Pint to fix code style issues by invoking the `pint` binary that is available in your project's `vendor/bin` directory:
-
+## Chạy Pint
+Bạn có thể yêu cầu Pint sửa code style bằng cách chạy binary `pint` nằm trong thư mục `vendor/bin` của project:
 ```shell
 ./vendor/bin/pint
 ```
-
-If you would like Pint to run in parallel mode (experimental) for improved performance, you may use the `--parallel` option:
-
+Nếu muốn Pint chạy ở parallel mode (thử nghiệm) để tăng hiệu năng, hãy dùng option `--parallel`:
 ```shell
 ./vendor/bin/pint --parallel
 ```
-
-Parallel mode also allows you to specify the maximum number of processes to run via the `--max-processes` option. If this option is not provided, Pint will use every available core on your machine:
-
+Parallel mode còn cho phép chỉ định số process tối đa qua `--max-processes`. Nếu không truyền option này, Pint dùng toàn bộ core khả dụng trên máy:
 ```shell
 ./vendor/bin/pint --parallel --max-processes=4
 ```
-
-You may also run Pint on specific files or directories:
-
+Bạn cũng có thể chạy Pint trên file hoặc directory cụ thể:
 ```shell
 ./vendor/bin/pint app/Models
 
 ./vendor/bin/pint app/Models/User.php
 ```
-
-By default, Pint does not format Blade templates. If you would like to format your `.blade.php` files as well, you may use the `--blade` option, which enables the [`Pint/laravel_blade`](#laravel-blade) rule for the current run without modifying your `pint.json` file:
-
+Mặc định Pint không format Blade template. Nếu muốn format cả file `.blade.php`, dùng option `--blade`; option này bật rule [`Pint/laravel_blade`](#laravel-blade) cho lần chạy hiện tại mà không sửa `pint.json`:
 ```shell
 ./vendor/bin/pint --blade
 ```
-
-Pint will display a thorough list of all of the files that it updates. You can view even more detail about Pint's changes by providing the `-v` option when invoking Pint:
-
+Pint hiển thị danh sách đầy đủ các file đã cập nhật. Để xem chi tiết hơn về thay đổi, truyền option `-v` khi chạy Pint:
 ```shell
 ./vendor/bin/pint -v
 ```
-
-If you would like Pint to simply inspect your code for style errors without actually changing the files, you may use the `--test` option. Pint will return a non-zero exit code if any code style errors are found:
-
+Nếu chỉ muốn Pint kiểm tra lỗi style mà không sửa file, dùng option `--test`. Pint trả exit code khác 0 nếu phát hiện vấn đề code style:
 ```shell
 ./vendor/bin/pint --test
 ```
-
-If you would like Pint to only modify the files that differ from the provided branch according to Git, you may use the `--diff=[branch]` option. This can be effectively used in your CI environment (like GitHub actions) to save time by only inspecting new or modified files:
-
+Nếu chỉ muốn Pint sửa các file khác với branch được chỉ định theo Git, dùng option `--diff=[branch]`. Cách này hữu ích trong CI như GitHub Actions vì chỉ cần kiểm tra file mới hoặc đã thay đổi:
 ```shell
 ./vendor/bin/pint --diff=main
 ```
-
-If you would like Pint to only modify the files that have uncommitted changes according to Git, you may use the `--dirty` option:
-
+Nếu chỉ muốn Pint sửa các file có uncommitted change theo Git, dùng option `--dirty`:
 ```shell
 ./vendor/bin/pint --dirty
 ```
-
-If you would like Pint to fix any files with code style errors but also exit with a non-zero exit code if any errors were fixed, you may use the `--repair` option:
-
+Nếu muốn Pint sửa file có lỗi code style nhưng đồng thời trả exit code khác 0 nếu có lỗi đã được sửa, dùng option `--repair`:
 ```shell
 ./vendor/bin/pint --repair
 ```
 
 <a name="configuring-pint"></a>
-## Configuring Pint
-
-As previously mentioned, Pint does not require any configuration. However, if you wish to customize the presets, rules, or inspected folders, you may do so by creating a `pint.json` file in your project's root directory:
-
+## Cấu hình Pint
+Như đã nói, Pint không bắt buộc cấu hình. Tuy nhiên, nếu muốn tùy chỉnh preset, rule hoặc folder được kiểm tra, bạn có thể tạo file `pint.json` ở thư mục root của project:
 ```json
 {
     "preset": "laravel"
 }
 ```
-
-In addition, if you wish to use a `pint.json` from a specific directory, you may provide the `--config` option when invoking Pint:
-
+Nếu muốn dùng `pint.json` từ một directory cụ thể, truyền option `--config` khi chạy Pint:
 ```shell
 ./vendor/bin/pint --config vendor/my-company/coding-style/pint.json
 ```
 
 <a name="presets"></a>
 ### Presets
-
-Presets define a set of rules that can be used to fix code style issues in your code. By default, Pint uses the `laravel` preset, which fixes issues by following the opinionated coding style of Laravel. However, you may specify a different preset by providing the `--preset` option to Pint:
-
+Preset định nghĩa một tập rule dùng để sửa code style. Mặc định Pint dùng preset `laravel`, áp dụng coding style do Laravel quy định. Bạn có thể chọn preset khác bằng option `--preset`:
 ```shell
 ./vendor/bin/pint --preset psr12
 ```
-
-If you wish, you may also set the preset in your project's `pint.json` file:
-
+Bạn cũng có thể đặt preset trong file `pint.json` của project:
 ```json
 {
     "preset": "psr12"
 }
 ```
-
-Pint's currently supported presets are: `laravel`, `per`, `psr12`, `symfony`, and `empty`.
-
+Các preset Pint hiện hỗ trợ gồm: `laravel`, `per`, `psr12`, `symfony` và `empty`.
 <a name="rules"></a>
 ### Rules
-
-Rules are style guidelines that Pint will use to fix code style issues in your code. As mentioned above, presets are predefined groups of rules that should be perfect for most PHP projects, so you typically will not need to worry about the individual rules they contain.
-
-However, if you wish, you may enable or disable specific rules in your `pint.json` file or use the `empty` preset and define the rules from scratch:
-
+Rule là các hướng dẫn style mà Pint dùng để sửa code. Preset là nhóm rule được định nghĩa sẵn và phù hợp với phần lớn PHP project, vì vậy thông thường bạn không cần quan tâm từng rule riêng lẻ.
+Nếu cần, bạn có thể bật / tắt rule cụ thể trong `pint.json` hoặc dùng preset `empty` rồi tự định nghĩa rule từ đầu:
 ```json
 {
     "preset": "laravel",
@@ -147,19 +107,14 @@ However, if you wish, you may enable or disable specific rules in your `pint.jso
     }
 }
 ```
-
-Pint is built on top of [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer). Therefore, you may use any of its rules to fix code style issues in your project: [PHP CS Fixer Configurator](https://mlocati.github.io/php-cs-fixer-configurator).
-
+Pint được xây trên [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer), vì vậy bạn có thể dùng bất kỳ rule nào của công cụ này để sửa code style: [PHP CS Fixer Configurator](https://mlocati.github.io/php-cs-fixer-configurator).
 <a name="custom-rules"></a>
 #### Custom Rules
-
-In addition to PHP CS Fixer rules, Pint provides custom rules prefixed with `Pint/`. These rules are not enabled by default, but you may enable them in your `pint.json` file.
-
+Ngoài rule từ PHP CS Fixer, Pint cung cấp custom rule có prefix `Pint/`. Các rule này không bật mặc định nhưng bạn có thể bật trong `pint.json`.
 <a name="laravel-blade"></a>
 ##### `Pint/laravel_blade`
 
-This rule formats your Blade templates, applying consistent indentation, spacing, and attribute formatting to your `.blade.php` files. By default, Pint does not format Blade files, so you must enable this rule in your `pint.json` file to opt in:
-
+Rule này format Blade template, áp dụng indentation, spacing và attribute formatting nhất quán cho file `.blade.php`. Mặc định Pint không format Blade nên bạn phải chủ động bật rule trong `pint.json`:
 ```json
 {
     "preset": "laravel",
@@ -168,29 +123,21 @@ This rule formats your Blade templates, applying consistent indentation, spacing
     }
 }
 ```
-
-Once enabled, Pint will format your Blade templates in addition to your PHP files whenever it runs:
-
+Khi đã bật, Pint sẽ format Blade template cùng với PHP file mỗi lần chạy:
 ```shell
 ./vendor/bin/pint
 ```
-
-Alternatively, if you would like to enable this rule for a single run without modifying your `pint.json` file, you may use the `--blade` option:
-
+Ngoài ra, nếu chỉ muốn bật rule này cho một lần chạy mà không sửa `pint.json`, dùng option `--blade`:
 ```shell
 ./vendor/bin/pint --blade
 ```
-
-Under the hood, this rule uses [Prettier](https://prettier.io) along with the `prettier-plugin-blade` and `prettier-plugin-tailwindcss` plugins, so [Node.js](https://nodejs.org) must be installed on your machine. The first time you run Pint with this rule enabled, Pint will detect any missing Prettier dependencies and prompt you to install them.
-
+Bên dưới, rule này dùng [Prettier](https://prettier.io) cùng plugin `prettier-plugin-blade` và `prettier-plugin-tailwindcss`, vì vậy máy cần cài [Node.js](https://nodejs.org). Lần đầu chạy Pint với rule này, Pint sẽ phát hiện dependency Prettier còn thiếu và hỏi bạn có muốn cài hay không.
 > [!NOTE]
-> This rule automatically skips files that typically rely on their own formatting, such as [Laravel Boost](https://github.com/laravel/boost) guidelines and email views located in the `resources/views/emails` and `resources/views/mail` directories.
-
+> Rule này tự động bỏ qua những file thường có quy tắc format riêng, chẳng hạn guideline của [Laravel Boost](https://github.com/laravel/boost) và email view trong `resources/views/emails` hoặc `resources/views/mail`.
 <a name="phpdoc-type-annotations-only"></a>
 ##### `Pint/phpdoc_type_annotations_only`
 
-This rule removes all comments and docblock prose from your code, keeping only lines that contain `@` annotations such as `@param`, `@return`, `@var`, `@phpstan-type`, etc:
-
+Rule này xóa toàn bộ comment và prose trong docblock, chỉ giữ các dòng chứa annotation bắt đầu bằng `@` như `@param`, `@return`, `@var`, `@phpstan-type`, v.v.:
 ```php
 /**
  * Get the posts for the user. [tl! remove]
@@ -199,15 +146,11 @@ This rule removes all comments and docblock prose from your code, keeping only l
  */
 public function posts(): HasMany
 ```
-
-Single-line comments and block comments without `@` annotations are removed entirely. If you would like to keep a specific comment, you may prefix it with `@note`, `@warning`, or `@todo`:
-
+Single-line comment và block comment không có annotation `@` sẽ bị xóa hoàn toàn. Nếu muốn giữ một comment cụ thể, bạn có thể thêm prefix `@note`, `@warning` hoặc `@todo`:
 ```php
 // @note This comment will be preserved.
 ```
-
-To enable this rule, add it to your `pint.json` file:
-
+Để bật rule này, hãy thêm nó vào `pint.json`:
 ```json
 {
     "preset": "laravel",
@@ -216,15 +159,11 @@ To enable this rule, add it to your `pint.json` file:
     }
 }
 ```
-
 > [!NOTE]
-> This rule automatically skips files in the `config` directory, as configuration files typically rely on comments for documentation.
-
+> Rule này tự động bỏ qua file trong directory `config`, vì configuration file thường dựa vào comment để làm tài liệu.
 <a name="excluding-files-or-folders"></a>
-### Excluding Files / Folders
-
-By default, Pint will inspect all `.php` files in your project except those in the `vendor` directory. If you wish to exclude more folders, you may do so using the `exclude` configuration option:
-
+### Loại trừ File / Folder
+Mặc định Pint kiểm tra mọi file `.php` trong project ngoại trừ directory `vendor`. Nếu muốn loại trừ thêm folder, dùng option cấu hình `exclude`:
 ```json
 {
     "exclude": [
@@ -232,9 +171,7 @@ By default, Pint will inspect all `.php` files in your project except those in t
     ]
 }
 ```
-
-If you wish to exclude all files that contain a given name pattern, you may do so using the `notName` configuration option:
-
+Nếu muốn loại trừ toàn bộ file có name pattern nhất định, dùng option `notName`:
 ```json
 {
     "notName": [
@@ -242,9 +179,7 @@ If you wish to exclude all files that contain a given name pattern, you may do s
     ]
 }
 ```
-
-If you would like to exclude a file by providing an exact path to the file, you may do so using the `notPath` configuration option:
-
+Nếu muốn loại trừ file bằng exact path, dùng option `notPath`:
 ```json
 {
     "notPath": [
@@ -255,12 +190,9 @@ If you would like to exclude a file by providing an exact path to the file, you 
 
 <a name="continuous-integration"></a>
 ## Continuous Integration
-
 <a name="running-tests-on-github-actions"></a>
 ### GitHub Actions
-
-To automate linting your project with Laravel Pint, you can configure [GitHub Actions](https://github.com/features/actions) to run Pint whenever new code is pushed to GitHub. First, be sure to grant "Read and write permissions" to workflows within GitHub at **Settings > Actions > General > Workflow permissions**. Then, create a `.github/workflows/lint.yml` file with the following content:
-
+Để tự động lint project bằng Laravel Pint, bạn có thể cấu hình [GitHub Actions](https://github.com/features/actions) chạy Pint mỗi khi code mới được push lên GitHub. Trước tiên, hãy cấp "Read and write permissions" cho workflow tại **Settings > Actions > General > Workflow permissions**. Sau đó tạo file `.github/workflows/lint.yml` với nội dung sau:
 ```yaml
 name: Fix Code Style
 

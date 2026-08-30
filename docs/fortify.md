@@ -1,104 +1,104 @@
 # Laravel Fortify
 
-- [Introduction](#introduction)
-    - [What is Fortify?](#what-is-fortify)
-    - [When Should I Use Fortify?](#when-should-i-use-fortify)
-- [Installation](#installation)
-    - [Fortify Features](#fortify-features)
-    - [Disabling Views](#disabling-views)
-- [Authentication](#authentication)
-    - [Customizing User Authentication](#customizing-user-authentication)
-    - [Customizing the Authentication Pipeline](#customizing-the-authentication-pipeline)
-    - [Customizing Redirects](#customizing-authentication-redirects)
-- [Two-Factor Authentication](#two-factor-authentication)
-    - [Enabling Two-Factor Authentication](#enabling-two-factor-authentication)
-    - [Authenticating With Two-Factor Authentication](#authenticating-with-two-factor-authentication)
-    - [Disabling Two-Factor Authentication](#disabling-two-factor-authentication)
+- [Giới thiệu](#introduction)
+    - [Fortify là gì?](#what-is-fortify)
+    - [Khi nào nên sử dụng Fortify?](#when-should-i-use-fortify)
+- [Cài đặt](#installation)
+    - [Các tính năng của Fortify](#fortify-features)
+    - [Vô hiệu hóa view](#disabling-views)
+- [Xác thực](#authentication)
+    - [Tùy biến xác thực người dùng](#customizing-user-authentication)
+    - [Tùy biến pipeline xác thực](#customizing-the-authentication-pipeline)
+    - [Tùy biến chuyển hướng](#customizing-authentication-redirects)
+- [Xác thực hai yếu tố](#two-factor-authentication)
+    - [Bật xác thực hai yếu tố](#enabling-two-factor-authentication)
+    - [Xác thực bằng xác thực hai yếu tố](#authenticating-with-two-factor-authentication)
+    - [Vô hiệu hóa xác thực hai yếu tố](#disabling-two-factor-authentication)
 - [Passkeys](#passkeys)
-    - [Enabling Passkeys](#enabling-passkeys)
+    - [Bật Passkey](#enabling-passkeys)
     - [JavaScript Client](#passkeys-javascript-client)
-    - [Authenticating With Passkeys](#authenticating-with-passkeys)
-    - [Confirming Password With Passkeys](#confirming-password-with-passkeys)
-    - [Registering Passkeys](#registering-passkeys)
-    - [Deleting Passkeys](#deleting-passkeys)
-- [Registration](#registration)
-    - [Customizing Registration](#customizing-registration)
-- [Password Reset](#password-reset)
-    - [Requesting a Password Reset Link](#requesting-a-password-reset-link)
-    - [Resetting the Password](#resetting-the-password)
-    - [Customizing Password Resets](#customizing-password-resets)
-- [Email Verification](#email-verification)
-    - [Protecting Routes](#protecting-routes)
-- [Password Confirmation](#password-confirmation)
+    - [Xác thực bằng Passkey](#authenticating-with-passkeys)
+    - [Xác nhận mật khẩu bằng Passkey](#confirming-password-with-passkeys)
+    - [Đăng ký Passkey](#registering-passkeys)
+    - [Xóa Passkey](#deleting-passkeys)
+- [Đăng ký](#registration)
+    - [Tùy biến đăng ký](#customizing-registration)
+- [Đặt lại mật khẩu](#password-reset)
+    - [Yêu cầu liên kết đặt lại mật khẩu](#requesting-a-password-reset-link)
+    - [Đặt lại mật khẩu](#resetting-the-password)
+    - [Tùy biến việc đặt lại mật khẩu](#customizing-password-resets)
+- [Xác minh email](#email-verification)
+    - [Bảo vệ route](#protecting-routes)
+- [Xác nhận mật khẩu](#password-confirmation)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-[Laravel Fortify](https://github.com/laravel/fortify) is a frontend agnostic authentication backend implementation for Laravel. Fortify registers the routes and controllers needed to implement all of Laravel's authentication features, including login, registration, password reset, email verification, and more. After installing Fortify, you may run the `route:list` Artisan command to see the routes that Fortify has registered.
+[Laravel Fortify](https://github.com/laravel/fortify) là một triển khai backend xác thực không phụ thuộc frontend dành cho Laravel. Fortify đăng ký các route và controller cần thiết để triển khai toàn bộ tính năng xác thực của Laravel, bao gồm đăng nhập, đăng ký, đặt lại mật khẩu, xác minh email và nhiều tính năng khác. Sau khi cài đặt Fortify, bạn có thể chạy lệnh Artisan `route:list` để xem các route mà Fortify đã đăng ký.
 
-Since Fortify does not provide its own user interface, it is meant to be paired with your own user interface which makes requests to the routes it registers. We will discuss exactly how to make requests to these routes in the remainder of this documentation.
+Vì Fortify không cung cấp giao diện người dùng riêng, nó được thiết kế để kết hợp với giao diện người dùng của chính bạn, giao diện này sẽ gửi request đến các route mà Fortify đăng ký. Trong phần còn lại của tài liệu này, chúng ta sẽ trình bày chính xác cách gửi request đến các route đó.
 
 > [!NOTE]
-> Remember, Fortify is a package that is meant to give you a head start implementing Laravel's authentication features. **You are not required to use it.** You are always free to manually interact with Laravel's authentication services by following the documentation available in the [authentication](/docs/{{version}}/authentication), [password reset](/docs/{{version}}/passwords), and [email verification](/docs/{{version}}/verification) documentation.
+> Hãy nhớ rằng Fortify là package giúp bạn có điểm khởi đầu nhanh khi triển khai các tính năng xác thực của Laravel. **Bạn không bắt buộc phải sử dụng Fortify.** Bạn luôn có thể tương tác thủ công với các dịch vụ xác thực của Laravel bằng cách làm theo tài liệu về [xác thực](/docs/{{version}}/authentication), [đặt lại mật khẩu](/docs/{{version}}/passwords) và [xác minh email](/docs/{{version}}/verification).
 
 <a name="what-is-fortify"></a>
-### What is Fortify?
+### Fortify là gì?
 
-As mentioned previously, Laravel Fortify is a frontend agnostic authentication backend implementation for Laravel. Fortify registers the routes and controllers needed to implement all of Laravel's authentication features, including login, registration, password reset, email verification, and more.
+Như đã đề cập, Laravel Fortify là một triển khai backend xác thực không phụ thuộc frontend dành cho Laravel. Fortify đăng ký các route và controller cần thiết để triển khai toàn bộ tính năng xác thực của Laravel, bao gồm đăng nhập, đăng ký, đặt lại mật khẩu, xác minh email và nhiều tính năng khác.
 
-**You are not required to use Fortify in order to use Laravel's authentication features.** You are always free to manually interact with Laravel's authentication services by following the documentation available in the [authentication](/docs/{{version}}/authentication), [password reset](/docs/{{version}}/passwords), and [email verification](/docs/{{version}}/verification) documentation.
+**Bạn không bắt buộc phải sử dụng Fortify để dùng các tính năng xác thực của Laravel.** Bạn luôn có thể tương tác thủ công với các dịch vụ xác thực của Laravel bằng cách làm theo tài liệu về [xác thực](/docs/{{version}}/authentication), [đặt lại mật khẩu](/docs/{{version}}/passwords) và [xác minh email](/docs/{{version}}/verification).
 
-If you are new to Laravel, you may wish to explore [our application starter kits](/docs/{{version}}/starter-kits). Laravel's application starter kits use Fortify internally to provide authentication scaffolding for your application that includes a user interface built with [Tailwind CSS](https://tailwindcss.com). This allows you to study and get comfortable with Laravel's authentication features.
+Nếu bạn mới làm quen với Laravel, bạn có thể tìm hiểu [các application starter kit](/docs/{{version}}/starter-kits). Các starter kit của Laravel sử dụng Fortify bên trong để cung cấp scaffolding xác thực cho ứng dụng, bao gồm giao diện người dùng được xây dựng bằng [Tailwind CSS](https://tailwindcss.com). Nhờ đó, bạn có thể nghiên cứu và làm quen với các tính năng xác thực của Laravel.
 
-Laravel Fortify essentially takes the routes and controllers of our application starter kits and offers them as a package that does not include a user interface. This allows you to still quickly scaffold the backend implementation of your application's authentication layer without being tied to any particular frontend opinions.
+Về cơ bản, Laravel Fortify lấy các route và controller từ application starter kit và cung cấp chúng dưới dạng một package không kèm giao diện người dùng. Điều này cho phép bạn nhanh chóng dựng phần backend cho lớp xác thực của ứng dụng mà không bị ràng buộc vào một lựa chọn frontend cụ thể.
 
 <a name="when-should-i-use-fortify"></a>
-### When Should I Use Fortify?
+### Khi nào nên sử dụng Fortify?
 
-You may be wondering when it is appropriate to use Laravel Fortify. First, if you are using one of Laravel's [application starter kits](/docs/{{version}}/starter-kits), you do not need to install Laravel Fortify since all of Laravel's application starter kits use Fortify and already provide a full authentication implementation.
+Bạn có thể đang tự hỏi khi nào nên sử dụng Laravel Fortify. Trước hết, nếu đang dùng một trong các [application starter kit](/docs/{{version}}/starter-kits) của Laravel, bạn không cần cài Laravel Fortify vì tất cả starter kit của Laravel đều sử dụng Fortify và đã cung cấp sẵn một triển khai xác thực đầy đủ.
 
-If you are not using an application starter kit and your application needs authentication features, you have two options: manually implement your application's authentication features or use Laravel Fortify to provide the backend implementation of these features.
+Nếu không sử dụng application starter kit và ứng dụng cần các tính năng xác thực, bạn có hai lựa chọn: tự triển khai thủ công các tính năng xác thực hoặc sử dụng Laravel Fortify để cung cấp phần triển khai backend cho các tính năng này.
 
-If you choose to install Fortify, your user interface will make requests to Fortify's authentication routes that are detailed in this documentation in order to authenticate and register users.
+Nếu chọn cài Fortify, giao diện người dùng của bạn sẽ gửi request đến các route xác thực của Fortify được mô tả trong tài liệu này để xác thực và đăng ký người dùng.
 
-If you choose to manually interact with Laravel's authentication services instead of using Fortify, you may do so by following the documentation available in the [authentication](/docs/{{version}}/authentication), [password reset](/docs/{{version}}/passwords), and [email verification](/docs/{{version}}/verification) documentation.
+Nếu chọn tương tác thủ công với các dịch vụ xác thực của Laravel thay vì sử dụng Fortify, bạn có thể làm theo tài liệu về [xác thực](/docs/{{version}}/authentication), [đặt lại mật khẩu](/docs/{{version}}/passwords) và [xác minh email](/docs/{{version}}/verification).
 
 <a name="laravel-fortify-and-laravel-sanctum"></a>
-#### Laravel Fortify and Laravel Sanctum
+#### Laravel Fortify và Laravel Sanctum
 
-Some developers become confused regarding the difference between [Laravel Sanctum](/docs/{{version}}/sanctum) and Laravel Fortify. Because the two packages solve two different but related problems, Laravel Fortify and Laravel Sanctum are not mutually exclusive or competing packages.
+Một số lập trình viên nhầm lẫn về sự khác biệt giữa [Laravel Sanctum](/docs/{{version}}/sanctum) và Laravel Fortify. Vì hai package giải quyết hai vấn đề khác nhau nhưng có liên quan, Laravel Fortify và Laravel Sanctum không loại trừ lẫn nhau và cũng không phải các package cạnh tranh.
 
-Laravel Sanctum is only concerned with managing API tokens and authenticating existing users using session cookies or tokens. Sanctum does not provide any routes that handle user registration, password reset, etc.
+Laravel Sanctum chỉ tập trung vào việc quản lý API token và xác thực người dùng hiện có bằng session cookie hoặc token. Sanctum không cung cấp các route xử lý đăng ký người dùng, đặt lại mật khẩu, v.v.
 
-If you are attempting to manually build the authentication layer for an application that offers an API or serves as the backend for a single-page application, it is entirely possible that you will utilize both Laravel Fortify (for user registration, password reset, etc.) and Laravel Sanctum (API token management, session authentication).
+Nếu đang tự xây dựng lớp xác thực cho một ứng dụng cung cấp API hoặc đóng vai trò backend cho single-page application, bạn hoàn toàn có thể sử dụng đồng thời Laravel Fortify (đăng ký người dùng, đặt lại mật khẩu, v.v.) và Laravel Sanctum (quản lý API token, xác thực session).
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
-To get started, install Fortify using the Composer package manager:
+Để bắt đầu, hãy cài đặt Fortify bằng trình quản lý package Composer:
 
 ```shell
 composer require laravel/fortify
 ```
 
-Next, publish Fortify's resources using the `fortify:install` Artisan command:
+Tiếp theo, publish các resource của Fortify bằng lệnh Artisan `fortify:install`:
 
 ```shell
 php artisan fortify:install
 ```
 
-This command will publish Fortify's actions to your `app/Actions` directory, which will be created if it does not exist. In addition, the `FortifyServiceProvider`, configuration file, and all necessary database migrations will be published.
+Lệnh này sẽ publish các action của Fortify vào thư mục `app/Actions`; thư mục này sẽ được tạo nếu chưa tồn tại. Ngoài ra, `FortifyServiceProvider`, file cấu hình và toàn bộ database migration cần thiết cũng sẽ được publish.
 
-Next, you should migrate your database:
+Tiếp theo, bạn nên chạy migration cho cơ sở dữ liệu:
 
 ```shell
 php artisan migrate
 ```
 
 <a name="fortify-features"></a>
-### Fortify Features
+### Các tính năng của Fortify
 
-The `fortify` configuration file contains a `features` configuration array. This array defines which backend routes / features Fortify will expose by default. We recommend that you only enable the following features, which are the basic authentication features provided by most Laravel applications:
+File cấu hình `fortify` chứa mảng cấu hình `features`. Mảng này xác định những route / tính năng backend mà Fortify sẽ cung cấp theo mặc định. Chúng tôi khuyến nghị chỉ bật các tính năng sau, đây là những tính năng xác thực cơ bản được phần lớn ứng dụng Laravel cung cấp:
 
 ```php
 'features' => [
@@ -109,25 +109,25 @@ The `fortify` configuration file contains a `features` configuration array. This
 ```
 
 <a name="disabling-views"></a>
-### Disabling Views
+### Vô hiệu hóa view
 
-By default, Fortify defines routes that are intended to return views, such as a login screen or registration screen. However, if you are building a JavaScript driven single-page application, you may not need these routes. For that reason, you may disable these routes entirely by setting the `views` configuration value within your application's `config/fortify.php` configuration file to `false`:
+Theo mặc định, Fortify định nghĩa các route dùng để trả về view, chẳng hạn màn hình đăng nhập hoặc đăng ký. Tuy nhiên, nếu đang xây dựng single-page application bằng JavaScript, bạn có thể không cần các route này. Vì vậy, bạn có thể vô hiệu hóa hoàn toàn chúng bằng cách đặt giá trị cấu hình `views` trong file `config/fortify.php` của ứng dụng thành `false`:
 
 ```php
 'views' => false,
 ```
 
 <a name="disabling-views-and-password-reset"></a>
-#### Disabling Views and Password Reset
+#### Vô hiệu hóa view và đặt lại mật khẩu
 
-If you choose to disable Fortify's views and you will be implementing password reset features for your application, you should still define a route named `password.reset` that is responsible for displaying your application's "reset password" view. This is necessary because Laravel's `Illuminate\Auth\Notifications\ResetPassword` notification will generate the password reset URL via the `password.reset` named route.
+Nếu bạn vô hiệu hóa các view của Fortify nhưng vẫn triển khai tính năng đặt lại mật khẩu, bạn vẫn nên định nghĩa route có tên `password.reset` chịu trách nhiệm hiển thị view "đặt lại mật khẩu" của ứng dụng. Điều này là cần thiết vì notification `Illuminate\Auth\Notifications\ResetPassword` của Laravel sẽ tạo URL đặt lại mật khẩu thông qua named route `password.reset`.
 
 <a name="authentication"></a>
-## Authentication
+## Xác thực
 
-To get started, we need to instruct Fortify how to return our "login" view. Remember, Fortify is a headless authentication library. If you would like a frontend implementation of Laravel's authentication features that are already completed for you, you should use an [application starter kit](/docs/{{version}}/starter-kits).
+Để bắt đầu, chúng ta cần chỉ cho Fortify cách trả về view "đăng nhập". Hãy nhớ rằng Fortify là một thư viện xác thực headless. Nếu bạn muốn có sẵn phần triển khai frontend cho các tính năng xác thực của Laravel, bạn nên sử dụng một [application starter kit](/docs/{{version}}/starter-kits).
 
-All of the authentication view's rendering logic may be customized using the appropriate methods available via the `Laravel\Fortify\Fortify` class. Typically, you should call this method from the `boot` method of your application's `App\Providers\FortifyServiceProvider` class. Fortify will take care of defining the `/login` route that returns this view:
+Toàn bộ logic render view xác thực có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider`. Fortify sẽ tự định nghĩa route `/login` trả về view này:
 
 ```php
 use Laravel\Fortify\Fortify;
@@ -145,18 +145,18 @@ public function boot(): void
 }
 ```
 
-Your login template should include a form that makes a POST request to `/login`. The `/login` endpoint expects a string `email` / `username` and a `password`. The name of the email / username field should match the `username` value within the `config/fortify.php` configuration file. In addition, a boolean `remember` field may be provided to indicate that the user would like to use the "remember me" functionality provided by Laravel.
+Template đăng nhập nên chứa form gửi POST request đến `/login`. Endpoint `/login` yêu cầu chuỗi `email` / `username` và `password`. Tên field email / username phải khớp với giá trị `username` trong file cấu hình `config/fortify.php`. Ngoài ra, có thể gửi field boolean `remember` để cho biết người dùng muốn sử dụng chức năng "remember me" của Laravel.
 
-If the login attempt is successful, Fortify will redirect you to the URI configured via the `home` configuration option within your application's `fortify` configuration file. If the login request was an XHR request, a 200 HTTP response will be returned.
+Nếu đăng nhập thành công, Fortify sẽ redirect đến URI được cấu hình bằng option `home` trong file cấu hình `fortify` của ứng dụng. Nếu request đăng nhập là XHR request, HTTP response 200 sẽ được trả về.
 
-If the request was not successful, the user will be redirected back to the login screen and the validation errors will be available to you via the shared `$errors` [Blade template variable](/docs/{{version}}/validation#quick-displaying-the-validation-errors). Or, in the case of an XHR request, the validation errors will be returned with the 422 HTTP response.
+Nếu request không thành công, người dùng sẽ được redirect trở lại màn hình đăng nhập và validation error có thể được truy cập qua [biến template Blade](/docs/{{version}}/validation#quick-displaying-the-validation-errors) `$errors` dùng chung. Với XHR request, validation error sẽ được trả về cùng HTTP response 422.
 
 <a name="customizing-user-authentication"></a>
-### Customizing User Authentication
+### Tùy biến xác thực người dùng
 
-Fortify will automatically retrieve and authenticate the user based on the provided credentials and the authentication guard that is configured for your application. However, you may sometimes wish to have full customization over how login credentials are authenticated and users are retrieved. Thankfully, Fortify allows you to easily accomplish this using the `Fortify::authenticateUsing` method.
+Fortify sẽ tự động truy xuất và xác thực người dùng dựa trên credentials được cung cấp và authentication guard được cấu hình cho ứng dụng. Tuy nhiên, đôi khi bạn có thể muốn tùy biến hoàn toàn cách xác thực credentials và truy xuất người dùng. Fortify cho phép thực hiện điều này dễ dàng bằng method `Fortify::authenticateUsing`.
 
-This method accepts a closure which receives the incoming HTTP request. The closure is responsible for validating the login credentials attached to the request and returning the associated user instance. If the credentials are invalid or no user can be found, `null` or `false` should be returned by the closure. Typically, this method should be called from the `boot` method of your `FortifyServiceProvider`:
+Method này nhận một closure với HTTP request đầu vào. Closure chịu trách nhiệm validate credentials đăng nhập trong request và trả về user instance tương ứng. Nếu credentials không hợp lệ hoặc không tìm thấy người dùng, closure nên trả về `null` hoặc `false`. Thông thường, method này nên được gọi từ method `boot` của `FortifyServiceProvider`:
 
 ```php
 use App\Models\User;
@@ -183,18 +183,18 @@ public function boot(): void
 ```
 
 <a name="authentication-guard"></a>
-#### Authentication Guard
+#### Guard xác thực
 
-You may customize the authentication guard used by Fortify within your application's `fortify` configuration file. However, you should ensure that the configured guard is an implementation of `Illuminate\Contracts\Auth\StatefulGuard`. If you are attempting to use Laravel Fortify to authenticate an SPA, you should use Laravel's default `web` guard in combination with [Laravel Sanctum](https://laravel.com/docs/sanctum).
+Bạn có thể tùy biến authentication guard mà Fortify sử dụng trong file cấu hình `fortify` của ứng dụng. Tuy nhiên, cần đảm bảo guard được cấu hình là một implementation của `Illuminate\Contracts\Auth\StatefulGuard`. Nếu sử dụng Laravel Fortify để xác thực SPA, bạn nên dùng guard `web` mặc định của Laravel kết hợp với [Laravel Sanctum](https://laravel.com/docs/sanctum).
 
 <a name="customizing-the-authentication-pipeline"></a>
-### Customizing the Authentication Pipeline
+### Tùy biến pipeline xác thực
 
-Laravel Fortify authenticates login requests through a pipeline of invokable classes. If you would like, you may define a custom pipeline of classes that login requests should be piped through. Each class should have an `__invoke` method which receives the incoming `Illuminate\Http\Request` instance and, like [middleware](/docs/{{version}}/middleware), a `$next` variable that is invoked in order to pass the request to the next class in the pipeline.
+Laravel Fortify xác thực các request đăng nhập thông qua một pipeline gồm các invokable class. Nếu muốn, bạn có thể định nghĩa pipeline class tùy chỉnh mà request đăng nhập sẽ đi qua. Mỗi class nên có method `__invoke` nhận instance `Illuminate\Http\Request` đầu vào và, tương tự [middleware](/docs/{{version}}/middleware), biến `$next` được gọi để chuyển request sang class tiếp theo trong pipeline.
 
-To define your custom pipeline, you may use the `Fortify::authenticateThrough` method. This method accepts a closure which should return the array of classes to pipe the login request through. Typically, this method should be called from the `boot` method of your `App\Providers\FortifyServiceProvider` class.
+Để định nghĩa pipeline tùy chỉnh, bạn có thể dùng method `Fortify::authenticateThrough`. Method này nhận một closure trả về mảng class mà request đăng nhập sẽ đi qua. Thông thường, method này nên được gọi từ method `boot` của class `App\Providers\FortifyServiceProvider`.
 
-The example below contains the default pipeline definition that you may use as a starting point when making your own modifications:
+Ví dụ dưới đây chứa định nghĩa pipeline mặc định mà bạn có thể dùng làm điểm khởi đầu cho các tùy chỉnh của mình:
 
 ```php
 use Laravel\Fortify\Actions\AttemptToAuthenticate;
@@ -217,21 +217,21 @@ Fortify::authenticateThrough(function (Request $request) {
 });
 ```
 
-#### Authentication Throttling
+#### Giới hạn tần suất xác thực
 
-By default, Fortify will throttle authentication attempts using the `EnsureLoginIsNotThrottled` middleware. This middleware throttles attempts that are unique to a username and IP address combination.
+Theo mặc định, Fortify giới hạn tần suất các lần xác thực bằng middleware `EnsureLoginIsNotThrottled`. Middleware này giới hạn các lần thử theo tổ hợp username và địa chỉ IP.
 
-Some applications may require a different approach to throttling authentication attempts, such as throttling by IP address alone. Therefore, Fortify allows you to specify your own [rate limiter](/docs/{{version}}/routing#rate-limiting) via the `fortify.limiters.login` configuration option. Of course, this configuration option is located in your application's `config/fortify.php` configuration file.
+Một số ứng dụng có thể cần cách giới hạn lần xác thực khác, chẳng hạn chỉ giới hạn theo địa chỉ IP. Vì vậy, Fortify cho phép bạn chỉ định [rate limiter](/docs/{{version}}/routing#rate-limiting) riêng thông qua option cấu hình `fortify.limiters.login`. Option này nằm trong file cấu hình `config/fortify.php` của ứng dụng.
 
 > [!NOTE]
-> Utilizing a mixture of throttling, [two-factor authentication](/docs/{{version}}/fortify#two-factor-authentication), and an external web application firewall (WAF) will provide the most robust defense for your legitimate application users.
+> Kết hợp throttling, [xác thực hai yếu tố](/docs/{{version}}/fortify#two-factor-authentication) và web application firewall (WAF) bên ngoài sẽ mang lại lớp phòng vệ mạnh mẽ nhất cho người dùng hợp lệ của ứng dụng.
 
 <a name="customizing-authentication-redirects"></a>
-### Customizing Redirects
+### Tùy biến chuyển hướng
 
-If the login attempt is successful, Fortify will redirect you to the URI configured via the `home` configuration option within your application's `fortify` configuration file. If the login request was an XHR request, a 200 HTTP response will be returned. After a user logs out of the application, the user will be redirected to the `/` URI.
+Nếu đăng nhập thành công, Fortify sẽ redirect đến URI được cấu hình bằng option `home` trong file cấu hình `fortify` của ứng dụng. Nếu request đăng nhập là XHR request, HTTP response 200 sẽ được trả về. Sau khi người dùng đăng xuất khỏi ứng dụng, họ sẽ được chuyển hướng đến URI `/`.
 
-If you need advanced customization of this behavior, you may bind implementations of the `LoginResponse` and `LogoutResponse` contracts into the Laravel [service container](/docs/{{version}}/container). Typically, this should be done within the `register` method of your application's `App\Providers\FortifyServiceProvider` class:
+Nếu cần tùy biến nâng cao hành vi này, bạn có thể bind các implementation của contract `LoginResponse` và `LogoutResponse` vào [service container](/docs/{{version}}/container) của Laravel. Thông thường, việc này nên được thực hiện trong method `register` của class `App\Providers\FortifyServiceProvider`:
 
 ```php
 use Laravel\Fortify\Contracts\LogoutResponse;
@@ -251,11 +251,11 @@ public function register(): void
 ```
 
 <a name="two-factor-authentication"></a>
-## Two-Factor Authentication
+## Xác thực hai yếu tố
 
-When Fortify's two-factor authentication feature is enabled, the user is required to input a six digit numeric token during the authentication process. This token is generated using a time-based one-time password (TOTP) that can be retrieved from any TOTP compatible mobile authentication application such as Google Authenticator.
+Khi tính năng xác thực hai yếu tố của Fortify được bật, người dùng phải nhập một token số gồm sáu chữ số trong quá trình xác thực. Token này được tạo bằng mật khẩu dùng một lần dựa trên thời gian (TOTP), có thể lấy từ bất kỳ ứng dụng xác thực di động nào tương thích TOTP như Google Authenticator.
 
-Before getting started, you should first ensure that your application's `App\Models\User` model uses the `Laravel\Fortify\TwoFactorAuthenticatable` trait:
+Trước khi bắt đầu, trước tiên bạn nên đảm bảo model `App\Models\User` của ứng dụng sử dụng trait `Laravel\Fortify\TwoFactorAuthenticatable`:
 
 ```php
 <?php
@@ -272,16 +272,16 @@ class User extends Authenticatable
 }
 ```
 
-Next, you should build a screen within your application where users can manage their two-factor authentication settings. This screen should allow the user to enable and disable two-factor authentication, as well as regenerate their two-factor authentication recovery codes.
+Tiếp theo, bạn nên xây dựng một màn hình trong ứng dụng để người dùng quản lý cài đặt xác thực hai yếu tố. Màn hình này nên cho phép người dùng bật và tắt xác thực hai yếu tố, đồng thời tạo lại các mã khôi phục xác thực hai yếu tố.
 
-> By default, the `features` array of the `fortify` configuration file instructs Fortify's two-factor authentication settings to require password confirmation before modification. Therefore, your application should implement Fortify's [password confirmation](#password-confirmation) feature before continuing.
+> Theo mặc định, mảng `features` trong file cấu hình `fortify` yêu cầu phải xác nhận mật khẩu trước khi thay đổi cài đặt xác thực hai yếu tố của Fortify. Vì vậy, ứng dụng của bạn nên triển khai tính năng [xác nhận mật khẩu](#password-confirmation) của Fortify trước khi tiếp tục.
 
 <a name="enabling-two-factor-authentication"></a>
-### Enabling Two-Factor Authentication
+### Bật xác thực hai yếu tố
 
-To begin enabling two-factor authentication, your application should make a POST request to the `/user/two-factor-authentication` endpoint defined by Fortify. If the request is successful, the user will be redirected back to the previous URL and the `status` session variable will be set to `two-factor-authentication-enabled`. You may detect this `status` session variable within your templates to display the appropriate success message. If the request was an XHR request, `200` HTTP response will be returned.
+Để bắt đầu bật xác thực hai yếu tố, ứng dụng của bạn nên gửi request POST đến endpoint `/user/two-factor-authentication` do Fortify định nghĩa. Nếu request thành công, người dùng sẽ được chuyển hướng về URL trước đó và biến session `status` sẽ được đặt thành `two-factor-authentication-enabled`. Bạn có thể kiểm tra biến session `status` này trong template để hiển thị thông báo thành công phù hợp. Nếu đây là request XHR, response HTTP `200` sẽ được trả về.
 
-After choosing to enable two-factor authentication, the user must still "confirm" their two-factor authentication configuration by providing a valid two-factor authentication code. So, your "success" message should instruct the user that two-factor authentication confirmation is still required:
+Sau khi chọn bật xác thực hai yếu tố, người dùng vẫn phải "xác nhận" cấu hình xác thực hai yếu tố bằng cách cung cấp một mã xác thực hai yếu tố hợp lệ. Vì vậy, thông báo "thành công" của bạn nên cho người dùng biết rằng vẫn cần xác nhận xác thực hai yếu tố:
 
 ```html
 @if (session('status') == 'two-factor-authentication-enabled')
@@ -291,20 +291,20 @@ After choosing to enable two-factor authentication, the user must still "confirm
 @endif
 ```
 
-Next, you should display the two-factor authentication QR code for the user to scan into their authenticator application. If you are using Blade to render your application's frontend, you may retrieve the QR code SVG using the `twoFactorQrCodeSvg` method available on the user instance:
+Tiếp theo, bạn nên hiển thị mã QR xác thực hai yếu tố để người dùng quét bằng ứng dụng xác thực của họ. Nếu sử dụng Blade để render frontend, bạn có thể lấy SVG của mã QR bằng method `twoFactorQrCodeSvg` có trên instance người dùng:
 
 ```php
 $request->user()->twoFactorQrCodeSvg();
 ```
 
-If you are building a JavaScript powered frontend, you may make an XHR GET request to the `/user/two-factor-qr-code` endpoint to retrieve the user's two-factor authentication QR code. This endpoint will return a JSON object containing an `svg` key.
+Nếu đang xây dựng frontend bằng JavaScript, bạn có thể gửi request XHR GET đến endpoint `/user/two-factor-qr-code` để lấy mã QR xác thực hai yếu tố của người dùng. Endpoint này trả về một object JSON chứa key `svg`.
 
 <a name="confirming-two-factor-authentication"></a>
-#### Confirming Two-Factor Authentication
+#### Xác nhận xác thực hai yếu tố
 
-In addition to displaying the user's two-factor authentication QR code, you should provide a text input where the user can supply a valid authentication code to "confirm" their two-factor authentication configuration. This code should be provided to the Laravel application via a POST request to the `/user/confirmed-two-factor-authentication` endpoint defined by Fortify.
+Ngoài việc hiển thị mã QR xác thực hai yếu tố của người dùng, bạn nên cung cấp một ô nhập văn bản để người dùng nhập mã xác thực hợp lệ nhằm "xác nhận" cấu hình xác thực hai yếu tố. Mã này nên được gửi đến ứng dụng Laravel thông qua request POST tới endpoint `/user/confirmed-two-factor-authentication` do Fortify định nghĩa.
 
-If the request is successful, the user will be redirected back to the previous URL and the `status` session variable will be set to `two-factor-authentication-confirmed`:
+Nếu request thành công, người dùng sẽ được chuyển hướng về URL trước đó và biến session `status` sẽ được đặt thành `two-factor-authentication-confirmed`:
 
 ```html
 @if (session('status') == 'two-factor-authentication-confirmed')
@@ -314,27 +314,27 @@ If the request is successful, the user will be redirected back to the previous U
 @endif
 ```
 
-If the request to the two-factor authentication confirmation endpoint was made via an XHR request, a `200` HTTP response will be returned.
+Nếu request đến endpoint xác nhận xác thực hai yếu tố được thực hiện qua XHR, response HTTP `200` sẽ được trả về.
 
 <a name="displaying-the-recovery-codes"></a>
-#### Displaying the Recovery Codes
+#### Hiển thị mã khôi phục
 
-You should also display the user's two-factor recovery codes. These recovery codes allow the user to authenticate if they lose access to their mobile device. If you are using Blade to render your application's frontend, you may access the recovery codes via the authenticated user instance:
+Bạn cũng nên hiển thị các mã khôi phục xác thực hai yếu tố của người dùng. Các mã khôi phục này cho phép người dùng xác thực nếu họ mất quyền truy cập vào thiết bị di động. Nếu sử dụng Blade để render frontend của ứng dụng, bạn có thể truy cập các mã khôi phục thông qua instance người dùng đã xác thực:
 
 ```php
 (array) $request->user()->recoveryCodes()
 ```
 
-If you are building a JavaScript powered frontend, you may make an XHR GET request to the `/user/two-factor-recovery-codes` endpoint. This endpoint will return a JSON array containing the user's recovery codes.
+Nếu đang xây dựng frontend bằng JavaScript, bạn có thể gửi request XHR GET đến endpoint `/user/two-factor-recovery-codes`. Endpoint này sẽ trả về một mảng JSON chứa các mã khôi phục của người dùng.
 
-To regenerate the user's recovery codes, your application should make a POST request to the `/user/two-factor-recovery-codes` endpoint.
+Để tạo lại các mã khôi phục của người dùng, ứng dụng nên gửi request POST đến endpoint `/user/two-factor-recovery-codes`.
 
 <a name="authenticating-with-two-factor-authentication"></a>
-### Authenticating With Two-Factor Authentication
+### Xác thực bằng xác thực hai yếu tố
 
-During the authentication process, Fortify will automatically redirect the user to your application's two-factor authentication challenge screen. However, if your application is making an XHR login request, the JSON response returned after a successful authentication attempt will contain a JSON object that has a `two_factor` boolean property. You should inspect this value to know whether you should redirect to your application's two-factor authentication challenge screen.
+Trong quá trình xác thực, Fortify sẽ tự động chuyển hướng người dùng đến màn hình thử thách xác thực hai yếu tố của ứng dụng. Tuy nhiên, nếu ứng dụng thực hiện request đăng nhập qua XHR, response JSON được trả về sau một lần xác thực thành công sẽ chứa object JSON có property boolean `two_factor`. Bạn nên kiểm tra giá trị này để xác định có cần chuyển hướng đến màn hình thử thách xác thực hai yếu tố của ứng dụng hay không.
 
-To begin implementing two-factor authentication functionality, we need to instruct Fortify how to return our two-factor authentication challenge view. All of Fortify's authentication view rendering logic may be customized using the appropriate methods available via the `Laravel\Fortify\Fortify` class. Typically, you should call this method from the `boot` method of your application's `App\Providers\FortifyServiceProvider` class:
+Để bắt đầu triển khai chức năng xác thực hai yếu tố, chúng ta cần chỉ cho Fortify cách trả về view thử thách xác thực hai yếu tố. Toàn bộ logic render view xác thực của Fortify có thể được tùy biến bằng các method phù hợp có sẵn trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider` trong ứng dụng:
 
 ```php
 use Laravel\Fortify\Fortify;
@@ -352,26 +352,26 @@ public function boot(): void
 }
 ```
 
-Fortify will take care of defining the `/two-factor-challenge` route that returns this view. Your `two-factor-challenge` template should include a form that makes a POST request to the `/two-factor-challenge` endpoint. The `/two-factor-challenge` action expects a `code` field that contains a valid TOTP token or a `recovery_code` field that contains one of the user's recovery codes.
+Fortify sẽ đảm nhiệm việc định nghĩa route `/two-factor-challenge` trả về view này. Template `two-factor-challenge` nên chứa một form gửi request POST đến endpoint `/two-factor-challenge`. Action `/two-factor-challenge` yêu cầu field `code` chứa token TOTP hợp lệ hoặc field `recovery_code` chứa một trong các mã khôi phục của người dùng.
 
-If the login attempt is successful, Fortify will redirect the user to the URI configured via the `home` configuration option within your application's `fortify` configuration file. If the login request was an XHR request, a 204 HTTP response will be returned.
+Nếu lần đăng nhập thành công, Fortify sẽ chuyển hướng người dùng đến URI được cấu hình thông qua tùy chọn `home` trong file cấu hình `fortify` của ứng dụng. Nếu request đăng nhập là request XHR, response HTTP 204 sẽ được trả về.
 
-If the request was not successful, the user will be redirected back to the two-factor challenge screen and the validation errors will be available to you via the shared `$errors` [Blade template variable](/docs/{{version}}/validation#quick-displaying-the-validation-errors). Or, in the case of an XHR request, the validation errors will be returned with a 422 HTTP response.
+Nếu request không thành công, người dùng sẽ được chuyển hướng trở lại màn hình thử thách xác thực hai yếu tố và các lỗi validation sẽ có sẵn thông qua [biến template Blade `$errors`](/docs/{{version}}/validation#quick-displaying-the-validation-errors) được chia sẻ. Với request XHR, các lỗi validation sẽ được trả về cùng response HTTP 422.
 
 <a name="disabling-two-factor-authentication"></a>
-### Disabling Two-Factor Authentication
+### Vô hiệu hóa xác thực hai yếu tố
 
-To disable two-factor authentication, your application should make a DELETE request to the `/user/two-factor-authentication` endpoint. Remember, Fortify's two-factor authentication endpoints require [password confirmation](#password-confirmation) prior to being called.
+Để vô hiệu hóa xác thực hai yếu tố, ứng dụng nên gửi request DELETE đến endpoint `/user/two-factor-authentication`. Hãy nhớ rằng các endpoint xác thực hai yếu tố của Fortify yêu cầu [xác nhận mật khẩu](#password-confirmation) trước khi được gọi.
 
 <a name="passkeys"></a>
 ## Passkeys
 
-Fortify supports passkey authentication using WebAuthn. Passkeys allow users to authenticate without passwords using platform authenticators such as Face ID, Touch ID, Windows Hello, or hardware security keys.
+Fortify hỗ trợ xác thực bằng passkey thông qua WebAuthn. Passkey cho phép người dùng xác thực không cần mật khẩu bằng các trình xác thực nền tảng như Face ID, Touch ID, Windows Hello hoặc khóa bảo mật phần cứng.
 
 <a name="enabling-passkeys"></a>
-### Enabling Passkeys
+### Bật Passkey
 
-To get started, ensure the `passkeys` feature is enabled in your application's `fortify` configuration file:
+Để bắt đầu, hãy đảm bảo tính năng `passkeys` đã được bật trong file cấu hình `fortify` của ứng dụng:
 
 ```php
 use Laravel\Fortify\Features;
@@ -384,9 +384,9 @@ use Laravel\Fortify\Features;
 ],
 ```
 
-The `confirmPassword` option determines whether Fortify requires [password confirmation](#password-confirmation) before passkeys may be registered or deleted.
+Tùy chọn `confirmPassword` xác định Fortify có yêu cầu [xác nhận mật khẩu](#password-confirmation) trước khi có thể đăng ký hoặc xóa passkey hay không.
 
-Next, ensure your application's `App\Models\User` model implements `Laravel\Fortify\Contracts\PasskeyUser` and uses the `Laravel\Fortify\PasskeyAuthenticatable` trait:
+Tiếp theo, hãy đảm bảo model `App\Models\User` của ứng dụng implements `Laravel\Fortify\Contracts\PasskeyUser` và sử dụng trait `Laravel\Fortify\PasskeyAuthenticatable`:
 
 ```php
 <?php
@@ -404,7 +404,7 @@ class User extends Authenticatable implements PasskeyUser
 }
 ```
 
-Fortify's passkeys configuration options may be customized using the `passkeys` configuration array in your application's `config/fortify.php` file:
+Các tùy chọn cấu hình passkey của Fortify có thể được tùy biến bằng mảng cấu hình `passkeys` trong file `config/fortify.php` của ứng dụng:
 
 ```php
 'passkeys' => [
@@ -416,24 +416,24 @@ Fortify's passkeys configuration options may be customized using the `passkeys` 
 ```
 
 > [!NOTE]
-> Fortify wraps the `laravel/passkeys` Composer package and configures it for you. If you are using Fortify's passkeys feature, you should configure passkeys using your application's `config/fortify.php` file. You do not need to publish the `laravel/passkeys` configuration file, and any values defined there will be overridden by Fortify.
+> Fortify bao bọc package Composer `laravel/passkeys` và cấu hình package này cho bạn. Nếu sử dụng tính năng passkey của Fortify, bạn nên cấu hình passkey bằng file `config/fortify.php` của ứng dụng. Bạn không cần publish file cấu hình của `laravel/passkeys`; mọi giá trị được định nghĩa trong đó sẽ bị Fortify ghi đè.
 
-The `relying_party_id` should match your application's domain. The `allowed_origins` array lists the browser origins that may complete passkey registration and authentication. The `user_handle_secret` is used to derive opaque user identifiers, ensuring the same user is recognized across passkey registrations. The `timeout` option controls how long passkey registration and authentication operations may remain active.
+`relying_party_id` nên khớp với domain của ứng dụng. Mảng `allowed_origins` liệt kê các origin của trình duyệt được phép hoàn tất việc đăng ký và xác thực passkey. `user_handle_secret` được dùng để tạo ra các định danh người dùng không để lộ thông tin, bảo đảm cùng một người dùng được nhận diện nhất quán giữa các lần đăng ký passkey. Tùy chọn `timeout` kiểm soát khoảng thời gian các thao tác đăng ký và xác thực passkey có thể duy trì trạng thái hoạt động.
 
-Fortify applies a dedicated passkeys rate limiter to its passkey login, confirmation, and registration routes. If needed, you may customize it using the `fortify.limiters.passkeys` configuration option and a corresponding `RateLimiter::for(...)` definition.
+Fortify áp dụng rate limiter riêng cho các route đăng nhập, xác nhận và đăng ký passkey. Khi cần, bạn có thể tùy biến limiter này bằng tùy chọn cấu hình `fortify.limiters.passkeys` và định nghĩa `RateLimiter::for(...)` tương ứng.
 
 <a name="passkeys-javascript-client"></a>
-### JavaScript Client
+### Client JavaScript
 
-If you are building a custom frontend, including a Blade application with browser-side scripts, you may use the official [`@laravel/passkeys`](https://www.npmjs.com/package/@laravel/passkeys) package. This package handles browser WebAuthn ceremonies and sends requests to Fortify's passkey endpoints.
+Nếu đang xây dựng frontend tùy biến, bao gồm ứng dụng Blade có script chạy phía trình duyệt, bạn có thể sử dụng package chính thức [`@laravel/passkeys`](https://www.npmjs.com/package/@laravel/passkeys). Package này xử lý các nghi thức WebAuthn trên trình duyệt và gửi request đến các endpoint passkey của Fortify.
 
-Install the package via npm:
+Cài đặt package bằng npm:
 
 ```shell
 npm install @laravel/passkeys
 ```
 
-Then, you may initiate passkey registration and verification from your frontend:
+Sau đó, bạn có thể khởi tạo việc đăng ký và xác minh passkey từ frontend:
 
 ```js
 import { Passkeys } from "@laravel/passkeys";
@@ -442,7 +442,7 @@ await Passkeys.register({ name: "MacBook Pro" });
 await Passkeys.verify();
 ```
 
-If your application uses custom passkey endpoint URIs, you may override the routes on a per-call basis:
+Nếu ứng dụng sử dụng URI endpoint passkey tùy biến, bạn có thể ghi đè các route cho từng lần gọi:
 
 ```js
 await Passkeys.verify({
@@ -461,78 +461,78 @@ await Passkeys.register({
 });
 ```
 
-The package also provides React, Vue, and Svelte helpers via `@laravel/passkeys/react`, `@laravel/passkeys/vue`, and `@laravel/passkeys/svelte`.
+Package này cũng cung cấp các helper cho React, Vue và Svelte thông qua `@laravel/passkeys/react`, `@laravel/passkeys/vue` và `@laravel/passkeys/svelte`.
 
 <a name="authenticating-with-passkeys"></a>
-### Authenticating With Passkeys
+### Xác thực bằng Passkey
 
-To authenticate a user with a passkey, your application should first make a GET request to the `/passkeys/login/options` endpoint. This endpoint returns the WebAuthn challenge options that your frontend should pass to `navigator.credentials.get(...)`.
+Để xác thực người dùng bằng passkey, trước tiên ứng dụng nên gửi request GET đến endpoint `/passkeys/login/options`. Endpoint này trả về các tùy chọn WebAuthn challenge mà frontend nên truyền cho `navigator.credentials.get(...)`.
 
-After the browser returns a credential, your application should make a POST request to `/passkeys/login` with the credential payload. You may also include a boolean `remember` field.
+Sau khi trình duyệt trả về credential, ứng dụng nên gửi request POST đến `/passkeys/login` cùng payload credential. Bạn cũng có thể gửi thêm field boolean `remember`.
 
-If the request is successful, Fortify will log the user into the configured guard and return either:
+Nếu request thành công, Fortify sẽ đăng nhập người dùng vào guard đã cấu hình và trả về một trong các response sau:
 
 <div class="content-list" markdown="1">
 
-- A redirect response to your intended destination for standard requests.
-- A `200` HTTP response containing a JSON payload with a `redirect` key for XHR requests.
+- Response chuyển hướng đến đích dự kiến đối với request thông thường.
+- Response HTTP `200` chứa payload JSON với key `redirect` đối với request XHR.
 
 </div>
 
 <a name="confirming-password-with-passkeys"></a>
-### Confirming Password With Passkeys
+### Xác nhận mật khẩu bằng Passkey
 
-For authenticated sessions, Fortify provides passkey confirmation endpoints that satisfy Laravel's password confirmation requirement for the current session.
+Đối với session đã xác thực, Fortify cung cấp các endpoint xác nhận bằng passkey để đáp ứng yêu cầu xác nhận mật khẩu của Laravel cho session hiện tại.
 
-To confirm with a passkey, your application should first make a GET request to `/passkeys/confirm/options`. This endpoint returns the WebAuthn challenge options that your frontend should pass to `navigator.credentials.get(...)`.
+Để xác nhận bằng passkey, trước tiên ứng dụng nên gửi request GET đến `/passkeys/confirm/options`. Endpoint này trả về các tùy chọn WebAuthn challenge mà frontend nên truyền cho `navigator.credentials.get(...)`.
 
-After the browser returns a credential, your application should make a POST request to `/passkeys/confirm` with the credential payload.
+Sau khi trình duyệt trả về credential, ứng dụng nên gửi request POST đến `/passkeys/confirm` cùng payload credential.
 
-If the request is successful, Fortify marks the current session as password confirmed and returns either:
+Nếu request thành công, Fortify đánh dấu session hiện tại là đã xác nhận mật khẩu và trả về một trong các response sau:
 
 <div class="content-list" markdown="1">
 
-- A redirect response to your intended destination for standard requests.
-- A `200` HTTP response containing a JSON payload with a `redirect` key for XHR requests.
+- Response chuyển hướng đến đích dự kiến đối với request thông thường.
+- Response HTTP `200` chứa payload JSON với key `redirect` đối với request XHR.
 
 </div>
 
 <a name="registering-passkeys"></a>
-### Registering Passkeys
+### Đăng ký Passkey
 
-To register a passkey for an authenticated user, your application should first make a GET request to `/user/passkeys/options`. This endpoint returns the WebAuthn creation options that your frontend should pass to `navigator.credentials.create(...)`.
+Để đăng ký passkey cho người dùng đã xác thực, trước tiên ứng dụng nên gửi request GET đến `/user/passkeys/options`. Endpoint này trả về các tùy chọn tạo WebAuthn mà frontend nên truyền cho `navigator.credentials.create(...)`.
 
-After the browser returns a credential, your application should make a POST request to `/user/passkeys` with a `name` field and a `credential` field containing the serialized [`PublicKeyCredential`](https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential) object returned by `navigator.credentials.create(...)`.
+Sau khi trình duyệt trả về credential, ứng dụng nên gửi request POST đến `/user/passkeys` với field `name` và field `credential` chứa object [`PublicKeyCredential`](https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential) đã được serialize do `navigator.credentials.create(...)` trả về.
 
-If the request is successful, Fortify will return either:
+Nếu request thành công, Fortify sẽ trả về một trong các response sau:
 
 <div class="content-list" markdown="1">
 
-- A redirect back response with a `passkey-registered` status in the session for standard requests.
-- A `200` HTTP response with a JSON payload containing a `status` key, along with the newly registered passkey's `id` and `name`.
+- Response chuyển hướng trở lại với status `passkey-registered` trong session đối với request thông thường.
+- Response HTTP `200` với payload JSON chứa key `status`, cùng `id` và `name` của passkey vừa đăng ký.
 
 </div>
 
 <a name="deleting-passkeys"></a>
-### Deleting Passkeys
+### Xóa Passkey
 
-To delete a passkey, your application should make a DELETE request to `/user/passkeys/{passkey}`.
+Để xóa passkey, ứng dụng nên gửi request DELETE đến `/user/passkeys/{passkey}`.
 
-If the request is successful, Fortify will return either:
+Nếu request thành công, Fortify sẽ trả về một trong các response sau:
 
 <div class="content-list" markdown="1">
 
-- A redirect back response with a `passkey-deleted` status in the session for standard requests.
-- A `200` HTTP response with a JSON payload containing a `status` key for XHR requests.
+- Response chuyển hướng trở lại với status `passkey-deleted` trong session đối với request thông thường.
+- Response HTTP `200` với payload JSON chứa key `status` đối với request XHR.
 
 </div>
 
 <a name="registration"></a>
-## Registration
+## Đăng ký
 
-To begin implementing our application's registration functionality, we need to instruct Fortify how to return our "register" view. Remember, Fortify is a headless authentication library. If you would like a frontend implementation of Laravel's authentication features that are already completed for you, you should use an [application starter kit](/docs/{{version}}/starter-kits).
+Để bắt đầu triển khai chức năng đăng ký của ứng dụng, chúng ta cần chỉ cho Fortify cách trả về view "register". Hãy nhớ rằng Fortify là thư viện xác thực headless. Nếu muốn dùng một frontend đã triển khai sẵn các tính năng xác thực của Laravel, bạn nên sử dụng [application starter kit](/docs/{{version}}/starter-kits).
 
-All of Fortify's view rendering logic may be customized using the appropriate methods available via the `Laravel\Fortify\Fortify` class. Typically, you should call this method from the `boot` method of your `App\Providers\FortifyServiceProvider` class:
+Toàn bộ logic render view của Fortify có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider`:
 
 ```php
 use Laravel\Fortify\Fortify;
@@ -550,28 +550,28 @@ public function boot(): void
 }
 ```
 
-Fortify will take care of defining the `/register` route that returns this view. Your `register` template should include a form that makes a POST request to the `/register` endpoint defined by Fortify.
+Fortify sẽ tự định nghĩa route `/register` trả về view này. Template `register` của bạn nên chứa form gửi POST request đến endpoint `/register` do Fortify định nghĩa.
 
-The `/register` endpoint expects a string `name`, string email address / username, `password`, and `password_confirmation` fields. The name of the email / username field should match the `username` configuration value defined within your application's `fortify` configuration file.
+Endpoint `/register` yêu cầu các field `name` dạng string, địa chỉ email / username dạng string, `password` và `password_confirmation`. Tên field email / username phải khớp với giá trị cấu hình `username` trong file cấu hình `fortify` của ứng dụng.
 
-If the registration attempt is successful, Fortify will redirect the user to the URI configured via the `home` configuration option within your application's `fortify` configuration file. If the request was an XHR request, a 201 HTTP response will be returned.
+Nếu đăng ký thành công, Fortify sẽ redirect người dùng đến URI được cấu hình qua option `home` trong file cấu hình `fortify`. Nếu request là XHR, HTTP response 201 sẽ được trả về.
 
-If the request was not successful, the user will be redirected back to the registration screen and the validation errors will be available to you via the shared `$errors` [Blade template variable](/docs/{{version}}/validation#quick-displaying-the-validation-errors). Or, in the case of an XHR request, the validation errors will be returned with a 422 HTTP response.
+Nếu request không thành công, người dùng sẽ được redirect trở lại màn hình đăng ký và validation error có thể được truy cập qua [biến template Blade](/docs/{{version}}/validation#quick-displaying-the-validation-errors) `$errors` dùng chung. Với XHR request, validation error sẽ được trả về cùng HTTP response 422.
 
 <a name="customizing-registration"></a>
-### Customizing Registration
+### Tùy biến đăng ký
 
-The user validation and creation process may be customized by modifying the `App\Actions\Fortify\CreateNewUser` action that was generated when you installed Laravel Fortify.
+Quy trình validate và tạo user có thể được tùy biến bằng cách sửa action `App\Actions\Fortify\CreateNewUser` được tạo khi cài Laravel Fortify.
 
 <a name="password-reset"></a>
-## Password Reset
+## Đặt lại mật khẩu
 
 <a name="requesting-a-password-reset-link"></a>
-### Requesting a Password Reset Link
+### Yêu cầu liên kết đặt lại mật khẩu
 
-To begin implementing our application's password reset functionality, we need to instruct Fortify how to return our "forgot password" view. Remember, Fortify is a headless authentication library. If you would like a frontend implementation of Laravel's authentication features that are already completed for you, you should use an [application starter kit](/docs/{{version}}/starter-kits).
+Để bắt đầu triển khai chức năng đặt lại mật khẩu, chúng ta cần chỉ cho Fortify cách trả về view "forgot password". Fortify là thư viện xác thực headless; nếu muốn dùng frontend đã triển khai sẵn các tính năng xác thực Laravel, bạn nên sử dụng [application starter kit](/docs/{{version}}/starter-kits).
 
-All of Fortify's view rendering logic may be customized using the appropriate methods available via the `Laravel\Fortify\Fortify` class. Typically, you should call this method from the `boot` method of your application's `App\Providers\FortifyServiceProvider` class:
+Toàn bộ logic render view của Fortify có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider` của ứng dụng:
 
 ```php
 use Laravel\Fortify\Fortify;
@@ -589,18 +589,18 @@ public function boot(): void
 }
 ```
 
-Fortify will take care of defining the `/forgot-password` endpoint that returns this view. Your `forgot-password` template should include a form that makes a POST request to the `/forgot-password` endpoint.
+Fortify sẽ tự định nghĩa endpoint `/forgot-password` trả về view này. Template `forgot-password` nên chứa form gửi POST request đến endpoint `/forgot-password`.
 
-The `/forgot-password` endpoint expects a string `email` field. The name of this field / database column should match the `email` configuration value within your application's `fortify` configuration file.
+Endpoint `/forgot-password` yêu cầu field `email` dạng string. Tên field / database column này phải khớp với giá trị cấu hình `email` trong file cấu hình `fortify`.
 
 <a name="handling-the-password-reset-link-request-response"></a>
-#### Handling the Password Reset Link Request Response
+#### Xử lý response khi yêu cầu liên kết đặt lại mật khẩu
 
-If the password reset link request was successful, Fortify will redirect the user back to the `/forgot-password` endpoint and send an email to the user with a secure link they can use to reset their password. If the request was an XHR request, a 200 HTTP response will be returned.
+Nếu yêu cầu liên kết đặt lại mật khẩu thành công, Fortify sẽ redirect người dùng trở lại endpoint `/forgot-password` và gửi email chứa liên kết bảo mật để đặt lại mật khẩu. Với XHR request, HTTP response 200 sẽ được trả về.
 
-After being redirected back to the `/forgot-password` endpoint after a successful request, the `status` session variable may be used to display the status of the password reset link request attempt.
+Sau khi request thành công và được redirect về endpoint `/forgot-password`, biến session `status` có thể được dùng để hiển thị trạng thái của yêu cầu liên kết đặt lại mật khẩu.
 
-The value of the `$status` session variable will match one of the translation strings defined within your application's `passwords` [language file](/docs/{{version}}/localization). If you would like to customize this value and have not published Laravel's language files, you may do so via the `lang:publish` Artisan command:
+Giá trị biến session `$status` sẽ khớp với một trong các chuỗi dịch được định nghĩa trong [language file](/docs/{{version}}/localization) `passwords` của ứng dụng. Nếu muốn tùy biến giá trị này và chưa publish language file của Laravel, bạn có thể dùng Artisan command `lang:publish`:
 
 ```html
 @if (session('status'))
@@ -610,14 +610,14 @@ The value of the `$status` session variable will match one of the translation st
 @endif
 ```
 
-If the request was not successful, the user will be redirected back to the request password reset link screen and the validation errors will be available to you via the shared `$errors` [Blade template variable](/docs/{{version}}/validation#quick-displaying-the-validation-errors). Or, in the case of an XHR request, the validation errors will be returned with a 422 HTTP response.
+Nếu request không thành công, người dùng sẽ được redirect về màn hình yêu cầu liên kết đặt lại mật khẩu và validation error có thể truy cập qua [biến template Blade](/docs/{{version}}/validation#quick-displaying-the-validation-errors) `$errors`. Với XHR request, validation error được trả về cùng HTTP response 422.
 
 <a name="resetting-the-password"></a>
-### Resetting the Password
+### Đặt lại mật khẩu
 
-To finish implementing our application's password reset functionality, we need to instruct Fortify how to return our "reset password" view.
+Để hoàn tất việc triển khai chức năng đặt lại mật khẩu, chúng ta cần chỉ cho Fortify cách trả về view "reset password".
 
-All of Fortify's view rendering logic may be customized using the appropriate methods available via the `Laravel\Fortify\Fortify` class. Typically, you should call this method from the `boot` method of your application's `App\Providers\FortifyServiceProvider` class:
+Toàn bộ logic render view của Fortify có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider` của ứng dụng:
 
 ```php
 use Laravel\Fortify\Fortify;
@@ -636,14 +636,14 @@ public function boot(): void
 }
 ```
 
-Fortify will take care of defining the route to display this view. Your `reset-password` template should include a form that makes a POST request to `/reset-password`.
+Fortify sẽ tự định nghĩa route hiển thị view này. Template `reset-password` nên chứa form gửi POST request đến `/reset-password`.
 
-The `/reset-password` endpoint expects a string `email` field, a `password` field, a `password_confirmation` field, and a hidden field named `token` that contains the value of `request()->route('token')`. The name of the "email" field / database column should match the `email` configuration value defined within your application's `fortify` configuration file.
+Endpoint `/reset-password` yêu cầu field `email` dạng string, field `password`, field `password_confirmation` và hidden field `token` chứa giá trị `request()->route('token')`. Tên field / database column "email" phải khớp với giá trị cấu hình `email` trong file cấu hình `fortify`.
 
 <a name="handling-the-password-reset-response"></a>
-#### Handling the Password Reset Response
+#### Xử lý response đặt lại mật khẩu
 
-If the password reset request was successful, Fortify will redirect back to the `/login` route so that the user can log in with their new password. In addition, a `status` session variable will be set so that you may display the successful status of the reset on your login screen:
+Nếu request đặt lại mật khẩu thành công, Fortify sẽ redirect về route `/login` để người dùng đăng nhập bằng mật khẩu mới. Đồng thời, biến session `status` sẽ được thiết lập để bạn có thể hiển thị trạng thái đặt lại thành công trên màn hình đăng nhập:
 
 ```blade
 @if (session('status'))
@@ -653,23 +653,23 @@ If the password reset request was successful, Fortify will redirect back to the 
 @endif
 ```
 
-If the request was an XHR request, a 200 HTTP response will be returned.
+Nếu request là XHR, HTTP response 200 sẽ được trả về.
 
-If the request was not successful, the user will be redirected back to the reset password screen and the validation errors will be available to you via the shared `$errors` [Blade template variable](/docs/{{version}}/validation#quick-displaying-the-validation-errors). Or, in the case of an XHR request, the validation errors will be returned with a 422 HTTP response.
+Nếu request không thành công, người dùng sẽ được redirect về màn hình đặt lại mật khẩu và validation error có thể truy cập qua [biến template Blade](/docs/{{version}}/validation#quick-displaying-the-validation-errors) `$errors`. Với XHR request, validation error được trả về cùng HTTP response 422.
 
 <a name="customizing-password-resets"></a>
-### Customizing Password Resets
+### Tùy biến việc đặt lại mật khẩu
 
-The password reset process may be customized by modifying the `App\Actions\ResetUserPassword` action that was generated when you installed Laravel Fortify.
+Quy trình đặt lại mật khẩu có thể được tùy biến bằng cách sửa action `App\Actions\ResetUserPassword` được tạo khi cài Laravel Fortify.
 
 <a name="email-verification"></a>
-## Email Verification
+## Xác minh email
 
-After registration, you may wish for users to verify their email address before they continue accessing your application. To get started, ensure the `emailVerification` feature is enabled in your `fortify` configuration file's `features` array. Next, you should ensure that your `App\Models\User` class implements the `Illuminate\Contracts\Auth\MustVerifyEmail` interface.
+Sau khi đăng ký, bạn có thể yêu cầu người dùng xác minh địa chỉ email trước khi tiếp tục truy cập ứng dụng. Trước tiên, hãy bảo đảm feature `emailVerification` được bật trong array `features` của file cấu hình `fortify`. Sau đó, bảo đảm class `App\Models\User` implement interface `Illuminate\Contracts\Auth\MustVerifyEmail`.
 
-Once these two setup steps have been completed, newly registered users will receive an email prompting them to verify their email address ownership. However, we need to inform Fortify how to display the email verification screen which informs the user that they need to go click the verification link in the email.
+Sau khi hoàn tất hai bước thiết lập này, user mới đăng ký sẽ nhận email yêu cầu xác minh quyền sở hữu địa chỉ email. Tuy nhiên, chúng ta vẫn cần chỉ cho Fortify cách hiển thị màn hình xác minh email để hướng dẫn người dùng nhấp vào liên kết xác minh trong email.
 
-All of Fortify's view's rendering logic may be customized using the appropriate methods available via the `Laravel\Fortify\Fortify` class. Typically, you should call this method from the `boot` method of your application's `App\Providers\FortifyServiceProvider` class:
+Toàn bộ logic render view của Fortify có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider` của ứng dụng:
 
 ```php
 use Laravel\Fortify\Fortify;
@@ -687,16 +687,16 @@ public function boot(): void
 }
 ```
 
-Fortify will take care of defining the route that displays this view when a user is redirected to the `/email/verify` endpoint by Laravel's built-in `verified` middleware.
+Fortify sẽ tự định nghĩa route hiển thị view này khi user được middleware `verified` tích hợp sẵn của Laravel redirect đến endpoint `/email/verify`.
 
-Your `verify-email` template should include an informational message instructing the user to click the email verification link that was sent to their email address.
+Template `verify-email` nên chứa thông báo hướng dẫn user nhấp vào liên kết xác minh đã được gửi đến địa chỉ email của họ.
 
 <a name="resending-email-verification-links"></a>
-#### Resending Email Verification Links
+#### Gửi lại liên kết xác minh email
 
-If you wish, you may add a button to your application's `verify-email` template that triggers a POST request to the `/email/verification-notification` endpoint. When this endpoint receives a request, a new verification email link will be emailed to the user, allowing the user to get a new verification link if the previous one was accidentally deleted or lost.
+Nếu muốn, bạn có thể thêm button vào template `verify-email` để gửi POST request đến endpoint `/email/verification-notification`. Khi nhận request, endpoint này sẽ gửi một liên kết xác minh mới qua email, cho phép user lấy lại liên kết nếu liên kết trước bị xóa hoặc thất lạc.
 
-If the request to resend the verification link email was successful, Fortify will redirect the user back to the `/email/verify` endpoint with a `status` session variable, allowing you to display an informational message to the user informing them the operation was successful. If the request was an XHR request, a 202 HTTP response will be returned:
+Nếu request gửi lại email xác minh thành công, Fortify sẽ redirect user về endpoint `/email/verify` cùng biến session `status`, cho phép hiển thị thông báo thao tác thành công. Với XHR request, HTTP response 202 sẽ được trả về:
 
 ```blade
 @if (session('status') == 'verification-link-sent')
@@ -707,9 +707,9 @@ If the request to resend the verification link email was successful, Fortify wil
 ```
 
 <a name="protecting-routes"></a>
-### Protecting Routes
+### Bảo vệ route
 
-To specify that a route or group of routes requires that the user has verified their email address, you should attach Laravel's built-in `verified` middleware to the route. The `verified` middleware alias is automatically registered by Laravel and serves as an alias for the `Illuminate\Auth\Middleware\EnsureEmailIsVerified` middleware:
+Để chỉ định một route hoặc nhóm route yêu cầu user đã xác minh email, hãy gắn middleware `verified` tích hợp sẵn của Laravel vào route. Alias middleware `verified` được Laravel đăng ký tự động và là alias của middleware `Illuminate\Auth\Middleware\EnsureEmailIsVerified`:
 
 ```php
 Route::get('/dashboard', function () {
@@ -718,13 +718,13 @@ Route::get('/dashboard', function () {
 ```
 
 <a name="password-confirmation"></a>
-## Password Confirmation
+## Xác nhận mật khẩu
 
-While building your application, you may occasionally have actions that should require the user to confirm their password before the action is performed. Typically, these routes are protected by Laravel's built-in `password.confirm` middleware.
+Khi xây dựng ứng dụng, đôi lúc bạn có các action cần yêu cầu user xác nhận mật khẩu trước khi thực thi. Thông thường, các route này được bảo vệ bằng middleware `password.confirm` tích hợp sẵn của Laravel.
 
-To begin implementing password confirmation functionality, we need to instruct Fortify how to return our application's "password confirmation" view. Remember, Fortify is a headless authentication library. If you would like a frontend implementation of Laravel's authentication features that are already completed for you, you should use an [application starter kit](/docs/{{version}}/starter-kits).
+Để bắt đầu triển khai chức năng xác nhận mật khẩu, chúng ta cần chỉ cho Fortify cách trả về view "password confirmation" của ứng dụng. Fortify là thư viện xác thực headless; nếu muốn dùng frontend đã triển khai sẵn các tính năng xác thực Laravel, bạn nên sử dụng [application starter kit](/docs/{{version}}/starter-kits).
 
-All of Fortify's view rendering logic may be customized using the appropriate methods available via the `Laravel\Fortify\Fortify` class. Typically, you should call this method from the `boot` method of your application's `App\Providers\FortifyServiceProvider` class:
+Toàn bộ logic render view của Fortify có thể được tùy biến bằng các method tương ứng trên class `Laravel\Fortify\Fortify`. Thông thường, bạn nên gọi method này từ method `boot` của class `App\Providers\FortifyServiceProvider` của ứng dụng:
 
 ```php
 use Laravel\Fortify\Fortify;
@@ -742,11 +742,13 @@ public function boot(): void
 }
 ```
 
-Fortify will take care of defining the `/user/confirm-password` endpoint that returns this view. Your `confirm-password` template should include a form that makes a POST request to the `/user/confirm-password` endpoint. The `/user/confirm-password` endpoint expects a `password` field that contains the user's current password.
+Fortify sẽ tự định nghĩa endpoint `/user/confirm-password` trả về view này. Template `confirm-password` nên chứa form gửi POST request đến endpoint `/user/confirm-password`. Endpoint này yêu cầu field `password` chứa mật khẩu hiện tại của user.
 
-If the password matches the user's current password, Fortify will redirect the user to the route they were attempting to access. If the request was an XHR request, a 201 HTTP response will be returned.
+Nếu mật khẩu khớp với mật khẩu hiện tại của user, Fortify sẽ redirect user đến route họ đang cố truy cập. Với XHR request, HTTP response 201 sẽ được trả về.
 
-If the request was not successful, the user will be redirected back to the confirm password screen and the validation errors will be available to you via the shared `$errors` Blade template variable. Or, in the case of an XHR request, the validation errors will be returned with a 422 HTTP response.
+Nếu request không thành công, user sẽ được redirect về màn hình xác nhận mật khẩu và validation error có thể truy cập qua biến template Blade `$errors`. Với XHR request, validation error được trả về cùng HTTP response 422.
+
+---
 
 ## Tài liệu chính thức
 

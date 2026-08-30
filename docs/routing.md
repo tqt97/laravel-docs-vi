@@ -1,39 +1,39 @@
-# Routing
+# Định tuyến
 
-- [Basic Routing](#basic-routing)
-    - [The Default Route Files](#the-default-route-files)
-    - [Redirect Routes](#redirect-routes)
-    - [View Routes](#view-routes)
-    - [Listing Your Routes](#listing-your-routes)
-    - [Routing Customization](#routing-customization)
-- [Route Parameters](#route-parameters)
-    - [Required Parameters](#required-parameters)
-    - [Optional Parameters](#parameters-optional-parameters)
-    - [Regular Expression Constraints](#parameters-regular-expression-constraints)
-- [Named Routes](#named-routes)
-- [Route Groups](#route-groups)
+- [Định tuyến cơ bản](#basic-routing)
+    - [Các file route mặc định](#the-default-route-files)
+    - [Route chuyển hướng](#redirect-routes)
+    - [Route trả về view](#view-routes)
+    - [Liệt kê các route](#listing-your-routes)
+    - [Tùy biến định tuyến](#routing-customization)
+- [Tham số route](#route-parameters)
+    - [Tham số bắt buộc](#required-parameters)
+    - [Tham số tùy chọn](#parameters-optional-parameters)
+    - [Ràng buộc bằng biểu thức chính quy](#parameters-regular-expression-constraints)
+- [Route có tên](#named-routes)
+- [Nhóm route](#route-groups)
     - [Middleware](#route-group-middleware)
-    - [Controllers](#route-group-controllers)
-    - [Subdomain Routing](#route-group-subdomain-routing)
-    - [Route Prefixes](#route-group-prefixes)
-    - [Route Name Prefixes](#route-group-name-prefixes)
+    - [Controller](#route-group-controllers)
+    - [Định tuyến theo subdomain](#route-group-subdomain-routing)
+    - [Tiền tố route](#route-group-prefixes)
+    - [Tiền tố tên route](#route-group-name-prefixes)
 - [Route Model Binding](#route-model-binding)
-    - [Implicit Binding](#implicit-binding)
-    - [Implicit Enum Binding](#implicit-enum-binding)
-    - [Explicit Binding](#explicit-binding)
-- [Fallback Routes](#fallback-routes)
-- [Rate Limiting](#rate-limiting)
-    - [Defining Rate Limiters](#defining-rate-limiters)
-    - [Attaching Rate Limiters to Routes](#attaching-rate-limiters-to-routes)
-- [Form Method Spoofing](#form-method-spoofing)
-- [Accessing the Current Route](#accessing-the-current-route)
+    - [Binding ngầm định](#implicit-binding)
+    - [Binding Enum ngầm định](#implicit-enum-binding)
+    - [Binding tường minh](#explicit-binding)
+- [Route dự phòng](#fallback-routes)
+- [Giới hạn tần suất](#rate-limiting)
+    - [Định nghĩa rate limiter](#defining-rate-limiters)
+    - [Gắn rate limiter vào route](#attaching-rate-limiters-to-routes)
+- [Giả lập HTTP method trong form](#form-method-spoofing)
+- [Truy cập route hiện tại](#accessing-the-current-route)
 - [Cross-Origin Resource Sharing (CORS)](#cors)
-- [Route Caching](#route-caching)
+- [Cache route](#route-caching)
 
 <a name="basic-routing"></a>
-## Basic Routing
+## Định tuyến cơ bản
 
-The most basic Laravel routes accept a URI and a closure, providing a very simple and expressive method of defining routes and behavior without complicated routing configuration files:
+Route cơ bản nhất trong Laravel nhận một URI và một closure, cung cấp cách rất đơn giản và rõ ràng để định nghĩa route cũng như hành vi của route mà không cần các file cấu hình định tuyến phức tạp:
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -44,11 +44,11 @@ Route::get('/greeting', function () {
 ```
 
 <a name="the-default-route-files"></a>
-### The Default Route Files
+### Các file route mặc định
 
-All Laravel routes are defined in your route files, which are located in the `routes` directory. These files are automatically loaded by Laravel using the configuration specified in your application's `bootstrap/app.php` file. The `routes/web.php` file defines routes that are for your web interface. These routes are assigned the `web` [middleware group](/docs/{{version}}/middleware#laravels-default-middleware-groups), which provides features like session state and CSRF protection.
+Tất cả route của Laravel được định nghĩa trong các file route nằm trong thư mục `routes`. Laravel tự động nạp các file này dựa trên cấu hình được khai báo trong file `bootstrap/app.php` của ứng dụng. File `routes/web.php` định nghĩa các route dành cho giao diện web. Những route này được gán [nhóm middleware](/docs/{{version}}/middleware#laravels-default-middleware-groups) `web`, cung cấp các tính năng như trạng thái session và bảo vệ CSRF.
 
-For most applications, you will begin by defining routes in your `routes/web.php` file. The routes defined in `routes/web.php` may be accessed by entering the defined route's URL in your browser. For example, you may access the following route by navigating to `http://example.com/user` in your browser:
+Với phần lớn ứng dụng, bạn sẽ bắt đầu bằng việc định nghĩa route trong file `routes/web.php`. Có thể truy cập các route được định nghĩa tại đây bằng cách nhập URL tương ứng vào trình duyệt. Ví dụ, route sau có thể được truy cập tại `http://example.com/user`:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -57,15 +57,15 @@ Route::get('/user', [UserController::class, 'index']);
 ```
 
 <a name="api-routes"></a>
-#### API Routes
+#### API Route
 
-If your application will also offer a stateless API, you may enable API routing using the `install:api` Artisan command:
+Nếu ứng dụng cũng cung cấp API stateless, bạn có thể bật định tuyến API bằng lệnh Artisan `install:api`:
 
 ```shell
 php artisan install:api
 ```
 
-The `install:api` command installs [Laravel Sanctum](/docs/{{version}}/sanctum), which provides a robust, yet simple API token authentication guard which can be used to authenticate third-party API consumers, SPAs, or mobile applications. In addition, the `install:api` command creates the `routes/api.php` file:
+Lệnh `install:api` cài đặt [Laravel Sanctum](/docs/{{version}}/sanctum), cung cấp một authentication guard dựa trên API token vừa mạnh mẽ vừa đơn giản, có thể dùng để xác thực các client API bên thứ ba, SPA hoặc ứng dụng di động. Đồng thời, lệnh `install:api` cũng tạo file `routes/api.php`:
 
 ```php
 Route::get('/user', function (Request $request) {
@@ -73,9 +73,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 ```
 
-Of course, you are free to omit the `auth:sanctum` middleware on routes that should be publicly accessible.
+Tất nhiên, với những route cần được truy cập công khai, bạn có thể không sử dụng middleware `auth:sanctum`.
 
-The routes in `routes/api.php` are stateless and are assigned to the `api` [middleware group](/docs/{{version}}/middleware#laravels-default-middleware-groups). Additionally, the `/api` URI prefix is automatically applied to these routes, so you do not need to manually apply it to every route in the file. You may change the prefix by modifying your application's `bootstrap/app.php` file:
+Các route trong `routes/api.php` là stateless và được gán vào [nhóm middleware](/docs/{{version}}/middleware#laravels-default-middleware-groups) `api`. Ngoài ra, tiền tố URI `/api` được tự động áp dụng cho các route này, vì vậy bạn không cần thêm thủ công vào từng route trong file. Có thể thay đổi tiền tố bằng cách chỉnh file `bootstrap/app.php` của ứng dụng:
 
 ```php
 ->withRouting(
@@ -86,9 +86,9 @@ The routes in `routes/api.php` are stateless and are assigned to the `api` [midd
 ```
 
 <a name="available-router-methods"></a>
-#### Available Router Methods
+#### Các method định tuyến khả dụng
 
-The router allows you to register routes that respond to any HTTP verb:
+Router cho phép đăng ký route phản hồi bất kỳ HTTP verb nào:
 
 ```php
 Route::get($uri, $callback);
@@ -99,7 +99,7 @@ Route::delete($uri, $callback);
 Route::options($uri, $callback);
 ```
 
-Sometimes you may need to register a route that responds to multiple HTTP verbs. You may do so using the `match` method. Or, you may even register a route that responds to all HTTP verbs using the `any` method:
+Đôi khi bạn cần đăng ký một route phản hồi nhiều HTTP verb. Có thể thực hiện bằng method `match`. Hoặc dùng method `any` để đăng ký route phản hồi tất cả HTTP verb:
 
 ```php
 Route::match(['get', 'post'], '/', function () {
@@ -112,12 +112,12 @@ Route::any('/', function () {
 ```
 
 > [!NOTE]
-> When defining multiple routes that share the same URI, routes using the `get`, `post`, `put`, `patch`, `delete`, and `options` methods should be defined before routes using the `any`, `match`, and `redirect` methods. This ensures the incoming request is matched with the correct route.
+> Khi định nghĩa nhiều route dùng chung một URI, các route sử dụng `get`, `post`, `put`, `patch`, `delete` và `options` nên được khai báo trước các route dùng `any`, `match` và `redirect`. Điều này bảo đảm request đi vào được khớp với đúng route.
 
 <a name="dependency-injection"></a>
 #### Dependency Injection
 
-You may type-hint any dependencies required by your route in your route's callback signature. The declared dependencies will automatically be resolved and injected into the callback by the Laravel [service container](/docs/{{version}}/container). For example, you may type-hint the `Illuminate\Http\Request` class to have the current HTTP request automatically injected into your route callback:
+Bạn có thể type-hint bất kỳ dependency nào mà route cần ngay trong signature của callback. Các dependency đã khai báo sẽ được [service container](/docs/{{version}}/container) của Laravel tự động resolve và inject vào callback. Ví dụ, có thể type-hint class `Illuminate\Http\Request` để HTTP request hiện tại được tự động inject vào callback của route:
 
 ```php
 use Illuminate\Http\Request;
@@ -128,9 +128,9 @@ Route::get('/users', function (Request $request) {
 ```
 
 <a name="csrf-protection"></a>
-#### CSRF Protection
+#### Bảo vệ CSRF
 
-Remember, any HTML forms pointing to `POST`, `PUT`, `PATCH`, or `DELETE` routes that are defined in the `web` routes file should include a CSRF token field. Otherwise, the request will be rejected. You can read more about CSRF protection in the [CSRF documentation](/docs/{{version}}/csrf):
+Hãy nhớ rằng mọi HTML form gửi tới route `POST`, `PUT`, `PATCH` hoặc `DELETE` được định nghĩa trong file route `web` đều cần chứa trường CSRF token. Nếu không, request sẽ bị từ chối. Bạn có thể tìm hiểu thêm trong [tài liệu CSRF](/docs/{{version}}/csrf):
 
 ```blade
 <form method="POST" action="/profile">
@@ -140,33 +140,33 @@ Remember, any HTML forms pointing to `POST`, `PUT`, `PATCH`, or `DELETE` routes 
 ```
 
 <a name="redirect-routes"></a>
-### Redirect Routes
+### Route chuyển hướng
 
-If you are defining a route that redirects to another URI, you may use the `Route::redirect` method. This method provides a convenient shortcut so that you do not have to define a full route or controller for performing a simple redirect:
+Nếu cần định nghĩa một route chuyển hướng sang URI khác, bạn có thể dùng method `Route::redirect`. Đây là cách viết tắt tiện lợi, giúp không phải định nghĩa đầy đủ một route hoặc controller chỉ để thực hiện chuyển hướng đơn giản:
 
 ```php
 Route::redirect('/here', '/there');
 ```
 
-By default, `Route::redirect` returns a `302` status code. You may customize the status code using the optional third parameter:
+Mặc định, `Route::redirect` trả về status code `302`. Bạn có thể tùy chỉnh status code bằng tham số thứ ba tùy chọn:
 
 ```php
 Route::redirect('/here', '/there', 301);
 ```
 
-Or, you may use the `Route::permanentRedirect` method to return a `301` status code:
+Hoặc có thể dùng `Route::permanentRedirect` để trả về status code `301`:
 
 ```php
 Route::permanentRedirect('/here', '/there');
 ```
 
 > [!WARNING]
-> When using route parameters in redirect routes, the following parameters are reserved by Laravel and cannot be used: `destination` and `status`.
+> Khi sử dụng tham số route trong redirect route, Laravel dành riêng các tên sau và bạn không thể sử dụng chúng: `destination` và `status`.
 
 <a name="view-routes"></a>
-### View Routes
+### Route trả về view
 
-If your route only needs to return a [view](/docs/{{version}}/views), you may use the `Route::view` method. Like the `redirect` method, this method provides a simple shortcut so that you do not have to define a full route or controller. The `view` method accepts a URI as its first argument and a view name as its second argument. In addition, you may provide an array of data to pass to the view as an optional third argument:
+Nếu route chỉ cần trả về một [view](/docs/{{version}}/views), bạn có thể dùng method `Route::view`. Tương tự `redirect`, method này là cách viết tắt giúp bạn không phải định nghĩa đầy đủ route hoặc controller. `view` nhận URI làm đối số thứ nhất và tên view làm đối số thứ hai. Ngoài ra, bạn có thể truyền một mảng dữ liệu cho view thông qua đối số thứ ba tùy chọn:
 
 ```php
 Route::view('/welcome', 'welcome');
@@ -175,18 +175,18 @@ Route::view('/welcome', 'welcome', ['name' => 'Taylor']);
 ```
 
 > [!WARNING]
-> When using route parameters in view routes, the following parameters are reserved by Laravel and cannot be used: `view`, `data`, `status`, and `headers`.
+> Khi sử dụng tham số route trong view route, Laravel dành riêng các tên sau và bạn không thể sử dụng chúng: `view`, `data`, `status` và `headers`.
 
 <a name="listing-your-routes"></a>
-### Listing Your Routes
+### Liệt kê các route
 
-The `route:list` Artisan command can easily provide an overview of all of the routes that are defined by your application:
+Lệnh Artisan `route:list` giúp bạn nhanh chóng xem tổng quan tất cả route đã được định nghĩa trong ứng dụng:
 
 ```shell
 php artisan route:list
 ```
 
-By default, the route middleware that are assigned to each route will not be displayed in the `route:list` output; however, you can instruct Laravel to display the route middleware and middleware group names by adding the `-v` option to the command:
+Mặc định, middleware được gán cho từng route sẽ không hiển thị trong kết quả của `route:list`. Tuy nhiên, bạn có thể yêu cầu Laravel hiển thị middleware của route và tên các middleware group bằng cách thêm tùy chọn `-v`:
 
 ```shell
 php artisan route:list -v
@@ -195,28 +195,28 @@ php artisan route:list -v
 php artisan route:list -vv
 ```
 
-You may also instruct Laravel to only show routes that begin with a given URI:
+Bạn cũng có thể yêu cầu Laravel chỉ hiển thị các route bắt đầu bằng một URI nhất định:
 
 ```shell
 php artisan route:list --path=api
 ```
 
-In addition, you may instruct Laravel to hide any routes that are defined by third-party packages by providing the `--except-vendor` option when executing the `route:list` command:
+Ngoài ra, bạn có thể ẩn các route do package bên thứ ba định nghĩa bằng tùy chọn `--except-vendor` khi chạy `route:list`:
 
 ```shell
 php artisan route:list --except-vendor
 ```
 
-Likewise, you may also instruct Laravel to only show routes that are defined by third-party packages by providing the `--only-vendor` option when executing the `route:list` command:
+Tương tự, bạn có thể chỉ hiển thị các route do package bên thứ ba định nghĩa bằng tùy chọn `--only-vendor` khi chạy `route:list`:
 
 ```shell
 php artisan route:list --only-vendor
 ```
 
 <a name="routing-customization"></a>
-### Routing Customization
+### Tùy chỉnh định tuyến
 
-By default, your application's routes are configured and loaded by the `bootstrap/app.php` file:
+Mặc định, các route của ứng dụng được cấu hình và nạp bởi file `bootstrap/app.php`:
 
 ```php
 <?php
@@ -231,7 +231,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )->create();
 ```
 
-However, sometimes you may want to define an entirely new file to contain a subset of your application's routes. To accomplish this, you may provide a `then` closure to the `withRouting` method. Within this closure, you may register any additional routes that are necessary for your application:
+Tuy nhiên, đôi khi bạn có thể muốn tạo một file hoàn toàn mới để chứa một nhóm route của ứng dụng. Khi đó, hãy truyền một closure `then` vào method `withRouting`. Bên trong closure này, bạn có thể đăng ký bất kỳ route bổ sung nào mà ứng dụng cần:
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -249,7 +249,7 @@ use Illuminate\Support\Facades\Route;
 )
 ```
 
-Or, you may even take complete control over route registration by providing a `using` closure to the `withRouting` method. When this argument is passed, no HTTP routes will be registered by the framework and you are responsible for manually registering all routes:
+Hoặc bạn có thể kiểm soát hoàn toàn việc đăng ký route bằng cách truyền closure `using` vào `withRouting`. Khi đối số này được cung cấp, framework sẽ không tự đăng ký bất kỳ HTTP route nào và bạn phải tự đăng ký toàn bộ route:
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -268,12 +268,12 @@ use Illuminate\Support\Facades\Route;
 ```
 
 <a name="route-parameters"></a>
-## Route Parameters
+## Tham số route
 
 <a name="required-parameters"></a>
-### Required Parameters
+### Tham số bắt buộc
 
-Sometimes you will need to capture segments of the URI within your route. For example, you may need to capture a user's ID from the URL. You may do so by defining route parameters:
+Đôi khi bạn cần lấy một số segment của URI trong route. Ví dụ, bạn có thể cần lấy ID của người dùng từ URL. Bạn có thể thực hiện bằng cách định nghĩa tham số route:
 
 ```php
 Route::get('/user/{id}', function (string $id) {
@@ -281,7 +281,7 @@ Route::get('/user/{id}', function (string $id) {
 });
 ```
 
-You may define as many route parameters as required by your route:
+Bạn có thể định nghĩa bao nhiêu tham số route tùy theo nhu cầu:
 
 ```php
 Route::get('/posts/{post}/comments/{comment}', function (string $postId, string $commentId) {
@@ -289,12 +289,12 @@ Route::get('/posts/{post}/comments/{comment}', function (string $postId, string 
 });
 ```
 
-Route parameters are always encased within `{}` braces and should consist of alphabetic characters. Underscores (`_`) are also acceptable within route parameter names. Route parameters are injected into route callbacks / controllers based on their order - the names of the route callback / controller arguments do not matter.
+Tham số route luôn được đặt trong dấu ngoặc nhọn `{}` và nên gồm các ký tự chữ cái. Dấu gạch dưới (`_`) cũng được chấp nhận trong tên tham số. Các tham số route được inject vào callback / controller theo thứ tự xuất hiện; tên đối số trong callback / controller không ảnh hưởng đến việc ánh xạ.
 
 <a name="parameters-and-dependency-injection"></a>
-#### Parameters and Dependency Injection
+#### Tham số và Dependency Injection
 
-If your route has dependencies that you would like the Laravel service container to automatically inject into your route's callback, you should list your route parameters after your dependencies:
+Nếu route có dependency mà bạn muốn Laravel service container tự động inject vào callback, hãy khai báo các tham số route sau các dependency:
 
 ```php
 use Illuminate\Http\Request;
@@ -305,9 +305,9 @@ Route::get('/user/{id}', function (Request $request, string $id) {
 ```
 
 <a name="parameters-optional-parameters"></a>
-### Optional Parameters
+### Tham số tùy chọn
 
-Occasionally you may need to specify a route parameter that may not always be present in the URI. You may do so by placing a `?` mark after the parameter name. Make sure to give the route's corresponding variable a default value:
+Đôi khi bạn cần định nghĩa một tham số route không phải lúc nào cũng xuất hiện trong URI. Hãy đặt dấu `?` sau tên tham số và đảm bảo biến tương ứng của route có giá trị mặc định:
 
 ```php
 Route::get('/user/{name?}', function (?string $name = null) {
@@ -320,9 +320,9 @@ Route::get('/user/{name?}', function (?string $name = 'John') {
 ```
 
 <a name="parameters-regular-expression-constraints"></a>
-### Regular Expression Constraints
+### Ràng buộc bằng biểu thức chính quy
 
-You may constrain the format of your route parameters using the `where` method on a route instance. The `where` method accepts the name of the parameter and a regular expression defining how the parameter should be constrained:
+Bạn có thể giới hạn định dạng của tham số route bằng method `where` trên route instance. Method `where` nhận tên tham số và một biểu thức chính quy mô tả ràng buộc của tham số đó:
 
 ```php
 Route::get('/user/{name}', function (string $name) {
@@ -338,7 +338,7 @@ Route::get('/user/{id}/{name}', function (string $id, string $name) {
 })->where(['id' => '[0-9]+', 'name' => '[a-z]+']);
 ```
 
-For convenience, some commonly used regular expression patterns have helper methods that allow you to quickly add pattern constraints to your routes:
+Để thuận tiện, Laravel cung cấp các helper method cho một số mẫu biểu thức chính quy thường dùng, giúp bạn nhanh chóng thêm ràng buộc pattern cho route:
 
 ```php
 Route::get('/user/{id}/{name}', function (string $id, string $name) {
@@ -366,12 +366,12 @@ Route::get('/category/{category}', function (string $category) {
 })->whereIn('category', CategoryEnum::cases());
 ```
 
-If the incoming request does not match the route pattern constraints, a 404 HTTP response will be returned.
+Nếu request đến không khớp với các ràng buộc pattern của route, Laravel sẽ trả về HTTP response 404.
 
 <a name="parameters-global-constraints"></a>
-#### Global Constraints
+#### Ràng buộc toàn cục
 
-If you would like a route parameter to always be constrained by a given regular expression, you may use the `pattern` method. You should define these patterns in the `boot` method of your application's `App\Providers\AppServiceProvider` class:
+Nếu muốn một tham số route luôn bị ràng buộc bởi một biểu thức chính quy nhất định, bạn có thể dùng method `pattern`. Các pattern này nên được định nghĩa trong method `boot` của class `App\Providers\AppServiceProvider`:
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -385,7 +385,7 @@ public function boot(): void
 }
 ```
 
-Once the pattern has been defined, it is automatically applied to all routes using that parameter name:
+Sau khi pattern được định nghĩa, nó sẽ tự động áp dụng cho mọi route sử dụng tên tham số đó:
 
 ```php
 Route::get('/user/{id}', function (string $id) {
@@ -394,9 +394,9 @@ Route::get('/user/{id}', function (string $id) {
 ```
 
 <a name="parameters-encoded-forward-slashes"></a>
-#### Encoded Forward Slashes
+#### Dấu gạch chéo đã mã hóa
 
-The Laravel routing component allows all characters except `/` to be present within route parameter values. You must explicitly allow `/` to be part of your placeholder using a `where` condition regular expression:
+Thành phần routing của Laravel cho phép mọi ký tự ngoại trừ `/` xuất hiện trong giá trị tham số route. Nếu muốn `/` là một phần của placeholder, bạn phải cho phép rõ ràng bằng biểu thức chính quy trong điều kiện `where`:
 
 ```php
 Route::get('/search/{search}', function (string $search) {
@@ -405,12 +405,12 @@ Route::get('/search/{search}', function (string $search) {
 ```
 
 > [!WARNING]
-> Encoded forward slashes are only supported within the last route segment.
+> Dấu gạch chéo đã mã hóa chỉ được hỗ trợ trong segment cuối cùng của route.
 
 <a name="named-routes"></a>
-## Named Routes
+## Route có tên
 
-Named routes allow the convenient generation of URLs or redirects for specific routes. You may specify a name for a route by chaining the `name` method onto the route definition:
+Route có tên giúp tạo URL hoặc redirect đến một route cụ thể thuận tiện hơn. Bạn có thể đặt tên route bằng cách chain method `name` vào định nghĩa route:
 
 ```php
 Route::get('/user/profile', function () {
@@ -418,7 +418,7 @@ Route::get('/user/profile', function () {
 })->name('profile');
 ```
 
-You may also specify route names for controller actions:
+Bạn cũng có thể đặt tên route cho các action của controller:
 
 ```php
 Route::get(
@@ -428,12 +428,12 @@ Route::get(
 ```
 
 > [!WARNING]
-> Route names should always be unique.
+> Tên route phải luôn là duy nhất.
 
 <a name="generating-urls-to-named-routes"></a>
-#### Generating URLs to Named Routes
+#### Tạo URL đến route có tên
 
-Once you have assigned a name to a given route, you may use the route's name when generating URLs or redirects via Laravel's `route` and `redirect` helper functions:
+Sau khi đã đặt tên cho route, bạn có thể dùng tên đó để tạo URL hoặc redirect thông qua các helper `route` và `redirect` của Laravel:
 
 ```php
 // Generating URLs...
@@ -445,7 +445,7 @@ return redirect()->route('profile');
 return to_route('profile');
 ```
 
-If the named route defines parameters, you may pass the parameters as the second argument to the `route` function. The given parameters will automatically be inserted into the generated URL in their correct positions:
+Nếu route có tên định nghĩa tham số, bạn có thể truyền các tham số đó làm đối số thứ hai của hàm `route`. Laravel sẽ tự động chèn chúng vào đúng vị trí trong URL được tạo:
 
 ```php
 Route::get('/user/{id}/profile', function (string $id) {
@@ -455,7 +455,7 @@ Route::get('/user/{id}/profile', function (string $id) {
 $url = route('profile', ['id' => 1]);
 ```
 
-If you pass additional parameters in the array, those key / value pairs will automatically be added to the generated URL's query string:
+Nếu truyền thêm tham số trong mảng, các cặp key / value bổ sung sẽ tự động được thêm vào query string của URL được tạo:
 
 ```php
 Route::get('/user/{id}/profile', function (string $id) {
@@ -468,12 +468,12 @@ $url = route('profile', ['id' => 1, 'photos' => 'yes']);
 ```
 
 > [!NOTE]
-> Sometimes, you may wish to specify request-wide default values for URL parameters, such as the current locale. To accomplish this, you may use the [URL::defaults method](/docs/{{version}}/urls#default-values).
+> Đôi khi bạn có thể muốn chỉ định giá trị mặc định cho tham số URL trên toàn bộ request, chẳng hạn locale hiện tại. Khi đó, bạn có thể sử dụng [method URL::defaults](/docs/{{version}}/urls#default-values).
 
 <a name="inspecting-the-current-route"></a>
-#### Inspecting the Current Route
+#### Kiểm tra route hiện tại
 
-If you would like to determine if the current request was routed to a given named route, you may use the `named` method on a Route instance. For example, you may check the current route name from a route middleware:
+Nếu muốn xác định request hiện tại có được định tuyến đến một route có tên cụ thể hay không, bạn có thể dùng method `named` trên Route instance. Ví dụ, bạn có thể kiểm tra tên route hiện tại từ route middleware:
 
 ```php
 use Closure;
@@ -496,16 +496,16 @@ public function handle(Request $request, Closure $next): Response
 ```
 
 <a name="route-groups"></a>
-## Route Groups
+## Nhóm route
 
-Route groups allow you to share route attributes, such as middleware, across a large number of routes without needing to define those attributes on each individual route.
+Nhóm route cho phép chia sẻ các thuộc tính của route, chẳng hạn middleware, cho nhiều route mà không cần khai báo lặp lại trên từng route.
 
-Nested groups attempt to intelligently "merge" attributes with their parent group. Middleware and `where` conditions are merged while names and prefixes are appended. Namespace delimiters and slashes in URI prefixes are automatically added where appropriate.
+Các group lồng nhau sẽ cố gắng "merge" thuộc tính với group cha một cách phù hợp. Middleware và điều kiện `where` được hợp nhất, còn tên và prefix được nối thêm. Dấu phân cách namespace và dấu gạch chéo trong URI prefix được tự động thêm khi cần.
 
 <a name="route-group-middleware"></a>
 ### Middleware
 
-To assign [middleware](/docs/{{version}}/middleware) to all routes within a group, you may use the `middleware` method before defining the group. Middleware are executed in the order they are listed in the array:
+Để gán [middleware](/docs/{{version}}/middleware) cho tất cả route trong một group, hãy dùng method `middleware` trước khi định nghĩa group. Middleware được thực thi theo thứ tự xuất hiện trong mảng:
 
 ```php
 Route::middleware(['first', 'second'])->group(function () {
@@ -520,9 +520,9 @@ Route::middleware(['first', 'second'])->group(function () {
 ```
 
 <a name="route-group-controllers"></a>
-### Controllers
+### Controller
 
-If a group of routes all utilize the same [controller](/docs/{{version}}/controllers), you may use the `controller` method to define the common controller for all of the routes within the group. Then, when defining the routes, you only need to provide the controller method that they invoke:
+Nếu một nhóm route đều sử dụng cùng một [controller](/docs/{{version}}/controllers), bạn có thể dùng method `controller` để xác định controller chung cho cả group. Sau đó, khi định nghĩa route, bạn chỉ cần chỉ định method của controller cần gọi:
 
 ```php
 use App\Http\Controllers\OrderController;
@@ -534,9 +534,9 @@ Route::controller(OrderController::class)->group(function () {
 ```
 
 <a name="route-group-subdomain-routing"></a>
-### Subdomain Routing
+### Định tuyến subdomain
 
-Route groups may also be used to handle subdomain routing. Subdomains may be assigned route parameters just like route URIs, allowing you to capture a portion of the subdomain for usage in your route or controller. The subdomain may be specified by calling the `domain` method before defining the group:
+Nhóm route cũng có thể dùng để xử lý định tuyến subdomain. Subdomain có thể nhận tham số route tương tự URI, cho phép bạn lấy một phần subdomain để sử dụng trong route hoặc controller. Bạn có thể chỉ định subdomain bằng method `domain` trước khi định nghĩa group:
 
 ```php
 Route::domain('{account}.example.com')->group(function () {
@@ -547,9 +547,9 @@ Route::domain('{account}.example.com')->group(function () {
 ```
 
 <a name="route-group-prefixes"></a>
-### Route Prefixes
+### Prefix của route
 
-The `prefix` method may be used to prefix each route in the group with a given URI. For example, you may want to prefix all route URIs within the group with `admin`:
+Method `prefix` có thể thêm một URI prefix cho mọi route trong group. Ví dụ, bạn có thể thêm `admin` vào đầu tất cả URI của route trong group:
 
 ```php
 Route::prefix('admin')->group(function () {
@@ -560,9 +560,9 @@ Route::prefix('admin')->group(function () {
 ```
 
 <a name="route-group-name-prefixes"></a>
-### Route Name Prefixes
+### Prefix cho tên route
 
-The `name` method may be used to prefix each route name in the group with a given string. For example, you may want to prefix the names of all of the routes in the group with `admin`. The given string is prefixed to the route name exactly as it is specified, so we will be sure to provide the trailing `.` character in the prefix:
+Method `name` có thể thêm một chuỗi prefix cho tên của mọi route trong group. Ví dụ, bạn có thể thêm `admin` vào đầu tên tất cả route. Chuỗi được nối chính xác như đã chỉ định, vì vậy cần cung cấp cả dấu `.` ở cuối prefix:
 
 ```php
 Route::name('admin.')->group(function () {
@@ -575,12 +575,12 @@ Route::name('admin.')->group(function () {
 <a name="route-model-binding"></a>
 ## Route Model Binding
 
-When injecting a model ID to a route or controller action, you will often query the database to retrieve the model that corresponds to that ID. Laravel route model binding provides a convenient way to automatically inject the model instances directly into your routes. For example, instead of injecting a user's ID, you can inject the entire `User` model instance that matches the given ID.
+Khi truyền ID của model vào route hoặc controller action, thông thường bạn phải query database để lấy model tương ứng. Route Model Binding của Laravel cung cấp cách thuận tiện để tự động inject trực tiếp model instance vào route. Ví dụ, thay vì nhận ID người dùng, bạn có thể nhận toàn bộ `User` model instance tương ứng với ID đó.
 
 <a name="implicit-binding"></a>
-### Implicit Binding
+### Binding ngầm định
 
-Laravel automatically resolves Eloquent models defined in routes or controller actions whose type-hinted variable names match a route segment name. For example:
+Laravel tự động resolve các Eloquent model trong route hoặc controller action khi tên biến được type-hint trùng với tên segment của route. Ví dụ:
 
 ```php
 use App\Models\User;
@@ -590,9 +590,9 @@ Route::get('/users/{user}', function (User $user) {
 });
 ```
 
-Since the `$user` variable is type-hinted as the `App\Models\User` Eloquent model and the variable name matches the `{user}` URI segment, Laravel will automatically inject the model instance that has an ID matching the corresponding value from the request URI. If a matching model instance is not found in the database, a 404 HTTP response will automatically be generated.
+Vì biến `$user` được type-hint là Eloquent model `App\Models\User` và tên biến khớp với segment URI `{user}`, Laravel sẽ tự động inject model instance có ID tương ứng với giá trị trong URI của request. Nếu không tìm thấy model phù hợp trong database, Laravel tự động tạo HTTP response 404.
 
-Of course, implicit binding is also possible when using controller methods. Again, note the `{user}` URI segment matches the `$user` variable in the controller which contains an `App\Models\User` type-hint:
+Implicit binding cũng hoạt động với controller method. Hãy lưu ý segment URI `{user}` khớp với biến `$user` trong controller và biến này có type-hint `App\Models\User`:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -609,9 +609,9 @@ public function show(User $user)
 ```
 
 <a name="implicit-soft-deleted-models"></a>
-#### Soft Deleted Models
+#### Model đã soft delete
 
-Typically, implicit model binding will not retrieve models that have been [soft deleted](/docs/{{version}}/eloquent#soft-deleting). However, you may instruct the implicit binding to retrieve these models by chaining the `withTrashed` method onto your route's definition:
+Thông thường, implicit model binding sẽ không lấy các model đã được [soft delete](/docs/{{version}}/eloquent#soft-deleting). Tuy nhiên, bạn có thể yêu cầu implicit binding lấy cả các model này bằng cách chain method `withTrashed` vào định nghĩa route:
 
 ```php
 use App\Models\User;
@@ -622,9 +622,9 @@ Route::get('/users/{user}', function (User $user) {
 ```
 
 <a name="customizing-the-default-key-name"></a>
-#### Customizing the Key
+#### Tùy chỉnh key
 
-Sometimes you may wish to resolve Eloquent models using a column other than `id`. To do so, you may specify the column in the route parameter definition:
+Đôi khi bạn muốn resolve Eloquent model bằng một column khác `id`. Khi đó, hãy chỉ định column ngay trong định nghĩa tham số route:
 
 ```php
 use App\Models\Post;
@@ -634,7 +634,7 @@ Route::get('/posts/{post:slug}', function (Post $post) {
 });
 ```
 
-If you would like model binding to always use a database column other than `id` when retrieving a given model class, you may apply the `RouteKey` attribute to the Eloquent model:
+Nếu muốn model binding luôn sử dụng một database column khác `id` khi truy xuất một model class cụ thể, bạn có thể áp dụng attribute `RouteKey` cho Eloquent model:
 
 ```php
 use Illuminate\Database\Eloquent\Attributes\RouteKey;
@@ -648,9 +648,9 @@ class Post extends Model
 ```
 
 <a name="implicit-model-binding-scoping"></a>
-#### Custom Keys and Scoping
+#### Custom key và scoping
 
-When implicitly binding multiple Eloquent models in a single route definition, you may wish to scope the second Eloquent model such that it must be a child of the previous Eloquent model. For example, consider this route definition that retrieves a blog post by slug for a specific user:
+Khi implicit binding nhiều Eloquent model trong cùng một route, bạn có thể muốn giới hạn model thứ hai để nó bắt buộc là model con của model trước đó. Ví dụ, route sau lấy một bài viết theo slug thuộc về một người dùng cụ thể:
 
 ```php
 use App\Models\Post;
@@ -661,9 +661,9 @@ Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) 
 });
 ```
 
-When using a custom keyed implicit binding as a nested route parameter, Laravel will automatically scope the query to retrieve the nested model by its parent using conventions to guess the relationship name on the parent. In this case, it will be assumed that the `User` model has a relationship named `posts` (the plural form of the route parameter name) which can be used to retrieve the `Post` model.
+Khi dùng implicit binding với custom key cho tham số route lồng nhau, Laravel sẽ tự động scope query để lấy model con thông qua model cha, đồng thời dùng convention để suy đoán tên relationship trên model cha. Trong trường hợp này, Laravel giả định model `User` có relationship tên `posts` (dạng số nhiều của tên tham số route) để truy xuất model `Post`.
 
-If you wish, you may instruct Laravel to scope "child" bindings even when a custom key is not provided. To do so, you may invoke the `scopeBindings` method when defining your route:
+Bạn cũng có thể yêu cầu Laravel scope các binding "con" ngay cả khi không cung cấp custom key bằng method `scopeBindings` khi định nghĩa route:
 
 ```php
 use App\Models\Post;
@@ -674,7 +674,7 @@ Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
 })->scopeBindings();
 ```
 
-Or, you may instruct an entire group of route definitions to use scoped bindings:
+Hoặc bạn có thể yêu cầu toàn bộ một nhóm route sử dụng scoped binding:
 
 ```php
 Route::scopeBindings()->group(function () {
@@ -684,7 +684,7 @@ Route::scopeBindings()->group(function () {
 });
 ```
 
-Similarly, you may explicitly instruct Laravel to not scope bindings by invoking the `withoutScopedBindings` method:
+Tương tự, bạn có thể yêu cầu Laravel không scope binding bằng method `withoutScopedBindings`:
 
 ```php
 Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) {
@@ -693,9 +693,9 @@ Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) 
 ```
 
 <a name="customizing-missing-model-behavior"></a>
-#### Customizing Missing Model Behavior
+#### Tùy chỉnh hành vi khi không tìm thấy model
 
-Typically, a 404 HTTP response will be generated if an implicitly bound model is not found. However, you may customize this behavior by calling the `missing` method when defining your route. The `missing` method accepts a closure that will be invoked if an implicitly bound model cannot be found:
+Thông thường, Laravel tạo HTTP response 404 nếu không tìm thấy model được implicit binding. Tuy nhiên, bạn có thể tùy chỉnh hành vi này bằng method `missing` khi định nghĩa route. Method `missing` nhận một closure sẽ được gọi khi không tìm thấy model:
 
 ```php
 use App\Http\Controllers\LocationsController;
@@ -710,9 +710,9 @@ Route::get('/locations/{location:slug}', [LocationsController::class, 'show'])
 ```
 
 <a name="implicit-enum-binding"></a>
-### Implicit Enum Binding
+### Enum Binding ngầm định
 
-PHP 8.1 introduced support for [Enums](https://www.php.net/manual/en/language.enumerations.backed.php). To complement this feature, Laravel allows you to type-hint a [string-backed Enum](https://www.php.net/manual/en/language.enumerations.backed.php) on your route definition and Laravel will only invoke the route if that route segment corresponds to a valid Enum value. Otherwise, a 404 HTTP response will be returned automatically. For example, given the following Enum:
+PHP 8.1 bổ sung hỗ trợ [Enum](https://www.php.net/manual/en/language.enumerations.backed.php). Laravel hỗ trợ type-hint một [string-backed Enum](https://www.php.net/manual/en/language.enumerations.backed.php) trong định nghĩa route và chỉ thực thi route nếu segment tương ứng là một giá trị Enum hợp lệ. Nếu không, Laravel tự động trả về HTTP response 404. Ví dụ với Enum sau:
 
 ```php
 <?php
@@ -726,7 +726,7 @@ enum Category: string
 }
 ```
 
-You may define a route that will only be invoked if the `{category}` route segment is `fruits` or `people`. Otherwise, Laravel will return a 404 HTTP response:
+Bạn có thể định nghĩa route chỉ được thực thi khi segment `{category}` là `fruits` hoặc `people`. Nếu không, Laravel sẽ trả về HTTP response 404:
 
 ```php
 use App\Enums\Category;
@@ -738,9 +738,9 @@ Route::get('/categories/{category}', function (Category $category) {
 ```
 
 <a name="explicit-binding"></a>
-### Explicit Binding
+### Binding tường minh
 
-You are not required to use Laravel's implicit, convention based model resolution in order to use model binding. You can also explicitly define how route parameters correspond to models. To register an explicit binding, use the router's `model` method to specify the class for a given parameter. You should define your explicit model bindings at the beginning of the `boot` method of your `AppServiceProvider` class:
+Bạn không bắt buộc phải dùng cơ chế resolve model ngầm định theo convention của Laravel để sử dụng model binding. Bạn cũng có thể định nghĩa tường minh cách tham số route ánh xạ tới model. Để đăng ký explicit binding, dùng method `model` của router để chỉ định class cho một tham số. Các explicit model binding nên được khai báo ở đầu method `boot` của `AppServiceProvider`:
 
 ```php
 use App\Models\User;
@@ -755,7 +755,7 @@ public function boot(): void
 }
 ```
 
-Next, define a route that contains a `{user}` parameter:
+Tiếp theo, định nghĩa một route chứa tham số `{user}`:
 
 ```php
 use App\Models\User;
@@ -765,14 +765,14 @@ Route::get('/users/{user}', function (User $user) {
 });
 ```
 
-Since we have bound all `{user}` parameters to the `App\Models\User` model, an instance of that class will be injected into the route. So, for example, a request to `users/1` will inject the `User` instance from the database which has an ID of `1`.
+Vì mọi tham số `{user}` đã được bind với model `App\Models\User`, một instance của class đó sẽ được inject vào route. Ví dụ, request tới `users/1` sẽ inject `User` instance trong database có ID bằng `1`.
 
-If a matching model instance is not found in the database, a 404 HTTP response will be automatically generated.
+Nếu không tìm thấy model instance phù hợp trong database, Laravel sẽ tự động tạo HTTP response 404.
 
 <a name="customizing-the-resolution-logic"></a>
-#### Customizing the Resolution Logic
+#### Tùy chỉnh logic resolve
 
-If you wish to define your own model binding resolution logic, you may use the `Route::bind` method. The closure you pass to the `bind` method will receive the value of the URI segment and should return the instance of the class that should be injected into the route. Again, this customization should take place in the `boot` method of your application's `AppServiceProvider`:
+Nếu muốn tự định nghĩa logic resolve model binding, bạn có thể dùng `Route::bind`. Closure truyền vào `bind` nhận giá trị của URI segment và phải trả về instance của class cần inject vào route. Việc tùy chỉnh này cũng nên được thực hiện trong method `boot` của `AppServiceProvider`:
 
 ```php
 use App\Models\User;
@@ -789,7 +789,7 @@ public function boot(): void
 }
 ```
 
-Alternatively, you may override the `resolveRouteBinding` method on your Eloquent model. This method will receive the value of the URI segment and should return the instance of the class that should be injected into the route:
+Ngoài ra, bạn có thể override method `resolveRouteBinding` trên Eloquent model. Method này nhận giá trị URI segment và phải trả về instance của class cần inject vào route:
 
 ```php
 /**
@@ -805,7 +805,7 @@ public function resolveRouteBinding($value, $field = null)
 }
 ```
 
-If a route is utilizing [implicit binding scoping](#implicit-model-binding-scoping), the `resolveChildRouteBinding` method will be used to resolve the child binding of the parent model:
+Nếu route sử dụng [implicit binding scoping](#implicit-model-binding-scoping), method `resolveChildRouteBinding` sẽ được dùng để resolve binding con của model cha:
 
 ```php
 /**
@@ -823,9 +823,9 @@ public function resolveChildRouteBinding($childType, $value, $field)
 ```
 
 <a name="fallback-routes"></a>
-## Fallback Routes
+## Fallback Route
 
-Using the `Route::fallback` method, you may define a route that will be executed when no other route matches the incoming request. Typically, unhandled requests will automatically render a "404" page via your application's exception handler. However, since you would typically define the `fallback` route within your `routes/web.php` file, all middleware in the `web` middleware group will apply to the route. You are free to add additional middleware to this route as needed:
+Với method `Route::fallback`, bạn có thể định nghĩa một route được thực thi khi không có route nào khác khớp với request đến. Thông thường, request không được xử lý sẽ tự động render trang "404" thông qua exception handler của ứng dụng. Tuy nhiên, vì `fallback` route thường được định nghĩa trong `routes/web.php`, toàn bộ middleware thuộc group `web` sẽ áp dụng cho route này. Bạn có thể bổ sung middleware khác nếu cần:
 
 ```php
 Route::fallback(function () {
@@ -834,14 +834,14 @@ Route::fallback(function () {
 ```
 
 <a name="rate-limiting"></a>
-## Rate Limiting
+## Giới hạn tần suất
 
 <a name="defining-rate-limiters"></a>
-### Defining Rate Limiters
+### Định nghĩa Rate Limiter
 
-Laravel includes powerful and customizable rate limiting services that you may utilize to restrict the amount of traffic for a given route or group of routes. To get started, you should define rate limiter configurations that meet your application's needs.
+Laravel cung cấp dịch vụ rate limiting mạnh mẽ và có thể tùy chỉnh để giới hạn lượng traffic tới một route hoặc nhóm route. Trước tiên, hãy định nghĩa cấu hình rate limiter phù hợp với nhu cầu của ứng dụng.
 
-Rate limiters may be defined within the `boot` method of your application's `App\Providers\AppServiceProvider` class:
+Rate limiter có thể được định nghĩa trong method `boot` của class `App\Providers\AppServiceProvider`:
 
 ```php
 use Illuminate\Cache\RateLimiting\Limit;
@@ -859,7 +859,7 @@ public function boot(): void
 }
 ```
 
-Rate limiters are defined using the `RateLimiter` facade's `for` method. The `for` method accepts a rate limiter name and a closure that returns the limit configuration that should apply to routes that are assigned to the rate limiter. Limit configuration are instances of the `Illuminate\Cache\RateLimiting\Limit` class. This class contains helpful "builder" methods so that you can quickly define your limit. The rate limiter name may be any string you wish:
+Rate limiter được định nghĩa bằng method `for` của facade `RateLimiter`. Method `for` nhận tên rate limiter và một closure trả về cấu hình giới hạn áp dụng cho các route được gán limiter đó. Cấu hình giới hạn là instance của class `Illuminate\Cache\RateLimiting\Limit`. Class này cung cấp các builder method giúp định nghĩa giới hạn nhanh chóng. Tên rate limiter có thể là bất kỳ chuỗi nào:
 
 ```php
 use Illuminate\Cache\RateLimiting\Limit;
@@ -877,7 +877,7 @@ public function boot(): void
 }
 ```
 
-If the incoming request exceeds the specified rate limit, a response with a 429 HTTP status code will automatically be returned by Laravel. If you would like to define your own response that should be returned by a rate limit, you may use the `response` method:
+Nếu request đến vượt quá rate limit đã chỉ định, Laravel tự động trả về response với HTTP status 429. Nếu muốn tùy chỉnh response khi vượt giới hạn, bạn có thể dùng method `response`:
 
 ```php
 RateLimiter::for('global', function (Request $request) {
@@ -887,7 +887,7 @@ RateLimiter::for('global', function (Request $request) {
 });
 ```
 
-Since rate limiter callbacks receive the incoming HTTP request instance, you may build the appropriate rate limit dynamically based on the incoming request or authenticated user:
+Vì callback của rate limiter nhận HTTP request instance hiện tại, bạn có thể xây dựng rate limit động dựa trên request hoặc người dùng đã xác thực:
 
 ```php
 RateLimiter::for('uploads', function (Request $request) {
@@ -898,9 +898,9 @@ RateLimiter::for('uploads', function (Request $request) {
 ```
 
 <a name="segmenting-rate-limits"></a>
-#### Segmenting Rate Limits
+#### Phân đoạn Rate Limit
 
-Sometimes you may wish to segment rate limits by some arbitrary value. For example, you may wish to allow users to access a given route 100 times per minute per IP address. To accomplish this, you may use the `by` method when building your rate limit:
+Đôi khi bạn muốn phân tách rate limit theo một giá trị bất kỳ. Ví dụ, cho phép truy cập một route tối đa 100 lần mỗi phút cho từng địa chỉ IP. Khi đó, hãy dùng method `by` khi xây dựng rate limit:
 
 ```php
 RateLimiter::for('uploads', function (Request $request) {
@@ -910,7 +910,7 @@ RateLimiter::for('uploads', function (Request $request) {
 });
 ```
 
-To illustrate this feature using another example, we can limit access to the route to 100 times per minute per authenticated user ID or 10 times per minute per IP address for guests:
+Ví dụ khác, ta có thể giới hạn route ở mức 100 lần mỗi phút cho từng ID người dùng đã xác thực hoặc 10 lần mỗi phút cho từng địa chỉ IP của guest:
 
 ```php
 RateLimiter::for('uploads', function (Request $request) {
@@ -921,9 +921,9 @@ RateLimiter::for('uploads', function (Request $request) {
 ```
 
 <a name="multiple-rate-limits"></a>
-#### Multiple Rate Limits
+#### Nhiều Rate Limit
 
-If needed, you may return an array of rate limits for a given rate limiter configuration. Each rate limit will be evaluated for the route based on the order they are placed within the array:
+Nếu cần, bạn có thể trả về một mảng gồm nhiều rate limit cho cùng một cấu hình limiter. Mỗi giới hạn sẽ được đánh giá theo thứ tự xuất hiện trong mảng:
 
 ```php
 RateLimiter::for('login', function (Request $request) {
@@ -934,7 +934,7 @@ RateLimiter::for('login', function (Request $request) {
 });
 ```
 
-If you're assigning multiple rate limits segmented by identical `by` values, you should ensure that each `by` value is unique. The easiest way to achieve this is to prefix the values given to the `by` method:
+Nếu gán nhiều rate limit được phân đoạn bằng các giá trị `by` giống nhau, hãy đảm bảo từng giá trị `by` là duy nhất. Cách đơn giản nhất là thêm prefix vào giá trị truyền cho method `by`:
 
 ```php
 RateLimiter::for('uploads', function (Request $request) {
@@ -946,11 +946,11 @@ RateLimiter::for('uploads', function (Request $request) {
 ```
 
 <a name="response-base-rate-limiting"></a>
-#### Response-Based Rate Limiting
+#### Rate Limiting dựa trên response
 
-In addition to rate limiting incoming requests, Laravel allows you to rate limit based on the response using the `after` method. This is useful when you only want to count certain responses toward the rate limit, such as validation errors, 404 responses, or other specific HTTP status codes.
+Ngoài việc giới hạn request đến, Laravel cho phép rate limit dựa trên response thông qua method `after`. Cách này hữu ích khi bạn chỉ muốn tính một số response nhất định vào giới hạn, chẳng hạn validation error, response 404 hoặc các HTTP status cụ thể khác.
 
-The `after` method accepts a closure that receives the response and should return `true` if the response should be counted toward the rate limit, or `false` if it should be ignored. This is particularly useful for preventing enumeration attacks by limiting consecutive 404 responses, or allowing users to retry requests that fail validation without exhausting their rate limit on an endpoint that should only throttle successful operations:
+Method `after` nhận một closure chứa response và phải trả về `true` nếu response đó cần được tính vào rate limit, hoặc `false` nếu bỏ qua. Điều này đặc biệt hữu ích để ngăn enumeration attack bằng cách giới hạn các response 404 liên tiếp, hoặc cho phép người dùng retry request thất bại validation mà không làm cạn rate limit trên endpoint chỉ nên throttle các thao tác thành công:
 
 ```php
 use Illuminate\Cache\RateLimiting\Limit;
@@ -969,9 +969,9 @@ RateLimiter::for('resource-not-found', function (Request $request) {
 ```
 
 <a name="attaching-rate-limiters-to-routes"></a>
-### Attaching Rate Limiters to Routes
+### Gắn Rate Limiter vào route
 
-Rate limiters may be attached to routes or route groups using the `throttle` [middleware](/docs/{{version}}/middleware). The throttle middleware accepts the name of the rate limiter you wish to assign to the route:
+Rate limiter có thể được gắn vào route hoặc nhóm route bằng [middleware](/docs/{{version}}/middleware) `throttle`. Middleware này nhận tên rate limiter bạn muốn gán cho route:
 
 ```php
 Route::middleware(['throttle:uploads'])->group(function () {
@@ -986,9 +986,9 @@ Route::middleware(['throttle:uploads'])->group(function () {
 ```
 
 <a name="throttling-with-redis"></a>
-#### Throttling With Redis
+#### Throttling bằng Redis
 
-By default, the `throttle` middleware is mapped to the `Illuminate\Routing\Middleware\ThrottleRequests` class. However, if you are using Redis as your application's cache driver, you may wish to instruct Laravel to use Redis to manage rate limiting. To do so, you should use the `throttleWithRedis` method in your application's `bootstrap/app.php` file. This method maps the `throttle` middleware to the `Illuminate\Routing\Middleware\ThrottleRequestsWithRedis` middleware class:
+Mặc định, middleware `throttle` được ánh xạ tới class `Illuminate\Routing\Middleware\ThrottleRequests`. Tuy nhiên, nếu ứng dụng sử dụng Redis làm cache driver, bạn có thể yêu cầu Laravel dùng Redis để quản lý rate limiting. Hãy gọi method `throttleWithRedis` trong `bootstrap/app.php`. Method này ánh xạ middleware `throttle` tới class `Illuminate\Routing\Middleware\ThrottleRequestsWithRedis`:
 
 ```php
 ->withMiddleware(function (Middleware $middleware): void {
@@ -998,9 +998,9 @@ By default, the `throttle` middleware is mapped to the `Illuminate\Routing\Middl
 ```
 
 <a name="form-method-spoofing"></a>
-## Form Method Spoofing
+## Giả lập HTTP method cho form
 
-HTML forms do not support `PUT`, `PATCH`, or `DELETE` actions. So, when defining `PUT`, `PATCH`, or `DELETE` routes that are called from an HTML form, you will need to add a hidden `_method` field to the form. The value sent with the `_method` field will be used as the HTTP request method:
+HTML form không hỗ trợ trực tiếp các action `PUT`, `PATCH` hoặc `DELETE`. Vì vậy, khi route `PUT`, `PATCH` hoặc `DELETE` được gọi từ HTML form, bạn cần thêm field ẩn `_method`. Giá trị của field `_method` sẽ được Laravel sử dụng làm HTTP request method:
 
 ```blade
 <form action="/example" method="POST">
@@ -1009,7 +1009,7 @@ HTML forms do not support `PUT`, `PATCH`, or `DELETE` actions. So, when defining
 </form>
 ```
 
-For convenience, you may use the `@method` [Blade directive](/docs/{{version}}/blade) to generate the `_method` input field:
+Để thuận tiện, bạn có thể dùng [Blade directive](/docs/{{version}}/blade) `@method` để tạo input `_method`:
 
 ```blade
 <form action="/example" method="POST">
@@ -1019,9 +1019,9 @@ For convenience, you may use the `@method` [Blade directive](/docs/{{version}}/b
 ```
 
 <a name="accessing-the-current-route"></a>
-## Accessing the Current Route
+## Truy cập route hiện tại
 
-You may use the `current`, `currentRouteName`, and `currentRouteAction` methods on the `Route` facade to access information about the route handling the incoming request:
+Bạn có thể dùng các method `current`, `currentRouteName` và `currentRouteAction` trên facade `Route` để truy cập thông tin về route đang xử lý request hiện tại:
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -1031,40 +1031,42 @@ $name = Route::currentRouteName(); // string
 $action = Route::currentRouteAction(); // string
 ```
 
-You may refer to the API documentation for both the [underlying class of the Route facade](https://api.laravel.com/docs/{{version}}/Illuminate/Routing/Router.html) and [Route instance](https://api.laravel.com/docs/{{version}}/Illuminate/Routing/Route.html) to review all of the methods that are available on the router and route classes.
+Bạn có thể tham khảo tài liệu API của [class nền bên dưới facade Route](https://api.laravel.com/docs/{{version}}/Illuminate/Routing/Router.html) và [Route instance](https://api.laravel.com/docs/{{version}}/Illuminate/Routing/Route.html) để xem toàn bộ method có trên router và route class.
 
 <a name="cors"></a>
 ## Cross-Origin Resource Sharing (CORS)
 
-Laravel can automatically respond to CORS `OPTIONS` HTTP requests with values that you configure. The `OPTIONS` requests will automatically be handled by the `HandleCors` [middleware](/docs/{{version}}/middleware) that is automatically included in your application's global middleware stack.
+Laravel có thể tự động phản hồi các HTTP request CORS `OPTIONS` bằng các giá trị bạn cấu hình. Request `OPTIONS` được xử lý tự động bởi [middleware](/docs/{{version}}/middleware) `HandleCors`, vốn được đưa sẵn vào global middleware stack của ứng dụng.
 
-Sometimes, you may need to customize the CORS configuration values for your application. You may do so by publishing the `cors` configuration file using the `config:publish` Artisan command:
+Đôi khi bạn cần tùy chỉnh cấu hình CORS của ứng dụng. Bạn có thể publish file cấu hình `cors` bằng lệnh Artisan `config:publish`:
 
 ```shell
 php artisan config:publish cors
 ```
 
-This command will place a `cors.php` configuration file within your application's `config` directory.
+Lệnh này sẽ tạo file cấu hình `cors.php` trong thư mục `config` của ứng dụng.
 
 > [!NOTE]
-> For more information on CORS and CORS headers, please consult the [MDN web documentation on CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#The_HTTP_response_headers).
+> Để tìm hiểu thêm về CORS và các CORS header, hãy tham khảo [tài liệu CORS trên MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#The_HTTP_response_headers).
 
 <a name="route-caching"></a>
-## Route Caching
+## Cache route
 
-When deploying your application to production, you should take advantage of Laravel's route cache. Using the route cache will drastically decrease the amount of time it takes to register all of your application's routes. To generate a route cache, execute the `route:cache` Artisan command:
+Khi deploy ứng dụng lên production, bạn nên tận dụng route cache của Laravel. Route cache giúp giảm đáng kể thời gian đăng ký toàn bộ route của ứng dụng. Để tạo route cache, hãy chạy lệnh Artisan `route:cache`:
 
 ```shell
 php artisan route:cache
 ```
 
-After running this command, your cached routes file will be loaded on every request. Remember, if you add any new routes you will need to generate a fresh route cache. Because of this, you should only run the `route:cache` command during your project's deployment.
+Sau khi chạy lệnh này, file route đã cache sẽ được nạp cho mọi request. Nếu thêm route mới, bạn cần tạo lại route cache. Vì vậy, chỉ nên chạy `route:cache` trong quá trình deployment của dự án.
 
-You may use the `route:clear` command to clear the route cache:
+Bạn có thể dùng lệnh `route:clear` để xóa route cache:
 
 ```shell
 php artisan route:clear
 ```
+
+---
 
 ## Tài liệu chính thức
 

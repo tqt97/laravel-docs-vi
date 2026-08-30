@@ -1,15 +1,15 @@
-# Eloquent: API Resources
+# Eloquent: API Resource
 
-- [Introduction](#introduction)
-- [Generating Resources](#generating-resources)
-- [Concept Overview](#concept-overview)
-    - [Resource Collections](#resource-collections)
-- [Writing Resources](#writing-resources)
-    - [Data Wrapping](#data-wrapping)
-    - [Pagination](#pagination)
-    - [Conditional Attributes](#conditional-attributes)
-    - [Conditional Relationships](#conditional-relationships)
-    - [Adding Meta Data](#adding-meta-data)
+- [Giới thiệu](#introduction)
+- [Tạo Resource](#generating-resources)
+- [Tổng quan khái niệm](#concept-overview)
+    - [Resource Collection](#resource-collections)
+- [Xây dựng Resource](#writing-resources)
+    - [Bao bọc dữ liệu](#data-wrapping)
+    - [Phân trang](#pagination)
+    - [Thuộc tính có điều kiện](#conditional-attributes)
+    - [Quan hệ có điều kiện](#conditional-relationships)
+    - [Thêm metadata](#adding-meta-data)
 - [JSON:API Resources](#jsonapi-resources)
     - [Generating JSON:API Resources](#generating-jsonapi-resources)
     - [Defining Attributes](#defining-jsonapi-attributes)
@@ -17,30 +17,30 @@
     - [Resource Type and ID](#jsonapi-resource-type-and-id)
     - [Sparse Fieldsets and Includes](#jsonapi-sparse-fieldsets-and-includes)
     - [Links and Meta](#jsonapi-links-and-meta)
-- [Resource Responses](#resource-responses)
+- [Response của Resource](#resource-responses)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-When building an API, you may need a transformation layer that sits between your Eloquent models and the JSON responses that are actually returned to your application's users. For example, you may wish to display certain attributes for a subset of users and not others, or you may wish to always include certain relationships in the JSON representation of your models. Eloquent's resource classes allow you to expressively and easily transform your models and model collections into JSON.
+Khi xây dựng API, bạn có thể cần một lớp chuyển đổi nằm giữa các Eloquent model và JSON response thực sự được trả về cho người dùng ứng dụng. Ví dụ, bạn có thể muốn hiển thị một số thuộc tính cho một nhóm người dùng nhưng không hiển thị cho nhóm khác, hoặc luôn đưa một số quan hệ nhất định vào biểu diễn JSON của model. Các resource class của Eloquent cho phép bạn chuyển đổi model và collection của model thành JSON một cách rõ ràng và thuận tiện.
 
-Of course, you may always convert Eloquent models or collections to JSON using their `toJson` methods; however, Eloquent resources provide more granular and robust control over the JSON serialization of your models and their relationships.
+Tất nhiên, bạn luôn có thể chuyển Eloquent model hoặc collection sang JSON bằng phương thức `toJson`; tuy nhiên, Eloquent resource cung cấp khả năng kiểm soát chi tiết và mạnh mẽ hơn đối với quá trình tuần tự hóa model và các quan hệ của chúng thành JSON.
 
 <a name="generating-resources"></a>
-## Generating Resources
+## Tạo Resource
 
-To generate a resource class, you may use the `make:resource` Artisan command. By default, resources will be placed in the `app/Http/Resources` directory of your application. Resources extend the `Illuminate\Http\Resources\Json\JsonResource` class:
+Để tạo một resource class, bạn có thể sử dụng lệnh Artisan `make:resource`. Theo mặc định, resource được đặt trong thư mục `app/Http/Resources` của ứng dụng. Resource kế thừa class `Illuminate\Http\Resources\Json\JsonResource`:
 
 ```shell
 php artisan make:resource UserResource
 ```
 
 <a name="generating-resource-collections"></a>
-#### Resource Collections
+#### Resource Collection
 
-In addition to generating resources that transform individual models, you may generate resources that are responsible for transforming collections of models. This allows your JSON responses to include links and other meta information that is relevant to an entire collection of a given resource.
+Ngoài resource dùng để chuyển đổi từng model riêng lẻ, bạn có thể tạo resource chịu trách nhiệm chuyển đổi cả collection model. Cách này cho phép JSON response chứa các liên kết và metadata khác áp dụng cho toàn bộ collection của resource đó.
 
-To create a resource collection, you should use the `--collection` flag when creating the resource. Or, including the word `Collection` in the resource name will indicate to Laravel that it should create a collection resource. Collection resources extend the `Illuminate\Http\Resources\Json\ResourceCollection` class:
+Để tạo resource collection, hãy sử dụng tùy chọn `--collection` khi tạo resource. Hoặc, nếu tên resource chứa từ `Collection`, Laravel sẽ hiểu rằng cần tạo một collection resource. Collection resource kế thừa class `Illuminate\Http\Resources\Json\ResourceCollection`:
 
 ```shell
 php artisan make:resource User --collection
@@ -49,12 +49,12 @@ php artisan make:resource UserCollection
 ```
 
 <a name="concept-overview"></a>
-## Concept Overview
+## Tổng quan khái niệm
 
 > [!NOTE]
-> This is a high-level overview of resources and resource collections. You are highly encouraged to read the other sections of this documentation to gain a deeper understanding of the customization and power offered to you by resources.
+> Đây là phần tổng quan ở mức cao về resource và resource collection. Bạn nên đọc các phần còn lại của tài liệu này để hiểu sâu hơn về khả năng tùy biến và sức mạnh mà resource cung cấp.
 
-Before diving into all of the options available to you when writing resources, let's first take a high-level look at how resources are used within Laravel. A resource class represents a single model that needs to be transformed into a JSON structure. For example, here is a simple `UserResource` resource class:
+Trước khi đi sâu vào tất cả tùy chọn khi xây dựng resource, trước tiên hãy xem tổng quan cách resource được sử dụng trong Laravel. Một resource class đại diện cho một model cần được chuyển đổi thành cấu trúc JSON. Ví dụ, dưới đây là một resource class `UserResource` đơn giản:
 
 ```php
 <?php
@@ -84,9 +84,9 @@ class UserResource extends JsonResource
 }
 ```
 
-Every resource class defines a `toArray` method which returns the array of attributes that should be converted to JSON when the resource is returned as a response from a route or controller method.
+Mỗi resource class định nghĩa phương thức `toArray`, phương thức này trả về mảng thuộc tính sẽ được chuyển thành JSON khi resource được trả về dưới dạng response từ route hoặc phương thức controller.
 
-Note that we can access model properties directly from the `$this` variable. This is because a resource class will automatically proxy property and method access down to the underlying model for convenient access. Once the resource is defined, it may be returned from a route or controller. The resource accepts the underlying model instance via its constructor:
+Lưu ý rằng chúng ta có thể truy cập trực tiếp các property của model thông qua biến `$this`. Điều này là do resource class tự động chuyển tiếp việc truy cập property và method đến model bên dưới để thuận tiện sử dụng. Sau khi resource được định nghĩa, bạn có thể trả nó về từ route hoặc controller. Resource nhận instance của model bên dưới thông qua constructor:
 
 ```php
 use App\Http\Resources\UserResource;
@@ -97,15 +97,15 @@ Route::get('/user/{id}', function (string $id) {
 });
 ```
 
-For convenience, you may use the model's `toResource` method, which will use framework conventions to automatically discover the model's underlying resource:
+Để thuận tiện, bạn có thể sử dụng phương thức `toResource` của model. Phương thức này sử dụng convention của framework để tự động tìm resource tương ứng với model:
 
 ```php
 return User::findOrFail($id)->toResource();
 ```
 
-When invoking the `toResource` method, Laravel will attempt to locate a resource that matches the model's name and is optionally suffixed with `Resource` within the `Http\Resources` namespace closest to the model's namespace.
+Khi gọi phương thức `toResource`, Laravel sẽ cố gắng tìm resource có tên khớp với tên model, có thể kèm hậu tố `Resource`, trong namespace `Http\Resources` gần nhất với namespace của model.
 
-If your resource class doesn't follow this naming convention or is located in a different namespace, you may specify the default resource for the model using the `UseResource` attribute:
+Nếu resource class không tuân theo convention đặt tên này hoặc nằm trong namespace khác, bạn có thể chỉ định resource mặc định cho model bằng attribute `UseResource`:
 
 ```php
 <?php
@@ -123,16 +123,16 @@ class User extends Model
 }
 ```
 
-Alternatively, you may specify resource class by passing it to the `toResource` method:
+Ngoài ra, bạn có thể chỉ định resource class bằng cách truyền nó vào phương thức `toResource`:
 
 ```php
 return User::findOrFail($id)->toResource(CustomUserResource::class);
 ```
 
 <a name="resource-collections"></a>
-### Resource Collections
+### Resource Collection
 
-If you are returning a collection of resources or a paginated response, you should use the `collection` method provided by your resource class when creating the resource instance in your route or controller:
+Nếu trả về một collection resource hoặc response có phân trang, bạn nên sử dụng phương thức `collection` do resource class cung cấp khi tạo resource instance trong route hoặc controller:
 
 ```php
 use App\Http\Resources\UserResource;
@@ -143,15 +143,15 @@ Route::get('/users', function () {
 });
 ```
 
-Or, for convenience, you may use the Eloquent collection's `toResourceCollection` method, which will use framework conventions to automatically discover the model's underlying resource collection:
+Hoặc, để thuận tiện, bạn có thể sử dụng phương thức `toResourceCollection` của Eloquent collection. Phương thức này sử dụng convention của framework để tự động tìm resource collection tương ứng với model:
 
 ```php
 return User::all()->toResourceCollection();
 ```
 
-When invoking the `toResourceCollection` method, Laravel will attempt to locate a resource collection that matches the model's name and is suffixed with `Collection` within the `Http\Resources` namespace closest to the model's namespace.
+Khi gọi phương thức `toResourceCollection`, Laravel sẽ cố gắng tìm resource collection có tên khớp với tên model và có hậu tố `Collection` trong namespace `Http\Resources` gần nhất với namespace của model.
 
-If your resource collection class doesn't follow this naming convention or is located in a different namespace, you may specify the default resource collection for the model using the `UseResourceCollection` attribute:
+Nếu resource collection class không tuân theo convention đặt tên này hoặc nằm trong namespace khác, bạn có thể chỉ định resource collection mặc định cho model bằng attribute `UseResourceCollection`:
 
 ```php
 <?php
@@ -169,22 +169,22 @@ class User extends Model
 }
 ```
 
-Alternatively, you may specify the resource collection class by passing it to the `toResourceCollection` method:
+Ngoài ra, bạn có thể chỉ định resource collection class bằng cách truyền nó vào phương thức `toResourceCollection`:
 
 ```php
 return User::all()->toResourceCollection(CustomUserCollection::class);
 ```
 
 <a name="custom-resource-collections"></a>
-#### Custom Resource Collections
+#### Resource Collection tùy chỉnh
 
-By default, resource collections do not allow any addition of custom meta data that may need to be returned with your collection. If you would like to customize the resource collection response, you may create a dedicated resource to represent the collection:
+Theo mặc định, resource collection không cho phép bổ sung metadata tùy chỉnh cần trả về cùng collection. Nếu muốn tùy biến response của resource collection, bạn có thể tạo một resource chuyên biệt để đại diện cho collection:
 
 ```shell
 php artisan make:resource UserCollection
 ```
 
-Once the resource collection class has been generated, you may easily define any meta data that should be included with the response:
+Sau khi resource collection class được tạo, bạn có thể dễ dàng định nghĩa metadata cần được đưa vào response:
 
 ```php
 <?php
@@ -213,7 +213,7 @@ class UserCollection extends ResourceCollection
 }
 ```
 
-After defining your resource collection, it may be returned from a route or controller:
+Sau khi định nghĩa resource collection, bạn có thể trả nó về từ route hoặc controller:
 
 ```php
 use App\Http\Resources\UserCollection;
@@ -224,18 +224,18 @@ Route::get('/users', function () {
 });
 ```
 
-Or, for convenience, you may use the Eloquent collection's `toResourceCollection` method, which will use framework conventions to automatically discover the model's underlying resource collection:
+Hoặc, để thuận tiện, bạn có thể sử dụng phương thức `toResourceCollection` của Eloquent collection. Phương thức này sử dụng convention của framework để tự động tìm resource collection tương ứng với model:
 
 ```php
 return User::all()->toResourceCollection();
 ```
 
-When invoking the `toResourceCollection` method, Laravel will attempt to locate a resource collection that matches the model's name and is suffixed with `Collection` within the `Http\Resources` namespace closest to the model's namespace.
+Khi gọi phương thức `toResourceCollection`, Laravel sẽ cố gắng tìm resource collection có tên khớp với tên model và có hậu tố `Collection` trong namespace `Http\Resources` gần nhất với namespace của model.
 
 <a name="preserving-collection-keys"></a>
 #### Preserving Collection Keys
 
-When returning a resource collection from a route, Laravel resets the collection's keys so that they are in numerical order. However, you may use the `PreserveKeys` attribute on your resource class indicating whether a collection's original keys should be preserved:
+Khi trả về một resource collection từ route, Laravel sẽ đặt lại các key của collection theo thứ tự số. Tuy nhiên, bạn có thể dùng attribute `PreserveKeys` trên resource class để chỉ định có giữ nguyên các key ban đầu của collection hay không:
 
 ```php
 <?php
@@ -252,7 +252,7 @@ class UserResource extends JsonResource
 }
 ```
 
-When the `preserveKeys` property is set to `true`, collection keys will be preserved when the collection is returned from a route or controller:
+Khi property `preserveKeys` được đặt thành `true`, các key của collection sẽ được giữ nguyên khi collection được trả về từ route hoặc controller:
 
 ```php
 use App\Http\Resources\UserResource;
@@ -264,11 +264,11 @@ Route::get('/users', function () {
 ```
 
 <a name="customizing-the-underlying-resource-class"></a>
-#### Customizing the Underlying Resource Class
+#### Tùy chỉnh Resource Class cơ sở
 
-Typically, the `$this->collection` property of a resource collection is automatically populated with the result of mapping each item of the collection to its singular resource class. The singular resource class is assumed to be the collection's class name without the trailing `Collection` portion of the class name. In addition, depending on your personal preference, the singular resource class may or may not be suffixed with `Resource`.
+Thông thường, thuộc tính `$this->collection` của một resource collection sẽ tự động được điền bằng kết quả ánh xạ từng phần tử trong collection sang resource class dạng số ít tương ứng. Resource class dạng số ít được giả định là tên class của collection sau khi bỏ phần `Collection` ở cuối. Ngoài ra, tùy theo quy ước bạn lựa chọn, resource class dạng số ít có thể có hoặc không có hậu tố `Resource`.
 
-For example, `UserCollection` will attempt to map the given user instances into the `UserResource` resource. To customize this behavior, you may use the `Collects` attribute on your resource collection:
+Ví dụ, `UserCollection` sẽ cố gắng ánh xạ các instance user được cung cấp sang resource `UserResource`. Để tùy chỉnh hành vi này, bạn có thể sử dụng attribute `Collects` trên resource collection:
 
 ```php
 <?php
@@ -286,12 +286,12 @@ class UserCollection extends ResourceCollection
 ```
 
 <a name="writing-resources"></a>
-## Writing Resources
+## Viết Resource
 
 > [!NOTE]
-> If you have not read the [concept overview](#concept-overview), you are highly encouraged to do so before proceeding with this documentation.
+> Nếu bạn chưa đọc [tổng quan khái niệm](#concept-overview), bạn nên đọc phần đó trước khi tiếp tục tài liệu này.
 
-Resources only need to transform a given model into an array. So, each resource contains a `toArray` method which translates your model's attributes into an API friendly array that can be returned from your application's routes or controllers:
+Resource chỉ cần chuyển đổi một model được cung cấp thành array. Vì vậy, mỗi resource chứa phương thức `toArray` để chuyển các attribute của model thành một array phù hợp với API và có thể được trả về từ route hoặc controller của ứng dụng:
 
 ```php
 <?php
@@ -321,7 +321,7 @@ class UserResource extends JsonResource
 }
 ```
 
-Once a resource has been defined, it may be returned directly from a route or controller:
+Sau khi resource được định nghĩa, bạn có thể trả resource đó trực tiếp từ route hoặc controller:
 
 ```php
 use App\Models\User;
@@ -332,9 +332,9 @@ Route::get('/user/{id}', function (string $id) {
 ```
 
 <a name="relationships"></a>
-#### Relationships
+#### Quan hệ
 
-If you would like to include related resources in your response, you may add them to the array returned by your resource's `toArray` method. In this example, we will use the `PostResource` resource's `collection` method to add the user's blog posts to the resource response:
+Nếu muốn đưa các resource liên quan vào response, bạn có thể thêm chúng vào array được trả về bởi phương thức `toArray` của resource. Trong ví dụ này, chúng ta sử dụng phương thức `collection` của `PostResource` để thêm các bài viết của user vào resource response:
 
 ```php
 use App\Http\Resources\PostResource;
@@ -359,12 +359,12 @@ public function toArray(Request $request): array
 ```
 
 > [!NOTE]
-> If you would like to include relationships only when they have already been loaded, check out the documentation on [conditional relationships](#conditional-relationships).
+> Nếu chỉ muốn đưa quan hệ vào response khi chúng đã được load, hãy xem phần [quan hệ có điều kiện](#conditional-relationships).
 
 <a name="writing-resource-collections"></a>
-#### Resource Collections
+#### Resource Collection
 
-While resources transform a single model into an array, resource collections transform a collection of models into an array. However, it is not absolutely necessary to define a resource collection class for each one of your models since all Eloquent model collections provide a `toResourceCollection` method to generate an "ad-hoc" resource collection on the fly:
+Trong khi resource chuyển đổi một model thành array, resource collection chuyển đổi một collection các model thành array. Tuy nhiên, bạn không nhất thiết phải định nghĩa một resource collection class cho từng model vì mọi Eloquent model collection đều cung cấp phương thức `toResourceCollection` để tạo resource collection linh hoạt ngay khi cần:
 
 ```php
 use App\Models\User;
@@ -374,7 +374,7 @@ Route::get('/users', function () {
 });
 ```
 
-However, if you need to customize the meta data returned with the collection, it is necessary to define your own resource collection:
+Tuy nhiên, nếu cần tùy chỉnh metadata được trả về cùng collection, bạn cần định nghĩa resource collection riêng:
 
 ```php
 <?php
@@ -403,7 +403,7 @@ class UserCollection extends ResourceCollection
 }
 ```
 
-Like singular resources, resource collections may be returned directly from routes or controllers:
+Tương tự resource đơn, resource collection có thể được trả trực tiếp từ route hoặc controller:
 
 ```php
 use App\Http\Resources\UserCollection;
@@ -414,18 +414,18 @@ Route::get('/users', function () {
 });
 ```
 
-Or, for convenience, you may use the Eloquent collection's `toResourceCollection` method, which will use framework conventions to automatically discover the model's underlying resource collection:
+Hoặc, để thuận tiện, bạn có thể sử dụng phương thức `toResourceCollection` của Eloquent collection. Phương thức này sử dụng convention của framework để tự động tìm resource collection tương ứng với model:
 
 ```php
 return User::all()->toResourceCollection();
 ```
 
-When invoking the `toResourceCollection` method, Laravel will attempt to locate a resource collection that matches the model's name and is suffixed with `Collection` within the `Http\Resources` namespace closest to the model's namespace.
+Khi gọi phương thức `toResourceCollection`, Laravel sẽ cố gắng tìm resource collection có tên khớp với tên model và có hậu tố `Collection` trong namespace `Http\Resources` gần nhất với namespace của model.
 
 <a name="data-wrapping"></a>
-### Data Wrapping
+### Bao bọc dữ liệu
 
-By default, your outermost resource is wrapped in a `data` key when the resource response is converted to JSON. So, for example, a typical resource collection response looks like the following:
+Theo mặc định, resource ngoài cùng sẽ được bao bọc trong key `data` khi resource response được chuyển thành JSON. Ví dụ, một resource collection response điển hình có dạng sau:
 
 ```json
 {
@@ -444,7 +444,7 @@ By default, your outermost resource is wrapped in a `data` key when the resource
 }
 ```
 
-If you would like to disable the wrapping of the outermost resource, you should invoke the `withoutWrapping` method on the base `Illuminate\Http\Resources\Json\JsonResource` class. Typically, you should call this method from your `AppServiceProvider` or another [service provider](/docs/{{version}}/providers) that is loaded on every request to your application:
+Nếu muốn tắt việc bao bọc resource ngoài cùng, bạn nên gọi phương thức `withoutWrapping` trên class cơ sở `Illuminate\Http\Resources\Json\JsonResource`. Thông thường, phương thức này nên được gọi từ `AppServiceProvider` hoặc một [service provider](/docs/{{version}}/providers) khác được load trong mọi request của ứng dụng:
 
 ```php
 <?php
@@ -475,14 +475,14 @@ class AppServiceProvider extends ServiceProvider
 ```
 
 > [!WARNING]
-> The `withoutWrapping` method only affects the outermost response and will not remove `data` keys that you manually add to your own resource collections.
+> Phương thức `withoutWrapping` chỉ ảnh hưởng đến response ngoài cùng và không xóa các key `data` mà bạn tự thêm vào resource collection.
 
 <a name="wrapping-nested-resources"></a>
-#### Wrapping Nested Resources
+#### Bao bọc Resource lồng nhau
 
-You have total freedom to determine how your resource's relationships are wrapped. If you would like all resource collections to be wrapped in a `data` key, regardless of their nesting, you should define a resource collection class for each resource and return the collection within a `data` key.
+Bạn hoàn toàn có thể quyết định cách bao bọc các quan hệ của resource. Nếu muốn mọi resource collection đều được bao bọc trong key `data` bất kể mức lồng nhau, bạn nên định nghĩa resource collection class cho từng resource và trả collection bên trong key `data`.
 
-You may be wondering if this will cause your outermost resource to be wrapped in two `data` keys. Don't worry, Laravel will never let your resources be accidentally double-wrapped, so you don't have to be concerned about the nesting level of the resource collection you are transforming:
+Bạn có thể thắc mắc liệu điều này có khiến resource ngoài cùng bị bao bọc bởi hai key `data` hay không. Laravel sẽ không để resource vô tình bị bao bọc hai lần, vì vậy bạn không cần lo về mức độ lồng nhau của resource collection đang chuyển đổi:
 
 ```php
 <?php
@@ -506,9 +506,9 @@ class CommentsCollection extends ResourceCollection
 ```
 
 <a name="data-wrapping-and-pagination"></a>
-#### Data Wrapping and Pagination
+#### Bao bọc dữ liệu and Pagination
 
-When returning paginated collections via a resource response, Laravel will wrap your resource data in a `data` key even if the `withoutWrapping` method has been called. This is because paginated responses always contain `meta` and `links` keys with information about the paginator's state:
+Khi trả về collection đã phân trang thông qua resource response, Laravel vẫn bao bọc dữ liệu resource trong key `data` ngay cả khi đã gọi `withoutWrapping`. Nguyên nhân là response phân trang luôn chứa các key `meta` và `links` mô tả trạng thái của paginator:
 
 ```json
 {
@@ -543,9 +543,9 @@ When returning paginated collections via a resource response, Laravel will wrap 
 ```
 
 <a name="pagination"></a>
-### Pagination
+### Phân trang
 
-You may pass a Laravel paginator instance to the `collection` method of a resource or to a custom resource collection:
+Bạn có thể truyền một instance paginator của Laravel vào phương thức `collection` của resource hoặc vào custom resource collection:
 
 ```php
 use App\Http\Resources\UserCollection;
@@ -556,13 +556,13 @@ Route::get('/users', function () {
 });
 ```
 
-Or, for convenience, you may use the paginator's `toResourceCollection` method, which will use framework conventions to automatically discover the paginated model's underlying resource collection:
+Hoặc để thuận tiện, bạn có thể dùng phương thức `toResourceCollection` của paginator. Phương thức này sử dụng convention của framework để tự động tìm resource collection cơ sở của model đang được phân trang:
 
 ```php
 return User::paginate()->toResourceCollection();
 ```
 
-Paginated responses always contain `meta` and `links` keys with information about the paginator's state:
+Response phân trang luôn chứa các key `meta` và `links` với thông tin về trạng thái của paginator:
 
 ```json
 {
@@ -597,9 +597,9 @@ Paginated responses always contain `meta` and `links` keys with information abou
 ```
 
 <a name="customizing-the-pagination-information"></a>
-#### Customizing the Pagination Information
+#### Tùy chỉnh thông tin phân trang
 
-If you would like to customize the information included in the `links` or `meta` keys of the pagination response, you may define a `paginationInformation` method on the resource. This method will receive the `$paginated` data and the array of `$default` information, which is an array containing the `links` and `meta` keys:
+Nếu muốn tùy chỉnh thông tin trong các key `links` hoặc `meta` của response phân trang, bạn có thể định nghĩa phương thức `paginationInformation` trên resource. Phương thức này nhận dữ liệu `$paginated` và array thông tin `$default`, trong đó chứa các key `links` và `meta`:
 
 ```php
 /**
@@ -619,9 +619,9 @@ public function paginationInformation($request, $paginated, $default)
 ```
 
 <a name="conditional-attributes"></a>
-### Conditional Attributes
+### Attribute có điều kiện
 
-Sometimes you may wish to only include an attribute in a resource response if a given condition is met. For example, you may wish to only include a value if the current user is an "administrator". Laravel provides a variety of helper methods to assist you in this situation. The `when` method may be used to conditionally add an attribute to a resource response:
+Đôi khi bạn chỉ muốn đưa một attribute vào resource response khi một điều kiện nhất định được thỏa mãn. Ví dụ, bạn có thể chỉ muốn đưa một giá trị vào khi user hiện tại là "administrator". Laravel cung cấp nhiều helper method cho trường hợp này. Phương thức `when` có thể được dùng để thêm attribute vào resource response theo điều kiện:
 
 ```php
 /**
@@ -642,9 +642,9 @@ public function toArray(Request $request): array
 }
 ```
 
-In this example, the `secret` key will only be returned in the final resource response if the authenticated user's `isAdmin` method returns `true`. If the method returns `false`, the `secret` key will be removed from the resource response before it is sent to the client. The `when` method allows you to expressively define your resources without resorting to conditional statements when building the array.
+Trong ví dụ này, key `secret` chỉ xuất hiện trong resource response cuối cùng nếu phương thức `isAdmin` của user đã xác thực trả về `true`. Nếu trả về `false`, key `secret` sẽ bị loại khỏi resource response trước khi gửi đến client. Phương thức `when` giúp bạn định nghĩa resource rõ ràng mà không phải tự viết câu lệnh điều kiện khi xây dựng array.
 
-The `when` method also accepts a closure as its second argument, allowing you to calculate the resulting value only if the given condition is `true`:
+Phương thức `when` cũng chấp nhận closure làm đối số thứ hai, nhờ đó giá trị kết quả chỉ được tính khi điều kiện là `true`:
 
 ```php
 'secret' => $this->when($request->user()->isAdmin(), function () {
@@ -652,22 +652,22 @@ The `when` method also accepts a closure as its second argument, allowing you to
 }),
 ```
 
-The `whenHas` method may be used to include an attribute if it is actually present on the underlying model:
+Phương thức `whenHas` có thể được dùng để đưa attribute vào response nếu attribute đó thực sự tồn tại trên model cơ sở:
 
 ```php
 'name' => $this->whenHas('name'),
 ```
 
-Additionally, the `whenNotNull` method may be used to include an attribute in the resource response if the attribute is not null:
+Ngoài ra, `whenNotNull` có thể được dùng để đưa attribute vào resource response nếu giá trị của attribute không phải `null`:
 
 ```php
 'name' => $this->whenNotNull($this->name),
 ```
 
 <a name="merging-conditional-attributes"></a>
-#### Merging Conditional Attributes
+#### Gộp các Attribute có điều kiện
 
-Sometimes you may have several attributes that should only be included in the resource response based on the same condition. In this case, you may use the `mergeWhen` method to include the attributes in the response only when the given condition is `true`:
+Đôi khi nhiều attribute chỉ nên được đưa vào resource response dựa trên cùng một điều kiện. Trong trường hợp này, bạn có thể dùng `mergeWhen` để chỉ thêm các attribute đó khi điều kiện là `true`:
 
 ```php
 /**
@@ -691,17 +691,17 @@ public function toArray(Request $request): array
 }
 ```
 
-Again, if the given condition is `false`, these attributes will be removed from the resource response before it is sent to the client.
+Tương tự, nếu điều kiện là `false`, các attribute này sẽ bị loại khỏi resource response trước khi gửi đến client.
 
 > [!WARNING]
-> The `mergeWhen` method should not be used within arrays that mix string and numeric keys. Furthermore, it should not be used within arrays with numeric keys that are not ordered sequentially.
+> Không nên sử dụng `mergeWhen` trong array trộn lẫn key dạng chuỗi và key dạng số. Ngoài ra, cũng không nên dùng phương thức này trong array có key dạng số nhưng không được sắp liên tục.
 
 <a name="conditional-relationships"></a>
-### Conditional Relationships
+### Quan hệ có điều kiện
 
-In addition to conditionally loading attributes, you may conditionally include relationships on your resource responses based on if the relationship has already been loaded on the model. This allows your controller to decide which relationships should be loaded on the model and your resource can easily include them only when they have actually been loaded. Ultimately, this makes it easier to avoid "N+1" query problems within your resources.
+Ngoài việc đưa attribute vào theo điều kiện, bạn có thể đưa các quan hệ vào resource response tùy theo việc quan hệ đó đã được load trên model hay chưa. Nhờ vậy controller có thể quyết định quan hệ nào cần được load, còn resource chỉ đưa chúng vào khi chúng thực sự đã được load. Cách này giúp tránh vấn đề truy vấn "N+1" trong resource.
 
-The `whenLoaded` method may be used to conditionally load a relationship. In order to avoid unnecessarily loading relationships, this method accepts the name of the relationship instead of the relationship itself:
+Phương thức `whenLoaded` có thể được dùng để đưa quan hệ vào theo điều kiện. Để tránh vô tình load quan hệ không cần thiết, phương thức này nhận tên của quan hệ thay vì chính giá trị quan hệ:
 
 ```php
 use App\Http\Resources\PostResource;
@@ -724,18 +724,18 @@ public function toArray(Request $request): array
 }
 ```
 
-In this example, if the relationship has not been loaded, the `posts` key will be removed from the resource response before it is sent to the client.
+Trong ví dụ này, nếu quan hệ chưa được load, key `posts` sẽ bị loại khỏi resource response trước khi gửi đến client.
 
 <a name="conditional-relationship-counts"></a>
-#### Conditional Relationship Counts
+#### Số lượng quan hệ có điều kiện
 
-In addition to conditionally including relationships, you may conditionally include relationship "counts" on your resource responses based on if the relationship's count has been loaded on the model:
+Ngoài việc đưa quan hệ vào theo điều kiện, bạn cũng có thể đưa "số lượng" của quan hệ vào resource response tùy theo việc số lượng đó đã được load trên model hay chưa:
 
 ```php
 new UserResource($user->loadCount('posts'));
 ```
 
-The `whenCounted` method may be used to conditionally include a relationship's count in your resource response. This method avoids unnecessarily including the attribute if the relationships' count is not present:
+Phương thức `whenCounted` có thể được dùng để đưa số lượng của quan hệ vào resource response theo điều kiện. Phương thức này tránh thêm attribute không cần thiết khi số lượng quan hệ chưa có trên model:
 
 ```php
 /**
@@ -756,9 +756,9 @@ public function toArray(Request $request): array
 }
 ```
 
-In this example, if the `posts` relationship's count has not been loaded, the `posts_count` key will be removed from the resource response before it is sent to the client.
+Trong ví dụ này, nếu số lượng của quan hệ `posts` chưa được load, key `posts_count` sẽ bị loại khỏi resource response trước khi gửi đến client.
 
-Other types of aggregates, such as `avg`, `sum`, `min`, and `max` may also be conditionally loaded using the `whenAggregated` method:
+Các aggregate khác như `avg`, `sum`, `min` và `max` cũng có thể được đưa vào theo điều kiện bằng phương thức `whenAggregated`:
 
 ```php
 'words_avg' => $this->whenAggregated('posts', 'words', 'avg'),
@@ -768,9 +768,9 @@ Other types of aggregates, such as `avg`, `sum`, `min`, and `max` may also be co
 ```
 
 <a name="conditional-pivot-information"></a>
-#### Conditional Pivot Information
+#### Thông tin Pivot có điều kiện
 
-In addition to conditionally including relationship information in your resource responses, you may conditionally include data from the intermediate tables of many-to-many relationships using the `whenPivotLoaded` method. The `whenPivotLoaded` method accepts the name of the pivot table as its first argument. The second argument should be a closure that returns the value to be returned if the pivot information is available on the model:
+Ngoài việc đưa thông tin quan hệ vào resource response theo điều kiện, bạn có thể đưa dữ liệu từ bảng trung gian của quan hệ many-to-many bằng phương thức `whenPivotLoaded`. Đối số đầu tiên của `whenPivotLoaded` là tên pivot table. Đối số thứ hai là closure trả về giá trị cần sử dụng khi thông tin pivot có sẵn trên model:
 
 ```php
 /**
@@ -790,7 +790,7 @@ public function toArray(Request $request): array
 }
 ```
 
-If your relationship is using a [custom intermediate table model](/docs/{{version}}/eloquent-relationships#defining-custom-intermediate-table-models), you may pass an instance of the intermediate table model as the first argument to the `whenPivotLoaded` method:
+Nếu quan hệ của bạn sử dụng [model bảng trung gian tùy chỉnh](/docs/{{version}}/eloquent-relationships#defining-custom-intermediate-table-models), bạn có thể truyền một instance của model bảng trung gian làm đối số đầu tiên cho phương thức `whenPivotLoaded`:
 
 ```php
 'expires_at' => $this->whenPivotLoaded(new Membership, function () {
@@ -798,7 +798,7 @@ If your relationship is using a [custom intermediate table model](/docs/{{versio
 }),
 ```
 
-If your intermediate table is using an accessor other than `pivot`, you may use the `whenPivotLoadedAs` method:
+Nếu bảng trung gian sử dụng accessor khác `pivot`, bạn có thể dùng phương thức `whenPivotLoadedAs`:
 
 ```php
 /**
@@ -819,9 +819,9 @@ public function toArray(Request $request): array
 ```
 
 <a name="adding-meta-data"></a>
-### Adding Meta Data
+### Thêm Metadata
 
-Some JSON API standards require the addition of meta data to your resource and resource collections responses. This often includes things like `links` to the resource or related resources, or meta data about the resource itself. If you need to return additional meta data about a resource, include it in your `toArray` method. For example, you might include `links` information when transforming a resource collection:
+Một số tiêu chuẩn JSON API yêu cầu bổ sung metadata vào response của resource và resource collection. Thông tin này thường bao gồm `links` trỏ đến resource hoặc các resource liên quan, hoặc metadata về chính resource đó. Nếu cần trả về metadata bổ sung cho resource, hãy đưa dữ liệu đó vào phương thức `toArray`. Ví dụ, bạn có thể thêm thông tin `links` khi chuyển đổi một resource collection:
 
 ```php
 /**
@@ -840,12 +840,12 @@ public function toArray(Request $request): array
 }
 ```
 
-When returning additional meta data from your resources, you never have to worry about accidentally overriding the `links` or `meta` keys that are automatically added by Laravel when returning paginated responses. Any additional `links` you define will be merged with the links provided by the paginator.
+Khi trả về metadata bổ sung từ resource, bạn không cần lo việc vô tình ghi đè các key `links` hoặc `meta` mà Laravel tự động thêm vào response có phân trang. Mọi `links` bổ sung do bạn định nghĩa sẽ được hợp nhất với các link do paginator cung cấp.
 
 <a name="top-level-meta-data"></a>
-#### Top Level Meta Data
+#### Metadata cấp cao nhất
 
-Sometimes you may wish to only include certain meta data with a resource response if the resource is the outermost resource being returned. Typically, this includes meta information about the response as a whole. To define this meta data, add a `with` method to your resource class. This method should return an array of meta data to be included with the resource response only when the resource is the outermost resource being transformed:
+Đôi khi bạn chỉ muốn đưa một số metadata vào resource response khi resource đó là resource ngoài cùng được trả về. Thông thường, đây là metadata mô tả toàn bộ response. Để định nghĩa metadata này, hãy thêm phương thức `with` vào resource class. Phương thức này phải trả về một mảng metadata và dữ liệu chỉ được thêm vào resource response khi resource đang được chuyển đổi là resource ngoài cùng:
 
 ```php
 <?php
@@ -883,9 +883,9 @@ class UserCollection extends ResourceCollection
 ```
 
 <a name="adding-meta-data-when-constructing-resources"></a>
-#### Adding Meta Data When Constructing Resources
+#### Thêm Metadata khi khởi tạo Resource
 
-You may also add top-level data when constructing resource instances in your route or controller. The `additional` method, which is available on all resources, accepts an array of data that should be added to the resource response:
+Bạn cũng có thể thêm dữ liệu cấp cao nhất khi khởi tạo resource instance trong route hoặc controller. Phương thức `additional`, có trên tất cả resource, nhận một mảng dữ liệu cần được thêm vào resource response:
 
 ```php
 return User::all()
@@ -897,23 +897,23 @@ return User::all()
 ```
 
 <a name="jsonapi-resources"></a>
-## JSON:API Resources
+## JSON:API Resource
 
-Laravel ships with `JsonApiResource`, a resource class that produces responses compliant with the [JSON:API specification](https://jsonapi.org/). It extends the standard `JsonResource` class and automatically handles resource object structure, relationships, sparse fieldsets, includes, lazy attribute evaluation, and sets the `Content-Type` header to `application/vnd.api+json`.
+Laravel cung cấp `JsonApiResource`, một resource class tạo response tuân thủ [đặc tả JSON:API](https://jsonapi.org/). Class này kế thừa `JsonResource` tiêu chuẩn và tự động xử lý cấu trúc resource object, relationship, sparse fieldset, include, việc đánh giá attribute theo cơ chế lazy, đồng thời đặt header `Content-Type` thành `application/vnd.api+json`.
 
 > [!NOTE]
-> Laravel's JSON:API resources handle the serialization of your responses. If you also need to parse incoming JSON:API query parameters such as filters and sorts, [Spatie's Laravel Query Builder](https://spatie.be/docs/laravel-query-builder) is a great companion package.
+> JSON:API resource của Laravel đảm nhiệm việc serialize response. Nếu bạn cũng cần phân tích các query parameter JSON:API gửi đến, chẳng hạn filter và sort, [Laravel Query Builder của Spatie](https://spatie.be/docs/laravel-query-builder) là một package bổ trợ phù hợp.
 
 <a name="generating-jsonapi-resources"></a>
-### Generating JSON:API Resources
+### Tạo JSON:API Resource
 
-To generate a JSON:API resource, use the `make:resource` Artisan command with the `--json-api` flag:
+Để tạo JSON:API resource, hãy dùng lệnh Artisan `make:resource` với flag `--json-api`:
 
 ```shell
 php artisan make:resource PostResource --json-api
 ```
 
-The generated class will extend `Illuminate\Http\Resources\JsonApi\JsonApiResource` and include `$attributes` and `$relationships` properties for you to define:
+Class được tạo sẽ kế thừa `Illuminate\Http\Resources\JsonApi\JsonApiResource` và có sẵn các property `$attributes` và `$relationships` để bạn định nghĩa:
 
 ```php
 <?php
@@ -941,7 +941,7 @@ class PostResource extends JsonApiResource
 }
 ```
 
-JSON:API resources may be returned from routes and controllers just like standard resources:
+JSON:API resource có thể được trả về từ route và controller giống như resource tiêu chuẩn:
 
 ```php
 use App\Http\Resources\PostResource;
@@ -952,7 +952,7 @@ Route::get('/api/posts/{post}', function (Post $post) {
 });
 ```
 
-Or, for convenience, you may use the model's `toResource` method:
+Hoặc, để thuận tiện, bạn có thể dùng phương thức `toResource` của model:
 
 ```php
 Route::get('/api/posts/{post}', function (Post $post) {
@@ -960,7 +960,7 @@ Route::get('/api/posts/{post}', function (Post $post) {
 });
 ```
 
-This will produce a JSON:API compliant response:
+Cách này sẽ tạo response tuân thủ JSON:API:
 
 ```json
 {
@@ -975,7 +975,7 @@ This will produce a JSON:API compliant response:
 }
 ```
 
-To return a collection of JSON:API resources, use the `collection` method or the `toResourceCollection` convenience method:
+Để trả về một collection JSON:API resource, hãy dùng phương thức `collection` hoặc phương thức tiện ích `toResourceCollection`:
 
 ```php
 return PostResource::collection(Post::all());
@@ -984,11 +984,11 @@ return Post::all()->toResourceCollection();
 ```
 
 <a name="defining-jsonapi-attributes"></a>
-### Defining Attributes
+### Định nghĩa Attribute
 
-There are two ways to define which attributes are included in your JSON:API resource.
+Có hai cách để định nghĩa những attribute nào được đưa vào JSON:API resource.
 
-The simplest approach is to define an `$attributes` property on your resource. You may list attribute names as values, which will be read directly from the underlying model:
+Cách đơn giản nhất là định nghĩa property `$attributes` trên resource. Bạn có thể liệt kê tên các attribute dưới dạng value; Laravel sẽ đọc trực tiếp chúng từ model bên dưới:
 
 ```php
 public $attributes = [
@@ -998,9 +998,9 @@ public $attributes = [
 ];
 ```
 
-If an attribute is expensive to calculate, you may return it from `toAttributes` as a closure so it is only evaluated when the attribute is actually needed in the response.
+Nếu một attribute tốn nhiều tài nguyên để tính toán, bạn có thể trả về attribute đó từ `toAttributes` dưới dạng closure để nó chỉ được đánh giá khi thực sự cần xuất hiện trong response.
 
-Or, for full control over the resource's attributes, you may override the `toAttributes` method on the resource:
+Hoặc, nếu cần toàn quyền kiểm soát các attribute của resource, bạn có thể ghi đè phương thức `toAttributes` trên resource:
 
 ```php
 /**
@@ -1021,13 +1021,13 @@ public function toAttributes(Request $request): array
 ```
 
 <a name="defining-jsonapi-relationships"></a>
-### Defining Relationships
+### Định nghĩa Relationship
 
-JSON:API resources support defining relationships that follow the JSON:API specification. Relationships are only serialized when requested by the client via the `include` query parameter.
+JSON:API resource hỗ trợ định nghĩa relationship theo đặc tả JSON:API. Relationship chỉ được serialize khi client yêu cầu thông qua query parameter `include`.
 
-#### The `$relationships` Property
+#### Property `$relationships`
 
-You may define your resource's includable relationships via the `$relationships` property on your resource:
+Bạn có thể định nghĩa các relationship được phép include thông qua property `$relationships` trên resource:
 
 ```php
 public $relationships = [
@@ -1036,7 +1036,7 @@ public $relationships = [
 ];
 ```
 
-When listing a relationship name as a value, Laravel will resolve the corresponding Eloquent relationship and automatically discover the appropriate resource class. If you need to specify the resource class explicitly, you may define the relationship as a key / class pair:
+Khi liệt kê tên relationship dưới dạng value, Laravel sẽ resolve Eloquent relationship tương ứng và tự động tìm resource class phù hợp. Nếu cần chỉ định resource class một cách tường minh, bạn có thể định nghĩa relationship dưới dạng cặp key / class:
 
 ```php
 use App\Http\Resources\UserResource;
@@ -1047,7 +1047,7 @@ public $relationships = [
 ];
 ```
 
-Alternatively, you may override the `toRelationships` method on the resource:
+Ngoài ra, bạn có thể ghi đè phương thức `toRelationships` trên resource:
 
 ```php
 /**
@@ -1066,17 +1066,17 @@ public function toRelationships(Request $request): array
 }
 ```
 
-Using closures gives you more control over the relationship payload, while still only resolving the relationship when the client requests it.
+Sử dụng closure giúp bạn kiểm soát relationship payload chi tiết hơn, trong khi relationship vẫn chỉ được resolve khi client yêu cầu.
 
-#### Including Relationships
+#### Include Relationship
 
-Clients may request related resources using the `include` query parameter:
+Client có thể yêu cầu các resource liên quan bằng query parameter `include`:
 
 ```
 GET /api/posts/1?include=author,comments
 ```
 
-This produces a response with resource identifier objects in the `relationships` key and full resource objects in the top-level `included` array:
+Response tạo ra sẽ chứa các resource identifier object trong key `relationships` và các resource object đầy đủ trong mảng `included` ở cấp cao nhất:
 
 ```json
 {
@@ -1122,16 +1122,16 @@ This produces a response with resource identifier objects in the `relationships`
 }
 ```
 
-Nested relationships may be included using dot notation:
+Có thể include relationship lồng nhau bằng dot notation:
 
 ```
 GET /api/posts/1?include=comments.author
 ```
 
 <a name="jsonapi-relationship-depth"></a>
-#### Relationship Depth
+#### Độ sâu Relationship
 
-By default, nested relationship includes are limited to a maximum depth. You may customize this limit using the `maxRelationshipDepth` method, typically in one of you application's service provider:
+Theo mặc định, việc include relationship lồng nhau bị giới hạn ở một độ sâu tối đa. Bạn có thể tùy chỉnh giới hạn này bằng phương thức `maxRelationshipDepth`, thường trong một service provider của ứng dụng:
 
 ```php
 use Illuminate\Http\Resources\JsonApi\JsonApiResource;
@@ -1140,11 +1140,11 @@ JsonApiResource::maxRelationshipDepth(3);
 ```
 
 <a name="jsonapi-resource-type-and-id"></a>
-### Resource Type and ID
+### Resource Type và ID
 
-By default, the resource's `type` is derived from the resource class name. For example, `PostResource` produces the type `posts` and `BlogPostResource` produces `blog-posts`. The resource's `id` is resolved from the model's primary key.
+Theo mặc định, `type` của resource được suy ra từ tên resource class. Ví dụ, `PostResource` tạo type `posts`, còn `BlogPostResource` tạo `blog-posts`. `id` của resource được resolve từ primary key của model.
 
-If you need to customize these values, you may override the `toType` and `toId` methods on your resource:
+Nếu cần tùy chỉnh các giá trị này, bạn có thể ghi đè các phương thức `toType` và `toId` trên resource:
 
 ```php
 /**
@@ -1164,23 +1164,23 @@ public function toId(Request $request): string
 }
 ```
 
-This is particularly useful when a resource's type should differ from its class name, such as when an `AuthorResource` wraps a `User` model and should output the type `authors`.
+Điều này đặc biệt hữu ích khi type của resource cần khác với tên class, chẳng hạn `AuthorResource` bao bọc model `User` nhưng cần xuất type `authors`.
 
 <a name="jsonapi-sparse-fieldsets-and-includes"></a>
-### Sparse Fieldsets and Includes
+### Sparse Fieldset và Include
 
-JSON:API resources support [sparse fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets), allowing clients to request only specific attributes for each resource type using the `fields` query parameter:
+JSON:API resource hỗ trợ [sparse fieldset](https://jsonapi.org/format/#fetching-sparse-fieldsets), cho phép client chỉ yêu cầu những attribute cụ thể cho từng resource type thông qua query parameter `fields`:
 
 ```
 GET /api/posts?fields[posts]=title,created_at&fields[users]=name
 ```
 
-This will only include the `title` and `created_at` attributes for `posts` resources, and the `name` attribute for `users` resources.
+Yêu cầu này chỉ đưa các attribute `title` và `created_at` vào resource `posts`, đồng thời chỉ đưa attribute `name` vào resource `users`.
 
 <a name="jsonapi-ignoring-query-string"></a>
-#### Ignoring the Query String
+#### Bỏ qua Query String
 
-If you would like to disable sparse fieldset filtering for a given resource response, you may call the `ignoreFieldsAndIncludesInQueryString` method:
+Nếu muốn tắt việc lọc sparse fieldset cho một resource response cụ thể, bạn có thể gọi phương thức `ignoreFieldsAndIncludesInQueryString`:
 
 ```php
 return $post->toResource()
@@ -1188,9 +1188,9 @@ return $post->toResource()
 ```
 
 <a name="jsonapi-including-previously-loaded-relationships"></a>
-#### Including Previously Loaded Relationships
+#### Include các Relationship đã được load trước đó
 
-By default, relationships are only included in the response when requested via the `include` query parameter. If you would like to include all previously eager-loaded relationships regardless of the query string, you may call the `includePreviouslyLoadedRelationships` method:
+Theo mặc định, relationship chỉ được đưa vào response khi được yêu cầu qua query parameter `include`. Nếu muốn include tất cả relationship đã eager load trước đó bất kể query string, bạn có thể gọi phương thức `includePreviouslyLoadedRelationships`:
 
 ```php
 return $post->load('author', 'comments')
@@ -1199,9 +1199,9 @@ return $post->load('author', 'comments')
 ```
 
 <a name="jsonapi-links-and-meta"></a>
-### Links and Meta
+### Link và Metadata
 
-You may add links and meta information to your JSON:API resource objects by overriding the `toLinks` and `toMeta` methods on the resource:
+Bạn có thể thêm link và metadata vào JSON:API resource object bằng cách ghi đè các phương thức `toLinks` và `toMeta` trên resource:
 
 ```php
 /**
@@ -1225,7 +1225,7 @@ public function toMeta(Request $request): array
 }
 ```
 
-This will add `links` and `meta` keys to the resource object in the response:
+Cách này sẽ thêm các key `links` và `meta` vào resource object trong response:
 
 ```json
 {
@@ -1246,9 +1246,9 @@ This will add `links` and `meta` keys to the resource object in the response:
 ```
 
 <a name="resource-responses"></a>
-## Resource Responses
+## Resource Response
 
-As you have already read, resources may be returned directly from routes and controllers:
+Như đã trình bày, resource có thể được trả về trực tiếp từ route và controller:
 
 ```php
 use App\Models\User;
@@ -1258,7 +1258,7 @@ Route::get('/user/{id}', function (string $id) {
 });
 ```
 
-However, sometimes you may need to customize the outgoing HTTP response before it is sent to the client. There are two ways to accomplish this. First, you may chain the `response` method onto the resource. This method will return an `Illuminate\Http\JsonResponse` instance, giving you full control over the response's headers:
+Tuy nhiên, đôi khi bạn cần tùy chỉnh HTTP response trước khi gửi đến client. Có hai cách để thực hiện. Cách thứ nhất là gọi nối tiếp phương thức `response` trên resource. Phương thức này trả về một instance `Illuminate\Http\JsonResponse`, cho phép bạn kiểm soát hoàn toàn các header của response:
 
 ```php
 use App\Http\Resources\UserResource;
@@ -1272,7 +1272,7 @@ Route::get('/user', function () {
 });
 ```
 
-Alternatively, you may define a `withResponse` method within the resource itself. This method will be called when the resource is returned as the outermost resource in a response:
+Ngoài ra, bạn có thể định nghĩa phương thức `withResponse` ngay trong resource. Phương thức này sẽ được gọi khi resource được trả về với vai trò resource ngoài cùng của response:
 
 ```php
 <?php
@@ -1306,6 +1306,8 @@ class UserResource extends JsonResource
     }
 }
 ```
+
+---
 
 ## Tài liệu chính thức
 

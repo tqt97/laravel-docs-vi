@@ -1,105 +1,105 @@
-# Upgrade Guide
+# Hướng dẫn nâng cấp
 
-- [Upgrading To 13.0 From 12.x](#upgrade-13.0)
-    - [Upgrading Using AI](#upgrading-using-ai)
+- [Nâng cấp từ 12.x lên 13.0](#upgrade-13.0)
+    - [Nâng cấp bằng AI](#upgrading-using-ai)
 
 <a name="high-impact-changes"></a>
-## High Impact Changes
+## Thay đổi có mức ảnh hưởng cao
 
 <div class="content-list" markdown="1">
 
-- [Updating Dependencies](#updating-dependencies)
-- [Updating the Laravel Installer](#updating-the-laravel-installer)
-- [Request Forgery Protection](#request-forgery-protection)
+- [Cập nhật dependency](#updating-dependencies)
+- [Cập nhật Laravel Installer](#updating-the-laravel-installer)
+- [Bảo vệ chống request giả mạo](#request-forgery-protection)
 
 </div>
 
 <a name="medium-impact-changes"></a>
-## Medium Impact Changes
+## Thay đổi có mức ảnh hưởng trung bình
 
 <div class="content-list" markdown="1">
 
-- [Cache `serializable_classes` Configuration](#cache-serializable_classes-configuration)
-- [Database `upsert` With MySQL or MariaDB](#database-upsert-mariadb-mysql)
+- [Cấu hình cache `serializable_classes`](#cache-serializable_classes-configuration)
+- [`upsert` database với MySQL hoặc MariaDB](#database-upsert-mariadb-mysql)
 
 </div>
 
 <a name="low-impact-changes"></a>
-## Low Impact Changes
+## Thay đổi có mức ảnh hưởng thấp
 
 <div class="content-list" markdown="1">
 
-- [Cache Prefixes and Session Cookie Names](#cache-prefixes-and-session-cookie-names)
-- [Collection Model Serialization Restores Eager-Loaded Relations](#collection-model-serialization-restores-eager-loaded-relations)
-- [`Container::call` and Nullable Class Defaults](#containercall-and-nullable-class-defaults)
-- [Domain Route Registration Precedence](#domain-route-registration-precedence)
-- [`JobAttempted` Event Exception Payload](#jobattempted-event-exception-payload)
-- [Manager `extend` Callback Binding](#manager-extend-callback-binding)
-- [MySQL `DELETE` Queries With `JOIN`, `ORDER BY`, and `LIMIT`](#mysql-delete-queries-with-join-order-by-and-limit)
-- [Pagination Bootstrap View Names](#pagination-bootstrap-view-names)
-- [Polymorphic Pivot Table Name Generation](#polymorphic-pivot-table-name-generation)
-- [`QueueBusy` Event Property Rename](#queuebusy-event-property-rename)
-- [Session `serialization` Configuration](#session-serialization-configuration)
-- [`Str` Factories Reset Between Tests](#str-factories-reset-between-tests)
+- [Cache prefix và tên session cookie](#cache-prefixes-and-session-cookie-names)
+- [Serialize collection model khôi phục eager-loaded relation](#collection-model-serialization-restores-eager-loaded-relations)
+- [`Container::call` và giá trị mặc định nullable class](#containercall-and-nullable-class-defaults)
+- [Độ ưu tiên khi đăng ký domain route](#domain-route-registration-precedence)
+- [Exception payload của event `JobAttempted`](#jobattempted-event-exception-payload)
+- [Binding callback `extend` của Manager](#manager-extend-callback-binding)
+- [Query MySQL `DELETE` với `JOIN`, `ORDER BY` và `LIMIT`](#mysql-delete-queries-with-join-order-by-and-limit)
+- [Tên view Bootstrap của pagination](#pagination-bootstrap-view-names)
+- [Sinh tên polymorphic pivot table](#polymorphic-pivot-table-name-generation)
+- [Đổi tên property của event `QueueBusy`](#queuebusy-event-property-rename)
+- [Cấu hình session `serialization`](#session-serialization-configuration)
+- [Reset `Str` factory giữa các test](#str-factories-reset-between-tests)
 
 </div>
 
 <a name="upgrade-13.0"></a>
-## Upgrading To 13.0 From 12.x
+## Nâng cấp từ 12.x lên 13.0
 
-#### Estimated Upgrade Time: 10 Minutes
+#### Thời gian nâng cấp ước tính: 10 phút
 
 > [!NOTE]
-> We attempt to document every possible breaking change. Since some of these breaking changes are in obscure parts of the framework only a portion of these changes may actually affect your application. To save time, you may use [Shift](https://laravelshift.com). Shift is a community-maintained service that automates Laravel upgrades.
+> Laravel cố gắng ghi lại mọi breaking change có thể xảy ra. Tuy nhiên, vì một số thay đổi nằm ở các phần ít được sử dụng của framework, chỉ một phần trong số này có thể ảnh hưởng tới ứng dụng của bạn. Để tiết kiệm thời gian, bạn có thể dùng [Shift](https://laravelshift.com), một dịch vụ do cộng đồng duy trì để tự động hóa việc nâng cấp Laravel.
 
 <a name="upgrading-using-ai"></a>
-### Upgrading Using AI
+### Nâng cấp bằng AI
 
-You can automate your upgrade using [Laravel Boost](https://github.com/laravel/boost). Boost is a first-party MCP server that provides your AI assistant with guided upgrade prompts — once installed in any Laravel 12 application, use the `/upgrade-laravel-v13` slash command in Claude Code, Cursor, OpenCode, Gemini, or VS Code to begin the upgrade to Laravel 13. This command requires Laravel Boost `^2.0`.
+Bạn có thể tự động hóa quá trình nâng cấp bằng [Laravel Boost](https://github.com/laravel/boost). Boost là MCP server first-party cung cấp các prompt nâng cấp có hướng dẫn cho AI assistant. Sau khi cài vào ứng dụng Laravel 12, hãy dùng slash command `/upgrade-laravel-v13` trong Claude Code, Cursor, OpenCode, Gemini hoặc VS Code để bắt đầu nâng cấp lên Laravel 13. Command này yêu cầu Laravel Boost `^2.0`.
 
 <a name="updating-dependencies"></a>
-### Updating Dependencies
+### Cập nhật dependency
 
-**Likelihood Of Impact: High**
+**Khả năng ảnh hưởng: Cao**
 
-You should update the following dependencies in your application's `composer.json` file:
+Bạn nên cập nhật các dependency sau trong file `composer.json` của ứng dụng:
 
 <div class="content-list" markdown="1">
 
-- `laravel/framework` to `^13.0`
-- `laravel/boost` to `^2.0`
-- `laravel/tinker` to `^3.0`
-- `phpunit/phpunit` to `^12.0`
-- `pestphp/pest` to `^4.0`
+- `laravel/framework` lên `^13.0`
+- `laravel/boost` lên `^2.0`
+- `laravel/tinker` lên `^3.0`
+- `phpunit/phpunit` lên `^12.0`
+- `pestphp/pest` lên `^4.0`
 
 </div>
 
 <a name="updating-the-laravel-installer"></a>
-### Updating the Laravel Installer
+### Cập nhật Laravel Installer
 
-If you are using the Laravel installer CLI tool to create new Laravel applications, you should update your installer installation for Laravel 13.x compatibility.
+Nếu dùng Laravel installer CLI để tạo ứng dụng Laravel mới, bạn nên cập nhật installer để tương thích với Laravel 13.x.
 
-If you installed the Laravel installer via `composer global require`, you may update the installer using `composer global update`:
+Nếu đã cài Laravel installer qua `composer global require`, bạn có thể cập nhật bằng `composer global update`:
 
 ```shell
 composer global update laravel/installer
 ```
 
-Or, if you are using [Laravel Herd's](https://herd.laravel.com) bundled copy of the Laravel installer, you should update your Herd installation to the latest release.
+Hoặc, nếu dùng bản Laravel installer đi kèm [Laravel Herd](https://herd.laravel.com), hãy cập nhật Herd lên release mới nhất.
 
 <a name="cache"></a>
 ### Cache
 
 <a name="cache-prefixes-and-session-cookie-names"></a>
-#### Cache Prefixes and Session Cookie Names
+#### Cache prefix và tên session cookie
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-Laravel's default cache and Redis key prefixes now use hyphenated suffixes.
+Cache prefix và Redis key prefix mặc định của Laravel giờ sử dụng hậu tố có dấu gạch nối.
 
-In most applications, this change will not apply because application-level configuration files already define these values. This primarily affects applications that rely on framework-level fallback configuration when corresponding application config values are not present.
+Với phần lớn ứng dụng, thay đổi này không áp dụng vì file cấu hình cấp ứng dụng đã định nghĩa các giá trị tương ứng. Nó chủ yếu ảnh hưởng ứng dụng dựa vào fallback configuration ở cấp framework khi config của ứng dụng không có giá trị tương ứng.
 
-If your application relies on these generated defaults, cache keys and session cookie names may change after upgrading:
+Nếu ứng dụng dựa vào các giá trị mặc định được sinh này, cache key và tên session cookie có thể thay đổi sau khi nâng cấp:
 
 ```php
 // Laravel <= 12.x
@@ -113,14 +113,14 @@ Str::slug((string) env('APP_NAME', 'laravel')).'-database-';
 Str::slug((string) env('APP_NAME', 'laravel')).'-session';
 ```
 
-To retain previous behavior, explicitly configure `CACHE_PREFIX`, `REDIS_PREFIX`, and `SESSION_COOKIE` in your environment.
+Để giữ hành vi trước đây, hãy cấu hình rõ `CACHE_PREFIX`, `REDIS_PREFIX` và `SESSION_COOKIE` trong environment.
 
 <a name="store-and-repository-contracts-touch"></a>
-#### `Store` and `Repository` Contracts: `touch`
+#### Contract `Store` và `Repository`: `touch`
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-The cache contracts now include a `touch` method for extending item TTLs. If you maintain custom cache store implementations, you should add this method:
+Các cache contract giờ có thêm method `touch` để kéo dài TTL của item. Nếu duy trì custom cache store implementation, bạn nên thêm method này:
 
 ```php
 // Illuminate\Contracts\Cache\Store
@@ -128,11 +128,11 @@ public function touch($key, $seconds);
 ```
 
 <a name="cache-serializable_classes-configuration"></a>
-#### Cache `serializable_classes` Configuration
+#### Cấu hình cache `serializable_classes`
 
-**Likelihood Of Impact: Medium**
+**Khả năng ảnh hưởng: Trung bình**
 
-The default application `cache` configuration now includes a `serializable_classes` option set to `false`. This hardens cache unserialization behavior to help prevent PHP deserialization gadget chain attacks if your application's `APP_KEY` is leaked. If your application intentionally stores PHP objects in cache, you should explicitly list the classes that may be unserialized:
+Cấu hình `cache` mặc định của ứng dụng giờ có option `serializable_classes` đặt thành `false`. Thay đổi này tăng cường bảo vệ quá trình cache unserialization, giúp ngăn PHP deserialization gadget chain attack nếu `APP_KEY` của ứng dụng bị lộ. Nếu ứng dụng chủ động lưu PHP object trong cache, bạn nên liệt kê rõ các class được phép unserialize:
 
 ```php
 'serializable_classes' => [
@@ -141,17 +141,17 @@ The default application `cache` configuration now includes a `serializable_class
 ],
 ```
 
-If your application previously relied on unserializing arbitrary cached objects, you will need to migrate that usage to explicit class allow-lists or to non-object cache payloads (such as arrays).
+Nếu trước đây ứng dụng dựa vào việc unserialize tùy ý object trong cache, bạn cần chuyển sang allow-list class rõ ràng hoặc dùng cache payload không phải object, chẳng hạn array.
 
 <a name="container"></a>
 ### Container
 
 <a name="containercall-and-nullable-class-defaults"></a>
-#### `Container::call` and Nullable Class Defaults
+#### `Container::call` và giá trị mặc định nullable class
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-`Container::call` now respects nullable class parameter defaults when no binding exists, matching constructor injection behavior introduced in Laravel 12:
+`Container::call` giờ tôn trọng giá trị mặc định của nullable class parameter khi không có binding, đồng nhất với hành vi constructor injection được đưa vào Laravel 12:
 
 ```php
 $container->call(function (?Carbon $date = null) {
@@ -162,70 +162,70 @@ $container->call(function (?Carbon $date = null) {
 // Laravel >= 13.x: null
 ```
 
-If your method-call injection logic depended on the previous behavior, you may need to update it.
+Nếu logic method-call injection của bạn phụ thuộc vào hành vi cũ, bạn có thể cần cập nhật.
 
 <a name="contracts"></a>
 ### Contracts
 
 <a name="dispatcher-contract-dispatchafterresponse"></a>
-#### `Dispatcher` Contract: `dispatchAfterResponse`
+#### Contract `Dispatcher`: `dispatchAfterResponse`
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-The `Illuminate\Contracts\Bus\Dispatcher` contract now includes the `dispatchAfterResponse($command, $handler = null)` method.
+Contract `Illuminate\Contracts\Bus\Dispatcher` giờ có method `dispatchAfterResponse($command, $handler = null)`.
 
-If you maintain a custom dispatcher implementation, add this method to your class.
+Nếu duy trì custom dispatcher implementation, hãy thêm method này vào class.
 
 <a name="responsefactory-contract-eventstream"></a>
-#### `ResponseFactory` Contract: `eventStream`
+#### Contract `ResponseFactory`: `eventStream`
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-The `Illuminate\Contracts\Routing\ResponseFactory` contract now includes an `eventStream` signature.
+Contract `Illuminate\Contracts\Routing\ResponseFactory` giờ có signature `eventStream`.
 
-If you maintain a custom implementation of this contract, you should add this method.
+Nếu duy trì custom implementation của contract này, hãy bổ sung method tương ứng.
 
 <a name="mustverifyemail-contract-markemailasunverified"></a>
-#### `MustVerifyEmail` Contract: `markEmailAsUnverified`
+#### Contract `MustVerifyEmail`: `markEmailAsUnverified`
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-The `Illuminate\Contracts\Auth\MustVerifyEmail` contract now includes `markEmailAsUnverified()`.
+Contract `Illuminate\Contracts\Auth\MustVerifyEmail` giờ có `markEmailAsUnverified()`.
 
-If you provide a custom implementation of this contract, add this method to remain compatible.
+Nếu cung cấp custom implementation của contract này, hãy thêm method để giữ tương thích.
 
 <a name="database"></a>
 ### Database
 
 <a name="database-upsert-mariadb-mysql"></a>
-#### Database `upsert` With MySQL or MariaDB
+#### Database `upsert` với MySQL hoặc MariaDB
 
-**Likelihood Of Impact: Medium**
+**Khả năng ảnh hưởng: Trung bình**
 
-Laravel now validates that the caller provides a non-empty value for `uniqueBy`, and will throw an `InvalidArgumentException` instead of generating invalid SQL.
+Laravel giờ kiểm tra caller có truyền giá trị không rỗng cho `uniqueBy`; nếu rỗng, framework sẽ throw `InvalidArgumentException` thay vì sinh SQL không hợp lệ.
 
-Although the MariaDB and MySQL database drivers ignore the `uniqueBy` value and always use the table's primary and unique indexes to detect existing records, the validation still applies. An `InvalidArgumentException` will be thrown if `uniqueBy` is empty.
+Dù driver MariaDB và MySQL bỏ qua giá trị `uniqueBy` và luôn dùng primary / unique index của table để phát hiện record đã tồn tại, validation này vẫn được áp dụng. `InvalidArgumentException` sẽ được throw nếu `uniqueBy` rỗng.
 
 <a name="mysql-delete-queries-with-join-order-by-and-limit"></a>
-#### MySQL `DELETE` Queries With `JOIN`, `ORDER BY`, and `LIMIT`
+#### Query MySQL `DELETE` với `JOIN`, `ORDER BY` và `LIMIT`
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-Laravel now compiles full `DELETE ... JOIN` queries including `ORDER BY` and `LIMIT` for MySQL grammar.
+Laravel giờ compile đầy đủ query `DELETE ... JOIN`, bao gồm `ORDER BY` và `LIMIT`, cho MySQL grammar.
 
-In previous versions, `ORDER BY` / `LIMIT` clauses could be silently ignored on joined deletes. In Laravel 13, these clauses are included in the generated SQL. As a result, database engines that do not support this syntax (such as standard MySQL / MariaDB variants) may now throw a `QueryException` instead of executing an unbounded delete.
+Ở các phiên bản trước, clause `ORDER BY` / `LIMIT` có thể bị âm thầm bỏ qua với joined delete. Trong Laravel 13, các clause này được đưa vào SQL sinh ra. Do đó, database engine không hỗ trợ cú pháp này, chẳng hạn các biến thể MySQL / MariaDB tiêu chuẩn, có thể throw `QueryException` thay vì thực thi một delete không giới hạn.
 
 <a name="eloquent"></a>
 ### Eloquent
 
 <a name="model-booting-and-nested-instantiation"></a>
-#### Model Booting and Nested Instantiation
+#### Model booting và nested instantiation
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-Creating a new model instance while that model is still booting is now disallowed and throws a `LogicException`.
+Việc tạo model instance mới trong khi chính model đó vẫn đang boot giờ không được phép và sẽ throw `LogicException`.
 
-This affects code that instantiates models from inside model `boot` methods or trait `boot*` methods:
+Thay đổi này ảnh hưởng code instantiate model bên trong method `boot` của model hoặc các method `boot*` của trait:
 
 ```php
 protected static function boot()
@@ -237,52 +237,52 @@ protected static function boot()
 }
 ```
 
-Move this logic outside the boot cycle to avoid nested booting.
+Hãy chuyển logic này ra ngoài boot cycle để tránh nested booting.
 
 <a name="polymorphic-pivot-table-name-generation"></a>
-#### Polymorphic Pivot Table Name Generation
+#### Sinh tên polymorphic pivot table
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-When table names are inferred for polymorphic pivot models using custom pivot model classes, Laravel now generates pluralized names.
+Khi Laravel suy luận tên table cho polymorphic pivot model sử dụng custom pivot model class, framework giờ sinh tên ở dạng số nhiều.
 
-If your application depended on the previous singular inferred names for morph pivot tables and used custom pivot classes, you should explicitly define the table name on your pivot model.
+Nếu ứng dụng phụ thuộc vào tên số ít được suy luận trước đây cho morph pivot table và dùng custom pivot class, hãy định nghĩa rõ tên table trên pivot model.
 
 <a name="collection-model-serialization-restores-eager-loaded-relations"></a>
-#### Collection Model Serialization Restores Eager-Loaded Relations
+#### Serialize collection model khôi phục eager-loaded relation
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-When Eloquent model collections are serialized and restored (such as in queued jobs), eager-loaded relations are now restored for the collection's models.
+Khi Eloquent model collection được serialize và khôi phục, chẳng hạn trong queued job, các eager-loaded relation giờ cũng được khôi phục cho model trong collection.
 
-If your code depended on relations not being present after deserialization, you may need to adjust that logic.
+Nếu code phụ thuộc vào việc relation không tồn tại sau deserialization, bạn có thể cần điều chỉnh logic.
 
 <a name="http-client"></a>
 ### HTTP Client
 
 <a name="http-client-response-throw-and-throwif-signatures"></a>
-#### HTTP Client `Response::throw` and `throwIf` Signatures
+#### Signature `Response::throw` và `throwIf` của HTTP Client
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-The HTTP client response methods now declare their callback parameters in the method signatures:
+Các response method của HTTP client giờ khai báo callback parameter trực tiếp trong method signature:
 
 ```php
 public function throw($callback = null);
 public function throwIf($condition, $callback = null);
 ```
 
-If you override these methods in custom response classes, ensure your method signatures are compatible.
+Nếu override các method này trong custom response class, hãy bảo đảm method signature tương thích.
 
 <a name="notifications"></a>
 ### Notifications
 
 <a name="default-password-reset-subject"></a>
-#### Default Password Reset Subject
+#### Subject mặc định của password reset
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-Laravel's default password reset mail subject has changed:
+Subject email password reset mặc định của Laravel đã thay đổi:
 
 ```text
 // Laravel <= 12.x
@@ -292,26 +292,26 @@ Reset Password Notification
 Reset your password
 ```
 
-If your tests, assertions, or translation overrides depend on the previous default string, update them accordingly.
+Nếu test, assertion hoặc translation override phụ thuộc vào chuỗi mặc định trước đây, hãy cập nhật tương ứng.
 
 <a name="queued-notifications-and-missing-models"></a>
-#### Queued Notifications and Missing Models
+#### Queued notification và model bị thiếu
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-Queued notifications now respect the `#[DeleteWhenMissingModels]` attribute and `$deleteWhenMissingModels` property defined on the notification class.
+Queued notification giờ tôn trọng attribute `#[DeleteWhenMissingModels]` và property `$deleteWhenMissingModels` được định nghĩa trên notification class.
 
-In previous versions, missing models could still cause queued notification jobs to fail in cases where you expected them to be deleted.
+Ở phiên bản trước, model bị thiếu vẫn có thể khiến queued notification job fail trong trường hợp bạn kỳ vọng job sẽ bị xóa.
 
 <a name="queue"></a>
 ### Queue
 
 <a name="jobattempted-event-exception-payload"></a>
-#### `JobAttempted` Event Exception Payload
+#### Exception payload của event `JobAttempted`
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-The `Illuminate\Queue\Events\JobAttempted` event now exposes the exception object (or `null`) via `$exception`, replacing the previous boolean `$exceptionOccurred` property:
+Event `Illuminate\Queue\Events\JobAttempted` giờ expose exception object (hoặc `null`) qua `$exception`, thay cho boolean property `$exceptionOccurred` trước đây:
 
 ```php
 // Laravel <= 12.x
@@ -321,25 +321,23 @@ $event->exceptionOccurred;
 $event->exception;
 ```
 
-If you listen for this event, update your listener code accordingly.
+Nếu listen event này, hãy cập nhật listener tương ứng.
 
 <a name="queuebusy-event-property-rename"></a>
-#### `QueueBusy` Event Property Rename
+#### Đổi tên property của event `QueueBusy`
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-The `Illuminate\Queue\Events\QueueBusy` event property `$connection` has been renamed to `$connectionName` for consistency with other queue events.
+Property `$connection` của event `Illuminate\Queue\Events\QueueBusy` đã được đổi tên thành `$connectionName` để nhất quán với các queue event khác.
 
-If your listeners reference `$connection`, update them to `$connectionName`.
+Nếu listener tham chiếu `$connection`, hãy cập nhật thành `$connectionName`.
 
 <a name="queue-contract-method-additions"></a>
-#### `Queue` Contract Method Additions
+#### Bổ sung method cho contract `Queue`
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-The `Illuminate\Contracts\Queue\Queue` contract now includes queue size inspection methods that were previously only declared in docblocks.
-
-If you maintain custom queue driver implementations of this contract, add implementations for:
+Contract `Illuminate\Contracts\Queue\Queue` giờ có các method kiểm tra kích thước queue mà trước đây chỉ được khai báo trong docblock. Nếu duy trì custom queue driver implementation của contract này, hãy thêm implementation cho:
 
 <div class="content-list" markdown="1">
 
@@ -354,51 +352,51 @@ If you maintain custom queue driver implementations of this contract, add implem
 ### Routing
 
 <a name="domain-route-registration-precedence"></a>
-#### Domain Route Registration Precedence
+#### Độ ưu tiên khi đăng ký domain route
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-Routes with an explicit domain are now prioritized before non-domain routes in route matching.
+Route có domain rõ ràng giờ được ưu tiên trước route không có domain khi matching route.
 
-This allows catch-all subdomain routes to behave consistently even when non-domain routes are registered earlier. If your application relied on previous registration precedence between domain and non-domain routes, review route matching behavior.
+Điều này cho phép catch-all subdomain route hoạt động nhất quán ngay cả khi non-domain route được đăng ký trước. Nếu ứng dụng phụ thuộc vào thứ tự đăng ký trước đây giữa domain và non-domain route, hãy review hành vi route matching.
 
 <a name="session"></a>
 ### Session
 
 <a name="session-serialization-configuration"></a>
-#### Session `serialization` Configuration
+#### Cấu hình session `serialization`
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-To help prevent PHP deserialization gadget chain attacks, the default application skeleton now sets the session `serialization` option to `json` in the `config/session.php` file.
+Để giúp ngăn PHP deserialization gadget chain attack, application skeleton mặc định giờ đặt option session `serialization` thành `json` trong `config/session.php`.
 
-If you are upgrading an existing application and syncing your configuration files with the Laravel 13 skeleton, updating this value from `php` to `json` will invalidate all active user sessions.
+Nếu nâng cấp ứng dụng hiện có và đồng bộ file cấu hình với skeleton Laravel 13, việc đổi giá trị từ `php` sang `json` sẽ làm mất hiệu lực tất cả user session đang hoạt động.
 
-If you wish to seamlessly maintain active sessions during your upgrade, you should ensure this value remains set to `php`. However, if your application does not store PHP objects in the session and you are comfortable requiring your users to re-authenticate, we recommend updating this value to `json` for improved security.
+Nếu muốn duy trì session đang hoạt động một cách liền mạch trong quá trình nâng cấp, hãy giữ giá trị là `php`. Tuy nhiên, nếu ứng dụng không lưu PHP object trong session và bạn chấp nhận yêu cầu người dùng đăng nhập lại, Laravel khuyến nghị đổi sang `json` để tăng bảo mật.
 
 <a name="scheduling"></a>
 ### Scheduling
 
 <a name="withscheduling-registration-timing"></a>
-#### `withScheduling` Registration Timing
+#### Thời điểm đăng ký `withScheduling`
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-Schedules registered via `ApplicationBuilder::withScheduling()` are now deferred until `Schedule` is resolved.
+Schedule đăng ký qua `ApplicationBuilder::withScheduling()` giờ được defer cho tới khi `Schedule` được resolve.
 
-If your application relied on immediate schedule registration timing during bootstrap, you may need to adjust that logic.
+Nếu ứng dụng phụ thuộc vào việc schedule được đăng ký ngay trong bootstrap, bạn có thể cần điều chỉnh logic.
 
 <a name="security"></a>
 ### Security
 
 <a name="request-forgery-protection"></a>
-#### Request Forgery Protection
+#### Bảo vệ chống request giả mạo
 
-**Likelihood Of Impact: High**
+**Khả năng ảnh hưởng: Cao**
 
-Laravel's CSRF middleware has been renamed from `VerifyCsrfToken` to `PreventRequestForgery`, and now includes request-origin verification using the `Sec-Fetch-Site` header.
+CSRF middleware của Laravel đã được đổi tên từ `VerifyCsrfToken` thành `PreventRequestForgery`, đồng thời giờ có thêm kiểm tra origin của request bằng header `Sec-Fetch-Site`.
 
-`VerifyCsrfToken` and `ValidateCsrfToken` remain as deprecated aliases, but direct references should be updated to `PreventRequestForgery`, especially when excluding middleware in tests or route definitions:
+`VerifyCsrfToken` và `ValidateCsrfToken` vẫn tồn tại dưới dạng alias deprecated, nhưng các tham chiếu trực tiếp nên được cập nhật sang `PreventRequestForgery`, đặc biệt khi loại trừ middleware trong test hoặc route definition:
 
 ```php
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -411,51 +409,51 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 ->withoutMiddleware([PreventRequestForgery::class]);
 ```
 
-The middleware configuration API now also provides `preventRequestForgery(...)`.
+API cấu hình middleware giờ cũng cung cấp `preventRequestForgery(...)`.
 
 <a name="support"></a>
 ### Support
 
 <a name="manager-extend-callback-binding"></a>
-#### Manager `extend` Callback Binding
+#### Binding callback `extend` của Manager
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-Custom driver closures registered via manager `extend` methods are now bound to the manager instance.
+Custom driver closure đăng ký qua các method `extend` của manager giờ được bind vào manager instance.
 
-If you previously relied on another bound object (such as a service provider instance) as `$this` inside these callbacks, you should move those values into closure captures using `use (...)`.
+Nếu trước đây bạn dựa vào một bound object khác, chẳng hạn service provider instance, làm `$this` bên trong callback, hãy đưa các giá trị đó vào closure capture bằng `use (...)`.
 
 <a name="str-factories-reset-between-tests"></a>
-#### `Str` Factories Reset Between Tests
+#### Reset `Str` factory giữa các test
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-Laravel now resets custom `Str` factories during test teardown.
+Laravel giờ reset custom `Str` factory trong quá trình test teardown.
 
-If your tests depended on custom UUID / ULID / random string factories persisting between test methods, you should set them in each relevant test or setup hook.
+Nếu test phụ thuộc vào custom UUID / ULID / random string factory tồn tại xuyên qua nhiều test method, hãy thiết lập chúng trong từng test hoặc setup hook tương ứng.
 
 <a name="jsfrom-uses-unescaped-unicode-by-default"></a>
-#### `Js::from` Uses Unescaped Unicode By Default
+#### `Js::from` mặc định dùng Unicode không escape
 
-**Likelihood Of Impact: Very Low**
+**Khả năng ảnh hưởng: Rất thấp**
 
-`Illuminate\Support\Js::from` now uses `JSON_UNESCAPED_UNICODE` by default.
+`Illuminate\Support\Js::from` giờ mặc định dùng `JSON_UNESCAPED_UNICODE`.
 
-If your tests or frontend output comparisons depended on escaped Unicode sequences (for example `\u00e8`), update your expectations.
+Nếu test hoặc frontend output comparison phụ thuộc vào Unicode sequence đã escape, ví dụ `\u00e8`, hãy cập nhật expectation.
 
 <a name="utilities"></a>
 ### Utilities
 
 <a name="symfony-polyfill"></a>
-#### Symfony PHP 8.5 Polyfill and Global Function Conflicts
+#### Symfony PHP 8.5 polyfill và xung đột global function
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-Laravel 13 introduces a dependency on `symfony/polyfill-php85`. On PHP versions below 8.5, this polyfill defines global functions such as `array_first()` and `array_last()` unless they have already been defined earlier during bootstrap.
+Laravel 13 thêm dependency `symfony/polyfill-php85`. Trên PHP thấp hơn 8.5, polyfill này định nghĩa các global function như `array_first()` và `array_last()` nếu chúng chưa được định nghĩa trước đó trong quá trình bootstrap.
 
-These functions may conflict with legacy helper packages like `laravel/helpers` or custom global helpers using the same names. For example, the historical `array_first()` helper accepted a callback to return the first matching element, while the polyfilled version only returns the first element of the array.
+Các function này có thể xung đột với helper package cũ như `laravel/helpers` hoặc custom global helper trùng tên. Ví dụ, helper `array_first()` trước đây nhận callback để trả về phần tử đầu tiên khớp điều kiện, trong khi bản polyfill chỉ trả về phần tử đầu tiên của array.
 
-To avoid conflicts and ensure consistent behavior across PHP versions, you should prefer the `Illuminate\Support\Arr` methods:
+Để tránh xung đột và bảo đảm hành vi nhất quán giữa các phiên bản PHP, hãy ưu tiên các method của `Illuminate\Support\Arr`:
 
 ```php
 use Illuminate\Support\Arr;
@@ -469,11 +467,11 @@ Arr::first($array, function ($value) {
 ### Views
 
 <a name="pagination-bootstrap-view-names"></a>
-#### Pagination Bootstrap View Names
+#### Tên view Bootstrap của pagination
 
-**Likelihood Of Impact: Low**
+**Khả năng ảnh hưởng: Thấp**
 
-The internal pagination view names for Bootstrap 3 defaults are now explicit:
+Tên internal pagination view cho Bootstrap 3 mặc định giờ được chỉ định rõ:
 
 ```nothing
 // Laravel <= 12.x
@@ -485,12 +483,14 @@ pagination::bootstrap-3
 pagination::simple-bootstrap-3
 ```
 
-If your application references the old pagination view names directly, update those references.
+Nếu ứng dụng tham chiếu trực tiếp tên pagination view cũ, hãy cập nhật các tham chiếu đó.
 
 <a name="miscellaneous"></a>
-### Miscellaneous
+### Khác
 
-We also encourage you to view the changes in the `laravel/laravel` [GitHub repository](https://github.com/laravel/laravel). While many of these changes are not required, you may wish to keep these files in sync with your application. Some of these changes will be covered in this upgrade guide, but others, such as changes to configuration files or comments, will not be. You can easily view the changes with the [GitHub comparison tool](https://github.com/laravel/laravel/compare/12.x...13.x) and choose which updates are important to you.
+Laravel cũng khuyến nghị bạn xem các thay đổi trong [repository `laravel/laravel`](https://github.com/laravel/laravel). Nhiều thay đổi không bắt buộc nhưng bạn có thể muốn giữ các file này đồng bộ với ứng dụng. Một số thay đổi được đề cập trong upgrade guide, nhưng các thay đổi khác như file cấu hình hoặc comment sẽ không được ghi lại.
+
+Bạn có thể dễ dàng xem các thay đổi bằng [GitHub comparison tool](https://github.com/laravel/laravel/compare/12.x...13.x) và chọn những update quan trọng với ứng dụng của mình.
 
 ## Tài liệu chính thức
 

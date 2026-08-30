@@ -1,64 +1,64 @@
 # Laravel Scout
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-    - [Queueing](#queueing)
-- [Driver Prerequisites](#driver-prerequisites)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+    - [Đưa vào hàng đợi](#queueing)
+- [Điều kiện tiên quyết của driver](#driver-prerequisites)
     - [Algolia](#algolia)
     - [Meilisearch](#meilisearch)
     - [Typesense](#typesense)
     - [Turbopuffer](#turbopuffer)
-- [Configuration](#configuration)
-    - [Configuring Searchable Data](#configuring-searchable-data)
-- [Database / Collection Engines](#database-and-collection-engines)
+- [Cấu hình](#configuration)
+    - [Cấu hình dữ liệu có thể tìm kiếm](#configuring-searchable-data)
+- [Engine Database / Collection](#database-and-collection-engines)
     - [Database Engine](#database-engine)
     - [Collection Engine](#collection-engine)
-- [Third-Party Engine Configuration](#third-party-engine-configuration)
-    - [Configuring Model Indexes](#configuring-model-indexes)
+- [Cấu hình engine bên thứ ba](#third-party-engine-configuration)
+    - [Cấu hình index của model](#configuring-model-indexes)
     - [Algolia](#algolia-configuration)
     - [Meilisearch](#meilisearch-configuration)
     - [Typesense](#typesense-configuration)
     - [Turbopuffer](#turbopuffer-configuration)
-- [Third-Party Engine Indexing](#indexing)
+- [Lập chỉ mục với engine bên thứ ba](#indexing)
     - [Batch Import](#batch-import)
-    - [Adding Records](#adding-records)
-    - [Updating Records](#updating-records)
-    - [Removing Records](#removing-records)
-    - [Pausing Indexing](#pausing-indexing)
-    - [Conditionally Searchable Model Instances](#conditionally-searchable-model-instances)
-- [Searching](#searching)
-    - [Where Clauses](#where-clauses)
-    - [Semantic Search](#semantic-search)
-    - [Pagination](#pagination)
-    - [Soft Deleting](#soft-deleting)
-    - [Customizing Engine Searches](#customizing-engine-searches)
-- [Custom Engines](#custom-engines)
+    - [Thêm record](#adding-records)
+    - [Cập nhật record](#updating-records)
+    - [Xóa record](#removing-records)
+    - [Tạm dừng lập chỉ mục](#pausing-indexing)
+    - [Model instance có thể tìm kiếm theo điều kiện](#conditionally-searchable-model-instances)
+- [Tìm kiếm](#searching)
+    - [Mệnh đề Where](#where-clauses)
+    - [Tìm kiếm semantic](#semantic-search)
+    - [Phân trang](#pagination)
+    - [Soft delete](#soft-deleting)
+    - [Tùy biến tìm kiếm của engine](#customizing-engine-searches)
+- [Engine tùy chỉnh](#custom-engines)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-[Laravel Scout](https://github.com/laravel/scout) provides a simple, driver-based solution for adding full-text search to your [Eloquent models](/docs/{{version}}/eloquent). Using model observers, Scout will automatically keep your search indexes in sync with your Eloquent records.
+[Laravel Scout](https://github.com/laravel/scout) cung cấp một giải pháp đơn giản dựa trên driver để bổ sung tìm kiếm full-text cho [Eloquent model](/docs/{{version}}/eloquent). Bằng cách sử dụng model observer, Scout sẽ tự động giữ các search index đồng bộ với các bản ghi Eloquent của bạn.
 
-Scout ships with a built-in `database` engine that uses MySQL / PostgreSQL full-text indexes and `LIKE` clauses to search your existing database — no external service required. For most applications, this is all you need. For an overview of all search options available in Laravel, consult the [search documentation](/docs/{{version}}/search).
+Scout đi kèm `database` engine tích hợp sẵn, sử dụng full-text index của MySQL / PostgreSQL và các mệnh đề `LIKE` để tìm kiếm trực tiếp trong database hiện có — không cần dịch vụ bên ngoài. Với phần lớn ứng dụng, đây là tất cả những gì bạn cần. Để xem tổng quan về các lựa chọn tìm kiếm có sẵn trong Laravel, hãy tham khảo [tài liệu search](/docs/{{version}}/search).
 
-Scout also includes drivers for [Algolia](https://www.algolia.com/), [Meilisearch](https://www.meilisearch.com), [Typesense](https://typesense.org), and [Turbopuffer](https://turbopuffer.com) when you need features like typo tolerance, faceted filtering, vector search, or geo-search at massive scale. A "collection" driver is also available for local development, and you are free to write [custom engines](#custom-engines) as well.
+Scout cũng bao gồm các driver cho [Algolia](https://www.algolia.com/), [Meilisearch](https://www.meilisearch.com), [Typesense](https://typesense.org) và [Turbopuffer](https://turbopuffer.com) khi bạn cần các tính năng như chịu lỗi chính tả, lọc theo facet, vector search hoặc geo-search ở quy mô rất lớn. Driver `collection` cũng có sẵn cho phát triển local, và bạn cũng có thể tự viết [custom engine](#custom-engines).
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
-First, install Scout via the Composer package manager:
+Trước tiên, hãy cài đặt Scout thông qua Composer:
 
 ```shell
 composer require laravel/scout
 ```
 
-After installing Scout, you should publish the Scout configuration file using the `vendor:publish` Artisan command. This command will publish the `scout.php` configuration file to your application's `config` directory:
+Sau khi cài đặt Scout, bạn nên publish file cấu hình Scout bằng lệnh Artisan `vendor:publish`. Lệnh này sẽ publish file cấu hình `scout.php` vào thư mục `config` của ứng dụng:
 
 ```shell
 php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 ```
 
-Finally, add the `Laravel\Scout\Searchable` trait to the model you would like to make searchable. This trait will register a model observer that will automatically keep the model in sync with your search driver:
+Cuối cùng, thêm trait `Laravel\Scout\Searchable` vào model mà bạn muốn có khả năng tìm kiếm. Trait này sẽ đăng ký một model observer để tự động giữ model đồng bộ với search driver:
 
 ```php
 <?php
@@ -75,19 +75,19 @@ class Post extends Model
 ```
 
 <a name="queueing"></a>
-### Queueing
+### Đưa vào hàng đợi
 
-When using an engine that is not the `database` or `collection` engine, you should strongly consider configuring a [queue driver](/docs/{{version}}/queues) before using the library. Running a queue worker will allow Scout to queue all operations that sync your model information to your search indexes, providing much better response times for your application's web interface.
+Khi sử dụng engine không phải `database` hoặc `collection`, bạn nên cân nhắc nghiêm túc việc cấu hình một [queue driver](/docs/{{version}}/queues) trước khi dùng thư viện. Chạy queue worker cho phép Scout đưa vào hàng đợi mọi thao tác đồng bộ thông tin model với search index, nhờ đó cải thiện đáng kể thời gian phản hồi của giao diện web.
 
-Once you have configured a queue driver, set the value of the `queue` option in your `config/scout.php` configuration file to `true`:
+Sau khi cấu hình queue driver, hãy đặt giá trị tùy chọn `queue` trong file `config/scout.php` thành `true`:
 
 ```php
 'queue' => true,
 ```
 
-Even when the `queue` option is set to `false`, it's important to remember that some Scout drivers like Algolia and Meilisearch always index records asynchronously. In other words, even though the index operation has completed within your Laravel application, the search engine itself may not reflect the new and updated records immediately.
+Ngay cả khi tùy chọn `queue` được đặt thành `false`, cần nhớ rằng một số Scout driver như Algolia và Meilisearch luôn index bản ghi theo cách bất đồng bộ. Nói cách khác, dù thao tác index đã hoàn tất bên trong ứng dụng Laravel, search engine có thể chưa phản ánh ngay các bản ghi mới hoặc vừa được cập nhật.
 
-To specify the connection and queue that your Scout jobs utilize, you may define the `queue` configuration option as an array:
+Để chỉ định connection và queue mà các Scout job sử dụng, bạn có thể định nghĩa tùy chọn cấu hình `queue` dưới dạng mảng:
 
 ```php
 'queue' => [
@@ -96,16 +96,16 @@ To specify the connection and queue that your Scout jobs utilize, you may define
 ],
 ```
 
-Of course, if you customize the connection and queue that Scout jobs utilize, you should run a queue worker to process jobs on that connection and queue:
+Dĩ nhiên, nếu tùy chỉnh connection và queue mà Scout job sử dụng, bạn nên chạy queue worker để xử lý job trên connection và queue đó:
 
 ```shell
 php artisan queue:work redis --queue=scout
 ```
 
 <a name="unique-jobs"></a>
-#### Unique Jobs
+#### Job duy nhất
 
-In write-heavy applications, you may wish to prevent Scout from queueing duplicate jobs for the same model records. You may opt into unique indexing jobs by registering the `MakeSearchableUniquely` and `RemoveFromSearchUniquely` job classes, typically within the `boot` method of a service provider:
+Trong các ứng dụng có lượng ghi lớn, bạn có thể muốn ngăn Scout đưa các job trùng lặp cho cùng bản ghi model vào queue. Bạn có thể bật cơ chế indexing job duy nhất bằng cách đăng ký các class job `MakeSearchableUniquely` và `RemoveFromSearchUniquely`, thường trong phương thức `boot` của service provider:
 
 ```php
 use Laravel\Scout\Jobs\MakeSearchableUniquely;
@@ -116,15 +116,15 @@ Scout::makeSearchableUsing(MakeSearchableUniquely::class);
 Scout::removeFromSearchUsing(RemoveFromSearchUniquely::class);
 ```
 
-These jobs use Laravel's [unique job locks](/docs/{{version}}/queues#unique-jobs) to avoid dispatching duplicate queued indexing operations for the same searchable model records while a matching job is already queued.
+Các job này sử dụng [unique job lock](/docs/{{version}}/queues#unique-jobs) của Laravel để tránh dispatch các thao tác indexing trùng lặp cho cùng bản ghi model có thể tìm kiếm trong khi một job tương ứng đã nằm trong queue.
 
 <a name="driver-prerequisites"></a>
-## Driver Prerequisites
+## Điều kiện tiên quyết của driver
 
 <a name="algolia"></a>
 ### Algolia
 
-When using the Algolia driver, you should configure your Algolia `id` and `secret` credentials in your `config/scout.php` configuration file. Once your credentials have been configured, you will also need to install the Algolia PHP SDK via the Composer package manager:
+Khi sử dụng Algolia driver, bạn nên cấu hình thông tin xác thực `id` và `secret` của Algolia trong file `config/scout.php`. Sau khi cấu hình thông tin xác thực, bạn cũng cần cài Algolia PHP SDK thông qua Composer:
 
 ```shell
 composer require algolia/algoliasearch-client-php
@@ -133,15 +133,15 @@ composer require algolia/algoliasearch-client-php
 <a name="meilisearch"></a>
 ### Meilisearch
 
-[Meilisearch](https://www.meilisearch.com) is a fast, open source search engine. If you aren't sure how to install Meilisearch on your local machine, you may use [Laravel Sail](/docs/{{version}}/sail#meilisearch), Laravel's officially supported Docker development environment.
+[Meilisearch](https://www.meilisearch.com) là một search engine mã nguồn mở, tốc độ cao. Nếu chưa chắc cách cài Meilisearch trên máy local, bạn có thể sử dụng [Laravel Sail](/docs/{{version}}/sail#meilisearch), môi trường phát triển Docker được Laravel hỗ trợ chính thức.
 
-When using the Meilisearch driver you will need to install the Meilisearch PHP SDK via the Composer package manager:
+Khi sử dụng Meilisearch driver, bạn cần cài Meilisearch PHP SDK thông qua Composer:
 
 ```shell
 composer require meilisearch/meilisearch-php http-interop/http-factory-guzzle
 ```
 
-Then, set the `SCOUT_DRIVER` environment variable as well as your Meilisearch `host` and `key` credentials within your application's `.env` file:
+Sau đó, đặt biến môi trường `SCOUT_DRIVER` cùng thông tin `host` và `key` của Meilisearch trong file `.env` của ứng dụng:
 
 ```ini
 SCOUT_DRIVER=meilisearch
@@ -149,27 +149,27 @@ MEILISEARCH_HOST=http://127.0.0.1:7700
 MEILISEARCH_KEY=masterKey
 ```
 
-For more information regarding Meilisearch, please consult the [Meilisearch documentation](https://docs.meilisearch.com/learn/getting_started/quick_start.html).
+Để biết thêm thông tin về Meilisearch, hãy tham khảo [tài liệu Meilisearch](https://docs.meilisearch.com/learn/getting_started/quick_start.html).
 
-In addition, you should ensure that you install a version of `meilisearch/meilisearch-php` that is compatible with your Meilisearch binary version by reviewing [Meilisearch's documentation regarding binary compatibility](https://github.com/meilisearch/meilisearch-php#-compatibility-with-meilisearch).
+Ngoài ra, bạn nên bảo đảm phiên bản `meilisearch/meilisearch-php` được cài tương thích với phiên bản binary Meilisearch bằng cách xem [tài liệu của Meilisearch về khả năng tương thích binary](https://github.com/meilisearch/meilisearch-php#-compatibility-with-meilisearch).
 
 > [!WARNING]
-> When upgrading Scout on an application that utilizes Meilisearch, you should always [review any additional breaking changes](https://github.com/meilisearch/Meilisearch/releases) to the Meilisearch service itself.
+> Khi nâng cấp Scout trên ứng dụng sử dụng Meilisearch, bạn luôn nên [xem xét mọi breaking change bổ sung](https://github.com/meilisearch/Meilisearch/releases) của chính dịch vụ Meilisearch.
 
 <a name="typesense"></a>
 ### Typesense
 
-[Typesense](https://typesense.org) is a lightning-fast, open source search engine and supports keyword search, semantic search, geo search, and vector search.
+[Typesense](https://typesense.org) là search engine mã nguồn mở có tốc độ rất cao, hỗ trợ tìm kiếm từ khóa, semantic search, geo search và vector search.
 
-You can [self-host](https://typesense.org/docs/guide/install-typesense.html#option-2-local-machine-self-hosting) Typesense or use [Typesense Cloud](https://cloud.typesense.org).
+Bạn có thể [tự host](https://typesense.org/docs/guide/install-typesense.html#option-2-local-machine-self-hosting) Typesense hoặc sử dụng [Typesense Cloud](https://cloud.typesense.org).
 
-To get started using Typesense with Scout, install the Typesense PHP SDK via the Composer package manager:
+Để bắt đầu sử dụng Typesense với Scout, hãy cài Typesense PHP SDK thông qua Composer:
 
 ```shell
 composer require typesense/typesense-php
 ```
 
-Then, set the `SCOUT_DRIVER` environment variable as well as your Typesense host and API key credentials within your application's .env file:
+Sau đó, đặt biến môi trường `SCOUT_DRIVER` cùng host và API key của Typesense trong file `.env` của ứng dụng:
 
 ```ini
 SCOUT_DRIVER=typesense
@@ -177,7 +177,7 @@ TYPESENSE_API_KEY=masterKey
 TYPESENSE_HOST=localhost
 ```
 
-If you are using [Laravel Sail](/docs/{{version}}/sail), you may need to adjust the `TYPESENSE_HOST` environment variable to match the Docker container name. You may also optionally specify your installation's port, path, and protocol:
+Nếu đang sử dụng [Laravel Sail](/docs/{{version}}/sail), bạn có thể cần điều chỉnh biến môi trường `TYPESENSE_HOST` để khớp với tên Docker container. Bạn cũng có thể tùy chọn chỉ định port, path và protocol của bản cài đặt:
 
 ```ini
 TYPESENSE_PORT=8108
@@ -185,12 +185,12 @@ TYPESENSE_PATH=
 TYPESENSE_PROTOCOL=http
 ```
 
-Additional settings and schema definitions for your Typesense collections can be found within your application's `config/scout.php` configuration file. For more information regarding Typesense, please consult the [Typesense documentation](https://typesense.org/docs/guide/#quick-start).
+Các thiết lập và định nghĩa schema bổ sung cho collection Typesense có thể được tìm thấy trong file cấu hình `config/scout.php` của ứng dụng. Để biết thêm thông tin, hãy tham khảo [tài liệu Typesense](https://typesense.org/docs/guide/#quick-start).
 
 <a name="turbopuffer"></a>
 ### Turbopuffer
 
-[Turbopuffer](https://turbopuffer.com) is a search engine that supports full-text, semantic, and hybrid search. To use the Turbopuffer driver, set the `SCOUT_DRIVER` environment variable and provide your Turbopuffer API key:
+[Turbopuffer](https://turbopuffer.com) là search engine hỗ trợ full-text, semantic và hybrid search. Để sử dụng Turbopuffer driver, hãy đặt biến môi trường `SCOUT_DRIVER` và cung cấp API key Turbopuffer:
 
 ```ini
 SCOUT_DRIVER=turbopuffer
@@ -198,15 +198,15 @@ TURBOPUFFER_API_KEY=tpuf_...
 TURBOPUFFER_REGION=gcp-us-central1
 ```
 
-The `TURBOPUFFER_REGION` environment variable is optional and defaults to `gcp-us-central1`.
+Biến môi trường `TURBOPUFFER_REGION` là tùy chọn và mặc định là `gcp-us-central1`.
 
 <a name="configuration"></a>
-## Configuration
+## Cấu hình
 
 <a name="configuring-searchable-data"></a>
-### Configuring Searchable Data
+### Cấu hình dữ liệu có thể tìm kiếm
 
-By default, the entire `toArray` form of a given model will be persisted to its search index. If you would like to customize the data that is synchronized to the search index, you may override the `toSearchableArray` method on the model:
+Theo mặc định, toàn bộ dữ liệu dạng `toArray` của model sẽ được lưu vào search index. Nếu muốn tùy chỉnh dữ liệu được đồng bộ tới search index, bạn có thể override phương thức `toSearchableArray` trên model:
 
 ```php
 <?php
@@ -237,9 +237,9 @@ class Post extends Model
 ```
 
 <a name="configuring-search-engines-per-model"></a>
-#### Configuring Model Engines
+#### Cấu hình engine cho model
 
-When searching, Scout will typically use the default search engine specified in your application's `scout` configuration file. However, the search engine for a particular model can be changed by overriding the `searchableUsing` method on the model:
+Khi tìm kiếm, Scout thường sử dụng search engine mặc định được chỉ định trong file cấu hình `scout` của ứng dụng. Tuy nhiên, bạn có thể thay đổi search engine cho một model cụ thể bằng cách override phương thức `searchableUsing` trên model:
 
 ```php
 <?php
@@ -266,28 +266,28 @@ class User extends Model
 ```
 
 <a name="database-and-collection-engines"></a>
-## Database / Collection Engines
+## Engine Database / Collection
 
 <a name="database-engine"></a>
 ### Database Engine
 
 > [!WARNING]
-> The database engine currently supports MySQL and PostgreSQL, both of which provide support for fast, full-text column indexing.
+> Database engine hiện hỗ trợ MySQL và PostgreSQL; cả hai đều hỗ trợ full-text index trên cột với hiệu năng cao.
 
-The `database` engine uses MySQL / PostgreSQL full-text indexes and `LIKE` clauses to search your existing database directly. For many applications, this is the simplest and most practical way to add search — no external service or additional infrastructure required.
+Engine `database` sử dụng full-text index của MySQL / PostgreSQL và các mệnh đề `LIKE` để tìm kiếm trực tiếp trong database hiện có. Với nhiều ứng dụng, đây là cách đơn giản và thực tế nhất để bổ sung tìm kiếm — không cần dịch vụ bên ngoài hay hạ tầng bổ sung.
 
-To use the database engine, set the `SCOUT_DRIVER` environment variable to `database`:
+Để sử dụng database engine, đặt biến môi trường `SCOUT_DRIVER` thành `database`:
 
 ```ini
 SCOUT_DRIVER=database
 ```
 
-Once configured, you may [define your searchable data](#configuring-searchable-data) and start [executing search queries](#searching) against your models. Unlike third-party engines, the database engine requires no separate indexing step — it searches your database tables directly.
+Sau khi cấu hình, bạn có thể [định nghĩa dữ liệu có thể tìm kiếm](#configuring-searchable-data) và bắt đầu [thực thi truy vấn tìm kiếm](#searching) trên các model. Không giống engine bên thứ ba, database engine không cần bước indexing riêng — nó tìm kiếm trực tiếp trên các bảng database.
 
 <a name="database-semantic-and-hybrid-search"></a>
-#### Semantic and Hybrid Search
+#### Tìm kiếm semantic và hybrid
 
-The database engine supports semantic and hybrid search when using PostgreSQL with the `pgvector` extension. To get started, add a nullable vector column and a full-text index to your model's table. The vector column must be nullable because Scout stores the embedding after the model has been persisted:
+Database engine hỗ trợ semantic và hybrid search khi dùng PostgreSQL với extension `pgvector`. Để bắt đầu, hãy thêm một cột vector nullable và một full-text index vào bảng của model. Cột vector phải nullable vì Scout lưu embedding sau khi model đã được persist:
 
 ```php
 Schema::ensureVectorExtensionExists();
@@ -301,13 +301,13 @@ Schema::table('articles', function (Blueprint $table) {
 });
 ```
 
-Next, define a `toSearchableEmbedding` method on the model. This method may return the source text that Scout should embed or a precomputed embedding array. Scout stores embeddings in the `embedding` column by default; to use another column, define a `searchableEmbeddingColumn` method on the model.
+Tiếp theo, định nghĩa phương thức `toSearchableEmbedding` trên model. Phương thức này có thể trả về văn bản nguồn mà Scout cần tạo embedding hoặc một mảng embedding đã tính sẵn. Theo mặc định Scout lưu embedding trong cột `embedding`; để dùng cột khác, hãy định nghĩa phương thức `searchableEmbeddingColumn` trên model.
 
-#### Customizing Database Searching Strategies
+#### Tùy chỉnh chiến lược tìm kiếm database
 
-By default, the database engine will execute a `LIKE` query against every model attribute that you have [configured as searchable](#configuring-searchable-data). However, you can assign more efficient search strategies to specific columns. The `SearchUsingFullText` attribute will use your database's full-text index for that column, while `SearchUsingPrefix` will only match the beginning of strings (`example%`) instead of searching within the entire string (`%example%`).
+Theo mặc định, database engine thực thi truy vấn `LIKE` trên mọi thuộc tính model mà bạn đã [cấu hình có thể tìm kiếm](#configuring-searchable-data). Tuy nhiên, bạn có thể gán chiến lược tìm kiếm hiệu quả hơn cho các cột cụ thể. Attribute `SearchUsingFullText` sử dụng full-text index của database cho cột đó, còn `SearchUsingPrefix` chỉ khớp phần đầu chuỗi (`example%`) thay vì tìm kiếm trong toàn bộ chuỗi (`%example%`).
 
-To define this behavior, assign PHP attributes to your model's `toSearchableArray` method. Any columns without an attribute will continue to use the default `LIKE` strategy:
+Để định nghĩa hành vi này, hãy gán PHP attribute cho phương thức `toSearchableArray` của model. Các cột không có attribute sẽ tiếp tục sử dụng chiến lược `LIKE` mặc định:
 
 ```php
 use Laravel\Scout\Attributes\SearchUsingFullText;
@@ -332,34 +332,34 @@ public function toSearchableArray(): array
 ```
 
 > [!WARNING]
-> Before specifying that a column should use full text query constraints, ensure that the column has been assigned a [full text index](/docs/{{version}}/migrations#available-index-types).
+> Trước khi chỉ định một cột sử dụng ràng buộc truy vấn full-text, hãy bảo đảm cột đó đã được gán [full-text index](/docs/{{version}}/migrations#available-index-types).
 
 <a name="collection-engine"></a>
 ### Collection Engine
 
-The "collection" engine is intended for quick prototypes, extremely small datasets (a few hundred records), or running tests. It retrieves all possible records from your database and uses Laravel's `Str::is` helper to filter them in PHP, so it does not require any indexing or database-specific features. For anything beyond trivial use cases, you should use the [database engine](#database-engine) instead.
+Engine `collection` dành cho prototype nhanh, tập dữ liệu cực nhỏ (vài trăm bản ghi) hoặc chạy test. Nó lấy toàn bộ bản ghi có thể có từ database và sử dụng helper `Str::is` của Laravel để lọc bằng PHP, vì vậy không cần indexing hay tính năng đặc thù của database. Với các trường hợp vượt quá nhu cầu đơn giản, bạn nên dùng [database engine](#database-engine).
 
-To use the collection engine, you may simply set the value of the `SCOUT_DRIVER` environment variable to `collection`, or specify the `collection` driver directly in your application's `scout` configuration file:
+Để sử dụng collection engine, bạn chỉ cần đặt biến môi trường `SCOUT_DRIVER` thành `collection`, hoặc chỉ định trực tiếp driver `collection` trong file cấu hình `scout` của ứng dụng:
 
 ```ini
 SCOUT_DRIVER=collection
 ```
 
-Once you have specified the collection driver as your preferred driver, you may start [executing search queries](#searching) against your models. Search engine indexing, such as the indexing needed to seed Algolia, Meilisearch, or Typesense indexes, is unnecessary when using the collection engine.
+Sau khi chọn collection driver làm driver ưu tiên, bạn có thể bắt đầu [thực thi truy vấn tìm kiếm](#searching) trên các model. Việc indexing search engine, chẳng hạn indexing cần để seed index Algolia, Meilisearch hoặc Typesense, là không cần thiết khi dùng collection engine.
 
-#### Differences From Database Engine
+#### Khác biệt so với Database Engine
 
-While the database engine uses full-text indexes and `LIKE` clauses to find matching records efficiently, the collection engine pulls all records and filters them in PHP. The collection engine is the most portable option as it works across all relational databases supported by Laravel (including SQLite and SQL Server); however, it is significantly less efficient than the database engine and should not be used with large datasets.
+Trong khi database engine sử dụng full-text index và mệnh đề `LIKE` để tìm bản ghi khớp một cách hiệu quả, collection engine lấy toàn bộ bản ghi rồi lọc bằng PHP. Collection engine có tính di động cao nhất vì hoạt động với mọi relational database được Laravel hỗ trợ (bao gồm SQLite và SQL Server); tuy nhiên, nó kém hiệu quả hơn đáng kể so với database engine và không nên dùng với tập dữ liệu lớn.
 
 <a name="third-party-engine-configuration"></a>
-## Third-Party Engine Configuration
+## Cấu hình engine bên thứ ba
 
-The following configuration options are only relevant when using a third-party search engine such as Algolia, Meilisearch, or Typesense. If you are using the [database engine](#database-engine), you may skip this section.
+Các tùy chọn cấu hình sau chỉ liên quan khi sử dụng search engine bên thứ ba như Algolia, Meilisearch hoặc Typesense. Nếu đang dùng [database engine](#database-engine), bạn có thể bỏ qua phần này.
 
 <a name="configuring-model-indexes"></a>
-### Configuring Model Indexes
+### Cấu hình index của model
 
-When using a third-party engine, each Eloquent model is synced with a given search "index", which contains all of the searchable records for that model. By default, each model will be persisted to an index matching the model's typical "table" name. Typically, this is the plural form of the model name; however, you are free to customize the model's index by overriding the `searchableAs` method on the model:
+Khi sử dụng engine bên thứ ba, mỗi Eloquent model được đồng bộ với một search `index` chứa tất cả bản ghi có thể tìm kiếm của model đó. Theo mặc định, mỗi model được lưu vào index có tên tương ứng với tên `table` thông thường của model, thường là dạng số nhiều của tên model; tuy nhiên, bạn có thể tùy chỉnh index của model bằng cách override phương thức `searchableAs`:
 
 ```php
 <?php
@@ -384,12 +384,12 @@ class Post extends Model
 ```
 
 > [!NOTE]
-> The `searchableAs` method has no effect when using the database engine, which always searches the model's database table directly.
+> Phương thức `searchableAs` không có tác dụng khi sử dụng database engine vì engine này luôn tìm kiếm trực tiếp trên bảng database của model.
 
 <a name="configuring-the-model-id"></a>
-#### Configuring the Model ID
+#### Cấu hình ID của model
 
-By default, Scout will use the primary key of the model as the model's unique ID / key that is stored in the search index. If you need to customize this behavior when using a third-party engine, you may override the `getScoutKey` and the `getScoutKeyName` methods on the model:
+Theo mặc định, Scout sử dụng primary key của model làm ID / key duy nhất được lưu trong search index. Nếu cần tùy chỉnh hành vi này khi dùng engine bên thứ ba, bạn có thể override các phương thức `getScoutKey` và `getScoutKeyName` trên model:
 
 ```php
 <?php
@@ -422,19 +422,19 @@ class User extends Model
 ```
 
 > [!NOTE]
-> The `getScoutKey` and `getScoutKeyName` methods have no effect when using the database engine, which always uses the model's primary key.
+> Các phương thức `getScoutKey` và `getScoutKeyName` không có tác dụng khi sử dụng database engine vì engine này luôn dùng primary key của model.
 
 <a name="algolia-configuration"></a>
 ### Algolia
 
 <a name="algolia-index-settings"></a>
-#### Index Settings
+#### Thiết lập index
 
-Sometimes you may want to configure additional settings on your Algolia indexes. While you can manage these settings via the Algolia UI, it is sometimes more efficient to manage the desired state of your index configuration directly from your application's `config/scout.php` configuration file.
+Đôi khi bạn có thể muốn cấu hình thêm các thiết lập cho Algolia index. Mặc dù có thể quản lý chúng qua giao diện Algolia, việc quản lý trực tiếp trạng thái cấu hình index mong muốn trong file `config/scout.php` của ứng dụng đôi khi hiệu quả hơn.
 
-This approach allows you to deploy these settings through your application's automated deployment pipeline, avoiding manual configuration and ensuring consistency across multiple environments. You may configure filterable attributes, ranking, faceting, or [any other supported settings](https://www.algolia.com/doc/rest-api/search/#tag/Indices/operation/setSettings).
+Cách tiếp cận này cho phép deploy các thiết lập thông qua pipeline triển khai tự động của ứng dụng, tránh cấu hình thủ công và bảo đảm tính nhất quán giữa nhiều môi trường. Bạn có thể cấu hình thuộc tính có thể lọc, ranking, faceting hoặc [bất kỳ thiết lập nào khác được hỗ trợ](https://www.algolia.com/doc/rest-api/search/#tag/Indices/operation/setSettings).
 
-To get started, add settings for each index in your application's `config/scout.php` configuration file:
+Để bắt đầu, hãy thêm thiết lập cho từng index trong file cấu hình `config/scout.php` của ứng dụng:
 
 ```php
 use App\Models\User;
@@ -456,7 +456,7 @@ use App\Models\Flight;
 ],
 ```
 
-If the model underlying a given index is soft deletable and is included in the `index-settings` array, Scout will automatically include support for faceting on soft deleted models on that index. If you have no other faceting attributes to define for a soft deletable model index, you may simply add an empty entry to the `index-settings` array for that model:
+Nếu model đứng sau một index hỗ trợ soft delete và được đưa vào mảng `index-settings`, Scout sẽ tự động bổ sung hỗ trợ faceting cho các model đã soft delete trên index đó. Nếu không có thuộc tính faceting nào khác cần định nghĩa cho index của model hỗ trợ soft delete, bạn chỉ cần thêm một entry rỗng vào mảng `index-settings` cho model đó:
 
 ```php
 'index-settings' => [
@@ -464,32 +464,32 @@ If the model underlying a given index is soft deletable and is included in the `
 ],
 ```
 
-After configuring your application's index settings, you must invoke the `scout:sync-index-settings` Artisan command. This command will inform Algolia of your currently configured index settings. For convenience, you may wish to make this command part of your deployment process:
+Sau khi cấu hình các thiết lập index của ứng dụng, bạn phải chạy lệnh Artisan `scout:sync-index-settings`. Lệnh này sẽ thông báo cho Algolia về các thiết lập index hiện được cấu hình. Để thuận tiện, bạn có thể đưa lệnh này vào quy trình deployment:
 
 ```shell
 php artisan scout:sync-index-settings
 ```
 
 <a name="algolia-identifying-users"></a>
-#### Identifying Users
+#### Nhận diện người dùng
 
-Scout allows you to auto identify users when using Algolia. Associating the authenticated user with search operations may be helpful when viewing your search analytics within Algolia's dashboard. You can enable user identification by defining a `SCOUT_IDENTIFY` environment variable as `true` in your application's `.env` file:
+Scout cho phép tự động nhận diện người dùng khi sử dụng Algolia. Việc liên kết người dùng đã xác thực với các thao tác tìm kiếm có thể hữu ích khi xem phân tích tìm kiếm trong dashboard của Algolia. Bạn có thể bật nhận diện người dùng bằng cách đặt biến môi trường `SCOUT_IDENTIFY` thành `true` trong file `.env` của ứng dụng:
 
 ```ini
 SCOUT_IDENTIFY=true
 ```
 
-Enabling this feature will also pass the request's IP address and your authenticated user's primary identifier to Algolia so this data is associated with any search request that is made by the user.
+Khi bật tính năng này, địa chỉ IP của request và định danh chính của người dùng đã xác thực cũng sẽ được gửi đến Algolia, để dữ liệu này được liên kết với mọi yêu cầu tìm kiếm do người dùng thực hiện.
 
 <a name="meilisearch-configuration"></a>
 ### Meilisearch
 
 <a name="meilisearch-index-settings"></a>
-#### Index Settings
+#### Thiết lập index
 
-Meilisearch requires you to pre-define index search settings such as filterable attributes, sortable attributes, and [other supported settings fields](https://docs.meilisearch.com/reference/api/settings.html).
+Meilisearch yêu cầu bạn định nghĩa trước các thiết lập tìm kiếm của index, chẳng hạn các thuộc tính có thể lọc, các thuộc tính có thể sắp xếp và [các trường thiết lập được hỗ trợ khác](https://docs.meilisearch.com/reference/api/settings.html).
 
-Filterable attributes are any attributes you plan to filter on when invoking Scout's `where` method, while sortable attributes are any attributes you plan to sort by when invoking Scout's `orderBy` method. To define your index settings, adjust the `index-settings` portion of your `meilisearch` configuration entry in your application's `scout` configuration file:
+Thuộc tính có thể lọc là những thuộc tính bạn dự định dùng để lọc khi gọi phương thức `where` của Scout, còn thuộc tính có thể sắp xếp là những thuộc tính bạn dự định dùng để sắp xếp khi gọi `orderBy`. Để định nghĩa thiết lập index, hãy điều chỉnh phần `index-settings` trong cấu hình `meilisearch` của file cấu hình `scout`:
 
 ```php
 use App\Models\User;
@@ -512,7 +512,7 @@ use App\Models\Flight;
 ],
 ```
 
-If the model underlying a given index is soft deletable and is included in the `index-settings` array, Scout will automatically include support for filtering on soft deleted models on that index. If you have no other filterable or sortable attributes to define for a soft deletable model index, you may simply add an empty entry to the `index-settings` array for that model:
+Nếu model đứng sau một index sử dụng soft delete và được khai báo trong mảng `index-settings`, Scout sẽ tự động hỗ trợ lọc các model đã soft delete trên index đó. Nếu không có thuộc tính lọc hoặc sắp xếp nào khác cần định nghĩa cho index của model soft delete, bạn chỉ cần thêm một entry rỗng vào mảng `index-settings` cho model đó:
 
 ```php
 'index-settings' => [
@@ -520,16 +520,16 @@ If the model underlying a given index is soft deletable and is included in the `
 ],
 ```
 
-After configuring your application's index settings, you must invoke the `scout:sync-index-settings` Artisan command. This command will inform Meilisearch of your currently configured index settings. For convenience, you may wish to make this command part of your deployment process:
+Sau khi cấu hình các thiết lập index của ứng dụng, bạn phải chạy lệnh Artisan `scout:sync-index-settings`. Lệnh này sẽ đồng bộ các thiết lập index hiện tại sang Meilisearch. Để thuận tiện, bạn có thể đưa lệnh này vào quy trình deployment:
 
 ```shell
 php artisan scout:sync-index-settings
 ```
 
 <a name="meilisearch-semantic-and-hybrid-search"></a>
-#### Semantic and Hybrid Search
+#### Tìm kiếm semantic và hybrid
 
-To use semantic or hybrid search with Meilisearch, configure an embedder in the index settings and embedding settings for each searchable model:
+Để sử dụng semantic search hoặc hybrid search với Meilisearch, hãy cấu hình embedder trong thiết lập index và thiết lập embedding cho từng model có thể tìm kiếm:
 
 ```php
 'meilisearch' => [
@@ -555,12 +555,12 @@ To use semantic or hybrid search with Meilisearch, configure an embedder in the 
 ],
 ```
 
-The model's `toSearchableEmbedding` method may return source text, which Scout embeds using the [Laravel AI SDK](/docs/{{version}}/ai-sdk), or a precomputed embedding array. After updating the configuration, run the `scout:sync-index-settings` command.
+Phương thức `toSearchableEmbedding` của model có thể trả về văn bản nguồn để Scout tạo embedding bằng [Laravel AI SDK](/docs/{{version}}/ai-sdk), hoặc trả về một mảng embedding đã được tính trước. Sau khi cập nhật cấu hình, hãy chạy lệnh `scout:sync-index-settings`.
 
 <a name="meilisearch-data-types"></a>
-#### Searchable Data Types
+#### Kiểu dữ liệu có thể tìm kiếm
 
-Meilisearch will only perform filter operations (`>`, `<`, etc.) on data of the correct type. When customizing your searchable data, you should ensure that numeric values are cast to their correct type:
+Meilisearch chỉ thực hiện các phép lọc (`>`, `<`, v.v.) trên dữ liệu có đúng kiểu. Khi tùy chỉnh dữ liệu có thể tìm kiếm, bạn nên bảo đảm các giá trị số được ép sang đúng kiểu:
 
 ```php
 public function toSearchableArray()
@@ -577,9 +577,9 @@ public function toSearchableArray()
 ### Typesense
 
 <a name="typesense-searchable-data"></a>
-#### Preparing Searchable Data
+#### Chuẩn bị dữ liệu có thể tìm kiếm
 
-When utilizing Typesense, your searchable models must define a `toSearchableArray` method that casts your model's primary key to a string and creation date to a UNIX timestamp:
+Khi sử dụng Typesense, các model có thể tìm kiếm phải định nghĩa phương thức `toSearchableArray` để ép primary key của model thành chuỗi và ngày tạo thành UNIX timestamp:
 
 ```php
 /**
@@ -596,11 +596,11 @@ public function toSearchableArray(): array
 }
 ```
 
-You should also define your Typesense collection schemas in your application's `config/scout.php` file. A collection schema describes the data types of each field that is searchable via Typesense. For more information on all available schema options, please consult the [Typesense documentation](https://typesense.org/docs/latest/api/collections.html#schema-parameters).
+Bạn cũng nên định nghĩa schema cho các collection Typesense trong file `config/scout.php` của ứng dụng. Collection schema mô tả kiểu dữ liệu của từng trường có thể tìm kiếm qua Typesense. Để biết thêm về tất cả tùy chọn schema, hãy tham khảo [tài liệu Typesense](https://typesense.org/docs/latest/api/collections.html#schema-parameters).
 
-If you need to change your Typesense collection's schema after it has been defined, you may either run `scout:flush` and `scout:import`, which will delete all existing indexed data and recreate the schema. Or, you may use Typesense's API to modify the collection's schema without removing any indexed data.
+Nếu cần thay đổi schema của collection Typesense sau khi đã định nghĩa, bạn có thể chạy `scout:flush` rồi `scout:import`; thao tác này sẽ xóa toàn bộ dữ liệu đã index và tạo lại schema. Hoặc, bạn có thể dùng API của Typesense để sửa schema collection mà không xóa dữ liệu đã index.
 
-If your searchable model is soft deletable, you should define a `__soft_deleted` field in the model's corresponding Typesense schema within your application's `config/scout.php` configuration file:
+Nếu model có thể tìm kiếm sử dụng soft delete, bạn nên định nghĩa trường `__soft_deleted` trong schema Typesense tương ứng của model trong file cấu hình `config/scout.php`:
 
 ```php
 User::class => [
@@ -618,9 +618,9 @@ User::class => [
 ```
 
 <a name="typesense-dynamic-search-parameters"></a>
-#### Dynamic Search Parameters
+#### Tham số tìm kiếm động
 
-Typesense allows you to modify your [search parameters](https://typesense.org/docs/latest/api/search.html#search-parameters) dynamically when performing a search operation via the `options` method:
+Typesense cho phép bạn thay đổi động các [tham số tìm kiếm](https://typesense.org/docs/latest/api/search.html#search-parameters) khi thực hiện tìm kiếm thông qua phương thức `options`:
 
 ```php
 use App\Models\Todo;
@@ -633,7 +633,7 @@ Todo::search('Groceries')->options([
 <a name="turbopuffer-configuration"></a>
 ### Turbopuffer
 
-Turbopuffer requires a schema and searchable attributes for each model. Define them in the `model-settings` array of your `turbopuffer` configuration within the `scout` configuration file:
+Turbopuffer yêu cầu schema và các thuộc tính có thể tìm kiếm cho từng model. Hãy định nghĩa chúng trong mảng `model-settings` của cấu hình `turbopuffer` bên trong file cấu hình `scout`:
 
 ```php
 use App\Models\Article;
@@ -656,9 +656,9 @@ use App\Models\Article;
 ],
 ```
 
-The numeric values assigned to `searchable-attributes` are relative BM25 weights. In the example above, matches in the article title contribute three times the score of matches in the body.
+Các giá trị số gán cho `searchable-attributes` là trọng số BM25 tương đối. Trong ví dụ trên, kết quả khớp ở tiêu đề bài viết đóng góp điểm số gấp ba lần kết quả khớp trong nội dung.
 
-To enable semantic and hybrid search, add an `embedding` setting and vector schema to the model's configuration:
+Để bật semantic search và hybrid search, hãy thêm thiết lập `embedding` và vector schema vào cấu hình của model:
 
 ```php
 'turbopuffer' => [
@@ -683,9 +683,9 @@ To enable semantic and hybrid search, add an `embedding` setting and vector sche
 ],
 ```
 
-Your model's `toSearchableEmbedding` method should return the source text that Scout should embed or a precomputed embedding array. Scout generates source-text embeddings using the [Laravel AI SDK](/docs/{{version}}/ai-sdk).
+Phương thức `toSearchableEmbedding` của model nên trả về văn bản nguồn mà Scout cần tạo embedding hoặc một mảng embedding đã được tính trước. Scout tạo embedding từ văn bản nguồn bằng [Laravel AI SDK](/docs/{{version}}/ai-sdk).
 
-Alternatively, you may use Turbopuffer's native embeddings without installing the Laravel AI SDK or defining a `toSearchableEmbedding` method. Set the embedding driver to `turbopuffer` and configure an `embed` schema on the searchable source attribute:
+Ngoài ra, bạn có thể sử dụng embedding native của Turbopuffer mà không cần cài Laravel AI SDK hoặc định nghĩa phương thức `toSearchableEmbedding`. Hãy đặt embedding driver thành `turbopuffer` và cấu hình schema `embed` trên thuộc tính nguồn có thể tìm kiếm:
 
 ```php
 'embedding' => [
@@ -706,39 +706,39 @@ Alternatively, you may use Turbopuffer's native embeddings without installing th
 ],
 ```
 
-The source attribute must be included in the model's `toSearchableArray` output.
+Thuộc tính nguồn phải được bao gồm trong output của phương thức `toSearchableArray` trên model.
 
 <a name="indexing"></a>
-## Third-Party Engine Indexing
+## Indexing với engine bên thứ ba
 
 > [!NOTE]
-> The indexing features described in this section are primarily relevant when using a third-party engine (Algolia, Meilisearch, Typesense, or Turbopuffer). The database engine searches your database tables directly, so it does not require manual index management.
+> Các tính năng indexing được mô tả trong phần này chủ yếu áp dụng khi sử dụng engine bên thứ ba (Algolia, Meilisearch, Typesense hoặc Turbopuffer). Database engine tìm kiếm trực tiếp trong các bảng database nên không yêu cầu quản lý index thủ công.
 
 <a name="batch-import"></a>
-### Batch Import
+### Import hàng loạt
 
-If you are installing Scout into an existing project, you may already have database records you need to import into your indexes. Scout provides a `scout:import` Artisan command that you may use to import all of your existing records into your search indexes:
+Nếu cài Scout vào một project hiện có, bạn có thể đã có các bản ghi database cần import vào index. Scout cung cấp lệnh Artisan `scout:import` để import toàn bộ các bản ghi hiện có vào search index:
 
 ```shell
 php artisan scout:import "App\Models\Post"
 ```
 
-The `scout:queue-import` command may be used to import all of your existing records using [queued jobs](/docs/{{version}}/queues):
+Lệnh `scout:queue-import` có thể được dùng để import toàn bộ bản ghi hiện có bằng [queued job](/docs/{{version}}/queues):
 
 ```shell
 php artisan scout:queue-import "App\Models\Post" --chunk=500
 ```
 
-The `flush` command may be used to remove all of a model's records from your search indexes:
+Lệnh `flush` có thể được dùng để xóa toàn bộ bản ghi của một model khỏi search index:
 
 ```shell
 php artisan scout:flush "App\Models\Post"
 ```
 
 <a name="modifying-the-import-query"></a>
-#### Modifying the Import Query
+#### Điều chỉnh query import
 
-If you would like to modify the query that is used to retrieve all of your models for batch importing, you may define a `makeAllSearchableUsing` method on your model. This is a great place to add any eager relationship loading that may be necessary before importing your models:
+Nếu muốn điều chỉnh query dùng để lấy toàn bộ model phục vụ import hàng loạt, bạn có thể định nghĩa phương thức `makeAllSearchableUsing` trên model. Đây là vị trí phù hợp để thêm eager loading cho các relationship cần thiết trước khi import model:
 
 ```php
 use Illuminate\Database\Eloquent\Builder;
@@ -753,12 +753,12 @@ protected function makeAllSearchableUsing(Builder $query): Builder
 ```
 
 > [!WARNING]
-> The `makeAllSearchableUsing` method may not be applicable when using a queue to batch import models. Relationships are [not restored](/docs/{{version}}/queues#handling-relationships) when model collections are processed by jobs.
+> Phương thức `makeAllSearchableUsing` có thể không áp dụng khi sử dụng queue để import model hàng loạt. Các relationship [không được khôi phục](/docs/{{version}}/queues#handling-relationships) khi collection model được xử lý bởi job.
 
 <a name="adding-records"></a>
-### Adding Records
+### Thêm bản ghi
 
-Once you have added the `Laravel\Scout\Searchable` trait to a model, all you need to do is `save` or `create` a model instance and it will automatically be added to your search index. If you have configured Scout to [use queues](#queueing) this operation will be performed in the background by your queue worker:
+Sau khi thêm trait `Laravel\Scout\Searchable` vào model, bạn chỉ cần `save` hoặc `create` một instance của model và nó sẽ tự động được thêm vào search index. Nếu đã cấu hình Scout [sử dụng queue](#queueing), thao tác này sẽ được queue worker thực hiện ở background:
 
 ```php
 use App\Models\Order;
@@ -771,9 +771,9 @@ $order->save();
 ```
 
 <a name="adding-records-via-query"></a>
-#### Adding Records via Query
+#### Thêm bản ghi via Query
 
-If you would like to add a collection of models to your search index via an Eloquent query, you may chain the `searchable` method onto the Eloquent query. The `searchable` method will [chunk the results](/docs/{{version}}/eloquent#chunking-results) of the query and add the records to your search index. Again, if you have configured Scout to use queues, all of the chunks will be imported in the background by your queue workers:
+Nếu muốn thêm một collection model vào search index thông qua Eloquent query, bạn có thể chain phương thức `searchable` vào query. Phương thức `searchable` sẽ [chia kết quả thành các chunk](/docs/{{version}}/eloquent#chunking-results) và thêm các bản ghi vào search index. Nếu đã cấu hình Scout dùng queue, toàn bộ chunk sẽ được các queue worker import ở background:
 
 ```php
 use App\Models\Order;
@@ -781,25 +781,25 @@ use App\Models\Order;
 Order::where('price', '>', 100)->searchable();
 ```
 
-You may also call the `searchable` method on an Eloquent relationship instance:
+Bạn cũng có thể gọi phương thức `searchable` trên một instance Eloquent relationship:
 
 ```php
 $user->orders()->searchable();
 ```
 
-Or, if you already have a collection of Eloquent models in memory, you may call the `searchable` method on the collection instance to add the model instances to their corresponding index:
+Hoặc, nếu bạn đã có một collection các Eloquent model trong memory, bạn có thể gọi method `searchable` trên collection instance để thêm các model instance vào index tương ứng:
 
 ```php
 $orders->searchable();
 ```
 
 > [!NOTE]
-> The `searchable` method can be considered an "upsert" operation. In other words, if the model record is already in your index, it will be updated. If it does not exist in the search index, it will be added to the index.
+> Phương thức `searchable` có thể được xem là thao tác "upsert". Nói cách khác, nếu bản ghi model đã tồn tại trong index thì nó sẽ được cập nhật; nếu chưa tồn tại trong search index thì nó sẽ được thêm vào index.
 
 <a name="updating-records"></a>
-### Updating Records
+### Cập nhật bản ghi
 
-To update a searchable model, you only need to update the model instance's properties and `save` the model to your database. Scout will automatically persist the changes to your search index:
+Để cập nhật một model có thể tìm kiếm, bạn chỉ cần cập nhật các thuộc tính của instance model rồi `save` model vào database. Scout sẽ tự động ghi các thay đổi vào search index:
 
 ```php
 use App\Models\Order;
@@ -811,28 +811,28 @@ $order = Order::find(1);
 $order->save();
 ```
 
-You may also invoke the `searchable` method on an Eloquent query instance to update a collection of models. If the models do not exist in your search index, they will be created:
+Bạn cũng có thể gọi phương thức `searchable` trên một Eloquent query để cập nhật một collection model. Nếu các model chưa tồn tại trong search index, chúng sẽ được tạo:
 
 ```php
 Order::where('price', '>', 100)->searchable();
 ```
 
-If you would like to update the search index records for all of the models in a relationship, you may invoke the `searchable` on the relationship instance:
+Nếu muốn cập nhật các bản ghi search index cho toàn bộ model trong một relationship, bạn có thể gọi `searchable` trên instance relationship:
 
 ```php
 $user->orders()->searchable();
 ```
 
-Or, if you already have a collection of Eloquent models in memory, you may call the `searchable` method on the collection instance to update the model instances in their corresponding index:
+Hoặc, nếu đã có một collection các Eloquent model trong bộ nhớ, bạn có thể gọi phương thức `searchable` trên instance collection để cập nhật các model instance trong index tương ứng:
 
 ```php
 $orders->searchable();
 ```
 
 <a name="modifying-records-before-importing"></a>
-#### Modifying Records Before Importing
+#### Điều chỉnh bản ghi trước khi import
 
-Sometimes you may need to prepare the collection of models before they are made searchable. For instance, you may want to eager load a relationship so that the relationship data can be efficiently added to your search index. To accomplish this, define a `makeSearchableUsing` method on the corresponding model:
+Đôi khi bạn cần chuẩn bị collection model trước khi chúng được đưa vào trạng thái có thể tìm kiếm. Ví dụ, bạn có thể muốn eager load một relationship để dữ liệu relationship được thêm vào search index hiệu quả. Để thực hiện, hãy định nghĩa phương thức `makeSearchableUsing` trên model tương ứng:
 
 ```php
 use Illuminate\Database\Eloquent\Collection;
@@ -847,9 +847,9 @@ public function makeSearchableUsing(Collection $models): Collection
 ```
 
 <a name="conditionally-updating-the-search-index"></a>
-#### Conditionally Updating the Search Index
+#### Cập nhật search index theo điều kiện
 
-By default, Scout will reindex an updated model regardless of which attributes were modified. If you would like to customize this behavior, you may define a `searchIndexShouldBeUpdated` method on your model:
+Theo mặc định, Scout sẽ reindex một model đã cập nhật bất kể thuộc tính nào được thay đổi. Nếu muốn tùy chỉnh hành vi này, bạn có thể định nghĩa phương thức `searchIndexShouldBeUpdated` trên model:
 
 ```php
 /**
@@ -862,9 +862,9 @@ public function searchIndexShouldBeUpdated(): bool
 ```
 
 <a name="removing-records"></a>
-### Removing Records
+### Xóa bản ghi
 
-To remove a record from your index you may simply `delete` the model from the database. This may be done even if you are using [soft deleted](/docs/{{version}}/eloquent#soft-deleting) models:
+Để xóa một bản ghi khỏi index, bạn chỉ cần `delete` model khỏi database. Điều này vẫn có thể thực hiện khi sử dụng model [soft delete](/docs/{{version}}/eloquent#soft-deleting):
 
 ```php
 use App\Models\Order;
@@ -874,34 +874,34 @@ $order = Order::find(1);
 $order->delete();
 ```
 
-If you do not want to retrieve the model before deleting the record, you may use the `unsearchable` method on an Eloquent query instance:
+Nếu không muốn truy xuất model trước khi xóa bản ghi, bạn có thể sử dụng phương thức `unsearchable` trên một Eloquent query:
 
 ```php
 Order::where('price', '>', 100)->unsearchable();
 ```
 
-If you would like to remove the search index records for all of the models in a relationship, you may invoke the `unsearchable` on the relationship instance:
+Nếu muốn xóa các bản ghi search index của toàn bộ model trong một relationship, bạn có thể gọi `unsearchable` trên instance relationship:
 
 ```php
 $user->orders()->unsearchable();
 ```
 
-Or, if you already have a collection of Eloquent models in memory, you may call the `unsearchable` method on the collection instance to remove the model instances from their corresponding index:
+Hoặc, nếu đã có một collection các Eloquent model trong bộ nhớ, bạn có thể gọi phương thức `unsearchable` trên instance collection để xóa các model instance khỏi index tương ứng:
 
 ```php
 $orders->unsearchable();
 ```
 
-To remove all of the model records from their corresponding index, you may invoke the `removeAllFromSearch` method:
+Để xóa toàn bộ bản ghi model khỏi index tương ứng, bạn có thể gọi phương thức `removeAllFromSearch`:
 
 ```php
 Order::removeAllFromSearch();
 ```
 
 <a name="pausing-indexing"></a>
-### Pausing Indexing
+### Tạm dừng lập chỉ mục
 
-Sometimes you may need to perform a batch of Eloquent operations on a model without syncing the model data to your search index. You may do this using the `withoutSyncingToSearch` method. This method accepts a single closure which will be immediately executed. Any model operations that occur within the closure will not be synced to the model's index:
+Đôi khi bạn cần thực hiện một loạt thao tác Eloquent trên model mà không đồng bộ dữ liệu model sang search index. Bạn có thể dùng phương thức `withoutSyncingToSearch`. Phương thức này nhận một closure và thực thi ngay; mọi thao tác model diễn ra bên trong closure sẽ không được đồng bộ vào index của model:
 
 ```php
 use App\Models\Order;
@@ -912,9 +912,9 @@ Order::withoutSyncingToSearch(function () {
 ```
 
 <a name="conditionally-searchable-model-instances"></a>
-### Conditionally Searchable Model Instances
+### Instance model có thể tìm kiếm theo điều kiện
 
-Sometimes you may need to only make a model searchable under certain conditions. For example, imagine you have `App\Models\Post` model that may be in one of two states: "draft" and "published". You may only want to allow "published" posts to be searchable. To accomplish this, you may define a `shouldBeSearchable` method on your model:
+Đôi khi bạn chỉ muốn một model có thể tìm kiếm khi đáp ứng các điều kiện nhất định. Ví dụ, giả sử model `App\Models\Post` có thể ở một trong hai trạng thái: "draft" và "published". Bạn có thể chỉ muốn các bài viết "published" được tìm kiếm. Để thực hiện, hãy định nghĩa phương thức `shouldBeSearchable` trên model:
 
 ```php
 /**
@@ -926,15 +926,15 @@ public function shouldBeSearchable(): bool
 }
 ```
 
-The `shouldBeSearchable` method is only applied when manipulating models through the `save` and `create` methods, queries, or relationships. Directly making models or collections searchable using the `searchable` method will override the result of the `shouldBeSearchable` method.
+Phương thức `shouldBeSearchable` chỉ được áp dụng khi thao tác model thông qua các phương thức `save`, `create`, query hoặc relationship. Việc trực tiếp làm cho model hoặc collection có thể tìm kiếm bằng phương thức `searchable` sẽ ghi đè kết quả của phương thức `shouldBeSearchable`.
 
 > [!WARNING]
-> The `shouldBeSearchable` method is not applicable when using Scout's "database" engine, as all searchable data is always stored in the database. To achieve similar behavior when using the database engine, you should use [where clauses](#where-clauses) instead.
+> Phương thức `shouldBeSearchable` không áp dụng khi sử dụng engine "database" của Scout, vì toàn bộ dữ liệu có thể tìm kiếm luôn được lưu trong database. Để đạt được hành vi tương tự khi sử dụng database engine, bạn nên dùng [mệnh đề where](#where-clauses) thay thế.
 
 <a name="searching"></a>
-## Searching
+## Tìm kiếm
 
-You may begin searching a model using the `search` method. The search method accepts a single string that will be used to search your models. You should then chain the `get` method onto the search query to retrieve the Eloquent models that match the given search query:
+Bạn có thể bắt đầu tìm kiếm một model bằng phương thức `search`. Phương thức `search` nhận một chuỗi duy nhất dùng để tìm kiếm các model. Sau đó, bạn nên nối phương thức `get` vào truy vấn tìm kiếm để truy xuất các Eloquent model khớp với truy vấn đã cho:
 
 ```php
 use App\Models\Order;
@@ -942,7 +942,7 @@ use App\Models\Order;
 $orders = Order::search('Star Trek')->get();
 ```
 
-Since Scout searches return a collection of Eloquent models, you may even return the results directly from a route or controller and they will automatically be converted to JSON:
+Vì kết quả tìm kiếm của Scout trả về một collection các Eloquent model, bạn thậm chí có thể trả kết quả trực tiếp từ route hoặc controller và chúng sẽ tự động được chuyển đổi thành JSON:
 
 ```php
 use App\Models\Order;
@@ -953,18 +953,18 @@ Route::get('/search', function (Request $request) {
 });
 ```
 
-If you would like to get the raw search results before they are converted to Eloquent models, you may use the `raw` method:
+Nếu muốn lấy kết quả tìm kiếm thô trước khi chúng được chuyển đổi thành Eloquent model, bạn có thể sử dụng phương thức `raw`:
 
 ```php
 $orders = Order::search('Star Trek')->raw();
 ```
 
 <a name="semantic-search"></a>
-### Semantic Search
+### Tìm kiếm semantic
 
-The database, Meilisearch, and Turbopuffer engines support semantic search, which matches records based on the meaning of a query. When Scout generates embeddings, semantic and hybrid searches require the [Laravel AI SDK](/docs/{{version}}/ai-sdk). Turbopuffer's [native embeddings](#turbopuffer-configuration) and precomputed query vectors do not require the Laravel AI SDK.
+Các engine database, Meilisearch và Turbopuffer hỗ trợ tìm kiếm semantic, cho phép khớp bản ghi dựa trên ý nghĩa của truy vấn. Khi Scout tạo embeddings, tìm kiếm semantic và hybrid yêu cầu [Laravel AI SDK](/docs/{{version}}/ai-sdk). [Native embeddings](#turbopuffer-configuration) của Turbopuffer và các query vector được tính toán trước không yêu cầu Laravel AI SDK.
 
-After configuring embeddings for the selected engine, invoke the `semantic` method on a search query:
+Sau khi cấu hình embeddings cho engine đã chọn, hãy gọi phương thức `semantic` trên truy vấn tìm kiếm:
 
 ```php
 $articles = Article::search('staying cool in the summer')
@@ -972,7 +972,7 @@ $articles = Article::search('staying cool in the summer')
     ->get();
 ```
 
-You may provide a minimum similarity threshold when supported by the selected engine:
+Bạn có thể cung cấp ngưỡng tương đồng tối thiểu khi engine được chọn hỗ trợ:
 
 ```php
 $articles = Article::search('renewable energy storage')
@@ -980,7 +980,7 @@ $articles = Article::search('renewable energy storage')
     ->get();
 ```
 
-To combine full-text and semantic search, use the `hybrid` method. Its first two arguments control the relative weights of text and semantic results:
+Để kết hợp tìm kiếm full-text và semantic, hãy sử dụng phương thức `hybrid`. Hai đối số đầu tiên của phương thức này kiểm soát trọng số tương đối của kết quả text và semantic:
 
 ```php
 $articles = Article::search('renewable energy storage')
@@ -989,9 +989,9 @@ $articles = Article::search('renewable energy storage')
 ```
 
 <a name="custom-indexes"></a>
-#### Custom Indexes
+#### Index tùy chỉnh
 
-When searching using third-party engines, search queries will typically be performed on the index specified by the model's [searchableAs](#configuring-model-indexes) method. However, you may use the `within` method to specify a custom index that should be searched instead:
+Khi tìm kiếm bằng engine bên thứ ba, truy vấn thường được thực hiện trên index do phương thức [searchableAs](#configuring-model-indexes) của model chỉ định. Tuy nhiên, bạn có thể sử dụng phương thức `within` để chỉ định một index tùy chỉnh cần được tìm kiếm thay thế:
 
 ```php
 $orders = Order::search('Star Trek')
@@ -1000,9 +1000,9 @@ $orders = Order::search('Star Trek')
 ```
 
 <a name="where-clauses"></a>
-### Where Clauses
+### Mệnh đề Where
 
-Scout allows you to add "where" clauses to your search queries. For example, basic equality checks are useful for scoping search queries by an owner ID:
+Scout cho phép bạn thêm các mệnh đề "where" vào truy vấn tìm kiếm. Ví dụ, kiểm tra bằng nhau cơ bản hữu ích khi giới hạn phạm vi truy vấn tìm kiếm theo ID của chủ sở hữu:
 
 ```php
 use App\Models\Order;
@@ -1010,7 +1010,7 @@ use App\Models\Order;
 $orders = Order::search('Star Trek')->where('user_id', 1)->get();
 ```
 
-You may also use the `=`, `!=`, `<`, `>`, `>=`, `<=` comparison operators to build more advanced queries:
+Bạn cũng có thể sử dụng các toán tử so sánh `=`, `!=`, `<`, `>`, `>=`, `<=` để xây dựng truy vấn nâng cao hơn:
 
 ```php
 Order::search('Star Trek')
@@ -1023,7 +1023,7 @@ Order::search('Star Trek')
   ->get();
 ```
 
-In addition, the `whereIn` method may be used to verify that a given column's value is contained within the given array:
+Ngoài ra, phương thức `whereIn` có thể được dùng để xác minh giá trị của một cột có nằm trong mảng đã cho hay không:
 
 ```php
 $orders = Order::search('Star Trek')->whereIn(
@@ -1031,7 +1031,7 @@ $orders = Order::search('Star Trek')->whereIn(
 )->get();
 ```
 
-The `whereNotIn` method verifies that the given column's value is not contained in the given array:
+Phương thức `whereNotIn` xác minh rằng giá trị của cột đã cho không nằm trong mảng đã cung cấp:
 
 ```php
 $orders = Order::search('Star Trek')->whereNotIn(
@@ -1040,12 +1040,12 @@ $orders = Order::search('Star Trek')->whereNotIn(
 ```
 
 > [!WARNING]
-> If your application is using Meilisearch, you must configure your application's [filterable attributes](#meilisearch-index-settings) before utilizing Scout's "where" clauses.
+> Nếu ứng dụng của bạn sử dụng Meilisearch, bạn phải cấu hình [filterable attributes](#meilisearch-index-settings) của ứng dụng trước khi sử dụng các mệnh đề "where" của Scout.
 
 <a name="customizing-the-eloquent-results-query"></a>
-#### Customizing the Eloquent Results Query
+#### Tùy chỉnh truy vấn kết quả Eloquent
 
-After Scout retrieves a list of matching Eloquent models from your application's search engine, Eloquent is used to retrieve all of the matching models by their primary keys. You may customize this query by invoking the `query` method. The `query` method accepts a closure that will receive the Eloquent query builder instance as an argument:
+Sau khi Scout lấy danh sách các Eloquent model khớp từ search engine của ứng dụng, Eloquent được dùng để truy xuất toàn bộ model tương ứng theo primary key. Bạn có thể tùy chỉnh truy vấn này bằng cách gọi phương thức `query`. Phương thức `query` nhận một closure, closure này sẽ nhận Eloquent query builder instance làm đối số:
 
 ```php
 use App\Models\Order;
@@ -1056,12 +1056,12 @@ $orders = Order::search('Star Trek')
     ->get();
 ```
 
-When using a third-party engine, this callback is invoked after the relevant models have already been retrieved from the search engine, so it should not be used for "filtering" results — use [Scout where clauses](#where-clauses) instead. However, when using the database engine, the `query` method's constraints are applied directly to the database query, so you may use it for filtering as well.
+Khi sử dụng engine bên thứ ba, callback này được gọi sau khi các model liên quan đã được lấy từ search engine, vì vậy không nên dùng nó để "lọc" kết quả — hãy sử dụng [mệnh đề where của Scout](#where-clauses) thay thế. Tuy nhiên, khi sử dụng database engine, các ràng buộc của phương thức `query` được áp dụng trực tiếp vào database query, nên bạn cũng có thể dùng nó để lọc.
 
 <a name="pagination"></a>
-### Pagination
+### Phân trang
 
-In addition to retrieving a collection of models, you may paginate your search results using the `paginate` method. This method will return an `Illuminate\Pagination\LengthAwarePaginator` instance just as if you had [paginated a traditional Eloquent query](/docs/{{version}}/pagination):
+Ngoài việc truy xuất một collection các model, bạn có thể phân trang kết quả tìm kiếm bằng phương thức `paginate`. Phương thức này trả về một instance `Illuminate\Pagination\LengthAwarePaginator`, tương tự như khi bạn [phân trang một truy vấn Eloquent thông thường](/docs/{{version}}/pagination):
 
 ```php
 use App\Models\Order;
@@ -1069,19 +1069,19 @@ use App\Models\Order;
 $orders = Order::search('Star Trek')->paginate();
 ```
 
-You may specify how many models to retrieve per page by passing the amount as the first argument to the `paginate` method:
+Bạn có thể chỉ định số lượng model cần lấy trên mỗi trang bằng cách truyền số lượng làm đối số đầu tiên cho phương thức `paginate`:
 
 ```php
 $orders = Order::search('Star Trek')->paginate(15);
 ```
 
-When using the database engine, you may also use the `simplePaginate` method. Unlike `paginate`, which retrieves the total number of matching records so it can display page numbers, `simplePaginate` only determines whether there are more results beyond the current page — making it more efficient for large datasets where you only need "previous" and "next" links:
+Khi sử dụng database engine, bạn cũng có thể dùng phương thức `simplePaginate`. Khác với `paginate`, vốn truy xuất tổng số bản ghi khớp để có thể hiển thị số trang, `simplePaginate` chỉ xác định liệu còn kết quả sau trang hiện tại hay không — nhờ đó hiệu quả hơn với tập dữ liệu lớn khi bạn chỉ cần liên kết "trước" và "tiếp theo":
 
 ```php
 $orders = Order::search('Star Trek')->simplePaginate(15);
 ```
 
-Once you have retrieved the results, you may display the results and render the page links using [Blade](/docs/{{version}}/blade) just as if you had paginated a traditional Eloquent query:
+Sau khi truy xuất kết quả, bạn có thể hiển thị chúng và render các liên kết phân trang bằng [Blade](/docs/{{version}}/blade), giống như khi phân trang một truy vấn Eloquent thông thường:
 
 ```html
 <div class="container">
@@ -1093,7 +1093,7 @@ Once you have retrieved the results, you may display the results and render the 
 {{ $orders->links() }}
 ```
 
-Of course, if you would like to retrieve the pagination results as JSON, you may return the paginator instance directly from a route or controller:
+Dĩ nhiên, nếu muốn lấy kết quả phân trang dưới dạng JSON, bạn có thể trả paginator instance trực tiếp từ route hoặc controller:
 
 ```php
 use App\Models\Order;
@@ -1105,18 +1105,18 @@ Route::get('/orders', function (Request $request) {
 ```
 
 > [!WARNING]
-> Since search engines are not aware of your Eloquent model's global scope definitions, you should not utilize global scopes in applications that utilize Scout pagination. Or, you should recreate the global scope's constraints when searching via Scout.
+> Vì search engine không biết các định nghĩa global scope của Eloquent model, bạn không nên sử dụng global scope trong các ứng dụng dùng phân trang của Scout. Hoặc, bạn nên tái tạo các ràng buộc của global scope khi tìm kiếm qua Scout.
 
 <a name="soft-deleting"></a>
-### Soft Deleting
+### Soft Delete
 
-If your indexed models are [soft deleting](/docs/{{version}}/eloquent#soft-deleting) and you need to search your soft deleted models, set the `soft_delete` option of the `config/scout.php` configuration file to `true`:
+Nếu các model đã được index của bạn sử dụng [soft delete](/docs/{{version}}/eloquent#soft-deleting) và bạn cần tìm kiếm cả các model đã soft delete, hãy đặt tùy chọn `soft_delete` trong file cấu hình `config/scout.php` thành `true`:
 
 ```php
 'soft_delete' => true,
 ```
 
-When this configuration option is `true`, Scout will not remove soft deleted models from the search index. Instead, it will set a hidden `__soft_deleted` attribute on the indexed record. Then, you may use the `withTrashed` or `onlyTrashed` methods to retrieve the soft deleted records when searching:
+Khi tùy chọn cấu hình này là `true`, Scout sẽ không xóa các model đã soft delete khỏi search index. Thay vào đó, Scout đặt thuộc tính ẩn `__soft_deleted` trên bản ghi đã index. Sau đó, bạn có thể sử dụng các phương thức `withTrashed` hoặc `onlyTrashed` để truy xuất các bản ghi đã soft delete khi tìm kiếm:
 
 ```php
 use App\Models\Order;
@@ -1129,12 +1129,12 @@ $orders = Order::search('Star Trek')->onlyTrashed()->get();
 ```
 
 > [!NOTE]
-> When a soft deleted model is permanently deleted using `forceDelete`, Scout will remove it from the search index automatically.
+> Khi một model đã soft delete bị xóa vĩnh viễn bằng `forceDelete`, Scout sẽ tự động xóa model đó khỏi search index.
 
 <a name="customizing-engine-searches"></a>
-### Customizing Engine Searches
+### Tùy chỉnh tìm kiếm của engine
 
-If you need to perform advanced customization of the search behavior of an engine you may pass a closure as the second argument to the `search` method. For example, you could use this callback to add geo-location data to your search options before the search query is passed to Algolia:
+Nếu cần tùy chỉnh nâng cao hành vi tìm kiếm của một engine, bạn có thể truyền một closure làm đối số thứ hai cho phương thức `search`. Ví dụ, bạn có thể dùng callback này để thêm dữ liệu vị trí địa lý vào các tùy chọn tìm kiếm trước khi truy vấn được chuyển đến Algolia:
 
 ```php
 use Algolia\AlgoliaSearch\SearchIndex;
@@ -1154,12 +1154,12 @@ Order::search(
 ```
 
 <a name="custom-engines"></a>
-## Custom Engines
+## Engine tùy chỉnh
 
 <a name="writing-the-engine"></a>
-#### Writing the Engine
+#### Viết engine
 
-If one of the built-in Scout search engines doesn't fit your needs, you may write your own custom engine and register it with Scout. Your engine should extend the `Laravel\Scout\Engines\Engine` abstract class. This abstract class contains eight methods your custom engine must implement:
+Nếu không engine tìm kiếm tích hợp sẵn nào của Scout phù hợp với nhu cầu, bạn có thể tự viết engine tùy chỉnh và đăng ký nó với Scout. Engine của bạn phải kế thừa abstract class `Laravel\Scout\Engines\Engine`. Abstract class này chứa tám phương thức mà engine tùy chỉnh phải triển khai:
 
 ```php
 use Laravel\Scout\Builder;
@@ -1174,12 +1174,12 @@ abstract public function getTotalCount($results);
 abstract public function flush($model);
 ```
 
-You may find it helpful to review the implementations of these methods on the `Laravel\Scout\Engines\AlgoliaEngine` class. This class will provide you with a good starting point for learning how to implement each of these methods in your own engine.
+Bạn có thể tham khảo cách triển khai các phương thức này trong class `Laravel\Scout\Engines\AlgoliaEngine`. Class này là điểm khởi đầu hữu ích để tìm hiểu cách triển khai từng phương thức trong engine của riêng bạn.
 
 <a name="registering-the-engine"></a>
-#### Registering the Engine
+#### Đăng ký engine
 
-Once you have written your custom engine, you may register it with Scout using the `extend` method of the Scout engine manager. Scout's engine manager may be resolved from the Laravel service container. You should call the `extend` method from the `boot` method of your `App\Providers\AppServiceProvider` class or any other service provider used by your application:
+Sau khi viết engine tùy chỉnh, bạn có thể đăng ký nó với Scout bằng phương thức `extend` của Scout engine manager. Scout engine manager có thể được resolve từ Laravel service container. Bạn nên gọi phương thức `extend` từ phương thức `boot` của class `App\Providers\AppServiceProvider` hoặc bất kỳ service provider nào khác mà ứng dụng sử dụng:
 
 ```php
 use App\ScoutExtensions\MySqlSearchEngine;
@@ -1196,11 +1196,13 @@ public function boot(): void
 }
 ```
 
-Once your engine has been registered, you may specify it as your default Scout `driver` in your application's `config/scout.php` configuration file:
+Sau khi engine được đăng ký, bạn có thể chỉ định nó làm `driver` Scout mặc định trong file cấu hình `config/scout.php` của ứng dụng:
 
 ```php
 'driver' => 'mysql',
 ```
+
+---
 
 ## Tài liệu chính thức
 

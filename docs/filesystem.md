@@ -1,50 +1,50 @@
-# File Storage
+# Lưu trữ file
 
-- [Introduction](#introduction)
-- [Configuration](#configuration)
-    - [The Local Driver](#the-local-driver)
-    - [The Public Disk](#the-public-disk)
-    - [Driver Prerequisites](#driver-prerequisites)
-    - [Scoped, Read-Only, and Read-Through Filesystems](#scoped-and-read-only-filesystems)
-    - [Amazon S3 Compatible Filesystems](#amazon-s3-compatible-filesystems)
-- [Obtaining Disk Instances](#obtaining-disk-instances)
-    - [On-Demand Disks](#on-demand-disks)
-- [Retrieving Files](#retrieving-files)
-    - [Downloading Files](#downloading-files)
-    - [File URLs](#file-urls)
-    - [Temporary URLs](#temporary-urls)
-    - [File Metadata](#file-metadata)
-- [Storing Files](#storing-files)
-    - [Prepending and Appending To Files](#prepending-appending-to-files)
-    - [Copying and Moving Files](#copying-moving-files)
-    - [Automatic Streaming](#automatic-streaming)
-    - [File Uploads](#file-uploads)
-    - [File Visibility](#file-visibility)
-    - [Image Manipulation](#image-manipulation)
-- [Deleting Files](#deleting-files)
-- [Directories](#directories)
-- [Testing](#testing)
-- [Custom Filesystems](#custom-filesystems)
+- [Giới thiệu](#introduction)
+- [Cấu hình](#configuration)
+    - [Driver Local](#the-local-driver)
+    - [Disk Public](#the-public-disk)
+    - [Điều kiện tiên quyết của driver](#driver-prerequisites)
+    - [Filesystem Scoped, Read-Only và Read-Through](#scoped-and-read-only-filesystems)
+    - [Filesystem tương thích Amazon S3](#amazon-s3-compatible-filesystems)
+- [Lấy instance của disk](#obtaining-disk-instances)
+    - [Disk theo yêu cầu](#on-demand-disks)
+- [Truy xuất file](#retrieving-files)
+    - [Tải file xuống](#downloading-files)
+    - [URL của file](#file-urls)
+    - [URL tạm thời](#temporary-urls)
+    - [Metadata của file](#file-metadata)
+- [Lưu file](#storing-files)
+    - [Thêm nội dung vào đầu và cuối file](#prepending-appending-to-files)
+    - [Sao chép và di chuyển file](#copying-moving-files)
+    - [Streaming tự động](#automatic-streaming)
+    - [Upload file](#file-uploads)
+    - [Khả năng truy cập file](#file-visibility)
+    - [Xử lý ảnh](#image-manipulation)
+- [Xóa file](#deleting-files)
+- [Thư mục](#directories)
+- [Kiểm thử](#testing)
+- [Filesystem tùy chỉnh](#custom-filesystems)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel provides a powerful filesystem abstraction thanks to the wonderful [Flysystem](https://github.com/thephpleague/flysystem) PHP package by Frank de Jonge. The Laravel Flysystem integration provides simple drivers for working with local filesystems, SFTP, and Amazon S3. Even better, it's amazingly simple to switch between these storage options between your local development machine and production server as the API remains the same for each system.
+Laravel cung cấp một lớp trừu tượng filesystem mạnh mẽ nhờ package PHP [Flysystem](https://github.com/thephpleague/flysystem) của Frank de Jonge. Tích hợp Flysystem của Laravel cung cấp các driver đơn giản để làm việc với filesystem local, SFTP và Amazon S3. Đặc biệt, bạn có thể chuyển đổi rất dễ dàng giữa các tùy chọn lưu trữ này trên máy phát triển local và máy chủ production vì API của từng hệ thống vẫn giống nhau.
 
 <a name="configuration"></a>
-## Configuration
+## Cấu hình
 
-Laravel's filesystem configuration file is located at `config/filesystems.php`. Within this file, you may configure all of your filesystem "disks". Each disk represents a particular storage driver and storage location. Example configurations for each supported driver are included in the configuration file so you can modify the configuration to reflect your storage preferences and credentials.
+File cấu hình filesystem của Laravel nằm tại `config/filesystems.php`. Trong file này, bạn có thể cấu hình tất cả các "disk" của filesystem. Mỗi disk đại diện cho một driver lưu trữ và một vị trí lưu trữ cụ thể. File cấu hình đã bao gồm cấu hình mẫu cho từng driver được hỗ trợ để bạn có thể điều chỉnh theo lựa chọn lưu trữ và thông tin xác thực của mình.
 
-The `local` driver interacts with files stored locally on the server running the Laravel application, while the `sftp` storage driver is used for SSH key-based FTP. The `s3` driver is used to write to Amazon's S3 cloud storage service.
+Driver `local` tương tác với các file được lưu cục bộ trên máy chủ chạy ứng dụng Laravel, trong khi driver lưu trữ `sftp` được dùng cho FTP dựa trên khóa SSH. Driver `s3` được dùng để ghi dữ liệu lên dịch vụ lưu trữ đám mây Amazon S3.
 
 > [!NOTE]
-> You may configure as many disks as you like and may even have multiple disks that use the same driver.
+> Bạn có thể cấu hình bao nhiêu disk tùy ý và thậm chí có thể có nhiều disk sử dụng cùng một driver.
 
 <a name="the-local-driver"></a>
-### The Local Driver
+### Driver Local
 
-When using the `local` driver, all file operations are relative to the `root` directory defined in your `filesystems` configuration file. By default, this value is set to the `storage/app/private` directory. Therefore, the following method would write to `storage/app/private/example.txt`:
+Khi sử dụng driver `local`, mọi thao tác với file đều tương đối so với thư mục `root` được định nghĩa trong file cấu hình `filesystems`. Theo mặc định, giá trị này là thư mục `storage/app/private`. Vì vậy, đoạn mã sau sẽ ghi vào `storage/app/private/example.txt`:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -53,25 +53,25 @@ Storage::disk('local')->put('example.txt', 'Contents');
 ```
 
 <a name="the-public-disk"></a>
-### The Public Disk
+### Disk Public
 
-The `public` disk included in your application's `filesystems` configuration file is intended for files that are going to be publicly accessible. By default, the `public` disk uses the `local` driver and stores its files in `storage/app/public`.
+Disk `public` có sẵn trong file cấu hình `filesystems` của ứng dụng dành cho các file cần được truy cập công khai. Theo mặc định, disk `public` sử dụng driver `local` và lưu file trong `storage/app/public`.
 
-If your `public` disk uses the `local` driver and you want to make these files accessible from the web, you should create a symbolic link from source directory `storage/app/public` to target directory `public/storage`:
+Nếu disk `public` sử dụng driver `local` và bạn muốn các file này có thể truy cập từ web, hãy tạo symbolic link từ thư mục nguồn `storage/app/public` đến thư mục đích `public/storage`:
 
-To create the symbolic link, you may use the `storage:link` Artisan command:
+Để tạo symbolic link, bạn có thể sử dụng lệnh Artisan `storage:link`:
 
 ```shell
 php artisan storage:link
 ```
 
-Once a file has been stored and the symbolic link has been created, you can create a URL to the files using the `asset` helper:
+Sau khi file được lưu và symbolic link đã được tạo, bạn có thể tạo URL đến file bằng helper `asset`:
 
 ```php
 echo asset('storage/file.txt');
 ```
 
-You may configure additional symbolic links in your `filesystems` configuration file. Each of the configured links will be created when you run the `storage:link` command:
+Bạn có thể cấu hình thêm các symbolic link trong file cấu hình `filesystems`. Mỗi link đã cấu hình sẽ được tạo khi bạn chạy lệnh `storage:link`:
 
 ```php
 'links' => [
@@ -80,25 +80,25 @@ You may configure additional symbolic links in your `filesystems` configuration 
 ],
 ```
 
-The `storage:unlink` command may be used to destroy your configured symbolic links:
+Bạn có thể dùng lệnh `storage:unlink` để xóa các symbolic link đã cấu hình:
 
 ```shell
 php artisan storage:unlink
 ```
 
 <a name="driver-prerequisites"></a>
-### Driver Prerequisites
+### Điều kiện tiên quyết của driver
 
 <a name="s3-driver-configuration"></a>
-#### S3 Driver Configuration
+#### Cấu hình driver S3
 
-Before using the S3 driver, you will need to install the Flysystem S3 package via the Composer package manager:
+Trước khi sử dụng driver S3, bạn cần cài package Flysystem S3 thông qua Composer:
 
 ```shell
 composer require league/flysystem-aws-s3-v3 "^3.0" --with-all-dependencies
 ```
 
-An S3 disk configuration array is located in your `config/filesystems.php` configuration file. Typically, you should configure your S3 information and credentials using the following environment variables which are referenced by the `config/filesystems.php` configuration file:
+Mảng cấu hình cho disk S3 nằm trong file cấu hình `config/filesystems.php`. Thông thường, bạn nên cấu hình thông tin và credential S3 bằng các biến môi trường sau, vốn được tham chiếu từ file cấu hình `config/filesystems.php`:
 
 ```ini
 AWS_ACCESS_KEY_ID=<your-key-id>
@@ -108,18 +108,18 @@ AWS_BUCKET=<your-bucket-name>
 AWS_USE_PATH_STYLE_ENDPOINT=false
 ```
 
-For convenience, these environment variables match the naming convention used by the AWS CLI.
+Để thuận tiện, các biến môi trường này tuân theo quy ước đặt tên được AWS CLI sử dụng.
 
 <a name="ftp-driver-configuration"></a>
-#### FTP Driver Configuration
+#### Cấu hình driver FTP
 
-Before using the FTP driver, you will need to install the Flysystem FTP package via the Composer package manager:
+Trước khi sử dụng driver FTP, bạn cần cài package Flysystem FTP thông qua Composer:
 
 ```shell
 composer require league/flysystem-ftp "^3.0"
 ```
 
-Laravel's Flysystem integrations work great with FTP; however, a sample configuration is not included with the framework's default `config/filesystems.php` configuration file. If you need to configure an FTP filesystem, you may use the configuration example below:
+Tích hợp Flysystem của Laravel hoạt động tốt với FTP; tuy nhiên, file `config/filesystems.php` mặc định của framework không bao gồm cấu hình mẫu. Nếu cần cấu hình FTP filesystem, bạn có thể tham khảo ví dụ dưới đây:
 
 ```php
 'ftp' => [
@@ -138,15 +138,15 @@ Laravel's Flysystem integrations work great with FTP; however, a sample configur
 ```
 
 <a name="sftp-driver-configuration"></a>
-#### SFTP Driver Configuration
+#### Cấu hình driver SFTP
 
-Before using the SFTP driver, you will need to install the Flysystem SFTP package via the Composer package manager:
+Trước khi sử dụng driver SFTP, bạn cần cài package Flysystem SFTP thông qua Composer:
 
 ```shell
 composer require league/flysystem-sftp-v3 "^3.0"
 ```
 
-Laravel's Flysystem integrations work great with SFTP; however, a sample configuration is not included with the framework's default `config/filesystems.php` configuration file. If you need to configure an SFTP filesystem, you may use the configuration example below:
+Tích hợp Flysystem của Laravel hoạt động tốt với SFTP; tuy nhiên, file `config/filesystems.php` mặc định của framework không bao gồm cấu hình mẫu. Nếu cần cấu hình SFTP filesystem, bạn có thể tham khảo ví dụ dưới đây:
 
 ```php
 'sftp' => [
@@ -177,15 +177,15 @@ Laravel's Flysystem integrations work great with SFTP; however, a sample configu
 ```
 
 <a name="scoped-and-read-only-filesystems"></a>
-### Scoped, Read-Only, and Read-Through Filesystems
+### Filesystem Scoped, Read-Only và Read-Through
 
-Scoped disks allow you to define a filesystem where all paths are automatically prefixed with a given path prefix. Before creating a scoped filesystem disk, you will need to install an additional Flysystem package via the Composer package manager:
+Scoped disk cho phép bạn định nghĩa một filesystem mà mọi đường dẫn đều tự động được thêm một tiền tố đường dẫn đã chỉ định. Trước khi tạo scoped filesystem disk, bạn cần cài thêm một package Flysystem thông qua Composer:
 
 ```shell
 composer require league/flysystem-path-prefixing "^3.0"
 ```
 
-You may create a path scoped instance of any existing filesystem disk by defining a disk that utilizes the `scoped` driver. For example, you may create a disk which scopes your existing `s3` disk to a specific path prefix, and then every file operation using your scoped disk will utilize the specified prefix:
+Bạn có thể tạo một instance giới hạn theo đường dẫn từ bất kỳ filesystem disk hiện có nào bằng cách định nghĩa disk sử dụng driver `scoped`. Ví dụ, bạn có thể giới hạn disk `s3` hiện có vào một tiền tố đường dẫn cụ thể; sau đó mọi thao tác file qua scoped disk sẽ sử dụng tiền tố đó:
 
 ```php
 's3-videos' => [
@@ -195,13 +195,13 @@ You may create a path scoped instance of any existing filesystem disk by definin
 ],
 ```
 
-"Read-only" disks allow you to create filesystem disks that do not allow write operations. Before using the `read-only` configuration option, you will need to install an additional Flysystem package via the Composer package manager:
+Disk "read-only" cho phép bạn tạo filesystem disk không cho phép thao tác ghi. Trước khi sử dụng tùy chọn cấu hình `read-only`, bạn cần cài thêm một package Flysystem thông qua Composer:
 
 ```shell
 composer require league/flysystem-read-only "^3.0"
 ```
 
-Next, you may include the `read-only` configuration option in one or more of your disk's configuration arrays:
+Tiếp theo, bạn có thể thêm tùy chọn cấu hình `read-only` vào một hoặc nhiều mảng cấu hình disk:
 
 ```php
 's3-videos' => [
@@ -211,7 +211,7 @@ Next, you may include the `read-only` configuration option in one or more of you
 ],
 ```
 
-Read-through disks allow you to migrate files between disks without downtime. When reading a file, Laravel checks the primary disk first. If the file only exists on the fallback disk, Laravel reads the file from the fallback disk and copies it to the primary disk for future requests:
+Read-through disk cho phép bạn di chuyển file giữa các disk mà không cần downtime. Khi đọc một file, Laravel kiểm tra primary disk trước. Nếu file chỉ tồn tại trên fallback disk, Laravel sẽ đọc file từ fallback disk và sao chép sang primary disk để phục vụ các request sau:
 
 ```php
 'assets' => [
@@ -221,23 +221,23 @@ Read-through disks allow you to migrate files between disks without downtime. Wh
 ],
 ```
 
-Writes and directory listings target the primary disk. File existence and metadata checks use either disk without copying files to the primary disk. If copying a fallback file to the primary disk fails, the read still succeeds by default. To throw an exception instead, set the `throw_on_promotion_failure` configuration option to `true`.
+Các thao tác ghi và liệt kê thư mục sử dụng primary disk. Việc kiểm tra file tồn tại và metadata có thể dùng một trong hai disk mà không sao chép file sang primary disk. Nếu việc sao chép file từ fallback disk sang primary disk thất bại, thao tác đọc mặc định vẫn thành công. Nếu muốn ném exception thay vào đó, hãy đặt tùy chọn cấu hình `throw_on_promotion_failure` thành `true`.
 
 <a name="amazon-s3-compatible-filesystems"></a>
-### Amazon S3 Compatible Filesystems
+### Filesystem tương thích Amazon S3
 
-By default, your application's `filesystems` configuration file contains a disk configuration for the `s3` disk. In addition to using this disk to interact with [Amazon S3](https://aws.amazon.com/s3/), you may use it to interact with any S3-compatible file storage service such as [RustFS](https://github.com/rustfs/rustfs), [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/), [Vultr Object Storage](https://www.vultr.com/products/object-storage/), [Cloudflare R2](https://www.cloudflare.com/developer-platform/products/r2/), or [Hetzner Cloud Storage](https://www.hetzner.com/storage/object-storage/).
+Mặc định, file cấu hình `filesystems` của ứng dụng chứa cấu hình disk `s3`. Ngoài việc dùng disk này để tương tác với [Amazon S3](https://aws.amazon.com/s3/), bạn cũng có thể dùng nó với bất kỳ dịch vụ lưu trữ file tương thích S3 nào như [RustFS](https://github.com/rustfs/rustfs), [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/), [Vultr Object Storage](https://www.vultr.com/products/object-storage/), [Cloudflare R2](https://www.cloudflare.com/developer-platform/products/r2/) hoặc [Hetzner Cloud Storage](https://www.hetzner.com/storage/object-storage/).
 
-Typically, after updating the disk's credentials to match the credentials of the service you are planning to use, you only need to update the value of the `endpoint` configuration option. This option's value is typically defined via the `AWS_ENDPOINT` environment variable:
+Thông thường, sau khi cập nhật thông tin xác thực của disk cho phù hợp với dịch vụ sẽ sử dụng, bạn chỉ cần cập nhật giá trị tùy chọn cấu hình `endpoint`. Giá trị này thường được định nghĩa qua biến môi trường `AWS_ENDPOINT`:
 
 ```php
 'endpoint' => env('AWS_ENDPOINT', 'https://rustfs:9000'),
 ```
 
 <a name="obtaining-disk-instances"></a>
-## Obtaining Disk Instances
+## Lấy instance của disk
 
-The `Storage` facade may be used to interact with any of your configured disks. For example, you may use the `put` method on the facade to store an avatar on the default disk. If you call methods on the `Storage` facade without first calling the `disk` method, the method will automatically be passed to the default disk:
+Facade `Storage` có thể được dùng để tương tác với bất kỳ disk nào đã cấu hình. Ví dụ, bạn có thể dùng phương thức `put` trên facade để lưu avatar vào disk mặc định. Nếu gọi phương thức trên facade `Storage` mà không gọi `disk` trước, phương thức sẽ tự động được chuyển đến disk mặc định:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -245,16 +245,16 @@ use Illuminate\Support\Facades\Storage;
 Storage::put('avatars/1', $content);
 ```
 
-If your application interacts with multiple disks, you may use the `disk` method on the `Storage` facade to work with files on a particular disk:
+Nếu ứng dụng tương tác với nhiều disk, bạn có thể dùng phương thức `disk` trên facade `Storage` để làm việc với file trên một disk cụ thể:
 
 ```php
 Storage::disk('s3')->put('avatars/1', $content);
 ```
 
 <a name="on-demand-disks"></a>
-### On-Demand Disks
+### Disk theo yêu cầu
 
-Sometimes you may wish to create a disk at runtime using a given configuration without that configuration actually being present in your application's `filesystems` configuration file. To accomplish this, you may pass a configuration array to the `Storage` facade's `build` method:
+Đôi khi bạn cần tạo disk tại runtime từ một cấu hình nhất định mà không cần cấu hình đó tồn tại trong file cấu hình `filesystems` của ứng dụng. Để thực hiện, hãy truyền một mảng cấu hình vào phương thức `build` của facade `Storage`:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -268,21 +268,21 @@ $disk->put('image.jpg', $content);
 ```
 
 <a name="retrieving-files"></a>
-## Retrieving Files
+## Truy xuất file
 
-The `get` method may be used to retrieve the contents of a file. The raw string contents of the file will be returned by the method. Remember, all file paths should be specified relative to the disk's "root" location:
+Phương thức `get` có thể được dùng để lấy nội dung của file. Phương thức trả về nội dung chuỗi thô của file. Hãy nhớ rằng mọi đường dẫn file phải được chỉ định tương đối so với vị trí `root` của disk:
 
 ```php
 $contents = Storage::get('file.jpg');
 ```
 
-If the file you are retrieving contains JSON, you may use the `json` method to retrieve the file and decode its contents:
+Nếu file cần lấy chứa JSON, bạn có thể dùng phương thức `json` để lấy file và giải mã nội dung:
 
 ```php
 $orders = Storage::json('orders.json');
 ```
 
-The `exists` method may be used to determine if a file exists on the disk:
+Phương thức `exists` có thể được dùng để xác định một file có tồn tại trên disk hay không:
 
 ```php
 if (Storage::disk('s3')->exists('file.jpg')) {
@@ -290,7 +290,7 @@ if (Storage::disk('s3')->exists('file.jpg')) {
 }
 ```
 
-The `missing` method may be used to determine if a file is missing from the disk:
+Phương thức `missing` có thể được dùng để xác định một file có không tồn tại trên disk hay không:
 
 ```php
 if (Storage::disk('s3')->missing('file.jpg')) {
@@ -299,9 +299,9 @@ if (Storage::disk('s3')->missing('file.jpg')) {
 ```
 
 <a name="downloading-files"></a>
-### Downloading Files
+### Tải file xuống
 
-The `download` method may be used to generate a response that forces the user's browser to download the file at the given path. The `download` method accepts a filename as the second argument to the method, which will determine the filename that is seen by the user downloading the file. Finally, you may pass an array of HTTP headers as the third argument to the method:
+Phương thức `download` có thể tạo response buộc trình duyệt của người dùng tải file tại đường dẫn đã cho. Đối số thứ hai của `download` là tên file mà người dùng sẽ thấy khi tải xuống. Cuối cùng, bạn có thể truyền một mảng HTTP header làm đối số thứ ba:
 
 ```php
 return Storage::download('file.jpg');
@@ -310,9 +310,9 @@ return Storage::download('file.jpg', $name, $headers);
 ```
 
 <a name="file-urls"></a>
-### File URLs
+### URL của file
 
-You may use the `url` method to get the URL for a given file. If you are using the `local` driver, this will typically just prepend `/storage` to the given path and return a relative URL to the file. If you are using the `s3` driver, the fully qualified remote URL will be returned:
+Bạn có thể dùng phương thức `url` để lấy URL của một file. Với driver `local`, phương thức thường chỉ thêm `/storage` vào đầu đường dẫn và trả về URL tương đối của file. Với driver `s3`, phương thức trả về remote URL đầy đủ:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -320,15 +320,15 @@ use Illuminate\Support\Facades\Storage;
 $url = Storage::url('file.jpg');
 ```
 
-When using the `local` driver, all files that should be publicly accessible should be placed in the `storage/app/public` directory. Furthermore, you should [create a symbolic link](#the-public-disk) at `public/storage` which points to the `storage/app/public` directory.
+Khi dùng driver `local`, mọi file cần truy cập công khai nên được đặt trong thư mục `storage/app/public`. Ngoài ra, bạn nên [tạo symbolic link](#the-public-disk) tại `public/storage` trỏ tới thư mục `storage/app/public`.
 
 > [!WARNING]
-> When using the `local` driver, the return value of `url` is not URL encoded. For this reason, we recommend always storing your files using names that will create valid URLs.
+> Khi dùng driver `local`, giá trị trả về của `url` không được URL encode. Vì vậy, bạn nên luôn lưu file với tên có thể tạo thành URL hợp lệ.
 
 <a name="url-host-customization"></a>
-#### URL Host Customization
+#### Tùy chỉnh host của URL
 
-If you would like to modify the host for URLs generated using the `Storage` facade, you may add or change the `url` option in the disk's configuration array:
+Nếu muốn thay đổi host cho URL được tạo bằng facade `Storage`, bạn có thể thêm hoặc thay đổi tùy chọn `url` trong mảng cấu hình disk:
 
 ```php
 'public' => [
@@ -341,9 +341,9 @@ If you would like to modify the host for URLs generated using the `Storage` faca
 ```
 
 <a name="temporary-urls"></a>
-### Temporary URLs
+### URL tạm thời
 
-Using the `temporaryUrl` method, you may create temporary URLs to files stored using the `local` and `s3` drivers. This method accepts a path and a `DateTime` instance specifying when the URL should expire:
+Với phương thức `temporaryUrl`, bạn có thể tạo URL tạm thời cho file được lưu bằng driver `local` và `s3`. Phương thức nhận một đường dẫn và một instance `DateTime` xác định thời điểm URL hết hạn:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -354,9 +354,9 @@ $url = Storage::temporaryUrl(
 ```
 
 <a name="enabling-local-temporary-urls"></a>
-#### Enabling Local Temporary URLs
+#### Bật URL tạm thời cho Local
 
-If you started developing your application before support for temporary URLs was introduced to the `local` driver, you may need to enable local temporary URLs. To do so, add the `serve` option to your `local` disk's configuration array within the `config/filesystems.php` configuration file:
+Nếu ứng dụng được phát triển trước khi driver `local` hỗ trợ URL tạm thời, bạn có thể cần bật tính năng này. Hãy thêm tùy chọn `serve` vào mảng cấu hình disk `local` trong file `config/filesystems.php`:
 
 ```php
 'local' => [
@@ -368,9 +368,9 @@ If you started developing your application before support for temporary URLs was
 ```
 
 <a name="s3-request-parameters"></a>
-#### S3 Request Parameters
+#### Tham số request S3
 
-If you need to specify additional [S3 request parameters](https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectGET.html#RESTObjectGET-requests), you may pass the array of request parameters as the third argument to the `temporaryUrl` method:
+Nếu cần chỉ định thêm [tham số request S3](https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectGET.html#RESTObjectGET-requests), bạn có thể truyền mảng tham số request làm đối số thứ ba cho `temporaryUrl`:
 
 ```php
 $url = Storage::temporaryUrl(
@@ -384,9 +384,9 @@ $url = Storage::temporaryUrl(
 ```
 
 <a name="customizing-temporary-urls"></a>
-#### Customizing Temporary URLs
+#### Tùy chỉnh URL tạm thời
 
-If you need to customize how temporary URLs are created for a specific storage disk, you can use the `buildTemporaryUrlsUsing` method. For example, this can be useful if you have a controller that allows you to download files stored via a disk that doesn't typically support temporary URLs. Usually, this method should be called from the `boot` method of a service provider:
+Nếu cần tùy chỉnh cách tạo URL tạm thời cho một storage disk cụ thể, bạn có thể dùng `buildTemporaryUrlsUsing`. Ví dụ, cách này hữu ích khi có controller cho phép tải file từ một disk vốn không hỗ trợ URL tạm thời. Thông thường, phương thức này nên được gọi trong `boot` của service provider:
 
 ```php
 <?php
@@ -419,12 +419,12 @@ class AppServiceProvider extends ServiceProvider
 ```
 
 <a name="temporary-upload-urls"></a>
-#### Temporary Upload URLs
+#### URL upload tạm thời
 
 > [!WARNING]
-> The ability to generate temporary upload URLs is only supported by the `s3` and `local` drivers.
+> Khả năng tạo URL upload tạm thời chỉ được hỗ trợ bởi driver `s3` và `local`.
 
-If you need to generate a temporary URL that can be used to upload a file directly from your client-side application, you may use the `temporaryUploadUrl` method. This method accepts a path and a `DateTime` instance specifying when the URL should expire. The `temporaryUploadUrl` method returns an associative array which may be destructured into the upload URL and the headers that should be included with the upload request:
+Nếu cần tạo URL tạm thời để ứng dụng phía client upload file trực tiếp, bạn có thể dùng `temporaryUploadUrl`. Phương thức nhận một đường dẫn và một instance `DateTime` xác định thời điểm URL hết hạn. `temporaryUploadUrl` trả về associative array có thể destructure thành URL upload và các header cần gửi kèm request upload:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -434,12 +434,12 @@ use Illuminate\Support\Facades\Storage;
 );
 ```
 
-This method is primarily useful in serverless environments that require the client-side application to directly upload files to a cloud storage system such as Amazon S3.
+Phương thức này đặc biệt hữu ích trong môi trường serverless, nơi ứng dụng phía client cần tải file trực tiếp lên hệ thống lưu trữ đám mây như Amazon S3.
 
 <a name="file-metadata"></a>
-### File Metadata
+### Metadata của file
 
-In addition to reading and writing files, Laravel can also provide information about the files themselves. For example, the `size` method may be used to get the size of a file in bytes:
+Ngoài việc đọc và ghi file, Laravel còn có thể cung cấp thông tin về chính các file đó. Ví dụ, phương thức `size` có thể được dùng để lấy kích thước file theo byte:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -447,22 +447,22 @@ use Illuminate\Support\Facades\Storage;
 $size = Storage::size('file.jpg');
 ```
 
-The `lastModified` method returns the UNIX timestamp of the last time the file was modified:
+Phương thức `lastModified` trả về UNIX timestamp của lần cuối file được chỉnh sửa:
 
 ```php
 $time = Storage::lastModified('file.jpg');
 ```
 
-The MIME type of a given file may be obtained via the `mimeType` method:
+Có thể lấy MIME type của một file bằng phương thức `mimeType`:
 
 ```php
 $mime = Storage::mimeType('file.jpg');
 ```
 
 <a name="file-paths"></a>
-#### File Paths
+#### Đường dẫn file
 
-You may use the `path` method to get the path for a given file. If you are using the `local` driver, this will return the absolute path to the file. If you are using the `s3` driver, this method will return the relative path to the file in the S3 bucket:
+Bạn có thể dùng phương thức `path` để lấy đường dẫn của một file. Nếu sử dụng driver `local`, phương thức này trả về đường dẫn tuyệt đối tới file. Nếu sử dụng driver `s3`, phương thức này trả về đường dẫn tương đối của file trong S3 bucket:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -471,9 +471,9 @@ $path = Storage::path('file.jpg');
 ```
 
 <a name="storing-files"></a>
-## Storing Files
+## Lưu file
 
-The `put` method may be used to store file contents on a disk. You may also pass a PHP `resource` to the `put` method, which will use Flysystem's underlying stream support. Remember, all file paths should be specified relative to the "root" location configured for the disk:
+Phương thức `put` có thể được dùng để lưu nội dung file vào một disk. Bạn cũng có thể truyền một PHP `resource` cho `put`; khi đó Flysystem sẽ sử dụng cơ chế stream bên dưới. Lưu ý rằng mọi đường dẫn file phải được chỉ định tương đối so với vị trí "root" đã cấu hình cho disk:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -484,9 +484,9 @@ Storage::put('file.jpg', $resource);
 ```
 
 <a name="failed-writes"></a>
-#### Failed Writes
+#### Ghi file thất bại
 
-If the `put` method (or other "write" operations) is unable to write the file to disk, `false` will be returned:
+Nếu phương thức `put` (hoặc thao tác "write" khác) không thể ghi file vào disk, giá trị `false` sẽ được trả về:
 
 ```php
 if (! Storage::put('file.jpg', $contents)) {
@@ -494,7 +494,7 @@ if (! Storage::put('file.jpg', $contents)) {
 }
 ```
 
-If you wish, you may define the `throw` option within your filesystem disk's configuration array. When this option is defined as `true`, "write" methods such as `put` will throw an instance of `League\Flysystem\UnableToWriteFile` when write operations fail:
+Nếu muốn, bạn có thể khai báo tùy chọn `throw` trong mảng cấu hình filesystem disk. Khi tùy chọn này là `true`, các phương thức ghi như `put` sẽ ném một instance của `League\Flysystem\UnableToWriteFile` khi thao tác ghi thất bại:
 
 ```php
 'public' => [
@@ -505,9 +505,9 @@ If you wish, you may define the `throw` option within your filesystem disk's con
 ```
 
 <a name="prepending-appending-to-files"></a>
-### Prepending and Appending To Files
+### Thêm nội dung vào đầu và cuối file
 
-The `prepend` and `append` methods allow you to write to the beginning or end of a file:
+Các phương thức `prepend` và `append` cho phép ghi nội dung vào đầu hoặc cuối file:
 
 ```php
 Storage::prepend('file.log', 'Prepended Text');
@@ -516,9 +516,9 @@ Storage::append('file.log', 'Appended Text');
 ```
 
 <a name="copying-moving-files"></a>
-### Copying and Moving Files
+### Sao chép và di chuyển file
 
-The `copy` method may be used to copy an existing file to a new location on the disk, while the `move` method may be used to rename or move an existing file to a new location:
+Phương thức `copy` có thể sao chép một file hiện có sang vị trí mới trên disk, còn `move` có thể đổi tên hoặc di chuyển file sang vị trí mới:
 
 ```php
 Storage::copy('old/file.jpg', 'new/file.jpg');
@@ -527,9 +527,9 @@ Storage::move('old/file.jpg', 'new/file.jpg');
 ```
 
 <a name="automatic-streaming"></a>
-### Automatic Streaming
+### Streaming tự động
 
-Streaming files to storage offers significantly reduced memory usage. If you would like Laravel to automatically manage streaming a given file to your storage location, you may use the `putFile` or `putFileAs` method. This method accepts either an `Illuminate\Http\File` or `Illuminate\Http\UploadedFile` instance and will automatically stream the file to your desired location:
+Streaming file vào storage giúp giảm đáng kể mức sử dụng bộ nhớ. Nếu muốn Laravel tự động quản lý việc stream file tới vị trí lưu trữ, bạn có thể dùng `putFile` hoặc `putFileAs`. Các phương thức này nhận instance `Illuminate\Http\File` hoặc `Illuminate\Http\UploadedFile` và tự động stream file tới vị trí mong muốn:
 
 ```php
 use Illuminate\Http\File;
@@ -542,18 +542,18 @@ $path = Storage::putFile('photos', new File('/path/to/photo'));
 $path = Storage::putFileAs('photos', new File('/path/to/photo'), 'photo.jpg');
 ```
 
-There are a few important things to note about the `putFile` method. Note that we only specified a directory name and not a filename. By default, the `putFile` method will generate a unique ID to serve as the filename. The file's extension will be determined by examining the file's MIME type. The path to the file will be returned by the `putFile` method so you can store the path, including the generated filename, in your database.
+Có một số điểm quan trọng cần lưu ý về `putFile`. Trong ví dụ trên, chúng ta chỉ chỉ định tên thư mục mà không chỉ định tên file. Mặc định, `putFile` tạo một ID duy nhất làm tên file. Phần mở rộng được xác định dựa trên MIME type của file. `putFile` trả về đường dẫn file, bao gồm cả tên file đã sinh, để bạn có thể lưu đường dẫn đó vào cơ sở dữ liệu.
 
-The `putFile` and `putFileAs` methods also accept an argument to specify the "visibility" of the stored file. This is particularly useful if you are storing the file on a cloud disk such as Amazon S3 and would like the file to be publicly accessible via generated URLs:
+Các phương thức `putFile` và `putFileAs` cũng nhận một đối số để chỉ định "visibility" của file được lưu. Điều này đặc biệt hữu ích khi lưu file trên cloud disk như Amazon S3 và muốn file có thể được truy cập công khai thông qua URL được tạo:
 
 ```php
 Storage::putFile('photos', new File('/path/to/photo'), 'public');
 ```
 
 <a name="file-uploads"></a>
-### File Uploads
+### Upload file
 
-In web applications, one of the most common use-cases for storing files is storing user uploaded files such as photos and documents. Laravel makes it very easy to store uploaded files using the `store` method on an uploaded file instance. Call the `store` method with the path at which you wish to store the uploaded file:
+Trong ứng dụng web, một trong những trường hợp lưu file phổ biến nhất là lưu các file người dùng tải lên, chẳng hạn ảnh và tài liệu. Laravel giúp việc này rất đơn giản thông qua phương thức `store` trên instance file đã upload. Hãy gọi `store` với đường dẫn nơi bạn muốn lưu file:
 
 ```php
 <?php
@@ -576,18 +576,18 @@ class UserAvatarController extends Controller
 }
 ```
 
-There are a few important things to note about this example. Note that we only specified a directory name, not a filename. By default, the `store` method will generate a unique ID to serve as the filename. The file's extension will be determined by examining the file's MIME type. The path to the file will be returned by the `store` method so you can store the path, including the generated filename, in your database.
+Có một số điểm quan trọng cần lưu ý trong ví dụ này. Chúng ta chỉ chỉ định tên thư mục, không chỉ định tên file. Mặc định, `store` tạo một ID duy nhất làm tên file. Phần mở rộng được xác định dựa trên MIME type của file. `store` trả về đường dẫn file, bao gồm tên file đã sinh, để bạn có thể lưu đường dẫn đó vào cơ sở dữ liệu.
 
-You may also call the `putFile` method on the `Storage` facade to perform the same file storage operation as the example above:
+Bạn cũng có thể gọi `putFile` trên facade `Storage` để thực hiện thao tác lưu file tương tự ví dụ trên:
 
 ```php
 $path = Storage::putFile('avatars', $request->file('avatar'));
 ```
 
 <a name="specifying-a-file-name"></a>
-#### Specifying a File Name
+#### Chỉ định tên file
 
-If you do not want a filename to be automatically assigned to your stored file, you may use the `storeAs` method, which receives the path, the filename, and the (optional) disk as its arguments:
+Nếu không muốn tên file được tự động gán, bạn có thể dùng `storeAs`, phương thức nhận đường dẫn, tên file và disk (tùy chọn) làm đối số:
 
 ```php
 $path = $request->file('avatar')->storeAs(
@@ -595,7 +595,7 @@ $path = $request->file('avatar')->storeAs(
 );
 ```
 
-You may also use the `putFileAs` method on the `Storage` facade, which will perform the same file storage operation as the example above:
+Bạn cũng có thể dùng `putFileAs` trên facade `Storage` để thực hiện thao tác lưu file tương tự ví dụ trên:
 
 ```php
 $path = Storage::putFileAs(
@@ -604,12 +604,12 @@ $path = Storage::putFileAs(
 ```
 
 > [!WARNING]
-> Unprintable and invalid unicode characters will automatically be removed from file paths. Therefore, you may wish to sanitize your file paths before passing them to Laravel's file storage methods. File paths are normalized using the `League\Flysystem\WhitespacePathNormalizer::normalizePath` method.
+> Các ký tự Unicode không thể in hoặc không hợp lệ sẽ tự động bị loại bỏ khỏi đường dẫn file. Vì vậy, bạn nên làm sạch đường dẫn trước khi truyền vào các phương thức lưu trữ file của Laravel. Đường dẫn được chuẩn hóa bằng phương thức `League\Flysystem\WhitespacePathNormalizer::normalizePath`.
 
 <a name="specifying-a-disk"></a>
-#### Specifying a Disk
+#### Chỉ định disk
 
-By default, this uploaded file's `store` method will use your default disk. If you would like to specify another disk, pass the disk name as the second argument to the `store` method:
+Mặc định, phương thức `store` của file đã upload sẽ sử dụng disk mặc định. Nếu muốn chỉ định disk khác, hãy truyền tên disk làm đối số thứ hai cho `store`:
 
 ```php
 $path = $request->file('avatar')->store(
@@ -617,7 +617,7 @@ $path = $request->file('avatar')->store(
 );
 ```
 
-If you are using the `storeAs` method, you may pass the disk name as the third argument to the method:
+Nếu sử dụng `storeAs`, bạn có thể truyền tên disk làm đối số thứ ba:
 
 ```php
 $path = $request->file('avatar')->storeAs(
@@ -628,9 +628,9 @@ $path = $request->file('avatar')->storeAs(
 ```
 
 <a name="other-uploaded-file-information"></a>
-#### Other Uploaded File Information
+#### Thông tin khác của file đã upload
 
-If you would like to get the original name and extension of the uploaded file, you may do so using the `getClientOriginalName` and `getClientOriginalExtension` methods:
+Nếu muốn lấy tên và phần mở rộng gốc của file đã upload, bạn có thể dùng `getClientOriginalName` và `getClientOriginalExtension`:
 
 ```php
 $file = $request->file('avatar');
@@ -639,7 +639,7 @@ $name = $file->getClientOriginalName();
 $extension = $file->getClientOriginalExtension();
 ```
 
-However, keep in mind that the `getClientOriginalName` and `getClientOriginalExtension` methods are considered unsafe, as the file name and extension may be tampered with by a malicious user. For this reason, you should typically prefer the `hashName` and `extension` methods to get a name and an extension for the given file upload:
+Tuy nhiên, `getClientOriginalName` và `getClientOriginalExtension` được xem là không an toàn vì tên và phần mở rộng file có thể bị người dùng độc hại giả mạo. Vì vậy, thông thường bạn nên ưu tiên `hashName` và `extension` để lấy tên và phần mở rộng cho file đã upload:
 
 ```php
 $file = $request->file('avatar');
@@ -649,11 +649,11 @@ $extension = $file->extension(); // Determine the file's extension based on the 
 ```
 
 <a name="file-visibility"></a>
-### File Visibility
+### Khả năng truy cập file
 
-In Laravel's Flysystem integration, "visibility" is an abstraction of file permissions across multiple platforms. Files may either be declared `public` or `private`. When a file is declared `public`, you are indicating that the file should generally be accessible to others. For example, when using the S3 driver, you may retrieve URLs for `public` files.
+Trong tích hợp Flysystem của Laravel, "visibility" là lớp trừu tượng hóa quyền truy cập file trên nhiều nền tảng. File có thể được khai báo là `public` hoặc `private`. Khi một file là `public`, điều đó cho biết file nhìn chung có thể được người khác truy cập. Ví dụ, với driver S3, bạn có thể lấy URL cho các file `public`.
 
-You can set the visibility when writing the file via the `put` method:
+Bạn có thể thiết lập visibility khi ghi file thông qua phương thức `put`:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -661,7 +661,7 @@ use Illuminate\Support\Facades\Storage;
 Storage::put('file.jpg', $contents, 'public');
 ```
 
-If the file has already been stored, its visibility can be retrieved and set via the `getVisibility` and `setVisibility` methods:
+Nếu file đã được lưu, bạn có thể lấy và thiết lập visibility bằng `getVisibility` và `setVisibility`:
 
 ```php
 $visibility = Storage::getVisibility('file.jpg');
@@ -669,7 +669,7 @@ $visibility = Storage::getVisibility('file.jpg');
 Storage::setVisibility('file.jpg', 'public');
 ```
 
-When interacting with uploaded files, you may use the `storePublicly` and `storePubliclyAs` methods to store the uploaded file with `public` visibility:
+Khi làm việc với file đã upload, bạn có thể dùng `storePublicly` và `storePubliclyAs` để lưu file với visibility `public`:
 
 ```php
 $path = $request->file('avatar')->storePublicly('avatars', 's3');
@@ -682,9 +682,9 @@ $path = $request->file('avatar')->storePubliclyAs(
 ```
 
 <a name="image-manipulation"></a>
-### Image Manipulation
+### Xử lý ảnh
 
-If you need to resize, crop, or convert an uploaded image before storing it, you may use Laravel's [image manipulation features](/docs/{{version}}/images):
+Nếu cần thay đổi kích thước, cắt hoặc chuyển đổi ảnh đã upload trước khi lưu, bạn có thể dùng [tính năng xử lý ảnh](/docs/{{version}}/images) của Laravel:
 
 ```php
 $path = $request->image('avatar')
@@ -693,16 +693,16 @@ $path = $request->image('avatar')
     ->storePublicly('avatars', 'public');
 ```
 
-You may also create an image instance from a file already stored on one of your filesystem disks:
+Bạn cũng có thể tạo image instance từ một file đã được lưu trên một filesystem disk:
 
 ```php
 $image = Storage::disk('public')->image('avatars/photo.jpg');
 ```
 
 <a name="local-files-and-visibility"></a>
-#### Local Files and Visibility
+#### File Local và khả năng truy cập
 
-When using the `local` driver, `public` [visibility](#file-visibility) translates to `0755` permissions for directories and `0644` permissions for files. You can modify the permissions mappings in your application's `filesystems` configuration file:
+Khi dùng driver `local`, [visibility](#file-visibility) `public` tương ứng với quyền `0755` cho thư mục và `0644` cho file. Bạn có thể thay đổi ánh xạ quyền trong file cấu hình `filesystems` của ứng dụng:
 
 ```php
 'local' => [
@@ -723,9 +723,9 @@ When using the `local` driver, `public` [visibility](#file-visibility) translate
 ```
 
 <a name="deleting-files"></a>
-## Deleting Files
+## Xóa file
 
-The `delete` method accepts a single filename or an array of files to delete:
+Phương thức `delete` nhận một tên file hoặc một mảng các file cần xóa:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -735,7 +735,7 @@ Storage::delete('file.jpg');
 Storage::delete(['file.jpg', 'file2.jpg']);
 ```
 
-If necessary, you may specify the disk that the file should be deleted from:
+Nếu cần, bạn có thể chỉ định disk chứa file cần xóa:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -744,12 +744,12 @@ Storage::disk('s3')->delete('path/file.jpg');
 ```
 
 <a name="directories"></a>
-## Directories
+## Thư mục
 
 <a name="get-all-files-within-a-directory"></a>
-#### Get All Files Within a Directory
+#### Lấy tất cả file trong một thư mục
 
-The `files` method returns an array of all files within a given directory. If you would like to retrieve a list of all files within a given directory including subdirectories, you may use the `allFiles` method:
+Phương thức `files` trả về mảng gồm tất cả file trong một thư mục. Nếu muốn lấy danh sách tất cả file bao gồm cả các thư mục con, bạn có thể dùng `allFiles`:
 
 ```php
 use Illuminate\Support\Facades\Storage;
@@ -760,9 +760,9 @@ $files = Storage::allFiles($directory);
 ```
 
 <a name="get-all-directories-within-a-directory"></a>
-#### Get All Directories Within a Directory
+#### Lấy tất cả thư mục con trong một thư mục
 
-The `directories` method returns an array of all directories within a given directory. If you would like to retrieve a list of all directories within a given directory including subdirectories, you may use the `allDirectories` method:
+Phương thức `directories` trả về mảng gồm tất cả thư mục con trực tiếp trong một thư mục. Nếu muốn lấy toàn bộ thư mục con ở mọi cấp, bạn có thể dùng `allDirectories`:
 
 ```php
 $directories = Storage::directories($directory);
@@ -771,27 +771,27 @@ $directories = Storage::allDirectories($directory);
 ```
 
 <a name="create-a-directory"></a>
-#### Create a Directory
+#### Tạo thư mục
 
-The `makeDirectory` method will create the given directory, including any needed subdirectories:
+Phương thức `makeDirectory` tạo thư mục được chỉ định, bao gồm cả các thư mục cha/con cần thiết:
 
 ```php
 Storage::makeDirectory($directory);
 ```
 
 <a name="delete-a-directory"></a>
-#### Delete a Directory
+#### Xóa thư mục
 
-Finally, the `deleteDirectory` method may be used to remove a directory and all of its files:
+Cuối cùng, `deleteDirectory` có thể được dùng để xóa một thư mục cùng toàn bộ file bên trong:
 
 ```php
 Storage::deleteDirectory($directory);
 ```
 
 <a name="testing"></a>
-## Testing
+## Kiểm thử
 
-The `Storage` facade's `fake` method allows you to easily generate a fake disk that, combined with the file generation utilities of the `Illuminate\Http\UploadedFile` class, greatly simplifies the testing of file uploads. For example:
+Phương thức `fake` của facade `Storage` cho phép dễ dàng tạo một fake disk. Khi kết hợp với các tiện ích tạo file của `Illuminate\Http\UploadedFile`, việc kiểm thử upload file trở nên đơn giản hơn đáng kể. Ví dụ:
 
 ```php tab=Pest
 <?php
@@ -866,23 +866,23 @@ class ExampleTest extends TestCase
 }
 ```
 
-By default, the `fake` method will delete all files in its temporary directory. If you would like to keep these files, you may use the "persistentFake" method instead. For more information on testing file uploads, you may consult the [HTTP testing documentation's information on file uploads](/docs/{{version}}/http-tests#testing-file-uploads).
+Mặc định, `fake` sẽ xóa toàn bộ file trong thư mục tạm. Nếu muốn giữ lại các file này, bạn có thể dùng `persistentFake`. Để biết thêm về kiểm thử upload file, hãy tham khảo [phần upload file trong tài liệu HTTP testing](/docs/{{version}}/http-tests#testing-file-uploads).
 
 > [!WARNING]
-> The `image` method requires the [GD extension](https://www.php.net/manual/en/book.image.php).
+> Phương thức `image` yêu cầu [extension GD](https://www.php.net/manual/en/book.image.php).
 
 <a name="custom-filesystems"></a>
-## Custom Filesystems
+## Filesystem tùy chỉnh
 
-Laravel's Flysystem integration provides support for several "drivers" out of the box; however, Flysystem is not limited to these and has adapters for many other storage systems. You can create a custom driver if you want to use one of these additional adapters in your Laravel application.
+Tích hợp Flysystem của Laravel hỗ trợ sẵn một số driver; tuy nhiên, Flysystem không chỉ giới hạn ở các driver này mà còn có adapter cho nhiều hệ thống lưu trữ khác. Bạn có thể tạo custom driver nếu muốn sử dụng một trong các adapter bổ sung đó trong ứng dụng Laravel.
 
-In order to define a custom filesystem you will need a Flysystem adapter. Let's add a community maintained Dropbox adapter to our project:
+Để định nghĩa một filesystem tùy chỉnh, bạn cần một Flysystem adapter. Hãy thêm Dropbox adapter do cộng đồng duy trì vào dự án:
 
 ```shell
 composer require spatie/flysystem-dropbox
 ```
 
-Next, you can register the driver within the `boot` method of one of your application's [service providers](/docs/{{version}}/providers). To accomplish this, you should use the `extend` method of the `Storage` facade:
+Tiếp theo, bạn có thể đăng ký driver trong phương thức `boot` của một [service provider](/docs/{{version}}/providers) trong ứng dụng. Để thực hiện, hãy dùng phương thức `extend` của facade `Storage`:
 
 ```php
 <?php
@@ -927,9 +927,11 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-The first argument of the `extend` method is the name of the driver and the second is a closure that receives the `$app` and `$config` variables. The closure must return an instance of `Illuminate\Filesystem\FilesystemAdapter`. The `$config` variable contains the values defined in `config/filesystems.php` for the specified disk.
+Đối số đầu tiên của `extend` là tên driver; đối số thứ hai là closure nhận các biến `$app` và `$config`. Closure phải trả về một instance của `Illuminate\Filesystem\FilesystemAdapter`. Biến `$config` chứa các giá trị được định nghĩa trong `config/filesystems.php` cho disk tương ứng.
 
-Once you have created and registered the extension's service provider, you may use the `dropbox` driver in your `config/filesystems.php` configuration file.
+Sau khi tạo và đăng ký extension trong service provider, bạn có thể sử dụng driver `dropbox` trong file cấu hình `config/filesystems.php`.
+
+---
 
 ## Tài liệu chính thức
 

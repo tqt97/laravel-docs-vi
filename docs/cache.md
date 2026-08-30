@@ -1,52 +1,52 @@
 # Cache
 
-- [Introduction](#introduction)
-- [Configuration](#configuration)
-    - [Driver Prerequisites](#driver-prerequisites)
-- [Cache Usage](#cache-usage)
-    - [Obtaining a Cache Instance](#obtaining-a-cache-instance)
-    - [Retrieving Items From the Cache](#retrieving-items-from-the-cache)
-    - [Storing Items in the Cache](#storing-items-in-the-cache)
-    - [Extending Item Lifetime](#extending-item-lifetime)
-    - [Removing Items From the Cache](#removing-items-from-the-cache)
-    - [Cache Memoization](#cache-memoization)
-    - [The Cache Helper](#the-cache-helper)
-- [Cache Tags](#cache-tags)
-    - [Storing Tagged Cache Items](#storing-tagged-cache-items)
-    - [Accessing Tagged Cache Items](#accessing-tagged-cache-items)
-    - [Removing Tagged Cache Items](#removing-tagged-cache-items)
-- [Atomic Locks](#atomic-locks)
-    - [Managing Locks](#managing-locks)
-    - [Managing Locks Across Processes](#managing-locks-across-processes)
-    - [Refreshing Locks](#refreshing-locks)
-    - [Concurrency Limiting](#concurrency-limiting)
-- [Cache Failover](#cache-failover)
-- [Adding Custom Cache Drivers](#adding-custom-cache-drivers)
-    - [Writing the Driver](#writing-the-driver)
-    - [Registering the Driver](#registering-the-driver)
-- [Events](#events)
+- [Giới thiệu](#introduction)
+- [Cấu hình](#configuration)
+    - [Điều kiện tiên quyết của driver](#driver-prerequisites)
+- [Sử dụng cache](#cache-usage)
+    - [Lấy một cache instance](#obtaining-a-cache-instance)
+    - [Lấy item từ cache](#retrieving-items-from-the-cache)
+    - [Lưu item vào cache](#storing-items-in-the-cache)
+    - [Gia hạn thời gian tồn tại của item](#extending-item-lifetime)
+    - [Xóa item khỏi cache](#removing-items-from-the-cache)
+    - [Memoization cache](#cache-memoization)
+    - [Helper cache](#the-cache-helper)
+- [Cache tag](#cache-tags)
+    - [Lưu item cache có tag](#storing-tagged-cache-items)
+    - [Truy cập item cache có tag](#accessing-tagged-cache-items)
+    - [Xóa item cache có tag](#removing-tagged-cache-items)
+- [Atomic lock](#atomic-locks)
+    - [Quản lý lock](#managing-locks)
+    - [Quản lý lock giữa nhiều process](#managing-locks-across-processes)
+    - [Gia hạn lock](#refreshing-locks)
+    - [Giới hạn concurrency](#concurrency-limiting)
+- [Cache failover](#cache-failover)
+- [Thêm cache driver tùy chỉnh](#adding-custom-cache-drivers)
+    - [Viết driver](#writing-the-driver)
+    - [Đăng ký driver](#registering-the-driver)
+- [Sự kiện](#events)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Some of the data retrieval or processing tasks performed by your application could be CPU intensive or take several seconds to complete. When this is the case, it is common to cache the retrieved data for a time so it can be retrieved quickly on subsequent requests for the same data. The cached data is usually stored in a very fast data store such as [Memcached](https://memcached.org) or [Redis](https://redis.io).
+Một số tác vụ truy xuất hoặc xử lý dữ liệu của ứng dụng có thể tiêu tốn nhiều CPU hoặc mất vài giây để hoàn thành. Trong trường hợp này, thông thường bạn sẽ lưu dữ liệu đã truy xuất vào cache trong một khoảng thời gian để các request tiếp theo cho cùng dữ liệu có thể lấy lại nhanh chóng. Dữ liệu cache thường được lưu trong một data store có tốc độ rất cao như [Memcached](https://memcached.org) hoặc [Redis](https://redis.io).
 
-Thankfully, Laravel provides an expressive, unified API for various cache backends, allowing you to take advantage of their blazing fast data retrieval and speed up your web application.
+Laravel cung cấp một API thống nhất, giàu tính biểu đạt cho nhiều cache backend khác nhau, giúp bạn tận dụng khả năng truy xuất dữ liệu rất nhanh của chúng để tăng tốc ứng dụng web.
 
 <a name="configuration"></a>
-## Configuration
+## Cấu hình
 
-Your application's cache configuration file is located at `config/cache.php`. In this file, you may specify which cache store you would like to be used by default throughout your application. Laravel supports popular caching backends like [Memcached](https://memcached.org), [Redis](https://redis.io), [DynamoDB](https://aws.amazon.com/dynamodb), relational databases, and filesystem disks out of the box. In addition, a file based cache driver is available, while `array` and `null` cache drivers provide convenient cache backends for your automated tests.
+File cấu hình cache của ứng dụng nằm tại `config/cache.php`. Trong file này, bạn có thể chỉ định cache store mặc định được sử dụng trong toàn bộ ứng dụng. Laravel hỗ trợ sẵn các cache backend phổ biến như [Memcached](https://memcached.org), [Redis](https://redis.io), [DynamoDB](https://aws.amazon.com/dynamodb), cơ sở dữ liệu quan hệ và filesystem disk. Ngoài ra còn có cache driver dựa trên file, trong khi các driver `array` và `null` cung cấp backend cache thuận tiện cho automated test.
 
-The cache configuration file also contains a variety of other options that you may review. By default, Laravel is configured to use the `database` cache driver, which stores the serialized, cached objects in your application's database.
+File cấu hình cache cũng chứa nhiều tùy chọn khác mà bạn có thể xem xét. Theo mặc định, Laravel được cấu hình sử dụng cache driver `database`, lưu các object đã được tuần tự hóa và cache trong cơ sở dữ liệu của ứng dụng.
 
 <a name="driver-prerequisites"></a>
-### Driver Prerequisites
+### Điều kiện tiên quyết của driver
 
 <a name="prerequisites-database"></a>
 #### Database
 
-When using the `database` cache driver, you will need a database table to contain the cache data. Typically, this is included in Laravel's default `0001_01_01_000001_create_cache_table.php` [database migration](/docs/{{version}}/migrations); however, if your application does not contain this migration, you may use the `make:cache-table` Artisan command to create it:
+Khi sử dụng cache driver `database`, bạn cần một bảng cơ sở dữ liệu để chứa dữ liệu cache. Thông thường bảng này được tạo bởi [database migration](/docs/{{version}}/migrations) mặc định `0001_01_01_000001_create_cache_table.php` của Laravel. Tuy nhiên, nếu ứng dụng không có migration này, bạn có thể dùng lệnh Artisan `make:cache-table` để tạo:
 
 ```shell
 php artisan make:cache-table
@@ -57,7 +57,7 @@ php artisan migrate
 <a name="memcached"></a>
 #### Memcached
 
-Using the Memcached driver requires the [Memcached PECL package](https://pecl.php.net/package/memcached) to be installed. You may list all of your Memcached servers in the `config/cache.php` configuration file. This file already contains a `memcached.servers` entry to get you started:
+Để sử dụng driver Memcached, bạn cần cài đặt [package Memcached PECL](https://pecl.php.net/package/memcached). Bạn có thể khai báo tất cả server Memcached trong file cấu hình `config/cache.php`. File này đã có sẵn mục `memcached.servers` để bạn bắt đầu:
 
 ```php
 'memcached' => [
@@ -73,7 +73,7 @@ Using the Memcached driver requires the [Memcached PECL package](https://pecl.ph
 ],
 ```
 
-If needed, you may set the `host` option to a UNIX socket path. If you do this, the `port` option should be set to `0`:
+Nếu cần, bạn có thể đặt tùy chọn `host` thành đường dẫn UNIX socket. Khi đó, tùy chọn `port` nên được đặt thành `0`:
 
 ```php
 'memcached' => [
@@ -92,14 +92,14 @@ If needed, you may set the `host` option to a UNIX socket path. If you do this, 
 <a name="redis"></a>
 #### Redis
 
-Before using a Redis cache with Laravel, you will need to either install the PhpRedis PHP extension via PECL or install the `predis/predis` package via Composer. [Laravel Sail](/docs/{{version}}/sail) already includes this extension. In addition, official Laravel application platforms such as [Laravel Cloud](https://cloud.laravel.com) and [Laravel Forge](https://forge.laravel.com) have the PhpRedis extension installed by default.
+Trước khi sử dụng Redis cache với Laravel, bạn cần cài extension PHP PhpRedis thông qua PECL hoặc cài package `predis/predis` bằng Composer. [Laravel Sail](/docs/{{version}}/sail) đã bao gồm extension này. Ngoài ra, các nền tảng ứng dụng Laravel chính thức như [Laravel Cloud](https://cloud.laravel.com) và [Laravel Forge](https://forge.laravel.com) cũng cài sẵn extension PhpRedis theo mặc định.
 
-For more information on configuring Redis, consult its [Laravel documentation page](/docs/{{version}}/redis#configuration).
+Để biết thêm thông tin về cấu hình Redis, hãy xem [trang tài liệu Redis của Laravel](/docs/{{version}}/redis#configuration).
 
 <a name="storage"></a>
 #### Storage
 
-The `storage` cache driver allows you to store cached values on any of your application's configured [filesystem disks](/docs/{{version}}/filesystem). This can be useful when you want to use an existing disk, such as an S3 disk, as a key / value cache store:
+Driver cache `storage` cho phép bạn lưu các giá trị cache trên bất kỳ [filesystem disk](/docs/{{version}}/filesystem) nào đã được cấu hình cho ứng dụng. Điều này hữu ích khi bạn muốn dùng một disk hiện có, chẳng hạn S3 disk, làm cache store dạng key / value:
 
 ```php
 'storage' => [
@@ -112,19 +112,19 @@ The `storage` cache driver allows you to store cached values on any of your appl
 <a name="dynamodb"></a>
 #### DynamoDB
 
-Before using the [DynamoDB](https://aws.amazon.com/dynamodb) cache driver, you must create a DynamoDB table to store all of the cached data. Typically, this table should be named `cache`. However, you should name the table based on the value of the `stores.dynamodb.table` configuration value within the `cache` configuration file. The table name may also be set via the `DYNAMODB_CACHE_TABLE` environment variable.
+Trước khi sử dụng cache driver [DynamoDB](https://aws.amazon.com/dynamodb), bạn phải tạo một bảng DynamoDB để lưu toàn bộ dữ liệu cache. Thông thường bảng này nên có tên `cache`. Tuy nhiên, tên bảng nên tương ứng với giá trị cấu hình `stores.dynamodb.table` trong file cấu hình `cache`. Bạn cũng có thể đặt tên bảng thông qua biến môi trường `DYNAMODB_CACHE_TABLE`.
 
-This table should also have a string partition key with a name that corresponds to the value of the `stores.dynamodb.attributes.key` configuration item within your application's `cache` configuration file. By default, the partition key should be named `key`.
+Bảng này cũng cần có partition key kiểu chuỗi với tên tương ứng với giá trị của mục cấu hình `stores.dynamodb.attributes.key` trong file cấu hình `cache` của ứng dụng. Theo mặc định, partition key nên có tên `key`.
 
-Typically, DynamoDB will not proactively remove expired items from a table. Therefore, you should [enable Time to Live (TTL)](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) on the table. When configuring the table's TTL settings, you should set the TTL attribute name to `expires_at`.
+Thông thường DynamoDB không chủ động xóa các item đã hết hạn khỏi bảng. Vì vậy, bạn nên [bật Time to Live (TTL)](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) cho bảng. Khi cấu hình TTL, hãy đặt tên thuộc tính TTL là `expires_at`.
 
-Next, install the AWS SDK so that your Laravel application can communicate with DynamoDB:
+Tiếp theo, hãy cài AWS SDK để ứng dụng Laravel có thể giao tiếp với DynamoDB:
 
 ```shell
 composer require aws/aws-sdk-php
 ```
 
-In addition, you should ensure that values are provided for the DynamoDB cache store configuration options. Typically these options, such as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, should be defined in your application's `.env` configuration file:
+Ngoài ra, hãy bảo đảm các tùy chọn cấu hình của DynamoDB cache store đã được cung cấp giá trị. Thông thường các tùy chọn như `AWS_ACCESS_KEY_ID` và `AWS_SECRET_ACCESS_KEY` nên được định nghĩa trong file `.env` của ứng dụng:
 
 ```php
 'dynamodb' => [
@@ -140,17 +140,17 @@ In addition, you should ensure that values are provided for the DynamoDB cache s
 <a name="mongodb"></a>
 #### MongoDB
 
-If you are using MongoDB, a `mongodb` cache driver is provided by the official `mongodb/laravel-mongodb` package and can be configured using a `mongodb` database connection. MongoDB supports TTL indexes, which can be used to automatically clear expired cache items.
+Nếu sử dụng MongoDB, package chính thức `mongodb/laravel-mongodb` cung cấp cache driver `mongodb`, có thể được cấu hình thông qua database connection `mongodb`. MongoDB hỗ trợ TTL index, cho phép tự động xóa các item cache đã hết hạn.
 
-For more information on configuring MongoDB, please refer to the MongoDB [Cache and Locks documentation](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/cache/).
+Để biết thêm thông tin về cấu hình MongoDB, hãy xem tài liệu [Cache and Locks](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/cache/) của MongoDB.
 
 <a name="cache-usage"></a>
-## Cache Usage
+## Sử dụng cache
 
 <a name="obtaining-a-cache-instance"></a>
-### Obtaining a Cache Instance
+### Lấy một cache instance
 
-To obtain a cache store instance, you may use the `Cache` facade, which is what we will use throughout this documentation. The `Cache` facade provides convenient, terse access to the underlying implementations of the Laravel cache contracts:
+Để lấy một cache store instance, bạn có thể sử dụng facade `Cache`; đây cũng là cách được dùng xuyên suốt tài liệu này. Facade `Cache` cung cấp cách truy cập ngắn gọn, thuận tiện đến các implementation bên dưới của cache contract trong Laravel:
 
 ```php
 <?php
@@ -176,9 +176,9 @@ class UserController extends Controller
 ```
 
 <a name="accessing-multiple-cache-stores"></a>
-#### Accessing Multiple Cache Stores
+#### Truy cập nhiều cache store
 
-Using the `Cache` facade, you may access various cache stores via the `store` method. The key passed to the `store` method should correspond to one of the stores listed in the `stores` configuration array in your `cache` configuration file:
+Với facade `Cache`, bạn có thể truy cập nhiều cache store thông qua phương thức `store`. Key truyền vào `store` phải tương ứng với một store được liệt kê trong mảng cấu hình `stores` của file cấu hình `cache`:
 
 ```php
 $value = Cache::store('file')->get('foo');
@@ -187,9 +187,9 @@ Cache::store('redis')->put('bar', 'baz', 600); // 10 Minutes
 ```
 
 <a name="retrieving-items-from-the-cache"></a>
-### Retrieving Items From the Cache
+### Lấy item từ cache
 
-The `Cache` facade's `get` method is used to retrieve items from the cache. If the item does not exist in the cache, `null` will be returned. If you wish, you may pass a second argument to the `get` method specifying the default value you wish to be returned if the item doesn't exist:
+Phương thức `get` của facade `Cache` dùng để lấy item từ cache. Nếu item không tồn tại, phương thức sẽ trả về `null`. Bạn cũng có thể truyền đối số thứ hai cho `get` để chỉ định giá trị mặc định được trả về khi item không tồn tại:
 
 ```php
 $value = Cache::get('key');
@@ -197,7 +197,7 @@ $value = Cache::get('key');
 $value = Cache::get('key', 'default');
 ```
 
-You may even pass a closure as the default value. The result of the closure will be returned if the specified item does not exist in the cache. Passing a closure allows you to defer the retrieval of default values from a database or other external service:
+Bạn thậm chí có thể truyền closure làm giá trị mặc định. Kết quả của closure sẽ được trả về nếu item được chỉ định không tồn tại trong cache. Việc truyền closure cho phép trì hoãn việc lấy giá trị mặc định từ cơ sở dữ liệu hoặc dịch vụ bên ngoài cho đến khi thực sự cần:
 
 ```php
 $value = Cache::get('key', function () {
@@ -206,9 +206,9 @@ $value = Cache::get('key', function () {
 ```
 
 <a name="determining-item-existence"></a>
-#### Determining Item Existence
+#### Xác định item có tồn tại
 
-The `has` method may be used to determine if an item exists in the cache. This method will also return `false` if the item exists but its value is `null`:
+Phương thức `has` có thể được dùng để xác định một item có tồn tại trong cache hay không. Phương thức này cũng trả về `false` nếu item tồn tại nhưng giá trị của nó là `null`:
 
 ```php
 if (Cache::has('key')) {
@@ -217,9 +217,9 @@ if (Cache::has('key')) {
 ```
 
 <a name="incrementing-decrementing-values"></a>
-#### Incrementing / Decrementing Values
+#### Tăng / giảm giá trị
 
-The `increment` and `decrement` methods may be used to adjust the value of integer items in the cache. Both of these methods accept an optional second argument indicating the amount by which to increment or decrement the item's value:
+Các phương thức `increment` và `decrement` dùng để điều chỉnh giá trị của các item số nguyên trong cache. Cả hai phương thức đều nhận đối số thứ hai tùy chọn để chỉ định lượng cần tăng hoặc giảm:
 
 ```php
 // Initialize the value if it does not exist...
@@ -233,9 +233,9 @@ Cache::decrement('key', $amount);
 ```
 
 <a name="retrieve-store"></a>
-#### Retrieve and Store
+#### Lấy và lưu
 
-Sometimes you may wish to retrieve an item from the cache, but also store a default value if the requested item doesn't exist. For example, you may wish to retrieve all users from the cache or, if they don't exist, retrieve them from the database and add them to the cache. You may do this using the `Cache::remember` method:
+Đôi khi bạn muốn lấy một item từ cache, đồng thời lưu một giá trị mặc định nếu item được yêu cầu chưa tồn tại. Ví dụ, bạn có thể muốn lấy toàn bộ user từ cache; nếu chưa có, lấy chúng từ cơ sở dữ liệu rồi thêm vào cache. Bạn có thể thực hiện việc này bằng phương thức `Cache::remember`:
 
 ```php
 $value = Cache::remember('users', $seconds, function () {
@@ -243,9 +243,9 @@ $value = Cache::remember('users', $seconds, function () {
 });
 ```
 
-If the item does not exist in the cache, the closure passed to the `remember` method will be executed and its result will be placed in the cache.
+Nếu item không tồn tại trong cache, closure truyền vào phương thức `remember` sẽ được thực thi và kết quả của nó sẽ được lưu vào cache.
 
-If you need to know whether the item was retrieved from the cache instead of by executing the given closure, you may use the `rememberWithWarmth` method. This method returns an array containing the cached value and a boolean indicating whether the item was "warm", meaning it was retrieved from the cache and not resolved from the closure:
+Nếu cần biết item được lấy trực tiếp từ cache hay được tạo ra bằng cách thực thi closure, bạn có thể dùng `rememberWithWarmth`. Phương thức này trả về một mảng gồm giá trị cache và một boolean cho biết item có ở trạng thái "warm" hay không, tức là giá trị được lấy từ cache thay vì được resolve từ closure:
 
 ```php
 [$value, $warm] = Cache::rememberWithWarmth('users', $seconds, function () {
@@ -253,7 +253,7 @@ If you need to know whether the item was retrieved from the cache instead of by 
 });
 ```
 
-You may use the `rememberForever` method to retrieve an item from the cache or store it forever if it does not exist:
+Bạn có thể dùng `rememberForever` để lấy item từ cache hoặc lưu item vĩnh viễn nếu nó chưa tồn tại:
 
 ```php
 $value = Cache::rememberForever('users', function () {
@@ -264,11 +264,11 @@ $value = Cache::rememberForever('users', function () {
 <a name="swr"></a>
 #### Stale While Revalidate
 
-When using the `Cache::remember` method, some users may experience slow response times if the cached value has expired. For certain types of data, it can be useful to allow partially stale data to be served while the cached value is recalculated in the background, preventing some users from experiencing slow response times while cached values are calculated. This is often referred to as the "stale-while-revalidate" pattern, and the `Cache::flexible` method provides an implementation of this pattern.
+Khi sử dụng `Cache::remember`, một số request có thể phản hồi chậm nếu giá trị cache đã hết hạn. Với một số loại dữ liệu, việc tạm thời phục vụ dữ liệu đã cũ trong khi giá trị cache được tính lại ở background có thể hữu ích, nhờ đó tránh để người dùng phải chờ quá lâu trong lúc tính lại cache. Mẫu này thường được gọi là "stale-while-revalidate", và phương thức `Cache::flexible` cung cấp implementation cho mẫu này.
 
-The flexible method accepts an array that specifies how long the cached value is considered "fresh" and when it becomes "stale". The first value in the array represents the number of seconds the cache is considered fresh, while the second value defines how long it can be served as stale data before recalculation is necessary.
+Phương thức `flexible` nhận một mảng xác định khoảng thời gian giá trị cache được xem là "fresh" và khi nào nó trở thành "stale". Giá trị đầu tiên trong mảng là số giây cache được xem là fresh; giá trị thứ hai xác định khoảng thời gian dữ liệu stale vẫn có thể được phục vụ trước khi bắt buộc phải tính lại.
 
-If a request is made within the fresh period (before the first value), the cache is returned immediately without recalculation. If a request is made during the stale period (between the two values), the stale value is served to the user, and a [deferred function](/docs/{{version}}/helpers#deferred-functions) is registered to refresh the cached value after the response is sent to the user. If a request is made after the second value, the cache is considered expired, and the value is recalculated immediately, which may result in a slower response for the user:
+Nếu request đến trong giai đoạn fresh (trước mốc đầu tiên), giá trị cache được trả về ngay mà không cần tính lại. Nếu request đến trong giai đoạn stale (giữa hai mốc), giá trị stale được trả cho người dùng và một [deferred function](/docs/{{version}}/helpers#deferred-functions) được đăng ký để làm mới cache sau khi response đã gửi đi. Nếu request đến sau mốc thứ hai, cache được xem là đã hết hạn và giá trị sẽ được tính lại ngay lập tức, vì vậy response có thể chậm hơn:
 
 ```php
 $value = Cache::flexible('users', [5, 10], function () {
@@ -277,9 +277,9 @@ $value = Cache::flexible('users', [5, 10], function () {
 ```
 
 <a name="retrieve-delete"></a>
-#### Retrieve and Delete
+#### Lấy và xóa
 
-If you need to retrieve an item from the cache and then delete the item, you may use the `pull` method. Like the `get` method, `null` will be returned if the item does not exist in the cache:
+Nếu cần lấy một item từ cache rồi xóa item đó, bạn có thể dùng phương thức `pull`. Tương tự `get`, phương thức sẽ trả về `null` nếu item không tồn tại trong cache:
 
 ```php
 $value = Cache::pull('key');
@@ -288,72 +288,72 @@ $value = Cache::pull('key', 'default');
 ```
 
 <a name="storing-items-in-the-cache"></a>
-### Storing Items in the Cache
+### Lưu item vào cache
 
-You may use the `put` method on the `Cache` facade to store items in the cache:
+Bạn có thể dùng phương thức `put` trên facade `Cache` để lưu item vào cache:
 
 ```php
 Cache::put('key', 'value', $seconds = 10);
 ```
 
-If the storage time is not passed to the `put` method, the item will be stored indefinitely:
+Nếu không truyền thời gian lưu cho `put`, item sẽ được lưu không thời hạn:
 
 ```php
 Cache::put('key', 'value');
 ```
 
-Instead of passing the number of seconds as an integer, you may also pass a `DateTime` instance representing the desired expiration time of the cached item:
+Thay vì truyền số giây dưới dạng số nguyên, bạn cũng có thể truyền một instance `DateTime` biểu thị thời điểm hết hạn mong muốn của item cache:
 
 ```php
 Cache::put('key', 'value', now()->plus(minutes: 10));
 ```
 
 <a name="store-if-not-present"></a>
-#### Store if Not Present
+#### Chỉ lưu khi chưa tồn tại
 
-The `add` method will only add the item to the cache if it does not already exist in the cache store. The method will return `true` if the item is actually added to the cache. Otherwise, the method will return `false`. The `add` method is an atomic operation:
+Phương thức `add` chỉ thêm item vào cache nếu item chưa tồn tại trong cache store. Phương thức trả về `true` nếu item thực sự được thêm; ngược lại trả về `false`. `add` là một atomic operation:
 
 ```php
 Cache::add('key', 'value', $seconds);
 ```
 
 <a name="extending-item-lifetime"></a>
-### Extending Item Lifetime
+### Gia hạn thời gian tồn tại của item
 
-The `touch` method allows you to extend the lifetime (TTL) of an existing cache item. The `touch` method will return `true` if the cache item exists and its expiration time was successfully extended. If the item does not exist in the cache, the method will return `false`:
+Phương thức `touch` cho phép gia hạn thời gian tồn tại (TTL) của một cache item hiện có. `touch` trả về `true` nếu item tồn tại và thời điểm hết hạn được gia hạn thành công. Nếu item không tồn tại trong cache, phương thức trả về `false`:
 
 ```php
 Cache::touch('key', 3600);
 ```
 
-You may provide a `DateTimeInterface`, `DateInterval`, or `Carbon` instance to specify an exact expiration time:
+Bạn có thể truyền instance `DateTimeInterface`, `DateInterval` hoặc `Carbon` để chỉ định chính xác thời điểm hết hạn:
 
 ```php
 Cache::touch('key', now()->addHours(2));
 ```
 
 <a name="storing-items-forever"></a>
-#### Storing Items Forever
+#### Lưu item vĩnh viễn
 
-The `forever` method may be used to store an item in the cache permanently. Since these items will not expire, they must be manually removed from the cache using the `forget` method:
+Phương thức `forever` có thể được dùng để lưu item vĩnh viễn trong cache. Vì các item này không tự hết hạn, bạn phải xóa chúng thủ công bằng phương thức `forget`:
 
 ```php
 Cache::forever('key', 'value');
 ```
 
 > [!NOTE]
-> If you are using the Memcached driver, items that are stored "forever" may be removed when the cache reaches its size limit.
+> Nếu sử dụng driver Memcached, các item được lưu "vĩnh viễn" vẫn có thể bị loại bỏ khi cache đạt giới hạn dung lượng.
 
 <a name="removing-items-from-the-cache"></a>
-### Removing Items From the Cache
+### Xóa item khỏi cache
 
-You may remove items from the cache using the `forget` method:
+Bạn có thể xóa item khỏi cache bằng phương thức `forget`:
 
 ```php
 Cache::forget('key');
 ```
 
-You may also remove items by providing a zero or negative number of expiration seconds:
+Bạn cũng có thể xóa item bằng cách cung cấp số giây hết hạn bằng 0 hoặc số âm:
 
 ```php
 Cache::put('key', 'value', 0);
@@ -361,27 +361,27 @@ Cache::put('key', 'value', 0);
 Cache::put('key', 'value', -5);
 ```
 
-You may clear the entire cache using the `flush` method:
+Bạn có thể xóa toàn bộ cache bằng phương thức `flush`:
 
 ```php
 Cache::flush();
 ```
 
-You may clear all atomic locks in the cache using the `flushLocks` method:
+Bạn có thể xóa toàn bộ atomic lock trong cache bằng phương thức `flushLocks`:
 
 ```php
 Cache::flushLocks();
 ```
 
 > [!WARNING]
-> Flushing the cache does not respect your configured cache "prefix" and will remove all entries from the cache. Consider this carefully when clearing a cache which is shared by other applications.
+> Việc flush cache không tuân theo "prefix" cache đã cấu hình và sẽ xóa tất cả entry trong cache. Hãy cân nhắc kỹ khi xóa một cache đang được dùng chung với các ứng dụng khác.
 
 <a name="cache-memoization"></a>
-### Cache Memoization
+### Memoization cache
 
-Laravel's `memo` cache driver allows you to temporarily store resolved cache values in memory during a single request or job execution. This prevents repeated cache hits within the same execution, significantly improving performance.
+Cache driver `memo` của Laravel cho phép tạm thời lưu các giá trị cache đã resolve trong bộ nhớ trong suốt một request hoặc một lần thực thi job. Điều này tránh việc truy cập cache lặp lại trong cùng lần thực thi và có thể cải thiện hiệu năng đáng kể.
 
-To use the memoized cache, invoke the `memo` method:
+Để sử dụng memoized cache, hãy gọi phương thức `memo`:
 
 ```php
 use Illuminate\Support\Facades\Cache;
@@ -389,7 +389,7 @@ use Illuminate\Support\Facades\Cache;
 $value = Cache::memo()->get('key');
 ```
 
-The `memo` method optionally accepts the name of a cache store, which specifies the underlying cache store the memoized driver will decorate:
+Phương thức `memo` có thể nhận tên cache store để chỉ định store bên dưới mà memoized driver sẽ bao bọc:
 
 ```php
 // Using the default cache store...
@@ -399,7 +399,7 @@ $value = Cache::memo()->get('key');
 $value = Cache::memo('redis')->get('key');
 ```
 
-The first `get` call for a given key retrieves the value from your cache store, but subsequent calls within the same request or job will retrieve the value from memory:
+Lần gọi `get` đầu tiên cho một key sẽ lấy giá trị từ cache store; các lần gọi tiếp theo trong cùng request hoặc job sẽ lấy giá trị từ bộ nhớ:
 
 ```php
 // Hits the cache...
@@ -409,7 +409,7 @@ $value = Cache::memo()->get('key');
 $value = Cache::memo()->get('key');
 ```
 
-When calling methods that modify cache values (such as `put`, `increment`, `remember`, etc.), the memoized cache automatically forgets the memoized value and delegates the mutating method call to the underlying cache store:
+Khi gọi các phương thức thay đổi giá trị cache như `put`, `increment`, `remember`, v.v., memoized cache sẽ tự động quên giá trị đã memoize và chuyển lời gọi thay đổi xuống cache store bên dưới:
 
 ```php
 Cache::memo()->put('name', 'Taylor'); // Writes to underlying cache...
@@ -421,15 +421,15 @@ Cache::memo()->get('name');           // Hits underlying cache again...
 ```
 
 <a name="the-cache-helper"></a>
-### The Cache Helper
+### Helper cache
 
-In addition to using the `Cache` facade, you may also use the global `cache` function to retrieve and store data via the cache. When the `cache` function is called with a single, string argument, it will return the value of the given key:
+Ngoài facade `Cache`, bạn cũng có thể dùng hàm global `cache` để lấy và lưu dữ liệu qua cache. Khi `cache` được gọi với một đối số chuỗi duy nhất, hàm sẽ trả về giá trị của key tương ứng:
 
 ```php
 $value = cache('key');
 ```
 
-If you provide an array of key / value pairs and an expiration time to the function, it will store values in the cache for the specified duration:
+Nếu truyền một mảng các cặp key / value cùng thời gian hết hạn, hàm sẽ lưu các giá trị vào cache trong khoảng thời gian được chỉ định:
 
 ```php
 cache(['key' => 'value'], $seconds);
@@ -437,7 +437,7 @@ cache(['key' => 'value'], $seconds);
 cache(['key' => 'value'], now()->plus(minutes: 10));
 ```
 
-When the `cache` function is called without any arguments, it returns an instance of the `Illuminate\Contracts\Cache\Factory` implementation, allowing you to call other caching methods:
+Khi hàm `cache` được gọi mà không có đối số, nó trả về một instance của implementation `Illuminate\Contracts\Cache\Factory`, cho phép bạn gọi các phương thức cache khác:
 
 ```php
 cache()->remember('users', $seconds, function () {
@@ -446,18 +446,18 @@ cache()->remember('users', $seconds, function () {
 ```
 
 > [!NOTE]
-> When testing calls to the global `cache` function, you may use the `Cache::shouldReceive` method just as if you were [testing the facade](/docs/{{version}}/mocking#mocking-facades).
+> Khi kiểm thử các lời gọi đến hàm `cache` toàn cục, bạn có thể sử dụng phương thức `Cache::shouldReceive` tương tự như khi [kiểm thử facade](/docs/{{version}}/mocking#mocking-facades).
 
 <a name="cache-tags"></a>
-## Cache Tags
+## Cache tag
 
 > [!WARNING]
-> Cache tags are not supported when using the `file`, `dynamodb`, `database`, or `storage` cache drivers.
+> Cache tag không được hỗ trợ khi sử dụng các cache driver `file`, `dynamodb`, `database` hoặc `storage`.
 
 <a name="storing-tagged-cache-items"></a>
-### Storing Tagged Cache Items
+### Lưu cache item có tag
 
-Cache tags allow you to tag related items in the cache and then flush all cached values that have been assigned a given tag. You may access a tagged cache by passing in an ordered array of tag names. For example, let's access a tagged cache and `put` a value into the cache:
+Cache tag cho phép gắn tag cho các item liên quan trong cache, sau đó flush toàn bộ giá trị cache được gán một tag cụ thể. Bạn có thể truy cập tagged cache bằng cách truyền một mảng tên tag theo đúng thứ tự. Ví dụ, hãy truy cập một tagged cache và `put` một giá trị vào cache:
 
 ```php
 use Illuminate\Support\Facades\Cache;
@@ -467,9 +467,9 @@ Cache::tags(['people', 'authors'])->put('Anne', $anne, $seconds);
 ```
 
 <a name="accessing-tagged-cache-items"></a>
-### Accessing Tagged Cache Items
+### Truy cập cache item có tag
 
-Items stored via tags may not be accessed without also providing the tags that were used to store the value. To retrieve a tagged cache item, pass the same ordered list of tags to the `tags` method, then call the `get` method with the key you wish to retrieve:
+Các item được lưu bằng tag không thể được truy cập nếu không cung cấp các tag đã dùng khi lưu. Để lấy một tagged cache item, hãy truyền cùng danh sách tag theo đúng thứ tự vào phương thức `tags`, sau đó gọi `get` với key cần lấy:
 
 ```php
 $john = Cache::tags(['people', 'artists'])->get('John');
@@ -478,30 +478,30 @@ $anne = Cache::tags(['people', 'authors'])->get('Anne');
 ```
 
 <a name="removing-tagged-cache-items"></a>
-### Removing Tagged Cache Items
+### Xóa cache item có tag
 
-You may flush all items that are assigned a tag or list of tags. For example, the following code would remove all caches tagged with either `people`, `authors`, or both. So, both `Anne` and `John` would be removed from the cache:
+Bạn có thể flush toàn bộ item được gán một tag hoặc một danh sách tag. Ví dụ, đoạn code sau sẽ xóa mọi cache được gắn tag `people`, `authors` hoặc cả hai. Vì vậy, cả `Anne` và `John` đều sẽ bị xóa khỏi cache:
 
 ```php
 Cache::tags(['people', 'authors'])->flush();
 ```
 
-In contrast, the code below would remove only cached values tagged with `authors`, so `Anne` would be removed, but not `John`:
+Ngược lại, đoạn code dưới đây chỉ xóa các giá trị cache được gắn tag `authors`, vì vậy `Anne` sẽ bị xóa nhưng `John` thì không:
 
 ```php
 Cache::tags('authors')->flush();
 ```
 
 <a name="atomic-locks"></a>
-## Atomic Locks
+## Atomic lock
 
 > [!WARNING]
-> To utilize this feature, your application must be using the `memcached`, `redis`, `dynamodb`, `database`, `file`, or `array` cache driver as your application's default cache driver. In addition, all servers must be communicating with the same central cache server.
+> Để sử dụng tính năng này, ứng dụng phải dùng cache driver `memcached`, `redis`, `dynamodb`, `database`, `file` hoặc `array` làm cache driver mặc định. Ngoài ra, tất cả server phải giao tiếp với cùng một cache server trung tâm.
 
 <a name="managing-locks"></a>
-### Managing Locks
+### Quản lý lock
 
-Atomic locks allow for the manipulation of distributed locks without worrying about race conditions. For example, [Laravel Cloud](https://cloud.laravel.com) uses atomic locks to ensure that only one remote task is being executed on a server at a time. You may create and manage locks using the `Cache::lock` method:
+Atomic lock cho phép thao tác với distributed lock mà không phải tự xử lý race condition. Ví dụ, [Laravel Cloud](https://cloud.laravel.com) sử dụng atomic lock để bảo đảm tại một thời điểm chỉ có một remote task được thực thi trên server. Bạn có thể tạo và quản lý lock bằng phương thức `Cache::lock`:
 
 ```php
 use Illuminate\Support\Facades\Cache;
@@ -515,7 +515,7 @@ if ($lock->get()) {
 }
 ```
 
-The `get` method also accepts a closure. After the closure is executed, Laravel will automatically release the lock:
+Phương thức `get` cũng nhận một closure. Sau khi closure được thực thi, Laravel sẽ tự động giải phóng lock:
 
 ```php
 Cache::lock('foo', 10)->get(function () {
@@ -523,7 +523,7 @@ Cache::lock('foo', 10)->get(function () {
 });
 ```
 
-If the lock is not available at the moment you request it, you may instruct Laravel to wait for a specified number of seconds. If the lock cannot be acquired within the specified time limit, an `Illuminate\Contracts\Cache\LockTimeoutException` will be thrown:
+Nếu lock chưa khả dụng tại thời điểm bạn yêu cầu, bạn có thể chỉ định Laravel chờ trong một số giây nhất định. Nếu không thể lấy được lock trong khoảng thời gian đó, `Illuminate\Contracts\Cache\LockTimeoutException` sẽ được ném ra:
 
 ```php
 use Illuminate\Contracts\Cache\LockTimeoutException;
@@ -541,7 +541,7 @@ try {
 }
 ```
 
-The example above may be simplified by passing a closure to the `block` method. When a closure is passed to this method, Laravel will attempt to acquire the lock for the specified number of seconds and will automatically release the lock once the closure has been executed:
+Ví dụ trên có thể được rút gọn bằng cách truyền một closure vào phương thức `block`. Khi nhận closure, Laravel sẽ cố lấy lock trong số giây được chỉ định và tự động giải phóng lock sau khi closure thực thi xong:
 
 ```php
 Cache::lock('foo', 10)->block(5, function () {
@@ -550,11 +550,11 @@ Cache::lock('foo', 10)->block(5, function () {
 ```
 
 <a name="managing-locks-across-processes"></a>
-### Managing Locks Across Processes
+### Quản lý lock giữa các process
 
-Sometimes, you may wish to acquire a lock in one process and release it in another process. For example, you may acquire a lock during a web request and wish to release the lock at the end of a queued job that is triggered by that request. In this scenario, you should pass the lock's scoped "owner token" to the queued job so that the job can re-instantiate the lock using the given token.
+Đôi khi bạn cần lấy lock trong một process và giải phóng nó ở process khác. Ví dụ, bạn có thể lấy lock trong một web request rồi muốn giải phóng lock ở cuối queued job được request đó kích hoạt. Trong trường hợp này, hãy truyền "owner token" có phạm vi của lock vào queued job để job có thể khởi tạo lại lock bằng token đã cho.
 
-In the example below, we will dispatch a queued job if a lock is successfully acquired. In addition, we will pass the lock's owner token to the queued job via the lock's `owner` method:
+Trong ví dụ dưới đây, chúng ta dispatch một queued job khi lấy lock thành công. Đồng thời, owner token của lock được truyền vào queued job thông qua phương thức `owner`:
 
 ```php
 $podcast = Podcast::find($id);
@@ -566,22 +566,22 @@ if ($lock->get()) {
 }
 ```
 
-Within our application's `ProcessPodcast` job, we can restore and release the lock using the owner token:
+Trong job `ProcessPodcast` của ứng dụng, chúng ta có thể khôi phục và giải phóng lock bằng owner token:
 
 ```php
 Cache::restoreLock('processing', $this->owner)->release();
 ```
 
-If you would like to release a lock without respecting its current owner, you may use the `forceRelease` method:
+Nếu muốn giải phóng lock mà không xét owner hiện tại, bạn có thể dùng phương thức `forceRelease`:
 
 ```php
 Cache::lock('processing')->forceRelease();
 ```
 
 <a name="refreshing-locks"></a>
-### Refreshing Locks
+### Gia hạn lock
 
-If you need to extend the expiration of a lock that you currently own, you may use the `refresh` method. If no number of seconds is provided, the lock's original duration will be used. This is useful for long-running operations where you prefer to acquire a short lock and periodically extend it instead of acquiring a lock with a very long expiration time:
+Nếu cần kéo dài thời gian hết hạn của lock mà bạn hiện đang sở hữu, hãy dùng phương thức `refresh`. Nếu không truyền số giây, Laravel sẽ dùng thời lượng ban đầu của lock. Cách này hữu ích cho các tác vụ chạy lâu khi bạn muốn lấy một lock ngắn rồi gia hạn định kỳ thay vì tạo ngay một lock có thời gian hết hạn rất dài:
 
 ```php
 $lock = Cache::lock('generate-reports', 60);
@@ -599,9 +599,9 @@ if ($lock->get()) {
 ```
 
 <a name="concurrency-limiting"></a>
-### Concurrency Limiting
+### Giới hạn thực thi đồng thời
 
-Laravel's atomic lock functionality also provides a few ways to limit concurrent execution of closures. Use `withoutOverlapping` when you want to allow only one running instance across your infrastructure:
+Chức năng atomic lock của Laravel cũng cung cấp một số cách giới hạn việc thực thi closure đồng thời. Dùng `withoutOverlapping` khi bạn chỉ muốn cho phép một instance chạy trên toàn bộ hạ tầng tại một thời điểm:
 
 ```php
 Cache::withoutOverlapping('foo', function () {
@@ -609,7 +609,7 @@ Cache::withoutOverlapping('foo', function () {
 });
 ```
 
-By default, the lock is held until the closure finishes executing, and the method waits up to 10 seconds to acquire the lock. You may customize these values using additional arguments:
+Mặc định, lock được giữ cho đến khi closure thực thi xong và phương thức sẽ chờ tối đa 10 giây để lấy lock. Bạn có thể tùy chỉnh các giá trị này bằng các đối số bổ sung:
 
 ```php
 Cache::withoutOverlapping('foo', function () {
@@ -617,9 +617,9 @@ Cache::withoutOverlapping('foo', function () {
 }, lockFor: 120, waitFor: 5);
 ```
 
-If the lock cannot be acquired within the specified wait time, an `Illuminate\Contracts\Cache\LockTimeoutException` will be thrown.
+Nếu không thể lấy lock trong thời gian chờ đã chỉ định, `Illuminate\Contracts\Cache\LockTimeoutException` sẽ được ném ra.
 
-If you want controlled parallelism, use the `funnel` method to set a maximum number of concurrent executions. The `funnel` method works with any cache driver that supports locks:
+Nếu muốn kiểm soát mức độ chạy song song, hãy dùng phương thức `funnel` để đặt số lượng thực thi đồng thời tối đa. Phương thức `funnel` hoạt động với mọi cache driver hỗ trợ lock:
 
 ```php
 Cache::funnel('foo')
@@ -633,9 +633,9 @@ Cache::funnel('foo')
     });
 ```
 
-The `funnel` key identifies the resource being limited. The `limit` method defines the maximum concurrent executions. The `releaseAfter` method sets a safety timeout in seconds before an acquired slot is automatically released. The `block` method sets how many seconds to wait for an available slot.
+Key của `funnel` xác định resource đang được giới hạn. Phương thức `limit` xác định số lượng thực thi đồng thời tối đa. `releaseAfter` đặt thời gian an toàn tính bằng giây trước khi một slot đã lấy được tự động giải phóng. `block` xác định số giây chờ một slot khả dụng.
 
-If you prefer to handle the timeout via exceptions instead of providing a failure closure, you may omit the second closure. An `Illuminate\Cache\Limiters\LimiterTimeoutException` will be thrown if the lock cannot be acquired within the specified wait time:
+Nếu muốn xử lý timeout bằng exception thay vì cung cấp failure closure, bạn có thể bỏ closure thứ hai. `Illuminate\Cache\Limiters\LimiterTimeoutException` sẽ được ném ra nếu không thể lấy lock trong thời gian chờ đã chỉ định:
 
 ```php
 use Illuminate\Cache\Limiters\LimiterTimeoutException;
@@ -653,7 +653,7 @@ try {
 }
 ```
 
-If you would like to use a specific cache store for the concurrency limiter, you may invoke the `funnel` method on the desired store:
+Nếu muốn dùng một cache store cụ thể cho concurrency limiter, bạn có thể gọi phương thức `funnel` trên store mong muốn:
 
 ```php
 Cache::store('redis')->funnel('foo')
@@ -665,14 +665,14 @@ Cache::store('redis')->funnel('foo')
 ```
 
 > [!NOTE]
-> The `funnel` method requires the cache store to implement the `Illuminate\Contracts\Cache\LockProvider` interface. If you attempt to use `funnel` with a cache store that does not support locks, a `BadMethodCallException` will be thrown.
+> Phương thức `funnel` yêu cầu cache store implement interface `Illuminate\Contracts\Cache\LockProvider`. Nếu cố dùng `funnel` với cache store không hỗ trợ lock, `BadMethodCallException` sẽ được ném ra.
 
 <a name="cache-failover"></a>
-## Cache Failover
+## Cache failover
 
-The `failover` cache driver provides automatic failover functionality when interacting with the cache. If the primary cache store of the `failover` store fails for any reason, Laravel will automatically attempt to use the next configured store in the list. This is particularly useful for ensuring high availability in production environments where cache reliability is critical.
+Cache driver `failover` cung cấp khả năng tự động chuyển sang store dự phòng khi thao tác với cache. Nếu cache store chính của store `failover` gặp lỗi vì bất kỳ lý do nào, Laravel sẽ tự động thử store tiếp theo trong danh sách cấu hình. Điều này đặc biệt hữu ích để bảo đảm tính sẵn sàng cao trong môi trường production, nơi độ tin cậy của cache rất quan trọng.
 
-To configure a failover cache store, specify the `failover` driver and provide an array of store names to attempt in order. By default, Laravel includes an example failover configuration in your application's `config/cache.php` configuration file:
+Để cấu hình một failover cache store, hãy chỉ định driver `failover` và cung cấp một mảng tên store theo thứ tự cần thử. Mặc định, Laravel có sẵn cấu hình failover mẫu trong file `config/cache.php` của ứng dụng:
 
 ```php
 'failover' => [
@@ -684,21 +684,21 @@ To configure a failover cache store, specify the `failover` driver and provide a
 ],
 ```
 
-Once you have configured a store that uses the `failover` driver, you will need to set the failover store as your default cache store in your application's `.env` file to make use of the failover functionality:
+Sau khi cấu hình store sử dụng driver `failover`, bạn cần đặt failover store làm cache store mặc định trong file `.env` để sử dụng chức năng này:
 
 ```ini
 CACHE_STORE=failover
 ```
 
-When a cache store operation fails and failover is activated, Laravel will dispatch the `Illuminate\Cache\Events\CacheFailedOver` event, allowing you to report or log that a cache store has failed.
+Khi một thao tác cache store thất bại và failover được kích hoạt, Laravel sẽ dispatch event `Illuminate\Cache\Events\CacheFailedOver`, cho phép bạn báo cáo hoặc ghi log việc cache store gặp lỗi.
 
 <a name="adding-custom-cache-drivers"></a>
-## Adding Custom Cache Drivers
+## Thêm cache driver tùy chỉnh
 
 <a name="writing-the-driver"></a>
-### Writing the Driver
+### Viết driver
 
-To create our custom cache driver, we first need to implement the `Illuminate\Contracts\Cache\Store` [contract](/docs/{{version}}/contracts). So, a MongoDB cache implementation might look something like this:
+Để tạo cache driver tùy chỉnh, trước tiên chúng ta cần implement [contract](/docs/{{version}}/contracts) `Illuminate\Contracts\Cache\Store`. Vì vậy, một implementation cache bằng MongoDB có thể trông như sau:
 
 ```php
 <?php
@@ -722,7 +722,7 @@ class MongoStore implements Store
 }
 ```
 
-We just need to implement each of these methods using a MongoDB connection. For an example of how to implement each of these methods, take a look at the `Illuminate\Cache\MemcachedStore` in the [Laravel framework source code](https://github.com/laravel/framework). Once our implementation is complete, we can finish our custom driver registration by calling the `Cache` facade's `extend` method:
+Chúng ta chỉ cần implement từng phương thức trên bằng kết nối MongoDB. Để xem ví dụ triển khai từng phương thức, hãy tham khảo `Illuminate\Cache\MemcachedStore` trong [source code Laravel framework](https://github.com/laravel/framework). Sau khi implementation hoàn tất, chúng ta có thể hoàn thành việc đăng ký driver tùy chỉnh bằng cách gọi phương thức `extend` của facade `Cache`:
 
 ```php
 Cache::extend('mongo', function (Application $app) {
@@ -731,12 +731,12 @@ Cache::extend('mongo', function (Application $app) {
 ```
 
 > [!NOTE]
-> If you're wondering where to put your custom cache driver code, you could create an `Extensions` namespace within your `app` directory. However, keep in mind that Laravel does not have a rigid application structure and you are free to organize your application according to your preferences.
+> Nếu đang cân nhắc đặt code cache driver tùy chỉnh ở đâu, bạn có thể tạo namespace `Extensions` bên trong thư mục `app`. Tuy nhiên, Laravel không áp đặt cấu trúc ứng dụng cứng nhắc, vì vậy bạn có thể tổ chức ứng dụng theo nhu cầu của mình.
 
 <a name="registering-the-driver"></a>
-### Registering the Driver
+### Đăng ký driver
 
-To register the custom cache driver with Laravel, we will use the `extend` method on the `Cache` facade. Since other service providers may attempt to read cached values within their `boot` method, we will register our custom driver within a `booting` callback. By using the `booting` callback, we can ensure that the custom driver is registered just before the `boot` method is called on our application's service providers but after the `register` method is called on all of the service providers. We will register our `booting` callback within the `register` method of our application's `App\Providers\AppServiceProvider` class:
+Để đăng ký cache driver tùy chỉnh với Laravel, chúng ta sẽ dùng phương thức `extend` trên facade `Cache`. Vì các service provider khác có thể cố đọc giá trị cache trong phương thức `boot`, driver tùy chỉnh sẽ được đăng ký bên trong callback `booting`. Cách này bảo đảm driver được đăng ký ngay trước khi phương thức `boot` được gọi trên các service provider của ứng dụng, nhưng sau khi phương thức `register` đã được gọi trên tất cả service provider. Callback `booting` sẽ được đăng ký trong phương thức `register` của class `App\Providers\AppServiceProvider`:
 
 ```php
 <?php
@@ -772,18 +772,18 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-The first argument passed to the `extend` method is the name of the driver. This will correspond to your `driver` option in the `config/cache.php` configuration file. The second argument is a closure that should return an `Illuminate\Cache\Repository` instance. The closure will be passed an `$app` instance, which is an instance of the [service container](/docs/{{version}}/container).
+Đối số đầu tiên truyền vào phương thức `extend` là tên driver. Tên này tương ứng với option `driver` trong file cấu hình `config/cache.php`. Đối số thứ hai là một closure phải trả về instance `Illuminate\Cache\Repository`. Closure nhận `$app`, là một instance của [service container](/docs/{{version}}/container).
 
-Once your extension is registered, update the `CACHE_STORE` environment variable or `default` option within your application's `config/cache.php` configuration file to the name of your extension.
+Sau khi extension được đăng ký, hãy cập nhật biến môi trường `CACHE_STORE` hoặc option `default` trong file `config/cache.php` thành tên extension của bạn.
 
 <a name="events"></a>
-## Events
+## Event
 
-To execute code on every cache operation, you may listen for various [events](/docs/{{version}}/events) dispatched by the cache:
+Để thực thi code trên mọi thao tác cache, bạn có thể lắng nghe các [event](/docs/{{version}}/events) khác nhau do cache dispatch:
 
 <div class="overflow-auto">
 
-| Event Name                                      |
+| Tên event                                       |
 |-------------------------------------------------|
 | `Illuminate\Cache\Events\CacheFlushed`          |
 | `Illuminate\Cache\Events\CacheFlushing`         |
@@ -805,7 +805,7 @@ To execute code on every cache operation, you may listen for various [events](/d
 
 </div>
 
-To increase performance, you may disable cache events by setting the `events` configuration option to `false` for a given cache store in your application's `config/cache.php` configuration file:
+Để cải thiện hiệu năng, bạn có thể tắt cache event bằng cách đặt option cấu hình `events` thành `false` cho cache store tương ứng trong file `config/cache.php`:
 
 ```php
 'database' => [
@@ -814,6 +814,8 @@ To increase performance, you may disable cache events by setting the `events` co
     'events' => false,
 ],
 ```
+
+---
 
 ## Tài liệu chính thức
 

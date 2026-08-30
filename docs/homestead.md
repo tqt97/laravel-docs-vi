@@ -1,55 +1,55 @@
 # Laravel Homestead
 
-- [Introduction](#introduction)
-- [Installation and Setup](#installation-and-setup)
-    - [First Steps](#first-steps)
-    - [Configuring Homestead](#configuring-homestead)
-    - [Configuring Nginx Sites](#configuring-nginx-sites)
-    - [Configuring Services](#configuring-services)
-    - [Launching the Vagrant Box](#launching-the-vagrant-box)
-    - [Per Project Installation](#per-project-installation)
-    - [Installing Optional Features](#installing-optional-features)
-    - [Aliases](#aliases)
-- [Updating Homestead](#updating-homestead)
-- [Daily Usage](#daily-usage)
-    - [Connecting via SSH](#connecting-via-ssh)
-    - [Adding Additional Sites](#adding-additional-sites)
-    - [Environment Variables](#environment-variables)
-    - [Ports](#ports)
-    - [PHP Versions](#php-versions)
-    - [Connecting to Databases](#connecting-to-databases)
-    - [Database Backups](#database-backups)
-    - [Configuring Cron Schedules](#configuring-cron-schedules)
-    - [Configuring Mailpit](#configuring-mailpit)
-    - [Configuring Minio](#configuring-minio)
+- [Giới thiệu](#introduction)
+- [Cài đặt và thiết lập](#installation-and-setup)
+    - [Các bước đầu tiên](#first-steps)
+    - [Cấu hình Homestead](#configuring-homestead)
+    - [Cấu hình site Nginx](#configuring-nginx-sites)
+    - [Cấu hình dịch vụ](#configuring-services)
+    - [Khởi chạy Vagrant box](#launching-the-vagrant-box)
+    - [Cài đặt theo từng dự án](#per-project-installation)
+    - [Cài đặt các tính năng tùy chọn](#installing-optional-features)
+    - [Alias](#aliases)
+- [Cập nhật Homestead](#updating-homestead)
+- [Sử dụng hằng ngày](#daily-usage)
+    - [Kết nối qua SSH](#connecting-via-ssh)
+    - [Thêm site bổ sung](#adding-additional-sites)
+    - [Biến môi trường](#environment-variables)
+    - [Cổng](#ports)
+    - [Phiên bản PHP](#php-versions)
+    - [Kết nối tới cơ sở dữ liệu](#connecting-to-databases)
+    - [Sao lưu cơ sở dữ liệu](#database-backups)
+    - [Cấu hình lịch Cron](#configuring-cron-schedules)
+    - [Cấu hình Mailpit](#configuring-mailpit)
+    - [Cấu hình Minio](#configuring-minio)
     - [Laravel Dusk](#laravel-dusk)
-    - [Sharing Your Environment](#sharing-your-environment)
-- [Debugging and Profiling](#debugging-and-profiling)
-    - [Debugging Web Requests With Xdebug](#debugging-web-requests)
-    - [Debugging CLI Applications](#debugging-cli-applications)
-    - [Profiling Applications With Blackfire](#profiling-applications-with-blackfire)
-- [Network Interfaces](#network-interfaces)
-- [Extending Homestead](#extending-homestead)
-- [Provider Specific Settings](#provider-specific-settings)
+    - [Chia sẻ môi trường](#sharing-your-environment)
+- [Debug và profiling](#debugging-and-profiling)
+    - [Debug web request bằng Xdebug](#debugging-web-requests)
+    - [Debug ứng dụng CLI](#debugging-cli-applications)
+    - [Profiling ứng dụng bằng Blackfire](#profiling-applications-with-blackfire)
+- [Giao diện mạng](#network-interfaces)
+- [Mở rộng Homestead](#extending-homestead)
+- [Thiết lập riêng theo provider](#provider-specific-settings)
     - [VirtualBox](#provider-specific-virtualbox)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
 > [!WARNING]
-> Laravel Homestead is a legacy package that is no longer actively maintained. [Laravel Sail](/docs/{{version}}/sail) may be used as a modern alternative.
+> Laravel Homestead là một package cũ (legacy) không còn được duy trì tích cực. Bạn có thể sử dụng [Laravel Sail](/docs/{{version}}/sail) như một giải pháp thay thế hiện đại.
 
-Laravel strives to make the entire PHP development experience delightful, including your local development environment. [Laravel Homestead](https://github.com/laravel/homestead) is an official, pre-packaged Vagrant box that provides you a wonderful development environment without requiring you to install PHP, a web server, or any other server software on your local machine.
+Laravel luôn hướng tới việc mang lại trải nghiệm phát triển PHP dễ chịu trong mọi khía cạnh, bao gồm cả môi trường phát triển cục bộ. [Laravel Homestead](https://github.com/laravel/homestead) là một Vagrant box chính thức, được đóng gói sẵn, cung cấp môi trường phát triển hoàn chỉnh mà không yêu cầu bạn cài PHP, web server hay bất kỳ phần mềm máy chủ nào khác trực tiếp trên máy cục bộ.
 
-[Vagrant](https://www.vagrantup.com) provides a simple, elegant way to manage and provision Virtual Machines. Vagrant boxes are completely disposable. If something goes wrong, you can destroy and re-create the box in minutes!
+[Vagrant](https://www.vagrantup.com) cung cấp một cách đơn giản và thuận tiện để quản lý cũng như provision máy ảo. Các Vagrant box hoàn toàn có thể được tạo lại. Nếu có sự cố, bạn có thể hủy và tạo lại box chỉ trong vài phút.
 
-Homestead runs on any Windows, macOS, or Linux system and includes Nginx, PHP, MySQL, PostgreSQL, Redis, Memcached, Node, and all of the other software you need to develop amazing Laravel applications.
+Homestead chạy trên Windows, macOS hoặc Linux và bao gồm Nginx, PHP, MySQL, PostgreSQL, Redis, Memcached, Node cùng các phần mềm khác cần thiết để phát triển ứng dụng Laravel.
 
 > [!WARNING]
-> If you are using Windows, you may need to enable hardware virtualization (VT-x). It can usually be enabled via your BIOS. If you are using Hyper-V on a UEFI system you may additionally need to disable Hyper-V in order to access VT-x.
+> Nếu sử dụng Windows, bạn có thể cần bật ảo hóa phần cứng (VT-x). Thông thường, tùy chọn này có thể được bật trong BIOS. Nếu đang sử dụng Hyper-V trên hệ thống UEFI, bạn cũng có thể cần tắt Hyper-V để truy cập VT-x.
 
 <a name="included-software"></a>
-### Included Software
+### Phần mềm đi kèm
 
 <style>
     #software-list > ul {
@@ -94,7 +94,7 @@ Homestead runs on any Windows, macOS, or Linux system and includes Nginx, PHP, M
 </div>
 
 <a name="optional-software"></a>
-### Optional Software
+### Phần mềm tùy chọn
 
 <style>
     #software-list > ul {
@@ -141,30 +141,30 @@ Homestead runs on any Windows, macOS, or Linux system and includes Nginx, PHP, M
 </div>
 
 <a name="installation-and-setup"></a>
-## Installation and Setup
+## Cài đặt và thiết lập
 
 <a name="first-steps"></a>
-### First Steps
+### Các bước đầu tiên
 
-Before launching your Homestead environment, you must install [Vagrant](https://developer.hashicorp.com/vagrant/downloads) as well as one of the following supported providers:
+Trước khi khởi chạy môi trường Homestead, bạn phải cài đặt [Vagrant](https://developer.hashicorp.com/vagrant/downloads) cùng một trong các provider được hỗ trợ sau:
 
 - [VirtualBox 6.1.x](https://www.virtualbox.org/wiki/Download_Old_Builds_6_1)
 - [Parallels](https://www.parallels.com/products/desktop/)
 
-All of these software packages provide easy-to-use visual installers for all popular operating systems.
+Tất cả các package phần mềm này đều cung cấp trình cài đặt đồ họa dễ sử dụng cho các hệ điều hành phổ biến.
 
-To use the Parallels provider, you will need to install [Parallels Vagrant plug-in](https://github.com/Parallels/vagrant-parallels). It is free of charge.
+Để sử dụng provider Parallels, bạn cần cài [Parallels Vagrant plug-in](https://github.com/Parallels/vagrant-parallels). Plug-in này được cung cấp miễn phí.
 
 <a name="installing-homestead"></a>
-#### Installing Homestead
+#### Cài đặt Homestead
 
-You may install Homestead by cloning the Homestead repository onto your host machine. Consider cloning the repository into a `Homestead` folder within your "home" directory, as the Homestead virtual machine will serve as the host to all of your Laravel applications. Throughout this documentation, we will refer to this directory as your "Homestead directory":
+Bạn có thể cài Homestead bằng cách clone repository Homestead về máy host. Nên clone repository vào thư mục `Homestead` bên trong thư mục "home", vì máy ảo Homestead sẽ đóng vai trò host cho tất cả ứng dụng Laravel của bạn. Trong tài liệu này, chúng tôi sẽ gọi thư mục đó là "thư mục Homestead":
 
 ```shell
 git clone https://github.com/laravel/homestead.git ~/Homestead
 ```
 
-After cloning the Laravel Homestead repository, you should checkout the `release` branch. This branch always contains the latest stable release of Homestead:
+Sau khi clone repository Laravel Homestead, bạn nên checkout branch `release`. Branch này luôn chứa bản phát hành Homestead ổn định mới nhất:
 
 ```shell
 cd ~/Homestead
@@ -172,7 +172,7 @@ cd ~/Homestead
 git checkout release
 ```
 
-Next, execute the `bash init.sh` command from the Homestead directory to create the `Homestead.yaml` configuration file. The `Homestead.yaml` file is where you will configure all of the settings for your Homestead installation. This file will be placed in the Homestead directory:
+Tiếp theo, chạy lệnh `bash init.sh` từ thư mục Homestead để tạo file cấu hình `Homestead.yaml`. Đây là nơi bạn cấu hình toàn bộ thiết lập cho Homestead. File này sẽ được đặt trong thư mục Homestead:
 
 ```shell
 # macOS / Linux...
@@ -183,22 +183,22 @@ init.bat
 ```
 
 <a name="configuring-homestead"></a>
-### Configuring Homestead
+### Cấu hình Homestead
 
 <a name="setting-your-provider"></a>
-#### Setting Your Provider
+#### Thiết lập provider
 
-The `provider` key in your `Homestead.yaml` file indicates which Vagrant provider should be used: `virtualbox` or `parallels`:
+Khóa `provider` trong file `Homestead.yaml` xác định Vagrant provider sẽ được sử dụng: `virtualbox` hoặc `parallels`:
 
     provider: virtualbox
 
 > [!WARNING]
-> If you are using Apple Silicon the Parallels provider is required.
+> Nếu đang sử dụng Apple Silicon, bạn bắt buộc phải dùng provider Parallels.
 
 <a name="configuring-shared-folders"></a>
-#### Configuring Shared Folders
+#### Cấu hình thư mục dùng chung
 
-The `folders` property of the `Homestead.yaml` file lists all of the folders you wish to share with your Homestead environment. As files within these folders are changed, they will be kept in sync between your local machine and the Homestead virtual environment. You may configure as many shared folders as necessary:
+Thuộc tính `folders` của file `Homestead.yaml` liệt kê tất cả thư mục bạn muốn chia sẻ với môi trường Homestead. Khi các file trong những thư mục này thay đổi, chúng sẽ được đồng bộ giữa máy cục bộ và môi trường ảo Homestead. Bạn có thể cấu hình bao nhiêu thư mục dùng chung tùy nhu cầu:
 
 ```yaml
 folders:
@@ -207,9 +207,9 @@ folders:
 ```
 
 > [!WARNING]
-> Windows users should not use the `~/` path syntax and instead should use the full path to their project, such as `C:\Users\user\Code\project1`.
+> Người dùng Windows không nên sử dụng cú pháp đường dẫn `~/`; thay vào đó hãy dùng đường dẫn đầy đủ tới project, chẳng hạn `C:\Users\user\Code\project1`.
 
-You should always map individual applications to their own folder mapping instead of mapping a single large directory that contains all of your applications. When you map a folder, the virtual machine must keep track of all disk IO for *every* file in the folder. You may experience reduced performance if you have a large number of files in a folder:
+Bạn nên luôn ánh xạ từng ứng dụng vào mapping thư mục riêng thay vì ánh xạ một thư mục lớn chứa tất cả ứng dụng. Khi một thư mục được ánh xạ, máy ảo phải theo dõi toàn bộ disk I/O của *mọi* file trong thư mục đó. Hiệu năng có thể giảm nếu thư mục chứa số lượng file lớn:
 
 ```yaml
 folders:
@@ -220,9 +220,9 @@ folders:
 ```
 
 > [!WARNING]
-> You should never mount `.` (the current directory) when using Homestead. This causes Vagrant to not map the current folder to `/vagrant` and will break optional features and cause unexpected results while provisioning.
+> Bạn không bao giờ nên mount `.` (thư mục hiện tại) khi sử dụng Homestead. Việc này khiến Vagrant không ánh xạ thư mục hiện tại tới `/vagrant`, làm hỏng các tính năng tùy chọn và có thể gây kết quả không mong muốn trong quá trình provision.
 
-To enable [NFS](https://developer.hashicorp.com/vagrant/docs/synced-folders/nfs), you may add a `type` option to your folder mapping:
+Để bật [NFS](https://developer.hashicorp.com/vagrant/docs/synced-folders/nfs), bạn có thể thêm tùy chọn `type` vào mapping thư mục:
 
 ```yaml
 folders:
@@ -232,9 +232,9 @@ folders:
 ```
 
 > [!WARNING]
-> When using NFS on Windows, you should consider installing the [vagrant-winnfsd](https://github.com/winnfsd/vagrant-winnfsd) plug-in. This plug-in will maintain the correct user / group permissions for files and directories within the Homestead virtual machine.
+> Khi sử dụng NFS trên Windows, bạn nên cân nhắc cài plug-in [vagrant-winnfsd](https://github.com/winnfsd/vagrant-winnfsd). Plug-in này duy trì đúng quyền user / group cho file và thư mục bên trong máy ảo Homestead.
 
-You may also pass any options supported by Vagrant's [Synced Folders](https://developer.hashicorp.com/vagrant/docs/synced-folders/basic_usage) by listing them under the `options` key:
+Bạn cũng có thể truyền bất kỳ tùy chọn nào được [Synced Folders](https://developer.hashicorp.com/vagrant/docs/synced-folders/basic_usage) của Vagrant hỗ trợ bằng cách liệt kê chúng dưới khóa `options`:
 
 ```yaml
 folders:
@@ -247,9 +247,9 @@ folders:
 ```
 
 <a name="configuring-nginx-sites"></a>
-### Configuring Nginx Sites
+### Cấu hình site Nginx
 
-Not familiar with Nginx? No problem. Your `Homestead.yaml` file's `sites` property allows you to easily map a "domain" to a folder on your Homestead environment. A sample site configuration is included in the `Homestead.yaml` file. Again, you may add as many sites to your Homestead environment as necessary. Homestead can serve as a convenient, virtualized environment for every Laravel application you are working on:
+Chưa quen với Nginx? Không sao. Thuộc tính `sites` trong file `Homestead.yaml` cho phép bạn dễ dàng ánh xạ một "domain" tới một thư mục trong môi trường Homestead. File `Homestead.yaml` có sẵn một cấu hình site mẫu. Bạn có thể thêm bao nhiêu site vào môi trường Homestead tùy nhu cầu. Homestead có thể đóng vai trò môi trường ảo hóa thuận tiện cho mọi ứng dụng Laravel mà bạn đang phát triển:
 
 ```yaml
 sites:
@@ -257,32 +257,32 @@ sites:
       to: /home/vagrant/project1/public
 ```
 
-If you change the `sites` property after provisioning the Homestead virtual machine, you should execute the `vagrant reload --provision` command in your terminal to update the Nginx configuration on the virtual machine.
+Nếu thay đổi thuộc tính `sites` sau khi đã provision máy ảo Homestead, bạn nên chạy lệnh `vagrant reload --provision` trong terminal để cập nhật cấu hình Nginx trên máy ảo.
 
 > [!WARNING]
-> Homestead scripts are built to be as idempotent as possible. However, if you are experiencing issues while provisioning you should destroy and rebuild the machine by executing the `vagrant destroy && vagrant up` command.
+> Các script của Homestead được xây dựng để có tính idempotent cao nhất có thể. Tuy nhiên, nếu gặp sự cố trong quá trình provision, bạn nên hủy và tạo lại máy bằng cách chạy lệnh `vagrant destroy && vagrant up`.
 
 <a name="hostname-resolution"></a>
-#### Hostname Resolution
+#### Phân giải hostname
 
-Homestead publishes hostnames using `mDNS` for automatic host resolution. If you set `hostname: homestead` in your `Homestead.yaml` file, the host will be available at `homestead.local`. macOS, iOS, and Linux desktop distributions include `mDNS` support by default. If you are using Windows, you must install [Bonjour Print Services for Windows](https://support.apple.com/kb/DL999?viewlocale=en_US&locale=en_US).
+Homestead công bố hostname bằng `mDNS` để tự động phân giải host. Nếu bạn đặt `hostname: homestead` trong file `Homestead.yaml`, host sẽ khả dụng tại `homestead.local`. Các bản phân phối desktop macOS, iOS và Linux hỗ trợ `mDNS` theo mặc định. Nếu đang sử dụng Windows, bạn phải cài đặt [Bonjour Print Services for Windows](https://support.apple.com/kb/DL999?viewlocale=en_US&locale=en_US).
 
-Using automatic hostnames works best for [per project installations](#per-project-installation) of Homestead. If you host multiple sites on a single Homestead instance, you may add the "domains" for your web sites to the `hosts` file on your machine. The `hosts` file will redirect requests for your Homestead sites into your Homestead virtual machine. On macOS and Linux, this file is located at `/etc/hosts`. On Windows, it is located at `C:\Windows\System32\drivers\etc\hosts`. The lines you add to this file will look like the following:
+Hostname tự động hoạt động tốt nhất với [cài đặt theo từng project](#per-project-installation) của Homestead. Nếu host nhiều site trên một instance Homestead, bạn có thể thêm các "domain" của website vào file `hosts` trên máy. File `hosts` sẽ chuyển hướng request dành cho các site Homestead vào máy ảo Homestead. Trên macOS và Linux, file này nằm tại `/etc/hosts`. Trên Windows, file nằm tại `C:\Windows\System32\drivers\etc\hosts`. Các dòng thêm vào file sẽ có dạng sau:
 
 ```text
 192.168.56.56  homestead.test
 ```
 
-Make sure the IP address listed is the one set in your `Homestead.yaml` file. Once you have added the domain to your `hosts` file and launched the Vagrant box you will be able to access the site via your web browser:
+Hãy đảm bảo địa chỉ IP được liệt kê chính là địa chỉ đã cấu hình trong file `Homestead.yaml`. Sau khi thêm domain vào file `hosts` và khởi chạy Vagrant box, bạn có thể truy cập site qua trình duyệt web:
 
 ```shell
 http://homestead.test
 ```
 
 <a name="configuring-services"></a>
-### Configuring Services
+### Cấu hình service
 
-Homestead starts several services by default; however, you may customize which services are enabled or disabled during provisioning. For example, you may enable PostgreSQL and disable MySQL by modifying the `services` option within your `Homestead.yaml` file:
+Homestead khởi động một số service theo mặc định; tuy nhiên, bạn có thể tùy chỉnh service nào được bật hoặc tắt trong quá trình provisioning. Ví dụ, bạn có thể bật PostgreSQL và tắt MySQL bằng cách chỉnh tùy chọn `services` trong file `Homestead.yaml`:
 
 ```yaml
 services:
@@ -292,27 +292,27 @@ services:
         - "mysql"
 ```
 
-The specified services will be started or stopped based on their order in the `enabled` and `disabled` directives.
+Các service được chỉ định sẽ được khởi động hoặc dừng dựa trên thứ tự của chúng trong các directive `enabled` và `disabled`.
 
 <a name="launching-the-vagrant-box"></a>
-### Launching the Vagrant Box
+### Khởi chạy Vagrant box
 
-Once you have edited the `Homestead.yaml` to your liking, run the `vagrant up` command from your Homestead directory. Vagrant will boot the virtual machine and automatically configure your shared folders and Nginx sites.
+Sau khi chỉnh sửa `Homestead.yaml` theo nhu cầu, hãy chạy lệnh `vagrant up` từ thư mục Homestead. Vagrant sẽ khởi động máy ảo và tự động cấu hình các thư mục dùng chung cùng các site Nginx.
 
-To destroy the machine, you may use the `vagrant destroy` command.
+Để hủy máy ảo, bạn có thể dùng lệnh `vagrant destroy`.
 
 <a name="per-project-installation"></a>
-### Per Project Installation
+### Cài đặt theo từng project
 
-Instead of installing Homestead globally and sharing the same Homestead virtual machine across all of your projects, you may instead configure a Homestead instance for each project you manage. Installing Homestead per project may be beneficial if you wish to ship a `Vagrantfile` with your project, allowing others working on the project to `vagrant up` immediately after cloning the project's repository.
+Thay vì cài Homestead toàn cục và dùng chung một máy ảo Homestead cho tất cả project, bạn có thể cấu hình một instance Homestead cho từng project mà mình quản lý. Cài Homestead theo từng project có thể hữu ích nếu bạn muốn phân phối `Vagrantfile` cùng project, cho phép những người khác làm việc trên project chạy `vagrant up` ngay sau khi clone repository.
 
-You may install Homestead into your project using the Composer package manager:
+Bạn có thể cài Homestead vào project bằng Composer package manager:
 
 ```shell
 composer require laravel/homestead --dev
 ```
 
-Once Homestead has been installed, invoke Homestead's `make` command to generate the `Vagrantfile` and `Homestead.yaml` file for your project. These files will be placed in the root of your project. The `make` command will automatically configure the `sites` and `folders` directives in the `Homestead.yaml` file:
+Sau khi cài Homestead, hãy gọi lệnh `make` của Homestead để tạo `Vagrantfile` và file `Homestead.yaml` cho project. Các file này sẽ được đặt tại thư mục gốc của project. Lệnh `make` sẽ tự động cấu hình các directive `sites` và `folders` trong file `Homestead.yaml`:
 
 ```shell
 # macOS / Linux...
@@ -322,12 +322,12 @@ php vendor/bin/homestead make
 vendor\\bin\\homestead make
 ```
 
-Next, run the `vagrant up` command in your terminal and access your project at `http://homestead.test` in your browser. Remember, you will still need to add an `/etc/hosts` file entry for `homestead.test` or the domain of your choice if you are not using automatic [hostname resolution](#hostname-resolution).
+Tiếp theo, chạy lệnh `vagrant up` trong terminal và truy cập project tại `http://homestead.test` trong trình duyệt. Hãy nhớ rằng bạn vẫn cần thêm một entry cho `homestead.test` hoặc domain tùy chọn vào file `/etc/hosts` nếu không sử dụng [phân giải hostname](#hostname-resolution) tự động.
 
 <a name="installing-optional-features"></a>
-### Installing Optional Features
+### Cài đặt các tính năng tùy chọn
 
-Optional software is installed using the `features` option within your `Homestead.yaml` file. Most features can be enabled or disabled with a boolean value, while some features allow multiple configuration options:
+Phần mềm tùy chọn được cài đặt bằng tùy chọn `features` trong file `Homestead.yaml`. Phần lớn tính năng có thể bật hoặc tắt bằng giá trị boolean, trong khi một số tính năng cho phép nhiều tùy chọn cấu hình:
 
 ```yaml
 features:
@@ -373,48 +373,48 @@ features:
 <a name="elasticsearch"></a>
 #### Elasticsearch
 
-You may specify a supported version of Elasticsearch, which must be an exact version number (major.minor.patch). The default installation will create a cluster named 'homestead'. You should never give Elasticsearch more than half of the operating system's memory, so make sure your Homestead virtual machine has at least twice the Elasticsearch allocation.
+Bạn có thể chỉ định một phiên bản Elasticsearch được hỗ trợ, và đó phải là số phiên bản chính xác (major.minor.patch). Cài đặt mặc định sẽ tạo cluster có tên `homestead`. Bạn không bao giờ nên cấp cho Elasticsearch nhiều hơn một nửa bộ nhớ của hệ điều hành, vì vậy hãy đảm bảo máy ảo Homestead có ít nhất gấp đôi lượng bộ nhớ được cấp cho Elasticsearch.
 
 > [!NOTE]
-> Check out the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current) to learn how to customize your configuration.
+> Hãy xem [tài liệu Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current) để tìm hiểu cách tùy chỉnh cấu hình.
 
 <a name="mariadb"></a>
 #### MariaDB
 
-Enabling MariaDB will remove MySQL and install MariaDB. MariaDB typically serves as a drop-in replacement for MySQL, so you should still use the `mysql` database driver in your application's database configuration.
+Bật MariaDB sẽ gỡ MySQL và cài MariaDB. MariaDB thường có thể được dùng như một giải pháp thay thế trực tiếp cho MySQL, vì vậy bạn vẫn nên sử dụng database driver `mysql` trong cấu hình database của ứng dụng.
 
 <a name="mongodb"></a>
 #### MongoDB
 
-The default MongoDB installation will set the database username to `homestead` and the corresponding password to `secret`.
+Cài đặt MongoDB mặc định sẽ đặt database username là `homestead` và password tương ứng là `secret`.
 
 <a name="neo4j"></a>
 #### Neo4j
 
-The default Neo4j installation will set the database username to `homestead` and the corresponding password to `secret`. To access the Neo4j browser, visit `http://homestead.test:7474` via your web browser. The ports `7687` (Bolt), `7474` (HTTP), and `7473` (HTTPS) are ready to serve requests from the Neo4j client.
+Cài đặt Neo4j mặc định sẽ đặt database username là `homestead` và password tương ứng là `secret`. Để truy cập trình duyệt Neo4j, hãy mở `http://homestead.test:7474` trong trình duyệt web. Các port `7687` (Bolt), `7474` (HTTP) và `7473` (HTTPS) đã sẵn sàng phục vụ request từ Neo4j client.
 
 <a name="aliases"></a>
-### Aliases
+### Alias
 
-You may add Bash aliases to your Homestead virtual machine by modifying the `aliases` file within your Homestead directory:
+Bạn có thể thêm Bash alias vào máy ảo Homestead bằng cách chỉnh file `aliases` trong thư mục Homestead:
 
 ```shell
 alias c='clear'
 alias ..='cd ..'
 ```
 
-After you have updated the `aliases` file, you should re-provision the Homestead virtual machine using the `vagrant reload --provision` command. This will ensure that your new aliases are available on the machine.
+Sau khi cập nhật file `aliases`, bạn nên provision lại máy ảo Homestead bằng lệnh `vagrant reload --provision`. Việc này đảm bảo các alias mới khả dụng trên máy.
 
 <a name="updating-homestead"></a>
-## Updating Homestead
+## Cập nhật Homestead
 
-Before you begin updating Homestead you should ensure you have removed your current virtual machine by running the following command in your Homestead directory:
+Trước khi bắt đầu cập nhật Homestead, hãy đảm bảo bạn đã xóa máy ảo hiện tại bằng cách chạy lệnh sau trong thư mục Homestead:
 
 ```shell
 vagrant destroy
 ```
 
-Next, you need to update the Homestead source code. If you cloned the repository, you can execute the following commands at the location you originally cloned the repository:
+Tiếp theo, bạn cần cập nhật source code Homestead. Nếu đã clone repository, bạn có thể chạy các lệnh sau tại vị trí ban đầu đã clone repository:
 
 ```shell
 git fetch
@@ -422,21 +422,21 @@ git fetch
 git pull origin release
 ```
 
-These commands pull the latest Homestead code from the GitHub repository, fetch the latest tags, and then check out the latest tagged release. You can find the latest stable release version on Homestead's [GitHub releases page](https://github.com/laravel/homestead/releases).
+Các lệnh này lấy code Homestead mới nhất từ GitHub repository, lấy các tag mới nhất rồi checkout bản phát hành được gắn tag mới nhất. Bạn có thể tìm phiên bản stable mới nhất trên [trang GitHub releases của Homestead](https://github.com/laravel/homestead/releases).
 
-If you have installed Homestead via your project's `composer.json` file, you should ensure your `composer.json` file contains `"laravel/homestead": "^12"` and update your dependencies:
+Nếu đã cài Homestead thông qua file `composer.json` của project, hãy đảm bảo file `composer.json` chứa `"laravel/homestead": "^12"` và cập nhật dependencies:
 
 ```shell
 composer update
 ```
 
-Next, you should update the Vagrant box using the `vagrant box update` command:
+Tiếp theo, hãy cập nhật Vagrant box bằng lệnh `vagrant box update`:
 
 ```shell
 vagrant box update
 ```
 
-After updating the Vagrant box, you should run the `bash init.sh` command from the Homestead directory in order to update Homestead's additional configuration files. You will be asked whether you wish to overwrite your existing `Homestead.yaml`, `after.sh`, and `aliases` files:
+Sau khi cập nhật Vagrant box, bạn nên chạy lệnh `bash init.sh` từ thư mục Homestead để cập nhật các file cấu hình bổ sung của Homestead. Bạn sẽ được hỏi có muốn ghi đè các file `Homestead.yaml`, `after.sh` và `aliases` hiện có hay không:
 
 ```shell
 # macOS / Linux...
@@ -446,24 +446,24 @@ bash init.sh
 init.bat
 ```
 
-Finally, you will need to regenerate your Homestead virtual machine to utilize the latest Vagrant installation:
+Cuối cùng, bạn cần tạo lại máy ảo Homestead để sử dụng bản cài đặt Vagrant mới nhất:
 
 ```shell
 vagrant up
 ```
 
 <a name="daily-usage"></a>
-## Daily Usage
+## Sử dụng hằng ngày
 
 <a name="connecting-via-ssh"></a>
-### Connecting via SSH
+### Kết nối qua SSH
 
-You can SSH into your virtual machine by executing the `vagrant ssh` terminal command from your Homestead directory.
+Bạn có thể SSH vào máy ảo bằng cách chạy lệnh terminal `vagrant ssh` từ thư mục Homestead.
 
 <a name="adding-additional-sites"></a>
-### Adding Additional Sites
+### Thêm site bổ sung
 
-Once your Homestead environment is provisioned and running, you may want to add additional Nginx sites for your other Laravel projects. You can run as many Laravel projects as you wish on a single Homestead environment. To add an additional site, add the site to your `Homestead.yaml` file.
+Sau khi môi trường Homestead đã được provision và đang chạy, bạn có thể muốn thêm các site Nginx cho những dự án Laravel khác. Bạn có thể chạy bao nhiêu dự án Laravel tùy ý trên một môi trường Homestead. Để thêm site, hãy thêm site đó vào file `Homestead.yaml`.
 
 ```yaml
 sites:
@@ -474,21 +474,21 @@ sites:
 ```
 
 > [!WARNING]
-> You should ensure that you have configured a [folder mapping](#configuring-shared-folders) for the project's directory before adding the site.
+> Bạn nên đảm bảo đã cấu hình [ánh xạ thư mục](#configuring-shared-folders) cho thư mục của dự án trước khi thêm site.
 
-If Vagrant is not automatically managing your "hosts" file, you may need to add the new site to that file as well. On macOS and Linux, this file is located at `/etc/hosts`. On Windows, it is located at `C:\Windows\System32\drivers\etc\hosts`:
+Nếu Vagrant không tự động quản lý file "hosts", bạn cũng có thể cần thêm site mới vào file này. Trên macOS và Linux, file nằm tại `/etc/hosts`. Trên Windows, file nằm tại `C:\Windows\System32\drivers\etc\hosts`:
 
 ```text
 192.168.56.56  homestead.test
 192.168.56.56  another.test
 ```
 
-Once the site has been added, execute the `vagrant reload --provision` terminal command from your Homestead directory.
+Sau khi thêm site, hãy chạy lệnh terminal `vagrant reload --provision` từ thư mục Homestead.
 
 <a name="site-types"></a>
-#### Site Types
+#### Loại site
 
-Homestead supports several "types" of sites which allow you to easily run projects that are not based on Laravel. For example, we may easily add a Statamic application to Homestead using the `statamic` site type:
+Homestead hỗ trợ một số "loại" site, cho phép bạn dễ dàng chạy các dự án không dựa trên Laravel. Ví dụ, bạn có thể dễ dàng thêm ứng dụng Statamic vào Homestead bằng loại site `statamic`:
 
 ```yaml
 sites:
@@ -497,12 +497,12 @@ sites:
       type: "statamic"
 ```
 
-The available site types are: `apache`, `apache-proxy`, `apigility`, `expressive`, `laravel` (the default), `proxy` (for nginx), `silverstripe`, `statamic`, `symfony2`, `symfony4`, and `zf`.
+Các loại site khả dụng gồm: `apache`, `apache-proxy`, `apigility`, `expressive`, `laravel` (mặc định), `proxy` (cho nginx), `silverstripe`, `statamic`, `symfony2`, `symfony4` và `zf`.
 
 <a name="site-parameters"></a>
-#### Site Parameters
+#### Tham số site
 
-You may add additional Nginx `fastcgi_param` values to your site via the `params` site directive:
+Bạn có thể thêm các giá trị Nginx `fastcgi_param` bổ sung cho site thông qua directive `params` của site:
 
 ```yaml
 sites:
@@ -514,9 +514,9 @@ sites:
 ```
 
 <a name="environment-variables"></a>
-### Environment Variables
+### Biến môi trường
 
-You can define global environment variables by adding them to your `Homestead.yaml` file:
+Bạn có thể định nghĩa các biến môi trường toàn cục bằng cách thêm chúng vào file `Homestead.yaml`:
 
 ```yaml
 variables:
@@ -526,24 +526,24 @@ variables:
       value: bar
 ```
 
-After updating the `Homestead.yaml` file, be sure to re-provision the machine by executing the `vagrant reload --provision` command. This will update the PHP-FPM configuration for all of the installed PHP versions and also update the environment for the `vagrant` user.
+Sau khi cập nhật file `Homestead.yaml`, hãy nhớ provision lại máy bằng lệnh `vagrant reload --provision`. Thao tác này sẽ cập nhật cấu hình PHP-FPM cho tất cả phiên bản PHP đã cài đặt và đồng thời cập nhật môi trường cho user `vagrant`.
 
 <a name="ports"></a>
-### Ports
+### Cổng
 
-By default, the following ports are forwarded to your Homestead environment:
+Theo mặc định, các cổng sau được forward tới môi trường Homestead:
 
 <div class="content-list" markdown="1">
 
-- **HTTP:** 8000 &rarr; Forwards To 80
-- **HTTPS:** 44300 &rarr; Forwards To 443
+- **HTTP:** 8000 &rarr; Forward tới 80
+- **HTTPS:** 44300 &rarr; Forward tới 443
 
 </div>
 
 <a name="forwarding-additional-ports"></a>
-#### Forwarding Additional Ports
+#### Forward các cổng bổ sung
 
-If you wish, you may forward additional ports to the Vagrant box by defining a `ports` configuration entry within your `Homestead.yaml` file. After updating the `Homestead.yaml` file, be sure to re-provision the machine by executing the `vagrant reload --provision` command:
+Nếu muốn, bạn có thể forward thêm cổng tới Vagrant box bằng cách định nghĩa mục cấu hình `ports` trong file `Homestead.yaml`. Sau khi cập nhật file, hãy provision lại máy bằng lệnh `vagrant reload --provision`:
 
 ```yaml
 ports:
@@ -554,7 +554,7 @@ ports:
       protocol: udp
 ```
 
-Below is a list of additional Homestead service ports that you may wish to map from your host machine to your Vagrant box:
+Dưới đây là danh sách các cổng dịch vụ Homestead bổ sung mà bạn có thể muốn ánh xạ từ máy host tới Vagrant box:
 
 <div class="content-list" markdown="1">
 
@@ -569,9 +569,9 @@ Below is a list of additional Homestead service ports that you may wish to map f
 </div>
 
 <a name="php-versions"></a>
-### PHP Versions
+### Phiên bản PHP
 
-Homestead supports running multiple versions of PHP on the same virtual machine. You may specify which version of PHP to use for a given site within your `Homestead.yaml` file. The available PHP versions are: "5.6", "7.0", "7.1", "7.2", "7.3", "7.4", "8.0", "8.1", "8.2", and "8.3", (the default):
+Homestead hỗ trợ chạy nhiều phiên bản PHP trên cùng một máy ảo. Bạn có thể chỉ định phiên bản PHP dùng cho từng site trong file `Homestead.yaml`. Các phiên bản PHP khả dụng là: "5.6", "7.0", "7.1", "7.2", "7.3", "7.4", "8.0", "8.1", "8.2" và "8.3" (mặc định):
 
 ```yaml
 sites:
@@ -580,7 +580,7 @@ sites:
       php: "7.1"
 ```
 
-[Within your Homestead virtual machine](#connecting-via-ssh), you may use any of the supported PHP versions via the CLI:
+[Bên trong máy ảo Homestead](#connecting-via-ssh), bạn có thể sử dụng bất kỳ phiên bản PHP được hỗ trợ nào thông qua CLI:
 
 ```shell
 php5.6 artisan list
@@ -595,7 +595,7 @@ php8.2 artisan list
 php8.3 artisan list
 ```
 
-You may change the default version of PHP used by the CLI by issuing the following commands from within your Homestead virtual machine:
+Bạn có thể thay đổi phiên bản PHP mặc định mà CLI sử dụng bằng cách chạy các lệnh sau bên trong máy ảo Homestead:
 
 ```shell
 php56
@@ -611,30 +611,30 @@ php83
 ```
 
 <a name="connecting-to-databases"></a>
-### Connecting to Databases
+### Kết nối tới cơ sở dữ liệu
 
-A `homestead` database is configured for both MySQL and PostgreSQL out of the box. To connect to your MySQL or PostgreSQL database from your host machine's database client, you should connect to `127.0.0.1` on port `33060` (MySQL) or `54320` (PostgreSQL). The username and password for both databases is `homestead` / `secret`.
+Một database `homestead` được cấu hình sẵn cho cả MySQL và PostgreSQL. Để kết nối tới MySQL hoặc PostgreSQL từ database client trên máy host, hãy kết nối tới `127.0.0.1` qua cổng `33060` (MySQL) hoặc `54320` (PostgreSQL). Username và password cho cả hai database là `homestead` / `secret`.
 
 > [!WARNING]
-> You should only use these non-standard ports when connecting to the databases from your host machine. You will use the default 3306 and 5432 ports in your Laravel application's `database` configuration file since Laravel is running _within_ the virtual machine.
+> Bạn chỉ nên sử dụng các cổng không chuẩn này khi kết nối tới database từ máy host. Trong file cấu hình `database` của ứng dụng Laravel, bạn sẽ sử dụng các cổng mặc định 3306 và 5432 vì Laravel đang chạy _bên trong_ máy ảo.
 
 <a name="database-backups"></a>
-### Database Backups
+### Sao lưu cơ sở dữ liệu
 
-Homestead can automatically backup your database when your Homestead virtual machine is destroyed. To utilize this feature, you must be using Vagrant 2.1.0 or greater. Or, if you are using an older version of Vagrant, you must install the `vagrant-triggers` plug-in. To enable automatic database backups, add the following line to your `Homestead.yaml` file:
+Homestead có thể tự động sao lưu database khi máy ảo Homestead bị hủy. Để sử dụng tính năng này, bạn phải dùng Vagrant 2.1.0 trở lên. Nếu dùng phiên bản Vagrant cũ hơn, bạn phải cài plug-in `vagrant-triggers`. Để bật sao lưu database tự động, hãy thêm dòng sau vào file `Homestead.yaml`:
 
 ```yaml
 backup: true
 ```
 
-Once configured, Homestead will export your databases to `.backup/mysql_backup` and `.backup/postgres_backup` directories when the `vagrant destroy` command is executed. These directories can be found in the folder where you installed Homestead or in the root of your project if you are using the [per project installation](#per-project-installation) method.
+Sau khi cấu hình, Homestead sẽ export database vào các thư mục `.backup/mysql_backup` và `.backup/postgres_backup` khi lệnh `vagrant destroy` được thực thi. Các thư mục này nằm trong thư mục cài Homestead hoặc tại thư mục gốc của dự án nếu bạn sử dụng phương thức [cài đặt theo từng dự án](#per-project-installation).
 
 <a name="configuring-cron-schedules"></a>
-### Configuring Cron Schedules
+### Cấu hình lịch Cron
 
-Laravel provides a convenient way to [schedule cron jobs](/docs/{{version}}/scheduling) by scheduling a single `schedule:run` Artisan command to run every minute. The `schedule:run` command will examine the job schedule defined in your `routes/console.php` file to determine which scheduled tasks to run.
+Laravel cung cấp cách thuận tiện để [lập lịch cron job](/docs/{{version}}/scheduling) bằng cách lên lịch một lệnh Artisan `schedule:run` duy nhất chạy mỗi phút. Lệnh `schedule:run` sẽ kiểm tra lịch job được định nghĩa trong file `routes/console.php` để xác định các tác vụ đã lên lịch cần chạy.
 
-If you would like the `schedule:run` command to be run for a Homestead site, you may set the `schedule` option to `true` when defining the site:
+Nếu muốn lệnh `schedule:run` được chạy cho một site Homestead, bạn có thể đặt tùy chọn `schedule` thành `true` khi định nghĩa site:
 
 ```yaml
 sites:
@@ -643,12 +643,12 @@ sites:
       schedule: true
 ```
 
-The cron job for the site will be defined in the `/etc/cron.d` directory of the Homestead virtual machine.
+Cron job của site sẽ được định nghĩa trong thư mục `/etc/cron.d` của máy ảo Homestead.
 
 <a name="configuring-mailpit"></a>
-### Configuring Mailpit
+### Cấu hình Mailpit
 
-[Mailpit](https://github.com/axllent/mailpit) allows you to intercept your outgoing email and examine it without actually sending the mail to its recipients. To get started, update your application's `.env` file to use the following mail settings:
+[Mailpit](https://github.com/axllent/mailpit) cho phép bạn chặn email gửi đi và kiểm tra chúng mà không thực sự gửi mail tới người nhận. Để bắt đầu, hãy cập nhật file `.env` của ứng dụng với các thiết lập mail sau:
 
 ```ini
 MAIL_MAILER=smtp
@@ -659,18 +659,18 @@ MAIL_PASSWORD=null
 MAIL_ENCRYPTION=null
 ```
 
-Once Mailpit has been configured, you may access the Mailpit dashboard at `http://localhost:8025`.
+Sau khi cấu hình Mailpit, bạn có thể truy cập dashboard Mailpit tại `http://localhost:8025`.
 
 <a name="configuring-minio"></a>
-### Configuring Minio
+### Cấu hình Minio
 
-[Minio](https://github.com/minio/minio) is an open source object storage server with an Amazon S3 compatible API. To install Minio, update your `Homestead.yaml` file with the following configuration option in the [features](#installing-optional-features) section:
+[Minio](https://github.com/minio/minio) là object storage server mã nguồn mở với API tương thích Amazon S3. Để cài Minio, hãy cập nhật file `Homestead.yaml` với tùy chọn cấu hình sau trong phần [features](#installing-optional-features):
 
     minio: true
 
-By default, Minio is available on port 9600. You may access the Minio control panel by visiting `http://localhost:9600`. The default access key is `homestead`, while the default secret key is `secretkey`. When accessing Minio, you should always use region `us-east-1`.
+Theo mặc định, Minio khả dụng trên cổng 9600. Bạn có thể truy cập bảng điều khiển Minio tại `http://localhost:9600`. Access key mặc định là `homestead`, còn secret key mặc định là `secretkey`. Khi truy cập Minio, bạn nên luôn sử dụng region `us-east-1`.
 
-In order to use Minio, ensure your `.env` file has the following options:
+Để sử dụng Minio, hãy đảm bảo file `.env` có các tùy chọn sau:
 
 ```ini
 AWS_USE_PATH_STYLE_ENDPOINT=true
@@ -680,7 +680,7 @@ AWS_SECRET_ACCESS_KEY=secretkey
 AWS_DEFAULT_REGION=us-east-1
 ```
 
-To provision Minio powered "S3" buckets, add a `buckets` directive to your `Homestead.yaml` file. After defining your buckets, you should execute the `vagrant reload --provision` command in your terminal:
+Để provision các bucket "S3" do Minio cung cấp, hãy thêm directive `buckets` vào file `Homestead.yaml`. Sau khi định nghĩa bucket, hãy chạy lệnh `vagrant reload --provision` trong terminal:
 
 ```yaml
 buckets:
@@ -690,59 +690,59 @@ buckets:
       policy: none
 ```
 
-Supported `policy` values include: `none`, `download`, `upload`, and `public`.
+Các giá trị `policy` được hỗ trợ gồm: `none`, `download`, `upload` và `public`.
 
 <a name="laravel-dusk"></a>
 ### Laravel Dusk
 
-In order to run [Laravel Dusk](/docs/{{version}}/dusk) tests within Homestead, you should enable the [webdriver feature](#installing-optional-features) in your Homestead configuration:
+Để chạy test [Laravel Dusk](/docs/{{version}}/dusk) bên trong Homestead, bạn nên bật [tính năng webdriver](#installing-optional-features) trong cấu hình Homestead:
 
 ```yaml
 features:
     - webdriver: true
 ```
 
-After enabling the `webdriver` feature, you should execute the `vagrant reload --provision` command in your terminal.
+Sau khi bật tính năng `webdriver`, hãy chạy lệnh `vagrant reload --provision` trong terminal.
 
 <a name="sharing-your-environment"></a>
-### Sharing Your Environment
+### Chia sẻ môi trường
 
-Sometimes you may wish to share what you're currently working on with coworkers or a client. Vagrant has built-in support for this via the `vagrant share` command; however, this will not work if you have multiple sites configured in your `Homestead.yaml` file.
+Đôi khi bạn có thể muốn chia sẻ nội dung đang làm với đồng nghiệp hoặc khách hàng. Vagrant hỗ trợ sẵn việc này qua lệnh `vagrant share`; tuy nhiên, cách này sẽ không hoạt động nếu bạn cấu hình nhiều site trong file `Homestead.yaml`.
 
-To solve this problem, Homestead includes its own `share` command. To get started, [SSH into your Homestead virtual machine](#connecting-via-ssh) via `vagrant ssh` and execute the `share homestead.test` command. This command will share the `homestead.test` site from your `Homestead.yaml` configuration file. You may substitute any of your other configured sites for `homestead.test`:
+Để giải quyết vấn đề này, Homestead cung cấp lệnh `share` riêng. Để bắt đầu, hãy [SSH vào máy ảo Homestead](#connecting-via-ssh) bằng `vagrant ssh` và chạy lệnh `share homestead.test`. Lệnh này sẽ chia sẻ site `homestead.test` từ file cấu hình `Homestead.yaml`. Bạn có thể thay `homestead.test` bằng bất kỳ site nào khác đã cấu hình:
 
 ```shell
 share homestead.test
 ```
 
-After running the command, you will see an Ngrok screen appear which contains the activity log and the publicly accessible URLs for the shared site. If you would like to specify a custom region, subdomain, or other Ngrok runtime option, you may add them to your `share` command:
+Sau khi chạy lệnh, màn hình Ngrok sẽ xuất hiện với activity log và các URL công khai để truy cập site được chia sẻ. Nếu muốn chỉ định region, subdomain hoặc tùy chọn runtime Ngrok khác, bạn có thể thêm chúng vào lệnh `share`:
 
 ```shell
 share homestead.test -region=eu -subdomain=laravel
 ```
 
-If you need to share content over HTTPS rather than HTTP, using the `sshare` command instead of `share` will enable you to do so.
+Nếu cần chia sẻ nội dung qua HTTPS thay vì HTTP, hãy sử dụng lệnh `sshare` thay cho `share`.
 
 > [!WARNING]
-> Remember, Vagrant is inherently insecure and you are exposing your virtual machine to the Internet when running the `share` command.
+> Hãy nhớ rằng Vagrant vốn không an toàn và bạn đang đưa máy ảo của mình ra Internet khi chạy lệnh `share`.
 
 <a name="debugging-and-profiling"></a>
-## Debugging and Profiling
+## Debug và profiling
 
 <a name="debugging-web-requests"></a>
-### Debugging Web Requests With Xdebug
+### Debug web request bằng Xdebug
 
-Homestead includes support for step debugging using [Xdebug](https://xdebug.org). For example, you can access a page in your browser and PHP will connect to your IDE to allow inspection and modification of the running code.
+Homestead hỗ trợ step debugging bằng [Xdebug](https://xdebug.org). Ví dụ, bạn có thể truy cập một trang trong trình duyệt và PHP sẽ kết nối tới IDE để cho phép kiểm tra và sửa đổi code đang chạy.
 
-By default, Xdebug is already running and ready to accept connections. If you need to enable Xdebug on the CLI, execute the `sudo phpenmod xdebug` command within your Homestead virtual machine. Next, follow your IDE's instructions to enable debugging. Finally, configure your browser to trigger Xdebug with an extension or [bookmarklet](https://www.jetbrains.com/phpstorm/marklets/).
+Theo mặc định, Xdebug đã chạy và sẵn sàng nhận kết nối. Nếu cần bật Xdebug trên CLI, hãy chạy `sudo phpenmod xdebug` bên trong máy ảo Homestead. Tiếp theo, làm theo hướng dẫn của IDE để bật debugging. Cuối cùng, cấu hình trình duyệt để kích hoạt Xdebug bằng extension hoặc [bookmarklet](https://www.jetbrains.com/phpstorm/marklets/).
 
 > [!WARNING]
-> Xdebug causes PHP to run significantly slower. To disable Xdebug, run `sudo phpdismod xdebug` within your Homestead virtual machine and restart the FPM service.
+> Xdebug khiến PHP chạy chậm hơn đáng kể. Để tắt Xdebug, hãy chạy `sudo phpdismod xdebug` bên trong máy ảo Homestead và khởi động lại dịch vụ FPM.
 
 <a name="autostarting-xdebug"></a>
-#### Autostarting Xdebug
+#### Tự động khởi động Xdebug
 
-When debugging functional tests that make requests to the web server, it is easier to autostart debugging rather than modifying tests to pass through a custom header or cookie to trigger debugging. To force Xdebug to start automatically, modify the `/etc/php/7.x/fpm/conf.d/20-xdebug.ini` file inside your Homestead virtual machine and add the following configuration:
+Khi debug functional test có request tới web server, việc tự động khởi động debugging thuận tiện hơn so với sửa test để truyền custom header hoặc cookie nhằm kích hoạt debugging. Để buộc Xdebug tự động khởi động, hãy sửa file `/etc/php/7.x/fpm/conf.d/20-xdebug.ini` bên trong máy ảo Homestead và thêm cấu hình sau:
 
 ```ini
 ; If Homestead.yaml contains a different subnet for the IP address, this address may be different...
@@ -752,22 +752,22 @@ xdebug.start_with_request = yes
 ```
 
 <a name="debugging-cli-applications"></a>
-### Debugging CLI Applications
+### Debug ứng dụng CLI
 
-To debug a PHP CLI application, use the `xphp` shell alias inside your Homestead virtual machine:
+Để debug một ứng dụng PHP CLI, hãy sử dụng shell alias `xphp` bên trong máy ảo Homestead:
 
 ```shell
 xphp /path/to/script
 ```
 
 <a name="profiling-applications-with-blackfire"></a>
-### Profiling Applications With Blackfire
+### Profiling ứng dụng bằng Blackfire
 
-[Blackfire](https://blackfire.io/docs/introduction) is a service for profiling web requests and CLI applications. It offers an interactive user interface which displays profile data in call-graphs and timelines. It is built for use in development, staging, and production, with no overhead for end users. In addition, Blackfire provides performance, quality, and security checks on code and `php.ini` configuration settings.
+[Blackfire](https://blackfire.io/docs/introduction) là dịch vụ profiling web request và ứng dụng CLI. Nó cung cấp giao diện tương tác hiển thị dữ liệu profile dưới dạng call graph và timeline. Blackfire được xây dựng để dùng trong development, staging và production mà không tạo overhead cho người dùng cuối. Ngoài ra, Blackfire cung cấp các kiểm tra về hiệu năng, chất lượng, bảo mật của code và thiết lập `php.ini`.
 
-The [Blackfire Player](https://blackfire.io/docs/player/index) is an open-source Web Crawling, Web Testing, and Web Scraping application which can work jointly with Blackfire in order to script profiling scenarios.
+[Blackfire Player](https://blackfire.io/docs/player/index) là ứng dụng Web Crawling, Web Testing và Web Scraping mã nguồn mở, có thể phối hợp với Blackfire để script các kịch bản profiling.
 
-To enable Blackfire, use the "features" setting in your Homestead configuration file:
+Để bật Blackfire, hãy sử dụng thiết lập "features" trong file cấu hình Homestead:
 
 ```yaml
 features:
@@ -778,12 +778,12 @@ features:
         client_token: "client_value"
 ```
 
-Blackfire server credentials and client credentials [require a Blackfire account](https://blackfire.io/signup). Blackfire offers various options to profile an application, including a CLI tool and browser extension. Please [review the Blackfire documentation for more details](https://blackfire.io/docs/php/integrations/laravel/index).
+Thông tin xác thực server và client của Blackfire [yêu cầu tài khoản Blackfire](https://blackfire.io/signup). Blackfire cung cấp nhiều cách để profile ứng dụng, gồm công cụ CLI và browser extension. Hãy [xem tài liệu Blackfire để biết thêm chi tiết](https://blackfire.io/docs/php/integrations/laravel/index).
 
 <a name="network-interfaces"></a>
-## Network Interfaces
+## Giao diện mạng
 
-The `networks` property of the `Homestead.yaml` file configures network interfaces for your Homestead virtual machine. You may configure as many interfaces as necessary:
+Thuộc tính `networks` của file `Homestead.yaml` cấu hình các giao diện mạng cho máy ảo Homestead. Bạn có thể cấu hình số lượng interface tùy nhu cầu:
 
 ```yaml
 networks:
@@ -791,7 +791,7 @@ networks:
       ip: "192.168.10.20"
 ```
 
-To enable a [bridged](https://developer.hashicorp.com/vagrant/docs/networking/public_network) interface, configure a `bridge` setting for the network and change the network type to `public_network`:
+Để bật interface [bridged](https://developer.hashicorp.com/vagrant/docs/networking/public_network), hãy cấu hình thiết lập `bridge` cho network và đổi loại network thành `public_network`:
 
 ```yaml
 networks:
@@ -800,7 +800,7 @@ networks:
       bridge: "en1: Wi-Fi (AirPort)"
 ```
 
-To enable [DHCP](https://developer.hashicorp.com/vagrant/docs/networking/public_network#dhcp), just remove the `ip` option from your configuration:
+Để bật [DHCP](https://developer.hashicorp.com/vagrant/docs/networking/public_network#dhcp), chỉ cần xóa tùy chọn `ip` khỏi cấu hình:
 
 ```yaml
 networks:
@@ -808,7 +808,7 @@ networks:
       bridge: "en1: Wi-Fi (AirPort)"
 ```
 
-To update what device the network is using, you may add a `dev` option to the network's configuration. The default `dev` value is `eth0`:
+Để thay đổi thiết bị mà network sử dụng, bạn có thể thêm tùy chọn `dev` vào cấu hình network. Giá trị `dev` mặc định là `eth0`:
 
 ```yaml
 networks:
@@ -819,11 +819,11 @@ networks:
 ```
 
 <a name="extending-homestead"></a>
-## Extending Homestead
+## Mở rộng Homestead
 
-You may extend Homestead using the `after.sh` script in the root of your Homestead directory. Within this file, you may add any shell commands that are necessary to properly configure and customize your virtual machine.
+Bạn có thể mở rộng Homestead bằng script `after.sh` ở thư mục gốc Homestead. Trong file này, bạn có thể thêm bất kỳ shell command nào cần thiết để cấu hình và tùy biến máy ảo.
 
-When customizing Homestead, Ubuntu may ask you if you would like to keep a package's original configuration or overwrite it with a new configuration file. To avoid this, you should use the following command when installing packages in order to avoid overwriting any configuration previously written by Homestead:
+Khi tùy biến Homestead, Ubuntu có thể hỏi bạn muốn giữ cấu hình gốc của package hay ghi đè bằng file cấu hình mới. Để tránh việc này, bạn nên sử dụng lệnh sau khi cài package nhằm tránh ghi đè bất kỳ cấu hình nào mà Homestead đã ghi trước đó:
 
 ```shell
 sudo apt-get -y \
@@ -833,12 +833,12 @@ sudo apt-get -y \
 ```
 
 <a name="user-customizations"></a>
-### User Customizations
+### Tùy biến người dùng
 
-When using Homestead with your team, you may want to tweak Homestead to better fit your personal development style. To accomplish this, you may create a `user-customizations.sh` file in the root of your Homestead directory (the same directory containing your `Homestead.yaml` file). Within this file, you may make any customization you would like; however, the `user-customizations.sh` should not be version controlled.
+Khi sử dụng Homestead cùng team, bạn có thể muốn tinh chỉnh Homestead để phù hợp hơn với phong cách phát triển cá nhân. Để làm vậy, bạn có thể tạo file `user-customizations.sh` ở thư mục gốc Homestead (cùng thư mục chứa `Homestead.yaml`). Trong file này, bạn có thể thực hiện các tùy biến mong muốn; tuy nhiên, `user-customizations.sh` không nên được đưa vào version control.
 
 <a name="provider-specific-settings"></a>
-## Provider Specific Settings
+## Thiết lập riêng theo provider
 
 <a name="provider-specific-virtualbox"></a>
 ### VirtualBox
@@ -846,12 +846,14 @@ When using Homestead with your team, you may want to tweak Homestead to better f
 <a name="natdnshostresolver"></a>
 #### `natdnshostresolver`
 
-By default, Homestead configures the `natdnshostresolver` setting to `on`. This allows Homestead to use your host operating system's DNS settings. If you would like to override this behavior, add the following configuration options to your `Homestead.yaml` file:
+Theo mặc định, Homestead cấu hình thiết lập `natdnshostresolver` thành `on`. Điều này cho phép Homestead sử dụng thiết lập DNS của hệ điều hành host. Nếu muốn ghi đè hành vi này, hãy thêm các tùy chọn cấu hình sau vào file `Homestead.yaml`:
 
 ```yaml
 provider: virtualbox
 natdnshostresolver: 'off'
 ```
+
+---
 
 ## Tài liệu chính thức
 

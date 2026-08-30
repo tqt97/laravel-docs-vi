@@ -1,10 +1,9 @@
 # Laravel Folio
-
-- [Introduction](#introduction)
-- [Installation](#installation)
-    - [Page Paths / URIs](#page-paths-uris)
-    - [Subdomain Routing](#subdomain-routing)
-- [Creating Routes](#creating-routes)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+    - [Page Path / URI](#page-paths-uris)
+    - [Routing theo Subdomain](#subdomain-routing)
+- [Tạo Route](#creating-routes)
     - [Nested Routes](#nested-routes)
     - [Index Routes](#index-routes)
 - [Route Parameters](#route-parameters)
@@ -14,14 +13,10 @@
 - [Named Routes](#named-routes)
 - [Middleware](#middleware)
 - [Route Caching](#route-caching)
-
 <a name="introduction"></a>
-## Introduction
-
-[Laravel Folio](https://github.com/laravel/folio) is a powerful page based router designed to simplify routing in Laravel applications. With Laravel Folio, generating a route becomes as effortless as creating a Blade template within your application's `resources/views/pages` directory.
-
-For example, to create a page that is accessible at the `/greeting` URL, just create a `greeting.blade.php` file in your application's `resources/views/pages` directory:
-
+## Giới thiệu
+[Laravel Folio](https://github.com/laravel/folio) là page-based router mạnh mẽ được thiết kế để đơn giản hóa routing trong ứng dụng Laravel. Với Folio, việc tạo route gần như chỉ đơn giản là tạo một Blade template trong thư mục `resources/views/pages` của ứng dụng.
+Ví dụ, để tạo trang truy cập tại URL `/greeting`, bạn chỉ cần tạo file `greeting.blade.php` trong `resources/views/pages`:
 ```php
 <div>
     Hello World
@@ -29,29 +24,21 @@ For example, to create a page that is accessible at the `/greeting` URL, just cr
 ```
 
 <a name="installation"></a>
-## Installation
-
-To get started, install Folio into your project using the Composer package manager:
-
+## Cài đặt
+Để bắt đầu, hãy cài Folio vào project bằng Composer:
 ```shell
 composer require laravel/folio
 ```
-
-After installing Folio, you may execute the `folio:install` Artisan command, which will install Folio's service provider into your application. This service provider registers the directory where Folio will search for routes / pages:
-
+Sau khi cài Folio, chạy command Artisan `folio:install`. Command này cài service provider của Folio vào ứng dụng. Service provider đăng ký directory mà Folio sẽ tìm route / page:
 ```shell
 php artisan folio:install
 ```
 
 <a name="page-paths-uris"></a>
-### Page Paths / URIs
-
-By default, Folio serves pages from your application's `resources/views/pages` directory, but you may customize these directories in your Folio service provider's `boot` method.
-
-For example, sometimes it may be convenient to specify multiple Folio paths in the same Laravel application. You may wish to have a separate directory of Folio pages for your application's "admin" area, while using another directory for the rest of your application's pages.
-
-You may accomplish this using the `Folio::path` and `Folio::uri` methods. The `path` method registers a directory that Folio will scan for pages when routing incoming HTTP requests, while the `uri` method specifies the "base URI" for that directory of pages:
-
+### Page Path / URI
+Mặc định, Folio phục vụ page từ `resources/views/pages`, nhưng bạn có thể tùy chỉnh các directory này trong phương thức `boot` của Folio service provider.
+Ví dụ, đôi khi sẽ tiện hơn nếu một ứng dụng Laravel có nhiều Folio path. Bạn có thể muốn tách directory page dành cho khu vực "admin" khỏi directory page của phần còn lại của ứng dụng.
+Có thể thực hiện bằng `Folio::path` và `Folio::uri`. Phương thức `path` đăng ký directory mà Folio scan để tìm page khi route HTTP request, còn `uri` chỉ định "base URI" cho directory đó:
 ```php
 use Laravel\Folio\Folio;
 
@@ -70,19 +57,15 @@ Folio::path(resource_path('views/pages/admin'))
 ```
 
 <a name="subdomain-routing"></a>
-### Subdomain Routing
-
-You may also route to pages based on the incoming request's subdomain. For example, you may wish to route requests from `admin.example.com` to a different page directory than the rest of your Folio pages. You may accomplish this by invoking the `domain` method after invoking the `Folio::path` method:
-
+### Routing theo Subdomain
+Bạn cũng có thể route tới page dựa trên subdomain của request. Ví dụ, request từ `admin.example.com` có thể được đưa tới directory page khác với phần còn lại của Folio page. Hãy gọi `domain` sau `Folio::path`:
 ```php
 use Laravel\Folio\Folio;
 
 Folio::domain('admin.example.com')
     ->path(resource_path('views/pages/admin'));
 ```
-
-The `domain` method also allows you to capture parts of the domain or subdomain as parameters. These parameters will be injected into your page template:
-
+Phương thức `domain` còn cho phép capture một phần domain hoặc subdomain làm parameter. Các parameter này sẽ được inject vào page template:
 ```php
 use Laravel\Folio\Folio;
 
@@ -91,23 +74,17 @@ Folio::domain('{account}.example.com')
 ```
 
 <a name="creating-routes"></a>
-## Creating Routes
-
-You may create a Folio route by placing a Blade template in any of your Folio mounted directories. By default, Folio mounts the `resources/views/pages` directory, but you may customize these directories in your Folio service provider's `boot` method.
-
-Once a Blade template has been placed in a Folio mounted directory, you may immediately access it via your browser. For example, a page placed in `pages/schedule.blade.php` may be accessed in your browser at `http://example.com/schedule`.
-
-To quickly view a list of all of your Folio pages / routes, you may invoke the `folio:list` Artisan command:
-
+## Tạo Route
+Bạn tạo Folio route bằng cách đặt Blade template trong một directory đã được Folio mount. Mặc định Folio mount `resources/views/pages`, nhưng có thể tùy chỉnh trong phương thức `boot` của service provider.
+Ngay khi Blade template được đặt trong Folio directory, bạn có thể truy cập nó từ browser. Ví dụ, page `pages/schedule.blade.php` có thể được truy cập tại `http://example.com/schedule`.
+Để nhanh chóng xem danh sách toàn bộ Folio page / route, hãy chạy command Artisan `folio:list`:
 ```shell
 php artisan folio:list
 ```
 
 <a name="nested-routes"></a>
 ### Nested Routes
-
-You may create a nested route by creating one or more directories within one of Folio's directories. For instance, to create a page that is accessible via `/user/profile`, create a `profile.blade.php` template within the `pages/user` directory:
-
+Bạn có thể tạo nested route bằng cách tạo một hoặc nhiều directory bên trong Folio directory. Ví dụ, để tạo page tại `/user/profile`, hãy tạo template `profile.blade.php` trong `pages/user`:
 ```shell
 php artisan folio:page user/profile
 
@@ -116,9 +93,7 @@ php artisan folio:page user/profile
 
 <a name="index-routes"></a>
 ### Index Routes
-
-Sometimes, you may wish to make a given page the "index" of a directory. By placing an `index.blade.php` template within a Folio directory, any requests to the root of that directory will be routed to that page:
-
+Đôi khi bạn muốn một page đóng vai trò "index" của directory. Khi đặt template `index.blade.php` trong Folio directory, mọi request tới root của directory đó sẽ được route tới page này:
 ```shell
 php artisan folio:page index
 # pages/index.blade.php → /
@@ -129,33 +104,25 @@ php artisan folio:page users/index
 
 <a name="route-parameters"></a>
 ## Route Parameters
-
-Often, you will need to have segments of the incoming request's URL injected into your page so that you can interact with them. For example, you may need to access the "ID" of the user whose profile is being displayed. To accomplish this, you may encapsulate a segment of the page's filename in square brackets:
-
+Bạn thường cần lấy segment từ URL request và inject vào page để sử dụng. Ví dụ, cần lấy "ID" của user đang được hiển thị profile. Để làm vậy, hãy đặt một segment trong tên file page vào dấu ngoặc vuông:
 ```shell
 php artisan folio:page "users/[id]"
 
 # pages/users/[id].blade.php → /users/1
 ```
-
-Captured segments can be accessed as variables within your Blade template:
-
+Segment đã capture có thể được truy cập như variable trong Blade template:
 ```html
 <div>
     User {{ $id }}
 </div>
 ```
-
-To capture multiple segments, you can prefix the encapsulated segment with three dots `...`:
-
+Để capture nhiều segment, thêm ba dấu chấm `...` trước segment trong ngoặc:
 ```shell
 php artisan folio:page "users/[...ids]"
 
 # pages/users/[...ids].blade.php → /users/1/2/3
 ```
-
-When capturing multiple segments, the captured segments will be injected into the page as an array:
-
+Khi capture nhiều segment, các segment đó sẽ được inject vào page dưới dạng array:
 ```html
 <ul>
     @foreach ($ids as $id)
@@ -166,33 +133,23 @@ When capturing multiple segments, the captured segments will be injected into th
 
 <a name="route-model-binding"></a>
 ## Route Model Binding
-
-If a wildcard segment of your page template's filename corresponds one of your application's Eloquent models, Folio will automatically take advantage of Laravel's route model binding capabilities and attempt to inject the resolved model instance into your page:
-
+Nếu wildcard segment trong tên file page tương ứng với một Eloquent model của ứng dụng, Folio tự động tận dụng route model binding của Laravel và cố resolve rồi inject model instance vào page:
 ```shell
 php artisan folio:page "users/[User]"
 
 # pages/users/[User].blade.php → /users/1
 ```
-
-Captured models can be accessed as variables within your Blade template. The model's variable name will be converted to "camel case":
-
+Model đã capture có thể được truy cập như variable trong Blade template. Tên variable của model sẽ được chuyển sang "camel case":
 ```html
 <div>
     User {{ $user->id }}
 </div>
 ```
-
-#### Customizing the Key
-
-Sometimes you may wish to resolve bound Eloquent models using a column other than `id`. To do so, you may specify the column in the page's filename. For example, a page with the filename `[Post:slug].blade.php` will attempt to resolve the bound model via the `slug` column instead of the `id` column.
-
-On Windows, you should use `-` to separate the model name from the key: `[Post-slug].blade.php`.
-
-#### Model Location
-
-By default, Folio will search for your model within your application's `app/Models` directory. However, if needed, you may specify the fully-qualified model class name in your template's filename:
-
+#### Tùy chỉnh Key
+Đôi khi bạn muốn resolve Eloquent model bằng column khác `id`. Hãy chỉ định column trong tên file page. Ví dụ, file `[Post:slug].blade.php` sẽ resolve model qua column `slug` thay vì `id`.
+Trên Windows, hãy dùng `-` để phân tách tên model và key: `[Post-slug].blade.php`.
+#### Vị trí Model
+Mặc định Folio tìm model trong directory `app/Models`. Nếu cần, bạn có thể chỉ định fully-qualified model class name trong tên file template:
 ```shell
 php artisan folio:page "users/[.App.Models.User]"
 
@@ -201,9 +158,7 @@ php artisan folio:page "users/[.App.Models.User]"
 
 <a name="soft-deleted-models"></a>
 ### Soft Deleted Models
-
-By default, models that have been soft deleted are not retrieved when resolving implicit model bindings. However, if you wish, you can instruct Folio to retrieve soft deleted models by invoking the `withTrashed` function within the page's template:
-
+Mặc định, model đã soft delete không được lấy khi resolve implicit model binding. Nếu muốn, bạn có thể yêu cầu Folio lấy cả soft deleted model bằng function `withTrashed` trong page template:
 ```php
 <?php
 
@@ -220,11 +175,8 @@ withTrashed();
 
 <a name="render-hooks"></a>
 ## Render Hooks
-
-By default, Folio will return the content of the page's Blade template as the response to the incoming request. However, you may customize the response by invoking the `render` function within the page's template.
-
-The `render` function accepts a closure which will receive the `View` instance being rendered by Folio, allowing you to add additional data to the view or customize the entire response. In addition to receiving the `View` instance, any additional route parameters or model bindings will also be provided to the `render` closure:
-
+Mặc định Folio trả nội dung Blade template của page làm response cho request. Tuy nhiên, bạn có thể tùy chỉnh response bằng function `render` bên trong page template.
+Function `render` nhận closure, closure này nhận instance `View` mà Folio đang render, cho phép thêm data vào view hoặc tùy chỉnh toàn bộ response. Ngoài `View`, các route parameter hoặc model binding bổ sung cũng được truyền vào closure `render`:
 ```php
 <?php
 
@@ -253,9 +205,7 @@ render(function (View $view, Post $post) {
 
 <a name="named-routes"></a>
 ## Named Routes
-
-You may specify a name for a given page's route using the `name` function:
-
+Bạn có thể đặt tên cho route của một page bằng function `name`:
 ```php
 <?php
 
@@ -263,26 +213,20 @@ use function Laravel\Folio\name;
 
 name('users.index');
 ```
-
-Just like Laravel's named routes, you may use the `route` function to generate URLs to Folio pages that have been assigned a name:
-
+Tương tự named route Laravel, bạn có thể dùng function `route` để tạo URL tới Folio page đã được gán tên:
 ```php
 <a href="{{ route('users.index') }}">
     All Users
 </a>
 ```
-
-If the page has parameters, you may simply pass their values to the `route` function:
-
+Nếu page có parameter, chỉ cần truyền value tương ứng cho function `route`:
 ```php
 route('users.show', ['user' => $user]);
 ```
 
 <a name="middleware"></a>
 ## Middleware
-
-You can apply middleware to a specific page by invoking the `middleware` function within the page's template:
-
+Bạn có thể áp middleware cho một page cụ thể bằng function `middleware` trong page template:
 ```php
 <?php
 
@@ -296,11 +240,8 @@ middleware(['auth', 'verified']);
     Dashboard
 </div>
 ```
-
-Or, to assign middleware to a group of pages, you may chain the `middleware` method after invoking the `Folio::path` method.
-
-To specify which pages the middleware should be applied to, the array of middleware may be keyed using the corresponding URL patterns of the pages they should be applied to. The `*` character may be utilized as a wildcard character:
-
+Hoặc để gán middleware cho một nhóm page, chain method `middleware` sau `Folio::path`.
+Để chỉ định page nào được áp middleware, array middleware có thể được đánh key bằng URL pattern tương ứng. Ký tự `*` có thể được dùng làm wildcard:
 ```php
 use Laravel\Folio\Folio;
 
@@ -313,9 +254,7 @@ Folio::path(resource_path('views/pages'))->middleware([
     ],
 ]);
 ```
-
-You may include closures in the array of middleware to define inline, anonymous middleware:
-
+Bạn có thể đưa closure vào array middleware để định nghĩa anonymous middleware inline:
 ```php
 use Closure;
 use Illuminate\Http\Request;
@@ -337,9 +276,7 @@ Folio::path(resource_path('views/pages'))->middleware([
 
 <a name="route-caching"></a>
 ## Route Caching
-
-When using Folio, you should always take advantage of [Laravel's route caching capabilities](/docs/{{version}}/routing#route-caching). Folio listens for the `route:cache` Artisan command to ensure that Folio page definitions and route names are properly cached for maximum performance.
-
+Khi dùng Folio, bạn nên tận dụng [route caching của Laravel](/docs/{{version}}/routing#route-caching). Folio lắng nghe command Artisan `route:cache` để đảm bảo định nghĩa page và route name của Folio được cache đúng cách, đạt hiệu năng tốt nhất.
 ## Tài liệu chính thức
 
 Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/folio). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

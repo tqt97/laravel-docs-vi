@@ -1,15 +1,15 @@
-# Strings
+# Chuỗi
 
-- [Introduction](#introduction)
-- [Available Methods](#available-methods)
+- [Giới thiệu](#introduction)
+- [Các phương thức có sẵn](#available-methods)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel includes a variety of functions for manipulating string values. Many of these functions are used by the framework itself; however, you are free to use them in your own applications if you find them convenient.
+Laravel cung cấp nhiều hàm tiện ích để thao tác với giá trị chuỗi. Nhiều hàm trong số này được chính framework sử dụng nội bộ; tuy vậy, bạn hoàn toàn có thể dùng chúng trong ứng dụng của mình khi thấy phù hợp.
 
 <a name="available-methods"></a>
-## Available Methods
+## Các phương thức có sẵn
 
 <style>
     .collection-method-list > p {
@@ -25,7 +25,7 @@ Laravel includes a variety of functions for manipulating string values. Many of 
 </style>
 
 <a name="strings-method-list"></a>
-### Strings
+### Chuỗi
 
 <div class="collection-method-list" markdown="1">
 
@@ -131,7 +131,7 @@ Laravel includes a variety of functions for manipulating string values. Many of 
 </div>
 
 <a name="fluent-strings-method-list"></a>
-### Fluent Strings
+### Chuỗi dạng fluent
 
 <div class="collection-method-list" markdown="1">
 
@@ -257,12 +257,12 @@ Laravel includes a variety of functions for manipulating string values. Many of 
 </div>
 
 <a name="strings"></a>
-## Strings
+## Chuỗi
 
 <a name="method-__"></a>
 #### `__()` {.collection-method}
 
-The `__` function translates the given translation string or translation key using your [language files](/docs/{{version}}/localization):
+Hàm `__` dịch chuỗi hoặc khóa bản dịch được cung cấp bằng các [file ngôn ngữ](/docs/{{version}}/localization) của ứng dụng:
 
 ```php
 echo __('Welcome to our application');
@@ -270,12 +270,12 @@ echo __('Welcome to our application');
 echo __('messages.welcome');
 ```
 
-If the specified translation string or key does not exist, the `__` function will return the given value. So, using the example above, the `__` function would return `messages.welcome` if that translation key does not exist.
+Nếu chuỗi hoặc khóa bản dịch được chỉ định không tồn tại, hàm `__` sẽ trả về chính giá trị được truyền vào. Vì vậy, với ví dụ trên, `__` sẽ trả về `messages.welcome` nếu khóa bản dịch đó không tồn tại.
 
 <a name="method-class-basename"></a>
 #### `class_basename()` {.collection-method}
 
-The `class_basename` function returns the class name of the given class with the class's namespace removed:
+Hàm `class_basename` trả về tên class của class được cung cấp sau khi loại bỏ namespace:
 
 ```php
 $class = class_basename('Foo\Bar\Baz');
@@ -286,7 +286,7 @@ $class = class_basename('Foo\Bar\Baz');
 <a name="method-e"></a>
 #### `e()` {.collection-method}
 
-The `e` function runs PHP's `htmlspecialchars` function with the `double_encode` option set to `true` by default:
+Hàm `e` gọi hàm `htmlspecialchars` của PHP, với tùy chọn `double_encode` mặc định được đặt thành `true`:
 
 ```php
 echo e('<html>foo</html>');
@@ -297,7 +297,7 @@ echo e('<html>foo</html>');
 <a name="method-preg-replace-array"></a>
 #### `preg_replace_array()` {.collection-method}
 
-The `preg_replace_array` function replaces a given pattern in the string sequentially using an array:
+Hàm `preg_replace_array` lần lượt thay thế pattern được chỉ định trong chuỗi bằng các giá trị từ một mảng:
 
 ```php
 $string = 'The event will take place between :start and :end';
@@ -310,7 +310,7 @@ $replaced = preg_replace_array('/:[a-z_]+/', ['8:30', '9:00'], $string);
 <a name="method-str-after"></a>
 #### `Str::after()` {.collection-method}
 
-The `Str::after` method returns everything after the given value in a string. The entire string will be returned if the value does not exist within the string:
+Phương thức `Str::after` trả về toàn bộ phần nằm sau giá trị được chỉ định trong chuỗi. Nếu giá trị đó không xuất hiện trong chuỗi, toàn bộ chuỗi sẽ được trả về:
 
 ```php
 use Illuminate\Support\Str;
@@ -323,7 +323,7 @@ $slice = Str::after('This is my name', 'This is');
 <a name="method-str-after-last"></a>
 #### `Str::afterLast()` {.collection-method}
 
-The `Str::afterLast` method returns everything after the last occurrence of the given value in a string. The entire string will be returned if the value does not exist within the string:
+Phương thức `Str::afterLast` trả về toàn bộ phần nằm sau lần xuất hiện cuối cùng của giá trị được chỉ định trong chuỗi. Nếu giá trị đó không xuất hiện trong chuỗi, toàn bộ chuỗi sẽ được trả về:
 
 ```php
 use Illuminate\Support\Str;
@@ -336,7 +336,7 @@ $slice = Str::afterLast('App\Http\Controllers\Controller', '\\');
 <a name="method-str-apa"></a>
 #### `Str::apa()` {.collection-method}
 
-The `Str::apa` method converts the given string to title case following the [APA guidelines](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case):
+Phương thức `Str::apa` chuyển chuỗi được cung cấp sang dạng viết hoa tiêu đề theo [quy tắc APA](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case):
 
 ```php
 use Illuminate\Support\Str;
@@ -349,7 +349,7 @@ $title = Str::apa('Creating A Project');
 <a name="method-str-ascii"></a>
 #### `Str::ascii()` {.collection-method}
 
-The `Str::ascii` method will attempt to transliterate the string into an ASCII value:
+Phương thức `Str::ascii` cố gắng chuyển tự chuỗi sang biểu diễn ASCII tương ứng:
 
 ```php
 use Illuminate\Support\Str;
@@ -362,7 +362,7 @@ $slice = Str::ascii('û');
 <a name="method-str-before"></a>
 #### `Str::before()` {.collection-method}
 
-The `Str::before` method returns everything before the given value in a string:
+Phương thức `Str::before` trả về toàn bộ phần nằm trước giá trị được chỉ định trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -375,7 +375,7 @@ $slice = Str::before('This is my name', 'my name');
 <a name="method-str-before-last"></a>
 #### `Str::beforeLast()` {.collection-method}
 
-The `Str::beforeLast` method returns everything before the last occurrence of the given value in a string:
+Phương thức `Str::beforeLast` trả về toàn bộ phần nằm trước lần xuất hiện cuối cùng của giá trị được chỉ định trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -388,7 +388,7 @@ $slice = Str::beforeLast('This is my name', 'is');
 <a name="method-str-between"></a>
 #### `Str::between()` {.collection-method}
 
-The `Str::between` method returns the portion of a string between two values:
+Phương thức `Str::between` trả về phần chuỗi nằm giữa hai giá trị được chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -401,7 +401,7 @@ $slice = Str::between('This is my name', 'This', 'name');
 <a name="method-str-between-first"></a>
 #### `Str::betweenFirst()` {.collection-method}
 
-The `Str::betweenFirst` method returns the smallest possible portion of a string between two values:
+Phương thức `Str::betweenFirst` trả về phần chuỗi ngắn nhất có thể nằm giữa hai giá trị được chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -414,7 +414,7 @@ $slice = Str::betweenFirst('[a] bc [d]', '[', ']');
 <a name="method-camel-case"></a>
 #### `Str::camel()` {.collection-method}
 
-The `Str::camel` method converts the given string to `camelCase`:
+Phương thức `Str::camel` chuyển chuỗi được cung cấp sang dạng `camelCase`:
 
 ```php
 use Illuminate\Support\Str;
@@ -427,7 +427,7 @@ $converted = Str::camel('foo_bar');
 <a name="method-char-at"></a>
 #### `Str::charAt()` {.collection-method}
 
-The `Str::charAt` method returns the character at the specified index. If the index is out of bounds, `false` is returned:
+Phương thức `Str::charAt` trả về ký tự tại chỉ số được chỉ định. Nếu chỉ số nằm ngoài phạm vi chuỗi, phương thức trả về `false`:
 
 ```php
 use Illuminate\Support\Str;
@@ -440,7 +440,7 @@ $character = Str::charAt('This is my name.', 6);
 <a name="method-str-chop-start"></a>
 #### `Str::chopStart()` {.collection-method}
 
-The `Str::chopStart` method removes the first occurrence of the given value only if the value appears at the start of the string:
+Phương thức `Str::chopStart` loại bỏ lần xuất hiện đầu tiên của giá trị được chỉ định, nhưng chỉ khi giá trị đó nằm ở đầu chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -450,7 +450,7 @@ $url = Str::chopStart('https://laravel.com', 'https://');
 // 'laravel.com'
 ```
 
-You may also pass an array as the second argument. If the string starts with any of the values in the array then that value will be removed from string:
+Bạn cũng có thể truyền một mảng làm đối số thứ hai. Nếu chuỗi bắt đầu bằng bất kỳ giá trị nào trong mảng, giá trị đó sẽ bị loại bỏ khỏi chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -463,7 +463,7 @@ $url = Str::chopStart('http://laravel.com', ['https://', 'http://']);
 <a name="method-str-chop-end"></a>
 #### `Str::chopEnd()` {.collection-method}
 
-The `Str::chopEnd` method removes the last occurrence of the given value only if the value appears at the end of the string:
+Phương thức `Str::chopEnd` loại bỏ lần xuất hiện cuối cùng của giá trị được chỉ định, nhưng chỉ khi giá trị đó nằm ở cuối chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -473,7 +473,7 @@ $url = Str::chopEnd('app/Models/Photograph.php', '.php');
 // 'app/Models/Photograph'
 ```
 
-You may also pass an array as the second argument. If the string ends with any of the values in the array then that value will be removed from string:
+Bạn cũng có thể truyền một mảng làm đối số thứ hai. Nếu chuỗi kết thúc bằng bất kỳ giá trị nào trong mảng, giá trị đó sẽ bị loại bỏ khỏi chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -486,7 +486,7 @@ $url = Str::chopEnd('laravel.com/index.php', ['/index.html', '/index.php']);
 <a name="method-str-contains"></a>
 #### `Str::contains()` {.collection-method}
 
-The `Str::contains` method determines if the given string contains the given value. By default, this method is case sensitive:
+Phương thức `Str::contains` xác định chuỗi được cung cấp có chứa giá trị chỉ định hay không. Mặc định, phép kiểm tra có phân biệt chữ hoa và chữ thường:
 
 ```php
 use Illuminate\Support\Str;
@@ -496,7 +496,7 @@ $contains = Str::contains('This is my name', 'my');
 // true
 ```
 
-You may also pass an array of values to determine if the given string contains any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để kiểm tra chuỗi có chứa ít nhất một giá trị trong mảng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -506,7 +506,7 @@ $contains = Str::contains('This is my name', ['my', 'foo']);
 // true
 ```
 
-You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+Bạn có thể bỏ phân biệt chữ hoa và chữ thường bằng cách đặt đối số `ignoreCase` thành `true`:
 
 ```php
 use Illuminate\Support\Str;
@@ -519,7 +519,7 @@ $contains = Str::contains('This is my name', 'MY', ignoreCase: true);
 <a name="method-str-contains-all"></a>
 #### `Str::containsAll()` {.collection-method}
 
-The `Str::containsAll` method determines if the given string contains all of the values in a given array:
+Phương thức `Str::containsAll` xác định chuỗi được cung cấp có chứa toàn bộ các giá trị trong mảng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -529,7 +529,7 @@ $containsAll = Str::containsAll('This is my name', ['my', 'name']);
 // true
 ```
 
-You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+Bạn có thể bỏ phân biệt chữ hoa và chữ thường bằng cách đặt đối số `ignoreCase` thành `true`:
 
 ```php
 use Illuminate\Support\Str;
@@ -542,7 +542,7 @@ $containsAll = Str::containsAll('This is my name', ['MY', 'NAME'], ignoreCase: t
 <a name="method-str-doesnt-contain"></a>
 #### `Str::doesntContain()` {.collection-method}
 
-The `Str::doesntContain` method determines if the given string doesn't contain the given value. By default, this method is case sensitive:
+Phương thức `Str::doesntContain` xác định chuỗi được cung cấp không chứa giá trị chỉ định. Mặc định, phép kiểm tra có phân biệt chữ hoa và chữ thường:
 
 ```php
 use Illuminate\Support\Str;
@@ -552,7 +552,7 @@ $doesntContain = Str::doesntContain('This is name', 'my');
 // true
 ```
 
-You may also pass an array of values to determine if the given string doesn't contain any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để kiểm tra chuỗi không chứa bất kỳ giá trị nào trong mảng:
 
 ```php
 use Illuminate\Support\Str;
@@ -562,7 +562,7 @@ $doesntContain = Str::doesntContain('This is name', ['my', 'framework']);
 // true
 ```
 
-You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+Bạn có thể bỏ phân biệt chữ hoa và chữ thường bằng cách đặt đối số `ignoreCase` thành `true`:
 
 ```php
 use Illuminate\Support\Str;
@@ -575,7 +575,7 @@ $doesntContain = Str::doesntContain('This is name', 'MY', ignoreCase: true);
 <a name="method-deduplicate"></a>
 #### `Str::deduplicate()` {.collection-method}
 
-The `Str::deduplicate` method replaces consecutive instances of a character with a single instance of that character in the given string. By default, the method deduplicates spaces:
+Phương thức `Str::deduplicate` thay các ký tự giống nhau xuất hiện liên tiếp bằng một ký tự duy nhất. Mặc định, phương thức loại bỏ các khoảng trắng lặp liên tiếp:
 
 ```php
 use Illuminate\Support\Str;
@@ -585,7 +585,7 @@ $result = Str::deduplicate('The   Laravel   Framework');
 // The Laravel Framework
 ```
 
-You may specify a different character to deduplicate by passing it in as the second argument to the method:
+Bạn có thể chỉ định một ký tự khác cần loại bỏ lặp bằng cách truyền ký tự đó làm đối số thứ hai:
 
 ```php
 use Illuminate\Support\Str;
@@ -598,7 +598,7 @@ $result = Str::deduplicate('The---Laravel---Framework', '-');
 <a name="method-str-doesnt-end-with"></a>
 #### `Str::doesntEndWith()` {.collection-method}
 
-The `Str::doesntEndWith` method determines if the given string doesn't end with the given value:
+Phương thức `Str::doesntEndWith` xác định chuỗi được cung cấp không kết thúc bằng giá trị chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -608,7 +608,7 @@ $result = Str::doesntEndWith('This is my name', 'dog');
 // true
 ```
 
-You may also pass an array of values to determine if the given string doesn't end with any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để kiểm tra chuỗi không kết thúc bằng bất kỳ giá trị nào trong mảng:
 
 ```php
 use Illuminate\Support\Str;
@@ -625,7 +625,7 @@ $result = Str::doesntEndWith('This is my name', ['name', 'foo']);
 <a name="method-str-doesnt-start-with"></a>
 #### `Str::doesntStartWith()` {.collection-method}
 
-The `Str::doesntStartWith` method determines if the given string doesn't begin with the given value:
+Phương thức `Str::doesntStartWith` xác định chuỗi được cung cấp không bắt đầu bằng giá trị chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -635,7 +635,7 @@ $result = Str::doesntStartWith('This is my name', 'That');
 // true
 ```
 
-If an array of possible values is passed, the `doesntStartWith` method will return `true` if the string doesn't begin with any of the given values:
+Nếu truyền vào một mảng các giá trị có thể có, `doesntStartWith` sẽ trả về `true` khi chuỗi không bắt đầu bằng bất kỳ giá trị nào trong mảng:
 
 ```php
 $result = Str::doesntStartWith('This is my name', ['What', 'That', 'There']);
@@ -646,7 +646,7 @@ $result = Str::doesntStartWith('This is my name', ['What', 'That', 'There']);
 <a name="method-ends-with"></a>
 #### `Str::endsWith()` {.collection-method}
 
-The `Str::endsWith` method determines if the given string ends with the given value:
+Phương thức `Str::endsWith` xác định chuỗi được cung cấp có kết thúc bằng giá trị chỉ định hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -656,7 +656,7 @@ $result = Str::endsWith('This is my name', 'name');
 // true
 ```
 
-You may also pass an array of values to determine if the given string ends with any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để kiểm tra chuỗi có kết thúc bằng ít nhất một giá trị trong mảng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -673,7 +673,7 @@ $result = Str::endsWith('This is my name', ['this', 'foo']);
 <a name="method-excerpt"></a>
 #### `Str::excerpt()` {.collection-method}
 
-The `Str::excerpt` method extracts an excerpt from a given string that matches the first instance of a phrase within that string:
+Phương thức `Str::excerpt` trích xuất một đoạn ngắn quanh lần xuất hiện đầu tiên của cụm từ được chỉ định trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -685,9 +685,9 @@ $excerpt = Str::excerpt('This is my name', 'my', [
 // '...is my na...'
 ```
 
-The `radius` option, which defaults to `100`, allows you to define the number of characters that should appear on each side of the truncated string.
+Tùy chọn `radius`, mặc định là `100`, cho phép xác định số ký tự xuất hiện ở mỗi phía của phần chuỗi được rút gọn.
 
-In addition, you may use the `omission` option to define the string that will be prepended and appended to the truncated string:
+Ngoài ra, bạn có thể dùng tùy chọn `omission` để xác định chuỗi sẽ được thêm vào trước và sau phần nội dung bị rút gọn:
 
 ```php
 use Illuminate\Support\Str;
@@ -703,7 +703,7 @@ $excerpt = Str::excerpt('This is my name', 'name', [
 <a name="method-str-finish"></a>
 #### `Str::finish()` {.collection-method}
 
-The `Str::finish` method adds a single instance of the given value to a string if it does not already end with that value:
+Phương thức `Str::finish` thêm đúng một lần giá trị được chỉ định vào cuối chuỗi nếu chuỗi chưa kết thúc bằng giá trị đó:
 
 ```php
 use Illuminate\Support\Str;
@@ -720,7 +720,7 @@ $adjusted = Str::finish('this/string/', '/');
 <a name="method-str-from-base64"></a>
 #### `Str::fromBase64()` {.collection-method}
 
-The `Str::fromBase64` method decodes the given Base64 string:
+Phương thức `Str::fromBase64` giải mã chuỗi Base64 được cung cấp:
 
 ```php
 use Illuminate\Support\Str;
@@ -733,7 +733,7 @@ $decoded = Str::fromBase64('TGFyYXZlbA==');
 <a name="method-str-headline"></a>
 #### `Str::headline()` {.collection-method}
 
-The `Str::headline` method will convert strings delimited by casing, hyphens, or underscores into a space delimited string with each word's first letter capitalized:
+Phương thức `Str::headline` chuyển chuỗi được phân tách bởi kiểu viết hoa, dấu gạch ngang hoặc dấu gạch dưới thành chuỗi phân tách bằng khoảng trắng, đồng thời viết hoa chữ cái đầu của mỗi từ:
 
 ```php
 use Illuminate\Support\Str;
@@ -750,7 +750,7 @@ $headline = Str::headline('EmailNotificationSent');
 <a name="method-str-initials"></a>
 #### `Str::initials()` {.collection-method}
 
-The `Str::initials` method will return the initials of a given string, optionally capitalizing them:
+Phương thức `Str::initials` trả về các chữ cái đầu của chuỗi được cung cấp và có thể tùy chọn chuyển chúng thành chữ hoa:
 
 ```php
 use Illuminate\Support\Str;
@@ -767,7 +767,7 @@ $initials = Str::initials('taylor otwell', capitalize: true);
 <a name="method-str-inline-markdown"></a>
 #### `Str::inlineMarkdown()` {.collection-method}
 
-The `Str::inlineMarkdown` method converts GitHub flavored Markdown into inline HTML using [CommonMark](https://commonmark.thephpleague.com/). However, unlike the `markdown` method, it does not wrap all generated HTML in a block-level element:
+Phương thức `Str::inlineMarkdown` chuyển Markdown theo phong cách GitHub thành HTML nội tuyến bằng [CommonMark](https://commonmark.thephpleague.com/). Tuy nhiên, khác với phương thức `markdown`, nó không bọc toàn bộ HTML được tạo ra trong một phần tử cấp khối:
 
 ```php
 use Illuminate\Support\Str;
@@ -777,9 +777,9 @@ $html = Str::inlineMarkdown('**Laravel**');
 // <strong>Laravel</strong>
 ```
 
-#### Markdown Security
+#### Bảo mật Markdown
 
-By default, Markdown supports raw HTML, which will expose Cross-Site Scripting (XSS) vulnerabilities when used with raw user input. As per the [CommonMark Security documentation](https://commonmark.thephpleague.com/security/), you may use the `html_input` option to either escape or strip raw HTML, and the `allow_unsafe_links` option to specify whether to allow unsafe links. If you need to allow some raw HTML, you should pass your compiled Markdown through an HTML Purifier:
+Mặc định, Markdown hỗ trợ HTML thô. Nếu sử dụng trực tiếp dữ liệu đầu vào không tin cậy từ người dùng, điều này có thể tạo ra lỗ hổng Cross-Site Scripting (XSS). Theo [tài liệu bảo mật của CommonMark](https://commonmark.thephpleague.com/security/), bạn có thể dùng tùy chọn `html_input` để escape hoặc loại bỏ HTML thô, đồng thời dùng `allow_unsafe_links` để xác định có cho phép liên kết không an toàn hay không. Nếu cần cho phép một phần HTML thô, bạn nên đưa Markdown sau khi biên dịch qua một HTML Purifier:
 
 ```php
 use Illuminate\Support\Str;
@@ -795,7 +795,7 @@ Str::inlineMarkdown('Inject: <script>alert("Hello XSS!");</script>', [
 <a name="method-str-is"></a>
 #### `Str::is()` {.collection-method}
 
-The `Str::is` method determines if a given string matches a given pattern. Asterisks may be used as wildcard values:
+Phương thức `Str::is` xác định chuỗi được cung cấp có khớp với pattern chỉ định hay không. Dấu hoa thị có thể được dùng làm ký tự đại diện:
 
 ```php
 use Illuminate\Support\Str;
@@ -809,7 +809,7 @@ $matches = Str::is('baz*', 'foobar');
 // false
 ```
 
-You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+Bạn có thể bỏ phân biệt chữ hoa và chữ thường bằng cách đặt đối số `ignoreCase` thành `true`:
 
 ```php
 use Illuminate\Support\Str;
@@ -822,7 +822,7 @@ $matches = Str::is('*.jpg', 'photo.JPG', ignoreCase: true);
 <a name="method-str-is-ascii"></a>
 #### `Str::isAscii()` {.collection-method}
 
-The `Str::isAscii` method determines if a given string is 7-bit ASCII:
+Phương thức `Str::isAscii` xác định chuỗi được cung cấp có phải là ASCII 7-bit hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -839,7 +839,7 @@ $isAscii = Str::isAscii('ü');
 <a name="method-str-is-json"></a>
 #### `Str::isJson()` {.collection-method}
 
-The `Str::isJson` method determines if the given string is valid JSON:
+Phương thức `Str::isJson` xác định chuỗi được cung cấp có phải JSON hợp lệ hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -860,7 +860,7 @@ $result = Str::isJson('{first: "John", last: "Doe"}');
 <a name="method-str-is-url"></a>
 #### `Str::isUrl()` {.collection-method}
 
-The `Str::isUrl` method determines if the given string is a valid URL:
+Phương thức `Str::isUrl` xác định chuỗi được cung cấp có phải URL hợp lệ hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -874,7 +874,7 @@ $isUrl = Str::isUrl('laravel');
 // false
 ```
 
-The `isUrl` method considers a wide range of protocols as valid. However, you may specify the protocols that should be considered valid by providing them to the `isUrl` method:
+Phương thức `isUrl` mặc định xem nhiều giao thức là hợp lệ. Tuy nhiên, bạn có thể giới hạn tập giao thức được chấp nhận bằng cách truyền danh sách giao thức vào `isUrl`:
 
 ```php
 $isUrl = Str::isUrl('http://example.com', ['http', 'https']);
@@ -883,7 +883,7 @@ $isUrl = Str::isUrl('http://example.com', ['http', 'https']);
 <a name="method-str-is-ulid"></a>
 #### `Str::isUlid()` {.collection-method}
 
-The `Str::isUlid` method determines if the given string is a valid ULID:
+Phương thức `Str::isUlid` xác định chuỗi được cung cấp có phải ULID hợp lệ hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -900,7 +900,7 @@ $isUlid = Str::isUlid('laravel');
 <a name="method-str-is-uuid"></a>
 #### `Str::isUuid()` {.collection-method}
 
-The `Str::isUuid` method determines if the given string is a valid UUID:
+Phương thức `Str::isUuid` xác định chuỗi được cung cấp có phải UUID hợp lệ hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -914,7 +914,7 @@ $isUuid = Str::isUuid('laravel');
 // false
 ```
 
-You may also validate that the given UUID matches a UUID specification by version (1, 3, 4, 5, 6, 7, or 8):
+Bạn cũng có thể xác thực UUID theo phiên bản cụ thể của chuẩn UUID (1, 3, 4, 5, 6, 7 hoặc 8):
 
 ```php
 use Illuminate\Support\Str;
@@ -931,7 +931,7 @@ $isUuid = Str::isUuid('a0a2a2d2-0b87-4a18-83f2-2529882be2de', version: 1);
 <a name="method-kebab-case"></a>
 #### `Str::kebab()` {.collection-method}
 
-The `Str::kebab` method converts the given string to `kebab-case`:
+Phương thức `Str::kebab` chuyển chuỗi được cung cấp sang dạng `kebab-case`:
 
 ```php
 use Illuminate\Support\Str;
@@ -944,7 +944,7 @@ $converted = Str::kebab('fooBar');
 <a name="method-str-lcfirst"></a>
 #### `Str::lcfirst()` {.collection-method}
 
-The `Str::lcfirst` method returns the given string with the first character lowercased:
+Phương thức `Str::lcfirst` trả về chuỗi với ký tự đầu tiên được chuyển thành chữ thường:
 
 ```php
 use Illuminate\Support\Str;
@@ -957,7 +957,7 @@ $string = Str::lcfirst('Foo Bar');
 <a name="method-str-length"></a>
 #### `Str::length()` {.collection-method}
 
-The `Str::length` method returns the length of the given string:
+Phương thức `Str::length` trả về độ dài của chuỗi được cung cấp:
 
 ```php
 use Illuminate\Support\Str;
@@ -970,7 +970,7 @@ $length = Str::length('Laravel');
 <a name="method-str-limit"></a>
 #### `Str::limit()` {.collection-method}
 
-The `Str::limit` method truncates the given string to the specified length:
+Phương thức `Str::limit` rút gọn chuỗi được cung cấp về độ dài chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -980,7 +980,7 @@ $truncated = Str::limit('The quick brown fox jumps over the lazy dog', 20);
 // The quick brown fox...
 ```
 
-You may pass a third argument to the method to change the string that will be appended to the end of the truncated string:
+Bạn có thể truyền đối số thứ ba để thay đổi chuỗi được thêm vào cuối nội dung đã rút gọn:
 
 ```php
 $truncated = Str::limit('The quick brown fox jumps over the lazy dog', 20, ' (...)');
@@ -988,7 +988,7 @@ $truncated = Str::limit('The quick brown fox jumps over the lazy dog', 20, ' (..
 // The quick brown fox (...)
 ```
 
-If you would like to preserve complete words when truncating the string, you may utilize the `preserveWords` argument. When this argument is `true`, the string will be truncated to the nearest complete word boundary:
+Nếu muốn giữ nguyên các từ hoàn chỉnh khi rút gọn chuỗi, bạn có thể sử dụng đối số `preserveWords`. Khi đối số này là `true`, chuỗi sẽ được cắt tại ranh giới từ hoàn chỉnh gần nhất:
 
 ```php
 $truncated = Str::limit('The quick brown fox', 12, preserveWords: true);
@@ -999,7 +999,7 @@ $truncated = Str::limit('The quick brown fox', 12, preserveWords: true);
 <a name="method-str-lower"></a>
 #### `Str::lower()` {.collection-method}
 
-The `Str::lower` method converts the given string to lowercase:
+Phương thức `Str::lower` chuyển chuỗi được cung cấp thành chữ thường:
 
 ```php
 use Illuminate\Support\Str;
@@ -1012,7 +1012,7 @@ $converted = Str::lower('LARAVEL');
 <a name="method-str-markdown"></a>
 #### `Str::markdown()` {.collection-method}
 
-The `Str::markdown` method converts GitHub flavored Markdown into HTML using [CommonMark](https://commonmark.thephpleague.com/):
+Phương thức `Str::markdown` chuyển Markdown theo phong cách GitHub thành HTML bằng [CommonMark](https://commonmark.thephpleague.com/):
 
 ```php
 use Illuminate\Support\Str;
@@ -1028,9 +1028,9 @@ $html = Str::markdown('# Taylor <b>Otwell</b>', [
 // <h1>Taylor Otwell</h1>
 ```
 
-#### Markdown Security
+#### Bảo mật Markdown
 
-By default, Markdown supports raw HTML, which will expose Cross-Site Scripting (XSS) vulnerabilities when used with raw user input. As per the [CommonMark Security documentation](https://commonmark.thephpleague.com/security/), you may use the `html_input` option to either escape or strip raw HTML, and the `allow_unsafe_links` option to specify whether to allow unsafe links. If you need to allow some raw HTML, you should pass your compiled Markdown through an HTML Purifier:
+Mặc định, Markdown hỗ trợ HTML thô. Nếu sử dụng trực tiếp dữ liệu đầu vào không tin cậy từ người dùng, điều này có thể tạo ra lỗ hổng Cross-Site Scripting (XSS). Theo [tài liệu bảo mật của CommonMark](https://commonmark.thephpleague.com/security/), bạn có thể dùng tùy chọn `html_input` để escape hoặc loại bỏ HTML thô, đồng thời dùng `allow_unsafe_links` để xác định có cho phép liên kết không an toàn hay không. Nếu cần cho phép một phần HTML thô, bạn nên đưa Markdown sau khi biên dịch qua một HTML Purifier:
 
 ```php
 use Illuminate\Support\Str;
@@ -1046,7 +1046,7 @@ Str::markdown('Inject: <script>alert("Hello XSS!");</script>', [
 <a name="method-str-mask"></a>
 #### `Str::mask()` {.collection-method}
 
-The `Str::mask` method masks a portion of a string with a repeated character, and may be used to obfuscate segments of strings such as email addresses and phone numbers:
+Phương thức `Str::mask` che một phần chuỗi bằng cách lặp lại một ký tự. Phương thức này hữu ích khi cần làm mờ các phần dữ liệu như địa chỉ email hoặc số điện thoại:
 
 ```php
 use Illuminate\Support\Str;
@@ -1056,7 +1056,7 @@ $string = Str::mask('taylor@example.com', '*', 3);
 // tay***************
 ```
 
-If needed, you may provide a negative number as the third argument to the `mask` method, which will instruct the method to begin masking at the given distance from the end of the string:
+Khi cần, bạn có thể truyền một số âm làm đối số thứ ba của `mask`; khi đó phương thức sẽ bắt đầu che dữ liệu từ vị trí cách cuối chuỗi một khoảng tương ứng:
 
 ```php
 $string = Str::mask('taylor@example.com', '*', -15, 3);
@@ -1067,7 +1067,7 @@ $string = Str::mask('taylor@example.com', '*', -15, 3);
 <a name="method-str-match"></a>
 #### `Str::match()` {.collection-method}
 
-The `Str::match` method will return the portion of a string that matches a given regular expression pattern:
+Phương thức `Str::match` trả về phần của chuỗi khớp với regular expression được chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -1084,7 +1084,7 @@ $result = Str::match('/foo (.*)/', 'foo bar');
 <a name="method-str-match-all"></a>
 #### `Str::matchAll()` {.collection-method}
 
-The `Str::matchAll` method will return a collection containing the portions of a string that match a given regular expression pattern:
+Phương thức `Str::matchAll` trả về một collection chứa các phần của chuỗi khớp với regular expression được chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -1094,7 +1094,7 @@ $result = Str::matchAll('/bar/', 'bar foo bar');
 // collect(['bar', 'bar'])
 ```
 
-If you specify a matching group within the expression, Laravel will return a collection of the first matching group's matches:
+Nếu bạn chỉ định một nhóm bắt giữ trong biểu thức, Laravel sẽ trả về collection chứa các kết quả khớp của nhóm bắt giữ đầu tiên:
 
 ```php
 use Illuminate\Support\Str;
@@ -1104,12 +1104,12 @@ $result = Str::matchAll('/f(\w*)/', 'bar fun bar fly');
 // collect(['un', 'ly']);
 ```
 
-If no matches are found, an empty collection will be returned.
+Nếu không tìm thấy kết quả khớp, một collection rỗng sẽ được trả về.
 
 <a name="method-str-is-match"></a>
 #### `Str::isMatch()` {.collection-method}
 
-The `Str::isMatch` method will return `true` if the string matches a given regular expression:
+Phương thức `Str::isMatch` trả về `true` nếu chuỗi khớp với regular expression được chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -1126,7 +1126,7 @@ $result = Str::isMatch('/foo (.*)/', 'laravel');
 <a name="method-str-ordered-uuid"></a>
 #### `Str::orderedUuid()` {.collection-method}
 
-The `Str::orderedUuid` method generates a "timestamp first" UUID that may be efficiently stored in an indexed database column. Each UUID that is generated using this method will be sorted after UUIDs previously generated using the method:
+Phương thức `Str::orderedUuid` tạo UUID theo kiểu "timestamp first", phù hợp để lưu hiệu quả trong cột database có index. Mỗi UUID được tạo bằng phương thức này sẽ có thứ tự sắp xếp sau các UUID đã được tạo trước đó bằng cùng phương thức:
 
 ```php
 use Illuminate\Support\Str;
@@ -1137,7 +1137,7 @@ return (string) Str::orderedUuid();
 <a name="method-str-padboth"></a>
 #### `Str::padBoth()` {.collection-method}
 
-The `Str::padBoth` method wraps PHP's `str_pad` function, padding both sides of a string with another string until the final string reaches a desired length:
+Phương thức `Str::padBoth` bọc hàm `str_pad` của PHP, thêm chuỗi đệm vào cả hai phía cho đến khi chuỗi kết quả đạt độ dài mong muốn:
 
 ```php
 use Illuminate\Support\Str;
@@ -1154,7 +1154,7 @@ $padded = Str::padBoth('James', 10);
 <a name="method-str-padleft"></a>
 #### `Str::padLeft()` {.collection-method}
 
-The `Str::padLeft` method wraps PHP's `str_pad` function, padding the left side of a string with another string until the final string reaches a desired length:
+Phương thức `Str::padLeft` bọc hàm `str_pad` của PHP, thêm chuỗi đệm vào bên trái cho đến khi chuỗi kết quả đạt độ dài mong muốn:
 
 ```php
 use Illuminate\Support\Str;
@@ -1171,7 +1171,7 @@ $padded = Str::padLeft('James', 10);
 <a name="method-str-padright"></a>
 #### `Str::padRight()` {.collection-method}
 
-The `Str::padRight` method wraps PHP's `str_pad` function, padding the right side of a string with another string until the final string reaches a desired length:
+Phương thức `Str::padRight` bọc hàm `str_pad` của PHP, thêm chuỗi đệm vào bên phải cho đến khi chuỗi kết quả đạt độ dài mong muốn:
 
 ```php
 use Illuminate\Support\Str;
@@ -1188,7 +1188,7 @@ $padded = Str::padRight('James', 10);
 <a name="method-str-password"></a>
 #### `Str::password()` {.collection-method}
 
-The `Str::password` method may be used to generate a secure, random password of a given length. The password will consist of a combination of letters, numbers, symbols, and spaces. By default, passwords are 32 characters long:
+Phương thức `Str::password` có thể dùng để tạo mật khẩu ngẫu nhiên an toàn với độ dài chỉ định. Mật khẩu được tạo từ tổ hợp chữ cái, chữ số, ký hiệu và khoảng trắng. Mặc định, mật khẩu dài 32 ký tự:
 
 ```php
 use Illuminate\Support\Str;
@@ -1205,7 +1205,7 @@ $password = Str::password(12);
 <a name="method-str-counted"></a>
 #### `Str::counted()` {.collection-method}
 
-The `Str::counted` method converts a singular word string to its singular or plural form based on the given count and prefixes the result with the formatted count:
+Phương thức `Str::counted` chuyển một từ ở dạng số ít sang dạng số ít hoặc số nhiều tùy theo số lượng được cung cấp, đồng thời thêm số lượng đã được định dạng vào phía trước kết quả:
 
 ```php
 use Illuminate\Support\Str;
@@ -1222,7 +1222,7 @@ $label = Str::counted('order', 1000);
 <a name="method-str-plural"></a>
 #### `Str::plural()` {.collection-method}
 
-The `Str::plural` method converts a singular word string to its plural form. This function supports [any of the languages supported by Laravel's pluralizer](/docs/{{version}}/localization#pluralization-language):
+Phương thức `Str::plural` chuyển một từ ở dạng số ít sang dạng số nhiều. Phương thức này hỗ trợ [mọi ngôn ngữ được pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -1236,7 +1236,7 @@ $plural = Str::plural('child');
 // children
 ```
 
-You may provide an integer as a second argument to the function to retrieve the singular or plural form of the string:
+Bạn có thể truyền một số nguyên làm đối số thứ hai để nhận về dạng số ít hoặc số nhiều tương ứng của chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1250,7 +1250,7 @@ $singular = Str::plural('child', 1);
 // child
 ```
 
-The `prependCount` argument may be provided to prefix the pluralized string with the formatted `$count`:
+Bạn có thể truyền đối số `prependCount` để thêm giá trị `$count` đã định dạng vào phía trước chuỗi sau khi chuyển số nhiều:
 
 ```php
 use Illuminate\Support\Str;
@@ -1263,7 +1263,7 @@ $label = Str::plural('car', 1000, prependCount: true);
 <a name="method-str-plural-studly"></a>
 #### `Str::pluralStudly()` {.collection-method}
 
-The `Str::pluralStudly` method converts a singular word string formatted in studly caps case to its plural form. This function supports [any of the languages supported by Laravel's pluralizer](/docs/{{version}}/localization#pluralization-language):
+Phương thức `Str::pluralStudly` chuyển chuỗi từ dạng số ít được định dạng theo `StudlyCase` sang dạng số nhiều. Phương thức này hỗ trợ [mọi ngôn ngữ được pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -1277,7 +1277,7 @@ $plural = Str::pluralStudly('UserFeedback');
 // UserFeedback
 ```
 
-You may provide an integer as a second argument to the function to retrieve the singular or plural form of the string:
+Bạn có thể truyền một số nguyên làm đối số thứ hai để nhận về dạng số ít hoặc số nhiều tương ứng của chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1294,7 +1294,7 @@ $singular = Str::pluralStudly('VerifiedHuman', 1);
 <a name="method-str-position"></a>
 #### `Str::position()` {.collection-method}
 
-The `Str::position` method returns the position of the first occurrence of a substring in a string. If the substring does not exist in the given string, `false` is returned:
+Phương thức `Str::position` trả về vị trí của lần xuất hiện đầu tiên của một chuỗi con trong chuỗi. Nếu chuỗi con không tồn tại, phương thức trả về `false`:
 
 ```php
 use Illuminate\Support\Str;
@@ -1311,7 +1311,7 @@ $position = Str::position('Hello, World!', 'W');
 <a name="method-str-random"></a>
 #### `Str::random()` {.collection-method}
 
-The `Str::random` method generates a random string of the specified length. This function uses PHP's `random_bytes` function:
+Phương thức `Str::random` tạo một chuỗi ngẫu nhiên với độ dài được chỉ định. Phương thức này sử dụng hàm `random_bytes` của PHP:
 
 ```php
 use Illuminate\Support\Str;
@@ -1319,7 +1319,7 @@ use Illuminate\Support\Str;
 $random = Str::random(40);
 ```
 
-During testing, it may be useful to "fake" the value that is returned by the `Str::random` method. To accomplish this, you may use the `createRandomStringsUsing` method:
+Trong quá trình testing, đôi khi bạn cần giả lập giá trị trả về từ `Str::random`. Khi đó, bạn có thể sử dụng phương thức `createRandomStringsUsing`:
 
 ```php
 Str::createRandomStringsUsing(function () {
@@ -1327,7 +1327,7 @@ Str::createRandomStringsUsing(function () {
 });
 ```
 
-To instruct the `random` method to return to generating random strings normally, you may invoke the `createRandomStringsNormally` method:
+Để đưa `random` trở lại cơ chế tạo chuỗi ngẫu nhiên thông thường, bạn có thể gọi phương thức `createRandomStringsNormally`:
 
 ```php
 Str::createRandomStringsNormally();
@@ -1336,7 +1336,7 @@ Str::createRandomStringsNormally();
 <a name="method-str-remove"></a>
 #### `Str::remove()` {.collection-method}
 
-The `Str::remove` method removes the given value or array of values from the string:
+Phương thức `Str::remove` loại bỏ giá trị hoặc mảng giá trị được chỉ định khỏi chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1348,12 +1348,12 @@ $removed = Str::remove('e', $string);
 // Ptr Pipr pickd a pck of pickld ppprs.
 ```
 
-You may also pass `false` as a third argument to the `remove` method to ignore case when removing strings.
+Bạn cũng có thể truyền `false` làm đối số thứ ba của `remove` để bỏ phân biệt chữ hoa và chữ thường khi loại bỏ chuỗi.
 
 <a name="method-str-repeat"></a>
 #### `Str::repeat()` {.collection-method}
 
-The `Str::repeat` method repeats the given string:
+Phương thức `Str::repeat` lặp lại chuỗi được cung cấp:
 
 ```php
 use Illuminate\Support\Str;
@@ -1368,7 +1368,7 @@ $repeat = Str::repeat($string, 5);
 <a name="method-str-replace"></a>
 #### `Str::replace()` {.collection-method}
 
-The `Str::replace` method replaces a given string within the string:
+Phương thức `Str::replace` thay thế một chuỗi con được chỉ định trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1380,7 +1380,7 @@ $replaced = Str::replace('11.x', '12.x', $string);
 // Laravel 12.x
 ```
 
-The `replace` method also accepts a `caseSensitive` argument. By default, the `replace` method is case sensitive:
+Phương thức `replace` cũng nhận đối số `caseSensitive`. Mặc định, phép thay thế có phân biệt chữ hoa và chữ thường:
 
 ```php
 $replaced = Str::replace(
@@ -1396,7 +1396,7 @@ $replaced = Str::replace(
 <a name="method-str-replace-array"></a>
 #### `Str::replaceArray()` {.collection-method}
 
-The `Str::replaceArray` method replaces a given value in the string sequentially using an array:
+Phương thức `Str::replaceArray` lần lượt thay thế giá trị được chỉ định trong chuỗi bằng các phần tử từ một mảng:
 
 ```php
 use Illuminate\Support\Str;
@@ -1411,7 +1411,7 @@ $replaced = Str::replaceArray('?', ['8:30', '9:00'], $string);
 <a name="method-str-replace-first"></a>
 #### `Str::replaceFirst()` {.collection-method}
 
-The `Str::replaceFirst` method replaces the first occurrence of a given value in a string:
+Phương thức `Str::replaceFirst` thay thế lần xuất hiện đầu tiên của giá trị được chỉ định trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1424,7 +1424,7 @@ $replaced = Str::replaceFirst('the', 'a', 'the quick brown fox jumps over the la
 <a name="method-str-replace-last"></a>
 #### `Str::replaceLast()` {.collection-method}
 
-The `Str::replaceLast` method replaces the last occurrence of a given value in a string:
+Phương thức `Str::replaceLast` thay thế lần xuất hiện cuối cùng của giá trị được chỉ định trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1437,7 +1437,7 @@ $replaced = Str::replaceLast('the', 'a', 'the quick brown fox jumps over the laz
 <a name="method-str-replace-matches"></a>
 #### `Str::replaceMatches()` {.collection-method}
 
-The `Str::replaceMatches` method replaces all portions of a string matching a pattern with the given replacement string:
+Phương thức `Str::replaceMatches` thay thế mọi phần của chuỗi khớp với pattern bằng chuỗi thay thế được cung cấp:
 
 ```php
 use Illuminate\Support\Str;
@@ -1451,7 +1451,7 @@ $replaced = Str::replaceMatches(
 // '15015551000'
 ```
 
-The `replaceMatches` method also accepts a closure that will be invoked with each portion of the string matching the given pattern, allowing you to perform the replacement logic within the closure and return the replaced value:
+Phương thức `replaceMatches` cũng chấp nhận một closure. Closure này sẽ được gọi cho từng phần của chuỗi khớp với pattern, cho phép bạn tự thực hiện logic thay thế và trả về giá trị mới:
 
 ```php
 use Illuminate\Support\Str;
@@ -1466,7 +1466,7 @@ $replaced = Str::replaceMatches('/\d/', function (array $matches) {
 <a name="method-str-replace-start"></a>
 #### `Str::replaceStart()` {.collection-method}
 
-The `Str::replaceStart` method replaces the first occurrence of the given value only if the value appears at the start of the string:
+Phương thức `Str::replaceStart` chỉ thay thế lần xuất hiện đầu tiên của giá trị được chỉ định khi giá trị đó nằm ở đầu chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1483,7 +1483,7 @@ $replaced = Str::replaceStart('World', 'Laravel', 'Hello World');
 <a name="method-str-replace-end"></a>
 #### `Str::replaceEnd()` {.collection-method}
 
-The `Str::replaceEnd` method replaces the last occurrence of the given value only if the value appears at the end of the string:
+Phương thức `Str::replaceEnd` chỉ thay thế lần xuất hiện cuối cùng của giá trị được chỉ định khi giá trị đó nằm ở cuối chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1500,7 +1500,7 @@ $replaced = Str::replaceEnd('Hello', 'Laravel', 'Hello World');
 <a name="method-str-reverse"></a>
 #### `Str::reverse()` {.collection-method}
 
-The `Str::reverse` method reverses the given string:
+Phương thức `Str::reverse` đảo ngược chuỗi được cung cấp:
 
 ```php
 use Illuminate\Support\Str;
@@ -1513,7 +1513,7 @@ $reversed = Str::reverse('Hello World');
 <a name="method-str-singular"></a>
 #### `Str::singular()` {.collection-method}
 
-The `Str::singular` method converts a string to its singular form. This function supports [any of the languages supported by Laravel's pluralizer](/docs/{{version}}/localization#pluralization-language):
+Phương thức `Str::singular` chuyển chuỗi sang dạng số ít. Phương thức này hỗ trợ [mọi ngôn ngữ được pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -1530,7 +1530,7 @@ $singular = Str::singular('children');
 <a name="method-str-slug"></a>
 #### `Str::slug()` {.collection-method}
 
-The `Str::slug` method generates a URL-friendly "slug" from the given string:
+Phương thức `Str::slug` tạo một `slug` thân thiện với URL từ chuỗi được cung cấp:
 
 ```php
 use Illuminate\Support\Str;
@@ -1543,7 +1543,7 @@ $slug = Str::slug('Laravel 5 Framework', '-');
 <a name="method-snake-case"></a>
 #### `Str::snake()` {.collection-method}
 
-The `Str::snake` method converts the given string to `snake_case`:
+Phương thức `Str::snake` chuyển chuỗi được cung cấp sang dạng `snake_case`:
 
 ```php
 use Illuminate\Support\Str;
@@ -1560,7 +1560,7 @@ $converted = Str::snake('fooBar', '-');
 <a name="method-str-squish"></a>
 #### `Str::squish()` {.collection-method}
 
-The `Str::squish` method removes all extraneous white space from a string, including extraneous white space between words:
+Phương thức `Str::squish` loại bỏ các khoảng trắng dư thừa trong chuỗi, kể cả khoảng trắng dư giữa các từ:
 
 ```php
 use Illuminate\Support\Str;
@@ -1573,7 +1573,7 @@ $string = Str::squish('    laravel    framework    ');
 <a name="method-str-start"></a>
 #### `Str::start()` {.collection-method}
 
-The `Str::start` method adds a single instance of the given value to a string if it does not already start with that value:
+Phương thức `Str::start` thêm đúng một lần giá trị được chỉ định vào đầu chuỗi nếu chuỗi chưa bắt đầu bằng giá trị đó:
 
 ```php
 use Illuminate\Support\Str;
@@ -1590,7 +1590,7 @@ $adjusted = Str::start('/this/string', '/');
 <a name="method-starts-with"></a>
 #### `Str::startsWith()` {.collection-method}
 
-The `Str::startsWith` method determines if the given string begins with the given value:
+Phương thức `Str::startsWith` xác định chuỗi được cung cấp có bắt đầu bằng giá trị chỉ định hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -1600,7 +1600,7 @@ $result = Str::startsWith('This is my name', 'This');
 // true
 ```
 
-If an array of possible values is passed, the `startsWith` method will return `true` if the string begins with any of the given values:
+Nếu truyền vào một mảng các giá trị có thể có, `startsWith` sẽ trả về `true` khi chuỗi bắt đầu bằng ít nhất một giá trị trong mảng:
 
 ```php
 $result = Str::startsWith('This is my name', ['This', 'That', 'There']);
@@ -1611,7 +1611,7 @@ $result = Str::startsWith('This is my name', ['This', 'That', 'There']);
 <a name="method-studly-case"></a>
 #### `Str::studly()` {.collection-method}
 
-The `Str::studly` method converts the given string to `StudlyCase`:
+Phương thức `Str::studly` chuyển chuỗi được cung cấp sang dạng `StudlyCase`:
 
 ```php
 use Illuminate\Support\Str;
@@ -1624,7 +1624,7 @@ $converted = Str::studly('foo_bar');
 <a name="method-str-substr"></a>
 #### `Str::substr()` {.collection-method}
 
-The `Str::substr` method returns the portion of string specified by the start and length parameters:
+Phương thức `Str::substr` trả về phần chuỗi được xác định bởi tham số vị trí bắt đầu và độ dài:
 
 ```php
 use Illuminate\Support\Str;
@@ -1637,7 +1637,7 @@ $converted = Str::substr('The Laravel Framework', 4, 7);
 <a name="method-str-substrcount"></a>
 #### `Str::substrCount()` {.collection-method}
 
-The `Str::substrCount` method returns the number of occurrences of a given value in the given string:
+Phương thức `Str::substrCount` trả về số lần giá trị được chỉ định xuất hiện trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1650,7 +1650,7 @@ $count = Str::substrCount('If you like ice cream, you will like snow cones.', 'l
 <a name="method-str-substrreplace"></a>
 #### `Str::substrReplace()` {.collection-method}
 
-The `Str::substrReplace` method replaces text within a portion of a string, starting at the position specified by the third argument and replacing the number of characters specified by the fourth argument. Passing `0` to the method's fourth argument will insert the string at the specified position without replacing any of the existing characters in the string:
+Phương thức `Str::substrReplace` thay thế nội dung trong một phần của chuỗi, bắt đầu từ vị trí được chỉ định bởi đối số thứ ba và thay số ký tự được chỉ định bởi đối số thứ tư. Nếu truyền `0` làm đối số thứ tư, chuỗi mới sẽ được chèn vào vị trí chỉ định mà không thay thế ký tự hiện có nào:
 
 ```php
 use Illuminate\Support\Str;
@@ -1665,7 +1665,7 @@ $result = Str::substrReplace('1300', ':', 2, 0);
 <a name="method-str-swap"></a>
 #### `Str::swap()` {.collection-method}
 
-The `Str::swap` method replaces multiple values in the given string using PHP's `strtr` function:
+Phương thức `Str::swap` thay thế nhiều giá trị trong chuỗi bằng hàm `strtr` của PHP:
 
 ```php
 use Illuminate\Support\Str;
@@ -1681,7 +1681,7 @@ $string = Str::swap([
 <a name="method-take"></a>
 #### `Str::take()` {.collection-method}
 
-The `Str::take` method returns a specified number of characters from the beginning of a string:
+Phương thức `Str::take` trả về số ký tự được chỉ định tính từ đầu chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1694,7 +1694,7 @@ $taken = Str::take('Build something amazing!', 5);
 <a name="method-title-case"></a>
 #### `Str::title()` {.collection-method}
 
-The `Str::title` method converts the given string to `Title Case`:
+Phương thức `Str::title` chuyển chuỗi được cung cấp sang dạng `Title Case`:
 
 ```php
 use Illuminate\Support\Str;
@@ -1707,7 +1707,7 @@ $converted = Str::title('a nice title uses the correct case');
 <a name="method-str-to-base64"></a>
 #### `Str::toBase64()` {.collection-method}
 
-The `Str::toBase64` method converts the given string to Base64:
+Phương thức `Str::toBase64` mã hóa chuỗi được cung cấp sang Base64:
 
 ```php
 use Illuminate\Support\Str;
@@ -1720,7 +1720,7 @@ $base64 = Str::toBase64('Laravel');
 <a name="method-str-transliterate"></a>
 #### `Str::transliterate()` {.collection-method}
 
-The `Str::transliterate` method will attempt to convert a given string into its closest ASCII representation:
+Phương thức `Str::transliterate` cố gắng chuyển chuỗi được cung cấp sang biểu diễn ASCII gần nhất:
 
 ```php
 use Illuminate\Support\Str;
@@ -1733,7 +1733,7 @@ $email = Str::transliterate('ⓣⓔⓢⓣ@ⓛⓐⓡⓐⓥⓔⓛ.ⓒⓞⓜ');
 <a name="method-str-trim"></a>
 #### `Str::trim()` {.collection-method}
 
-The `Str::trim` method strips whitespace (or other characters) from the beginning and end of the given string. Unlike PHP's native `trim` function, the `Str::trim` method also removes unicode whitespace characters:
+Phương thức `Str::trim` loại bỏ khoảng trắng (hoặc các ký tự khác) ở đầu và cuối chuỗi. Khác với hàm `trim` nguyên bản của PHP, `Str::trim` cũng loại bỏ các ký tự khoảng trắng Unicode:
 
 ```php
 use Illuminate\Support\Str;
@@ -1746,7 +1746,7 @@ $string = Str::trim(' foo bar ');
 <a name="method-str-ltrim"></a>
 #### `Str::ltrim()` {.collection-method}
 
-The `Str::ltrim` method strips whitespace (or other characters) from the beginning of the given string. Unlike PHP's native `ltrim` function, the `Str::ltrim` method also removes unicode whitespace characters:
+Phương thức `Str::ltrim` loại bỏ khoảng trắng (hoặc các ký tự khác) ở đầu chuỗi. Khác với hàm `ltrim` nguyên bản của PHP, `Str::ltrim` cũng loại bỏ các ký tự khoảng trắng Unicode:
 
 ```php
 use Illuminate\Support\Str;
@@ -1759,7 +1759,7 @@ $string = Str::ltrim('  foo bar  ');
 <a name="method-str-rtrim"></a>
 #### `Str::rtrim()` {.collection-method}
 
-The `Str::rtrim` method strips whitespace (or other characters) from the end of the given string. Unlike PHP's native `rtrim` function, the `Str::rtrim` method also removes unicode whitespace characters:
+Phương thức `Str::rtrim` loại bỏ khoảng trắng (hoặc các ký tự khác) ở cuối chuỗi. Khác với hàm `rtrim` nguyên bản của PHP, `Str::rtrim` cũng loại bỏ các ký tự khoảng trắng Unicode:
 
 ```php
 use Illuminate\Support\Str;
@@ -1772,7 +1772,7 @@ $string = Str::rtrim('  foo bar  ');
 <a name="method-str-ucfirst"></a>
 #### `Str::ucfirst()` {.collection-method}
 
-The `Str::ucfirst` method returns the given string with the first character capitalized:
+Phương thức `Str::ucfirst` trả về chuỗi với ký tự đầu tiên được chuyển thành chữ hoa:
 
 ```php
 use Illuminate\Support\Str;
@@ -1785,7 +1785,7 @@ $string = Str::ucfirst('foo bar');
 <a name="method-str-ucsplit"></a>
 #### `Str::ucsplit()` {.collection-method}
 
-The `Str::ucsplit` method splits the given string into an array by uppercase characters:
+Phương thức `Str::ucsplit` tách chuỗi thành một mảng dựa trên các ký tự viết hoa:
 
 ```php
 use Illuminate\Support\Str;
@@ -1798,7 +1798,7 @@ $segments = Str::ucsplit('FooBar');
 <a name="method-str-ucwords"></a>
 #### `Str::ucwords()` {.collection-method}
 
-The `Str::ucwords` method converts the first character of each word in the given string to uppercase:
+Phương thức `Str::ucwords` chuyển ký tự đầu tiên của mỗi từ trong chuỗi thành chữ hoa:
 
 ```php
 use Illuminate\Support\Str;
@@ -1811,7 +1811,7 @@ $string = Str::ucwords('laravel framework');
 <a name="method-str-upper"></a>
 #### `Str::upper()` {.collection-method}
 
-The `Str::upper` method converts the given string to uppercase:
+Phương thức `Str::upper` chuyển chuỗi thành chữ hoa:
 
 ```php
 use Illuminate\Support\Str;
@@ -1824,7 +1824,7 @@ $string = Str::upper('laravel');
 <a name="method-str-ulid"></a>
 #### `Str::ulid()` {.collection-method}
 
-The `Str::ulid` method generates a ULID, which is a compact, time-ordered unique identifier:
+Phương thức `Str::ulid` tạo một ULID, là định danh duy nhất nhỏ gọn và có thứ tự theo thời gian:
 
 ```php
 use Illuminate\Support\Str;
@@ -1834,7 +1834,7 @@ return (string) Str::ulid();
 // 01gd6r360bp37zj17nxb55yv40
 ```
 
-If you would like to retrieve a `Illuminate\Support\Carbon` date instance representing the date and time that a given ULID was created, you may use the `createFromId` method provided by Laravel's Carbon integration:
+Nếu muốn lấy một instance ngày `Illuminate\Support\Carbon` biểu diễn ngày và thời điểm một ULID được tạo, bạn có thể sử dụng phương thức `createFromId` do tích hợp Carbon của Laravel cung cấp:
 
 ```php
 use Illuminate\Support\Carbon;
@@ -1843,7 +1843,7 @@ use Illuminate\Support\Str;
 $date = Carbon::createFromId((string) Str::ulid());
 ```
 
-During testing, it may be useful to "fake" the value that is returned by the `Str::ulid` method. To accomplish this, you may use the `createUlidsUsing` method:
+Trong quá trình kiểm thử, đôi khi bạn cần "giả lập" giá trị do phương thức `Str::ulid` trả về. Để thực hiện việc này, bạn có thể dùng phương thức `createUlidsUsing`:
 
 ```php
 use Symfony\Component\Uid\Ulid;
@@ -1853,7 +1853,7 @@ Str::createUlidsUsing(function () {
 });
 ```
 
-To instruct the `ulid` method to return to generating ULIDs normally, you may invoke the `createUlidsNormally` method:
+Để yêu cầu phương thức `ulid` quay lại tạo ULID theo cách thông thường, bạn có thể gọi phương thức `createUlidsNormally`:
 
 ```php
 Str::createUlidsNormally();
@@ -1862,7 +1862,7 @@ Str::createUlidsNormally();
 <a name="method-str-unwrap"></a>
 #### `Str::unwrap()` {.collection-method}
 
-The `Str::unwrap` method removes the specified strings from the beginning and end of a given string:
+Phương thức `Str::unwrap` loại bỏ các chuỗi được chỉ định khỏi đầu và cuối chuỗi đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -1879,7 +1879,7 @@ Str::unwrap('{framework: "Laravel"}', '{', '}');
 <a name="method-str-uuid"></a>
 #### `Str::uuid()` {.collection-method}
 
-The `Str::uuid` method generates a UUID (version 4):
+Phương thức `Str::uuid` tạo một UUID (phiên bản 4):
 
 ```php
 use Illuminate\Support\Str;
@@ -1887,7 +1887,7 @@ use Illuminate\Support\Str;
 return (string) Str::uuid();
 ```
 
-During testing, it may be useful to "fake" the value that is returned by the `Str::uuid` method. To accomplish this, you may use the `createUuidsUsing` method:
+Trong quá trình kiểm thử, đôi khi bạn cần "giả lập" giá trị do phương thức `Str::uuid` trả về. Để thực hiện việc này, bạn có thể dùng phương thức `createUuidsUsing`:
 
 ```php
 use Ramsey\Uuid\Uuid;
@@ -1897,7 +1897,7 @@ Str::createUuidsUsing(function () {
 });
 ```
 
-To instruct the `uuid` method to return to generating UUIDs normally, you may invoke the `createUuidsNormally` method:
+Để yêu cầu phương thức `uuid` quay lại tạo UUID theo cách thông thường, bạn có thể gọi phương thức `createUuidsNormally`:
 
 ```php
 Str::createUuidsNormally();
@@ -1906,7 +1906,7 @@ Str::createUuidsNormally();
 <a name="method-str-uuid7"></a>
 #### `Str::uuid7()` {.collection-method}
 
-The `Str::uuid7` method generates a UUID (version 7):
+Phương thức `Str::uuid7` tạo một UUID (phiên bản 7):
 
 ```php
 use Illuminate\Support\Str;
@@ -1914,7 +1914,7 @@ use Illuminate\Support\Str;
 return (string) Str::uuid7();
 ```
 
-A `DateTimeInterface` may be passed as an optional parameter which will be used to generate the ordered UUID:
+Bạn có thể truyền một `DateTimeInterface` làm tham số tùy chọn để dùng khi tạo ordered UUID:
 
 ```php
 return (string) Str::uuid7(time: now());
@@ -1923,7 +1923,7 @@ return (string) Str::uuid7(time: now());
 <a name="method-str-word-count"></a>
 #### `Str::wordCount()` {.collection-method}
 
-The `Str::wordCount` method returns the number of words that a string contains:
+Phương thức `Str::wordCount` trả về số lượng từ có trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1934,7 +1934,7 @@ Str::wordCount('Hello, world!'); // 2
 <a name="method-str-word-wrap"></a>
 #### `Str::wordWrap()` {.collection-method}
 
-The `Str::wordWrap` method wraps a string to a given number of characters:
+Phương thức `Str::wordWrap` ngắt dòng chuỗi theo số ký tự được chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -1953,7 +1953,7 @@ dog.
 <a name="method-str-words"></a>
 #### `Str::words()` {.collection-method}
 
-The `Str::words` method limits the number of words in a string. An additional string may be passed to this method via its third argument to specify which string should be appended to the end of the truncated string:
+Phương thức `Str::words` giới hạn số lượng từ trong chuỗi. Bạn có thể truyền thêm một chuỗi qua đối số thứ ba để chỉ định nội dung sẽ được nối vào cuối chuỗi sau khi rút gọn:
 
 ```php
 use Illuminate\Support\Str;
@@ -1966,7 +1966,7 @@ return Str::words('Perfectly balanced, as all things should be.', 3, ' >>>');
 <a name="method-str-wrap"></a>
 #### `Str::wrap()` {.collection-method}
 
-The `Str::wrap` method wraps the given string with an additional string or pair of strings:
+Phương thức `Str::wrap` bao chuỗi đã cho bằng một chuỗi bổ sung hoặc một cặp chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -1983,7 +1983,7 @@ Str::wrap('is', before: 'This ', after: ' Laravel!');
 <a name="method-str"></a>
 #### `str()` {.collection-method}
 
-The `str` function returns a new `Illuminate\Support\Stringable` instance of the given string. This function is equivalent to the `Str::of` method:
+Hàm `str` trả về một instance `Illuminate\Support\Stringable` mới cho chuỗi đã cho. Hàm này tương đương với phương thức `Str::of`:
 
 ```php
 $string = str('Taylor')->append(' Otwell');
@@ -1991,7 +1991,7 @@ $string = str('Taylor')->append(' Otwell');
 // 'Taylor Otwell'
 ```
 
-If no argument is provided to the `str` function, the function returns an instance of `Illuminate\Support\Str`:
+Nếu không truyền đối số cho hàm `str`, hàm sẽ trả về một instance của `Illuminate\Support\Str`:
 
 ```php
 $snake = str()->snake('FooBar');
@@ -2002,34 +2002,34 @@ $snake = str()->snake('FooBar');
 <a name="method-trans"></a>
 #### `trans()` {.collection-method}
 
-The `trans` function translates the given translation key using your [language files](/docs/{{version}}/localization):
+Hàm `trans` dịch translation key đã cho bằng các [file ngôn ngữ](/docs/{{version}}/localization) của ứng dụng:
 
 ```php
 echo trans('messages.welcome');
 ```
 
-If the specified translation key does not exist, the `trans` function will return the given key. So, using the example above, the `trans` function would return `messages.welcome` if the translation key does not exist.
+Nếu translation key được chỉ định không tồn tại, hàm `trans` sẽ trả về chính key đó. Vì vậy, với ví dụ trên, `trans` sẽ trả về `messages.welcome` nếu translation key không tồn tại.
 
 <a name="method-trans-choice"></a>
 #### `trans_choice()` {.collection-method}
 
-The `trans_choice` function translates the given translation key with inflection:
+Hàm `trans_choice` dịch translation key đã cho với khả năng biến đổi theo số lượng:
 
 ```php
 echo trans_choice('messages.notifications', $unreadCount);
 ```
 
-If the specified translation key does not exist, the `trans_choice` function will return the given key. So, using the example above, the `trans_choice` function would return `messages.notifications` if the translation key does not exist.
+Nếu translation key được chỉ định không tồn tại, hàm `trans_choice` sẽ trả về chính key đó. Vì vậy, với ví dụ trên, `trans_choice` sẽ trả về `messages.notifications` nếu translation key không tồn tại.
 
 <a name="fluent-strings"></a>
 ## Fluent Strings
 
-Fluent strings provide a more fluent, object-oriented interface for working with string values, allowing you to chain multiple string operations together using a more readable syntax compared to traditional string operations.
+Fluent Strings cung cấp giao diện hướng đối tượng mạch lạc hơn để làm việc với giá trị chuỗi, cho phép bạn nối nhiều thao tác xử lý chuỗi với nhau bằng cú pháp dễ đọc hơn so với cách xử lý chuỗi truyền thống.
 
 <a name="method-fluent-str-after"></a>
 #### `after` {.collection-method}
 
-The `after` method returns everything after the given value in a string. The entire string will be returned if the value does not exist within the string:
+Phương thức `after` trả về toàn bộ nội dung nằm sau giá trị đã cho trong chuỗi. Nếu giá trị đó không tồn tại trong chuỗi, toàn bộ chuỗi sẽ được trả về:
 
 ```php
 use Illuminate\Support\Str;
@@ -2042,7 +2042,7 @@ $slice = Str::of('This is my name')->after('This is');
 <a name="method-fluent-str-after-last"></a>
 #### `afterLast` {.collection-method}
 
-The `afterLast` method returns everything after the last occurrence of the given value in a string. The entire string will be returned if the value does not exist within the string:
+Phương thức `afterLast` trả về toàn bộ nội dung nằm sau lần xuất hiện cuối cùng của giá trị đã cho trong chuỗi. Nếu giá trị đó không tồn tại, toàn bộ chuỗi sẽ được trả về:
 
 ```php
 use Illuminate\Support\Str;
@@ -2055,7 +2055,7 @@ $slice = Str::of('App\Http\Controllers\Controller')->afterLast('\\');
 <a name="method-fluent-str-apa"></a>
 #### `apa` {.collection-method}
 
-The `apa` method converts the given string to title case following the [APA guidelines](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case):
+Phương thức `apa` chuyển chuỗi đã cho sang kiểu viết hoa tiêu đề theo [hướng dẫn của APA](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case):
 
 ```php
 use Illuminate\Support\Str;
@@ -2068,7 +2068,7 @@ $converted = Str::of('a nice title uses the correct case')->apa();
 <a name="method-fluent-str-append"></a>
 #### `append` {.collection-method}
 
-The `append` method appends the given values to the string:
+Phương thức `append` nối các giá trị đã cho vào cuối chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2081,7 +2081,7 @@ $string = Str::of('Taylor')->append(' Otwell');
 <a name="method-fluent-str-ascii"></a>
 #### `ascii` {.collection-method}
 
-The `ascii` method will attempt to transliterate the string into an ASCII value:
+Phương thức `ascii` sẽ cố gắng chuyển tự chuỗi thành giá trị ASCII:
 
 ```php
 use Illuminate\Support\Str;
@@ -2094,7 +2094,7 @@ $string = Str::of('ü')->ascii();
 <a name="method-fluent-str-basename"></a>
 #### `basename` {.collection-method}
 
-The `basename` method will return the trailing name component of the given string:
+Phương thức `basename` trả về thành phần tên ở cuối chuỗi đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -2104,7 +2104,7 @@ $string = Str::of('/foo/bar/baz')->basename();
 // 'baz'
 ```
 
-If needed, you may provide an "extension" that will be removed from the trailing component:
+Nếu cần, bạn có thể truyền một "extension" để loại bỏ phần mở rộng đó khỏi thành phần cuối:
 
 ```php
 use Illuminate\Support\Str;
@@ -2117,7 +2117,7 @@ $string = Str::of('/foo/bar/baz.jpg')->basename('.jpg');
 <a name="method-fluent-str-before"></a>
 #### `before` {.collection-method}
 
-The `before` method returns everything before the given value in a string:
+Phương thức `before` trả về toàn bộ nội dung nằm trước giá trị đã cho trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2130,7 +2130,7 @@ $slice = Str::of('This is my name')->before('my name');
 <a name="method-fluent-str-before-last"></a>
 #### `beforeLast` {.collection-method}
 
-The `beforeLast` method returns everything before the last occurrence of the given value in a string:
+Phương thức `beforeLast` trả về toàn bộ nội dung nằm trước lần xuất hiện cuối cùng của giá trị đã cho trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2143,7 +2143,7 @@ $slice = Str::of('This is my name')->beforeLast('is');
 <a name="method-fluent-str-between"></a>
 #### `between` {.collection-method}
 
-The `between` method returns the portion of a string between two values:
+Phương thức `between` trả về phần của chuỗi nằm giữa hai giá trị:
 
 ```php
 use Illuminate\Support\Str;
@@ -2156,7 +2156,7 @@ $converted = Str::of('This is my name')->between('This', 'name');
 <a name="method-fluent-str-between-first"></a>
 #### `betweenFirst` {.collection-method}
 
-The `betweenFirst` method returns the smallest possible portion of a string between two values:
+Phương thức `betweenFirst` trả về phần nhỏ nhất có thể của chuỗi nằm giữa hai giá trị:
 
 ```php
 use Illuminate\Support\Str;
@@ -2169,7 +2169,7 @@ $converted = Str::of('[a] bc [d]')->betweenFirst('[', ']');
 <a name="method-fluent-str-camel"></a>
 #### `camel` {.collection-method}
 
-The `camel` method converts the given string to `camelCase`:
+Phương thức `camel` chuyển chuỗi đã cho sang dạng `camelCase`:
 
 ```php
 use Illuminate\Support\Str;
@@ -2182,7 +2182,7 @@ $converted = Str::of('foo_bar')->camel();
 <a name="method-fluent-str-char-at"></a>
 #### `charAt` {.collection-method}
 
-The `charAt` method returns the character at the specified index. If the index is out of bounds, `false` is returned:
+Phương thức `charAt` trả về ký tự tại chỉ mục được chỉ định. Nếu chỉ mục nằm ngoài phạm vi, phương thức trả về `false`:
 
 ```php
 use Illuminate\Support\Str;
@@ -2195,7 +2195,7 @@ $character = Str::of('This is my name.')->charAt(6);
 <a name="method-fluent-str-class-basename"></a>
 #### `classBasename` {.collection-method}
 
-The `classBasename` method returns the class name of the given class with the class's namespace removed:
+Phương thức `classBasename` trả về tên class của class đã cho sau khi loại bỏ namespace:
 
 ```php
 use Illuminate\Support\Str;
@@ -2208,7 +2208,7 @@ $class = Str::of('Foo\Bar\Baz')->classBasename();
 <a name="method-fluent-str-chop-start"></a>
 #### `chopStart` {.collection-method}
 
-The `chopStart` method removes the first occurrence of the given value only if the value appears at the start of the string:
+Phương thức `chopStart` loại bỏ lần xuất hiện đầu tiên của giá trị đã cho, nhưng chỉ khi giá trị đó nằm ở đầu chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2218,7 +2218,7 @@ $url = Str::of('https://laravel.com')->chopStart('https://');
 // 'laravel.com'
 ```
 
-You may also pass an array. If the string starts with any of the values in the array then that value will be removed from string:
+Bạn cũng có thể truyền một mảng. Nếu chuỗi bắt đầu bằng bất kỳ giá trị nào trong mảng, giá trị đó sẽ được loại khỏi chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2231,7 +2231,7 @@ $url = Str::of('http://laravel.com')->chopStart(['https://', 'http://']);
 <a name="method-fluent-str-chop-end"></a>
 #### `chopEnd` {.collection-method}
 
-The `chopEnd` method removes the last occurrence of the given value only if the value appears at the end of the string:
+Phương thức `chopEnd` loại bỏ lần xuất hiện cuối cùng của giá trị đã cho, nhưng chỉ khi giá trị đó nằm ở cuối chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2241,7 +2241,7 @@ $url = Str::of('https://laravel.com')->chopEnd('.com');
 // 'https://laravel'
 ```
 
-You may also pass an array. If the string ends with any of the values in the array then that value will be removed from string:
+Bạn cũng có thể truyền một mảng. Nếu chuỗi kết thúc bằng bất kỳ giá trị nào trong mảng, giá trị đó sẽ được loại khỏi chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2254,7 +2254,7 @@ $url = Str::of('http://laravel.com')->chopEnd(['.com', '.io']);
 <a name="method-fluent-str-contains"></a>
 #### `contains` {.collection-method}
 
-The `contains` method determines if the given string contains the given value. By default, this method is case sensitive:
+Phương thức `contains` xác định chuỗi đã cho có chứa giá trị được chỉ định hay không. Theo mặc định, phương thức này phân biệt chữ hoa và chữ thường:
 
 ```php
 use Illuminate\Support\Str;
@@ -2264,7 +2264,7 @@ $contains = Str::of('This is my name')->contains('my');
 // true
 ```
 
-You may also pass an array of values to determine if the given string contains any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để kiểm tra chuỗi có chứa ít nhất một giá trị trong mảng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2274,7 +2274,7 @@ $contains = Str::of('This is my name')->contains(['my', 'foo']);
 // true
 ```
 
-You can disable case sensitivity by setting the `ignoreCase` argument to `true`:
+Bạn có thể tắt việc phân biệt chữ hoa và chữ thường bằng cách đặt đối số `ignoreCase` thành `true`:
 
 ```php
 use Illuminate\Support\Str;
@@ -2287,7 +2287,7 @@ $contains = Str::of('This is my name')->contains('MY', ignoreCase: true);
 <a name="method-fluent-str-contains-all"></a>
 #### `containsAll` {.collection-method}
 
-The `containsAll` method determines if the given string contains all of the values in the given array:
+Phương thức `containsAll` xác định chuỗi đã cho có chứa tất cả giá trị trong mảng được chỉ định hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2297,7 +2297,7 @@ $containsAll = Str::of('This is my name')->containsAll(['my', 'name']);
 // true
 ```
 
-You can disable case sensitivity by setting the `ignoreCase` argument to `true`:
+Bạn có thể tắt việc phân biệt chữ hoa và chữ thường bằng cách đặt đối số `ignoreCase` thành `true`:
 
 ```php
 use Illuminate\Support\Str;
@@ -2310,7 +2310,7 @@ $containsAll = Str::of('This is my name')->containsAll(['MY', 'NAME'], ignoreCas
 <a name="method-fluent-str-decrypt"></a>
 #### `decrypt` {.collection-method}
 
-The `decrypt` method [decrypts](/docs/{{version}}/encryption) the encrypted string:
+Phương thức `decrypt` [giải mã](/docs/{{version}}/encryption) chuỗi đã được mã hóa:
 
 ```php
 use Illuminate\Support\Str;
@@ -2320,12 +2320,12 @@ $decrypted = $encrypted->decrypt();
 // 'secret'
 ```
 
-For the inverse of `decrypt`, see the [encrypt](#method-fluent-str-encrypt) method.
+Để thực hiện thao tác ngược với `decrypt`, hãy xem phương thức [encrypt](#method-fluent-str-encrypt).
 
 <a name="method-fluent-str-deduplicate"></a>
 #### `deduplicate` {.collection-method}
 
-The `deduplicate` method replaces consecutive instances of a character with a single instance of that character in the given string. By default, the method deduplicates spaces:
+Phương thức `deduplicate` thay thế các lần xuất hiện liên tiếp của một ký tự bằng một lần xuất hiện duy nhất của ký tự đó trong chuỗi. Theo mặc định, phương thức loại bỏ các khoảng trắng lặp liên tiếp:
 
 ```php
 use Illuminate\Support\Str;
@@ -2335,7 +2335,7 @@ $result = Str::of('The   Laravel   Framework')->deduplicate();
 // The Laravel Framework
 ```
 
-You may specify a different character to deduplicate by passing it in as the second argument to the method:
+Bạn có thể chỉ định một ký tự khác cần loại bỏ lặp bằng cách truyền ký tự đó làm đối số thứ hai:
 
 ```php
 use Illuminate\Support\Str;
@@ -2348,7 +2348,7 @@ $result = Str::of('The---Laravel---Framework')->deduplicate('-');
 <a name="method-fluent-str-dirname"></a>
 #### `dirname` {.collection-method}
 
-The `dirname` method returns the parent directory portion of the given string:
+Phương thức `dirname` trả về phần thư mục cha của chuỗi đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -2358,7 +2358,7 @@ $string = Str::of('/foo/bar/baz')->dirname();
 // '/foo/bar'
 ```
 
-If necessary, you may specify how many directory levels you wish to trim from the string:
+Nếu cần, bạn có thể chỉ định số cấp thư mục muốn loại bỏ khỏi chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2371,7 +2371,7 @@ $string = Str::of('/foo/bar/baz')->dirname(2);
 <a name="method-fluent-str-doesnt-contain"></a>
 #### `doesntContain()` {.collection-method}
 
-The `doesntContain` method determines if the given string does not contain the given value. This method is the inverse of the [contains](#method-fluent-str-contains) method. By default, this method is case sensitive:
+Phương thức `doesntContain` xác định chuỗi đã cho không chứa giá trị được chỉ định hay không. Đây là thao tác ngược với phương thức [contains](#method-fluent-str-contains). Theo mặc định, phương thức này phân biệt chữ hoa và chữ thường:
 
 ```php
 use Illuminate\Support\Str;
@@ -2381,7 +2381,7 @@ $doesntContain = Str::of('This is name')->doesntContain('my');
 // true
 ```
 
-You may also pass an array of values to determine if the given string does not contain any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để xác định chuỗi đã cho có không chứa bất kỳ giá trị nào trong mảng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2391,7 +2391,7 @@ $doesntContain = Str::of('This is name')->doesntContain(['my', 'framework']);
 // true
 ```
 
-You may disable case sensitivity by setting the `ignoreCase` argument to `true`:
+Bạn có thể bỏ phân biệt chữ hoa và chữ thường bằng cách đặt đối số `ignoreCase` thành `true`:
 
 ```php
 use Illuminate\Support\Str;
@@ -2404,7 +2404,7 @@ $doesntContain = Str::of('This is my name')->doesntContain('MY', ignoreCase: tru
 <a name="method-fluent-str-doesnt-end-with"></a>
 #### `doesntEndWith` {.collection-method}
 
-The `doesntEndWith` method determines if the given string doesn't end with the given value:
+Phương thức `doesntEndWith` xác định chuỗi đã cho có không kết thúc bằng giá trị được chỉ định hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2414,7 +2414,7 @@ $result = Str::of('This is my name')->doesntEndWith('dog');
 // true
 ```
 
-You may also pass an array of values to determine if the given string doesn't end with any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để kiểm tra chuỗi không kết thúc bằng bất kỳ giá trị nào trong mảng:
 
 ```php
 use Illuminate\Support\Str;
@@ -2431,7 +2431,7 @@ $result = Str::of('This is my name')->doesntEndWith(['name', 'foo']);
 <a name="method-fluent-str-doesnt-start-with"></a>
 #### `doesntStartWith` {.collection-method}
 
-The `doesntStartWith` method determines if the given string doesn't begin with the given value:
+Phương thức `doesntStartWith` xác định chuỗi đã cho có không bắt đầu bằng giá trị được chỉ định hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2441,7 +2441,7 @@ $result = Str::of('This is my name')->doesntStartWith('That');
 // true
 ```
 
-You may also pass an array of values to determine if the given string doesn't start with any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để xác định chuỗi đã cho có không bắt đầu bằng bất kỳ giá trị nào trong mảng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2454,7 +2454,7 @@ $result = Str::of('This is my name')->doesntStartWith(['What', 'That', 'There'])
 <a name="method-fluent-str-encrypt"></a>
 #### `encrypt` {.collection-method}
 
-The `encrypt` method [encrypts](/docs/{{version}}/encryption) the string:
+Phương thức `encrypt` [mã hóa](/docs/{{version}}/encryption) chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2462,12 +2462,12 @@ use Illuminate\Support\Str;
 $encrypted = Str::of('secret')->encrypt();
 ```
 
-For the inverse of `encrypt`, see the [decrypt](#method-fluent-str-decrypt) method.
+Để thực hiện thao tác ngược với `encrypt`, hãy xem phương thức [decrypt](#method-fluent-str-decrypt).
 
 <a name="method-fluent-str-ends-with"></a>
 #### `endsWith` {.collection-method}
 
-The `endsWith` method determines if the given string ends with the given value:
+Phương thức `endsWith` xác định chuỗi đã cho có kết thúc bằng giá trị được chỉ định hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2477,7 +2477,7 @@ $result = Str::of('This is my name')->endsWith('name');
 // true
 ```
 
-You may also pass an array of values to determine if the given string ends with any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để kiểm tra chuỗi có kết thúc bằng ít nhất một giá trị trong mảng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2494,7 +2494,7 @@ $result = Str::of('This is my name')->endsWith(['this', 'foo']);
 <a name="method-fluent-str-exactly"></a>
 #### `exactly` {.collection-method}
 
-The `exactly` method determines if the given string is an exact match with another string:
+Phương thức `exactly` xác định chuỗi đã cho có khớp chính xác với một chuỗi khác hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2507,7 +2507,7 @@ $result = Str::of('Laravel')->exactly('Laravel');
 <a name="method-fluent-str-excerpt"></a>
 #### `excerpt` {.collection-method}
 
-The `excerpt` method extracts an excerpt from the string that matches the first instance of a phrase within that string:
+Phương thức `excerpt` trích xuất một đoạn văn quanh lần xuất hiện đầu tiên của một cụm từ trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -2519,9 +2519,9 @@ $excerpt = Str::of('This is my name')->excerpt('my', [
 // '...is my na...'
 ```
 
-The `radius` option, which defaults to `100`, allows you to define the number of characters that should appear on each side of the truncated string.
+Tùy chọn `radius`, mặc định là `100`, cho phép xác định số ký tự xuất hiện ở mỗi phía của phần chuỗi được rút gọn.
 
-In addition, you may use the `omission` option to change the string that will be prepended and appended to the truncated string:
+Ngoài ra, bạn có thể dùng tùy chọn `omission` để thay đổi chuỗi được thêm vào đầu và cuối phần nội dung đã rút gọn:
 
 ```php
 use Illuminate\Support\Str;
@@ -2537,7 +2537,7 @@ $excerpt = Str::of('This is my name')->excerpt('name', [
 <a name="method-fluent-str-explode"></a>
 #### `explode` {.collection-method}
 
-The `explode` method splits the string by the given delimiter and returns a collection containing each section of the split string:
+Phương thức `explode` tách chuỗi theo delimiter đã cho và trả về một collection chứa từng phần sau khi tách:
 
 ```php
 use Illuminate\Support\Str;
@@ -2550,7 +2550,7 @@ $collection = Str::of('foo bar baz')->explode(' ');
 <a name="method-fluent-str-finish"></a>
 #### `finish` {.collection-method}
 
-The `finish` method adds a single instance of the given value to a string if it does not already end with that value:
+Phương thức `finish` thêm đúng một lần giá trị đã cho vào cuối chuỗi nếu chuỗi chưa kết thúc bằng giá trị đó:
 
 ```php
 use Illuminate\Support\Str;
@@ -2567,7 +2567,7 @@ $adjusted = Str::of('this/string/')->finish('/');
 <a name="method-fluent-str-from-base64"></a>
 #### `fromBase64` {.collection-method}
 
-The `fromBase64` method decodes the given Base64 string:
+Phương thức `fromBase64` giải mã chuỗi Base64 đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -2580,7 +2580,7 @@ $decoded = Str::of('TGFyYXZlbA==')->fromBase64();
 <a name="method-fluent-str-hash"></a>
 #### `hash` {.collection-method}
 
-The `hash` method hashes the string using the given [algorithm](https://www.php.net/manual/en/function.hash-algos.php):
+Phương thức `hash` băm chuỗi bằng [thuật toán](https://www.php.net/manual/en/function.hash-algos.php) đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -2593,7 +2593,7 @@ $hashed = Str::of('secret')->hash(algorithm: 'sha256');
 <a name="method-fluent-str-headline"></a>
 #### `headline` {.collection-method}
 
-The `headline` method will convert strings delimited by casing, hyphens, or underscores into a space delimited string with each word's first letter capitalized:
+Phương thức `headline` chuyển chuỗi được phân tách bởi kiểu viết hoa, dấu gạch ngang hoặc dấu gạch dưới thành chuỗi phân tách bằng khoảng trắng, đồng thời viết hoa chữ cái đầu của mỗi từ:
 
 ```php
 use Illuminate\Support\Str;
@@ -2610,7 +2610,7 @@ $headline = Str::of('EmailNotificationSent')->headline();
 <a name="method-fluent-str-initials"></a>
 #### `initials` {.collection-method}
 
-The `initials` method will convert the string to its initials:
+Phương thức `initials` chuyển chuỗi thành các chữ cái đầu của từng từ:
 
 ```php
 use Illuminate\Support\Str;
@@ -2623,7 +2623,7 @@ $initials = Str::of('Taylor Otwell')->initials()->upper();
 <a name="method-fluent-str-inline-markdown"></a>
 #### `inlineMarkdown` {.collection-method}
 
-The `inlineMarkdown` method converts GitHub flavored Markdown into inline HTML using [CommonMark](https://commonmark.thephpleague.com/). However, unlike the `markdown` method, it does not wrap all generated HTML in a block-level element:
+Phương thức `inlineMarkdown` chuyển Markdown theo cú pháp GitHub thành HTML inline bằng [CommonMark](https://commonmark.thephpleague.com/). Tuy nhiên, khác với phương thức `markdown`, phương thức này không bọc toàn bộ HTML được tạo trong một phần tử cấp block:
 
 ```php
 use Illuminate\Support\Str;
@@ -2633,9 +2633,9 @@ $html = Str::of('**Laravel**')->inlineMarkdown();
 // <strong>Laravel</strong>
 ```
 
-#### Markdown Security
+#### Bảo mật Markdown
 
-By default, Markdown supports raw HTML, which will expose Cross-Site Scripting (XSS) vulnerabilities when used with raw user input. As per the [CommonMark Security documentation](https://commonmark.thephpleague.com/security/), you may use the `html_input` option to either escape or strip raw HTML, and the `allow_unsafe_links` option to specify whether to allow unsafe links. If you need to allow some raw HTML, you should pass your compiled Markdown through an HTML Purifier:
+Mặc định, Markdown hỗ trợ HTML thô. Nếu sử dụng trực tiếp dữ liệu đầu vào không tin cậy từ người dùng, điều này có thể tạo ra lỗ hổng Cross-Site Scripting (XSS). Theo [tài liệu bảo mật của CommonMark](https://commonmark.thephpleague.com/security/), bạn có thể dùng tùy chọn `html_input` để escape hoặc loại bỏ HTML thô, đồng thời dùng `allow_unsafe_links` để xác định có cho phép liên kết không an toàn hay không. Nếu cần cho phép một phần HTML thô, bạn nên đưa Markdown sau khi biên dịch qua một HTML Purifier:
 
 ```php
 use Illuminate\Support\Str;
@@ -2651,7 +2651,7 @@ Str::of('Inject: <script>alert("Hello XSS!");</script>')->inlineMarkdown([
 <a name="method-fluent-str-is"></a>
 #### `is` {.collection-method}
 
-The `is` method determines if a given string matches a given pattern. Asterisks may be used as wildcard values
+Phương thức `is` xác định chuỗi có khớp với mẫu đã cho hay không. Có thể sử dụng dấu sao làm ký tự đại diện:
 
 ```php
 use Illuminate\Support\Str;
@@ -2668,7 +2668,7 @@ $matches = Str::of('foobar')->is('baz*');
 <a name="method-fluent-str-is-ascii"></a>
 #### `isAscii` {.collection-method}
 
-The `isAscii` method determines if a given string is an ASCII string:
+Phương thức `isAscii` xác định chuỗi đã cho có phải là chuỗi ASCII hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2685,7 +2685,7 @@ $result = Str::of('ü')->isAscii();
 <a name="method-fluent-str-is-empty"></a>
 #### `isEmpty` {.collection-method}
 
-The `isEmpty` method determines if the given string is empty:
+Phương thức `isEmpty` xác định chuỗi đã cho có rỗng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2702,7 +2702,7 @@ $result = Str::of('Laravel')->trim()->isEmpty();
 <a name="method-fluent-str-is-not-empty"></a>
 #### `isNotEmpty` {.collection-method}
 
-The `isNotEmpty` method determines if the given string is not empty:
+Phương thức `isNotEmpty` xác định chuỗi đã cho có khác rỗng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2719,7 +2719,7 @@ $result = Str::of('Laravel')->trim()->isNotEmpty();
 <a name="method-fluent-str-is-json"></a>
 #### `isJson` {.collection-method}
 
-The `isJson` method determines if a given string is valid JSON:
+Phương thức `isJson` xác định chuỗi đã cho có phải JSON hợp lệ hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2740,7 +2740,7 @@ $result = Str::of('{first: "John", last: "Doe"}')->isJson();
 <a name="method-fluent-str-is-ulid"></a>
 #### `isUlid` {.collection-method}
 
-The `isUlid` method determines if a given string is a ULID:
+Phương thức `isUlid` xác định chuỗi đã cho có phải là ULID hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2757,7 +2757,7 @@ $result = Str::of('Taylor')->isUlid();
 <a name="method-fluent-str-is-url"></a>
 #### `isUrl` {.collection-method}
 
-The `isUrl` method determines if a given string is a URL:
+Phương thức `isUrl` xác định chuỗi đã cho có phải là URL hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2771,7 +2771,7 @@ $result = Str::of('Taylor')->isUrl();
 // false
 ```
 
-The `isUrl` method considers a wide range of protocols as valid. However, you may specify the protocols that should be considered valid by providing them to the `isUrl` method:
+Phương thức `isUrl` mặc định xem nhiều giao thức là hợp lệ. Tuy nhiên, bạn có thể giới hạn tập giao thức được chấp nhận bằng cách truyền danh sách giao thức vào `isUrl`:
 
 ```php
 $result = Str::of('http://example.com')->isUrl(['http', 'https']);
@@ -2780,7 +2780,7 @@ $result = Str::of('http://example.com')->isUrl(['http', 'https']);
 <a name="method-fluent-str-is-uuid"></a>
 #### `isUuid` {.collection-method}
 
-The `isUuid` method determines if a given string is a UUID:
+Phương thức `isUuid` xác định chuỗi đã cho có phải là UUID hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -2794,7 +2794,7 @@ $result = Str::of('Taylor')->isUuid();
 // false
 ```
 
-You may also validate that the given UUID matches a UUID specification by version (1, 3, 4, 5, 6, 7, or 8):
+Bạn cũng có thể xác thực UUID theo phiên bản cụ thể của chuẩn UUID (1, 3, 4, 5, 6, 7 hoặc 8):
 
 ```php
 use Illuminate\Support\Str;
@@ -2811,7 +2811,7 @@ $isUuid = Str::of('a0a2a2d2-0b87-4a18-83f2-2529882be2de')->isUuid(version: 1);
 <a name="method-fluent-str-kebab"></a>
 #### `kebab` {.collection-method}
 
-The `kebab` method converts the given string to `kebab-case`:
+Phương thức `kebab` chuyển chuỗi đã cho sang dạng `kebab-case`:
 
 ```php
 use Illuminate\Support\Str;
@@ -2824,7 +2824,7 @@ $converted = Str::of('fooBar')->kebab();
 <a name="method-fluent-str-lcfirst"></a>
 #### `lcfirst` {.collection-method}
 
-The `lcfirst` method returns the given string with the first character lowercased:
+Phương thức `lcfirst` trả về chuỗi đã cho với ký tự đầu tiên được chuyển thành chữ thường:
 
 ```php
 use Illuminate\Support\Str;
@@ -2837,7 +2837,7 @@ $string = Str::of('Foo Bar')->lcfirst();
 <a name="method-fluent-str-length"></a>
 #### `length` {.collection-method}
 
-The `length` method returns the length of the given string:
+Phương thức `length` trả về độ dài của chuỗi đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -2850,7 +2850,7 @@ $length = Str::of('Laravel')->length();
 <a name="method-fluent-str-limit"></a>
 #### `limit` {.collection-method}
 
-The `limit` method truncates the given string to the specified length:
+Phương thức `limit` cắt ngắn chuỗi đã cho đến độ dài được chỉ định:
 
 ```php
 use Illuminate\Support\Str;
@@ -2860,7 +2860,7 @@ $truncated = Str::of('The quick brown fox jumps over the lazy dog')->limit(20);
 // The quick brown fox...
 ```
 
-You may also pass a second argument to change the string that will be appended to the end of the truncated string:
+Bạn cũng có thể truyền đối số thứ hai để thay đổi chuỗi được nối vào cuối chuỗi sau khi rút gọn:
 
 ```php
 $truncated = Str::of('The quick brown fox jumps over the lazy dog')->limit(20, ' (...)');
@@ -2868,7 +2868,7 @@ $truncated = Str::of('The quick brown fox jumps over the lazy dog')->limit(20, '
 // The quick brown fox (...)
 ```
 
-If you would like to preserve complete words when truncating the string, you may utilize the `preserveWords` argument. When this argument is `true`, the string will be truncated to the nearest complete word boundary:
+Nếu muốn giữ nguyên các từ hoàn chỉnh khi rút gọn chuỗi, bạn có thể sử dụng đối số `preserveWords`. Khi đối số này là `true`, chuỗi sẽ được cắt tại ranh giới từ hoàn chỉnh gần nhất:
 
 ```php
 $truncated = Str::of('The quick brown fox')->limit(12, preserveWords: true);
@@ -2879,7 +2879,7 @@ $truncated = Str::of('The quick brown fox')->limit(12, preserveWords: true);
 <a name="method-fluent-str-lower"></a>
 #### `lower` {.collection-method}
 
-The `lower` method converts the given string to lowercase:
+Phương thức `lower` chuyển chuỗi đã cho thành chữ thường:
 
 ```php
 use Illuminate\Support\Str;
@@ -2892,7 +2892,7 @@ $result = Str::of('LARAVEL')->lower();
 <a name="method-fluent-str-markdown"></a>
 #### `markdown` {.collection-method}
 
-The `markdown` method converts GitHub flavored Markdown into HTML:
+Phương thức `markdown` chuyển Markdown theo cú pháp GitHub Flavored Markdown thành HTML:
 
 ```php
 use Illuminate\Support\Str;
@@ -2908,9 +2908,9 @@ $html = Str::of('# Taylor <b>Otwell</b>')->markdown([
 // <h1>Taylor Otwell</h1>
 ```
 
-#### Markdown Security
+#### Bảo mật Markdown
 
-By default, Markdown supports raw HTML, which will expose Cross-Site Scripting (XSS) vulnerabilities when used with raw user input. As per the [CommonMark Security documentation](https://commonmark.thephpleague.com/security/), you may use the `html_input` option to either escape or strip raw HTML, and the `allow_unsafe_links` option to specify whether to allow unsafe links. If you need to allow some raw HTML, you should pass your compiled Markdown through an HTML Purifier:
+Mặc định, Markdown hỗ trợ HTML thô. Nếu sử dụng trực tiếp dữ liệu đầu vào không tin cậy từ người dùng, điều này có thể tạo ra lỗ hổng Cross-Site Scripting (XSS). Theo [tài liệu bảo mật của CommonMark](https://commonmark.thephpleague.com/security/), bạn có thể dùng tùy chọn `html_input` để escape hoặc loại bỏ HTML thô, đồng thời dùng `allow_unsafe_links` để xác định có cho phép liên kết không an toàn hay không. Nếu cần cho phép một phần HTML thô, bạn nên đưa Markdown sau khi biên dịch qua một HTML Purifier:
 
 ```php
 use Illuminate\Support\Str;
@@ -2926,7 +2926,7 @@ Str::of('Inject: <script>alert("Hello XSS!");</script>')->markdown([
 <a name="method-fluent-str-mask"></a>
 #### `mask` {.collection-method}
 
-The `mask` method masks a portion of a string with a repeated character, and may be used to obfuscate segments of strings such as email addresses and phone numbers:
+Phương thức `mask` che một phần chuỗi bằng một ký tự lặp lại và có thể dùng để ẩn các phần của chuỗi như địa chỉ email hoặc số điện thoại:
 
 ```php
 use Illuminate\Support\Str;
@@ -2936,7 +2936,7 @@ $string = Str::of('taylor@example.com')->mask('*', 3);
 // tay***************
 ```
 
-If needed, you may provide negative numbers as the third or fourth argument to the `mask` method, which will instruct the method to begin masking at the given distance from the end of the string:
+Nếu cần, bạn có thể truyền số âm làm đối số thứ ba hoặc thứ tư cho `mask`; khi đó phương thức sẽ bắt đầu che tại khoảng cách tương ứng tính từ cuối chuỗi:
 
 ```php
 $string = Str::of('taylor@example.com')->mask('*', -15, 3);
@@ -2951,7 +2951,7 @@ $string = Str::of('taylor@example.com')->mask('*', 4, -4);
 <a name="method-fluent-str-match"></a>
 #### `match` {.collection-method}
 
-The `match` method will return the portion of a string that matches a given regular expression pattern:
+Phương thức `match` trả về phần của chuỗi khớp với biểu thức chính quy đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -2968,7 +2968,7 @@ $result = Str::of('foo bar')->match('/foo (.*)/');
 <a name="method-fluent-str-match-all"></a>
 #### `matchAll` {.collection-method}
 
-The `matchAll` method will return a collection containing the portions of a string that match a given regular expression pattern:
+Phương thức `matchAll` trả về một collection chứa các phần của chuỗi khớp với biểu thức chính quy đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -2978,7 +2978,7 @@ $result = Str::of('bar foo bar')->matchAll('/bar/');
 // collect(['bar', 'bar'])
 ```
 
-If you specify a matching group within the expression, Laravel will return a collection of the first matching group's matches:
+Nếu bạn chỉ định một nhóm bắt giữ trong biểu thức, Laravel sẽ trả về collection chứa các kết quả khớp của nhóm bắt giữ đầu tiên:
 
 ```php
 use Illuminate\Support\Str;
@@ -2988,12 +2988,12 @@ $result = Str::of('bar fun bar fly')->matchAll('/f(\w*)/');
 // collect(['un', 'ly']);
 ```
 
-If no matches are found, an empty collection will be returned.
+Nếu không tìm thấy kết quả khớp, một collection rỗng sẽ được trả về.
 
 <a name="method-fluent-str-is-match"></a>
 #### `isMatch` {.collection-method}
 
-The `isMatch` method will return `true` if the string matches a given regular expression:
+Phương thức `isMatch` trả về `true` nếu chuỗi khớp với biểu thức chính quy đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -3010,7 +3010,7 @@ $result = Str::of('laravel')->isMatch('/foo (.*)/');
 <a name="method-fluent-str-new-line"></a>
 #### `newLine` {.collection-method}
 
-The `newLine` method appends an "end of line" character to a string:
+Phương thức `newLine` nối thêm ký tự "xuống dòng" vào chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3024,7 +3024,7 @@ $padded = Str::of('Laravel')->newLine()->append('Framework');
 <a name="method-fluent-str-padboth"></a>
 #### `padBoth` {.collection-method}
 
-The `padBoth` method wraps PHP's `str_pad` function, padding both sides of a string with another string until the final string reaches the desired length:
+Phương thức `padBoth` bao bọc hàm `str_pad` của PHP, thêm chuỗi đệm vào cả hai phía cho đến khi chuỗi cuối đạt độ dài mong muốn:
 
 ```php
 use Illuminate\Support\Str;
@@ -3041,7 +3041,7 @@ $padded = Str::of('James')->padBoth(10);
 <a name="method-fluent-str-padleft"></a>
 #### `padLeft` {.collection-method}
 
-The `padLeft` method wraps PHP's `str_pad` function, padding the left side of a string with another string until the final string reaches the desired length:
+Phương thức `padLeft` bao bọc hàm `str_pad` của PHP, thêm chuỗi đệm vào phía trái cho đến khi chuỗi cuối đạt độ dài mong muốn:
 
 ```php
 use Illuminate\Support\Str;
@@ -3058,7 +3058,7 @@ $padded = Str::of('James')->padLeft(10);
 <a name="method-fluent-str-padright"></a>
 #### `padRight` {.collection-method}
 
-The `padRight` method wraps PHP's `str_pad` function, padding the right side of a string with another string until the final string reaches the desired length:
+Phương thức `padRight` bao bọc hàm `str_pad` của PHP, thêm chuỗi đệm vào phía phải cho đến khi chuỗi cuối đạt độ dài mong muốn:
 
 ```php
 use Illuminate\Support\Str;
@@ -3075,7 +3075,7 @@ $padded = Str::of('James')->padRight(10);
 <a name="method-fluent-str-pipe"></a>
 #### `pipe` {.collection-method}
 
-The `pipe` method allows you to transform the string by passing its current value to the given callable:
+Phương thức `pipe` cho phép biến đổi chuỗi bằng cách truyền giá trị hiện tại của nó vào callable đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -3095,7 +3095,7 @@ $closure = Str::of('foo')->pipe(function (Stringable $str) {
 <a name="method-fluent-str-counted"></a>
 #### `counted` {.collection-method}
 
-The `counted` method converts a singular word string to its singular or plural form based on the given count and prefixes the result with the formatted count:
+Phương thức `counted` chuyển một chuỗi từ dạng số ít sang dạng số ít hoặc số nhiều dựa trên số lượng đã cho, đồng thời thêm số lượng đã định dạng vào đầu kết quả:
 
 ```php
 use Illuminate\Support\Str;
@@ -3112,7 +3112,7 @@ $label = Str::of('order')->counted(1000);
 <a name="method-fluent-str-plural"></a>
 #### `plural` {.collection-method}
 
-The `plural` method converts a singular word string to its plural form. This function supports [any of the languages supported by Laravel's pluralizer](/docs/{{version}}/localization#pluralization-language):
+Phương thức `plural` chuyển chuỗi từ dạng số ít sang dạng số nhiều. Hàm này hỗ trợ [mọi ngôn ngữ được bộ pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -3126,7 +3126,7 @@ $plural = Str::of('child')->plural();
 // children
 ```
 
-You may provide an integer argument to the function to retrieve the singular or plural form of the string:
+Bạn có thể truyền một đối số số nguyên để nhận dạng số ít hoặc số nhiều phù hợp của chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3140,7 +3140,7 @@ $plural = Str::of('child')->plural(1);
 // child
 ```
 
-You may provide the `prependCount` argument to prefix the pluralized string with the formatted `$count`:
+Bạn có thể truyền đối số `prependCount` để thêm `$count` đã định dạng vào đầu chuỗi sau khi chuyển dạng số nhiều:
 
 ```php
 use Illuminate\Support\Str;
@@ -3153,7 +3153,7 @@ $label = Str::of('car')->plural(1000, prependCount: true);
 <a name="method-fluent-str-position"></a>
 #### `position` {.collection-method}
 
-The `position` method returns the position of the first occurrence of a substring in a string. If the substring does not exist within the string, `false` is returned:
+Phương thức `position` trả về vị trí xuất hiện đầu tiên của chuỗi con trong chuỗi. Nếu chuỗi con không tồn tại, phương thức trả về `false`:
 
 ```php
 use Illuminate\Support\Str;
@@ -3170,7 +3170,7 @@ $position = Str::of('Hello, World!')->position('W');
 <a name="method-fluent-str-prepend"></a>
 #### `prepend` {.collection-method}
 
-The `prepend` method prepends the given values onto the string:
+Phương thức `prepend` thêm các giá trị đã cho vào đầu chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3183,7 +3183,7 @@ $string = Str::of('Framework')->prepend('Laravel ');
 <a name="method-fluent-str-remove"></a>
 #### `remove` {.collection-method}
 
-The `remove` method removes the given value or array of values from the string:
+Phương thức `remove` loại bỏ giá trị hoặc mảng giá trị đã cho khỏi chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3193,12 +3193,12 @@ $string = Str::of('Arkansas is quite beautiful!')->remove('quite ');
 // Arkansas is beautiful!
 ```
 
-You may also pass `false` as a second parameter to ignore case when removing strings.
+Bạn cũng có thể truyền `false` làm tham số thứ hai để không phân biệt chữ hoa và chữ thường khi loại bỏ chuỗi.
 
 <a name="method-fluent-str-repeat"></a>
 #### `repeat` {.collection-method}
 
-The `repeat` method repeats the given string:
+Phương thức `repeat` lặp lại chuỗi đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -3211,7 +3211,7 @@ $repeated = Str::of('a')->repeat(5);
 <a name="method-fluent-str-replace"></a>
 #### `replace` {.collection-method}
 
-The `replace` method replaces a given string within the string:
+Phương thức `replace` thay thế một chuỗi đã cho bên trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3221,7 +3221,7 @@ $replaced = Str::of('Laravel 6.x')->replace('6.x', '7.x');
 // Laravel 7.x
 ```
 
-The `replace` method also accepts a `caseSensitive` argument. By default, the `replace` method is case sensitive:
+Phương thức `replace` cũng nhận đối số `caseSensitive`. Mặc định, phép thay thế có phân biệt chữ hoa và chữ thường:
 
 ```php
 $replaced = Str::of('macOS 13.x')->replace(
@@ -3232,7 +3232,7 @@ $replaced = Str::of('macOS 13.x')->replace(
 <a name="method-fluent-str-replace-array"></a>
 #### `replaceArray` {.collection-method}
 
-The `replaceArray` method replaces a given value in the string sequentially using an array:
+Phương thức `replaceArray` lần lượt thay thế một giá trị trong chuỗi bằng các phần tử của một mảng:
 
 ```php
 use Illuminate\Support\Str;
@@ -3247,7 +3247,7 @@ $replaced = Str::of($string)->replaceArray('?', ['8:30', '9:00']);
 <a name="method-fluent-str-replace-first"></a>
 #### `replaceFirst` {.collection-method}
 
-The `replaceFirst` method replaces the first occurrence of a given value in a string:
+Phương thức `replaceFirst` thay thế lần xuất hiện đầu tiên của giá trị đã cho trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3260,7 +3260,7 @@ $replaced = Str::of('the quick brown fox jumps over the lazy dog')->replaceFirst
 <a name="method-fluent-str-replace-last"></a>
 #### `replaceLast` {.collection-method}
 
-The `replaceLast` method replaces the last occurrence of a given value in a string:
+Phương thức `replaceLast` thay thế lần xuất hiện cuối cùng của giá trị đã cho trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3273,7 +3273,7 @@ $replaced = Str::of('the quick brown fox jumps over the lazy dog')->replaceLast(
 <a name="method-fluent-str-replace-matches"></a>
 #### `replaceMatches` {.collection-method}
 
-The `replaceMatches` method replaces all portions of a string matching a pattern with the given replacement string:
+Phương thức `replaceMatches` thay thế mọi phần của chuỗi khớp với pattern bằng chuỗi thay thế đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -3283,7 +3283,7 @@ $replaced = Str::of('(+1) 501-555-1000')->replaceMatches('/[^A-Za-z0-9]++/', '')
 // '15015551000'
 ```
 
-The `replaceMatches` method also accepts a closure that will be invoked with each portion of the string matching the given pattern, allowing you to perform the replacement logic within the closure and return the replaced value:
+Phương thức `replaceMatches` cũng chấp nhận một closure. Closure này sẽ được gọi cho từng phần của chuỗi khớp với pattern, cho phép bạn tự thực hiện logic thay thế và trả về giá trị mới:
 
 ```php
 use Illuminate\Support\Str;
@@ -3298,7 +3298,7 @@ $replaced = Str::of('123')->replaceMatches('/\d/', function (array $matches) {
 <a name="method-fluent-str-replace-start"></a>
 #### `replaceStart` {.collection-method}
 
-The `replaceStart` method replaces the first occurrence of the given value only if the value appears at the start of the string:
+Phương thức `replaceStart` chỉ thay thế lần xuất hiện đầu tiên của giá trị đã cho nếu giá trị đó nằm ở đầu chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3315,7 +3315,7 @@ $replaced = Str::of('Hello World')->replaceStart('World', 'Laravel');
 <a name="method-fluent-str-replace-end"></a>
 #### `replaceEnd` {.collection-method}
 
-The `replaceEnd` method replaces the last occurrence of the given value only if the value appears at the end of the string:
+Phương thức `replaceEnd` chỉ thay thế lần xuất hiện cuối cùng của giá trị đã cho nếu giá trị đó nằm ở cuối chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3332,7 +3332,7 @@ $replaced = Str::of('Hello World')->replaceEnd('Hello', 'Laravel');
 <a name="method-fluent-str-scan"></a>
 #### `scan` {.collection-method}
 
-The `scan` method parses input from a string into a collection according to a format supported by the [`sscanf` PHP function](https://www.php.net/manual/en/function.sscanf.php):
+Phương thức `scan` phân tích dữ liệu từ chuỗi thành một collection theo định dạng được [hàm `sscanf` của PHP](https://www.php.net/manual/en/function.sscanf.php) hỗ trợ:
 
 ```php
 use Illuminate\Support\Str;
@@ -3345,7 +3345,7 @@ $collection = Str::of('filename.jpg')->scan('%[^.].%s');
 <a name="method-fluent-str-singular"></a>
 #### `singular` {.collection-method}
 
-The `singular` method converts a string to its singular form. This function supports [any of the languages supported by Laravel's pluralizer](/docs/{{version}}/localization#pluralization-language):
+Phương thức `singular` chuyển chuỗi sang dạng số ít. Hàm này hỗ trợ [mọi ngôn ngữ được bộ pluralizer của Laravel hỗ trợ](/docs/{{version}}/localization#pluralization-language):
 
 ```php
 use Illuminate\Support\Str;
@@ -3362,7 +3362,7 @@ $singular = Str::of('children')->singular();
 <a name="method-fluent-str-slug"></a>
 #### `slug` {.collection-method}
 
-The `slug` method generates a URL-friendly "slug" from the given string:
+Phương thức `slug` tạo một "slug" thân thiện với URL từ chuỗi đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -3375,7 +3375,7 @@ $slug = Str::of('Laravel Framework')->slug('-');
 <a name="method-fluent-str-snake"></a>
 #### `snake` {.collection-method}
 
-The `snake` method converts the given string to `snake_case`:
+Phương thức `snake` chuyển chuỗi đã cho sang dạng `snake_case`:
 
 ```php
 use Illuminate\Support\Str;
@@ -3388,7 +3388,7 @@ $converted = Str::of('fooBar')->snake();
 <a name="method-fluent-str-split"></a>
 #### `split` {.collection-method}
 
-The `split` method splits a string into a collection using a regular expression:
+Phương thức `split` tách chuỗi thành một collection bằng biểu thức chính quy:
 
 ```php
 use Illuminate\Support\Str;
@@ -3401,7 +3401,7 @@ $segments = Str::of('one, two, three')->split('/[\s,]+/');
 <a name="method-fluent-str-squish"></a>
 #### `squish` {.collection-method}
 
-The `squish` method removes all extraneous white space from a string, including extraneous white space between words:
+Phương thức `squish` loại bỏ toàn bộ khoảng trắng dư thừa khỏi chuỗi, bao gồm cả khoảng trắng thừa giữa các từ:
 
 ```php
 use Illuminate\Support\Str;
@@ -3414,7 +3414,7 @@ $string = Str::of('    laravel    framework    ')->squish();
 <a name="method-fluent-str-start"></a>
 #### `start` {.collection-method}
 
-The `start` method adds a single instance of the given value to a string if it does not already start with that value:
+Phương thức `start` thêm đúng một lần giá trị đã cho vào đầu chuỗi nếu chuỗi chưa bắt đầu bằng giá trị đó:
 
 ```php
 use Illuminate\Support\Str;
@@ -3431,7 +3431,7 @@ $adjusted = Str::of('/this/string')->start('/');
 <a name="method-fluent-str-starts-with"></a>
 #### `startsWith` {.collection-method}
 
-The `startsWith` method determines if the given string begins with the given value:
+Phương thức `startsWith` xác định chuỗi đã cho có bắt đầu bằng giá trị đã cho hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -3441,7 +3441,7 @@ $result = Str::of('This is my name')->startsWith('This');
 // true
 ```
 
-You may also pass an array of values to determine if the given string starts with any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để xác định chuỗi có bắt đầu bằng bất kỳ giá trị nào trong mảng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -3454,7 +3454,7 @@ $result = Str::of('This is my name')->startsWith(['This', 'That']);
 <a name="method-fluent-str-strip-tags"></a>
 #### `stripTags` {.collection-method}
 
-The `stripTags` method removes all HTML and PHP tags from a string:
+Phương thức `stripTags` loại bỏ toàn bộ thẻ HTML và PHP khỏi chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3471,7 +3471,7 @@ $result = Str::of('<a href="https://laravel.com">Taylor <b>Otwell</b></a>')->str
 <a name="method-fluent-str-studly"></a>
 #### `studly` {.collection-method}
 
-The `studly` method converts the given string to `StudlyCase`:
+Phương thức `studly` chuyển chuỗi đã cho sang dạng `StudlyCase`:
 
 ```php
 use Illuminate\Support\Str;
@@ -3484,7 +3484,7 @@ $converted = Str::of('foo_bar')->studly();
 <a name="method-fluent-str-substr"></a>
 #### `substr` {.collection-method}
 
-The `substr` method returns the portion of the string specified by the given start and length parameters:
+Phương thức `substr` trả về phần của chuỗi được xác định bởi tham số vị trí bắt đầu và độ dài:
 
 ```php
 use Illuminate\Support\Str;
@@ -3501,7 +3501,7 @@ $string = Str::of('Laravel Framework')->substr(8, 5);
 <a name="method-fluent-str-substrreplace"></a>
 #### `substrReplace` {.collection-method}
 
-The `substrReplace` method replaces text within a portion of a string, starting at the position specified by the second argument and replacing the number of characters specified by the third argument. Passing `0` to the method's third argument will insert the string at the specified position without replacing any of the existing characters in the string:
+Phương thức `substrReplace` thay thế văn bản trong một phần của chuỗi, bắt đầu tại vị trí do đối số thứ hai xác định và thay thế số ký tự do đối số thứ ba chỉ định. Truyền `0` làm đối số thứ ba sẽ chèn chuỗi tại vị trí đã chỉ định mà không thay thế bất kỳ ký tự hiện có nào:
 
 ```php
 use Illuminate\Support\Str;
@@ -3518,7 +3518,7 @@ $string = Str::of('The Framework')->substrReplace(' Laravel', 3, 0);
 <a name="method-fluent-str-swap"></a>
 #### `swap` {.collection-method}
 
-The `swap` method replaces multiple values in the string using PHP's `strtr` function:
+Phương thức `swap` thay thế nhiều giá trị trong chuỗi bằng hàm `strtr` của PHP:
 
 ```php
 use Illuminate\Support\Str;
@@ -3535,7 +3535,7 @@ $string = Str::of('Tacos are great!')
 <a name="method-fluent-str-take"></a>
 #### `take` {.collection-method}
 
-The `take` method returns a specified number of characters from the beginning of the string:
+Phương thức `take` trả về số lượng ký tự được chỉ định tính từ đầu chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -3548,7 +3548,7 @@ $taken = Str::of('Build something amazing!')->take(5);
 <a name="method-fluent-str-tap"></a>
 #### `tap` {.collection-method}
 
-The `tap` method passes the string to the given closure, allowing you to examine and interact with the string while not affecting the string itself. The original string is returned by the `tap` method regardless of what is returned by the closure:
+Phương thức `tap` truyền chuỗi vào closure đã cho, cho phép bạn kiểm tra và tương tác với chuỗi mà không làm thay đổi chính chuỗi đó. `tap` luôn trả về chuỗi ban đầu bất kể closure trả về giá trị gì:
 
 ```php
 use Illuminate\Support\Str;
@@ -3567,7 +3567,7 @@ $string = Str::of('Laravel')
 <a name="method-fluent-str-test"></a>
 #### `test` {.collection-method}
 
-The `test` method determines if a string matches the given regular expression pattern:
+Phương thức `test` xác định chuỗi có khớp với pattern biểu thức chính quy đã cho hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -3580,7 +3580,7 @@ $result = Str::of('Laravel Framework')->test('/Laravel/');
 <a name="method-fluent-str-title"></a>
 #### `title` {.collection-method}
 
-The `title` method converts the given string to `Title Case`:
+Phương thức `title` chuyển chuỗi đã cho sang dạng `Title Case`:
 
 ```php
 use Illuminate\Support\Str;
@@ -3593,7 +3593,7 @@ $converted = Str::of('a nice title uses the correct case')->title();
 <a name="method-fluent-str-to-base64"></a>
 #### `toBase64` {.collection-method}
 
-The `toBase64` method converts the given string to Base64:
+Phương thức `toBase64` chuyển chuỗi đã cho sang Base64:
 
 ```php
 use Illuminate\Support\Str;
@@ -3606,7 +3606,7 @@ $base64 = Str::of('Laravel')->toBase64();
 <a name="method-fluent-str-to-html-string"></a>
 #### `toHtmlString` {.collection-method}
 
-The `toHtmlString` method converts the given string to an instance of `Illuminate\Support\HtmlString`, which will not be escaped when rendered in Blade templates:
+Phương thức `toHtmlString` chuyển chuỗi đã cho thành một instance của `Illuminate\Support\HtmlString`; giá trị này sẽ không bị escape khi render trong template Blade:
 
 ```php
 use Illuminate\Support\Str;
@@ -3617,7 +3617,7 @@ $htmlString = Str::of('Nuno Maduro')->toHtmlString();
 <a name="method-fluent-str-to-uri"></a>
 #### `toUri` {.collection-method}
 
-The `toUri` method converts the given string to an instance of [Illuminate\Support\Uri](/docs/{{version}}/helpers#uri):
+Phương thức `toUri` chuyển chuỗi đã cho thành một instance của [Illuminate\Support\Uri](/docs/{{version}}/helpers#uri):
 
 ```php
 use Illuminate\Support\Str;
@@ -3628,7 +3628,7 @@ $uri = Str::of('https://example.com')->toUri();
 <a name="method-fluent-str-transliterate"></a>
 #### `transliterate` {.collection-method}
 
-The `transliterate` method will attempt to convert a given string into its closest ASCII representation:
+Phương thức `transliterate` cố gắng chuyển chuỗi đã cho sang biểu diễn ASCII gần nhất:
 
 ```php
 use Illuminate\Support\Str;
@@ -3641,7 +3641,7 @@ $email = Str::of('ⓣⓔⓢⓣ@ⓛⓐⓡⓐⓥⓔⓛ.ⓒⓞⓜ')->transliterate(
 <a name="method-fluent-str-trim"></a>
 #### `trim` {.collection-method}
 
-The `trim` method trims the given string. Unlike PHP's native `trim` function, Laravel's `trim` method also removes unicode whitespace characters:
+Phương thức `trim` cắt khoảng trắng ở hai đầu chuỗi. Khác với hàm `trim` nguyên bản của PHP, `trim` của Laravel cũng loại bỏ các ký tự khoảng trắng Unicode:
 
 ```php
 use Illuminate\Support\Str;
@@ -3658,7 +3658,7 @@ $string = Str::of('/Laravel/')->trim('/');
 <a name="method-fluent-str-ltrim"></a>
 #### `ltrim` {.collection-method}
 
-The `ltrim` method trims the left side of the string. Unlike PHP's native `ltrim` function, Laravel's `ltrim` method also removes unicode whitespace characters:
+Phương thức `ltrim` cắt khoảng trắng ở phía trái chuỗi. Khác với hàm `ltrim` nguyên bản của PHP, `ltrim` của Laravel cũng loại bỏ các ký tự khoảng trắng Unicode:
 
 ```php
 use Illuminate\Support\Str;
@@ -3675,7 +3675,7 @@ $string = Str::of('/Laravel/')->ltrim('/');
 <a name="method-fluent-str-rtrim"></a>
 #### `rtrim` {.collection-method}
 
-The `rtrim` method trims the right side of the given string. Unlike PHP's native `rtrim` function, Laravel's `rtrim` method also removes unicode whitespace characters:
+Phương thức `rtrim` cắt khoảng trắng ở phía phải của chuỗi đã cho. Khác với hàm `rtrim` nguyên bản của PHP, phương thức `rtrim` của Laravel cũng loại bỏ các ký tự khoảng trắng Unicode:
 
 ```php
 use Illuminate\Support\Str;
@@ -3692,7 +3692,7 @@ $string = Str::of('/Laravel/')->rtrim('/');
 <a name="method-fluent-str-ucfirst"></a>
 #### `ucfirst` {.collection-method}
 
-The `ucfirst` method returns the given string with the first character capitalized:
+Phương thức `ucfirst` trả về chuỗi đã cho với ký tự đầu tiên được viết hoa:
 
 ```php
 use Illuminate\Support\Str;
@@ -3705,7 +3705,7 @@ $string = Str::of('foo bar')->ucfirst();
 <a name="method-fluent-str-ucsplit"></a>
 #### `ucsplit` {.collection-method}
 
-The `ucsplit` method splits the given string into a collection by uppercase characters:
+Phương thức `ucsplit` tách chuỗi đã cho thành một collection dựa trên các ký tự viết hoa:
 
 ```php
 use Illuminate\Support\Str;
@@ -3718,7 +3718,7 @@ $string = Str::of('Foo Bar')->ucsplit();
 <a name="method-fluent-str-ucwords"></a>
 #### `ucwords` {.collection-method}
 
-The `ucwords` method converts the first character of each word in the given string to uppercase:
+Phương thức `ucwords` chuyển ký tự đầu tiên của mỗi từ trong chuỗi sang chữ hoa:
 
 ```php
 use Illuminate\Support\Str;
@@ -3731,7 +3731,7 @@ $string = Str::of('laravel framework')->ucwords();
 <a name="method-fluent-str-unwrap"></a>
 #### `unwrap` {.collection-method}
 
-The `unwrap` method removes the specified strings from the beginning and end of a given string:
+Phương thức `unwrap` loại bỏ các chuỗi được chỉ định khỏi đầu và cuối chuỗi đã cho:
 
 ```php
 use Illuminate\Support\Str;
@@ -3748,7 +3748,7 @@ Str::of('{framework: "Laravel"}')->unwrap('{', '}');
 <a name="method-fluent-str-upper"></a>
 #### `upper` {.collection-method}
 
-The `upper` method converts the given string to uppercase:
+Phương thức `upper` chuyển chuỗi đã cho sang chữ hoa:
 
 ```php
 use Illuminate\Support\Str;
@@ -3761,7 +3761,7 @@ $adjusted = Str::of('laravel')->upper();
 <a name="method-fluent-str-when"></a>
 #### `when` {.collection-method}
 
-The `when` method invokes the given closure if a given condition is `true`. The closure will receive the fluent string instance:
+Phương thức `when` gọi closure đã cho nếu điều kiện là `true`. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3775,12 +3775,12 @@ $string = Str::of('Taylor')
 // 'Taylor Otwell'
 ```
 
-If necessary, you may pass another closure as the third parameter to the `when` method. This closure will execute if the condition parameter evaluates to `false`.
+Nếu cần, bạn có thể truyền thêm một closure làm tham số thứ ba cho `when`. Closure này sẽ được thực thi nếu điều kiện được đánh giá là `false`.
 
 <a name="method-fluent-str-when-contains"></a>
 #### `whenContains` {.collection-method}
 
-The `whenContains` method invokes the given closure if the string contains the given value. The closure will receive the fluent string instance:
+Phương thức `whenContains` gọi closure đã cho nếu chuỗi chứa giá trị được chỉ định. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3794,9 +3794,9 @@ $string = Str::of('tony stark')
 // 'Tony Stark'
 ```
 
-If necessary, you may pass another closure as the third parameter. The closure will be invoked if the string does not contain the given value.
+Nếu cần, bạn có thể truyền thêm một closure làm tham số thứ ba. Closure này sẽ được gọi nếu chuỗi không chứa giá trị đã cho.
 
-You may also pass an array of values to determine if the given string contains any of the values in the array:
+Bạn cũng có thể truyền một mảng giá trị để kiểm tra chuỗi có chứa ít nhất một giá trị trong mảng hay không:
 
 ```php
 use Illuminate\Support\Str;
@@ -3813,7 +3813,7 @@ $string = Str::of('tony stark')
 <a name="method-fluent-str-when-contains-all"></a>
 #### `whenContainsAll` {.collection-method}
 
-The `whenContainsAll` method invokes the given closure if the string contains all of the given sub-strings. The closure will receive the fluent string instance:
+Phương thức `whenContainsAll` gọi closure đã cho nếu chuỗi chứa tất cả các chuỗi con được chỉ định. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3827,12 +3827,12 @@ $string = Str::of('tony stark')
 // 'Tony Stark'
 ```
 
-If necessary, you may pass another closure as the third parameter. The closure will be invoked if the condition parameter evaluates to `false`.
+Nếu cần, bạn có thể truyền thêm một closure làm tham số thứ ba. Closure này sẽ được gọi nếu điều kiện được đánh giá là `false`.
 
 <a name="method-fluent-str-when-doesnt-end-with"></a>
 #### `whenDoesntEndWith` {.collection-method}
 
-The `whenDoesntEndWith` method invokes the given closure if the string doesn't end with the given sub-string. The closure will receive the fluent string instance:
+Phương thức `whenDoesntEndWith` gọi closure đã cho nếu chuỗi không kết thúc bằng chuỗi con được chỉ định. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3848,7 +3848,7 @@ $string = Str::of('disney world')->whenDoesntEndWith('land', function (Stringabl
 <a name="method-fluent-str-when-doesnt-start-with"></a>
 #### `whenDoesntStartWith` {.collection-method}
 
-The `whenDoesntStartWith` method invokes the given closure if the string doesn't start with the given sub-string. The closure will receive the fluent string instance:
+Phương thức `whenDoesntStartWith` gọi closure đã cho nếu chuỗi không bắt đầu bằng chuỗi con được chỉ định. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3864,7 +3864,7 @@ $string = Str::of('disney world')->whenDoesntStartWith('sea', function (Stringab
 <a name="method-fluent-str-when-empty"></a>
 #### `whenEmpty` {.collection-method}
 
-The `whenEmpty` method invokes the given closure if the string is empty. If the closure returns a value, that value will also be returned by the `whenEmpty` method. If the closure does not return a value, the fluent string instance will be returned:
+Phương thức `whenEmpty` gọi closure đã cho nếu chuỗi rỗng. Nếu closure trả về một giá trị, `whenEmpty` cũng trả về giá trị đó. Nếu closure không trả về giá trị, instance fluent string sẽ được trả về:
 
 ```php
 use Illuminate\Support\Str;
@@ -3880,7 +3880,7 @@ $string = Str::of('  ')->trim()->whenEmpty(function (Stringable $string) {
 <a name="method-fluent-str-when-not-empty"></a>
 #### `whenNotEmpty` {.collection-method}
 
-The `whenNotEmpty` method invokes the given closure if the string is not empty. If the closure returns a value, that value will also be returned by the `whenNotEmpty` method. If the closure does not return a value, the fluent string instance will be returned:
+Phương thức `whenNotEmpty` gọi closure đã cho nếu chuỗi không rỗng. Nếu closure trả về một giá trị, `whenNotEmpty` cũng trả về giá trị đó. Nếu closure không trả về giá trị, instance fluent string sẽ được trả về:
 
 ```php
 use Illuminate\Support\Str;
@@ -3896,7 +3896,7 @@ $string = Str::of('Framework')->whenNotEmpty(function (Stringable $string) {
 <a name="method-fluent-str-when-starts-with"></a>
 #### `whenStartsWith` {.collection-method}
 
-The `whenStartsWith` method invokes the given closure if the string starts with the given sub-string. The closure will receive the fluent string instance:
+Phương thức `whenStartsWith` gọi closure đã cho nếu chuỗi bắt đầu bằng chuỗi con được chỉ định. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3912,7 +3912,7 @@ $string = Str::of('disney world')->whenStartsWith('disney', function (Stringable
 <a name="method-fluent-str-when-ends-with"></a>
 #### `whenEndsWith` {.collection-method}
 
-The `whenEndsWith` method invokes the given closure if the string ends with the given sub-string. The closure will receive the fluent string instance:
+Phương thức `whenEndsWith` gọi closure đã cho nếu chuỗi kết thúc bằng chuỗi con được chỉ định. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3928,7 +3928,7 @@ $string = Str::of('disney world')->whenEndsWith('world', function (Stringable $s
 <a name="method-fluent-str-when-exactly"></a>
 #### `whenExactly` {.collection-method}
 
-The `whenExactly` method invokes the given closure if the string exactly matches the given string. The closure will receive the fluent string instance:
+Phương thức `whenExactly` gọi closure đã cho nếu chuỗi khớp chính xác với chuỗi được chỉ định. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3944,7 +3944,7 @@ $string = Str::of('laravel')->whenExactly('laravel', function (Stringable $strin
 <a name="method-fluent-str-when-not-exactly"></a>
 #### `whenNotExactly` {.collection-method}
 
-The `whenNotExactly` method invokes the given closure if the string does not exactly match the given string. The closure will receive the fluent string instance:
+Phương thức `whenNotExactly` gọi closure đã cho nếu chuỗi không khớp chính xác với chuỗi được chỉ định. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3960,7 +3960,7 @@ $string = Str::of('framework')->whenNotExactly('laravel', function (Stringable $
 <a name="method-fluent-str-when-is"></a>
 #### `whenIs` {.collection-method}
 
-The `whenIs` method invokes the given closure if the string matches a given pattern. Asterisks may be used as wildcard values. The closure will receive the fluent string instance:
+Phương thức `whenIs` gọi closure đã cho nếu chuỗi khớp với pattern được chỉ định. Có thể dùng dấu hoa thị làm wildcard. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3976,7 +3976,7 @@ $string = Str::of('foo/bar')->whenIs('foo/*', function (Stringable $string) {
 <a name="method-fluent-str-when-is-ascii"></a>
 #### `whenIsAscii` {.collection-method}
 
-The `whenIsAscii` method invokes the given closure if the string is 7-bit ASCII. The closure will receive the fluent string instance:
+Phương thức `whenIsAscii` gọi closure đã cho nếu chuỗi là ASCII 7-bit. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -3992,7 +3992,7 @@ $string = Str::of('laravel')->whenIsAscii(function (Stringable $string) {
 <a name="method-fluent-str-when-is-ulid"></a>
 #### `whenIsUlid` {.collection-method}
 
-The `whenIsUlid` method invokes the given closure if the string is a valid ULID. The closure will receive the fluent string instance:
+Phương thức `whenIsUlid` gọi closure đã cho nếu chuỗi là ULID hợp lệ. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -4007,7 +4007,7 @@ $string = Str::of('01gd6r360bp37zj17nxb55yv40')->whenIsUlid(function (Stringable
 <a name="method-fluent-str-when-is-uuid"></a>
 #### `whenIsUuid` {.collection-method}
 
-The `whenIsUuid` method invokes the given closure if the string is a valid UUID. The closure will receive the fluent string instance:
+Phương thức `whenIsUuid` gọi closure đã cho nếu chuỗi là UUID hợp lệ. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -4023,7 +4023,7 @@ $string = Str::of('a0a2a2d2-0b87-4a18-83f2-2529882be2de')->whenIsUuid(function (
 <a name="method-fluent-str-when-test"></a>
 #### `whenTest` {.collection-method}
 
-The `whenTest` method invokes the given closure if the string matches the given regular expression. The closure will receive the fluent string instance:
+Phương thức `whenTest` gọi closure đã cho nếu chuỗi khớp với biểu thức chính quy được chỉ định. Closure sẽ nhận instance fluent string:
 
 ```php
 use Illuminate\Support\Str;
@@ -4039,7 +4039,7 @@ $string = Str::of('laravel framework')->whenTest('/laravel/', function (Stringab
 <a name="method-fluent-str-word-count"></a>
 #### `wordCount` {.collection-method}
 
-The `wordCount` method returns the number of words that a string contains:
+Phương thức `wordCount` trả về số lượng từ có trong chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -4050,7 +4050,7 @@ Str::of('Hello, world!')->wordCount(); // 2
 <a name="method-fluent-str-words"></a>
 #### `words` {.collection-method}
 
-The `words` method limits the number of words in a string. If necessary, you may specify an additional string that will be appended to the truncated string:
+Phương thức `words` giới hạn số lượng từ trong chuỗi. Nếu cần, bạn có thể chỉ định thêm một chuỗi để nối vào cuối chuỗi sau khi rút gọn:
 
 ```php
 use Illuminate\Support\Str;
@@ -4063,7 +4063,7 @@ $string = Str::of('Perfectly balanced, as all things should be.')->words(3, ' >>
 <a name="method-fluent-str-wrap"></a>
 #### `wrap` {.collection-method}
 
-The `wrap` method wraps the given string with an additional string or pair of strings:
+Phương thức `wrap` bao chuỗi đã cho bằng một chuỗi bổ sung hoặc một cặp chuỗi:
 
 ```php
 use Illuminate\Support\Str;
@@ -4076,6 +4076,8 @@ Str::is('is')->wrap(before: 'This ', after: ' Laravel!');
 
 // This is Laravel!
 ```
+
+---
 
 ## Tài liệu chính thức
 

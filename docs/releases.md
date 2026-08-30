@@ -1,34 +1,34 @@
-# Release Notes
+# Ghi chú phát hành
 
-- [Versioning Scheme](#versioning-scheme)
-- [Support Policy](#support-policy)
+- [Quy tắc phiên bản](#versioning-scheme)
+- [Chính sách hỗ trợ](#support-policy)
 - [Laravel 13](#laravel-13)
 
 <a name="versioning-scheme"></a>
-## Versioning Scheme
+## Quy tắc phiên bản
 
-Laravel and its other first-party packages follow [Semantic Versioning](https://semver.org). Major framework releases are released every year (~Q1), while minor and patch releases may be released as often as every week. Minor and patch releases should **never** contain breaking changes.
+Laravel và các package first-party khác tuân theo [Semantic Versioning](https://semver.org). Các major release của framework được phát hành hằng năm (khoảng Q1), trong khi minor và patch release có thể được phát hành thường xuyên tới mức hằng tuần. Minor và patch release **không bao giờ** nên chứa breaking change.
 
-When referencing the Laravel framework or its components from your application or package, you should always use a version constraint such as `^13.0`, since major releases of Laravel do include breaking changes. However, we strive to always ensure you may update to a new major release in one day or less.
+Khi tham chiếu Laravel framework hoặc các component của nó từ application hay package, bạn luôn nên sử dụng version constraint như `^13.0`, vì các major release của Laravel có bao gồm breaking change. Tuy nhiên, chúng tôi luôn cố gắng bảo đảm bạn có thể nâng cấp lên một major release mới trong vòng một ngày hoặc ít hơn.
 
 <a name="named-arguments"></a>
-#### Named Arguments
+#### Named arguments
 
-[Named arguments](https://www.php.net/manual/en/functions.arguments.php#functions.named-arguments) are not covered by Laravel's backwards compatibility guidelines. We may choose to rename function arguments when necessary in order to improve the Laravel codebase. Therefore, using named arguments when calling Laravel methods should be done cautiously and with the understanding that the parameter names may change in the future.
+[Named arguments](https://www.php.net/manual/en/functions.arguments.php#functions.named-arguments) không nằm trong các nguyên tắc backward compatibility của Laravel. Khi cần thiết, chúng tôi có thể đổi tên function argument để cải thiện Laravel codebase. Vì vậy, khi gọi Laravel method bằng named argument, bạn nên thận trọng và hiểu rằng parameter name có thể thay đổi trong tương lai.
 
 <a name="support-policy"></a>
-## Support Policy
+## Chính sách hỗ trợ
 
-For all Laravel releases, bug fixes are provided for 18 months and security fixes are provided for 2 years. For all additional libraries, only the latest major release receives bug fixes. In addition, please review the database versions [supported by Laravel](/docs/{{version}}/database#introduction).
+Đối với mọi Laravel release, bug fix được cung cấp trong 18 tháng và security fix được cung cấp trong 2 năm. Với tất cả library bổ sung, chỉ major release mới nhất nhận bug fix. Ngoài ra, vui lòng xem các phiên bản database [được Laravel hỗ trợ](/docs/{{version}}/database#introduction).
 
 <div class="overflow-auto">
 
-| Version | PHP (*)   | Release             | Bug Fixes Until     | Security Fixes Until |
-| ------- |-----------| ------------------- | ------------------- | -------------------- |
-| 10      | 8.1 - 8.3 | February 14th, 2023 | August 6th, 2024    | February 4th, 2025   |
-| 11      | 8.2 - 8.4 | March 12th, 2024    | September 3rd, 2025 | March 12th, 2026     |
-| 12      | 8.2 - 8.5 | February 24th, 2025 | August 13th, 2026   | February 24th, 2027  |
-| 13      | 8.3 - 8.5 | March 17th, 2026    | Q3 2027             | March 17th, 2028     |
+| Phiên bản | PHP (*)   | Phát hành           | Bug fix đến          | Security fix đến     |
+| --------- |-----------| ------------------- | -------------------- | -------------------- |
+| 10        | 8.1 - 8.3 | February 14th, 2023 | August 6th, 2024     | February 4th, 2025   |
+| 11        | 8.2 - 8.4 | March 12th, 2024    | September 3rd, 2025  | March 12th, 2026     |
+| 12        | 8.2 - 8.5 | February 24th, 2025 | August 13th, 2026    | February 24th, 2027  |
+| 13        | 8.3 - 8.5 | March 17th, 2026    | Q3 2027              | March 17th, 2028     |
 
 </div>
 
@@ -43,33 +43,33 @@ For all Laravel releases, bug fixes are provided for 18 months and security fixe
     </div>
 </div>
 
-(*) Supported PHP versions
+(*) Các phiên bản PHP được hỗ trợ
 
 <a name="laravel-13"></a>
 ## Laravel 13
 
-Laravel 13 continues Laravel's annual release cadence with a focus on AI-native workflows, stronger defaults, and more expressive developer APIs. This release includes first-party AI primitives, JSON:API resources, semantic / vector search capabilities, and incremental improvements across queues, cache, and security.
+Laravel 13 tiếp tục nhịp phát hành hằng năm của Laravel với trọng tâm vào workflow AI-native, các default mạnh mẽ hơn và developer API biểu đạt tốt hơn. Release này bao gồm các primitive AI first-party, JSON:API resource, khả năng semantic / vector search và những cải tiến tăng dần trên queue, cache và security.
 
 <a name="minimal-breaking-changes"></a>
-### Minimal Breaking Changes
+### Breaking change tối thiểu
 
-Much of our focus during this release cycle has been minimizing breaking changes. Instead, we have dedicated ourselves to shipping continuous quality-of-life improvements throughout the year that do not break existing applications.
+Phần lớn trọng tâm của chúng tôi trong chu kỳ phát hành này là giảm thiểu breaking change. Thay vào đó, chúng tôi tập trung phát hành liên tục các cải tiến về chất lượng trải nghiệm trong suốt năm mà không làm hỏng application hiện có.
 
-Therefore, the Laravel 13 release is a relatively minor upgrade in terms of effort, while still delivering substantial new capabilities. In light of this, most Laravel applications may upgrade to Laravel 13 without changing much application code.
+Vì vậy, xét về công sức nâng cấp, Laravel 13 là một bản nâng cấp tương đối nhẹ nhưng vẫn mang lại nhiều khả năng mới đáng kể. Nhờ đó, phần lớn application Laravel có thể nâng cấp lên Laravel 13 mà không cần thay đổi nhiều application code.
 
 <a name="php-8"></a>
 ### PHP 8.3
 
-Laravel 13.x requires a minimum PHP version of 8.3.
+Laravel 13.x yêu cầu PHP tối thiểu phiên bản 8.3.
 
 <a name="ai-sdk"></a>
 ### Laravel AI SDK
 
-Laravel 13 introduces the first-party [Laravel AI SDK](https://laravel.com/ai), providing a unified API for text generation, tool-calling agents, embeddings, audio, images, and vector-store integrations.
+Laravel 13 giới thiệu [Laravel AI SDK](https://laravel.com/ai) first-party, cung cấp API thống nhất cho text generation, agent gọi tool, embedding, audio, image và tích hợp vector store.
 
-With the AI SDK, you can build provider-agnostic AI features while keeping a consistent, Laravel-native developer experience.
+Với AI SDK, bạn có thể xây dựng các tính năng AI không phụ thuộc provider trong khi vẫn giữ trải nghiệm developer nhất quán, theo phong cách Laravel native.
 
-For example, a basic agent can be prompted with a single call:
+Ví dụ, một agent cơ bản có thể được prompt chỉ bằng một call:
 
 ```php
 use App\Ai\Agents\SalesCoach;
@@ -79,19 +79,18 @@ $response = SalesCoach::make()->prompt('Analyze this sales transcript...');
 return (string) $response;
 ```
 
-The Laravel AI SDK can also generate images, audio, and embeddings:
+Laravel AI SDK cũng có thể tạo image, audio và embedding:
 
-For visual generation use cases, the SDK offers a clean API for creating images from plain-language prompts:
+Với use case tạo hình ảnh, SDK cung cấp API gọn gàng để tạo image từ prompt bằng ngôn ngữ tự nhiên:
 
 ```php
 use Laravel\Ai\Image;
 
 $image = Image::of('A donut sitting on the kitchen counter')->generate();
-
 $rawContent = (string) $image;
 ```
 
-For voice experiences, you can synthesize natural-sounding audio from text for assistants, narrations, and accessibility features:
+Đối với trải nghiệm giọng nói, bạn có thể tổng hợp audio tự nhiên từ text cho assistant, narration và các tính năng accessibility:
 
 ```php
 use Laravel\Ai\Audio;
@@ -101,7 +100,7 @@ $audio = Audio::of('I love coding with Laravel.')->generate();
 $rawContent = (string) $audio;
 ```
 
-And for semantic search and retrieval workflows, you can generate embeddings directly from strings:
+Và đối với workflow semantic search và retrieval, bạn có thể tạo embedding trực tiếp từ string:
 
 ```php
 use Illuminate\Support\Str;
@@ -112,32 +111,32 @@ $embeddings = Str::of('Napa Valley has great wine.')->toEmbeddings();
 <a name="json-api"></a>
 ### JSON:API Resources
 
-Laravel now includes first-party [JSON:API resources](/docs/{{version}}/eloquent-resources#jsonapi-resources), making it straightforward to return responses compliant with the JSON:API specification.
+Laravel giờ đây bao gồm [JSON:API resource](/docs/{{version}}/eloquent-resources#jsonapi-resources) first-party, giúp việc trả về response tuân theo JSON:API specification trở nên đơn giản.
 
-JSON:API resources handle resource object serialization, relationship inclusion, sparse fieldsets, links, and JSON:API-compliant response headers.
+JSON:API resource xử lý serialization resource object, inclusion relationship, sparse fieldset, link và response header tuân theo JSON:API.
 
 <a name="request-forgery-protection"></a>
-### Request Forgery Protection
+### Bảo vệ chống giả mạo request
 
-For security, Laravel's [request forgery protection](/docs/{{version}}/csrf#preventing-csrf-requests) middleware has been enhanced and formalized as `PreventRequestForgery`, adding origin-aware request verification while preserving compatibility with token-based CSRF protection.
+Vì lý do security, middleware [request forgery protection](/docs/{{version}}/csrf#preventing-csrf-requests) của Laravel đã được tăng cường và chính thức hóa thành `PreventRequestForgery`, bổ sung cơ chế xác minh request có xét origin trong khi vẫn giữ compatibility với CSRF protection dựa trên token.
 
 <a name="queue-routing"></a>
 ### Queue Routing
 
-Laravel 13 adds [queue routing by class](/docs/{{version}}/queues#queue-routing) via `Queue::route(...)`, allowing you to define default queue / connection routing rules for specific jobs in a central place:
+Laravel 13 bổ sung [queue routing theo class](/docs/{{version}}/queues#queue-routing) thông qua `Queue::route(...)`, cho phép bạn định nghĩa default queue / connection routing rule cho các job cụ thể tại một nơi tập trung:
 
 ```php
 Queue::route(ProcessPodcast::class, connection: 'redis', queue: 'podcasts');
 ```
 
 <a name="php-attributes"></a>
-### Expanded PHP Attributes
+### Mở rộng PHP Attributes
 
-Laravel 13 continues to expand first-party PHP attribute support across the framework, making common configuration and behavioral concerns more declarative and colocated with your classes and methods.
+Laravel 13 tiếp tục mở rộng hỗ trợ PHP attribute first-party trên toàn framework, giúp các concern về configuration và behavior phổ biến trở nên declarative hơn và nằm gần class/method liên quan.
 
-Notable additions include controller and authorization attributes like [`#[Middleware]`](/docs/{{version}}/controllers#controller-middleware) and [`#[Authorize]`](/docs/{{version}}/controllers#authorization-attributes), as well as queue-oriented job controls like [`#[Tries]`](/docs/{{version}}/queues#max-job-attempts-and-timeout), [`#[Backoff]`](/docs/{{version}}/queues#dealing-with-failed-jobs), [`#[Timeout]`](/docs/{{version}}/queues#max-job-attempts-and-timeout), and [`#[FailOnTimeout]`](/docs/{{version}}/queues#failing-on-timeout).
+Các bổ sung đáng chú ý gồm controller và authorization attribute như [`#[Middleware]`](/docs/{{version}}/controllers#controller-middleware) và [`#[Authorize]`](/docs/{{version}}/controllers#authorization-attributes), cùng các cơ chế kiểm soát job liên quan queue như [`#[Tries]`](/docs/{{version}}/queues#max-job-attempts-and-timeout), [`#[Backoff]`](/docs/{{version}}/queues#dealing-with-failed-jobs), [`#[Timeout]`](/docs/{{version}}/queues#max-job-attempts-and-timeout) và [`#[FailOnTimeout]`](/docs/{{version}}/queues#failing-on-timeout).
 
-For example, controller middleware and policy checks can now be declared directly on classes and methods:
+Ví dụ, controller middleware và policy check giờ có thể được khai báo trực tiếp trên class và method:
 
 ```php
 <?php
@@ -161,21 +160,21 @@ class CommentController
 }
 ```
 
-Additional attributes have also been introduced across Eloquent, events, notifications, validation, testing, and resource serialization APIs, giving you a consistent attribute-first option in more areas of the framework.
+Các attribute bổ sung cũng đã được giới thiệu trên Eloquent, event, notification, validation, testing và resource serialization API, mang đến một lựa chọn attribute-first nhất quán hơn ở nhiều khu vực của framework.
 
 <a name="cache-touch"></a>
-### Cache TTL Extension
+### Gia hạn Cache TTL
 
-Laravel now includes [`Cache::touch(...)`](/docs/{{version}}/cache), which lets you extend an existing cache item's TTL without retrieving and re-storing its value.
+Laravel giờ bao gồm [`Cache::touch(...)`](/docs/{{version}}/cache), cho phép bạn gia hạn TTL của một cache item hiện có mà không cần retrieve rồi lưu lại value.
 
 <a name="semantic-search"></a>
-### Semantic / Vector Search
+### Tìm kiếm ngữ nghĩa / vector
 
-Laravel 13 deepens its semantic search story with native vector query support, embedding workflows, and related APIs documented across [search](/docs/{{version}}/search#semantic-vector-search), [queries](/docs/{{version}}/queries#vector-similarity-clauses), and the [AI SDK](/docs/{{version}}/ai-sdk#embeddings).
+Laravel 13 mở rộng mạnh hơn khả năng semantic search với hỗ trợ vector query native, workflow embedding và các API liên quan được mô tả trong [search](/docs/{{version}}/search#semantic-vector-search), [queries](/docs/{{version}}/queries#vector-similarity-clauses) và [AI SDK](/docs/{{version}}/ai-sdk#embeddings).
 
-These features make it straightforward to build AI-powered search experiences using PostgreSQL + `pgvector`, including similarity search against embeddings generated directly from strings.
+Các tính năng này giúp việc xây dựng trải nghiệm tìm kiếm dựa trên AI với PostgreSQL + `pgvector` trở nên đơn giản, bao gồm similarity search trên embedding được tạo trực tiếp từ string.
 
-For example, you may run semantic similarity searches directly from the query builder:
+Ví dụ, bạn có thể thực thi semantic similarity search trực tiếp từ query builder:
 
 ```php
 $documents = DB::table('documents')

@@ -1,65 +1,65 @@
-# Asset Bundling (Vite)
+# Đóng gói Asset (Vite)
 
-- [Introduction](#introduction)
-- [Installation & Setup](#installation)
-  - [Installing Node](#installing-node)
-  - [Installing Vite and the Laravel Plugin](#installing-vite-and-laravel-plugin)
-  - [Configuring Vite](#configuring-vite)
-  - [Loading Your Scripts and Styles](#loading-your-scripts-and-styles)
-- [Running Vite](#running-vite)
-- [Working With JavaScript](#working-with-scripts)
-  - [Aliases](#aliases)
+- [Giới thiệu](#introduction)
+- [Cài đặt & Thiết lập](#installation)
+  - [Cài đặt Node](#installing-node)
+  - [Cài đặt Vite và Laravel Plugin](#installing-vite-and-laravel-plugin)
+  - [Cấu hình Vite](#configuring-vite)
+  - [Nạp Script và Style](#loading-your-scripts-and-styles)
+- [Chạy Vite](#running-vite)
+- [Làm việc với JavaScript](#working-with-scripts)
+  - [Alias](#aliases)
   - [Vue](#vue)
   - [React](#react)
   - [Svelte](#svelte)
   - [Inertia](#inertia)
   - [URL Processing](#url-processing)
-- [Working With Stylesheets](#working-with-stylesheets)
-- [Working With Fonts](#working-with-fonts)
+- [Làm việc với Stylesheet](#working-with-stylesheets)
+- [Làm việc với Font](#working-with-fonts)
   - [Font Providers](#font-providers)
   - [Local Fonts](#local-fonts)
   - [Font Options](#font-options)
-- [Working With Blade and Routes](#working-with-blade-and-routes)
+- [Làm việc với Blade và Route](#working-with-blade-and-routes)
   - [Processing Static Assets With Vite](#blade-processing-static-assets)
   - [Refreshing on Save](#blade-refreshing-on-save)
   - [Aliases](#blade-aliases)
-- [Asset Prefetching](#asset-prefetching)
-- [Custom Base URLs](#custom-base-urls)
-- [Environment Variables](#environment-variables)
-- [Disabling Vite in Tests](#disabling-vite-in-tests)
+- [Prefetch Asset](#asset-prefetching)
+- [Base URL tùy chỉnh](#custom-base-urls)
+- [Biến môi trường](#environment-variables)
+- [Tắt Vite trong Test](#disabling-vite-in-tests)
 - [Server-Side Rendering (SSR)](#ssr)
-- [Script and Style Tag Attributes](#script-and-style-attributes)
+- [Attribute của thẻ Script và Style](#script-and-style-attributes)
   - [Content Security Policy (CSP) Nonce](#content-security-policy-csp-nonce)
   - [Subresource Integrity (SRI)](#subresource-integrity-sri)
   - [Arbitrary Attributes](#arbitrary-attributes)
-- [Advanced Customization](#advanced-customization)
+- [Tùy chỉnh nâng cao](#advanced-customization)
   - [Dev Server Cross-Origin Resource Sharing (CORS)](#cors)
   - [Correcting Dev Server URLs](#correcting-dev-server-urls)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-[Vite](https://vitejs.dev) is a modern frontend build tool that provides an extremely fast development environment and bundles your code for production. When building applications with Laravel, you will typically use Vite to bundle your application's CSS and JavaScript files into production-ready assets.
+[Vite](https://vitejs.dev) là công cụ build frontend hiện đại, cung cấp môi trường phát triển cực nhanh và đóng gói code để sử dụng trong production. Khi xây dựng ứng dụng Laravel, bạn thường dùng Vite để đóng gói các file CSS và JavaScript của ứng dụng thành asset sẵn sàng cho production.
 
-Laravel integrates seamlessly with Vite by providing an official plugin and Blade directive to load your assets for development and production.
+Laravel tích hợp liền mạch với Vite thông qua plugin chính thức và Blade directive để nạp asset trong cả môi trường development lẫn production.
 
 <a name="installation"></a>
-## Installation & Setup
+## Cài đặt & Thiết lập
 
 > [!NOTE]
-> The following documentation discusses how to manually install and configure the Laravel Vite plugin. However, Laravel's [starter kits](/docs/{{version}}/starter-kits) already include all of this scaffolding and are the fastest way to get started with Laravel and Vite.
+> Phần tài liệu sau trình bày cách cài đặt và cấu hình Laravel Vite plugin theo cách thủ công. Tuy nhiên, các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm toàn bộ scaffolding này và là cách nhanh nhất để bắt đầu với Laravel và Vite.
 
 <a name="installing-node"></a>
-### Installing Node
+### Cài đặt Node
 
-You must ensure that Node.js (16+) and NPM are installed before running Vite and the Laravel plugin:
+Bạn phải bảo đảm Node.js (16+) và NPM đã được cài đặt trước khi chạy Vite và Laravel plugin:
 
 ```shell
 node -v
 npm -v
 ```
 
-You can easily install the latest version of Node and NPM using simple graphical installers from [the official Node website](https://nodejs.org/en/download/). Or, if you are using [Laravel Sail](https://laravel.com/docs/{{version}}/sail), you may invoke Node and NPM through Sail:
+Bạn có thể dễ dàng cài phiên bản Node và NPM mới nhất bằng bộ cài đồ họa từ [website Node chính thức](https://nodejs.org/en/download/). Hoặc nếu đang dùng [Laravel Sail](https://laravel.com/docs/{{version}}/sail), bạn có thể gọi Node và NPM thông qua Sail:
 
 ```shell
 ./vendor/bin/sail node -v
@@ -67,20 +67,20 @@ You can easily install the latest version of Node and NPM using simple graphical
 ```
 
 <a name="installing-vite-and-laravel-plugin"></a>
-### Installing Vite and the Laravel Plugin
+### Cài đặt Vite và Laravel Plugin
 
-Within a fresh installation of Laravel, you will find a `package.json` file in the root of your application's directory structure. The default `package.json` file already includes everything you need to get started using Vite and the Laravel plugin. You may install your application's frontend dependencies via NPM:
+Trong một bản cài Laravel mới, bạn sẽ thấy file `package.json` ở thư mục gốc của ứng dụng. File `package.json` mặc định đã chứa mọi thứ cần thiết để bắt đầu sử dụng Vite và Laravel plugin. Bạn có thể cài các dependency frontend của ứng dụng thông qua NPM:
 
 ```shell
 npm install
 ```
 
 <a name="configuring-vite"></a>
-### Configuring Vite
+### Cấu hình Vite
 
-Vite is configured via a `vite.config.js` file in the root of your project. You are free to customize this file based on your needs, and you may also install any other plugins your application requires, such as `@vitejs/plugin-react`, `@sveltejs/vite-plugin-svelte` or `@vitejs/plugin-vue`.
+Vite được cấu hình thông qua file `vite.config.js` ở thư mục gốc của project. Bạn có thể tùy chỉnh file này theo nhu cầu và cài thêm bất kỳ plugin nào ứng dụng cần, chẳng hạn `@vitejs/plugin-react`, `@sveltejs/vite-plugin-svelte` hoặc `@vitejs/plugin-vue`.
 
-The Laravel Vite plugin requires you to specify the entry points for your application. These may be JavaScript or CSS files, and include preprocessed languages such as TypeScript, JSX, TSX, and Sass.
+Laravel Vite plugin yêu cầu bạn chỉ định các entry point của ứng dụng. Chúng có thể là file JavaScript hoặc CSS, bao gồm cả các ngôn ngữ cần tiền xử lý như TypeScript, JSX, TSX và Sass.
 
 ```js
 import { defineConfig } from 'vite';
@@ -96,7 +96,7 @@ export default defineConfig({
 });
 ```
 
-If you are building an SPA, including applications built using Inertia, Vite works best without CSS entry points:
+Nếu đang xây dựng SPA, bao gồm ứng dụng sử dụng Inertia, Vite hoạt động tốt nhất khi không dùng CSS làm entry point:
 
 ```js
 import { defineConfig } from 'vite';
@@ -112,23 +112,23 @@ export default defineConfig({
 });
 ```
 
-Instead, you should import your CSS via JavaScript. Typically, this would be done in your application's `resources/js/app.js` file:
+Thay vào đó, bạn nên import CSS thông qua JavaScript. Thông thường việc này được thực hiện trong file `resources/js/app.js` của ứng dụng:
 
 ```js
 import './bootstrap';
 import '../css/app.css'; // [tl! add]
 ```
 
-The Laravel plugin also supports multiple entry points and advanced configuration options such as [SSR entry points](#ssr).
+Laravel plugin cũng hỗ trợ nhiều entry point và các tùy chọn cấu hình nâng cao như [SSR entry point](#ssr).
 
 <a name="working-with-a-secure-development-server"></a>
-#### Working With a Secure Development Server
+#### Làm việc với Development Server bảo mật
 
-If your local development web server is serving your application via HTTPS, you may run into issues connecting to the Vite development server.
+Nếu web server phát triển cục bộ phục vụ ứng dụng qua HTTPS, bạn có thể gặp vấn đề khi kết nối tới Vite development server.
 
-If you are using [Laravel Herd](https://herd.laravel.com) and have secured the site or you are using [Laravel Valet](/docs/{{version}}/valet) and have run the [secure command](/docs/{{version}}/valet#securing-sites) against your application, the Laravel Vite plugin will automatically detect and use the generated TLS certificate for you.
+Nếu dùng [Laravel Herd](https://herd.laravel.com) và đã bật HTTPS cho site, hoặc dùng [Laravel Valet](/docs/{{version}}/valet) và đã chạy [lệnh `secure`](/docs/{{version}}/valet#securing-sites) cho ứng dụng, Laravel Vite plugin sẽ tự động phát hiện và sử dụng TLS certificate đã được tạo.
 
-If you secured the site using a host that does not match the application's directory name, you may manually specify the host in your application's `vite.config.js` file:
+Nếu bạn bảo mật site bằng host không trùng với tên thư mục ứng dụng, có thể chỉ định host thủ công trong file `vite.config.js`:
 
 ```js
 import { defineConfig } from 'vite';
@@ -144,7 +144,7 @@ export default defineConfig({
 });
 ```
 
-When using another web server, you should generate a trusted certificate and manually configure Vite to use the generated certificates:
+Khi dùng web server khác, bạn nên tạo certificate đáng tin cậy và cấu hình Vite thủ công để sử dụng certificate đã tạo:
 
 ```js
 // ...
@@ -165,12 +165,12 @@ export default defineConfig({
 });
 ```
 
-If you are unable to generate a trusted certificate for your system, you may install and configure the [@vitejs/plugin-basic-ssl plugin](https://github.com/vitejs/vite-plugin-basic-ssl). When using untrusted certificates, you will need to accept the certificate warning for Vite's development server in your browser by following the "Local" link in your console when running the `npm run dev` command.
+Nếu không thể tạo certificate đáng tin cậy cho hệ thống, bạn có thể cài và cấu hình [plugin @vitejs/plugin-basic-ssl](https://github.com/vitejs/vite-plugin-basic-ssl). Khi dùng certificate không đáng tin cậy, bạn cần chấp nhận cảnh báo certificate của Vite development server trong trình duyệt bằng cách mở liên kết "Local" xuất hiện trong console khi chạy `npm run dev`.
 
 <a name="configuring-hmr-in-sail-on-wsl2"></a>
-#### Running the Development Server in Sail on WSL2
+#### Chạy Development Server trong Sail trên WSL2
 
-When running the Vite development server within [Laravel Sail](/docs/{{version}}/sail) on Windows Subsystem for Linux 2 (WSL2), you should add the following configuration to your `vite.config.js` file to ensure the browser can communicate with the development server:
+Khi chạy Vite development server trong [Laravel Sail](/docs/{{version}}/sail) trên Windows Subsystem for Linux 2 (WSL2), bạn nên thêm cấu hình sau vào `vite.config.js` để bảo đảm trình duyệt có thể giao tiếp với development server:
 
 ```js
 // ...
@@ -185,12 +185,12 @@ export default defineConfig({
 });
 ```
 
-If your file changes are not being reflected in the browser while the development server is running, you may also need to configure Vite's [server.watch.usePolling option](https://vitejs.dev/config/server-options.html#server-watch).
+Nếu thay đổi file không được phản ánh trong trình duyệt khi development server đang chạy, bạn có thể cần cấu hình thêm [tùy chọn `server.watch.usePolling`](https://vitejs.dev/config/server-options.html#server-watch) của Vite.
 
 <a name="loading-your-scripts-and-styles"></a>
-### Loading Your Scripts and Styles
+### Nạp Script và Style
 
-With your Vite entry points configured, you may now reference them in a `@vite()` Blade directive that you add to the `<head>` of your application's root template:
+Sau khi cấu hình các Vite entry point, bạn có thể tham chiếu chúng bằng Blade directive `@vite()` được thêm vào `<head>` của root template ứng dụng:
 
 ```blade
 <!DOCTYPE html>
@@ -201,7 +201,7 @@ With your Vite entry points configured, you may now reference them in a `@vite()
 </head>
 ```
 
-If you're importing your CSS via JavaScript, you only need to include the JavaScript entry point:
+Nếu import CSS thông qua JavaScript, bạn chỉ cần thêm JavaScript entry point:
 
 ```blade
 <!DOCTYPE html>
@@ -212,9 +212,9 @@ If you're importing your CSS via JavaScript, you only need to include the JavaSc
 </head>
 ```
 
-The `@vite` directive will automatically detect the Vite development server and inject the Vite client to enable Hot Module Replacement. In build mode, the directive will load your compiled and versioned assets, including any imported CSS.
+Directive `@vite` sẽ tự động phát hiện Vite development server và inject Vite client để bật Hot Module Replacement. Ở build mode, directive sẽ nạp các asset đã compile và version, bao gồm cả CSS được import.
 
-If needed, you may also specify the build path of your compiled assets when invoking the `@vite` directive:
+Nếu cần, bạn cũng có thể chỉ định build path của asset đã compile khi gọi directive `@vite`:
 
 ```blade
 <!doctype html>
@@ -226,9 +226,9 @@ If needed, you may also specify the build path of your compiled assets when invo
 ```
 
 <a name="inline-assets"></a>
-#### Inline Assets
+#### Asset Inline
 
-Sometimes it may be necessary to include the raw content of assets rather than linking to the versioned URL of the asset. For example, you may need to include asset content directly into your page when passing HTML content to a PDF generator. You may output the content of Vite assets using the `content` method provided by the `Vite` facade:
+Đôi khi bạn cần đưa trực tiếp nội dung thô của asset thay vì liên kết tới URL đã được version. Ví dụ, bạn có thể cần nhúng nội dung asset trực tiếp vào trang khi truyền HTML cho trình tạo PDF. Bạn có thể xuất nội dung Vite asset bằng phương thức `content` do facade `Vite` cung cấp:
 
 ```blade
 @use('Illuminate\Support\Facades\Vite')
@@ -247,11 +247,11 @@ Sometimes it may be necessary to include the raw content of assets rather than l
 ```
 
 <a name="running-vite"></a>
-## Running Vite
+## Chạy Vite
 
-There are two ways you can run Vite. You may run the development server via the `dev` command, which is useful while developing locally. The development server will automatically detect changes to your files and instantly reflect them in any open browser windows.
+Có hai cách chạy Vite. Bạn có thể chạy development server bằng lệnh `dev`, phù hợp khi phát triển cục bộ. Development server sẽ tự động phát hiện thay đổi trong file và phản ánh chúng ngay lập tức trên các cửa sổ trình duyệt đang mở.
 
-Or, running the `build` command will version and bundle your application's assets and get them ready for you to deploy to production:
+Hoặc chạy lệnh `build` để version và đóng gói asset của ứng dụng, chuẩn bị chúng cho việc deploy lên production:
 
 ```shell
 # Run the Vite development server...
@@ -261,15 +261,15 @@ npm run dev
 npm run build
 ```
 
-If you are running the development server in [Sail](/docs/{{version}}/sail) on WSL2, you may need some [additional configuration](#configuring-hmr-in-sail-on-wsl2) options.
+Nếu đang chạy development server trong [Sail](/docs/{{version}}/sail) trên WSL2, bạn có thể cần một số [cấu hình bổ sung](#configuring-hmr-in-sail-on-wsl2).
 
 <a name="working-with-scripts"></a>
-## Working With JavaScript
+## Làm việc với JavaScript
 
 <a name="aliases"></a>
-### Aliases
+### Alias trong Blade
 
-By default, The Laravel plugin provides a common alias to help you hit the ground running and conveniently import your application's assets:
+Mặc định, Laravel plugin cung cấp một alias phổ biến để bạn có thể bắt đầu nhanh và import asset của ứng dụng thuận tiện hơn:
 
 ```js
 {
@@ -277,7 +277,7 @@ By default, The Laravel plugin provides a common alias to help you hit the groun
 }
 ```
 
-You may overwrite the `'@'` alias by adding your own to the `vite.config.js` configuration file:
+Bạn có thể ghi đè alias `'@'` bằng cách thêm alias riêng vào file cấu hình `vite.config.js`:
 
 ```js
 import { defineConfig } from 'vite';
@@ -298,13 +298,13 @@ export default defineConfig({
 <a name="vue"></a>
 ### Vue
 
-If you would like to build your frontend using the [Vue](https://vuejs.org/) framework, then you will also need to install the `@vitejs/plugin-vue` plugin:
+Nếu muốn xây dựng frontend bằng framework [Vue](https://vuejs.org/), bạn cũng cần cài plugin `@vitejs/plugin-vue`:
 
 ```shell
 npm install --save-dev @vitejs/plugin-vue
 ```
 
-You may then include the plugin in your `vite.config.js` configuration file. There are a few additional options you will need when using the Vue plugin with Laravel:
+Sau đó, bạn có thể thêm plugin vào file cấu hình `vite.config.js`. Khi sử dụng Vue plugin với Laravel, bạn sẽ cần thêm một số tùy chọn:
 
 ```js
 import { defineConfig } from 'vite';
@@ -337,18 +337,18 @@ export default defineConfig({
 ```
 
 > [!NOTE]
-> Laravel's [starter kits](/docs/{{version}}/starter-kits) already include the proper Laravel, Vue, and Vite configuration. These starter kits offer the fastest way to get started with Laravel, Vue, and Vite.
+> [Starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình Laravel, Vue và Vite phù hợp. Đây là cách nhanh nhất để bắt đầu với Laravel, Vue và Vite.
 
 <a name="react"></a>
 ### React
 
-If you would like to build your frontend using the [React](https://reactjs.org/) framework, then you will also need to install the `@vitejs/plugin-react` plugin:
+Nếu muốn xây dựng frontend bằng framework [React](https://reactjs.org/), bạn cũng cần cài plugin `@vitejs/plugin-react`:
 
 ```shell
 npm install --save-dev @vitejs/plugin-react
 ```
 
-You may then include the plugin in your `vite.config.js` configuration file:
+Sau đó, bạn có thể thêm plugin vào file cấu hình `vite.config.js`:
 
 ```js
 import { defineConfig } from 'vite';
@@ -363,30 +363,30 @@ export default defineConfig({
 });
 ```
 
-You will need to ensure that any files containing JSX have a `.jsx` or `.tsx` extension, remembering to update your entry point, if required, as [shown above](#configuring-vite).
+Bạn cần đảm bảo mọi file chứa JSX đều có phần mở rộng `.jsx` hoặc `.tsx`; đồng thời cập nhật entry point nếu cần, như [đã trình bày ở trên](#configuring-vite).
 
-You will also need to include the additional `@viteReactRefresh` Blade directive alongside your existing `@vite` directive.
+Bạn cũng cần thêm Blade directive `@viteReactRefresh` bên cạnh directive `@vite` hiện có.
 
 ```blade
 @viteReactRefresh
 @vite('resources/js/app.jsx')
 ```
 
-The `@viteReactRefresh` directive must be called before the `@vite` directive.
+Directive `@viteReactRefresh` phải được gọi trước directive `@vite`.
 
 > [!NOTE]
-> Laravel's [starter kits](/docs/{{version}}/starter-kits) already include the proper Laravel, React, and Vite configuration. These starter kits offer the fastest way to get started with Laravel, React, and Vite.
+> Các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, React và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, React và Vite.
 
 <a name="svelte"></a>
 ### Svelte
 
-If you would like to build your frontend using the [Svelte](https://svelte.dev/) framework, then you will also need to install the `@sveltejs/vite-plugin-svelte` plugin:
+Nếu muốn xây dựng frontend bằng framework [Svelte](https://svelte.dev/), bạn cũng cần cài plugin `@sveltejs/vite-plugin-svelte`:
 
 ```shell
 npm install --save-dev @sveltejs/vite-plugin-svelte
 ```
 
-You may then include the plugin in your `vite.config.js` configuration file.
+Sau đó, bạn có thể thêm plugin vào file cấu hình `vite.config.js`.
 
 ```js
 import { svelte } from '@sveltejs/vite-plugin-svelte';
@@ -406,12 +406,12 @@ export default defineConfig({
 ```
 
 > [!NOTE]
-> Laravel's [starter kits](/docs/{{version}}/starter-kits) already include the proper Laravel, Svelte, and Vite configuration. These starter kits offer the fastest way to get started with Laravel, Svelte, and Vite.
+> Các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, Svelte và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, Svelte và Vite.
 
 <a name="inertia"></a>
 ### Inertia
 
-The Laravel Vite plugin provides a convenient `resolvePageComponent` function to help you resolve your Inertia page components. Below is an example of the helper in use with Vue 3; however, you may also utilize the function in other frameworks such as React or Svelte:
+Laravel Vite plugin cung cấp hàm `resolvePageComponent` tiện dụng để giúp resolve các page component của Inertia. Ví dụ dưới đây sử dụng helper này với Vue 3; tuy nhiên, bạn cũng có thể dùng hàm này với các framework khác như React hoặc Svelte:
 
 ```js
 import { createApp, h } from 'vue';
@@ -428,19 +428,19 @@ createInertiaApp({
 });
 ```
 
-If you are using Vite's code splitting feature with Inertia, we recommend configuring [asset prefetching](#asset-prefetching).
+Nếu đang sử dụng tính năng code splitting của Vite với Inertia, bạn nên cấu hình [prefetch asset](#asset-prefetching).
 
 > [!NOTE]
-> Laravel's [starter kits](/docs/{{version}}/starter-kits) already include the proper Laravel, Inertia, and Vite configuration. These starter kits offer the fastest way to get started with Laravel, Inertia, and Vite.
+> Các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, Inertia và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, Inertia và Vite.
 
 <a name="url-processing"></a>
-### URL Processing
+### Xử lý URL
 
-When using Vite and referencing assets in your application's HTML, CSS, or JS, there are a couple of caveats to consider. First, if you reference assets with an absolute path, Vite will not include the asset in the build; therefore, you should ensure that the asset is available in your public directory. You should avoid using absolute paths when using a [dedicated CSS entrypoint](#configuring-vite) because, during development, browsers will try to load these paths from the Vite development server, where the CSS is hosted, rather than from your public directory.
+Khi dùng Vite và tham chiếu asset trong HTML, CSS hoặc JS của ứng dụng, có một vài điểm cần lưu ý. Trước hết, nếu tham chiếu asset bằng absolute path, Vite sẽ không đưa asset đó vào build; vì vậy bạn cần bảo đảm asset tồn tại trong public directory. Bạn nên tránh dùng absolute path khi sử dụng [CSS entrypoint riêng](#configuring-vite), vì trong lúc development browser sẽ cố tải các path này từ Vite development server — nơi CSS được host — thay vì từ public directory của ứng dụng.
 
-When referencing relative asset paths, you should remember that the paths are relative to the file where they are referenced. Any assets referenced via a relative path will be re-written, versioned, and bundled by Vite.
+Khi tham chiếu asset bằng đường dẫn tương đối, hãy nhớ rằng đường dẫn được tính tương đối từ file chứa tham chiếu đó. Mọi asset được tham chiếu bằng đường dẫn tương đối sẽ được Vite viết lại, gắn phiên bản và bundle.
 
-Consider the following project structure:
+Hãy xem cấu trúc project sau:
 
 ```text
 public/
@@ -453,7 +453,7 @@ resources/
     abigail.png
 ```
 
-The following example demonstrates how Vite will treat relative and absolute URLs:
+Ví dụ sau minh họa cách Vite xử lý URL tương đối và tuyệt đối:
 
 ```html
 <!-- This asset is not handled by Vite and will not be included in the build -->
@@ -464,25 +464,25 @@ The following example demonstrates how Vite will treat relative and absolute URL
 ```
 
 <a name="working-with-stylesheets"></a>
-## Working With Stylesheets
+## Làm việc với stylesheet
 
 > [!NOTE]
-> Laravel's [starter kits](/docs/{{version}}/starter-kits) already include the proper Tailwind and Vite configuration. Or, if you would like to use Tailwind and Laravel without using one of our starter kits, check out [Tailwind's installation guide for Laravel](https://tailwindcss.com/docs/guides/laravel).
+> [Starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình Tailwind và Vite phù hợp. Hoặc, nếu muốn dùng Tailwind với Laravel mà không dùng starter kit, hãy xem [hướng dẫn cài đặt Tailwind cho Laravel](https://tailwindcss.com/docs/guides/laravel).
 
-All Laravel applications already include Tailwind and a properly configured `vite.config.js` file. So, you only need to start the Vite development server or run the `dev` Composer command, which will start both the Laravel and Vite development servers:
+Mọi ứng dụng Laravel đều đã bao gồm Tailwind và file `vite.config.js` được cấu hình phù hợp. Vì vậy, bạn chỉ cần khởi động Vite development server hoặc chạy lệnh Composer `dev`; lệnh này sẽ khởi động cả Laravel và Vite development server:
 
 ```shell
 composer run dev
 ```
 
-Your application's CSS may be placed within the `resources/css/app.css` file.
+CSS của ứng dụng có thể được đặt trong file `resources/css/app.css`.
 
 <a name="working-with-fonts"></a>
-## Working With Fonts
+## Làm việc với font
 
-The Laravel Vite plugin can serve optimized, self-hosted fonts for your application. When fonts are configured, the plugin resolves the requested font files, emits them as Vite assets, generates font CSS, and writes a font manifest that may be consumed by Blade's [`@fonts` directive](/docs/{{version}}/blade#fonts).
+Laravel Vite plugin có thể phục vụ các font self-hosted đã được tối ưu cho ứng dụng. Khi font được cấu hình, plugin sẽ resolve các file font được yêu cầu, xuất chúng thành Vite asset, sinh CSS cho font và ghi font manifest để Blade [`@fonts` directive](/docs/{{version}}/blade#fonts) sử dụng.
 
-To configure fonts, import one or more provider helpers from `laravel-vite-plugin/fonts` and add them to the Laravel plugin's `fonts` option:
+Để cấu hình font, hãy import một hoặc nhiều provider helper từ `laravel-vite-plugin/fonts` và thêm chúng vào option `fonts` của Laravel plugin:
 
 ```js
 import { defineConfig } from 'vite';
@@ -512,12 +512,12 @@ export default defineConfig({
 });
 ```
 
-In this example, the `Inter` font will be available through the `sans` alias. The plugin will generate a `--font-sans` CSS variable and a `.font-sans` utility class that applies the generated font stack.
+Trong ví dụ này, font `Inter` sẽ khả dụng thông qua alias `sans`. Plugin sẽ tạo CSS variable `--font-sans` và utility class `.font-sans` áp dụng font stack đã sinh.
 
 <a name="font-providers"></a>
-### Font Providers
+### Font provider
 
-The Laravel Vite plugin includes provider helpers for Google Fonts, Bunny Fonts, Fontsource, and local fonts:
+Laravel Vite plugin cung cấp các provider helper cho Google Fonts, Bunny Fonts, Fontsource và font local:
 
 ```js
 import { defineConfig } from 'vite';
@@ -542,12 +542,12 @@ export default defineConfig({
 });
 ```
 
-The `fontsource` provider reads fonts from an installed Fontsource package. By default, the package name is derived from the font family, such as `@fontsource/jetbrains-mono`. If your application uses a different package name, you may specify it using the `package` option.
+Provider `fontsource` đọc font từ Fontsource package đã cài đặt. Mặc định, package name được suy ra từ font family, chẳng hạn `@fontsource/jetbrains-mono`. Nếu ứng dụng dùng package name khác, bạn có thể chỉ định bằng option `package`.
 
 <a name="local-fonts"></a>
-### Local Fonts
+### Font local
 
-When using local fonts, the `src` option may point to a single font file, a directory, or a glob pattern. The plugin will discover supported font files and infer their weight and style from their filenames:
+Khi dùng local font, option `src` có thể trỏ tới một font file, một directory hoặc một glob pattern. Plugin sẽ tự tìm các font file được hỗ trợ và suy luận weight, style từ filename của chúng:
 
 ```js
 local('Brand Sans', {
@@ -556,7 +556,7 @@ local('Brand Sans', {
 })
 ```
 
-If you need full control over the available variants, you may define them explicitly using the `variants` option:
+Nếu cần kiểm soát đầy đủ các variant khả dụng, bạn có thể khai báo chúng rõ ràng bằng option `variants`:
 
 ```js
 local('Brand Sans', {
@@ -570,45 +570,45 @@ local('Brand Sans', {
 ```
 
 <a name="font-options"></a>
-### Font Options
+### Tùy chọn font
 
-Depending on the provider, font definitions may accept several options that allow you to customize the generated font CSS:
+Tùy provider, định nghĩa font có thể chấp nhận nhiều option để bạn tùy biến CSS font được tạo:
 
 <div class="content-list" markdown="1">
 
-- `alias` defines the name used by Blade's `@fonts` directive and defaults to a slug of the font family.
-- `variable` defines the generated CSS variable and defaults to `--font-{alias}`.
-- `weights` defines the remote or Fontsource font weights that should be resolved and defaults to `[400]`.
-- `styles` defines the remote or Fontsource font styles that should be resolved and defaults to `['normal']`.
-- `subsets` defines the remote or Fontsource font subsets that should be resolved and defaults to `['latin']`.
-- `display` defines the `font-display` value and defaults to `swap`.
-- `preload` controls which WOFF2 font variants should be preloaded. This option may be `true`, `false`, or an array of `{ weight, style }` selectors.
-- `fallbacks` defines additional fallback fonts that should be appended to the generated font stack.
-- `optimizedFallbacks` attempts to generate metric-adjusted fallback font faces using the optional `fontaine` package and defaults to `true`.
+- `alias` định nghĩa tên được dùng bởi directive `@fonts` của Blade và mặc định là slug của font family.
+- `variable` định nghĩa CSS variable được sinh và mặc định là `--font-{alias}`.
+- `weights` định nghĩa các font weight của remote hoặc Fontsource cần resolve và mặc định là `[400]`.
+- `styles` định nghĩa các font style của remote hoặc Fontsource cần resolve và mặc định là `['normal']`.
+- `subsets` định nghĩa các font subset của remote hoặc Fontsource cần resolve và mặc định là `['latin']`.
+- `display` định nghĩa value `font-display` và mặc định là `swap`.
+- `preload` kiểm soát WOFF2 font variant nào được preload. Option này có thể là `true`, `false` hoặc một array selector `{ weight, style }`.
+- `fallbacks` định nghĩa các fallback font bổ sung được append vào font stack đã sinh.
+- `optimizedFallbacks` cố gắng tạo fallback font face đã điều chỉnh metric bằng package tùy chọn `fontaine` và mặc định là `true`.
 
 </div>
 
-Optimized fallbacks require the `fontaine` package, which is not installed by default. If you want Laravel to generate metric-adjusted fallback font faces, you should install `fontaine` as a development dependency:
+Optimized fallback cần package `fontaine`, package này không được cài mặc định. Nếu muốn Laravel tạo fallback font face đã điều chỉnh metric, bạn nên cài `fontaine` làm development dependency:
 
 ```shell
 npm install --save-dev fontaine
 ```
 
-If `fontaine` is not installed or cannot read a font file, Laravel will skip the optimized fallback for that font and continue using any fonts configured via the `fallbacks` option.
+Nếu `fontaine` chưa được cài hoặc không đọc được font file, Laravel sẽ bỏ qua optimized fallback cho font đó và tiếp tục dùng các font được cấu hình qua option `fallbacks`.
 
-Local fonts are resolved from the `src` or `variants` options described above instead of using `weights`, `styles`, and `subsets`.
+Local font được resolve từ option `src` hoặc `variants` đã mô tả ở trên thay vì dùng `weights`, `styles` và `subsets`.
 
 <a name="working-with-blade-and-routes"></a>
-## Working With Blade and Routes
+## Làm việc với Blade và route
 
 <a name="blade-processing-static-assets"></a>
-### Processing Static Assets With Vite
+### Xử lý static asset bằng Vite
 
-When referencing assets in your JavaScript or CSS, Vite automatically processes and versions them. In addition, when building Blade-based applications, Vite can also process and version static assets that you reference solely in Blade templates.
+Khi tham chiếu asset trong JavaScript hoặc CSS, Vite tự động xử lý và version hóa chúng. Ngoài ra, khi xây dựng ứng dụng dùng Blade, Vite cũng có thể xử lý và version hóa các static asset chỉ được tham chiếu trong Blade template.
 
-However, to accomplish this, you need to make Vite aware of your assets by specifying them in the plugin's `assets` option. This option is intended for static files that you want to reference directly with `Vite::asset`. If you want Laravel to generate font CSS and preload links, use the [`fonts` option](#working-with-fonts) instead.
+Để làm được điều đó, bạn cần cho Vite biết các asset của mình bằng cách khai báo chúng trong option `assets` của plugin. Option này dành cho static file mà bạn muốn tham chiếu trực tiếp bằng `Vite::asset`. Nếu muốn Laravel tạo font CSS và preload link, hãy dùng [option `fonts`](#working-with-fonts) thay thế.
 
-For example, if you want to process and version all images stored in `resources/images` and all fonts stored in `resources/fonts`, you should add the following to your Vite configuration:
+Ví dụ, nếu muốn xử lý và version hóa toàn bộ image trong `resources/images` và toàn bộ font trong `resources/fonts`, hãy thêm cấu hình sau vào Vite configuration:
 
 ```js
 laravel({
@@ -617,19 +617,19 @@ laravel({
 })
 ```
 
-These assets will now be processed by Vite when running `npm run build`. You can then reference these assets in Blade templates using the `Vite::asset` method, which will return the versioned URL for a given asset:
+Các asset này giờ sẽ được Vite xử lý khi chạy `npm run build`. Sau đó, bạn có thể tham chiếu chúng trong Blade template bằng method `Vite::asset`, method này trả về URL đã version hóa của asset tương ứng:
 
 ```blade
 <img src="{{ Vite::asset('resources/images/logo.png') }}">
 ```
 
 > [!NOTE]
-> Prior to version 3 of the Laravel Vite plugin, static assets had to be imported in your application's entry point using `import.meta.glob`. The `assets` option was introduced due to changes in Vite 8.
+> Trước version 3 của Laravel Vite plugin, static asset phải được import trong entry point của ứng dụng bằng `import.meta.glob`. Option `assets` được giới thiệu do các thay đổi trong Vite 8.
 
 <a name="blade-refreshing-on-save"></a>
-### Refreshing on Save
+### Refresh khi lưu
 
-When your application is built using traditional server-side rendering with Blade, Vite can improve your development workflow by automatically refreshing the browser when you make changes to view files in your application. To get started, you can simply specify the `refresh` option as `true`.
+Khi ứng dụng được xây theo kiểu server-side rendering truyền thống bằng Blade, Vite có thể cải thiện development workflow bằng cách tự động refresh browser khi bạn thay đổi view file. Để bắt đầu, chỉ cần đặt option `refresh` thành `true`.
 
 ```js
 import { defineConfig } from 'vite';
@@ -645,7 +645,7 @@ export default defineConfig({
 });
 ```
 
-When the `refresh` option is `true`, saving files in the following directories will trigger the browser to perform a full page refresh while you are running `npm run dev`:
+Khi option `refresh` là `true`, việc lưu file trong các directory sau sẽ kích hoạt browser full-page refresh trong lúc bạn đang chạy `npm run dev`:
 
 - `app/Livewire/**`
 - `app/View/Components/**`
@@ -654,9 +654,9 @@ When the `refresh` option is `true`, saving files in the following directories w
 - `resources/views/**`
 - `routes/**`
 
-Watching the `routes/**` directory is useful if you are utilizing [Ziggy](https://github.com/tighten/ziggy) to generate route links within your application's frontend.
+Theo dõi thư mục `routes/**` sẽ hữu ích nếu bạn đang sử dụng [Ziggy](https://github.com/tighten/ziggy) để tạo các liên kết route trong frontend của ứng dụng.
 
-If these default paths do not suit your needs, you can specify your own list of paths to watch:
+Nếu các đường dẫn mặc định này không phù hợp với nhu cầu, bạn có thể tự chỉ định danh sách đường dẫn cần theo dõi:
 
 ```js
 import { defineConfig } from 'vite';
@@ -672,7 +672,7 @@ export default defineConfig({
 });
 ```
 
-Under the hood, the Laravel Vite plugin uses the [vite-plugin-full-reload](https://github.com/ElMassimo/vite-plugin-full-reload) package, which offers some advanced configuration options to fine-tune this feature's behavior. If you need this level of customization, you may provide a `config` definition:
+Bên dưới, Laravel Vite plugin sử dụng package [vite-plugin-full-reload](https://github.com/ElMassimo/vite-plugin-full-reload), cung cấp một số tùy chọn cấu hình nâng cao để tinh chỉnh hành vi của tính năng này. Nếu cần mức tùy biến đó, bạn có thể cung cấp cấu hình `config`:
 
 ```js
 import { defineConfig } from 'vite';
@@ -692,9 +692,9 @@ export default defineConfig({
 ```
 
 <a name="blade-aliases"></a>
-### Aliases
+### Alias trong Blade
 
-It is common in JavaScript applications to [create aliases](#aliases) to regularly referenced directories. But, you may also create aliases to use in Blade by using the `macro` method on the `Illuminate\Support\Facades\Vite` class. Typically, "macros" should be defined within the `boot` method of a [service provider](/docs/{{version}}/providers):
+Trong các ứng dụng JavaScript, việc [tạo alias](#aliases) cho những thư mục thường xuyên được tham chiếu là khá phổ biến. Tuy nhiên, bạn cũng có thể tạo alias để sử dụng trong Blade bằng phương thức `macro` của class `Illuminate\Support\Facades\Vite`. Thông thường, các "macro" nên được định nghĩa trong phương thức `boot` của một [service provider](/docs/{{version}}/providers):
 
 ```php
 /**
@@ -706,18 +706,18 @@ public function boot(): void
 }
 ```
 
-Once a macro has been defined, it can be invoked within your templates. For example, we can use the `image` macro defined above to reference an asset located at `resources/images/logo.png`:
+Sau khi macro được định nghĩa, bạn có thể gọi nó trong template. Ví dụ, có thể sử dụng macro `image` ở trên để tham chiếu đến asset tại `resources/images/logo.png`:
 
 ```blade
 <img src="{{ Vite::image('logo.png') }}" alt="Laravel Logo">
 ```
 
 <a name="asset-prefetching"></a>
-## Asset Prefetching
+## Prefetch asset
 
-When building an SPA using Vite's code splitting feature, required assets are fetched on each page navigation. This behavior can lead to delayed UI rendering. If this is a problem for your frontend framework of choice, Laravel offers the ability to eagerly prefetch your application's JavaScript and CSS assets on initial page load.
+Khi xây dựng SPA bằng tính năng code splitting của Vite, các asset cần thiết sẽ được tải mỗi khi chuyển trang. Hành vi này có thể khiến việc render UI bị trễ. Nếu đây là vấn đề với frontend framework bạn sử dụng, Laravel cho phép prefetch sớm các asset JavaScript và CSS của ứng dụng ngay trong lần tải trang đầu tiên.
 
-You can instruct Laravel to eagerly prefetch your assets by invoking the `Vite::prefetch` method in the `boot` method of a [service provider](/docs/{{version}}/providers):
+Bạn có thể yêu cầu Laravel prefetch sớm các asset bằng cách gọi phương thức `Vite::prefetch` trong phương thức `boot` của một [service provider](/docs/{{version}}/providers):
 
 ```php
 <?php
@@ -747,7 +747,7 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-In the example above, assets will be prefetched with a maximum of `3` concurrent downloads on each page load. You can modify the concurrency to suit your application's needs or specify no concurrency limit if the application should download all assets at once:
+Trong ví dụ trên, các asset sẽ được prefetch với tối đa `3` lượt tải đồng thời trong mỗi lần tải trang. Bạn có thể điều chỉnh mức concurrency cho phù hợp với ứng dụng, hoặc không đặt giới hạn nếu muốn tải tất cả asset cùng lúc:
 
 ```php
 /**
@@ -759,7 +759,7 @@ public function boot(): void
 }
 ```
 
-By default, prefetching will begin when the [page _load_ event](https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event) fires. If you would like to customize when prefetching begins, you may specify an event that Vite will listen for:
+Mặc định, quá trình prefetch bắt đầu khi [sự kiện _load_ của trang](https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event) được kích hoạt. Nếu muốn tùy chỉnh thời điểm bắt đầu prefetch, bạn có thể chỉ định một event để Vite lắng nghe:
 
 ```php
 /**
@@ -771,7 +771,7 @@ public function boot(): void
 }
 ```
 
-Given the code above, prefetching will now begin when you manually dispatch the `vite:prefetch` event on the `window` object. For example, you could have prefetching begin three seconds after the page loads:
+Với đoạn code trên, prefetch sẽ bắt đầu khi bạn chủ động dispatch event `vite:prefetch` trên object `window`. Ví dụ, bạn có thể bắt đầu prefetch sau ba giây kể từ khi trang tải xong:
 
 ```html
 <script>
@@ -782,43 +782,43 @@ Given the code above, prefetching will now begin when you manually dispatch the 
 ```
 
 <a name="custom-base-urls"></a>
-## Custom Base URLs
+## URL gốc tùy chỉnh
 
-If your Vite compiled assets are deployed to a domain separate from your application, such as via a CDN, you must specify the `ASSET_URL` environment variable within your application's `.env` file:
+Nếu các asset được Vite biên dịch được triển khai trên một domain khác với ứng dụng, chẳng hạn thông qua CDN, bạn phải khai báo biến môi trường `ASSET_URL` trong file `.env` của ứng dụng:
 
 ```env
 ASSET_URL=https://cdn.example.com
 ```
 
-After configuring the asset URL, all re-written URLs to your assets will be prefixed with the configured value:
+Sau khi cấu hình asset URL, mọi URL asset được viết lại sẽ được thêm giá trị đã cấu hình vào phía trước:
 
 ```text
 https://cdn.example.com/build/assets/app.9dce8d17.js
 ```
 
-Remember that [absolute URLs are not re-written by Vite](#url-processing), so they will not be prefixed.
+Lưu ý rằng [URL tuyệt đối không được Vite viết lại](#url-processing), vì vậy chúng sẽ không được thêm prefix này.
 
 <a name="environment-variables"></a>
-## Environment Variables
+## Biến môi trường
 
-You may inject environment variables into your JavaScript by prefixing them with `VITE_` in your application's `.env` file:
+Bạn có thể inject biến môi trường vào JavaScript bằng cách thêm prefix `VITE_` cho chúng trong file `.env` của ứng dụng:
 
 ```env
 VITE_SENTRY_DSN_PUBLIC=http://example.com
 ```
 
-You may access injected environment variables via the `import.meta.env` object:
+Bạn có thể truy cập các biến môi trường đã được inject thông qua object `import.meta.env`:
 
 ```js
 import.meta.env.VITE_SENTRY_DSN_PUBLIC
 ```
 
 <a name="disabling-vite-in-tests"></a>
-## Disabling Vite in Tests
+## Tắt Vite trong test
 
-Laravel's Vite integration will attempt to resolve your assets while running your tests, which requires you to either run the Vite development server or build your assets.
+Tích hợp Vite của Laravel sẽ cố resolve các asset trong khi chạy test, vì vậy bạn phải chạy Vite development server hoặc build các asset trước.
 
-If you would prefer to mock Vite during testing, you may call the `withoutVite` method, which is available for any tests that extend Laravel's `TestCase` class:
+Nếu muốn mock Vite trong quá trình test, bạn có thể gọi phương thức `withoutVite`, khả dụng cho mọi test kế thừa class `TestCase` của Laravel:
 
 ```php tab=Pest
 test('without vite example', function () {
@@ -842,7 +842,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-If you would like to disable Vite for all tests, you may call the `withoutVite` method from the `setUp` method on your base `TestCase` class:
+Nếu muốn tắt Vite cho toàn bộ test, bạn có thể gọi phương thức `withoutVite` từ phương thức `setUp` của class `TestCase` cơ sở:
 
 ```php
 <?php
@@ -865,7 +865,7 @@ abstract class TestCase extends BaseTestCase
 <a name="ssr"></a>
 ## Server-Side Rendering (SSR)
 
-The Laravel Vite plugin makes it painless to set up server-side rendering with Vite. To get started, create an SSR entry point at `resources/js/ssr.js` and specify the entry point by passing a configuration option to the Laravel plugin:
+Laravel Vite plugin giúp việc thiết lập server-side rendering với Vite trở nên đơn giản. Để bắt đầu, hãy tạo SSR entry point tại `resources/js/ssr.js` và chỉ định entry point này thông qua tùy chọn cấu hình truyền vào Laravel plugin:
 
 ```js
 import { defineConfig } from 'vite';
@@ -881,7 +881,7 @@ export default defineConfig({
 });
 ```
 
-To ensure you don't forget to rebuild the SSR entry point, we recommend augmenting the "build" script in your application's `package.json` to create your SSR build:
+Để tránh quên build lại SSR entry point, Laravel khuyến nghị mở rộng script `build` trong `package.json` của ứng dụng để đồng thời tạo SSR build:
 
 ```json
 "scripts": {
@@ -891,29 +891,29 @@ To ensure you don't forget to rebuild the SSR entry point, we recommend augmenti
 }
 ```
 
-Then, to build and start the SSR server, you may run the following commands:
+Sau đó, để build và khởi động SSR server, bạn có thể chạy các lệnh sau:
 
 ```shell
 npm run build
 node bootstrap/ssr/ssr.js
 ```
 
-If you are using [SSR with Inertia](https://inertiajs.com/server-side-rendering), you may instead use the `inertia:start-ssr` Artisan command to start the SSR server:
+Nếu đang sử dụng [SSR với Inertia](https://inertiajs.com/server-side-rendering), bạn có thể dùng lệnh Artisan `inertia:start-ssr` để khởi động SSR server:
 
 ```shell
 php artisan inertia:start-ssr
 ```
 
 > [!NOTE]
-> Laravel's [starter kits](/docs/{{version}}/starter-kits) already include the proper Laravel, Inertia SSR, and Vite configuration. These starter kits offer the fastest way to get started with Laravel, Inertia SSR, and Vite.
+> Các [starter kit](/docs/{{version}}/starter-kits) của Laravel đã bao gồm cấu hình phù hợp cho Laravel, Inertia SSR và Vite. Đây là cách nhanh nhất để bắt đầu với Laravel, Inertia SSR và Vite.
 
 <a name="script-and-style-attributes"></a>
-## Script and Style Tag Attributes
+## Thuộc tính của thẻ script và style
 
 <a name="content-security-policy-csp-nonce"></a>
-### Content Security Policy (CSP) Nonce
+### Nonce cho Content Security Policy (CSP)
 
-If you wish to include a [nonce attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) on your script and style tags as part of your [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP), you may generate or specify a nonce using the `useCspNonce` method within a custom [middleware](/docs/{{version}}/middleware):
+Nếu muốn thêm [thuộc tính nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) vào các thẻ script và style như một phần của [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP), bạn có thể tạo hoặc chỉ định nonce bằng phương thức `useCspNonce` trong một [middleware](/docs/{{version}}/middleware) tùy chỉnh:
 
 ```php
 <?php
@@ -943,15 +943,15 @@ class AddContentSecurityPolicyHeaders
 }
 ```
 
-After invoking the `useCspNonce` method, Laravel will automatically include the `nonce` attributes on all generated script and style tags.
+Sau khi gọi phương thức `useCspNonce`, Laravel sẽ tự động thêm thuộc tính `nonce` vào mọi thẻ script và style được tạo.
 
-If you need to specify the nonce elsewhere, including the [Ziggy `@route` directive](https://github.com/tighten/ziggy#using-routes-with-a-content-security-policy) included with Laravel's [starter kits](/docs/{{version}}/starter-kits), you may retrieve it using the `cspNonce` method:
+Nếu cần sử dụng nonce ở nơi khác, bao gồm [directive `@route` của Ziggy](https://github.com/tighten/ziggy#using-routes-with-a-content-security-policy) đi kèm [starter kit](/docs/{{version}}/starter-kits) của Laravel, bạn có thể lấy giá trị đó bằng phương thức `cspNonce`:
 
 ```blade
 @routes(nonce: Vite::cspNonce())
 ```
 
-If you already have a nonce that you would like to instruct Laravel to use, you may pass the nonce to the `useCspNonce` method:
+Nếu đã có sẵn nonce và muốn Laravel sử dụng giá trị đó, bạn có thể truyền nonce vào phương thức `useCspNonce`:
 
 ```php
 Vite::useCspNonce($nonce);
@@ -960,13 +960,13 @@ Vite::useCspNonce($nonce);
 <a name="subresource-integrity-sri"></a>
 ### Subresource Integrity (SRI)
 
-If your Vite manifest includes `integrity` hashes for your assets, Laravel will automatically add the `integrity` attribute on any script and style tags it generates in order to enforce [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity). By default, Vite does not include the `integrity` hash in its manifest, but you may enable it by installing the [vite-plugin-manifest-sri](https://www.npmjs.com/package/vite-plugin-manifest-sri) NPM plugin:
+Nếu Vite manifest chứa hash `integrity` cho các asset, Laravel sẽ tự động thêm thuộc tính `integrity` vào các thẻ script và style được tạo để thực thi [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity). Mặc định, Vite không đưa hash `integrity` vào manifest, nhưng bạn có thể bật tính năng này bằng cách cài NPM plugin [vite-plugin-manifest-sri](https://www.npmjs.com/package/vite-plugin-manifest-sri):
 
 ```shell
 npm install --save-dev vite-plugin-manifest-sri
 ```
 
-You may then enable this plugin in your `vite.config.js` file:
+Sau đó, bạn có thể bật plugin này trong file `vite.config.js`:
 
 ```js
 import { defineConfig } from 'vite';
@@ -983,7 +983,7 @@ export default defineConfig({
 });
 ```
 
-If required, you may also customize the manifest key where the integrity hash can be found:
+Nếu cần, bạn cũng có thể tùy chỉnh key trong manifest dùng để lưu integrity hash:
 
 ```php
 use Illuminate\Support\Facades\Vite;
@@ -991,16 +991,16 @@ use Illuminate\Support\Facades\Vite;
 Vite::useIntegrityKey('custom-integrity-key');
 ```
 
-If you would like to disable this auto-detection completely, you may pass `false` to the `useIntegrityKey` method:
+Nếu muốn tắt hoàn toàn cơ chế tự động phát hiện này, hãy truyền `false` vào phương thức `useIntegrityKey`:
 
 ```php
 Vite::useIntegrityKey(false);
 ```
 
 <a name="arbitrary-attributes"></a>
-### Arbitrary Attributes
+### Thuộc tính tùy ý
 
-If you need to include additional attributes on your script and style tags, such as the [data-turbo-track](https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change) attribute, you may specify them via the `useScriptTagAttributes` and `useStyleTagAttributes` methods. Typically, this methods should be invoked from a [service provider](/docs/{{version}}/providers):
+Nếu cần thêm các thuộc tính khác vào thẻ script và style, chẳng hạn thuộc tính [data-turbo-track](https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change), bạn có thể chỉ định chúng thông qua các phương thức `useScriptTagAttributes` và `useStyleTagAttributes`. Thông thường, các phương thức này nên được gọi từ một [service provider](/docs/{{version}}/providers):
 
 ```php
 use Illuminate\Support\Facades\Vite;
@@ -1016,7 +1016,7 @@ Vite::useStyleTagAttributes([
 ]);
 ```
 
-If you need to conditionally add attributes, you may pass a callback that will receive the asset source path, its URL, its manifest chunk, and the entire manifest:
+Nếu cần thêm thuộc tính theo điều kiện, bạn có thể truyền một callback nhận source path của asset, URL, manifest chunk và toàn bộ manifest:
 
 ```php
 use Illuminate\Support\Facades\Vite;
@@ -1031,12 +1031,12 @@ Vite::useStyleTagAttributes(fn (string $src, string $url, array|null $chunk, arr
 ```
 
 > [!WARNING]
-> The `$chunk` and `$manifest` arguments will be `null` while the Vite development server is running.
+> Các tham số `$chunk` và `$manifest` sẽ là `null` khi Vite development server đang chạy.
 
 <a name="advanced-customization"></a>
-## Advanced Customization
+## Tùy chỉnh nâng cao
 
-Out of the box, Laravel's Vite plugin uses sensible conventions that should work for the majority of applications; however, sometimes you may need to customize Vite's behavior. To enable additional customization options, we offer the following methods and options which can be used in place of the `@vite` Blade directive:
+Mặc định, Laravel Vite plugin sử dụng các convention hợp lý và phù hợp với phần lớn ứng dụng. Tuy nhiên, đôi khi bạn cần tùy chỉnh hành vi của Vite. Để hỗ trợ các tùy chọn nâng cao hơn, Laravel cung cấp các phương thức và tùy chọn sau có thể dùng thay cho Blade directive `@vite`:
 
 ```blade
 <!doctype html>
@@ -1055,7 +1055,7 @@ Out of the box, Laravel's Vite plugin uses sensible conventions that should work
 </head>
 ```
 
-Within the `vite.config.js` file, you should then specify the same configuration:
+Sau đó, trong file `vite.config.js`, bạn cần chỉ định cấu hình tương ứng:
 
 ```js
 import { defineConfig } from 'vite';
@@ -1076,9 +1076,9 @@ export default defineConfig({
 ```
 
 <a name="cors"></a>
-### Dev Server Cross-Origin Resource Sharing (CORS)
+### Cross-Origin Resource Sharing (CORS) của dev server
 
-If you are experiencing Cross-Origin Resource Sharing (CORS) issues in the browser while fetching assets from the Vite dev server, you may need to grant your custom origin access to the dev server. Vite combined with the Laravel plugin allows the following origins without any additional configuration:
+Nếu gặp lỗi Cross-Origin Resource Sharing (CORS) trên trình duyệt khi tải asset từ Vite dev server, bạn có thể cần cấp quyền cho origin tùy chỉnh truy cập dev server. Vite kết hợp với Laravel plugin cho phép các origin sau mà không cần cấu hình bổ sung:
 
 - `::1`
 - `127.0.0.1`
@@ -1087,13 +1087,13 @@ If you are experiencing Cross-Origin Resource Sharing (CORS) issues in the brows
 - `*.localhost`
 - `APP_URL` in the project's `.env`
 
-The easiest way to allow a custom origin for your project is to ensure that your application's `APP_URL` environment variable matches the origin you are visiting in your browser. For example, if you visiting `https://my-app.laravel`, you should update your `.env` to match:
+Cách đơn giản nhất để cho phép một origin tùy chỉnh là bảo đảm biến môi trường `APP_URL` của ứng dụng khớp với origin bạn đang truy cập trên trình duyệt. Ví dụ, nếu truy cập `https://my-app.laravel`, hãy cập nhật `.env` tương ứng:
 
 ```env
 APP_URL=https://my-app.laravel
 ```
 
-If you need more fine-grained control over the origins, such as supporting multiple origins, you should utilize [Vite's comprehensive and flexible built-in CORS server configuration](https://vite.dev/config/server-options.html#server-cors). For example, you may specify multiple origins in the `server.cors.origin` configuration option in the project's `vite.config.js` file:
+Nếu cần kiểm soát origin chi tiết hơn, chẳng hạn hỗ trợ nhiều origin, bạn nên sử dụng [cấu hình CORS server tích hợp đầy đủ và linh hoạt của Vite](https://vite.dev/config/server-options.html#server-cors). Ví dụ, có thể chỉ định nhiều origin trong tùy chọn `server.cors.origin` của file `vite.config.js`:
 
 ```js
 import { defineConfig } from 'vite';
@@ -1117,7 +1117,7 @@ export default defineConfig({
 });
 ```
 
-You may also include regex patterns, which can be helpful if you would like to allow all origins for a given top-level domain, such as `*.laravel`:
+Bạn cũng có thể sử dụng biểu thức chính quy, hữu ích khi muốn cho phép mọi origin thuộc một top-level domain nhất định, chẳng hạn `*.laravel`:
 
 ```js
 import { defineConfig } from 'vite';
@@ -1142,19 +1142,19 @@ export default defineConfig({
 ```
 
 <a name="correcting-dev-server-urls"></a>
-### Correcting Dev Server URLs
+### Hiệu chỉnh URL của dev server
 
-Some plugins within the Vite ecosystem assume that URLs which begin with a forward-slash will always point to the Vite dev server. However, due to the nature of the Laravel integration, this is not the case.
+Một số plugin trong hệ sinh thái Vite giả định rằng URL bắt đầu bằng dấu gạch chéo `/` luôn trỏ đến Vite dev server. Tuy nhiên, do cách Laravel tích hợp với Vite, giả định này không phải lúc nào cũng đúng.
 
-For example, the `vite-imagetools` plugin outputs URLs like the following while Vite is serving your assets:
+Ví dụ, plugin `vite-imagetools` tạo URL như sau khi Vite đang phục vụ asset:
 
 ```html
 <img src="/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520">
 ```
 
-The `vite-imagetools` plugin is expecting that the output URL will be intercepted by Vite and the plugin may then handle all URLs that start with `/@imagetools`. If you are using plugins that are expecting this behavior, you will need to manually correct the URLs. You can do this in your `vite.config.js` file by using the `transformOnServe` option.
+Plugin `vite-imagetools` kỳ vọng URL đầu ra sẽ được Vite chặn lại để plugin xử lý mọi URL bắt đầu bằng `/@imagetools`. Nếu đang sử dụng plugin dựa trên hành vi này, bạn cần hiệu chỉnh URL thủ công. Việc đó có thể được thực hiện trong `vite.config.js` bằng tùy chọn `transformOnServe`.
 
-In this particular example, we will prepend the dev server URL to all occurrences of `/@imagetools` within the generated code:
+Trong ví dụ này, URL của dev server sẽ được thêm vào trước mọi lần xuất hiện của `/@imagetools` trong code được tạo:
 
 ```js
 import { defineConfig } from 'vite';
@@ -1172,12 +1172,14 @@ export default defineConfig({
 });
 ```
 
-Now, while Vite is serving Assets, it will output URLs that point to the Vite dev server:
+Khi Vite đang phục vụ asset, URL đầu ra lúc này sẽ trỏ đến Vite dev server:
 
 ```html
 - <img src="/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520"><!-- [tl! remove] -->
 + <img src="http://[::1]:5173/@imagetools/f0b2f404b13f052c604e632f2fb60381bf61a520"><!-- [tl! add] -->
 ```
+
+---
 
 ## Tài liệu chính thức
 

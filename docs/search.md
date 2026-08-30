@@ -1,64 +1,66 @@
-# Search
+# Tìm kiếm
 
-- [Introduction](#introduction)
-    - [Full-Text Search](#introduction-full-text-search)
-    - [Semantic / Vector Search](#introduction-semantic-vector-search)
-    - [Reranking](#introduction-reranking)
-    - [Scout Search Engines](#introduction-scout-search-engines)
-- [Full-Text Search](#full-text-search)
-    - [Adding Full-Text Indexes](#adding-full-text-indexes)
-    - [Running Full-Text Queries](#running-full-text-queries)
-- [Semantic / Vector Search](#semantic-vector-search)
-    - [Generating Embeddings](#generating-embeddings)
-    - [Storing and Indexing Vectors](#storing-and-indexing-vectors)
-    - [Querying by Similarity](#querying-by-similarity)
-- [Reranking Results](#reranking-results)
+- [Giới thiệu](#introduction)
+    - [Tìm kiếm toàn văn](#introduction-full-text-search)
+    - [Tìm kiếm ngữ nghĩa / vector](#introduction-semantic-vector-search)
+    - [Xếp hạng lại](#introduction-reranking)
+    - [Các công cụ tìm kiếm của Scout](#introduction-scout-search-engines)
+- [Tìm kiếm toàn văn](#full-text-search)
+    - [Thêm chỉ mục toàn văn](#adding-full-text-indexes)
+    - [Thực thi truy vấn toàn văn](#running-full-text-queries)
+- [Tìm kiếm ngữ nghĩa / vector](#semantic-vector-search)
+    - [Tạo embedding](#generating-embeddings)
+    - [Lưu trữ và lập chỉ mục vector](#storing-and-indexing-vectors)
+    - [Truy vấn theo độ tương đồng](#querying-by-similarity)
+- [Xếp hạng lại kết quả](#reranking-results)
 - [Laravel Scout](#laravel-scout)
     - [Database Engine](#database-engine)
-    - [Third-Party Engines](#third-party-engines)
-- [Combining Techniques](#combining-techniques)
+    - [Các engine bên thứ ba](#third-party-engines)
+- [Kết hợp các kỹ thuật](#combining-techniques)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Almost every application needs search. Whether your users are searching a knowledge base for relevant articles, exploring a product catalog, or asking natural-language questions against a corpus of documents, Laravel provides built-in tools to handle each of these scenarios — and you often don't need any external services to get there.
+Gần như mọi ứng dụng đều cần chức năng tìm kiếm. Dù người dùng đang tìm các bài viết liên quan trong một knowledge base, duyệt catalog sản phẩm, hay đặt câu hỏi bằng ngôn ngữ tự nhiên trên một tập tài liệu, Laravel đều cung cấp các công cụ tích hợp để xử lý từng tình huống này — và trong nhiều trường hợp bạn không cần bất kỳ dịch vụ bên ngoài nào.
 
-Most applications will find that the built-in database-powered options provided by Laravel are more than sufficient — external search services are only necessary when you need features like typo tolerance, faceted filtering, or geo-search at massive scale.
+Phần lớn ứng dụng sẽ nhận thấy các tùy chọn tìm kiếm dựa trên database được Laravel tích hợp sẵn là quá đủ — các dịch vụ tìm kiếm bên ngoài chỉ thực sự cần thiết khi bạn cần những tính năng như khả năng chịu lỗi gõ sai, faceted filtering hoặc geo-search ở quy mô rất lớn.
 
 <a name="introduction-full-text-search"></a>
-#### Full-Text Search
+#### Tìm kiếm toàn văn
 
-When you need keyword relevance ranking — where the database scores and sorts results based on how well they match the search terms — Laravel's `whereFullText` query builder method leverages native full-text indexes on MariaDB, MySQL, and PostgreSQL. Full-text search understands word boundaries and stemming, so a search for "running" can match records containing "run". No external service is required.
+Khi bạn cần xếp hạng theo mức độ liên quan của từ khóa — tức database chấm điểm và sắp xếp kết quả dựa trên mức độ khớp với các từ tìm kiếm — method `whereFullText` của query builder tận dụng các full-text index native trên MariaDB, MySQL và PostgreSQL. Full-text search hiểu ranh giới từ và stemming, vì vậy tìm kiếm "running" có thể khớp với các record chứa "run". Không cần dịch vụ bên ngoài.
 
 <a name="introduction-semantic-vector-search"></a>
-#### Semantic / Vector Search
+#### Tìm kiếm ngữ nghĩa / vector
 
-For AI-powered semantic search that matches results by *meaning* rather than exact keywords, the `whereVectorSimilarTo` query builder method uses vector embeddings stored in PostgreSQL with the `pgvector` extension or MariaDB. For example, a search for "best wineries in Napa Valley" can surface an article titled "Top Vineyards to Visit" — even though the words don't overlap. Vector search requires PostgreSQL with the `pgvector` extension or MariaDB 11.7 or later, as well as the [Laravel AI SDK](/docs/{{version}}/ai-sdk).
+Đối với semantic search dựa trên AI, nơi kết quả được khớp theo *ý nghĩa* thay vì từ khóa chính xác, method `whereVectorSimilarTo` của query builder sử dụng vector embedding được lưu trong PostgreSQL với extension `pgvector` hoặc MariaDB. Ví dụ, tìm kiếm "best wineries in Napa Valley" có thể trả về bài viết có tiêu đề "Top Vineyards to Visit" — dù các từ không hề trùng nhau.
+
+Vector search yêu cầu PostgreSQL với extension `pgvector` hoặc MariaDB 11.7 trở lên, đồng thời cần [Laravel AI SDK](/docs/{{version}}/ai-sdk).
 
 <a name="introduction-reranking"></a>
-#### Reranking
+#### Xếp hạng lại
 
-Laravel's [AI SDK](/docs/{{version}}/ai-sdk) provides reranking capabilities that use AI models to reorder any set of results by semantic relevance to a query. Reranking is especially powerful as a second stage after a fast initial retrieval step like full-text search — giving you both speed and semantic accuracy.
+[AI SDK](/docs/{{version}}/ai-sdk) của Laravel cung cấp khả năng reranking, sử dụng AI model để sắp xếp lại bất kỳ tập kết quả nào theo mức độ liên quan ngữ nghĩa với một query. Reranking đặc biệt hiệu quả khi được dùng làm bước thứ hai sau một bước truy xuất ban đầu nhanh như full-text search — nhờ đó bạn có cả tốc độ lẫn độ chính xác ngữ nghĩa.
 
 <a name="introduction-scout-search-engines"></a>
-#### Laravel Scout Search
+#### Tìm kiếm với Laravel Scout
 
-For applications that want a `Searchable` trait that automatically keeps search indexes in sync with Eloquent models, [Laravel Scout](/docs/{{version}}/scout) offers both a built-in database engine and drivers for third-party services like Algolia, Meilisearch, Typesense, and Turbopuffer.
+Đối với các ứng dụng muốn sử dụng trait `Searchable` để tự động giữ search index đồng bộ với Eloquent model, [Laravel Scout](/docs/{{version}}/scout) cung cấp cả database engine tích hợp sẵn lẫn driver cho các dịch vụ bên thứ ba như Algolia, Meilisearch, Typesense và Turbopuffer.
 
 <a name="full-text-search"></a>
-## Full-Text Search
+## Tìm kiếm toàn văn
 
-While `LIKE` queries work well for simple substring matching, they don't understand language. A `LIKE` search for "running" won't find a record containing "run", and results aren't ranked by relevance — they're simply returned in whatever order the database finds them. Full-text search solves both of these problems by using specialized indexes that understand word boundaries, stemming, and relevance scoring, allowing the database to return the most relevant results first.
+Mặc dù truy vấn `LIKE` phù hợp với việc khớp substring đơn giản, chúng không hiểu ngôn ngữ. Một truy vấn `LIKE` cho "running" sẽ không tìm thấy record chứa "run", và kết quả cũng không được xếp hạng theo mức độ liên quan — chúng chỉ được trả về theo thứ tự database tìm thấy. Full-text search giải quyết cả hai vấn đề bằng các index chuyên dụng hiểu ranh giới từ, stemming và relevance scoring, cho phép database trả về các kết quả phù hợp nhất trước tiên.
 
-Fast full-text search is built into MariaDB, MySQL, and PostgreSQL — no external search service is required. You only need to add a full-text index to the columns you want to search, and then use the `whereFullText` query builder method to search against them.
+Tìm kiếm toàn văn tốc độ cao được tích hợp sẵn trong MariaDB, MySQL và PostgreSQL — không cần dịch vụ tìm kiếm bên ngoài. Bạn chỉ cần thêm full-text index vào các column muốn tìm kiếm, rồi sử dụng method `whereFullText` của query builder để tìm trên chúng.
 
 > [!WARNING]
-> Full-text search is currently supported by MariaDB, MySQL, and PostgreSQL.
+> Hiện tại full-text search được hỗ trợ trên MariaDB, MySQL và PostgreSQL.
 
 <a name="adding-full-text-indexes"></a>
-### Adding Full-Text Indexes
+### Thêm chỉ mục toàn văn
 
-To use full-text search, first add a full-text index to the columns you want to search. You may add the index to a single column, or pass an array of columns to create a composite index that searches across multiple fields at once:
+Để sử dụng full-text search, trước tiên hãy thêm full-text index vào các column bạn muốn tìm kiếm. Bạn có thể thêm index cho một column đơn, hoặc truyền một array các column để tạo composite index có thể tìm trên nhiều field cùng lúc:
 
 ```php
 Schema::create('articles', function (Blueprint $table) {
@@ -71,26 +73,26 @@ Schema::create('articles', function (Blueprint $table) {
 });
 ```
 
-On PostgreSQL, you may specify a language configuration for the index, which controls how words are stemmed:
+Trên PostgreSQL, bạn có thể chỉ định language configuration cho index để kiểm soát cách các từ được stemming:
 
 ```php
 $table->fullText('body')->language('english');
 ```
 
-For more information on creating indexes, consult the [migration documentation](/docs/{{version}}/migrations#available-index-types).
+Để biết thêm thông tin về việc tạo index, hãy xem [tài liệu migration](/docs/{{version}}/migrations#available-index-types).
 
 <a name="running-full-text-queries"></a>
-### Running Full-Text Queries
+### Thực thi truy vấn toàn văn
 
-Once the index is in place, use the `whereFullText` query builder method to search against it. Laravel will generate the appropriate SQL for your database driver — for example, `MATCH(...) AGAINST(...)` on MariaDB and MySQL, and `to_tsvector(...) @@ plainto_tsquery(...)` on PostgreSQL:
+Sau khi index đã được tạo, hãy sử dụng method `whereFullText` của query builder để tìm kiếm trên index đó. Laravel sẽ sinh SQL phù hợp với database driver của bạn — ví dụ `MATCH(...) AGAINST(...)` trên MariaDB và MySQL, còn PostgreSQL dùng `to_tsvector(...) @@ plainto_tsquery(...)`:
 
 ```php
 $articles = Article::whereFullText('body', 'web developer')->get();
 ```
 
-When using MariaDB and MySQL, results are automatically ordered by relevance score. On PostgreSQL, `whereFullText` filters matching records but does not order them by relevance — if you need automatic relevance ordering on PostgreSQL, consider using [Scout's database engine](#database-engine), which handles this for you.
+Khi sử dụng MariaDB và MySQL, kết quả được tự động sắp theo relevance score. Trên PostgreSQL, `whereFullText` lọc các record khớp nhưng không sắp xếp chúng theo mức độ liên quan — nếu bạn cần tự động relevance ordering trên PostgreSQL, hãy cân nhắc sử dụng [database engine của Scout](#database-engine), vì engine này xử lý việc đó cho bạn.
 
-If you created a composite full-text index across multiple columns, you may search against all of them by passing the same array of columns to `whereFullText`:
+Nếu đã tạo composite full-text index trên nhiều column, bạn có thể tìm kiếm trên tất cả các column đó bằng cách truyền cùng array column vào `whereFullText`:
 
 ```php
 $articles = Article::whereFullText(
@@ -98,22 +100,22 @@ $articles = Article::whereFullText(
 )->get();
 ```
 
-The `orWhereFullText` method may be used to add a full-text search clause as an "or" condition. For complete details, consult the [query builder documentation](/docs/{{version}}/queries#full-text-where-clauses).
+Method `orWhereFullText` có thể được dùng để thêm một mệnh đề full-text search dưới dạng điều kiện "or". Để biết đầy đủ chi tiết, hãy xem [tài liệu query builder](/docs/{{version}}/queries#full-text-where-clauses).
 
 <a name="semantic-vector-search"></a>
-## Semantic / Vector Search
+## Tìm kiếm ngữ nghĩa / vector
 
-Full-text search relies on matching keywords — the words in the query must appear (in some form) in the data. Semantic search takes a fundamentally different approach: it uses AI-generated vector embeddings to represent the *meaning* of text as arrays of numbers, and then finds results whose meaning is most similar to the query. For example, a search for "best wineries in Napa Valley" can surface an article titled "Top Vineyards to Visit" — even though the words don't overlap at all.
+Full-text search dựa vào việc khớp từ khóa — các từ trong query phải xuất hiện, dưới một dạng nào đó, trong dữ liệu. Semantic search sử dụng cách tiếp cận hoàn toàn khác: nó dùng vector embedding do AI tạo ra để biểu diễn *ý nghĩa* của văn bản dưới dạng các array số, sau đó tìm các kết quả có ý nghĩa gần nhất với query. Ví dụ, tìm kiếm "best wineries in Napa Valley" có thể trả về bài viết "Top Vineyards to Visit" — dù các từ hoàn toàn không trùng nhau.
 
-The basic workflow for vector search is: generate an embedding (a numeric array) for each piece of content and store it alongside your data, then at search time, generate an embedding for the user's query and find the stored embeddings that are closest to it in vector space.
+Workflow cơ bản của vector search là: tạo embedding (một array số) cho từng phần nội dung và lưu cùng dữ liệu; sau đó, tại thời điểm tìm kiếm, tạo embedding cho query của người dùng rồi tìm các embedding đã lưu có vị trí gần nó nhất trong vector space.
 
 > [!NOTE]
-> Vector search requires the [Laravel AI SDK](/docs/{{version}}/ai-sdk) and is supported by PostgreSQL (requires the `pgvector` extension), MariaDB 11.7 or later, and MongoDB (requires the [Laravel MongoDB package](https://laravel.com/docs/13.x/mongodb)). All Postgres databases on [Laravel Cloud](https://laravel.com/cloud) already have `pgvector` installed.
+> Vector search yêu cầu [Laravel AI SDK](/docs/{{version}}/ai-sdk) và được hỗ trợ bởi PostgreSQL (cần extension `pgvector`), MariaDB 11.7 trở lên và MongoDB (cần [Laravel MongoDB package](https://laravel.com/docs/13.x/mongodb)). Tất cả PostgreSQL database trên [Laravel Cloud](https://laravel.com/cloud) đều đã cài `pgvector`.
 
 <a name="generating-embeddings"></a>
-### Generating Embeddings
+### Tạo embedding
 
-An embedding is a high-dimensional numeric array (typically hundreds or thousands of numbers) that represents the semantic meaning of a piece of text. You may generate embeddings for a string using the `toEmbeddings` method available on Laravel's `Stringable` class:
+Embedding là một array số nhiều chiều (thường gồm hàng trăm hoặc hàng nghìn số) biểu diễn ý nghĩa ngữ nghĩa của một đoạn văn bản. Bạn có thể tạo embedding cho string bằng method `toEmbeddings` có sẵn trên class `Stringable` của Laravel:
 
 ```php
 use Illuminate\Support\Str;
@@ -121,7 +123,7 @@ use Illuminate\Support\Str;
 $embedding = Str::of('Napa Valley has great wine.')->toEmbeddings();
 ```
 
-To generate embeddings for multiple inputs at once — which is more efficient than generating them one at a time since it requires only a single API call to the embedding provider — use the `Embeddings` class:
+Để tạo embedding cho nhiều input cùng lúc — hiệu quả hơn tạo từng cái một vì chỉ cần một API call đến embedding provider — hãy sử dụng class `Embeddings`:
 
 ```php
 use Laravel\Ai\Embeddings;
@@ -134,12 +136,12 @@ $response = Embeddings::for([
 $response->embeddings; // [[0.123, 0.456, ...], [0.789, 0.012, ...]]
 ```
 
-For more details on configuring embedding providers, customizing dimensions, and caching, consult the [AI SDK documentation](/docs/{{version}}/ai-sdk#embeddings).
+Để biết thêm chi tiết về cấu hình embedding provider, tùy chỉnh dimensions và caching, hãy xem [tài liệu AI SDK](/docs/{{version}}/ai-sdk#embeddings).
 
 <a name="storing-and-indexing-vectors"></a>
-### Storing and Indexing Vectors
+### Lưu trữ và lập chỉ mục vector
 
-To store vector embeddings, define a `vector` column in your migration, specifying the number of dimensions that matches your embedding provider's output (for example, 1536 for OpenAI's `text-embedding-3-small` model). You should also call `index` on the column to create an HNSW (Hierarchical Navigable Small World) index, which dramatically speeds up similarity searches on large datasets:
+Để lưu vector embedding, hãy định nghĩa column `vector` trong migration và chỉ định số dimensions khớp với output của embedding provider (ví dụ 1536 với model OpenAI `text-embedding-3-small`). Bạn cũng nên gọi `index` trên column để tạo HNSW (Hierarchical Navigable Small World) index, giúp tăng tốc đáng kể similarity search trên dataset lớn:
 
 ```php
 Schema::ensureVectorExtensionExists();
@@ -153,9 +155,9 @@ Schema::create('documents', function (Blueprint $table) {
 });
 ```
 
-The `Schema::ensureVectorExtensionExists` method ensures the `pgvector` extension is enabled on your PostgreSQL database before creating the table.
+Method `Schema::ensureVectorExtensionExists` bảo đảm extension `pgvector` được bật trên PostgreSQL database trước khi tạo table.
 
-On your Eloquent model, use the `AsVector` cast so that Laravel automatically handles the conversion between PHP arrays and the database's vector format:
+Trên Eloquent model, hãy sử dụng cast `AsVector` để Laravel tự động xử lý việc chuyển đổi giữa PHP array và vector format của database:
 
 ```php
 use Illuminate\Database\Eloquent\Casts\AsVector;
@@ -168,12 +170,12 @@ protected function casts(): array
 }
 ```
 
-For more details on vector columns and indexes, consult the [migration documentation](/docs/{{version}}/migrations#available-column-types).
+Để biết thêm chi tiết về vector column và index, hãy xem [tài liệu migration](/docs/{{version}}/migrations#available-column-types).
 
 <a name="querying-by-similarity"></a>
-### Querying by Similarity
+### Truy vấn theo độ tương đồng
 
-Once you have stored embeddings for your content, you can search for similar records using the `whereVectorSimilarTo` method. This method compares the given embedding against the stored vectors using cosine similarity, filters out results below the `minSimilarity` threshold, and automatically orders the results by relevance — with the most similar records first. The threshold should be a value between `0.0` and `1.0`, where `1.0` means the vectors are identical:
+Sau khi đã lưu embedding cho nội dung, bạn có thể tìm các record tương tự bằng method `whereVectorSimilarTo`. Method này so sánh embedding được cung cấp với các vector đã lưu bằng cosine similarity, lọc bỏ các kết quả thấp hơn ngưỡng `minSimilarity`, đồng thời tự động sắp xếp kết quả theo mức độ liên quan — record giống nhất sẽ đứng trước. Threshold phải là giá trị từ `0.0` đến `1.0`, trong đó `1.0` nghĩa là hai vector giống hệt nhau:
 
 ```php
 $documents = Document::query()
@@ -182,7 +184,7 @@ $documents = Document::query()
     ->get();
 ```
 
-As a convenience, when a plain string is given instead of an embedding array, Laravel will automatically generate the embedding for you using your configured embedding provider. This means you can pass the user's search query directly without manually converting it to an embedding first:
+Để thuận tiện, khi truyền plain string thay vì embedding array, Laravel sẽ tự động tạo embedding cho bạn bằng embedding provider đã cấu hình. Điều này có nghĩa bạn có thể truyền trực tiếp search query của người dùng mà không cần tự chuyển đổi thành embedding trước:
 
 ```php
 $documents = Document::query()
@@ -191,16 +193,18 @@ $documents = Document::query()
     ->get();
 ```
 
-For lower-level control over vector queries, the `whereVectorDistanceLessThan`, `selectVectorDistance`, and `orderByVectorDistance` methods are also available. These methods let you work directly with distance values rather than similarity scores, select the computed distance as a column in your results, or manually control the ordering. For complete details, consult the [query builder documentation](/docs/{{version}}/queries#vector-similarity-clauses) and the [AI SDK documentation](/docs/{{version}}/ai-sdk#querying-embeddings).
+Nếu cần kiểm soát vector query ở mức thấp hơn, các method `whereVectorDistanceLessThan`, `selectVectorDistance` và `orderByVectorDistance` cũng có sẵn. Các method này cho phép bạn làm việc trực tiếp với distance value thay vì similarity score, select distance đã tính thành một column trong result, hoặc tự kiểm soát việc ordering.
+
+Để biết đầy đủ chi tiết, hãy xem [tài liệu query builder](/docs/{{version}}/queries#vector-similarity-clauses) và [tài liệu AI SDK](/docs/{{version}}/ai-sdk#querying-embeddings).
 
 <a name="reranking-results"></a>
-## Reranking Results
+## Xếp hạng lại kết quả
 
-Reranking is a technique where an AI model reorders a set of results by how semantically relevant each result is to a given query. Unlike vector search, which requires you to pre-compute and store embeddings, reranking works on any collection of text — it takes the raw content and the query as input and returns the items sorted by relevance.
+Reranking là kỹ thuật trong đó AI model sắp xếp lại một tập kết quả dựa trên mức độ liên quan ngữ nghĩa của từng kết quả với một query. Khác với vector search, vốn yêu cầu bạn tính trước và lưu embedding, reranking hoạt động trên bất kỳ collection văn bản nào — nó nhận raw content và query làm input rồi trả các item đã được sắp xếp theo relevance.
 
-Reranking is especially powerful as a second stage after a fast initial retrieval step. For example, you might use full-text search to quickly narrow thousands of records down to the top 50 candidates, and then use reranking to put the most relevant results at the top. This "retrieve then rerank" pattern gives you both speed and semantic accuracy.
+Reranking đặc biệt hiệu quả khi dùng làm bước thứ hai sau một bước truy xuất ban đầu nhanh. Ví dụ, bạn có thể dùng full-text search để nhanh chóng thu hẹp hàng nghìn record xuống 50 candidate tốt nhất, sau đó dùng reranking để đưa các kết quả phù hợp nhất lên đầu. Pattern "retrieve then rerank" này mang lại cả tốc độ lẫn độ chính xác ngữ nghĩa.
 
-You may rerank an array of strings using the `Reranking` class:
+Bạn có thể rerank một array string bằng class `Reranking`:
 
 ```php
 use Laravel\Ai\Reranking;
@@ -214,26 +218,26 @@ $response = Reranking::of([
 $response->first()->document; // "Laravel is a PHP web application framework."
 ```
 
-Laravel collections also have a `rerank` macro that accepts a field name (or closure) and a query, making it easy to rerank Eloquent results:
+Laravel collection cũng có macro `rerank`, nhận một field name (hoặc closure) và một query, giúp rerank Eloquent result thuận tiện:
 
 ```php
 $articles = Article::all()
     ->rerank('body', 'Laravel tutorials');
 ```
 
-For complete details on configuring reranking providers and available options, consult the [AI SDK documentation](/docs/{{version}}/ai-sdk#reranking).
+Để biết đầy đủ chi tiết về cấu hình reranking provider và các option khả dụng, hãy xem [tài liệu AI SDK](/docs/{{version}}/ai-sdk#reranking).
 
 <a name="laravel-scout"></a>
 ## Laravel Scout
 
-The search techniques described above are all query builder methods that you call directly in your code. [Laravel Scout](/docs/{{version}}/scout) takes a different approach: it provides a `Searchable` trait that you add to your Eloquent models, and Scout automatically keeps your search indexes in sync as records are created, updated, and deleted. This is particularly convenient when you want your models to always be searchable without manually managing index updates.
+Các kỹ thuật tìm kiếm được mô tả ở trên đều là các query builder method mà bạn gọi trực tiếp trong code. [Laravel Scout](/docs/{{version}}/scout) có cách tiếp cận khác: nó cung cấp trait `Searchable` để bạn thêm vào Eloquent model, và Scout tự động giữ search index đồng bộ khi record được tạo, cập nhật hoặc xóa. Cách này đặc biệt tiện lợi khi bạn muốn model luôn có thể tìm kiếm mà không phải tự quản lý việc cập nhật index.
 
 <a name="database-engine"></a>
 ### Database Engine
 
-Scout's built-in database engine performs full-text and `LIKE` searches against your existing database — no external service or extra infrastructure required. Simply add the `Searchable` trait to your model and define a `toSearchableArray` method that returns the columns you want to be searchable.
+Database engine tích hợp của Scout thực hiện full-text search và `LIKE` search trên database hiện có của bạn — không cần dịch vụ ngoài hoặc hạ tầng bổ sung. Chỉ cần thêm trait `Searchable` vào model và định nghĩa method `toSearchableArray` trả về các column bạn muốn có thể tìm kiếm.
 
-You may use PHP attributes to control the search strategy for each column. `SearchUsingFullText` will use your database's full-text index, `SearchUsingPrefix` will only match from the beginning of the string (`example%`), and any columns without an attribute use a default `LIKE` strategy with wildcards on both sides (`%example%`):
+Bạn có thể dùng PHP attribute để kiểm soát search strategy cho từng column. `SearchUsingFullText` sẽ dùng full-text index của database, `SearchUsingPrefix` chỉ khớp từ đầu string (`example%`), còn các column không có attribute sẽ dùng strategy `LIKE` mặc định với wildcard ở cả hai phía (`%example%`):
 
 ```php
 <?php
@@ -263,36 +267,36 @@ class Article extends Model
 ```
 
 > [!WARNING]
-> Before specifying that a column should use full-text query constraints, ensure that the column has been assigned a [full-text index](/docs/{{version}}/migrations#available-index-types).
+> Trước khi chỉ định một column nên dùng full-text query constraint, hãy bảo đảm column đó đã được gán [full-text index](/docs/{{version}}/migrations#available-index-types).
 
-Once the trait is added, you may search your model using Scout's `search` method. Scout's database engine will automatically order results by relevance, even on PostgreSQL:
+Sau khi thêm trait, bạn có thể tìm model bằng method `search` của Scout. Database engine của Scout sẽ tự động sắp xếp kết quả theo relevance, kể cả trên PostgreSQL:
 
 ```php
 $articles = Article::search('Laravel')->get();
 ```
 
-The database engine is a great choice when your search needs are moderate and you want the convenience of Scout's automatic index syncing without deploying an external service. It handles the most common search use cases well, including filtering, pagination, and soft-deleted record handling. For complete details, consult the [Scout documentation](/docs/{{version}}/scout#database-engine).
+Database engine là lựa chọn rất phù hợp khi nhu cầu tìm kiếm của bạn ở mức vừa phải và bạn muốn sự tiện lợi của cơ chế tự đồng bộ index của Scout mà không cần triển khai dịch vụ bên ngoài. Nó xử lý tốt các use case tìm kiếm phổ biến nhất, bao gồm filtering, pagination và xử lý soft-deleted record. Để biết đầy đủ chi tiết, hãy xem [tài liệu Scout](/docs/{{version}}/scout#database-engine).
 
 <a name="third-party-engines"></a>
-### Third-Party Engines
+### Các engine bên thứ ba
 
-Scout also supports third-party search engines such as [Algolia](https://www.algolia.com/), [Meilisearch](https://www.meilisearch.com), and [Typesense](https://typesense.org). These dedicated search services offer advanced features like typo tolerance, faceted filtering, geo-search, and custom ranking rules — features that become important at very large scale or when you need a highly polished search-as-you-type experience.
+Scout cũng hỗ trợ các search engine bên thứ ba như [Algolia](https://www.algolia.com/), [Meilisearch](https://www.meilisearch.com) và [Typesense](https://typesense.org). Các dịch vụ tìm kiếm chuyên dụng này cung cấp những tính năng nâng cao như chịu lỗi gõ sai, faceted filtering, geo-search và custom ranking rules — những tính năng trở nên quan trọng ở quy mô rất lớn hoặc khi bạn cần trải nghiệm search-as-you-type được hoàn thiện kỹ lưỡng.
 
-Since Scout provides a unified API across all of its drivers, switching from the database engine to a third-party engine later requires minimal code changes. You may start with the database engine and migrate to a third-party service only if your application's needs outgrow what the database can provide.
+Vì Scout cung cấp một API thống nhất trên tất cả driver, việc chuyển từ database engine sang engine bên thứ ba sau này chỉ cần thay đổi code tối thiểu. Bạn có thể bắt đầu với database engine và chỉ chuyển sang dịch vụ bên thứ ba nếu nhu cầu của ứng dụng vượt quá khả năng database có thể cung cấp.
 
-For complete details on configuring third-party engines, consult the [Scout documentation](/docs/{{version}}/scout).
+Để biết đầy đủ chi tiết về cấu hình các engine bên thứ ba, hãy xem [tài liệu Scout](/docs/{{version}}/scout).
 
 > [!NOTE]
-> Many applications never need an external search engine. The built-in techniques described on this page cover the vast majority of use cases.
+> Nhiều ứng dụng sẽ không bao giờ cần search engine bên ngoài. Các kỹ thuật tích hợp sẵn được mô tả trên trang này đã bao phủ phần lớn use case.
 
 <a name="combining-techniques"></a>
-## Combining Techniques
+## Kết hợp các kỹ thuật
 
-The search techniques described on this page are not mutually exclusive — combining them often produces the best results. Here are two common patterns that demonstrate how these tools work together.
+Các kỹ thuật tìm kiếm được mô tả trên trang này không loại trừ lẫn nhau — kết hợp chúng thường mang lại kết quả tốt nhất. Dưới đây là hai pattern phổ biến minh họa cách các công cụ này phối hợp với nhau.
 
-**Full-Text Retrieval + Reranking**
+**Truy xuất toàn văn + xếp hạng lại**
 
-Use full-text search to quickly narrow a large dataset down to a candidate set, then apply reranking to sort those candidates by semantic relevance. This gives you the speed of database-native full-text search with the accuracy of AI-powered relevance scoring:
+Sử dụng full-text search để nhanh chóng thu hẹp dataset lớn xuống một tập candidate, sau đó áp dụng reranking để sắp xếp các candidate đó theo mức độ liên quan ngữ nghĩa. Cách này cho bạn tốc độ của full-text search native trong database cùng độ chính xác của relevance scoring dựa trên AI:
 
 ```php
 $articles = Article::query()
@@ -302,9 +306,9 @@ $articles = Article::query()
     ->rerank('body', $request->input('query'), limit: 10);
 ```
 
-**Vector Search + Traditional Filters**
+**Tìm kiếm vector + bộ lọc truyền thống**
 
-Combine vector similarity with standard `where` clauses to scope semantic search to a subset of records. This is useful when you want meaning-based search but need to restrict results by ownership, category, or any other attribute:
+Kết hợp vector similarity với các mệnh đề `where` tiêu chuẩn để giới hạn semantic search trong một tập con record. Cách này hữu ích khi bạn muốn tìm kiếm dựa trên ý nghĩa nhưng vẫn cần giới hạn kết quả theo ownership, category hoặc bất kỳ attribute nào khác:
 
 ```php
 $documents = Document::query()

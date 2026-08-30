@@ -1,56 +1,56 @@
-# Database: Migrations
+# Database: Migration
 
-- [Introduction](#introduction)
-- [Generating Migrations](#generating-migrations)
-    - [Squashing Migrations](#squashing-migrations)
-- [Migration Structure](#migration-structure)
-- [Running Migrations](#running-migrations)
-    - [Rolling Back Migrations](#rolling-back-migrations)
-- [Tables](#tables)
-    - [Creating Tables](#creating-tables)
-    - [Updating Tables](#updating-tables)
-    - [Renaming / Dropping Tables](#renaming-and-dropping-tables)
-- [Columns](#columns)
-    - [Creating Columns](#creating-columns)
-    - [Available Column Types](#available-column-types)
-    - [Column Modifiers](#column-modifiers)
-    - [Modifying Columns](#modifying-columns)
-    - [Renaming Columns](#renaming-columns)
-    - [Dropping Columns](#dropping-columns)
-- [Indexes](#indexes)
-    - [Creating Indexes](#creating-indexes)
-    - [Renaming Indexes](#renaming-indexes)
-    - [Dropping Indexes](#dropping-indexes)
-    - [Foreign Key Constraints](#foreign-key-constraints)
-- [Events](#events)
+- [Giới thiệu](#introduction)
+- [Tạo migration](#generating-migrations)
+    - [Gộp migration](#squashing-migrations)
+- [Cấu trúc migration](#migration-structure)
+- [Chạy migration](#running-migrations)
+    - [Rollback migration](#rolling-back-migrations)
+- [Bảng](#tables)
+    - [Tạo bảng](#creating-tables)
+    - [Cập nhật bảng](#updating-tables)
+    - [Đổi tên / Xóa bảng](#renaming-and-dropping-tables)
+- [Cột](#columns)
+    - [Tạo cột](#creating-columns)
+    - [Các kiểu cột khả dụng](#available-column-types)
+    - [Các modifier của cột](#column-modifiers)
+    - [Thay đổi cột](#modifying-columns)
+    - [Đổi tên cột](#renaming-columns)
+    - [Xóa cột](#dropping-columns)
+- [Index](#indexes)
+    - [Tạo index](#creating-indexes)
+    - [Đổi tên index](#renaming-indexes)
+    - [Xóa index](#dropping-indexes)
+    - [Ràng buộc khóa ngoại](#foreign-key-constraints)
+- [Event](#events)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Migrations are like version control for your database, allowing your team to define and share the application's database schema definition. If you have ever had to tell a teammate to manually add a column to their local database schema after pulling in your changes from source control, you've faced the problem that database migrations solve.
+Migration hoạt động tương tự hệ thống quản lý phiên bản dành cho database, cho phép đội ngũ định nghĩa và chia sẻ schema database của ứng dụng. Nếu bạn từng phải yêu cầu đồng đội tự thêm một cột vào schema database trên máy local sau khi họ pull thay đổi của bạn từ source control, thì đó chính là vấn đề mà database migration giải quyết.
 
-The Laravel `Schema` [facade](/docs/{{version}}/facades) provides database agnostic support for creating and manipulating tables across all of Laravel's supported database systems. Typically, migrations will use this facade to create and modify database tables and columns.
+[Facade](/docs/{{version}}/facades) `Schema` của Laravel cung cấp API không phụ thuộc vào hệ quản trị database để tạo và thao tác với bảng trên tất cả các hệ database mà Laravel hỗ trợ. Thông thường, migration sử dụng facade này để tạo và thay đổi bảng cũng như cột trong database.
 
 <a name="generating-migrations"></a>
-## Generating Migrations
+## Tạo migration
 
-You may use the `make:migration` [Artisan command](/docs/{{version}}/artisan) to generate a database migration. The new migration will be placed in your `database/migrations` directory. Each migration filename contains a timestamp that allows Laravel to determine the order of the migrations:
+Bạn có thể sử dụng [lệnh Artisan](/docs/{{version}}/artisan) `make:migration` để tạo database migration. Migration mới sẽ được đặt trong thư mục `database/migrations`. Tên file của mỗi migration chứa timestamp để Laravel xác định thứ tự chạy migration:
 
 ```shell
 php artisan make:migration create_flights_table
 ```
 
-Laravel will use the name of the migration to attempt to guess the name of the table and whether or not the migration will be creating a new table. If Laravel is able to determine the table name from the migration name, Laravel will pre-fill the generated migration file with the specified table. Otherwise, you may simply specify the table in the migration file manually.
+Laravel sẽ dựa vào tên migration để thử suy đoán tên bảng và migration đó có tạo bảng mới hay không. Nếu xác định được tên bảng từ tên migration, Laravel sẽ điền sẵn bảng tương ứng vào file migration được tạo. Nếu không, bạn chỉ cần tự chỉ định bảng trong file migration.
 
-If you would like to specify a custom path for the generated migration, you may use the `--path` option when executing the `make:migration` command. The given path should be relative to your application's base path.
+Nếu muốn chỉ định đường dẫn tùy chỉnh cho migration được tạo, bạn có thể dùng tùy chọn `--path` khi chạy lệnh `make:migration`. Đường dẫn được cung cấp phải là đường dẫn tương đối so với base path của ứng dụng.
 
 > [!NOTE]
-> Migration stubs may be customized using [stub publishing](/docs/{{version}}/artisan#stub-customization).
+> Có thể tùy chỉnh migration stub bằng cách [publish stub](/docs/{{version}}/artisan#stub-customization).
 
 <a name="squashing-migrations"></a>
-### Squashing Migrations
+### Gộp migration
 
-As you build your application, you may accumulate more and more migrations over time. This can lead to your `database/migrations` directory becoming bloated with potentially hundreds of migrations. If you would like, you may "squash" your migrations into a single SQL file. To get started, execute the `schema:dump` command:
+Trong quá trình phát triển ứng dụng, số lượng migration có thể tăng dần theo thời gian, khiến thư mục `database/migrations` phình to với hàng trăm migration. Nếu muốn, bạn có thể "gộp" các migration thành một file SQL duy nhất. Để bắt đầu, hãy chạy lệnh `schema:dump`:
 
 ```shell
 php artisan schema:dump
@@ -59,26 +59,26 @@ php artisan schema:dump
 php artisan schema:dump --prune
 ```
 
-When you execute this command, Laravel will write a "schema" file to your application's `database/schema` directory. The schema file's name will correspond to the database connection. Now, when you attempt to migrate your database and no other migrations have been executed, Laravel will first execute the SQL statements in the schema file of the database connection you are using. After executing the schema file's SQL statements, Laravel will execute any remaining migrations that were not part of the schema dump.
+Khi chạy lệnh này, Laravel sẽ ghi một file "schema" vào thư mục `database/schema` của ứng dụng. Tên file schema sẽ tương ứng với database connection. Sau đó, khi bạn chạy migration trên một database chưa có migration nào được thực thi, Laravel trước tiên sẽ chạy các câu lệnh SQL trong file schema của database connection đang sử dụng. Sau khi chạy các câu lệnh SQL trong file schema, Laravel sẽ tiếp tục chạy những migration còn lại không nằm trong schema dump.
 
-If your application's tests use a different database connection than the one you typically use during local development, you should ensure you have dumped a schema file using that database connection so that your tests are able to build your database. You may wish to do this after dumping the database connection you typically use during local development:
+Nếu test của ứng dụng sử dụng database connection khác với connection thường dùng khi phát triển local, bạn nên đảm bảo đã dump một file schema bằng connection đó để test có thể dựng database. Bạn có thể thực hiện việc này sau khi dump connection thường dùng cho môi trường local:
 
 ```shell
 php artisan schema:dump
 php artisan schema:dump --database=testing --prune
 ```
 
-You should commit your database schema file to source control so that other new developers on your team may quickly create your application's initial database structure.
+Bạn nên commit file database schema vào source control để các developer mới trong đội ngũ có thể nhanh chóng tạo cấu trúc database ban đầu của ứng dụng.
 
 > [!WARNING]
-> Migration squashing is only available for the MariaDB, MySQL, PostgreSQL, and SQLite databases and utilizes the database's command-line client.
+> Tính năng gộp migration chỉ khả dụng với MariaDB, MySQL, PostgreSQL và SQLite, đồng thời sử dụng command-line client của database tương ứng.
 
 <a name="migration-structure"></a>
-## Migration Structure
+## Cấu trúc migration
 
-A migration class contains two methods: `up` and `down`. The `up` method is used to add new tables, columns, or indexes to your database, while the `down` method should reverse the operations performed by the `up` method.
+Một class migration chứa hai method: `up` và `down`. Method `up` được dùng để thêm bảng, cột hoặc index mới vào database; trong khi method `down` phải đảo ngược các thao tác đã được thực hiện bởi method `up`.
 
-Within both of these methods, you may use the Laravel schema builder to expressively create and modify tables. To learn about all of the methods available on the `Schema` builder, [check out its documentation](#creating-tables). For example, the following migration creates a `flights` table:
+Trong cả hai method này, bạn có thể sử dụng schema builder của Laravel để tạo và thay đổi bảng bằng API rõ ràng, dễ đọc. Để tìm hiểu tất cả method có trên `Schema` builder, hãy [xem tài liệu tương ứng](#creating-tables). Ví dụ, migration sau tạo bảng `flights`:
 
 ```php
 <?php
@@ -113,9 +113,9 @@ return new class extends Migration
 ```
 
 <a name="setting-the-migration-connection"></a>
-#### Setting the Migration Connection
+#### Thiết lập database connection cho migration
 
-If your migration will be interacting with a database connection other than your application's default database connection, you should set the `$connection` property of your migration:
+Nếu migration tương tác với database connection khác connection mặc định của ứng dụng, bạn nên thiết lập property `$connection` của migration:
 
 ```php
 /**
@@ -135,9 +135,9 @@ public function up(): void
 ```
 
 <a name="skipping-migrations"></a>
-#### Skipping Migrations
+#### Bỏ qua migration
 
-Sometimes a migration might be meant to support a feature that is not yet active and you do not want it to run yet. In this case you may define a `shouldRun` method on the migration. If the `shouldRun` method returns `false`, the migration will be skipped:
+Đôi khi migration được tạo để hỗ trợ một tính năng chưa kích hoạt và bạn chưa muốn migration đó chạy. Trong trường hợp này, bạn có thể định nghĩa method `shouldRun` trên migration. Nếu `shouldRun` trả về `false`, migration sẽ được bỏ qua:
 
 ```php
 use App\Models\Flight;
@@ -153,92 +153,92 @@ public function shouldRun(): bool
 ```
 
 <a name="running-migrations"></a>
-## Running Migrations
+## Chạy migration
 
-To run all of your outstanding migrations, execute the `migrate` Artisan command:
+Để chạy tất cả migration đang chờ, hãy thực thi lệnh Artisan `migrate`:
 
 ```shell
 php artisan migrate
 ```
 
-If you would like to see which migrations have already run and which are still pending, you may use the `migrate:status` Artisan command:
+Nếu muốn xem migration nào đã chạy và migration nào vẫn đang chờ, bạn có thể sử dụng lệnh Artisan `migrate:status`:
 
 ```shell
 php artisan migrate:status
 ```
 
-If you provide the `--step` option to the `migrate` command, the command will run each migration as its own batch, allowing you to roll back individual migrations later using the `migrate:rollback` command:
+Nếu truyền tùy chọn `--step` cho lệnh `migrate`, mỗi migration sẽ được chạy như một batch riêng, cho phép bạn rollback từng migration sau đó bằng lệnh `migrate:rollback`:
 
 ```shell
 php artisan migrate --step
 ```
 
-If you would like to see the SQL statements that will be executed by the migrations without actually running them, you may provide the `--pretend` flag to the `migrate` command:
+Nếu muốn xem các câu lệnh SQL mà migration sẽ thực thi nhưng không thực sự chạy chúng, bạn có thể truyền flag `--pretend` cho lệnh `migrate`:
 
 ```shell
 php artisan migrate --pretend
 ```
 
 <a name="isolating-migration-execution"></a>
-#### Isolating Migration Execution
+#### Cô lập quá trình chạy migration
 
-If you are deploying your application across multiple servers and running migrations as part of your deployment process, you likely do not want two servers attempting to migrate the database at the same time. To avoid this, you may use the `isolated` option when invoking the `migrate` command.
+Nếu triển khai ứng dụng trên nhiều server và chạy migration như một phần của quy trình deployment, bạn thường không muốn hai server cố gắng migrate database cùng lúc. Để tránh tình trạng này, bạn có thể sử dụng tùy chọn `isolated` khi gọi lệnh `migrate`.
 
-When the `isolated` option is provided, Laravel will acquire an atomic lock using your application's cache driver before attempting to run your migrations. All other attempts to run the `migrate` command while that lock is held will not execute; however, the command will still exit with a successful exit status code:
+Khi có tùy chọn `isolated`, Laravel sẽ lấy một atomic lock thông qua cache driver của ứng dụng trước khi cố gắng chạy migration. Mọi lần gọi `migrate` khác trong khi lock đang được giữ sẽ không thực thi migration; tuy nhiên, lệnh vẫn kết thúc với exit status thành công:
 
 ```shell
 php artisan migrate --isolated
 ```
 
 > [!WARNING]
-> To utilize this feature, your application must be using the `memcached`, `redis`, `dynamodb`, `database`, `file`, or `array` cache driver as your application's default cache driver. In addition, all servers must be communicating with the same central cache server.
+> Để sử dụng tính năng này, ứng dụng phải dùng `memcached`, `redis`, `dynamodb`, `database`, `file` hoặc `array` làm cache driver mặc định. Ngoài ra, tất cả server phải giao tiếp với cùng một cache server trung tâm.
 
 <a name="forcing-migrations-to-run-in-production"></a>
-#### Forcing Migrations to Run in Production
+#### Buộc chạy migration trong production
 
-Some migration operations are destructive, which means they may cause you to lose data. In order to protect you from running these commands against your production database, you will be prompted for confirmation before the commands are executed. To force the commands to run without a prompt, use the `--force` flag:
+Một số thao tác migration có tính phá hủy dữ liệu, nghĩa là chúng có thể khiến bạn mất dữ liệu. Để tránh vô tình chạy các lệnh này trên production database, Laravel sẽ yêu cầu xác nhận trước khi thực thi. Để buộc lệnh chạy mà không hỏi xác nhận, hãy dùng flag `--force`:
 
 ```shell
 php artisan migrate --force
 ```
 
 <a name="rolling-back-migrations"></a>
-### Rolling Back Migrations
+### Rollback migration
 
-To roll back the latest migration operation, you may use the `rollback` Artisan command. This command rolls back the last "batch" of migrations, which may include multiple migration files:
+Để rollback lần chạy migration gần nhất, bạn có thể sử dụng lệnh Artisan `rollback`. Lệnh này rollback "batch" migration cuối cùng, batch đó có thể chứa nhiều file migration:
 
 ```shell
 php artisan migrate:rollback
 ```
 
-You may roll back a limited number of migrations by providing the `step` option to the `rollback` command. For example, the following command will roll back the last five migrations:
+Bạn có thể giới hạn số migration cần rollback bằng tùy chọn `step` của lệnh `rollback`. Ví dụ, lệnh sau rollback năm migration gần nhất:
 
 ```shell
 php artisan migrate:rollback --step=5
 ```
 
-You may roll back a specific "batch" of migrations by providing the `batch` option to the `rollback` command, where the `batch` option corresponds to a batch value within your application's `migrations` database table. For example, the following command will roll back all migrations in batch three:
+Bạn có thể rollback một "batch" migration cụ thể bằng tùy chọn `batch` của lệnh `rollback`; giá trị này tương ứng với giá trị batch trong bảng `migrations` của database ứng dụng. Ví dụ, lệnh sau rollback toàn bộ migration thuộc batch số ba:
 
 ```shell
 php artisan migrate:rollback --batch=3
 ```
 
-If you would like to see the SQL statements that will be executed by the migrations without actually running them, you may provide the `--pretend` flag to the `migrate:rollback` command:
+Nếu muốn xem các câu lệnh SQL mà migration sẽ thực thi mà không thực sự chạy chúng, bạn có thể truyền flag `--pretend` cho command `migrate:rollback`:
 
 ```shell
 php artisan migrate:rollback --pretend
 ```
 
-The `migrate:reset` command will roll back all of your application's migrations:
+Lệnh `migrate:reset` sẽ rollback toàn bộ migration của ứng dụng:
 
 ```shell
 php artisan migrate:reset
 ```
 
 <a name="roll-back-migrate-using-a-single-command"></a>
-#### Roll Back and Migrate Using a Single Command
+#### Rollback và migrate bằng một lệnh
 
-The `migrate:refresh` command will roll back all of your migrations and then execute the `migrate` command. This command effectively re-creates your entire database:
+Lệnh `migrate:refresh` sẽ rollback toàn bộ migration rồi chạy lệnh `migrate`. Về bản chất, lệnh này tạo lại toàn bộ database:
 
 ```shell
 php artisan migrate:refresh
@@ -247,16 +247,16 @@ php artisan migrate:refresh
 php artisan migrate:refresh --seed
 ```
 
-You may roll back and re-migrate a limited number of migrations by providing the `step` option to the `refresh` command. For example, the following command will roll back and re-migrate the last five migrations:
+Bạn có thể giới hạn số migration được rollback và migrate lại bằng tùy chọn `step` của lệnh `refresh`. Ví dụ, lệnh sau rollback rồi migrate lại năm migration gần nhất:
 
 ```shell
 php artisan migrate:refresh --step=5
 ```
 
 <a name="drop-all-tables-migrate"></a>
-#### Drop All Tables and Migrate
+#### Xóa toàn bộ bảng và migrate
 
-The `migrate:fresh` command will drop all tables from the database and then execute the `migrate` command:
+Command `migrate:fresh` sẽ xóa toàn bộ table khỏi database rồi thực thi command `migrate`:
 
 ```shell
 php artisan migrate:fresh
@@ -264,22 +264,22 @@ php artisan migrate:fresh
 php artisan migrate:fresh --seed
 ```
 
-By default, the `migrate:fresh` command only drops tables from the default database connection. However, you may use the `--database` option to specify the database connection that should be migrated. The database connection name should correspond to a connection defined in your application's `database` [configuration file](/docs/{{version}}/configuration):
+Theo mặc định, lệnh `migrate:fresh` chỉ xóa các bảng thuộc database connection mặc định. Tuy nhiên, bạn có thể dùng tùy chọn `--database` để chỉ định database connection cần migrate. Tên connection phải tương ứng với một connection được định nghĩa trong [file cấu hình](/docs/{{version}}/configuration) `database` của ứng dụng:
 
 ```shell
 php artisan migrate:fresh --database=admin
 ```
 
 > [!WARNING]
-> The `migrate:fresh` command will drop all database tables regardless of their prefix. This command should be used with caution when developing on a database that is shared with other applications.
+> Lệnh `migrate:fresh` sẽ xóa toàn bộ bảng trong database bất kể prefix của chúng. Hãy đặc biệt thận trọng khi dùng lệnh này trên database được chia sẻ với các ứng dụng khác.
 
 <a name="tables"></a>
-## Tables
+## Bảng
 
 <a name="creating-tables"></a>
-### Creating Tables
+### Tạo bảng
 
-To create a new database table, use the `create` method on the `Schema` facade. The `create` method accepts two arguments: the first is the name of the table, while the second is a closure which receives a `Blueprint` object that may be used to define the new table:
+Để tạo bảng database mới, hãy dùng method `create` trên facade `Schema`. Method `create` nhận hai đối số: đối số thứ nhất là tên bảng; đối số thứ hai là một closure nhận object `Blueprint`, được dùng để định nghĩa bảng mới:
 
 ```php
 use Illuminate\Database\Schema\Blueprint;
@@ -293,12 +293,12 @@ Schema::create('users', function (Blueprint $table) {
 });
 ```
 
-When creating the table, you may use any of the schema builder's [column methods](#creating-columns) to define the table's columns.
+Khi tạo bảng, bạn có thể dùng bất kỳ [column method](#creating-columns) nào của schema builder để định nghĩa các cột của bảng.
 
 <a name="determining-table-column-existence"></a>
-#### Determining Table / Column Existence
+#### Kiểm tra sự tồn tại của bảng / cột
 
-You may determine the existence of a table, column, or index using the `hasTable`, `hasColumn`, and `hasIndex` methods:
+Bạn có thể kiểm tra sự tồn tại của bảng, cột hoặc index bằng các method `hasTable`, `hasColumn` và `hasIndex`:
 
 ```php
 if (Schema::hasTable('users')) {
@@ -315,9 +315,9 @@ if (Schema::hasIndex('users', ['email'], 'unique')) {
 ```
 
 <a name="database-connection-table-options"></a>
-#### Database Connection and Table Options
+#### Database connection và các tùy chọn của bảng
 
-If you want to perform a schema operation on a database connection that is not your application's default connection, use the `connection` method:
+Nếu muốn thực hiện thao tác schema trên database connection không phải connection mặc định của ứng dụng, hãy dùng method `connection`:
 
 ```php
 Schema::connection('sqlite')->create('users', function (Blueprint $table) {
@@ -325,7 +325,7 @@ Schema::connection('sqlite')->create('users', function (Blueprint $table) {
 });
 ```
 
-In addition, a few other properties and methods may be used to define other aspects of the table's creation. The `engine` property may be used to specify the table's storage engine when using MariaDB or MySQL:
+Ngoài ra, một số property và method khác có thể được dùng để định nghĩa các khía cạnh khác khi tạo bảng. Property `engine` cho phép chỉ định storage engine của bảng khi sử dụng MariaDB hoặc MySQL:
 
 ```php
 Schema::create('users', function (Blueprint $table) {
@@ -335,7 +335,7 @@ Schema::create('users', function (Blueprint $table) {
 });
 ```
 
-The `charset` and `collation` properties may be used to specify the character set and collation for the created table when using MariaDB or MySQL:
+Các property `charset` và `collation` có thể được dùng để chỉ định character set và collation cho bảng được tạo khi sử dụng MariaDB hoặc MySQL:
 
 ```php
 Schema::create('users', function (Blueprint $table) {
@@ -346,7 +346,7 @@ Schema::create('users', function (Blueprint $table) {
 });
 ```
 
-The `temporary` method may be used to indicate that the table should be "temporary". Temporary tables are only visible to the current connection's database session and are dropped automatically when the connection is closed:
+Method `temporary` có thể được dùng để đánh dấu bảng là bảng "tạm thời". Bảng tạm chỉ hiển thị trong database session của connection hiện tại và tự động bị xóa khi connection đóng:
 
 ```php
 Schema::create('calculations', function (Blueprint $table) {
@@ -356,7 +356,7 @@ Schema::create('calculations', function (Blueprint $table) {
 });
 ```
 
-If you would like to add a "comment" to a database table, you may invoke the `comment` method on the table instance. Table comments are currently only supported by MariaDB, MySQL, and PostgreSQL:
+Nếu muốn thêm "comment" cho một bảng database, bạn có thể gọi method `comment` trên table instance. Hiện tại table comment chỉ được hỗ trợ bởi MariaDB, MySQL và PostgreSQL:
 
 ```php
 Schema::create('calculations', function (Blueprint $table) {
@@ -367,9 +367,9 @@ Schema::create('calculations', function (Blueprint $table) {
 ```
 
 <a name="updating-tables"></a>
-### Updating Tables
+### Cập nhật bảng
 
-The `table` method on the `Schema` facade may be used to update existing tables. Like the `create` method, the `table` method accepts two arguments: the name of the table and a closure that receives a `Blueprint` instance you may use to add columns or indexes to the table:
+Method `table` trên facade `Schema` có thể được dùng để cập nhật bảng hiện có. Tương tự `create`, method `table` nhận hai đối số: tên bảng và một closure nhận instance `Blueprint` mà bạn có thể dùng để thêm cột hoặc index vào bảng:
 
 ```php
 use Illuminate\Database\Schema\Blueprint;
@@ -381,9 +381,9 @@ Schema::table('users', function (Blueprint $table) {
 ```
 
 <a name="renaming-and-dropping-tables"></a>
-### Renaming / Dropping Tables
+### Đổi tên / Xóa bảng
 
-To rename an existing database table, use the `rename` method:
+Để đổi tên một bảng database hiện có, hãy dùng method `rename`:
 
 ```php
 use Illuminate\Support\Facades\Schema;
@@ -391,7 +391,7 @@ use Illuminate\Support\Facades\Schema;
 Schema::rename($from, $to);
 ```
 
-To drop an existing table, you may use the `drop` or `dropIfExists` methods:
+Để xóa một bảng hiện có, bạn có thể dùng method `drop` hoặc `dropIfExists`:
 
 ```php
 Schema::drop('users');
@@ -400,17 +400,17 @@ Schema::dropIfExists('users');
 ```
 
 <a name="renaming-tables-with-foreign-keys"></a>
-#### Renaming Tables With Foreign Keys
+#### Đổi tên bảng có khóa ngoại
 
-Before renaming a table, you should verify that any foreign key constraints on the table have an explicit name in your migration files instead of letting Laravel assign a convention based name. Otherwise, the foreign key constraint name will refer to the old table name.
+Trước khi đổi tên bảng, bạn nên đảm bảo mọi ràng buộc khóa ngoại trên bảng đều được đặt tên tường minh trong file migration thay vì để Laravel tự gán tên theo convention. Nếu không, tên ràng buộc khóa ngoại sẽ vẫn tham chiếu đến tên bảng cũ.
 
 <a name="columns"></a>
-## Columns
+## Cột
 
 <a name="creating-columns"></a>
-### Creating Columns
+### Tạo cột
 
-The `table` method on the `Schema` facade may be used to update existing tables. Like the `create` method, the `table` method accepts two arguments: the name of the table and a closure that receives an `Illuminate\Database\Schema\Blueprint` instance you may use to add columns to the table:
+Method `table` trên facade `Schema` có thể được dùng để cập nhật bảng hiện có. Tương tự method `create`, `table` nhận hai đối số: tên bảng và một closure nhận instance `Illuminate\Database\Schema\Blueprint` mà bạn có thể dùng để thêm cột vào bảng:
 
 ```php
 use Illuminate\Database\Schema\Blueprint;
@@ -422,9 +422,9 @@ Schema::table('users', function (Blueprint $table) {
 ```
 
 <a name="available-column-types"></a>
-### Available Column Types
+### Các kiểu cột khả dụng
 
-The schema builder blueprint offers a variety of methods that correspond to the different types of columns you can add to your database tables. Each of the available methods are listed in the table below:
+Blueprint của schema builder cung cấp nhiều method tương ứng với các kiểu cột khác nhau mà bạn có thể thêm vào bảng database. Các method khả dụng được liệt kê bên dưới:
 
 <style>
     .collection-method-list > p {
@@ -448,7 +448,7 @@ The schema builder blueprint offers a variety of methods that correspond to the 
 </style>
 
 <a name="booleans-method-list"></a>
-#### Boolean Types
+#### Kiểu Boolean
 
 <div class="collection-method-list" markdown="1">
 
@@ -457,7 +457,7 @@ The schema builder blueprint offers a variety of methods that correspond to the 
 </div>
 
 <a name="strings-and-texts-method-list"></a>
-#### String & Text Types
+#### Kiểu String & Text
 
 <div class="collection-method-list" markdown="1">
 
@@ -471,7 +471,7 @@ The schema builder blueprint offers a variety of methods that correspond to the 
 </div>
 
 <a name="numbers--method-list"></a>
-#### Numeric Types
+#### Kiểu số
 
 <div class="collection-method-list" markdown="1">
 
@@ -498,7 +498,7 @@ The schema builder blueprint offers a variety of methods that correspond to the 
 </div>
 
 <a name="dates-and-times-method-list"></a>
-#### Date & Time Types
+#### Kiểu ngày & giờ
 
 <div class="collection-method-list" markdown="1">
 
@@ -517,7 +517,7 @@ The schema builder blueprint offers a variety of methods that correspond to the 
 </div>
 
 <a name="binaries-method-list"></a>
-#### Binary Types
+#### Kiểu Binary
 
 <div class="collection-method-list" markdown="1">
 
@@ -526,7 +526,7 @@ The schema builder blueprint offers a variety of methods that correspond to the 
 </div>
 
 <a name="object-and-jsons-method-list"></a>
-#### Object & Json Types
+#### Kiểu Object & JSON
 
 <div class="collection-method-list" markdown="1">
 
@@ -536,7 +536,7 @@ The schema builder blueprint offers a variety of methods that correspond to the 
 </div>
 
 <a name="uuids-and-ulids-method-list"></a>
-#### UUID & ULID Types
+#### Kiểu UUID & ULID
 
 <div class="collection-method-list" markdown="1">
 
@@ -550,7 +550,7 @@ The schema builder blueprint offers a variety of methods that correspond to the 
 </div>
 
 <a name="spatials-method-list"></a>
-#### Spatial Types
+#### Kiểu Spatial
 
 <div class="collection-method-list" markdown="1">
 
@@ -591,7 +591,7 @@ The schema builder blueprint offers a variety of methods that correspond to the 
 <a name="column-method-bigIncrements"></a>
 #### `bigIncrements()` {.collection-method .first-collection-method}
 
-The `bigIncrements` method creates an auto-incrementing `UNSIGNED BIGINT` (primary key) equivalent column:
+Method `bigIncrements` tạo một column `UNSIGNED BIGINT` tự tăng, tương đương primary key:
 
 ```php
 $table->bigIncrements('id');
@@ -600,7 +600,7 @@ $table->bigIncrements('id');
 <a name="column-method-bigInteger"></a>
 #### `bigInteger()` {.collection-method}
 
-The `bigInteger` method creates a `BIGINT` equivalent column:
+Phương thức `bigInteger` tạo một cột tương đương `BIGINT`:
 
 ```php
 $table->bigInteger('votes');
@@ -609,13 +609,13 @@ $table->bigInteger('votes');
 <a name="column-method-binary"></a>
 #### `binary()` {.collection-method}
 
-The `binary` method creates a `BLOB` equivalent column:
+Phương thức `binary` tạo một cột tương đương `BLOB`:
 
 ```php
 $table->binary('photo');
 ```
 
-When utilizing MySQL, MariaDB, or SQL Server, you may pass `length` and `fixed` arguments to create `VARBINARY` or `BINARY` equivalent column:
+Khi sử dụng MySQL, MariaDB hoặc SQL Server, bạn có thể truyền các đối số `length` và `fixed` để tạo cột tương đương `VARBINARY` hoặc `BINARY`:
 
 ```php
 $table->binary('data', length: 16); // VARBINARY(16)
@@ -626,7 +626,7 @@ $table->binary('data', length: 16, fixed: true); // BINARY(16)
 <a name="column-method-boolean"></a>
 #### `boolean()` {.collection-method}
 
-The `boolean` method creates a `BOOLEAN` equivalent column:
+Phương thức `boolean` tạo một cột tương đương `BOOLEAN`:
 
 ```php
 $table->boolean('confirmed');
@@ -635,7 +635,7 @@ $table->boolean('confirmed');
 <a name="column-method-char"></a>
 #### `char()` {.collection-method}
 
-The `char` method creates a `CHAR` equivalent column with of a given length:
+Phương thức `char` tạo một cột tương đương `CHAR` với độ dài được chỉ định:
 
 ```php
 $table->char('name', length: 100);
@@ -644,7 +644,7 @@ $table->char('name', length: 100);
 <a name="column-method-dateTimeTz"></a>
 #### `dateTimeTz()` {.collection-method}
 
-The `dateTimeTz` method creates a `DATETIME` (with timezone) equivalent column with an optional fractional seconds precision:
+Phương thức `dateTimeTz` tạo một cột tương đương `DATETIME` (có múi giờ), với độ chính xác phần thập phân của giây là tùy chọn:
 
 ```php
 $table->dateTimeTz('created_at', precision: 0);
@@ -653,7 +653,7 @@ $table->dateTimeTz('created_at', precision: 0);
 <a name="column-method-dateTime"></a>
 #### `dateTime()` {.collection-method}
 
-The `dateTime` method creates a `DATETIME` equivalent column with an optional fractional seconds precision:
+Phương thức `dateTime` tạo một cột tương đương `DATETIME`, với độ chính xác phần thập phân của giây là tùy chọn:
 
 ```php
 $table->dateTime('created_at', precision: 0);
@@ -662,7 +662,7 @@ $table->dateTime('created_at', precision: 0);
 <a name="column-method-date"></a>
 #### `date()` {.collection-method}
 
-The `date` method creates a `DATE` equivalent column:
+Phương thức `date` tạo một cột tương đương `DATE`:
 
 ```php
 $table->date('created_at');
@@ -671,7 +671,7 @@ $table->date('created_at');
 <a name="column-method-decimal"></a>
 #### `decimal()` {.collection-method}
 
-The `decimal` method creates a `DECIMAL` equivalent column with the given precision (total digits) and scale (decimal digits):
+Phương thức `decimal` tạo một cột tương đương `DECIMAL` với precision (tổng số chữ số) và scale (số chữ số thập phân) được chỉ định:
 
 ```php
 $table->decimal('amount', total: 8, places: 2);
@@ -680,7 +680,7 @@ $table->decimal('amount', total: 8, places: 2);
 <a name="column-method-double"></a>
 #### `double()` {.collection-method}
 
-The `double` method creates a `DOUBLE` equivalent column:
+Phương thức `double` tạo một cột tương đương `DOUBLE`:
 
 ```php
 $table->double('amount');
@@ -689,13 +689,13 @@ $table->double('amount');
 <a name="column-method-enum"></a>
 #### `enum()` {.collection-method}
 
-The `enum` method creates a `ENUM` equivalent column with the given valid values:
+Phương thức `enum` tạo một cột tương đương `ENUM` với các giá trị hợp lệ được chỉ định:
 
 ```php
 $table->enum('difficulty', ['easy', 'hard']);
 ```
 
-Of course, you may use the `Enum::cases()` method instead of manually defining an array of allowed values:
+Bạn cũng có thể sử dụng phương thức `Enum::cases()` thay vì tự định nghĩa mảng các giá trị được phép:
 
 ```php
 use App\Enums\Difficulty;
@@ -706,7 +706,7 @@ $table->enum('difficulty', Difficulty::cases());
 <a name="column-method-float"></a>
 #### `float()` {.collection-method}
 
-The `float` method creates a `FLOAT` equivalent column with the given precision:
+Phương thức `float` tạo một cột tương đương `FLOAT` với precision được chỉ định:
 
 ```php
 $table->float('amount', precision: 53);
@@ -715,7 +715,7 @@ $table->float('amount', precision: 53);
 <a name="column-method-foreignId"></a>
 #### `foreignId()` {.collection-method}
 
-The `foreignId` method creates an `UNSIGNED BIGINT` equivalent column:
+Phương thức `foreignId` tạo một cột tương đương `UNSIGNED BIGINT`:
 
 ```php
 $table->foreignId('user_id');
@@ -724,7 +724,7 @@ $table->foreignId('user_id');
 <a name="column-method-foreignIdFor"></a>
 #### `foreignIdFor()` {.collection-method}
 
-The `foreignIdFor` method adds a `{column}_id` equivalent column for a given model class. The column type will be `UNSIGNED BIGINT`, `CHAR(36)`, or `CHAR(26)` depending on the model key type:
+Phương thức `foreignIdFor` thêm một cột `{column}_id` tương ứng cho model class được chỉ định. Kiểu cột sẽ là `UNSIGNED BIGINT`, `CHAR(36)` hoặc `CHAR(26)` tùy theo kiểu khóa của model:
 
 ```php
 $table->foreignIdFor(User::class);
@@ -733,7 +733,7 @@ $table->foreignIdFor(User::class);
 <a name="column-method-foreignUlid"></a>
 #### `foreignUlid()` {.collection-method}
 
-The `foreignUlid` method creates a `ULID` equivalent column:
+Phương thức `foreignUlid` tạo một cột tương đương `ULID`:
 
 ```php
 $table->foreignUlid('user_id');
@@ -742,7 +742,7 @@ $table->foreignUlid('user_id');
 <a name="column-method-foreignUuid"></a>
 #### `foreignUuid()` {.collection-method}
 
-The `foreignUuid` method creates a `UUID` equivalent column:
+Phương thức `foreignUuid` tạo một cột tương đương `UUID`:
 
 ```php
 $table->foreignUuid('user_id');
@@ -751,7 +751,7 @@ $table->foreignUuid('user_id');
 <a name="column-method-foreignUuidFor"></a>
 #### `foreignUuidFor()` {.collection-method}
 
-The `foreignUuidFor` method adds a `{column}_id` UUID equivalent column for a given model class:
+Phương thức `foreignUuidFor` thêm một cột `{column}_id` tương đương UUID cho model class được chỉ định:
 
 ```php
 $table->foreignUuidFor(User::class);
@@ -760,31 +760,31 @@ $table->foreignUuidFor(User::class);
 <a name="column-method-geography"></a>
 #### `geography()` {.collection-method}
 
-The `geography` method creates a `GEOGRAPHY` equivalent column with the given spatial type and SRID (Spatial Reference System Identifier):
+Phương thức `geography` tạo một cột tương đương `GEOGRAPHY` với kiểu dữ liệu không gian và SRID (Spatial Reference System Identifier) được chỉ định:
 
 ```php
 $table->geography('coordinates', subtype: 'point', srid: 4326);
 ```
 
 > [!NOTE]
-> Support for spatial types depends on your database driver. Please refer to your database's documentation. If your application is utilizing a PostgreSQL database, you must install the [PostGIS](https://postgis.net) extension before the `geography` method may be used.
+> Khả năng hỗ trợ các kiểu dữ liệu không gian phụ thuộc vào database driver. Hãy tham khảo tài liệu của cơ sở dữ liệu bạn đang sử dụng. Nếu ứng dụng sử dụng PostgreSQL, bạn phải cài extension [PostGIS](https://postgis.net) trước khi có thể dùng phương thức `geography`.
 
 <a name="column-method-geometry"></a>
 #### `geometry()` {.collection-method}
 
-The `geometry` method creates a `GEOMETRY` equivalent column with the given spatial type and SRID (Spatial Reference System Identifier):
+Phương thức `geometry` tạo một cột tương đương `GEOMETRY` với kiểu dữ liệu không gian và SRID (Spatial Reference System Identifier) được chỉ định:
 
 ```php
 $table->geometry('positions', subtype: 'point', srid: 0);
 ```
 
 > [!NOTE]
-> Support for spatial types depends on your database driver. Please refer to your database's documentation. If your application is utilizing a PostgreSQL database, you must install the [PostGIS](https://postgis.net) extension before the `geometry` method may be used.
+> Khả năng hỗ trợ các kiểu dữ liệu không gian phụ thuộc vào database driver. Hãy tham khảo tài liệu của cơ sở dữ liệu bạn đang sử dụng. Nếu ứng dụng sử dụng PostgreSQL, bạn phải cài extension [PostGIS](https://postgis.net) trước khi có thể dùng phương thức `geometry`.
 
 <a name="column-method-id"></a>
 #### `id()` {.collection-method}
 
-The `id` method is an alias of the `bigIncrements` method. By default, the method will create an `id` column; however, you may pass a column name if you would like to assign a different name to the column:
+Phương thức `id` là alias của `bigIncrements`. Theo mặc định, phương thức này tạo cột `id`; tuy nhiên, bạn có thể truyền tên cột nếu muốn sử dụng một tên khác:
 
 ```php
 $table->id();
@@ -793,7 +793,7 @@ $table->id();
 <a name="column-method-increments"></a>
 #### `increments()` {.collection-method}
 
-The `increments` method creates an auto-incrementing `UNSIGNED INTEGER` equivalent column as a primary key:
+Phương thức `increments` tạo một cột tương đương `UNSIGNED INTEGER` tự tăng làm khóa chính:
 
 ```php
 $table->increments('id');
@@ -802,7 +802,7 @@ $table->increments('id');
 <a name="column-method-integer"></a>
 #### `integer()` {.collection-method}
 
-The `integer` method creates an `INTEGER` equivalent column:
+Phương thức `integer` tạo một cột tương đương `INTEGER`:
 
 ```php
 $table->integer('votes');
@@ -811,46 +811,46 @@ $table->integer('votes');
 <a name="column-method-ipAddress"></a>
 #### `ipAddress()` {.collection-method}
 
-The `ipAddress` method creates a `VARCHAR` equivalent column:
+Phương thức `ipAddress` tạo một cột tương đương `VARCHAR`:
 
 ```php
 $table->ipAddress('visitor');
 ```
 
-When using PostgreSQL, an `INET` column will be created.
+Khi sử dụng PostgreSQL, một cột `INET` sẽ được tạo.
 
 <a name="column-method-json"></a>
 #### `json()` {.collection-method}
 
-The `json` method creates a `JSON` equivalent column:
+Phương thức `json` tạo một cột tương đương `JSON`:
 
 ```php
 $table->json('options');
 ```
 
-When using SQLite, a `TEXT` column will be created.
+Khi sử dụng SQLite, một cột `TEXT` sẽ được tạo.
 
 <a name="column-method-jsonb"></a>
 #### `jsonb()` {.collection-method}
 
-The `jsonb` method creates a `JSONB` equivalent column:
+Phương thức `jsonb` tạo một cột tương đương `JSONB`:
 
 ```php
 $table->jsonb('options');
 ```
 
-When using SQLite, a `TEXT` column will be created.
+Khi sử dụng SQLite, một cột `TEXT` sẽ được tạo.
 
 <a name="column-method-longText"></a>
 #### `longText()` {.collection-method}
 
-The `longText` method creates a `LONGTEXT` equivalent column:
+Phương thức `longText` tạo một cột tương đương `LONGTEXT`:
 
 ```php
 $table->longText('description');
 ```
 
-When utilizing MySQL or MariaDB, you may apply a `binary` character set to the column in order to create a `LONGBLOB` equivalent column:
+Khi sử dụng MySQL hoặc MariaDB, bạn có thể áp dụng character set `binary` cho cột để tạo một cột tương đương `LONGBLOB`:
 
 ```php
 $table->longText('data')->charset('binary'); // LONGBLOB
@@ -859,7 +859,7 @@ $table->longText('data')->charset('binary'); // LONGBLOB
 <a name="column-method-macAddress"></a>
 #### `macAddress()` {.collection-method}
 
-The `macAddress` method creates a column that is intended to hold a MAC address. Some database systems, such as PostgreSQL, have a dedicated column type for this type of data. Other database systems will use a string equivalent column:
+Phương thức `macAddress` tạo một cột dùng để lưu địa chỉ MAC. Một số hệ quản trị cơ sở dữ liệu như PostgreSQL có kiểu cột chuyên dụng cho loại dữ liệu này; các hệ khác sẽ sử dụng cột tương đương kiểu chuỗi:
 
 ```php
 $table->macAddress('device');
@@ -868,7 +868,7 @@ $table->macAddress('device');
 <a name="column-method-mediumIncrements"></a>
 #### `mediumIncrements()` {.collection-method}
 
-The `mediumIncrements` method creates an auto-incrementing `UNSIGNED MEDIUMINT` equivalent column as a primary key:
+Phương thức `mediumIncrements` tạo một cột tương đương `UNSIGNED MEDIUMINT` tự tăng làm khóa chính:
 
 ```php
 $table->mediumIncrements('id');
@@ -877,7 +877,7 @@ $table->mediumIncrements('id');
 <a name="column-method-mediumInteger"></a>
 #### `mediumInteger()` {.collection-method}
 
-The `mediumInteger` method creates a `MEDIUMINT` equivalent column:
+Phương thức `mediumInteger` tạo một cột tương đương `MEDIUMINT`:
 
 ```php
 $table->mediumInteger('votes');
@@ -886,13 +886,13 @@ $table->mediumInteger('votes');
 <a name="column-method-mediumText"></a>
 #### `mediumText()` {.collection-method}
 
-The `mediumText` method creates a `MEDIUMTEXT` equivalent column:
+Phương thức `mediumText` tạo một cột tương đương `MEDIUMTEXT`:
 
 ```php
 $table->mediumText('description');
 ```
 
-When utilizing MySQL or MariaDB, you may apply a `binary` character set to the column in order to create a `MEDIUMBLOB` equivalent column:
+Khi sử dụng MySQL hoặc MariaDB, bạn có thể áp dụng character set `binary` cho cột để tạo một cột tương đương `MEDIUMBLOB`:
 
 ```php
 $table->mediumText('data')->charset('binary'); // MEDIUMBLOB
@@ -901,9 +901,9 @@ $table->mediumText('data')->charset('binary'); // MEDIUMBLOB
 <a name="column-method-morphs"></a>
 #### `morphs()` {.collection-method}
 
-The `morphs` method is a convenience method that adds a `{column}_type` `VARCHAR` equivalent column and a `{column}_id` equivalent column. The column type for the `{column}_id` will be `UNSIGNED BIGINT`, `CHAR(36)`, or `CHAR(26)` depending on the model key type.
+Phương thức `morphs` là một phương thức tiện ích, thêm cột `{column}_type` tương đương `VARCHAR` và cột `{column}_id` tương ứng. Kiểu của cột `{column}_id` sẽ là `UNSIGNED BIGINT`, `CHAR(36)` hoặc `CHAR(26)` tùy theo kiểu khóa của model.
 
-This method is intended to be used when defining the columns necessary for a polymorphic [Eloquent relationship](/docs/{{version}}/eloquent-relationships). In the following example, `taggable_type` and `taggable_id` columns would be created:
+Phương thức này được dùng khi định nghĩa các cột cần thiết cho [quan hệ Eloquent đa hình](/docs/{{version}}/eloquent-relationships). Trong ví dụ sau, các cột `taggable_type` và `taggable_id` sẽ được tạo:
 
 ```php
 $table->morphs('taggable');
@@ -912,7 +912,7 @@ $table->morphs('taggable');
 <a name="column-method-nullableMorphs"></a>
 #### `nullableMorphs()` {.collection-method}
 
-The method is similar to the [morphs](#column-method-morphs) method; however, the columns that are created will be "nullable":
+Phương thức này tương tự [morphs](#column-method-morphs), nhưng các cột được tạo sẽ cho phép `null`:
 
 ```php
 $table->nullableMorphs('taggable');
@@ -921,7 +921,7 @@ $table->nullableMorphs('taggable');
 <a name="column-method-nullableUlidMorphs"></a>
 #### `nullableUlidMorphs()` {.collection-method}
 
-The method is similar to the [ulidMorphs](#column-method-ulidMorphs) method; however, the columns that are created will be "nullable":
+Phương thức này tương tự [ulidMorphs](#column-method-ulidMorphs), nhưng các cột được tạo sẽ cho phép `null`:
 
 ```php
 $table->nullableUlidMorphs('taggable');
@@ -930,7 +930,7 @@ $table->nullableUlidMorphs('taggable');
 <a name="column-method-nullableUuidMorphs"></a>
 #### `nullableUuidMorphs()` {.collection-method}
 
-The method is similar to the [uuidMorphs](#column-method-uuidMorphs) method; however, the columns that are created will be "nullable":
+Phương thức này tương tự [uuidMorphs](#column-method-uuidMorphs), nhưng các cột được tạo sẽ cho phép `null`:
 
 ```php
 $table->nullableUuidMorphs('taggable');
@@ -939,7 +939,7 @@ $table->nullableUuidMorphs('taggable');
 <a name="column-method-rememberToken"></a>
 #### `rememberToken()` {.collection-method}
 
-The `rememberToken` method creates a nullable, `VARCHAR(100)` equivalent column that is intended to store the current "remember me" [authentication token](/docs/{{version}}/authentication#remembering-users):
+Phương thức `rememberToken` tạo một cột tương đương `VARCHAR(100)` cho phép `null`, dùng để lưu [authentication token](/docs/{{version}}/authentication#remembering-users) hiện tại của chức năng "remember me":
 
 ```php
 $table->rememberToken();
@@ -948,7 +948,7 @@ $table->rememberToken();
 <a name="column-method-set"></a>
 #### `set()` {.collection-method}
 
-The `set` method creates a `SET` equivalent column with the given list of valid values:
+Phương thức `set` tạo một cột tương đương `SET` với danh sách các giá trị hợp lệ được chỉ định:
 
 ```php
 $table->set('flavors', ['strawberry', 'vanilla']);
@@ -957,7 +957,7 @@ $table->set('flavors', ['strawberry', 'vanilla']);
 <a name="column-method-smallIncrements"></a>
 #### `smallIncrements()` {.collection-method}
 
-The `smallIncrements` method creates an auto-incrementing `UNSIGNED SMALLINT` equivalent column as a primary key:
+Phương thức `smallIncrements` tạo một cột tương đương `UNSIGNED SMALLINT` tự tăng làm khóa chính:
 
 ```php
 $table->smallIncrements('id');
@@ -966,7 +966,7 @@ $table->smallIncrements('id');
 <a name="column-method-smallInteger"></a>
 #### `smallInteger()` {.collection-method}
 
-The `smallInteger` method creates a `SMALLINT` equivalent column:
+Phương thức `smallInteger` tạo một cột tương đương `SMALLINT`:
 
 ```php
 $table->smallInteger('votes');
@@ -975,7 +975,7 @@ $table->smallInteger('votes');
 <a name="column-method-softDeletesTz"></a>
 #### `softDeletesTz()` {.collection-method}
 
-The `softDeletesTz` method adds a nullable `deleted_at` `TIMESTAMP` (with timezone) equivalent column with an optional fractional seconds precision. This column is intended to store the `deleted_at` timestamp needed for Eloquent's "soft delete" functionality:
+Phương thức `softDeletesTz` thêm cột `deleted_at` tương đương `TIMESTAMP` (có múi giờ), cho phép `null` và có thể chỉ định độ chính xác phần thập phân của giây. Cột này lưu timestamp `deleted_at` cần cho chức năng "soft delete" của Eloquent:
 
 ```php
 $table->softDeletesTz('deleted_at', precision: 0);
@@ -984,7 +984,7 @@ $table->softDeletesTz('deleted_at', precision: 0);
 <a name="column-method-softDeletes"></a>
 #### `softDeletes()` {.collection-method}
 
-The `softDeletes` method adds a nullable `deleted_at` `TIMESTAMP` equivalent column with an optional fractional seconds precision. This column is intended to store the `deleted_at` timestamp needed for Eloquent's "soft delete" functionality:
+Phương thức `softDeletes` thêm cột `deleted_at` tương đương `TIMESTAMP`, cho phép `null` và có thể chỉ định độ chính xác phần thập phân của giây. Cột này lưu timestamp `deleted_at` cần cho chức năng "soft delete" của Eloquent:
 
 ```php
 $table->softDeletes('deleted_at', precision: 0);
@@ -993,7 +993,7 @@ $table->softDeletes('deleted_at', precision: 0);
 <a name="column-method-string"></a>
 #### `string()` {.collection-method}
 
-The `string` method creates a `VARCHAR` equivalent column of the given length:
+Phương thức `string` tạo một cột tương đương `VARCHAR` với độ dài được chỉ định:
 
 ```php
 $table->string('name', length: 100);
@@ -1002,13 +1002,13 @@ $table->string('name', length: 100);
 <a name="column-method-text"></a>
 #### `text()` {.collection-method}
 
-The `text` method creates a `TEXT` equivalent column:
+Phương thức `text` tạo một cột tương đương `TEXT`:
 
 ```php
 $table->text('description');
 ```
 
-When utilizing MySQL or MariaDB, you may apply a `binary` character set to the column in order to create a `BLOB` equivalent column:
+Khi sử dụng MySQL hoặc MariaDB, bạn có thể áp dụng character set `binary` cho cột để tạo một cột tương đương `BLOB`:
 
 ```php
 $table->text('data')->charset('binary'); // BLOB
@@ -1017,7 +1017,7 @@ $table->text('data')->charset('binary'); // BLOB
 <a name="column-method-timeTz"></a>
 #### `timeTz()` {.collection-method}
 
-The `timeTz` method creates a `TIME` (with timezone) equivalent column with an optional fractional seconds precision:
+Phương thức `timeTz` tạo một cột tương đương `TIME` (có múi giờ), với độ chính xác phần thập phân của giây là tùy chọn:
 
 ```php
 $table->timeTz('sunrise', precision: 0);
@@ -1026,7 +1026,7 @@ $table->timeTz('sunrise', precision: 0);
 <a name="column-method-time"></a>
 #### `time()` {.collection-method}
 
-The `time` method creates a `TIME` equivalent column with an optional fractional seconds precision:
+Phương thức `time` tạo một cột tương đương `TIME`, với độ chính xác phần thập phân của giây là tùy chọn:
 
 ```php
 $table->time('sunrise', precision: 0);
@@ -1035,7 +1035,7 @@ $table->time('sunrise', precision: 0);
 <a name="column-method-timestampTz"></a>
 #### `timestampTz()` {.collection-method}
 
-The `timestampTz` method creates a `TIMESTAMP` (with timezone) equivalent column with an optional fractional seconds precision:
+Phương thức `timestampTz` tạo một cột tương đương `TIMESTAMP` (có múi giờ), với độ chính xác phần thập phân của giây là tùy chọn:
 
 ```php
 $table->timestampTz('added_at', precision: 0);
@@ -1044,7 +1044,7 @@ $table->timestampTz('added_at', precision: 0);
 <a name="column-method-timestamp"></a>
 #### `timestamp()` {.collection-method}
 
-The `timestamp` method creates a `TIMESTAMP` equivalent column with an optional fractional seconds precision:
+Phương thức `timestamp` tạo một cột tương đương `TIMESTAMP`, với độ chính xác phần thập phân của giây là tùy chọn:
 
 ```php
 $table->timestamp('added_at', precision: 0);
@@ -1053,7 +1053,7 @@ $table->timestamp('added_at', precision: 0);
 <a name="column-method-timestampsTz"></a>
 #### `timestampsTz()` {.collection-method}
 
-The `timestampsTz` method creates `created_at` and `updated_at` `TIMESTAMP` (with timezone) equivalent columns with an optional fractional seconds precision:
+Phương thức `timestampsTz` tạo các cột `created_at` và `updated_at` tương đương `TIMESTAMP` (có múi giờ), với độ chính xác phần thập phân của giây là tùy chọn:
 
 ```php
 $table->timestampsTz(precision: 0);
@@ -1062,7 +1062,7 @@ $table->timestampsTz(precision: 0);
 <a name="column-method-timestamps"></a>
 #### `timestamps()` {.collection-method}
 
-The `timestamps` method creates `created_at` and `updated_at` `TIMESTAMP` equivalent columns with an optional fractional seconds precision:
+Phương thức `timestamps` tạo các cột `created_at` và `updated_at` tương đương `TIMESTAMP`, với độ chính xác phần thập phân của giây là tùy chọn:
 
 ```php
 $table->timestamps(precision: 0);
@@ -1071,7 +1071,7 @@ $table->timestamps(precision: 0);
 <a name="column-method-tinyIncrements"></a>
 #### `tinyIncrements()` {.collection-method}
 
-The `tinyIncrements` method creates an auto-incrementing `UNSIGNED TINYINT` equivalent column as a primary key:
+Phương thức `tinyIncrements` tạo một cột tương đương `UNSIGNED TINYINT` tự tăng làm khóa chính:
 
 ```php
 $table->tinyIncrements('id');
@@ -1080,7 +1080,7 @@ $table->tinyIncrements('id');
 <a name="column-method-tinyInteger"></a>
 #### `tinyInteger()` {.collection-method}
 
-The `tinyInteger` method creates a `TINYINT` equivalent column:
+Phương thức `tinyInteger` tạo một cột tương đương `TINYINT`:
 
 ```php
 $table->tinyInteger('votes');
@@ -1089,13 +1089,13 @@ $table->tinyInteger('votes');
 <a name="column-method-tinyText"></a>
 #### `tinyText()` {.collection-method}
 
-The `tinyText` method creates a `TINYTEXT` equivalent column:
+Phương thức `tinyText` tạo một cột tương đương `TINYTEXT`:
 
 ```php
 $table->tinyText('notes');
 ```
 
-When utilizing MySQL or MariaDB, you may apply a `binary` character set to the column in order to create a `TINYBLOB` equivalent column:
+Khi sử dụng MySQL hoặc MariaDB, bạn có thể áp dụng character set `binary` cho cột để tạo một cột tương đương `TINYBLOB`:
 
 ```php
 $table->tinyText('data')->charset('binary'); // TINYBLOB
@@ -1104,7 +1104,7 @@ $table->tinyText('data')->charset('binary'); // TINYBLOB
 <a name="column-method-unsignedBigInteger"></a>
 #### `unsignedBigInteger()` {.collection-method}
 
-The `unsignedBigInteger` method creates an `UNSIGNED BIGINT` equivalent column:
+Phương thức `unsignedBigInteger` tạo một cột tương đương `UNSIGNED BIGINT`:
 
 ```php
 $table->unsignedBigInteger('votes');
@@ -1113,7 +1113,7 @@ $table->unsignedBigInteger('votes');
 <a name="column-method-unsignedInteger"></a>
 #### `unsignedInteger()` {.collection-method}
 
-The `unsignedInteger` method creates an `UNSIGNED INTEGER` equivalent column:
+Phương thức `unsignedInteger` tạo một cột tương đương `UNSIGNED INTEGER`:
 
 ```php
 $table->unsignedInteger('votes');
@@ -1122,7 +1122,7 @@ $table->unsignedInteger('votes');
 <a name="column-method-unsignedMediumInteger"></a>
 #### `unsignedMediumInteger()` {.collection-method}
 
-The `unsignedMediumInteger` method creates an `UNSIGNED MEDIUMINT` equivalent column:
+Phương thức `unsignedMediumInteger` tạo một cột tương đương `UNSIGNED MEDIUMINT`:
 
 ```php
 $table->unsignedMediumInteger('votes');
@@ -1131,7 +1131,7 @@ $table->unsignedMediumInteger('votes');
 <a name="column-method-unsignedSmallInteger"></a>
 #### `unsignedSmallInteger()` {.collection-method}
 
-The `unsignedSmallInteger` method creates an `UNSIGNED SMALLINT` equivalent column:
+Phương thức `unsignedSmallInteger` tạo một cột tương đương `UNSIGNED SMALLINT`:
 
 ```php
 $table->unsignedSmallInteger('votes');
@@ -1140,7 +1140,7 @@ $table->unsignedSmallInteger('votes');
 <a name="column-method-unsignedTinyInteger"></a>
 #### `unsignedTinyInteger()` {.collection-method}
 
-The `unsignedTinyInteger` method creates an `UNSIGNED TINYINT` equivalent column:
+Phương thức `unsignedTinyInteger` tạo một cột tương đương `UNSIGNED TINYINT`:
 
 ```php
 $table->unsignedTinyInteger('votes');
@@ -1149,9 +1149,9 @@ $table->unsignedTinyInteger('votes');
 <a name="column-method-ulidMorphs"></a>
 #### `ulidMorphs()` {.collection-method}
 
-The `ulidMorphs` method is a convenience method that adds a `{column}_type` `VARCHAR` equivalent column and a `{column}_id` `CHAR(26)` equivalent column.
+Phương thức `ulidMorphs` là một phương thức tiện ích, thêm cột `{column}_type` tương đương `VARCHAR` và cột `{column}_id` tương đương `CHAR(26)`.
 
-This method is intended to be used when defining the columns necessary for a polymorphic [Eloquent relationship](/docs/{{version}}/eloquent-relationships) that use ULID identifiers. In the following example, `taggable_type` and `taggable_id` columns would be created:
+Phương thức này được dùng khi định nghĩa các cột cần thiết cho [quan hệ Eloquent đa hình](/docs/{{version}}/eloquent-relationships) sử dụng định danh ULID. Trong ví dụ sau, các cột `taggable_type` và `taggable_id` sẽ được tạo:
 
 ```php
 $table->ulidMorphs('taggable');
@@ -1160,9 +1160,9 @@ $table->ulidMorphs('taggable');
 <a name="column-method-uuidMorphs"></a>
 #### `uuidMorphs()` {.collection-method}
 
-The `uuidMorphs` method is a convenience method that adds a `{column}_type` `VARCHAR` equivalent column and a `{column}_id` `CHAR(36)` equivalent column.
+Phương thức `uuidMorphs` là một phương thức tiện ích, thêm cột `{column}_type` tương đương `VARCHAR` và cột `{column}_id` tương đương `CHAR(36)`.
 
-This method is intended to be used when defining the columns necessary for a [polymorphic Eloquent relationship](/docs/{{version}}/eloquent-relationships#polymorphic-relationships) that use UUID identifiers. In the following example, `taggable_type` and `taggable_id` columns would be created:
+Phương thức này được dùng khi định nghĩa các cột cần thiết cho [quan hệ Eloquent đa hình](/docs/{{version}}/eloquent-relationships#polymorphic-relationships) sử dụng định danh UUID. Trong ví dụ sau, các cột `taggable_type` và `taggable_id` sẽ được tạo:
 
 ```php
 $table->uuidMorphs('taggable');
@@ -1171,7 +1171,7 @@ $table->uuidMorphs('taggable');
 <a name="column-method-ulid"></a>
 #### `ulid()` {.collection-method}
 
-The `ulid` method creates a `ULID` equivalent column:
+Phương thức `ulid` tạo một cột tương đương `ULID`:
 
 ```php
 $table->ulid('id');
@@ -1180,7 +1180,7 @@ $table->ulid('id');
 <a name="column-method-uuid"></a>
 #### `uuid()` {.collection-method}
 
-The `uuid` method creates a `UUID` equivalent column:
+Phương thức `uuid` tạo một cột tương đương `UUID`:
 
 ```php
 $table->uuid('id');
@@ -1189,13 +1189,13 @@ $table->uuid('id');
 <a name="column-method-vector"></a>
 #### `vector()` {.collection-method}
 
-The `vector` method creates a `vector` equivalent column:
+Phương thức `vector` tạo một cột tương đương `vector`:
 
 ```php
 $table->vector('embedding', dimensions: 100);
 ```
 
-When utilizing PostgreSQL, the `pgvector` extension must be loaded before `vector` columns can be created:
+Khi sử dụng PostgreSQL, extension `pgvector` phải được nạp trước khi có thể tạo các cột `vector`:
 
 ```php
 Schema::ensureVectorExtensionExists();
@@ -1204,16 +1204,16 @@ Schema::ensureVectorExtensionExists();
 <a name="column-method-year"></a>
 #### `year()` {.collection-method}
 
-The `year` method creates a `YEAR` equivalent column:
+Phương thức `year` tạo một cột tương đương `YEAR`:
 
 ```php
 $table->year('birth_year');
 ```
 
 <a name="column-modifiers"></a>
-### Column Modifiers
+### Bộ điều chỉnh cột
 
-In addition to the column types listed above, there are several column "modifiers" you may use when adding a column to a database table. For example, to make the column "nullable", you may use the `nullable` method:
+Ngoài các kiểu cột được liệt kê ở trên, Laravel cung cấp một số "modifier" mà bạn có thể dùng khi thêm cột vào bảng cơ sở dữ liệu. Ví dụ, để cho phép cột nhận giá trị `null`, bạn có thể sử dụng phương thức `nullable`:
 
 ```php
 use Illuminate\Database\Schema\Blueprint;
@@ -1224,39 +1224,39 @@ Schema::table('users', function (Blueprint $table) {
 });
 ```
 
-The following table contains all of the available column modifiers. This list does not include [index modifiers](#creating-indexes):
+Bảng sau liệt kê toàn bộ column modifier hiện có. Danh sách này không bao gồm [index modifier](#creating-indexes):
 
 <div class="overflow-auto">
 
 | Modifier                            | Description                                                                                    |
 | ----------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `->after('column')`                 | Place the column "after" another column (MariaDB / MySQL).                                     |
-| `->autoIncrement()`                 | Set `INTEGER` columns as auto-incrementing (primary key).                                      |
-| `->charset('utf8mb4')`              | Specify a character set for the column (MariaDB / MySQL).                                      |
-| `->collation('utf8mb4_unicode_ci')` | Specify a collation for the column.                                                            |
+| `->after('column')`                 | Đặt cột "sau" một cột khác (MariaDB / MySQL).                                     |
+| `->autoIncrement()`                 | Đặt cột `INTEGER` thành tự tăng (khóa chính).                                      |
+| `->charset('utf8mb4')`              | Chỉ định character set cho cột (MariaDB / MySQL).                                      |
+| `->collation('utf8mb4_unicode_ci')` | Chỉ định collation cho cột.                                                            |
 | `->comment('my comment')`           | Add a comment to a column (MariaDB / MySQL / PostgreSQL).                                      |
-| `->default($value)`                 | Specify a "default" value for the column.                                                      |
-| `->first()`                         | Place the column "first" in the table (MariaDB / MySQL).                                       |
-| `->from($integer)`                  | Set the starting value of an auto-incrementing field (MariaDB / MySQL / PostgreSQL).           |
-| `->instant()`                       | Add or modify the column using an instant operation (MySQL).                                   |
-| `->invisible()`                     | Make the column "invisible" to `SELECT *` queries (MariaDB / MySQL).                           |
+| `->default($value)`                 | Chỉ định value "default" cho column.                                                        |
+| `->first()`                         | Đặt column ở vị trí "đầu tiên" trong table (MariaDB / MySQL).                               |
+| `->from($integer)`                  | Đặt giá trị bắt đầu của field tự tăng (MariaDB / MySQL / PostgreSQL).                         |
+| `->instant()`                       | Thêm hoặc chỉnh sửa column bằng instant operation (MySQL).                                    |
+| `->invisible()`                     | Làm column "ẩn" khỏi các query `SELECT *` (MariaDB / MySQL).                                 |
 | `->lock($mode)`                     | Specify a lock mode for the column operation (MySQL).                                          |
-| `->nullable($value = true)`         | Allow `NULL` values to be inserted into the column.                                            |
+| `->nullable($value = true)`         | Cho phép chèn giá trị `NULL` vào cột.                                            |
 | `->storedAs($expression)`           | Create a stored generated column (MariaDB / MySQL / PostgreSQL / SQLite).                      |
-| `->unsigned()`                      | Set `INTEGER` columns as `UNSIGNED` (MariaDB / MySQL).                                         |
+| `->unsigned()`                      | Đặt cột `INTEGER` thành `UNSIGNED` (MariaDB / MySQL).                                         |
 | `->using($expression)`              | Specify a casting expression when changing the column type (PostgreSQL).                       |
-| `->useCurrent()`                    | Set `TIMESTAMP` columns to use `CURRENT_TIMESTAMP` as default value.                           |
-| `->useCurrentOnUpdate()`            | Set `TIMESTAMP` columns to use `CURRENT_TIMESTAMP` when a record is updated (MariaDB / MySQL). |
+| `->useCurrent()`                    | Đặt column `TIMESTAMP` dùng `CURRENT_TIMESTAMP` làm default value.                             |
+| `->useCurrentOnUpdate()`            | Đặt column `TIMESTAMP` dùng `CURRENT_TIMESTAMP` khi record được update (MariaDB / MySQL).      |
 | `->virtualAs($expression)`          | Create a virtual generated column (MariaDB / MySQL / SQLite).                                  |
-| `->generatedAs($expression)`        | Create an identity column with specified sequence options (PostgreSQL).                        |
-| `->always()`                        | Defines the precedence of sequence values over input for an identity column (PostgreSQL).      |
+| `->generatedAs($expression)`        | Tạo identity column với sequence option đã chỉ định (PostgreSQL).                              |
+| `->always()`                        | Định nghĩa độ ưu tiên của sequence value so với input cho identity column (PostgreSQL).        |
 
 </div>
 
 <a name="default-expressions"></a>
-#### Default Expressions
+#### Biểu thức mặc định
 
-The `default` modifier accepts a value or an `Illuminate\Database\Query\Expression` instance. Using an `Expression` instance will prevent Laravel from wrapping the value in quotes and allow you to use database specific functions. One situation where this is particularly useful is when you need to assign default values to JSON columns:
+Modifier `default` chấp nhận một giá trị hoặc một instance của `Illuminate\Database\Query\Expression`. Khi dùng `Expression`, Laravel sẽ không đặt giá trị trong dấu nháy, nhờ đó bạn có thể sử dụng các hàm đặc thù của cơ sở dữ liệu. Cách này đặc biệt hữu ích khi cần gán giá trị mặc định cho các cột JSON:
 
 ```php
 <?php
@@ -1283,12 +1283,12 @@ return new class extends Migration
 ```
 
 > [!WARNING]
-> Support for default expressions depends on your database driver, database version, and the field type. Please refer to your database's documentation.
+> Khả năng hỗ trợ default expression phụ thuộc vào database driver, phiên bản cơ sở dữ liệu và kiểu trường. Hãy tham khảo tài liệu của cơ sở dữ liệu bạn đang sử dụng.
 
 <a name="column-order"></a>
-#### Column Order
+#### Thứ tự cột
 
-When using the MariaDB or MySQL database, the `after` method may be used to add columns after an existing column in the schema:
+Khi sử dụng MariaDB hoặc MySQL, bạn có thể dùng phương thức `after` để thêm các cột sau một cột đã tồn tại trong schema:
 
 ```php
 $table->after('password', function (Blueprint $table) {
@@ -1299,22 +1299,22 @@ $table->after('password', function (Blueprint $table) {
 ```
 
 <a name="instant-column-operations"></a>
-#### Instant Column Operations
+#### Thao tác cột tức thời
 
-When using MySQL, you may chain the `instant` modifier onto a column definition to indicate that the column should be added or modified using MySQL's "instant" algorithm. This algorithm allows certain schema changes to be performed without a full table rebuild, making them nearly instantaneous regardless of table size:
+Khi sử dụng MySQL, bạn có thể nối modifier `instant` vào định nghĩa cột để yêu cầu thêm hoặc sửa cột bằng thuật toán "instant" của MySQL. Thuật toán này cho phép thực hiện một số thay đổi schema mà không cần rebuild toàn bộ bảng, vì vậy thao tác gần như tức thời bất kể kích thước bảng:
 
 ```php
 $table->string('name')->nullable()->instant();
 ```
 
-Instant column additions can only append columns to the end of the table, so the `instant` modifier cannot be combined with the `after` or `first` modifiers. In addition, the algorithm does not support all column types or operations. If the requested operation is incompatible, MySQL will raise an error.
+Việc thêm cột bằng `instant` chỉ có thể nối cột vào cuối bảng, vì vậy modifier `instant` không thể kết hợp với `after` hoặc `first`. Ngoài ra, thuật toán này không hỗ trợ mọi kiểu cột hay mọi thao tác. Nếu thao tác được yêu cầu không tương thích, MySQL sẽ phát sinh lỗi.
 
-Please refer to [MySQL's documentation](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html) to determine which operations are compatible with instant column modifications.
+Hãy tham khảo [tài liệu MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-online-ddl-operations.html) để xác định những thao tác nào tương thích với việc sửa cột bằng `instant`.
 
 <a name="ddl-locking"></a>
-#### DDL Locking
+#### Khóa DDL
 
-When using MySQL, you may chain the `lock` modifier onto column, index, or foreign key definitions to control table locking during schema operations. MySQL supports several lock modes: `none` allows concurrent reads and writes, `shared` allows concurrent reads but blocks writes, `exclusive` blocks all concurrent access, and `default` lets MySQL choose the most appropriate mode:
+Khi sử dụng MySQL, bạn có thể nối modifier `lock` vào định nghĩa cột, index hoặc foreign key để kiểm soát việc khóa bảng trong các thao tác schema. MySQL hỗ trợ nhiều chế độ khóa: `none` cho phép đọc và ghi đồng thời; `shared` cho phép đọc đồng thời nhưng chặn ghi; `exclusive` chặn mọi truy cập đồng thời; còn `default` để MySQL tự chọn chế độ phù hợp nhất:
 
 ```php
 $table->string('name')->lock('none');
@@ -1322,16 +1322,16 @@ $table->string('name')->lock('none');
 $table->index('email')->lock('shared');
 ```
 
-If the requested lock mode is incompatible with the operation, MySQL will raise an error. The `lock` modifier may be combined with the `instant` modifier to further optimize schema changes:
+Nếu chế độ khóa được yêu cầu không tương thích với thao tác, MySQL sẽ phát sinh lỗi. Modifier `lock` có thể kết hợp với `instant` để tối ưu thêm các thay đổi schema:
 
 ```php
 $table->string('name')->instant()->lock('none');
 ```
 
 <a name="modifying-columns"></a>
-### Modifying Columns
+### Sửa đổi cột
 
-The `change` method allows you to modify the type and attributes of existing columns. For example, you may wish to increase the size of a `string` column. To see the `change` method in action, let's increase the size of the `name` column from 25 to 50. To accomplish this, we simply define the new state of the column and then call the `change` method:
+Phương thức `change` cho phép bạn thay đổi kiểu và các thuộc tính của cột hiện có. Ví dụ, bạn có thể muốn tăng kích thước của một cột `string`. Trong ví dụ sau, kích thước cột `name` được tăng từ 25 lên 50 bằng cách định nghĩa trạng thái mới của cột rồi gọi `change`:
 
 ```php
 Schema::table('users', function (Blueprint $table) {
@@ -1339,7 +1339,7 @@ Schema::table('users', function (Blueprint $table) {
 });
 ```
 
-When modifying a column, you must explicitly include all the modifiers you want to keep on the column definition - any missing attribute will be dropped. For example, to retain the `unsigned`, `default`, and `comment` attributes, you must call each modifier explicitly when changing the column:
+Khi sửa một cột, bạn phải khai báo rõ tất cả modifier muốn giữ lại trong định nghĩa cột; mọi thuộc tính bị bỏ sót sẽ bị loại bỏ. Ví dụ, để giữ các thuộc tính `unsigned`, `default` và `comment`, bạn phải gọi rõ từng modifier khi thay đổi cột:
 
 ```php
 Schema::table('users', function (Blueprint $table) {
@@ -1347,7 +1347,7 @@ Schema::table('users', function (Blueprint $table) {
 });
 ```
 
-The `change` method does not change the indexes of the column. Therefore, you may use index modifiers to explicitly add or drop an index when modifying the column:
+Phương thức `change` không thay đổi các index của cột. Vì vậy, bạn có thể sử dụng index modifier để thêm hoặc xóa index một cách tường minh khi sửa cột:
 
 ```php
 // Add an index...
@@ -1358,9 +1358,9 @@ $table->char('postal_code', 10)->unique(false)->change();
 ```
 
 <a name="postgresql-column-modifications"></a>
-#### PostgreSQL Column Modifications
+#### Sửa đổi cột trên PostgreSQL
 
-When changing a column's type on PostgreSQL, you may use the `using` modifier to specify the expression used to cast the existing values:
+Khi thay đổi kiểu của cột trên PostgreSQL, bạn có thể dùng modifier `using` để chỉ định biểu thức dùng để ép kiểu các giá trị hiện có:
 
 ```php
 Schema::table('users', function (Blueprint $table) {
@@ -1369,9 +1369,9 @@ Schema::table('users', function (Blueprint $table) {
 ```
 
 <a name="renaming-columns"></a>
-### Renaming Columns
+### Đổi tên cột
 
-To rename a column, you may use the `renameColumn` method provided by the schema builder:
+Để đổi tên một cột, bạn có thể sử dụng phương thức `renameColumn` do schema builder cung cấp:
 
 ```php
 Schema::table('users', function (Blueprint $table) {
@@ -1380,9 +1380,9 @@ Schema::table('users', function (Blueprint $table) {
 ```
 
 <a name="dropping-columns"></a>
-### Dropping Columns
+### Xóa cột
 
-To drop a column, you may use the `dropColumn` method on the schema builder:
+Để xóa một cột, bạn có thể sử dụng phương thức `dropColumn` trên schema builder:
 
 ```php
 Schema::table('users', function (Blueprint $table) {
@@ -1390,7 +1390,7 @@ Schema::table('users', function (Blueprint $table) {
 });
 ```
 
-You may drop multiple columns from a table by passing an array of column names to the `dropColumn` method:
+Bạn có thể xóa nhiều cột khỏi một bảng bằng cách truyền mảng tên cột vào phương thức `dropColumn`:
 
 ```php
 Schema::table('users', function (Blueprint $table) {
@@ -1399,30 +1399,30 @@ Schema::table('users', function (Blueprint $table) {
 ```
 
 <a name="available-command-aliases"></a>
-#### Available Command Aliases
+#### Các command alias hiện có
 
-Laravel provides several convenient methods related to dropping common types of columns. Each of these methods is described in the table below:
+Laravel cung cấp một số phương thức tiện ích để xóa các loại cột thường gặp. Các phương thức này được mô tả trong bảng dưới đây:
 
 <div class="overflow-auto">
 
 | Command                             | Description                                           |
 | ----------------------------------- | ----------------------------------------------------- |
-| `$table->dropMorphs('morphable');`  | Drop the `morphable_type` and `morphable_id` columns. |
-| `$table->dropRememberToken();`      | Drop the `remember_token` column.                     |
-| `$table->dropSoftDeletes();`        | Drop the `deleted_at` column.                         |
-| `$table->dropSoftDeletesTz();`      | Alias of `dropSoftDeletes()` method.                  |
-| `$table->dropTimestamps();`         | Drop the `created_at` and `updated_at` columns.       |
-| `$table->dropTimestampsTz();`       | Alias of `dropTimestamps()` method.                   |
+| `$table->dropMorphs('morphable');`  | Xóa các cột `morphable_type` và `morphable_id`. |
+| `$table->dropRememberToken();`      | Xóa cột `remember_token`.                     |
+| `$table->dropSoftDeletes();`        | Xóa cột `deleted_at`.                         |
+| `$table->dropSoftDeletesTz();`      | Alias của phương thức `dropSoftDeletes()`.                  |
+| `$table->dropTimestamps();`         | Xóa các cột `created_at` và `updated_at`.       |
+| `$table->dropTimestampsTz();`       | Alias của phương thức `dropTimestamps()`.                   |
 
 </div>
 
 <a name="indexes"></a>
-## Indexes
+## Chỉ mục
 
 <a name="creating-indexes"></a>
-### Creating Indexes
+### Tạo chỉ mục
 
-The Laravel schema builder supports several types of indexes. The following example creates a new `email` column and specifies that its values should be unique. To create the index, we can chain the `unique` method onto the column definition:
+Schema Builder của Laravel hỗ trợ nhiều loại chỉ mục. Ví dụ sau tạo một cột `email` mới và quy định rằng các giá trị của cột này phải là duy nhất. Để tạo chỉ mục, chúng ta có thể nối phương thức `unique` vào định nghĩa cột:
 
 ```php
 use Illuminate\Database\Schema\Blueprint;
@@ -1433,81 +1433,81 @@ Schema::table('users', function (Blueprint $table) {
 });
 ```
 
-Alternatively, you may create the index after defining the column. To do so, you should call the `unique` method on the schema builder blueprint. This method accepts the name of the column that should receive a unique index:
+Ngoài ra, bạn có thể tạo chỉ mục sau khi đã định nghĩa cột. Để thực hiện, hãy gọi phương thức `unique` trên blueprint của Schema Builder. Phương thức này nhận tên cột cần được tạo chỉ mục duy nhất:
 
 ```php
 $table->unique('email');
 ```
 
-You may even pass an array of columns to an index method to create a compound (or composite) index:
+Bạn cũng có thể truyền một mảng các cột vào phương thức tạo chỉ mục để tạo chỉ mục ghép (compound hoặc composite index):
 
 ```php
 $table->index(['account_id', 'created_at']);
 ```
 
-When creating an index, Laravel will automatically generate an index name based on the table, column names, and the index type, but you may pass a second argument to the method to specify the index name yourself:
+Khi tạo chỉ mục, Laravel sẽ tự động sinh tên chỉ mục dựa trên tên bảng, tên các cột và loại chỉ mục. Tuy nhiên, bạn có thể truyền đối số thứ hai cho phương thức để tự chỉ định tên chỉ mục:
 
 ```php
 $table->unique('email', 'unique_email');
 ```
 
 <a name="available-index-types"></a>
-#### Available Index Types
+#### Các loại chỉ mục hiện có
 
-Laravel's schema builder blueprint class provides methods for creating each type of index supported by Laravel. Each index method accepts an optional second argument to specify the name of the index. If omitted, the name will be derived from the names of the table and column(s) used for the index, as well as the index type. Each of the available index methods is described in the table below:
+Lớp blueprint của Schema Builder cung cấp các phương thức để tạo từng loại chỉ mục mà Laravel hỗ trợ. Mỗi phương thức tạo chỉ mục nhận một đối số thứ hai tùy chọn để chỉ định tên chỉ mục. Nếu bỏ qua, tên sẽ được suy ra từ tên bảng, tên cột hoặc các cột được dùng cho chỉ mục và loại chỉ mục. Các phương thức tạo chỉ mục hiện có được mô tả trong bảng dưới đây:
 
 <div class="overflow-auto">
 
-| Command                                          | Description                                                    |
+| Lệnh                                             | Mô tả                                                          |
 | ------------------------------------------------ | -------------------------------------------------------------- |
-| `$table->primary('id');`                         | Adds a primary key.                                            |
-| `$table->primary(['id', 'parent_id']);`          | Adds composite keys.                                           |
-| `$table->unique('email');`                       | Adds a unique index.                                           |
-| `$table->index('state');`                        | Adds an index.                                                 |
-| `$table->fullText('body');`                      | Adds a full text index (MariaDB / MySQL / PostgreSQL).         |
-| `$table->fullText('body')->language('english');` | Adds a full text index of the specified language (PostgreSQL). |
-| `$table->spatialIndex('location');`              | Adds a spatial index (except SQLite).                          |
+| `$table->primary('id');`                         | Thêm khóa chính.                                               |
+| `$table->primary(['id', 'parent_id']);`          | Thêm khóa chính ghép.                                          |
+| `$table->unique('email');`                       | Thêm chỉ mục duy nhất.                                         |
+| `$table->index('state');`                        | Thêm chỉ mục.                                                  |
+| `$table->fullText('body');`                      | Thêm chỉ mục full-text (MariaDB / MySQL / PostgreSQL).         |
+| `$table->fullText('body')->language('english');` | Thêm chỉ mục full-text cho ngôn ngữ được chỉ định (PostgreSQL). |
+| `$table->spatialIndex('location');`              | Thêm chỉ mục không gian (ngoại trừ SQLite).                    |
 
 </div>
 
 <a name="online-index-creation"></a>
-#### Online Index Creation
+#### Tạo chỉ mục online
 
-By default, creating an index on a large table can lock the table and block reads or writes while the index is being built. When using PostgreSQL or SQL Server, you may chain the `online` method onto an index definition to create the index without locking the table, allowing your application to continue reading and writing data during index creation:
+Theo mặc định, việc tạo chỉ mục trên một bảng lớn có thể khóa bảng và chặn thao tác đọc hoặc ghi trong khi chỉ mục đang được xây dựng. Khi sử dụng PostgreSQL hoặc SQL Server, bạn có thể nối phương thức `online` vào định nghĩa chỉ mục để tạo chỉ mục mà không khóa bảng, nhờ đó ứng dụng vẫn có thể tiếp tục đọc và ghi dữ liệu trong quá trình tạo chỉ mục:
 
 ```php
 $table->string('email')->unique()->online();
 ```
 
-When using PostgreSQL, this adds the `CONCURRENTLY` option to the index creation statement. When using SQL Server, this adds the `WITH (online = on)` option.
+Khi sử dụng PostgreSQL, thao tác này thêm tùy chọn `CONCURRENTLY` vào câu lệnh tạo chỉ mục. Khi sử dụng SQL Server, nó thêm tùy chọn `WITH (online = on)`.
 
 <a name="renaming-indexes"></a>
-### Renaming Indexes
+### Đổi tên chỉ mục
 
-To rename an index, you may use the `renameIndex` method provided by the schema builder blueprint. This method accepts the current index name as its first argument and the desired name as its second argument:
+Để đổi tên một chỉ mục, bạn có thể sử dụng phương thức `renameIndex` do blueprint của Schema Builder cung cấp. Phương thức này nhận tên hiện tại của chỉ mục làm đối số thứ nhất và tên mong muốn làm đối số thứ hai:
 
 ```php
 $table->renameIndex('from', 'to')
 ```
 
 <a name="dropping-indexes"></a>
-### Dropping Indexes
+### Xóa chỉ mục
 
-To drop an index, you must specify the index's name. By default, Laravel automatically assigns an index name based on the table name, the name of the indexed column, and the index type. Here are some examples:
+Để xóa một chỉ mục, bạn phải chỉ định tên của chỉ mục. Theo mặc định, Laravel tự động gán tên chỉ mục dựa trên tên bảng, tên cột được đánh chỉ mục và loại chỉ mục. Dưới đây là một số ví dụ:
 
 <div class="overflow-auto">
 
-| Command                                                  | Description                                                 |
+| Lệnh                                                     | Mô tả                                                      |
 | -------------------------------------------------------- | ----------------------------------------------------------- |
-| `$table->dropPrimary('users_id_primary');`               | Drop a primary key from the "users" table.                  |
-| `$table->dropUnique('users_email_unique');`              | Drop a unique index from the "users" table.                 |
-| `$table->dropIndex('geo_state_index');`                  | Drop a basic index from the "geo" table.                    |
-| `$table->dropFullText('posts_body_fulltext');`           | Drop a full text index from the "posts" table.              |
-| `$table->dropSpatialIndex('geo_location_spatialindex');` | Drop a spatial index from the "geo" table  (except SQLite). |
+| `$table->dropPrimary('users_id_primary');`               | Xóa khóa chính khỏi bảng `users`.                          |
+| `$table->dropUnique('users_email_unique');`              | Xóa chỉ mục duy nhất khỏi bảng `users`.                    |
+| `$table->dropIndex('geo_state_index');`                  | Xóa chỉ mục cơ bản khỏi bảng `geo`.                        |
+| `$table->dropFullText('posts_body_fulltext');`           | Xóa chỉ mục full-text khỏi bảng `posts`.                   |
+| `$table->dropSpatialIndex('geo_location_spatialindex');` | Xóa chỉ mục không gian khỏi bảng `geo` (ngoại trừ SQLite). |
 
 </div>
 
-If you pass an array of columns into a method that drops indexes, the conventional index name will be generated based on the table name, columns, and index type:
+Nếu truyền một mảng cột vào phương thức xóa chỉ mục, tên chỉ mục theo convention sẽ được tạo dựa trên tên bảng, các cột và loại chỉ mục:
 
 ```php
 Schema::table('geo', function (Blueprint $table) {
@@ -1516,9 +1516,9 @@ Schema::table('geo', function (Blueprint $table) {
 ```
 
 <a name="foreign-key-constraints"></a>
-### Foreign Key Constraints
+### Ràng buộc khóa ngoại
 
-Laravel also provides support for creating foreign key constraints, which are used to force referential integrity at the database level. For example, let's define a `user_id` column on the `posts` table that references the `id` column on a `users` table:
+Laravel cũng hỗ trợ tạo các ràng buộc khóa ngoại, được dùng để đảm bảo tính toàn vẹn tham chiếu ở cấp cơ sở dữ liệu. Ví dụ, hãy định nghĩa cột `user_id` trên bảng `posts` tham chiếu đến cột `id` của bảng `users`:
 
 ```php
 use Illuminate\Database\Schema\Blueprint;
@@ -1531,7 +1531,7 @@ Schema::table('posts', function (Blueprint $table) {
 });
 ```
 
-Since this syntax is rather verbose, Laravel provides additional, terser methods that use conventions to provide a better developer experience. When using the `foreignId` method to create your column, the example above can be rewritten like so:
+Vì cú pháp này khá dài, Laravel cung cấp thêm các phương thức ngắn gọn hơn, tận dụng convention để mang lại trải nghiệm phát triển thuận tiện hơn. Khi sử dụng phương thức `foreignId` để tạo cột, ví dụ trên có thể được viết lại như sau:
 
 ```php
 Schema::table('posts', function (Blueprint $table) {
@@ -1539,7 +1539,7 @@ Schema::table('posts', function (Blueprint $table) {
 });
 ```
 
-The `foreignId` method creates an `UNSIGNED BIGINT` equivalent column, while the `constrained` method will use conventions to determine the table and column being referenced. If your table name does not match Laravel's conventions, you may manually provide it to the `constrained` method. In addition, the name that should be assigned to the generated index may be specified as well:
+Phương thức `foreignId` tạo một cột tương đương `UNSIGNED BIGINT`, còn phương thức `constrained` sử dụng convention để xác định bảng và cột được tham chiếu. Nếu tên bảng không tuân theo convention của Laravel, bạn có thể truyền tên bảng thủ công vào phương thức `constrained`. Ngoài ra, bạn cũng có thể chỉ định tên cho chỉ mục được tạo:
 
 ```php
 Schema::table('posts', function (Blueprint $table) {
@@ -1549,7 +1549,7 @@ Schema::table('posts', function (Blueprint $table) {
 });
 ```
 
-You may also specify the desired action for the "on delete" and "on update" properties of the constraint:
+Bạn cũng có thể chỉ định hành động mong muốn cho các thuộc tính "on delete" và "on update" của ràng buộc:
 
 ```php
 $table->foreignId('user_id')
@@ -1558,24 +1558,24 @@ $table->foreignId('user_id')
     ->onDelete('cascade');
 ```
 
-An alternative, expressive syntax is also provided for these actions:
+Laravel cũng cung cấp một cú pháp thay thế dễ đọc hơn cho các hành động này:
 
 <div class="overflow-auto">
 
-| Method                        | Description                                       |
+| Phương thức                    | Mô tả                                             |
 | ----------------------------- | ------------------------------------------------- |
-| `$table->cascadeOnUpdate();`  | Updates should cascade.                           |
-| `$table->restrictOnUpdate();` | Updates should be restricted.                     |
-| `$table->nullOnUpdate();`     | Updates should set the foreign key value to null. |
-| `$table->noActionOnUpdate();` | No action on updates.                             |
-| `$table->cascadeOnDelete();`  | Deletes should cascade.                           |
-| `$table->restrictOnDelete();` | Deletes should be restricted.                     |
-| `$table->nullOnDelete();`     | Deletes should set the foreign key value to null. |
-| `$table->noActionOnDelete();` | Prevents deletes if child records exist.          |
+| `$table->cascadeOnUpdate();`  | Các cập nhật sẽ được cascade.                     |
+| `$table->restrictOnUpdate();` | Hạn chế thao tác cập nhật.                        |
+| `$table->nullOnUpdate();`     | Khi cập nhật, đặt giá trị khóa ngoại thành null.  |
+| `$table->noActionOnUpdate();` | Không thực hiện hành động khi cập nhật.           |
+| `$table->cascadeOnDelete();`  | Các thao tác xóa sẽ được cascade.                 |
+| `$table->restrictOnDelete();` | Hạn chế thao tác xóa.                             |
+| `$table->nullOnDelete();`     | Khi xóa, đặt giá trị khóa ngoại thành null.       |
+| `$table->noActionOnDelete();` | Ngăn thao tác xóa nếu tồn tại bản ghi con.        |
 
 </div>
 
-Any additional [column modifiers](#column-modifiers) must be called before the `constrained` method:
+Mọi [column modifier](#column-modifiers) bổ sung phải được gọi trước phương thức `constrained`:
 
 ```php
 $table->foreignId('user_id')
@@ -1584,24 +1584,24 @@ $table->foreignId('user_id')
 ```
 
 <a name="dropping-foreign-keys"></a>
-#### Dropping Foreign Keys
+#### Xóa khóa ngoại
 
-To drop a foreign key, you may use the `dropForeign` method, passing the name of the foreign key constraint to be deleted as an argument. Foreign key constraints use the same naming convention as indexes. In other words, the foreign key constraint name is based on the name of the table and the columns in the constraint, followed by a "\_foreign" suffix:
+Để xóa một khóa ngoại, bạn có thể sử dụng phương thức `dropForeign` và truyền tên ràng buộc khóa ngoại cần xóa làm đối số. Ràng buộc khóa ngoại sử dụng cùng convention đặt tên với chỉ mục. Nói cách khác, tên ràng buộc khóa ngoại được tạo dựa trên tên bảng và các cột trong ràng buộc, sau đó thêm hậu tố `\_foreign`:
 
 ```php
 $table->dropForeign('posts_user_id_foreign');
 ```
 
-Alternatively, you may pass an array containing the column name that holds the foreign key to the `dropForeign` method. The array will be converted to a foreign key constraint name using Laravel's constraint naming conventions:
+Ngoài ra, bạn có thể truyền vào phương thức `dropForeign` một mảng chứa tên cột giữ khóa ngoại. Mảng này sẽ được chuyển thành tên ràng buộc khóa ngoại theo convention đặt tên ràng buộc của Laravel:
 
 ```php
 $table->dropForeign(['user_id']);
 ```
 
 <a name="toggling-foreign-key-constraints"></a>
-#### Toggling Foreign Key Constraints
+#### Bật và tắt ràng buộc khóa ngoại
 
-You may enable or disable foreign key constraints within your migrations by using the following methods:
+Bạn có thể bật hoặc tắt các ràng buộc khóa ngoại trong migration bằng các phương thức sau:
 
 ```php
 Schema::enableForeignKeyConstraints();
@@ -1614,27 +1614,29 @@ Schema::withoutForeignKeyConstraints(function () {
 ```
 
 > [!WARNING]
-> SQLite disables foreign key constraints by default. When using SQLite, make sure to [enable foreign key support](/docs/{{version}}/database#configuration) in your database configuration before attempting to create them in your migrations.
+> SQLite mặc định tắt các ràng buộc khóa ngoại. Khi sử dụng SQLite, hãy đảm bảo đã [bật hỗ trợ khóa ngoại](/docs/{{version}}/database#configuration) trong cấu hình cơ sở dữ liệu trước khi cố gắng tạo chúng trong migration.
 
 <a name="events"></a>
-## Events
+## Sự kiện
 
-For convenience, each migration operation will dispatch an [event](/docs/{{version}}/events). All of the following events extend the base `Illuminate\Database\Events\MigrationEvent` class:
+Để thuận tiện, mỗi thao tác migration sẽ phát một [event](/docs/{{version}}/events). Tất cả các event sau đều kế thừa lớp cơ sở `Illuminate\Database\Events\MigrationEvent`:
 
 <div class="overflow-auto">
 
-| Class                                            | Description                                      |
+| Class                                            | Mô tả                                            |
 | ------------------------------------------------ | ------------------------------------------------ |
-| `Illuminate\Database\Events\DatabaseRefreshed`   | The `migrate:refresh` command has finished.      |
-| `Illuminate\Database\Events\MigrationsStarted`   | A batch of migrations is about to be executed.   |
-| `Illuminate\Database\Events\MigrationsEnded`     | A batch of migrations has finished.              |
-| `Illuminate\Database\Events\MigrationStarted`    | A single migration is about to be executed.      |
-| `Illuminate\Database\Events\MigrationEnded`      | A single migration has finished.                 |
-| `Illuminate\Database\Events\NoPendingMigrations` | A migration command found no pending migrations. |
-| `Illuminate\Database\Events\SchemaDumped`        | A database schema dump has finished.             |
-| `Illuminate\Database\Events\SchemaLoaded`        | An existing database schema dump has loaded.     |
+| `Illuminate\Database\Events\DatabaseRefreshed`   | Lệnh `migrate:refresh` đã hoàn tất.              |
+| `Illuminate\Database\Events\MigrationsStarted`   | Một batch migration sắp được thực thi.           |
+| `Illuminate\Database\Events\MigrationsEnded`     | Một batch migration đã hoàn tất.                 |
+| `Illuminate\Database\Events\MigrationStarted`    | Một migration đơn lẻ sắp được thực thi.          |
+| `Illuminate\Database\Events\MigrationEnded`      | Một migration đơn lẻ đã hoàn tất.                |
+| `Illuminate\Database\Events\NoPendingMigrations` | Lệnh migration không tìm thấy migration đang chờ.|
+| `Illuminate\Database\Events\SchemaDumped`        | Quá trình dump schema cơ sở dữ liệu đã hoàn tất. |
+| `Illuminate\Database\Events\SchemaLoaded`        | Một bản dump schema hiện có đã được nạp.          |
 
 </div>
+
+---
 
 ## Tài liệu chính thức
 

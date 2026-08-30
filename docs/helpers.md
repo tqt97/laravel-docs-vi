@@ -1,11 +1,11 @@
-# Helpers
+# Hàm hỗ trợ
 
-- [Introduction](#introduction)
-- [Available Methods](#available-methods)
-- [Other Utilities](#other-utilities)
-    - [Benchmarking](#benchmarking)
-    - [Dates and Time](#dates)
-    - [Deferred Functions](#deferred-functions)
+- [Giới thiệu](#introduction)
+- [Các phương thức có sẵn](#available-methods)
+- [Các tiện ích khác](#other-utilities)
+    - [Đo hiệu năng](#benchmarking)
+    - [Ngày và thời gian](#dates)
+    - [Hàm trì hoãn](#deferred-functions)
     - [Lottery](#lottery)
     - [Pipeline](#pipeline)
     - [Sleep](#sleep)
@@ -13,12 +13,12 @@
     - [URI](#uri)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel includes a variety of global "helper" PHP functions. Many of these functions are used by the framework itself; however, you are free to use them in your own applications if you find them convenient.
+Laravel cung cấp nhiều hàm PHP "helper" toàn cục. Nhiều hàm trong số này được chính framework sử dụng; tuy nhiên, bạn hoàn toàn có thể dùng chúng trong ứng dụng của mình nếu thấy thuận tiện.
 
 <a name="available-methods"></a>
-## Available Methods
+## Các phương thức có sẵn
 
 <style>
     .collection-method-list > p {
@@ -34,7 +34,7 @@ Laravel includes a variety of global "helper" PHP functions. Many of these funct
 </style>
 
 <a name="arrays-and-objects-method-list"></a>
-### Arrays & Objects
+### Mảng và đối tượng
 
 <div class="collection-method-list" markdown="1">
 
@@ -104,7 +104,7 @@ Laravel includes a variety of global "helper" PHP functions. Many of these funct
 </div>
 
 <a name="numbers-method-list"></a>
-### Numbers
+### Số
 
 <div class="collection-method-list" markdown="1">
 
@@ -133,7 +133,7 @@ Laravel includes a variety of global "helper" PHP functions. Many of these funct
 </div>
 
 <a name="paths-method-list"></a>
-### Paths
+### Đường dẫn
 
 <div class="collection-method-list" markdown="1">
 
@@ -149,7 +149,7 @@ Laravel includes a variety of global "helper" PHP functions. Many of these funct
 </div>
 
 <a name="urls-method-list"></a>
-### URLs
+### URL
 
 <div class="collection-method-list" markdown="1">
 
@@ -166,7 +166,7 @@ Laravel includes a variety of global "helper" PHP functions. Many of these funct
 </div>
 
 <a name="miscellaneous-method-list"></a>
-### Miscellaneous
+### Khác
 
 <div class="collection-method-list" markdown="1">
 
@@ -233,12 +233,12 @@ Laravel includes a variety of global "helper" PHP functions. Many of these funct
 </div>
 
 <a name="arrays"></a>
-## Arrays & Objects
+## Mảng và đối tượng
 
 <a name="method-array-accessible"></a>
 #### `Arr::accessible()` {.collection-method .first-collection-method}
 
-The `Arr::accessible` method determines if the given value is array accessible:
+Phương thức `Arr::accessible` xác định giá trị đã cho có thể được truy cập như một mảng hay không:
 
 ```php
 use Illuminate\Support\Arr;
@@ -264,7 +264,7 @@ $isAccessible = Arr::accessible(new stdClass);
 <a name="method-array-add"></a>
 #### `Arr::add()` {.collection-method}
 
-The `Arr::add` method adds a given key / value pair to an array if the given key doesn't already exist in the array or is set to `null`:
+Phương thức `Arr::add` thêm một cặp khóa / giá trị vào mảng nếu khóa đó chưa tồn tại trong mảng hoặc đang có giá trị `null`:
 
 ```php
 use Illuminate\Support\Arr;
@@ -281,7 +281,7 @@ $array = Arr::add(['name' => 'Desk', 'price' => null], 'price', 100);
 <a name="method-array-array"></a>
 #### `Arr::array()` {.collection-method}
 
-The `Arr::array` method retrieves a value from a deeply nested array using "dot" notation (just as [Arr::get()](#method-array-get) does), but throws an `InvalidArgumentException` if the requested value is not an `array`:
+Phương thức `Arr::array` lấy một giá trị từ mảng lồng sâu bằng ký pháp "dot" (tương tự [Arr::get()](#method-array-get)), nhưng sẽ ném `InvalidArgumentException` nếu giá trị được yêu cầu không phải là `array`:
 
 ```php
 use Illuminate\Support\Arr;
@@ -300,7 +300,7 @@ $value = Arr::array($array, 'name');
 <a name="method-array-boolean"></a>
 #### `Arr::boolean()` {.collection-method}
 
-The `Arr::boolean` method retrieves a value from a deeply nested array using "dot" notation (just as [Arr::get()](#method-array-get) does), but throws an `InvalidArgumentException` if the requested value is not a `boolean`:
+Phương thức `Arr::boolean` lấy một giá trị từ mảng lồng sâu bằng ký pháp "dot" (tương tự [Arr::get()](#method-array-get)), nhưng sẽ ném `InvalidArgumentException` nếu giá trị được yêu cầu không phải là `boolean`:
 
 ```php
 use Illuminate\Support\Arr;
@@ -320,7 +320,7 @@ $value = Arr::boolean($array, 'name');
 <a name="method-array-collapse"></a>
 #### `Arr::collapse()` {.collection-method}
 
-The `Arr::collapse` method collapses an array of arrays or collections into a single array:
+Phương thức `Arr::collapse` gộp một mảng gồm các mảng hoặc collection thành một mảng duy nhất:
 
 ```php
 use Illuminate\Support\Arr;
@@ -333,7 +333,7 @@ $array = Arr::collapse([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
 <a name="method-array-crossjoin"></a>
 #### `Arr::crossJoin()` {.collection-method}
 
-The `Arr::crossJoin` method cross joins the given arrays, returning a Cartesian product with all possible permutations:
+Phương thức `Arr::crossJoin` thực hiện phép cross join trên các mảng đã cho, trả về tích Descartes chứa mọi tổ hợp có thể:
 
 ```php
 use Illuminate\Support\Arr;
@@ -368,7 +368,7 @@ $matrix = Arr::crossJoin([1, 2], ['a', 'b'], ['I', 'II']);
 <a name="method-array-divide"></a>
 #### `Arr::divide()` {.collection-method}
 
-The `Arr::divide` method returns two arrays: one containing the keys and the other containing the values of the given array:
+Phương thức `Arr::divide` trả về hai mảng: một mảng chứa các khóa và mảng còn lại chứa các giá trị của mảng đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -383,7 +383,7 @@ use Illuminate\Support\Arr;
 <a name="method-array-dot"></a>
 #### `Arr::dot()` {.collection-method}
 
-The `Arr::dot` method flattens a multi-dimensional array into a single level array that uses "dot" notation to indicate depth:
+Phương thức `Arr::dot` làm phẳng một mảng đa chiều thành mảng một cấp, sử dụng ký pháp "dot" để biểu thị độ sâu:
 
 ```php
 use Illuminate\Support\Arr;
@@ -398,7 +398,7 @@ $flattened = Arr::dot($array);
 <a name="method-array-every"></a>
 #### `Arr::every()` {.collection-method}
 
-The `Arr::every` method ensures that all values in the array pass a given truth test:
+Phương thức `Arr::every` kiểm tra rằng tất cả giá trị trong mảng đều thỏa điều kiện kiểm tra đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -417,7 +417,7 @@ Arr::every($array, fn ($i) => $i > 2);
 <a name="method-array-except"></a>
 #### `Arr::except()` {.collection-method}
 
-The `Arr::except` method removes the given key / value pairs from an array:
+Phương thức `Arr::except` loại bỏ các cặp khóa / giá trị đã chỉ định khỏi mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -432,7 +432,7 @@ $filtered = Arr::except($array, ['price']);
 <a name="method-array-except-values"></a>
 #### `Arr::exceptValues()` {.collection-method}
 
-The `Arr::exceptValues` method removes the specified values from an array:
+Phương thức `Arr::exceptValues` loại bỏ các giá trị đã chỉ định khỏi mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -444,7 +444,7 @@ $filtered = Arr::exceptValues($array, ['foo', 'baz']);
 // ['bar', 'qux']
 ```
 
-You may also pass `true` to the `strict` argument to use strict type comparisons when filtering:
+Bạn cũng có thể truyền `true` cho tham số `strict` để sử dụng phép so sánh kiểu nghiêm ngặt khi lọc:
 
 ```php
 use Illuminate\Support\Arr;
@@ -459,7 +459,7 @@ $filtered = Arr::exceptValues($array, [1, 2], strict: true);
 <a name="method-array-exists"></a>
 #### `Arr::exists()` {.collection-method}
 
-The `Arr::exists` method checks that the given key exists in the provided array:
+Phương thức `Arr::exists` kiểm tra khóa đã cho có tồn tại trong mảng hay không:
 
 ```php
 use Illuminate\Support\Arr;
@@ -478,7 +478,7 @@ $exists = Arr::exists($array, 'salary');
 <a name="method-array-first"></a>
 #### `Arr::first()` {.collection-method}
 
-The `Arr::first` method returns the first element of an array passing a given truth test:
+Phương thức `Arr::first` trả về phần tử đầu tiên của mảng thỏa điều kiện kiểm tra đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -492,7 +492,7 @@ $first = Arr::first($array, function (int $value, int $key) {
 // 200
 ```
 
-A default value may also be passed as the third parameter to the method. This value will be returned if no value passes the truth test:
+Bạn cũng có thể truyền giá trị mặc định làm tham số thứ ba. Giá trị này sẽ được trả về nếu không có phần tử nào thỏa điều kiện kiểm tra:
 
 ```php
 use Illuminate\Support\Arr;
@@ -503,7 +503,7 @@ $first = Arr::first($array, $callback, $default);
 <a name="method-array-flatten"></a>
 #### `Arr::flatten()` {.collection-method}
 
-The `Arr::flatten` method flattens a multi-dimensional array into a single level array:
+Phương thức `Arr::flatten` làm phẳng một mảng đa chiều thành mảng một cấp:
 
 ```php
 use Illuminate\Support\Arr;
@@ -518,7 +518,7 @@ $flattened = Arr::flatten($array);
 <a name="method-array-float"></a>
 #### `Arr::float()` {.collection-method}
 
-The `Arr::float` method retrieves a value from a deeply nested array using "dot" notation (just as [Arr::get()](#method-array-get) does), but throws an `InvalidArgumentException` if the requested value is not a `float`:
+Phương thức `Arr::float` lấy một giá trị từ mảng lồng sâu bằng ký pháp "dot" (tương tự [Arr::get()](#method-array-get)), nhưng sẽ ném `InvalidArgumentException` nếu giá trị được yêu cầu không phải là `float`:
 
 ```php
 use Illuminate\Support\Arr;
@@ -537,7 +537,7 @@ $value = Arr::float($array, 'name');
 <a name="method-array-forget"></a>
 #### `Arr::forget()` {.collection-method}
 
-The `Arr::forget` method removes a given key / value pairs from a deeply nested array using "dot" notation:
+Phương thức `Arr::forget` loại bỏ các cặp khóa / giá trị đã cho khỏi mảng lồng sâu bằng ký pháp "dot":
 
 ```php
 use Illuminate\Support\Arr;
@@ -552,7 +552,7 @@ Arr::forget($array, 'products.desk');
 <a name="method-array-from"></a>
 #### `Arr::from()` {.collection-method}
 
-The `Arr::from` method converts various input types into a plain PHP array. It supports a range of input types, including arrays, objects, and several common Laravel interfaces, such as `Arrayable`, `Enumerable`, `Jsonable`, and `JsonSerializable`. Additionally, it handles `Traversable` and `WeakMap` instances:
+Phương thức `Arr::from` chuyển đổi nhiều kiểu đầu vào thành một mảng PHP thông thường. Phương thức hỗ trợ nhiều kiểu dữ liệu, bao gồm mảng, đối tượng và một số interface Laravel phổ biến như `Arrayable`, `Enumerable`, `Jsonable` và `JsonSerializable`. Ngoài ra, nó còn xử lý các instance `Traversable` và `WeakMap`:
 
 ```php
 use Illuminate\Support\Arr;
@@ -573,7 +573,7 @@ Arr::from(new TestJsonableObject); // ['foo' => 'bar']
 <a name="method-array-get"></a>
 #### `Arr::get()` {.collection-method}
 
-The `Arr::get` method retrieves a value from a deeply nested array using "dot" notation:
+Phương thức `Arr::get` lấy một giá trị từ mảng lồng sâu bằng ký pháp "dot":
 
 ```php
 use Illuminate\Support\Arr;
@@ -585,7 +585,7 @@ $price = Arr::get($array, 'products.desk.price');
 // 100
 ```
 
-The `Arr::get` method also accepts a default value, which will be returned if the specified key is not present in the array:
+Phương thức `Arr::get` cũng chấp nhận một giá trị mặc định; giá trị này sẽ được trả về nếu khóa được chỉ định không tồn tại trong mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -598,7 +598,7 @@ $discount = Arr::get($array, 'products.desk.discount', 0);
 <a name="method-array-has"></a>
 #### `Arr::has()` {.collection-method}
 
-The `Arr::has` method checks whether a given item or items exists in an array using "dot" notation:
+Phương thức `Arr::has` kiểm tra một hoặc nhiều phần tử có tồn tại trong mảng bằng ký pháp "dot" hay không:
 
 ```php
 use Illuminate\Support\Arr;
@@ -617,7 +617,7 @@ $contains = Arr::has($array, ['product.price', 'product.discount']);
 <a name="method-array-hasall"></a>
 #### `Arr::hasAll()` {.collection-method}
 
-The `Arr::hasAll` method determines if all of the specified keys exist in the given array using "dot" notation:
+Phương thức `Arr::hasAll` xác định tất cả các khóa được chỉ định có tồn tại trong mảng bằng ký pháp "dot" hay không:
 
 ```php
 use Illuminate\Support\Arr;
@@ -632,7 +632,7 @@ Arr::hasAll($array, ['name', 'IDE']); // false
 <a name="method-array-hasany"></a>
 #### `Arr::hasAny()` {.collection-method}
 
-The `Arr::hasAny` method checks whether any item in a given set exists in an array using "dot" notation:
+Phương thức `Arr::hasAny` kiểm tra có bất kỳ phần tử nào trong tập khóa đã cho tồn tại trong mảng bằng ký pháp "dot" hay không:
 
 ```php
 use Illuminate\Support\Arr;
@@ -655,7 +655,7 @@ $contains = Arr::hasAny($array, ['category', 'product.discount']);
 <a name="method-array-integer"></a>
 #### `Arr::integer()` {.collection-method}
 
-The `Arr::integer` method retrieves a value from a deeply nested array using "dot" notation (just as [Arr::get()](#method-array-get) does), but throws an `InvalidArgumentException` if the requested value is not an `int`:
+Phương thức `Arr::integer` lấy một giá trị từ mảng lồng sâu bằng ký pháp "dot" (tương tự [Arr::get()](#method-array-get)), nhưng sẽ ném `InvalidArgumentException` nếu giá trị được yêu cầu không phải là `int`:
 
 ```php
 use Illuminate\Support\Arr;
@@ -674,7 +674,7 @@ $value = Arr::integer($array, 'name');
 <a name="method-array-isassoc"></a>
 #### `Arr::isAssoc()` {.collection-method}
 
-The `Arr::isAssoc` method returns `true` if the given array is an associative array. An array is considered "associative" if it doesn't have sequential numerical keys beginning with zero:
+Phương thức `Arr::isAssoc` trả về `true` nếu mảng đã cho là mảng kết hợp. Một mảng được xem là "kết hợp" khi các khóa số của nó không liên tiếp bắt đầu từ 0:
 
 ```php
 use Illuminate\Support\Arr;
@@ -691,7 +691,7 @@ $isAssoc = Arr::isAssoc([1, 2, 3]);
 <a name="method-array-islist"></a>
 #### `Arr::isList()` {.collection-method}
 
-The `Arr::isList` method returns `true` if the given array's keys are sequential integers beginning from zero:
+Phương thức `Arr::isList` trả về `true` nếu các khóa của mảng là các số nguyên liên tiếp bắt đầu từ 0:
 
 ```php
 use Illuminate\Support\Arr;
@@ -708,7 +708,7 @@ $isList = Arr::isList(['product' => ['name' => 'Desk', 'price' => 100]]);
 <a name="method-array-join"></a>
 #### `Arr::join()` {.collection-method}
 
-The `Arr::join` method joins array elements with a string. Using this method's third argument, you may also specify the joining string for the final element of the array:
+Phương thức `Arr::join` nối các phần tử của mảng bằng một chuỗi. Với tham số thứ ba, bạn cũng có thể chỉ định chuỗi nối riêng cho phần tử cuối cùng của mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -727,7 +727,7 @@ $joined = Arr::join($array, ', ', ', and ');
 <a name="method-array-keyby"></a>
 #### `Arr::keyBy()` {.collection-method}
 
-The `Arr::keyBy` method keys the array by the given key. If multiple items have the same key, only the last one will appear in the new array:
+Phương thức `Arr::keyBy` đánh khóa cho mảng theo khóa đã cho. Nếu nhiều phần tử có cùng khóa, chỉ phần tử cuối cùng xuất hiện trong mảng mới:
 
 ```php
 use Illuminate\Support\Arr;
@@ -750,7 +750,7 @@ $keyed = Arr::keyBy($array, 'product_id');
 <a name="method-array-last"></a>
 #### `Arr::last()` {.collection-method}
 
-The `Arr::last` method returns the last element of an array passing a given truth test:
+Phương thức `Arr::last` trả về phần tử cuối cùng của mảng thỏa điều kiện kiểm tra đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -764,7 +764,7 @@ $last = Arr::last($array, function (int $value, int $key) {
 // 300
 ```
 
-A default value may be passed as the third argument to the method. This value will be returned if no value passes the truth test:
+Có thể truyền giá trị mặc định làm tham số thứ ba của phương thức. Giá trị này sẽ được trả về nếu không có phần tử nào thỏa điều kiện kiểm tra:
 
 ```php
 use Illuminate\Support\Arr;
@@ -775,7 +775,7 @@ $last = Arr::last($array, $callback, $default);
 <a name="method-array-map"></a>
 #### `Arr::map()` {.collection-method}
 
-The `Arr::map` method iterates through the array and passes each value and key to the given callback. The array value is replaced by the value returned by the callback:
+Phương thức `Arr::map` duyệt qua mảng và truyền từng giá trị cùng khóa vào callback đã cho. Giá trị trong mảng sẽ được thay bằng giá trị mà callback trả về:
 
 ```php
 use Illuminate\Support\Arr;
@@ -792,7 +792,7 @@ $mapped = Arr::map($array, function (string $value, string $key) {
 <a name="method-array-map-spread"></a>
 #### `Arr::mapSpread()` {.collection-method}
 
-The `Arr::mapSpread` method iterates over the array, passing each nested item value into the given closure. The closure is free to modify the item and return it, thus forming a new array of modified items:
+Phương thức `Arr::mapSpread` duyệt qua mảng và truyền từng giá trị của phần tử lồng nhau vào closure đã cho. Closure có thể chỉnh sửa phần tử rồi trả về, từ đó tạo thành một mảng mới gồm các phần tử đã được biến đổi:
 
 ```php
 use Illuminate\Support\Arr;
@@ -817,7 +817,7 @@ $mapped = Arr::mapSpread($array, function (int $even, int $odd) {
 <a name="method-array-map-with-keys"></a>
 #### `Arr::mapWithKeys()` {.collection-method}
 
-The `Arr::mapWithKeys` method iterates through the array and passes each value to the given callback. The callback should return an associative array containing a single key / value pair:
+Phương thức `Arr::mapWithKeys` duyệt qua mảng và truyền từng giá trị vào callback đã cho. Callback cần trả về một mảng kết hợp chứa một cặp khóa / giá trị duy nhất:
 
 ```php
 use Illuminate\Support\Arr;
@@ -850,7 +850,7 @@ $mapped = Arr::mapWithKeys($array, function (array $item, int $key) {
 <a name="method-array-only"></a>
 #### `Arr::only()` {.collection-method}
 
-The `Arr::only` method returns only the specified key / value pairs from the given array:
+Phương thức `Arr::only` chỉ trả về các cặp khóa / giá trị được chỉ định từ mảng đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -865,7 +865,7 @@ $slice = Arr::only($array, ['name', 'price']);
 <a name="method-array-only-values"></a>
 #### `Arr::onlyValues()` {.collection-method}
 
-The `Arr::onlyValues` method returns only the specified values from an array:
+Phương thức `Arr::onlyValues` chỉ trả về các giá trị được chỉ định từ mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -877,7 +877,7 @@ $filtered = Arr::onlyValues($array, ['foo', 'baz']);
 // ['foo', 'baz']
 ```
 
-You may also pass `true` to the `strict` argument to use strict type comparisons when filtering:
+Bạn cũng có thể truyền `true` cho tham số `strict` để sử dụng phép so sánh kiểu nghiêm ngặt khi lọc:
 
 ```php
 use Illuminate\Support\Arr;
@@ -892,7 +892,7 @@ $filtered = Arr::onlyValues($array, [1, 2], strict: true);
 <a name="method-array-partition"></a>
 #### `Arr::partition()` {.collection-method}
 
-The `Arr::partition` method may be combined with PHP array destructuring to separate elements that pass a given truth test from those that do not:
+Phương thức `Arr::partition` có thể kết hợp với cú pháp destructuring mảng của PHP để tách các phần tử thỏa điều kiện kiểm tra khỏi các phần tử không thỏa:
 
 ```php
 <?php
@@ -917,7 +917,7 @@ dump($equalOrAboveThree);
 <a name="method-array-pluck"></a>
 #### `Arr::pluck()` {.collection-method}
 
-The `Arr::pluck` method retrieves all of the values for a given key from an array:
+Phương thức `Arr::pluck` lấy tất cả giá trị ứng với một key nhất định từ mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -932,7 +932,7 @@ $names = Arr::pluck($array, 'developer.name');
 // ['Taylor', 'Abigail']
 ```
 
-You may also specify how you wish the resulting list to be keyed:
+Bạn cũng có thể chỉ định cách đánh key cho danh sách kết quả:
 
 ```php
 use Illuminate\Support\Arr;
@@ -945,7 +945,7 @@ $names = Arr::pluck($array, 'developer.name', 'developer.id');
 <a name="method-array-prepend"></a>
 #### `Arr::prepend()` {.collection-method}
 
-The `Arr::prepend` method will push an item onto the beginning of an array:
+Phương thức `Arr::prepend` thêm một phần tử vào đầu mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -957,7 +957,7 @@ $array = Arr::prepend($array, 'zero');
 // ['zero', 'one', 'two', 'three', 'four']
 ```
 
-If needed, you may specify the key that should be used for the value:
+Nếu cần, bạn có thể chỉ định key sẽ được dùng cho giá trị:
 
 ```php
 use Illuminate\Support\Arr;
@@ -972,7 +972,7 @@ $array = Arr::prepend($array, 'Desk', 'name');
 <a name="method-array-prependkeyswith"></a>
 #### `Arr::prependKeysWith()` {.collection-method}
 
-The `Arr::prependKeysWith` prepends all key names of an associative array with the given prefix:
+Phương thức `Arr::prependKeysWith` thêm prefix đã cho vào đầu tất cả tên key của một mảng kết hợp:
 
 ```php
 use Illuminate\Support\Arr;
@@ -995,7 +995,7 @@ $keyed = Arr::prependKeysWith($array, 'product.');
 <a name="method-array-pull"></a>
 #### `Arr::pull()` {.collection-method}
 
-The `Arr::pull` method returns and removes a key / value pair from an array:
+Phương thức `Arr::pull` trả về đồng thời xóa một cặp key / value khỏi mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1009,7 +1009,7 @@ $name = Arr::pull($array, 'name');
 // $array: ['price' => 100]
 ```
 
-A default value may be passed as the third argument to the method. This value will be returned if the key doesn't exist:
+Có thể truyền giá trị mặc định làm tham số thứ ba. Giá trị này sẽ được trả về nếu key không tồn tại:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1020,7 +1020,7 @@ $value = Arr::pull($array, $key, $default);
 <a name="method-array-push"></a>
 #### `Arr::push()` {.collection-method}
 
-The `Arr::push` method pushes an item into an array using "dot" notation. If an array does not exist at the given key, it will be created:
+Phương thức `Arr::push` thêm một phần tử vào mảng bằng ký pháp "dot". Nếu tại key đã cho chưa có mảng, mảng đó sẽ được tạo:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1035,7 +1035,7 @@ Arr::push($array, 'office.furniture', 'Desk');
 <a name="method-array-query"></a>
 #### `Arr::query()` {.collection-method}
 
-The `Arr::query` method converts the array into a query string:
+Phương thức `Arr::query` chuyển mảng thành query string:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1056,7 +1056,7 @@ Arr::query($array);
 <a name="method-array-random"></a>
 #### `Arr::random()` {.collection-method}
 
-The `Arr::random` method returns a random value from an array:
+Phương thức `Arr::random` trả về một giá trị ngẫu nhiên từ mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1068,7 +1068,7 @@ $random = Arr::random($array);
 // 4 - (retrieved randomly)
 ```
 
-You may also specify the number of items to return as an optional second argument. Note that providing this argument will return an array even if only one item is desired:
+Bạn cũng có thể chỉ định số lượng phần tử cần trả về bằng tham số thứ hai tùy chọn. Lưu ý rằng khi truyền tham số này, phương thức luôn trả về một mảng ngay cả khi chỉ yêu cầu một phần tử:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1081,7 +1081,7 @@ $items = Arr::random($array, 2);
 <a name="method-array-reject"></a>
 #### `Arr::reject()` {.collection-method}
 
-The `Arr::reject` method removes items from an array using the given closure:
+Phương thức `Arr::reject` loại các phần tử khỏi mảng bằng closure đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1098,7 +1098,7 @@ $filtered = Arr::reject($array, function (string|int $value, int $key) {
 <a name="method-array-select"></a>
 #### `Arr::select()` {.collection-method}
 
-The `Arr::select` method selects an array of values from an array:
+Phương thức `Arr::select` chọn một tập các giá trị từ mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1117,7 +1117,7 @@ Arr::select($array, ['name', 'price']);
 <a name="method-array-set"></a>
 #### `Arr::set()` {.collection-method}
 
-The `Arr::set` method sets a value within a deeply nested array using "dot" notation:
+Phương thức `Arr::set` gán một giá trị trong mảng lồng sâu bằng ký pháp "dot":
 
 ```php
 use Illuminate\Support\Arr;
@@ -1132,7 +1132,7 @@ Arr::set($array, 'products.desk.price', 200);
 <a name="method-array-shuffle"></a>
 #### `Arr::shuffle()` {.collection-method}
 
-The `Arr::shuffle` method randomly shuffles the items in the array:
+Phương thức `Arr::shuffle` xáo trộn ngẫu nhiên các phần tử trong mảng:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1145,7 +1145,7 @@ $array = Arr::shuffle([1, 2, 3, 4, 5]);
 <a name="method-array-sole"></a>
 #### `Arr::sole()` {.collection-method}
 
-The `Arr::sole` method retrieves a single value from an array using the given closure. If more than one value within the array matches the given truth test, an `Illuminate\Support\MultipleItemsFoundException` exception will be thrown. If no values match the truth test, an `Illuminate\Support\ItemNotFoundException` exception will be thrown:
+Phương thức `Arr::sole` lấy duy nhất một giá trị từ mảng bằng closure đã cho. Nếu có nhiều hơn một giá trị trong mảng thỏa điều kiện kiểm tra, exception `Illuminate\Support\MultipleItemsFoundException` sẽ được ném ra. Nếu không có giá trị nào thỏa điều kiện, exception `Illuminate\Support\ItemNotFoundException` sẽ được ném ra:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1160,7 +1160,7 @@ $value = Arr::sole($array, fn (string $value) => $value === 'Desk');
 <a name="method-array-some"></a>
 #### `Arr::some()` {.collection-method}
 
-The `Arr::some` method ensures that at least one of the values in the array passes a given truth test:
+Phương thức `Arr::some` kiểm tra rằng có ít nhất một giá trị trong mảng thỏa điều kiện đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1175,7 +1175,7 @@ Arr::some($array, fn ($i) => $i > 2);
 <a name="method-array-sort"></a>
 #### `Arr::sort()` {.collection-method}
 
-The `Arr::sort` method sorts an array by its values:
+Phương thức `Arr::sort` sắp xếp mảng theo các giá trị của nó:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1187,7 +1187,7 @@ $sorted = Arr::sort($array);
 // ['Chair', 'Desk', 'Table']
 ```
 
-You may also sort the array by the results of a given closure:
+Bạn cũng có thể sắp xếp mảng theo kết quả của closure đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1214,7 +1214,7 @@ $sorted = array_values(Arr::sort($array, function (array $value) {
 <a name="method-array-sort-desc"></a>
 #### `Arr::sortDesc()` {.collection-method}
 
-The `Arr::sortDesc` method sorts an array in descending order by its values:
+Phương thức `Arr::sortDesc` sắp xếp mảng theo giá trị theo thứ tự giảm dần:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1226,7 +1226,7 @@ $sorted = Arr::sortDesc($array);
 // ['Table', 'Desk', 'Chair']
 ```
 
-You may also sort the array by the results of a given closure:
+Bạn cũng có thể sắp xếp mảng theo kết quả của closure đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1253,7 +1253,7 @@ $sorted = array_values(Arr::sortDesc($array, function (array $value) {
 <a name="method-array-sort-recursive"></a>
 #### `Arr::sortRecursive()` {.collection-method}
 
-The `Arr::sortRecursive` method recursively sorts an array using the `sort` function for numerically indexed sub-arrays and the `ksort` function for associative sub-arrays:
+Phương thức `Arr::sortRecursive` sắp xếp mảng theo cách đệ quy, sử dụng hàm `sort` cho các mảng con có index dạng số và hàm `ksort` cho các mảng con kết hợp:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1275,7 +1275,7 @@ $sorted = Arr::sortRecursive($array);
 */
 ```
 
-If you would like the results sorted in descending order, you may use the `Arr::sortRecursiveDesc` method.
+Nếu muốn kết quả được sắp xếp giảm dần, bạn có thể sử dụng phương thức `Arr::sortRecursiveDesc`.
 
 ```php
 $sorted = Arr::sortRecursiveDesc($array);
@@ -1284,7 +1284,7 @@ $sorted = Arr::sortRecursiveDesc($array);
 <a name="method-array-string"></a>
 #### `Arr::string()` {.collection-method}
 
-The `Arr::string` method retrieves a value from a deeply nested array using "dot" notation (just as [Arr::get()](#method-array-get) does), but throws an `InvalidArgumentException` if the requested value is not a `string`:
+Phương thức `Arr::string` lấy một giá trị từ mảng lồng sâu bằng ký pháp "dot" (tương tự [Arr::get()](#method-array-get)), nhưng sẽ ném `InvalidArgumentException` nếu giá trị được yêu cầu không phải là `string`:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1303,7 +1303,7 @@ $value = Arr::string($array, 'languages');
 <a name="method-array-take"></a>
 #### `Arr::take()` {.collection-method}
 
-The `Arr::take` method returns a new array with the specified number of items:
+Phương thức `Arr::take` trả về một mảng mới với số lượng phần tử được chỉ định:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1315,7 +1315,7 @@ $chunk = Arr::take($array, 3);
 // [0, 1, 2]
 ```
 
-You may also pass a negative integer to take the specified number of items from the end of the array:
+Bạn cũng có thể truyền số nguyên âm để lấy số lượng phần tử tương ứng tính từ cuối mảng:
 
 ```php
 $array = [0, 1, 2, 3, 4, 5];
@@ -1328,7 +1328,7 @@ $chunk = Arr::take($array, -2);
 <a name="method-array-to-css-classes"></a>
 #### `Arr::toCssClasses()` {.collection-method}
 
-The `Arr::toCssClasses` method conditionally compiles a CSS class string. The method accepts an array of classes where the array key contains the class or classes you wish to add, while the value is a boolean expression. If the array element has a numeric key, it will always be included in the rendered class list:
+Phương thức `Arr::toCssClasses` biên dịch có điều kiện một chuỗi CSS class. Phương thức nhận một mảng class, trong đó key chứa class hoặc các class bạn muốn thêm, còn value là một biểu thức boolean. Nếu phần tử mảng có key dạng số, phần tử đó luôn được đưa vào danh sách class được render:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1348,7 +1348,7 @@ $classes = Arr::toCssClasses($array);
 <a name="method-array-to-css-styles"></a>
 #### `Arr::toCssStyles()` {.collection-method}
 
-The `Arr::toCssStyles` method conditionally compiles a CSS style string. The method accepts an array of CSS declarations where the array key contains the CSS declaration you wish to add, while the value is a boolean expression. If the array element has a numeric key, it will always be included in the compiled CSS style string:
+Phương thức `Arr::toCssStyles` biên dịch có điều kiện một chuỗi CSS style. Phương thức nhận một mảng khai báo CSS, trong đó key chứa khai báo CSS bạn muốn thêm, còn value là một biểu thức boolean. Nếu phần tử mảng có key dạng số, phần tử đó luôn được đưa vào chuỗi CSS style đã biên dịch:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1364,12 +1364,12 @@ $classes = Arr::toCssStyles($array);
 */
 ```
 
-This method powers Laravel's functionality allowing [merging classes with a Blade component's attribute bag](/docs/{{version}}/blade#conditionally-merge-classes) as well as the `@class` [Blade directive](/docs/{{version}}/blade#conditional-classes).
+Phương thức này là nền tảng cho khả năng [merge class với attribute bag của Blade component](/docs/{{version}}/blade#conditionally-merge-classes), cũng như [Blade directive](/docs/{{version}}/blade#conditional-classes) `@class` của Laravel.
 
 <a name="method-array-undot"></a>
 #### `Arr::undot()` {.collection-method}
 
-The `Arr::undot` method expands a single-dimensional array that uses "dot" notation into a multi-dimensional array:
+Phương thức `Arr::undot` mở rộng một mảng một chiều sử dụng ký pháp "dot" thành mảng đa chiều:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1387,7 +1387,7 @@ $array = Arr::undot($array);
 <a name="method-array-where"></a>
 #### `Arr::where()` {.collection-method}
 
-The `Arr::where` method filters an array using the given closure:
+Phương thức `Arr::where` lọc mảng bằng closure đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1404,7 +1404,7 @@ $filtered = Arr::where($array, function (string|int $value, int $key) {
 <a name="method-array-where-not-null"></a>
 #### `Arr::whereNotNull()` {.collection-method}
 
-The `Arr::whereNotNull` method removes all `null` values from the given array:
+Phương thức `Arr::whereNotNull` loại bỏ tất cả giá trị `null` khỏi mảng đã cho:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1419,7 +1419,7 @@ $filtered = Arr::whereNotNull($array);
 <a name="method-array-wrap"></a>
 #### `Arr::wrap()` {.collection-method}
 
-The `Arr::wrap` method wraps the given value in an array. If the given value is already an array it will be returned without modification:
+Phương thức `Arr::wrap` bọc giá trị đã cho trong một mảng. Nếu giá trị đó vốn đã là mảng, nó sẽ được trả về mà không thay đổi:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1431,7 +1431,7 @@ $array = Arr::wrap($string);
 // ['Laravel']
 ```
 
-If the given value is `null`, an empty array will be returned:
+Nếu giá trị đã cho là `null`, một mảng rỗng sẽ được trả về:
 
 ```php
 use Illuminate\Support\Arr;
@@ -1444,7 +1444,7 @@ $array = Arr::wrap(null);
 <a name="method-data-fill"></a>
 #### `data_fill()` {.collection-method}
 
-The `data_fill` function sets a missing value within a nested array or object using "dot" notation:
+Hàm `data_fill` gán một giá trị còn thiếu trong mảng hoặc object lồng nhau bằng ký pháp "dot":
 
 ```php
 $data = ['products' => ['desk' => ['price' => 100]]];
@@ -1458,7 +1458,7 @@ data_fill($data, 'products.desk.discount', 10);
 // ['products' => ['desk' => ['price' => 100, 'discount' => 10]]]
 ```
 
-This function also accepts asterisks as wildcards and will fill the target accordingly:
+Hàm này cũng chấp nhận dấu hoa thị làm wildcard và sẽ điền giá trị vào các target tương ứng:
 
 ```php
 $data = [
@@ -1483,7 +1483,7 @@ data_fill($data, 'products.*.price', 200);
 <a name="method-data-get"></a>
 #### `data_get()` {.collection-method}
 
-The `data_get` function retrieves a value from a nested array or object using "dot" notation:
+Hàm `data_get` lấy một giá trị từ mảng hoặc object lồng nhau bằng ký pháp "dot":
 
 ```php
 $data = ['products' => ['desk' => ['price' => 100]]];
@@ -1493,7 +1493,7 @@ $price = data_get($data, 'products.desk.price');
 // 100
 ```
 
-The `data_get` function also accepts a default value, which will be returned if the specified key is not found:
+Hàm `data_get` cũng chấp nhận một giá trị mặc định; giá trị này sẽ được trả về nếu không tìm thấy key được chỉ định:
 
 ```php
 $discount = data_get($data, 'products.desk.discount', 0);
@@ -1501,7 +1501,7 @@ $discount = data_get($data, 'products.desk.discount', 0);
 // 0
 ```
 
-The function also accepts wildcards using asterisks, which may target any key of the array or object:
+Hàm cũng chấp nhận wildcard bằng dấu hoa thị, có thể khớp với bất kỳ key nào của mảng hoặc object:
 
 ```php
 $data = [
@@ -1514,7 +1514,7 @@ data_get($data, '*.name');
 // ['Desk 1', 'Desk 2'];
 ```
 
-The `{first}` and `{last}` placeholders may be used to retrieve the first or last items in an array:
+Có thể sử dụng placeholder `{first}` và `{last}` để lấy phần tử đầu tiên hoặc cuối cùng trong mảng:
 
 ```php
 $flight = [
@@ -1532,7 +1532,7 @@ data_get($flight, 'segments.{first}.arrival');
 <a name="method-data-set"></a>
 #### `data_set()` {.collection-method}
 
-The `data_set` function sets a value within a nested array or object using "dot" notation:
+Hàm `data_set` gán một giá trị trong mảng hoặc object lồng nhau bằng ký pháp "dot":
 
 ```php
 $data = ['products' => ['desk' => ['price' => 100]]];
@@ -1542,7 +1542,7 @@ data_set($data, 'products.desk.price', 200);
 // ['products' => ['desk' => ['price' => 200]]]
 ```
 
-This function also accepts wildcards using asterisks and will set values on the target accordingly:
+Hàm này cũng chấp nhận wildcard bằng dấu hoa thị và sẽ gán giá trị trên các target tương ứng:
 
 ```php
 $data = [
@@ -1564,7 +1564,7 @@ data_set($data, 'products.*.price', 200);
 */
 ```
 
-By default, any existing values are overwritten. If you wish to only set a value if it doesn't exist, you may pass `false` as the fourth argument to the function:
+Mặc định, mọi giá trị hiện có sẽ bị ghi đè. Nếu chỉ muốn gán khi giá trị chưa tồn tại, bạn có thể truyền `false` làm tham số thứ tư của hàm:
 
 ```php
 $data = ['products' => ['desk' => ['price' => 100]]];
@@ -1577,7 +1577,7 @@ data_set($data, 'products.desk.price', 200, overwrite: false);
 <a name="method-data-forget"></a>
 #### `data_forget()` {.collection-method}
 
-The `data_forget` function removes a value within a nested array or object using "dot" notation:
+Hàm `data_forget` xóa một giá trị trong mảng hoặc object lồng nhau bằng ký pháp "dot":
 
 ```php
 $data = ['products' => ['desk' => ['price' => 100]]];
@@ -1587,7 +1587,7 @@ data_forget($data, 'products.desk.price');
 // ['products' => ['desk' => []]]
 ```
 
-This function also accepts wildcards using asterisks and will remove values on the target accordingly:
+Hàm này cũng chấp nhận wildcard bằng dấu hoa thị và sẽ xóa giá trị trên các target tương ứng:
 
 ```php
 $data = [
@@ -1612,7 +1612,7 @@ data_forget($data, 'products.*.price');
 <a name="method-head"></a>
 #### `head()` {.collection-method}
 
-The `head` function returns the first element in the given array. If the array is empty, `false` will be returned:
+Hàm `head` trả về phần tử đầu tiên trong mảng đã cho. Nếu mảng rỗng, `false` sẽ được trả về:
 
 ```php
 $array = [100, 200, 300];
@@ -1625,7 +1625,7 @@ $first = head($array);
 <a name="method-last"></a>
 #### `last()` {.collection-method}
 
-The `last` function returns the last element in the given array. If the array is empty, `false` will be returned:
+Hàm `last` trả về phần tử cuối cùng trong mảng đã cho. Nếu mảng rỗng, `false` sẽ được trả về:
 
 ```php
 $array = [100, 200, 300];
@@ -1636,12 +1636,12 @@ $last = last($array);
 ```
 
 <a name="numbers"></a>
-## Numbers
+## Số
 
 <a name="method-number-abbreviate"></a>
 #### `Number::abbreviate()` {.collection-method}
 
-The `Number::abbreviate` method returns the human-readable format of the provided numerical value, with an abbreviation for the units:
+Phương thức `Number::abbreviate` trả về dạng dễ đọc của giá trị số đã cho, với đơn vị được viết tắt:
 
 ```php
 use Illuminate\Support\Number;
@@ -1662,7 +1662,7 @@ $number = Number::abbreviate(1230000, precision: 2);
 <a name="method-number-clamp"></a>
 #### `Number::clamp()` {.collection-method}
 
-The `Number::clamp` method ensures a given number stays within a specified range. If the number is lower than the minimum, the minimum value is returned. If the number is higher than the maximum, the maximum value is returned:
+Phương thức `Number::clamp` đảm bảo một số luôn nằm trong khoảng được chỉ định. Nếu số nhỏ hơn giá trị tối thiểu, giá trị tối thiểu sẽ được trả về. Nếu số lớn hơn giá trị tối đa, giá trị tối đa sẽ được trả về:
 
 ```php
 use Illuminate\Support\Number;
@@ -1687,7 +1687,7 @@ $number = Number::clamp(20, min: 10, max: 100);
 <a name="method-number-currency"></a>
 #### `Number::currency()` {.collection-method}
 
-The `Number::currency` method returns the currency representation of the given value as a string:
+Phương thức `Number::currency` trả về biểu diễn tiền tệ của giá trị đã cho dưới dạng chuỗi:
 
 ```php
 use Illuminate\Support\Number;
@@ -1712,7 +1712,7 @@ $currency = Number::currency(1000, in: 'EUR', locale: 'de', precision: 0);
 <a name="method-default-currency"></a>
 #### `Number::defaultCurrency()` {.collection-method}
 
-The `Number::defaultCurrency` method returns the default currency being used by the `Number` class:
+Phương thức `Number::defaultCurrency` trả về loại tiền tệ mặc định đang được class `Number` sử dụng:
 
 ```php
 use Illuminate\Support\Number;
@@ -1725,7 +1725,7 @@ $currency = Number::defaultCurrency();
 <a name="method-default-locale"></a>
 #### `Number::defaultLocale()` {.collection-method}
 
-The `Number::defaultLocale` method returns the default locale being used by the `Number` class:
+Phương thức `Number::defaultLocale` trả về locale mặc định đang được class `Number` sử dụng:
 
 ```php
 use Illuminate\Support\Number;
@@ -1738,7 +1738,7 @@ $locale = Number::defaultLocale();
 <a name="method-number-file-size"></a>
 #### `Number::fileSize()` {.collection-method}
 
-The `Number::fileSize` method returns the file size representation of the given byte value as a string:
+Phương thức `Number::fileSize` trả về biểu diễn kích thước file của giá trị byte đã cho dưới dạng chuỗi:
 
 ```php
 use Illuminate\Support\Number;
@@ -1759,7 +1759,7 @@ $size = Number::fileSize(1024, precision: 2);
 <a name="method-number-for-humans"></a>
 #### `Number::forHumans()` {.collection-method}
 
-The `Number::forHumans` method returns the human-readable format of the provided numerical value:
+Phương thức `Number::forHumans` trả về dạng dễ đọc của giá trị số đã cho:
 
 ```php
 use Illuminate\Support\Number;
@@ -1780,7 +1780,7 @@ $number = Number::forHumans(1230000, precision: 2);
 <a name="method-number-format"></a>
 #### `Number::format()` {.collection-method}
 
-The `Number::format` method formats the given number into a locale specific string:
+Phương thức `Number::format` định dạng số đã cho thành chuỗi theo locale:
 
 ```php
 use Illuminate\Support\Number;
@@ -1805,7 +1805,7 @@ $number = Number::format(100000, locale: 'de');
 <a name="method-number-ordinal"></a>
 #### `Number::ordinal()` {.collection-method}
 
-The `Number::ordinal` method returns a number's ordinal representation:
+Phương thức `Number::ordinal` trả về biểu diễn số thứ tự của một số:
 
 ```php
 use Illuminate\Support\Number;
@@ -1826,7 +1826,7 @@ $number = Number::ordinal(21);
 <a name="method-number-pairs"></a>
 #### `Number::pairs()` {.collection-method}
 
-The `Number::pairs` method generates an array of number pairs (sub-ranges) based on a specified range and step value. This method can be useful for dividing a larger range of numbers into smaller, manageable sub-ranges for things like pagination or batching tasks. The `pairs` method returns an array of arrays, where each inner array represents a pair (sub-range) of numbers:
+Phương thức `Number::pairs` tạo một mảng các cặp số (các khoảng con) dựa trên khoảng và bước nhảy được chỉ định. Phương thức này hữu ích khi chia một khoảng số lớn thành các khoảng con nhỏ, dễ quản lý hơn, chẳng hạn cho phân trang hoặc xử lý tác vụ theo batch. Phương thức `pairs` trả về một mảng các mảng, trong đó mỗi mảng con biểu diễn một cặp (khoảng con) số:
 
 ```php
 use Illuminate\Support\Number;
@@ -1843,7 +1843,7 @@ $result = Number::pairs(25, 10, offset: 0);
 <a name="method-number-parse"></a>
 #### `Number::parse()` {.collection-method}
 
-The `Number::parse` method parses a localized numeric string using PHP's `NumberFormatter`:
+Phương thức `Number::parse` phân tích một chuỗi số đã được bản địa hóa bằng `NumberFormatter` của PHP:
 
 ```php
 use Illuminate\Support\Number;
@@ -1860,7 +1860,7 @@ $result = Number::parse('10,123', locale: 'fr');
 <a name="method-number-parse-int"></a>
 #### `Number::parseInt()` {.collection-method}
 
-The `Number::parseInt` method parse a string into an integer according to the specified locale:
+Phương thức `Number::parseInt` phân tích một chuỗi thành số nguyên theo locale được chỉ định:
 
 ```php
 use Illuminate\Support\Number;
@@ -1877,7 +1877,7 @@ $result = Number::parseInt('10,123', locale: 'fr');
 <a name="method-number-parse-float"></a>
 #### `Number::parseFloat()` {.collection-method}
 
-The `Number::parseFloat` method parse a string into a float according to the specified locale:
+Phương thức `Number::parseFloat` phân tích một chuỗi thành số thực theo locale được chỉ định:
 
 ```php
 use Illuminate\Support\Number;
@@ -1894,7 +1894,7 @@ $result = Number::parseFloat('10', locale: 'fr');
 <a name="method-number-percentage"></a>
 #### `Number::percentage()` {.collection-method}
 
-The `Number::percentage` method returns the percentage representation of the given value as a string:
+Phương thức `Number::percentage` trả về biểu diễn phần trăm của giá trị đã cho dưới dạng chuỗi:
 
 ```php
 use Illuminate\Support\Number;
@@ -1919,7 +1919,7 @@ $percentage = Number::percentage(10, precision: 2, locale: 'de');
 <a name="method-number-spell"></a>
 #### `Number::spell()` {.collection-method}
 
-The `Number::spell` method transforms the given number into a string of words:
+Phương thức `Number::spell` chuyển số đã cho thành chuỗi chữ:
 
 ```php
 use Illuminate\Support\Number;
@@ -1933,7 +1933,7 @@ $number = Number::spell(88, locale: 'fr');
 // quatre-vingt-huit
 ```
 
-The `after` argument allows you to specify a value after which all numbers should be spelled out:
+Đối số `after` cho phép chỉ định một giá trị mà sau giá trị đó tất cả các số sẽ được viết bằng chữ:
 
 ```php
 $number = Number::spell(10, after: 10);
@@ -1945,7 +1945,7 @@ $number = Number::spell(11, after: 10);
 // eleven
 ```
 
-The `until` argument allows you to specify a value before which all numbers should be spelled out:
+Đối số `until` cho phép chỉ định một giá trị mà trước giá trị đó tất cả các số sẽ được viết bằng chữ:
 
 ```php
 $number = Number::spell(5, until: 10);
@@ -1960,7 +1960,7 @@ $number = Number::spell(10, until: 10);
 <a name="method-number-spell-ordinal"></a>
 #### `Number::spellOrdinal()` {.collection-method}
 
-The `Number::spellOrdinal` method returns the number's ordinal representation as a string of words:
+Phương thức `Number::spellOrdinal` trả về biểu diễn số thứ tự của số dưới dạng chuỗi chữ:
 
 ```php
 use Illuminate\Support\Number;
@@ -1981,7 +1981,7 @@ $number = Number::spellOrdinal(21);
 <a name="method-number-trim"></a>
 #### `Number::trim()` {.collection-method}
 
-The `Number::trim` method removes any trailing zero digits after the decimal point of the given number:
+Phương thức `Number::trim` loại bỏ các chữ số 0 ở cuối phần thập phân của số đã cho:
 
 ```php
 use Illuminate\Support\Number;
@@ -1998,7 +1998,7 @@ $number = Number::trim(12.30);
 <a name="method-number-use-locale"></a>
 #### `Number::useLocale()` {.collection-method}
 
-The `Number::useLocale` method sets the default number locale globally, which affects how numbers and currency are formatted by subsequent invocations to the `Number` class's methods:
+Phương thức `Number::useLocale` thiết lập locale mặc định cho số trên phạm vi toàn cục, ảnh hưởng đến cách các lần gọi phương thức `Number` sau đó định dạng số và tiền tệ:
 
 ```php
 use Illuminate\Support\Number;
@@ -2015,7 +2015,7 @@ public function boot(): void
 <a name="method-number-with-locale"></a>
 #### `Number::withLocale()` {.collection-method}
 
-The `Number::withLocale` method executes the given closure using the specified locale and then restores the original locale after the callback has executed:
+Phương thức `Number::withLocale` thực thi closure đã cho bằng locale được chỉ định, sau đó khôi phục locale ban đầu khi callback thực thi xong:
 
 ```php
 use Illuminate\Support\Number;
@@ -2028,7 +2028,7 @@ $number = Number::withLocale('de', function () {
 <a name="method-number-use-currency"></a>
 #### `Number::useCurrency()` {.collection-method}
 
-The `Number::useCurrency` method sets the default number currency globally, which affects how the currency is formatted by subsequent invocations to the `Number` class's methods:
+Phương thức `Number::useCurrency` thiết lập loại tiền tệ mặc định trên phạm vi toàn cục, ảnh hưởng đến cách các lần gọi phương thức `Number` sau đó định dạng tiền tệ:
 
 ```php
 use Illuminate\Support\Number;
@@ -2045,7 +2045,7 @@ public function boot(): void
 <a name="method-number-with-currency"></a>
 #### `Number::withCurrency()` {.collection-method}
 
-The `Number::withCurrency` method executes the given closure using the specified currency and then restores the original currency after the callback has executed:
+Phương thức `Number::withCurrency` thực thi closure đã cho bằng loại tiền tệ được chỉ định, sau đó khôi phục loại tiền tệ ban đầu khi callback thực thi xong:
 
 ```php
 use Illuminate\Support\Number;
@@ -2061,7 +2061,7 @@ $number = Number::withCurrency('GBP', function () {
 <a name="method-app-path"></a>
 #### `app_path()` {.collection-method}
 
-The `app_path` function returns the fully qualified path to your application's `app` directory. You may also use the `app_path` function to generate a fully qualified path to a file relative to the application directory:
+Hàm `app_path` trả về đường dẫn đầy đủ đến thư mục `app` của ứng dụng. Bạn cũng có thể dùng `app_path` để tạo đường dẫn đầy đủ đến một file tương đối so với thư mục ứng dụng:
 
 ```php
 $path = app_path();
@@ -2072,7 +2072,7 @@ $path = app_path('Http/Controllers/Controller.php');
 <a name="method-base-path"></a>
 #### `base_path()` {.collection-method}
 
-The `base_path` function returns the fully qualified path to your application's root directory. You may also use the `base_path` function to generate a fully qualified path to a given file relative to the project root directory:
+Hàm `base_path` trả về đường dẫn đầy đủ đến thư mục gốc của ứng dụng. Bạn cũng có thể dùng `base_path` để tạo đường dẫn đầy đủ đến một file tương đối so với thư mục gốc của project:
 
 ```php
 $path = base_path();
@@ -2083,7 +2083,7 @@ $path = base_path('vendor/bin');
 <a name="method-config-path"></a>
 #### `config_path()` {.collection-method}
 
-The `config_path` function returns the fully qualified path to your application's `config` directory. You may also use the `config_path` function to generate a fully qualified path to a given file within the application's configuration directory:
+Hàm `config_path` trả về đường dẫn đầy đủ đến thư mục `config` của ứng dụng. Bạn cũng có thể dùng `config_path` để tạo đường dẫn đầy đủ đến một file trong thư mục cấu hình của ứng dụng:
 
 ```php
 $path = config_path();
@@ -2094,7 +2094,7 @@ $path = config_path('app.php');
 <a name="method-database-path"></a>
 #### `database_path()` {.collection-method}
 
-The `database_path` function returns the fully qualified path to your application's `database` directory. You may also use the `database_path` function to generate a fully qualified path to a given file within the database directory:
+Hàm `database_path` trả về đường dẫn đầy đủ đến thư mục `database` của ứng dụng. Bạn cũng có thể dùng `database_path` để tạo đường dẫn đầy đủ đến một file trong thư mục database:
 
 ```php
 $path = database_path();
@@ -2105,7 +2105,7 @@ $path = database_path('factories/UserFactory.php');
 <a name="method-lang-path"></a>
 #### `lang_path()` {.collection-method}
 
-The `lang_path` function returns the fully qualified path to your application's `lang` directory. You may also use the `lang_path` function to generate a fully qualified path to a given file within the directory:
+Hàm `lang_path` trả về đường dẫn đầy đủ đến thư mục `lang` của ứng dụng. Bạn cũng có thể dùng `lang_path` để tạo đường dẫn đầy đủ đến một file trong thư mục này:
 
 ```php
 $path = lang_path();
@@ -2114,12 +2114,12 @@ $path = lang_path('en/messages.php');
 ```
 
 > [!NOTE]
-> By default, the Laravel application skeleton does not include the `lang` directory. If you would like to customize Laravel's language files, you may publish them via the `lang:publish` Artisan command.
+> Theo mặc định, bộ khung ứng dụng Laravel không bao gồm thư mục `lang`. Nếu muốn tùy chỉnh các file ngôn ngữ của Laravel, bạn có thể publish chúng bằng lệnh Artisan `lang:publish`.
 
 <a name="method-public-path"></a>
 #### `public_path()` {.collection-method}
 
-The `public_path` function returns the fully qualified path to your application's `public` directory. You may also use the `public_path` function to generate a fully qualified path to a given file within the public directory:
+Hàm `public_path` trả về đường dẫn đầy đủ đến thư mục `public` của ứng dụng. Bạn cũng có thể dùng `public_path` để tạo đường dẫn đầy đủ đến một file trong thư mục public:
 
 ```php
 $path = public_path();
@@ -2130,7 +2130,7 @@ $path = public_path('css/app.css');
 <a name="method-resource-path"></a>
 #### `resource_path()` {.collection-method}
 
-The `resource_path` function returns the fully qualified path to your application's `resources` directory. You may also use the `resource_path` function to generate a fully qualified path to a given file within the resources directory:
+Hàm `resource_path` trả về đường dẫn đầy đủ đến thư mục `resources` của ứng dụng. Bạn cũng có thể dùng `resource_path` để tạo đường dẫn đầy đủ đến một file trong thư mục resources:
 
 ```php
 $path = resource_path();
@@ -2141,7 +2141,7 @@ $path = resource_path('sass/app.scss');
 <a name="method-storage-path"></a>
 #### `storage_path()` {.collection-method}
 
-The `storage_path` function returns the fully qualified path to your application's `storage` directory. You may also use the `storage_path` function to generate a fully qualified path to a given file within the storage directory:
+Hàm `storage_path` trả về đường dẫn đầy đủ đến thư mục `storage` của ứng dụng. Bạn cũng có thể dùng `storage_path` để tạo đường dẫn đầy đủ đến một file trong thư mục storage:
 
 ```php
 $path = storage_path();
@@ -2155,7 +2155,7 @@ $path = storage_path('app/file.txt');
 <a name="method-action"></a>
 #### `action()` {.collection-method}
 
-The `action` function generates a URL for the given controller action:
+Hàm `action` tạo URL cho controller action đã cho:
 
 ```php
 use App\Http\Controllers\HomeController;
@@ -2163,7 +2163,7 @@ use App\Http\Controllers\HomeController;
 $url = action([HomeController::class, 'index']);
 ```
 
-If the method accepts route parameters, you may pass them as the second argument to the method:
+Nếu method chấp nhận route parameter, bạn có thể truyền chúng làm đối số thứ hai cho method:
 
 ```php
 $url = action([UserController::class, 'profile'], ['id' => 1]);
@@ -2172,13 +2172,13 @@ $url = action([UserController::class, 'profile'], ['id' => 1]);
 <a name="method-asset"></a>
 #### `asset()` {.collection-method}
 
-The `asset` function generates a URL for an asset using the current scheme of the request (HTTP or HTTPS):
+Hàm `asset` tạo URL cho một asset bằng scheme hiện tại của request (HTTP hoặc HTTPS):
 
 ```php
 $url = asset('img/photo.jpg');
 ```
 
-You can configure the asset URL host by setting the `ASSET_URL` variable in your `.env` file. This can be useful if you host your assets on an external service like Amazon S3 or another CDN:
+Bạn có thể cấu hình host cho URL asset bằng cách đặt biến `ASSET_URL` trong file `.env`. Điều này hữu ích khi bạn lưu asset trên một dịch vụ bên ngoài như Amazon S3 hoặc một CDN khác:
 
 ```php
 // ASSET_URL=http://example.com/assets
@@ -2189,19 +2189,19 @@ $url = asset('img/photo.jpg'); // http://example.com/assets/img/photo.jpg
 <a name="method-route"></a>
 #### `route()` {.collection-method}
 
-The `route` function generates a URL for a given [named route](/docs/{{version}}/routing#named-routes):
+Hàm `route` tạo URL cho một [named route](/docs/{{version}}/routing#named-routes) đã cho:
 
 ```php
 $url = route('route.name');
 ```
 
-If the route accepts parameters, you may pass them as the second argument to the function:
+Nếu route chấp nhận parameter, bạn có thể truyền chúng làm đối số thứ hai cho hàm:
 
 ```php
 $url = route('route.name', ['id' => 1]);
 ```
 
-By default, the `route` function generates an absolute URL. If you wish to generate a relative URL, you may pass `false` as the third argument to the function:
+Theo mặc định, hàm `route` tạo URL tuyệt đối. Nếu muốn tạo URL tương đối, bạn có thể truyền `false` làm đối số thứ ba:
 
 ```php
 $url = route('route.name', ['id' => 1], false);
@@ -2210,7 +2210,7 @@ $url = route('route.name', ['id' => 1], false);
 <a name="method-secure-asset"></a>
 #### `secure_asset()` {.collection-method}
 
-The `secure_asset` function generates a URL for an asset using HTTPS:
+Hàm `secure_asset` tạo URL HTTPS cho một asset:
 
 ```php
 $url = secure_asset('img/photo.jpg');
@@ -2219,7 +2219,7 @@ $url = secure_asset('img/photo.jpg');
 <a name="method-secure-url"></a>
 #### `secure_url()` {.collection-method}
 
-The `secure_url` function generates a fully qualified HTTPS URL to the given path. Additional URL segments may be passed in the function's second argument:
+Hàm `secure_url` tạo URL HTTPS đầy đủ đến đường dẫn đã cho. Có thể truyền thêm các segment URL trong đối số thứ hai của hàm:
 
 ```php
 $url = secure_url('user/profile');
@@ -2230,7 +2230,7 @@ $url = secure_url('user/profile', [1]);
 <a name="method-to-action"></a>
 #### `to_action()` {.collection-method}
 
-The `to_action` function generates a [redirect HTTP response](/docs/{{version}}/responses#redirects) for a given controller action:
+Hàm `to_action` tạo [HTTP redirect response](/docs/{{version}}/responses#redirects) cho controller action đã cho:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -2238,7 +2238,7 @@ use App\Http\Controllers\UserController;
 return to_action([UserController::class, 'show'], ['user' => 1]);
 ```
 
-If necessary, you may pass the HTTP status code that should be assigned to the redirect and any additional response headers as the third and fourth arguments to the `to_action` method:
+Nếu cần, bạn có thể truyền HTTP status code cho redirect và các response header bổ sung làm đối số thứ ba và thứ tư của `to_action`:
 
 ```php
 return to_action(
@@ -2252,13 +2252,13 @@ return to_action(
 <a name="method-to-route"></a>
 #### `to_route()` {.collection-method}
 
-The `to_route` function generates a [redirect HTTP response](/docs/{{version}}/responses#redirects) for a given [named route](/docs/{{version}}/routing#named-routes):
+Hàm `to_route` tạo [HTTP redirect response](/docs/{{version}}/responses#redirects) cho một [named route](/docs/{{version}}/routing#named-routes) đã cho:
 
 ```php
 return to_route('users.show', ['user' => 1]);
 ```
 
-If necessary, you may pass the HTTP status code that should be assigned to the redirect and any additional response headers as the third and fourth arguments to the `to_route` method:
+Nếu cần, bạn có thể truyền HTTP status code cho redirect và các response header bổ sung làm đối số thứ ba và thứ tư của `to_route`:
 
 ```php
 return to_route('users.show', ['user' => 1], 302, ['X-Framework' => 'Laravel']);
@@ -2267,7 +2267,7 @@ return to_route('users.show', ['user' => 1], 302, ['X-Framework' => 'Laravel']);
 <a name="method-uri"></a>
 #### `uri()` {.collection-method}
 
-The `uri` function generates a [fluent URI instance](#uri) for the given URI:
+Hàm `uri` tạo một [fluent URI instance](#uri) cho URI đã cho:
 
 ```php
 $uri = uri('https://example.com')
@@ -2275,7 +2275,7 @@ $uri = uri('https://example.com')
     ->withQuery(['page' => 1]);
 ```
 
-If the `uri` function is given an array containing a callable controller and method pair, the function will create a `Uri` instance for the controller method's route path:
+Nếu hàm `uri` nhận một mảng chứa cặp controller callable và method, hàm sẽ tạo instance `Uri` cho route path của controller method đó:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -2283,7 +2283,7 @@ use App\Http\Controllers\UserController;
 $uri = uri([UserController::class, 'show'], ['user' => $user]);
 ```
 
-If the controller is invokable, you may simply provide the controller class name:
+Nếu controller là invokable, bạn chỉ cần cung cấp tên class controller:
 
 ```php
 use App\Http\Controllers\UserIndexController;
@@ -2291,7 +2291,7 @@ use App\Http\Controllers\UserIndexController;
 $uri = uri(UserIndexController::class);
 ```
 
-If the value given to the `uri` function matches the name of a [named route](/docs/{{version}}/routing#named-routes), a `Uri` instance will be generated for that route's path:
+Nếu giá trị truyền cho hàm `uri` khớp với tên của một [named route](/docs/{{version}}/routing#named-routes), instance `Uri` sẽ được tạo cho path của route đó:
 
 ```php
 $uri = uri('users.show', ['user' => $user]);
@@ -2300,7 +2300,7 @@ $uri = uri('users.show', ['user' => $user]);
 <a name="method-url"></a>
 #### `url()` {.collection-method}
 
-The `url` function generates a fully qualified URL to the given path:
+Hàm `url` tạo URL đầy đủ đến đường dẫn đã cho:
 
 ```php
 $url = url('user/profile');
@@ -2308,7 +2308,7 @@ $url = url('user/profile');
 $url = url('user/profile', [1]);
 ```
 
-If no path is provided, an `Illuminate\Routing\UrlGenerator` instance is returned:
+Nếu không cung cấp path, một instance `Illuminate\Routing\UrlGenerator` sẽ được trả về:
 
 ```php
 $current = url()->current();
@@ -2318,7 +2318,7 @@ $full = url()->full();
 $previous = url()->previous();
 ```
 
-For more information on working with the `url` function, consult the [URL generation documentation](/docs/{{version}}/urls#generating-urls).
+Để biết thêm thông tin về cách làm việc với hàm `url`, hãy tham khảo [tài liệu tạo URL](/docs/{{version}}/urls#generating-urls).
 
 <a name="miscellaneous"></a>
 ## Miscellaneous
@@ -2326,13 +2326,13 @@ For more information on working with the `url` function, consult the [URL genera
 <a name="method-abort"></a>
 #### `abort()` {.collection-method}
 
-The `abort` function throws [an HTTP exception](/docs/{{version}}/errors#http-exceptions) which will be rendered by the [exception handler](/docs/{{version}}/errors#handling-exceptions):
+Hàm `abort` ném ra [HTTP exception](/docs/{{version}}/errors#http-exceptions), exception này sẽ được render bởi [exception handler](/docs/{{version}}/errors#handling-exceptions):
 
 ```php
 abort(403);
 ```
 
-You may also provide the exception's message and custom HTTP response headers that should be sent to the browser:
+Bạn cũng có thể cung cấp message của exception và các HTTP response header tùy chỉnh cần gửi đến trình duyệt:
 
 ```php
 abort(403, 'Unauthorized.', $headers);
@@ -2341,35 +2341,35 @@ abort(403, 'Unauthorized.', $headers);
 <a name="method-abort-if"></a>
 #### `abort_if()` {.collection-method}
 
-The `abort_if` function throws an HTTP exception if a given boolean expression evaluates to `true`:
+Hàm `abort_if` ném ra HTTP exception nếu biểu thức boolean đã cho được đánh giá là `true`:
 
 ```php
 abort_if(! Auth::user()->isAdmin(), 403);
 ```
 
-Like the `abort` method, you may also provide the exception's response text as the third argument and an array of custom response headers as the fourth argument to the function.
+Tương tự method `abort`, bạn cũng có thể cung cấp nội dung response của exception làm đối số thứ ba và mảng response header tùy chỉnh làm đối số thứ tư cho hàm.
 
 <a name="method-abort-unless"></a>
 #### `abort_unless()` {.collection-method}
 
-The `abort_unless` function throws an HTTP exception if a given boolean expression evaluates to `false`:
+Hàm `abort_unless` ném ra HTTP exception nếu biểu thức boolean đã cho được đánh giá là `false`:
 
 ```php
 abort_unless(Auth::user()->isAdmin(), 403);
 ```
 
-Like the `abort` method, you may also provide the exception's response text as the third argument and an array of custom response headers as the fourth argument to the function.
+Tương tự method `abort`, bạn cũng có thể cung cấp nội dung response của exception làm đối số thứ ba và mảng response header tùy chỉnh làm đối số thứ tư cho hàm.
 
 <a name="method-app"></a>
 #### `app()` {.collection-method}
 
-The `app` function returns the [service container](/docs/{{version}}/container) instance:
+Hàm `app` trả về instance [service container](/docs/{{version}}/container):
 
 ```php
 $container = app();
 ```
 
-You may pass a class or interface name to resolve it from the container:
+Bạn có thể truyền tên class hoặc interface để resolve nó từ container:
 
 ```php
 $api = app('HelpSpot\API');
@@ -2378,13 +2378,13 @@ $api = app('HelpSpot\API');
 <a name="method-auth"></a>
 #### `auth()` {.collection-method}
 
-The `auth` function returns an [authenticator](/docs/{{version}}/authentication) instance. You may use it as an alternative to the `Auth` facade:
+Hàm `auth` trả về một instance [authenticator](/docs/{{version}}/authentication). Bạn có thể dùng hàm này thay cho facade `Auth`:
 
 ```php
 $user = auth()->user();
 ```
 
-If needed, you may specify which guard instance you would like to access:
+Nếu cần, bạn có thể chỉ định instance guard muốn truy cập:
 
 ```php
 $user = auth('admin')->user();
@@ -2393,7 +2393,7 @@ $user = auth('admin')->user();
 <a name="method-back"></a>
 #### `back()` {.collection-method}
 
-The `back` function generates a [redirect HTTP response](/docs/{{version}}/responses#redirects) to the user's previous location:
+Hàm `back` tạo [HTTP redirect response](/docs/{{version}}/responses#redirects) về vị trí trước đó của người dùng:
 
 ```php
 return back($status = 302, $headers = [], $fallback = '/');
@@ -2404,7 +2404,7 @@ return back();
 <a name="method-bcrypt"></a>
 #### `bcrypt()` {.collection-method}
 
-The `bcrypt` function [hashes](/docs/{{version}}/hashing) the given value using Bcrypt. You may use this function as an alternative to the `Hash` facade:
+Hàm `bcrypt` [hash](/docs/{{version}}/hashing) giá trị đã cho bằng Bcrypt. Bạn có thể dùng hàm này thay cho facade `Hash`:
 
 ```php
 $password = bcrypt('my-secret-password');
@@ -2413,7 +2413,7 @@ $password = bcrypt('my-secret-password');
 <a name="method-blank"></a>
 #### `blank()` {.collection-method}
 
-The `blank` function determines whether the given value is "blank":
+Hàm `blank` xác định giá trị đã cho có "trống" hay không:
 
 ```php
 blank('');
@@ -2430,12 +2430,12 @@ blank(false);
 // false
 ```
 
-For the inverse of `blank`, see the [filled](#method-filled) function.
+Để kiểm tra điều kiện ngược lại với `blank`, hãy xem hàm [filled](#method-filled).
 
 <a name="method-broadcast"></a>
 #### `broadcast()` {.collection-method}
 
-The `broadcast` function [broadcasts](/docs/{{version}}/broadcasting) the given [event](/docs/{{version}}/events) to its listeners:
+Hàm `broadcast` [broadcast](/docs/{{version}}/broadcasting) [event](/docs/{{version}}/events) đã cho đến các listener của nó:
 
 ```php
 broadcast(new UserRegistered($user));
@@ -2446,7 +2446,7 @@ broadcast(new UserRegistered($user))->toOthers();
 <a name="method-broadcast-if"></a>
 #### `broadcast_if()` {.collection-method}
 
-The `broadcast_if` function [broadcasts](/docs/{{version}}/broadcasting) the given [event](/docs/{{version}}/events) to its listeners if a given boolean expression evaluates to `true`:
+Hàm `broadcast_if` [broadcast](/docs/{{version}}/broadcasting) [event](/docs/{{version}}/events) đã cho đến các listener nếu biểu thức boolean được đánh giá là `true`:
 
 ```php
 broadcast_if($user->isActive(), new UserRegistered($user));
@@ -2457,7 +2457,7 @@ broadcast_if($user->isActive(), new UserRegistered($user))->toOthers();
 <a name="method-broadcast-unless"></a>
 #### `broadcast_unless()` {.collection-method}
 
-The `broadcast_unless` function [broadcasts](/docs/{{version}}/broadcasting) the given [event](/docs/{{version}}/events) to its listeners if a given boolean expression evaluates to `false`:
+Hàm `broadcast_unless` [broadcast](/docs/{{version}}/broadcasting) [event](/docs/{{version}}/events) đã cho đến các listener nếu biểu thức boolean được đánh giá là `false`:
 
 ```php
 broadcast_unless($user->isBanned(), new UserRegistered($user));
@@ -2468,7 +2468,7 @@ broadcast_unless($user->isBanned(), new UserRegistered($user))->toOthers();
 <a name="method-cache"></a>
 #### `cache()` {.collection-method}
 
-The `cache` function may be used to get values from the [cache](/docs/{{version}}/cache). If the given key does not exist in the cache, an optional default value will be returned:
+Hàm `cache` có thể được dùng để lấy giá trị từ [cache](/docs/{{version}}/cache). Nếu key đã cho không tồn tại trong cache, giá trị mặc định tùy chọn sẽ được trả về:
 
 ```php
 $value = cache('key');
@@ -2476,7 +2476,7 @@ $value = cache('key');
 $value = cache('key', 'default');
 ```
 
-You may add items to the cache by passing an array of key / value pairs to the function. You should also pass the number of seconds or duration the cached value should be considered valid:
+Bạn có thể thêm item vào cache bằng cách truyền một mảng các cặp key / value cho hàm. Đồng thời, hãy truyền số giây hoặc khoảng thời gian mà giá trị cache được xem là hợp lệ:
 
 ```php
 cache(['key' => 'value'], 300);
@@ -2487,7 +2487,7 @@ cache(['key' => 'value'], now()->plus(seconds: 10));
 <a name="method-class-uses-recursive"></a>
 #### `class_uses_recursive()` {.collection-method}
 
-The `class_uses_recursive` function returns all traits used by a class, including traits used by all of its parent classes:
+Hàm `class_uses_recursive` trả về tất cả trait được một class sử dụng, bao gồm cả các trait được sử dụng bởi mọi class cha của nó:
 
 ```php
 $traits = class_uses_recursive(App\Models\User::class);
@@ -2496,7 +2496,7 @@ $traits = class_uses_recursive(App\Models\User::class);
 <a name="method-collect"></a>
 #### `collect()` {.collection-method}
 
-The `collect` function creates a [collection](/docs/{{version}}/collections) instance from the given value:
+Hàm `collect` tạo một instance [collection](/docs/{{version}}/collections) từ giá trị đã cho:
 
 ```php
 $collection = collect(['Taylor', 'Abigail']);
@@ -2505,7 +2505,7 @@ $collection = collect(['Taylor', 'Abigail']);
 <a name="method-config"></a>
 #### `config()` {.collection-method}
 
-The `config` function gets the value of a [configuration](/docs/{{version}}/configuration) variable. The configuration values may be accessed using "dot" syntax, which includes the name of the file and the option you wish to access. You may also provide a default value that will be returned if the configuration option does not exist:
+Hàm `config` lấy giá trị của một biến [configuration](/docs/{{version}}/configuration). Có thể truy cập giá trị cấu hình bằng cú pháp "dot", gồm tên file và option muốn truy cập. Bạn cũng có thể cung cấp giá trị mặc định để trả về nếu option cấu hình không tồn tại:
 
 ```php
 $value = config('app.timezone');
@@ -2513,7 +2513,7 @@ $value = config('app.timezone');
 $value = config('app.timezone', $default);
 ```
 
-You may set configuration variables at runtime by passing an array of key / value pairs. However, note that this function only affects the configuration value for the current request and does not update your actual configuration values:
+Bạn có thể thiết lập biến cấu hình tại runtime bằng cách truyền một mảng các cặp key / value. Tuy nhiên, hàm này chỉ ảnh hưởng đến giá trị cấu hình của request hiện tại và không cập nhật các giá trị cấu hình thực tế:
 
 ```php
 config(['app.debug' => true]);
@@ -2522,7 +2522,7 @@ config(['app.debug' => true]);
 <a name="method-context"></a>
 #### `context()` {.collection-method}
 
-The `context` function gets the value from the current [context](/docs/{{version}}/context). You may also provide a default value that will be returned if the context key does not exist:
+Hàm `context` lấy giá trị từ [context](/docs/{{version}}/context) hiện tại. Bạn cũng có thể cung cấp giá trị mặc định để trả về nếu context key không tồn tại:
 
 ```php
 $value = context('trace_id');
@@ -2530,7 +2530,7 @@ $value = context('trace_id');
 $value = context('trace_id', $default);
 ```
 
-You may set context values by passing an array of key / value pairs:
+Bạn có thể thiết lập các giá trị context bằng cách truyền một mảng các cặp key / value:
 
 ```php
 use Illuminate\Support\Str;
@@ -2541,7 +2541,7 @@ context(['trace_id' => Str::uuid()->toString()]);
 <a name="method-cookie"></a>
 #### `cookie()` {.collection-method}
 
-The `cookie` function creates a new [cookie](/docs/{{version}}/requests#cookies) instance:
+Hàm `cookie` tạo một instance [cookie](/docs/{{version}}/requests#cookies) mới:
 
 ```php
 $cookie = cookie('name', 'value', $minutes);
@@ -2550,7 +2550,7 @@ $cookie = cookie('name', 'value', $minutes);
 <a name="method-csrf-field"></a>
 #### `csrf_field()` {.collection-method}
 
-The `csrf_field` function generates an HTML `hidden` input field containing the value of the CSRF token. For example, using [Blade syntax](/docs/{{version}}/blade):
+Hàm `csrf_field` tạo một input HTML `hidden` chứa giá trị CSRF token. Ví dụ, khi dùng [cú pháp Blade](/docs/{{version}}/blade):
 
 ```blade
 {{ csrf_field() }}
@@ -2559,7 +2559,7 @@ The `csrf_field` function generates an HTML `hidden` input field containing the 
 <a name="method-csrf-token"></a>
 #### `csrf_token()` {.collection-method}
 
-The `csrf_token` function retrieves the value of the current CSRF token:
+Hàm `csrf_token` lấy giá trị CSRF token hiện tại:
 
 ```php
 $token = csrf_token();
@@ -2568,18 +2568,18 @@ $token = csrf_token();
 <a name="method-decrypt"></a>
 #### `decrypt()` {.collection-method}
 
-The `decrypt` function [decrypts](/docs/{{version}}/encryption) the given value. You may use this function as an alternative to the `Crypt` facade:
+Hàm `decrypt` [giải mã](/docs/{{version}}/encryption) giá trị đã cho. Bạn có thể dùng hàm này thay cho facade `Crypt`:
 
 ```php
 $password = decrypt($value);
 ```
 
-For the inverse of `decrypt`, see the [encrypt](#method-encrypt) function.
+Để thực hiện thao tác ngược với `decrypt`, hãy xem hàm [encrypt](#method-encrypt).
 
 <a name="method-dd"></a>
 #### `dd()` {.collection-method}
 
-The `dd` function dumps the given variables and ends the execution of the script:
+Hàm `dd` dump các biến đã cho và kết thúc việc thực thi script:
 
 ```php
 dd($value);
@@ -2587,12 +2587,12 @@ dd($value);
 dd($value1, $value2, $value3, ...);
 ```
 
-If you do not want to halt the execution of your script, use the [dump](#method-dump) function instead.
+Nếu không muốn dừng việc thực thi script, hãy dùng hàm [dump](#method-dump) thay thế.
 
 <a name="method-dispatch"></a>
 #### `dispatch()` {.collection-method}
 
-The `dispatch` function pushes the given [job](/docs/{{version}}/queues#creating-jobs) onto the Laravel [job queue](/docs/{{version}}/queues):
+Hàm `dispatch` đẩy [job](/docs/{{version}}/queues#creating-jobs) đã cho vào [job queue](/docs/{{version}}/queues) của Laravel:
 
 ```php
 dispatch(new App\Jobs\SendEmails);
@@ -2601,7 +2601,7 @@ dispatch(new App\Jobs\SendEmails);
 <a name="method-dispatch-sync"></a>
 #### `dispatch_sync()` {.collection-method}
 
-The `dispatch_sync` function pushes the given job to the [sync](/docs/{{version}}/queues#synchronous-dispatching) queue so that it is processed immediately:
+Hàm `dispatch_sync` đẩy job đã cho vào queue [sync](/docs/{{version}}/queues#synchronous-dispatching) để được xử lý ngay lập tức:
 
 ```php
 dispatch_sync(new App\Jobs\SendEmails);
@@ -2610,7 +2610,7 @@ dispatch_sync(new App\Jobs\SendEmails);
 <a name="method-dump"></a>
 #### `dump()` {.collection-method}
 
-The `dump` function dumps the given variables:
+Hàm `dump` dump các biến đã cho:
 
 ```php
 dump($value);
@@ -2618,23 +2618,23 @@ dump($value);
 dump($value1, $value2, $value3, ...);
 ```
 
-If you want to stop executing the script after dumping the variables, use the [dd](#method-dd) function instead.
+Nếu muốn dừng thực thi script sau khi dump các biến, hãy dùng hàm [dd](#method-dd) thay thế.
 
 <a name="method-encrypt"></a>
 #### `encrypt()` {.collection-method}
 
-The `encrypt` function [encrypts](/docs/{{version}}/encryption) the given value. You may use this function as an alternative to the `Crypt` facade:
+Hàm `encrypt` [mã hóa](/docs/{{version}}/encryption) giá trị đã cho. Bạn có thể dùng hàm này thay cho facade `Crypt`:
 
 ```php
 $secret = encrypt('my-secret-value');
 ```
 
-For the inverse of `encrypt`, see the [decrypt](#method-decrypt) function.
+Để thực hiện thao tác ngược với `encrypt`, hãy xem hàm [decrypt](#method-decrypt).
 
 <a name="method-env"></a>
 #### `env()` {.collection-method}
 
-The `env` function retrieves the value of an [environment variable](/docs/{{version}}/configuration#environment-configuration) or returns a default value:
+Hàm `env` lấy giá trị của một [biến môi trường](/docs/{{version}}/configuration#environment-configuration) hoặc trả về giá trị mặc định:
 
 ```php
 $env = env('APP_ENV');
@@ -2643,12 +2643,12 @@ $env = env('APP_ENV', 'production');
 ```
 
 > [!WARNING]
-> If you execute the `config:cache` command during your deployment process, you should be sure that you are only calling the `env` function from within your configuration files. Once the configuration has been cached, the `.env` file will not be loaded and all calls to the `env` function will return external environment variables such as server-level or system-level environment variables or `null`.
+> Nếu chạy lệnh `config:cache` trong quá trình deployment, hãy bảo đảm chỉ gọi hàm `env` từ bên trong các file cấu hình. Khi cấu hình đã được cache, file `.env` sẽ không được load và mọi lời gọi `env` sẽ trả về các biến môi trường bên ngoài như biến cấp server, cấp hệ thống hoặc `null`.
 
 <a name="method-event"></a>
 #### `event()` {.collection-method}
 
-The `event` function dispatches the given [event](/docs/{{version}}/events) to its listeners:
+Hàm `event` dispatch [event](/docs/{{version}}/events) đã cho đến các listener của nó:
 
 ```php
 event(new UserRegistered($user));
@@ -2657,7 +2657,7 @@ event(new UserRegistered($user));
 <a name="method-fake"></a>
 #### `fake()` {.collection-method}
 
-The `fake` function resolves a [Faker](https://github.com/FakerPHP/Faker) singleton from the container, which can be useful when creating fake data in model factories, database seeding, tests, and prototyping views:
+Hàm `fake` resolve một singleton [Faker](https://github.com/FakerPHP/Faker) từ container, hữu ích khi tạo dữ liệu giả trong model factory, database seeding, test và prototype view:
 
 ```blade
 @for ($i = 0; $i < 10; $i++)
@@ -2671,7 +2671,7 @@ The `fake` function resolves a [Faker](https://github.com/FakerPHP/Faker) single
 @endfor
 ```
 
-By default, the `fake` function will utilize the `app.faker_locale` configuration option in your `config/app.php` configuration. Typically, this configuration option is set via the `APP_FAKER_LOCALE` environment variable. You may also specify the locale by passing it to the `fake` function. Each locale will resolve an individual singleton:
+Theo mặc định, hàm `fake` sử dụng option cấu hình `app.faker_locale` trong `config/app.php`. Thông thường option này được thiết lập qua biến môi trường `APP_FAKER_LOCALE`. Bạn cũng có thể chỉ định locale bằng cách truyền vào hàm `fake`. Mỗi locale sẽ resolve một singleton riêng:
 
 ```php
 fake('nl_NL')->name()
@@ -2680,7 +2680,7 @@ fake('nl_NL')->name()
 <a name="method-filled"></a>
 #### `filled()` {.collection-method}
 
-The `filled` function determines whether the given value is not "blank":
+Hàm `filled` xác định giá trị đã cho có không "trống" hay không:
 
 ```php
 filled(0);
@@ -2697,18 +2697,18 @@ filled(collect());
 // false
 ```
 
-For the inverse of `filled`, see the [blank](#method-blank) function.
+Để kiểm tra điều kiện ngược lại với `filled`, hãy xem hàm [blank](#method-blank).
 
 <a name="method-info"></a>
 #### `info()` {.collection-method}
 
-The `info` function will write information to your application's [log](/docs/{{version}}/logging):
+Hàm `info` sẽ ghi thông tin vào [log](/docs/{{version}}/logging) của ứng dụng:
 
 ```php
 info('Some helpful information!');
 ```
 
-An array of contextual data may also be passed to the function:
+Bạn cũng có thể truyền một mảng dữ liệu ngữ cảnh vào hàm:
 
 ```php
 info('User login attempt failed.', ['id' => $user->id]);
@@ -2717,7 +2717,7 @@ info('User login attempt failed.', ['id' => $user->id]);
 <a name="method-literal"></a>
 #### `literal()` {.collection-method}
 
-The `literal` function creates a new [stdClass](https://www.php.net/manual/en/class.stdclass.php) instance with the given named arguments as properties:
+Hàm `literal` tạo một instance [stdClass](https://www.php.net/manual/en/class.stdclass.php) mới, trong đó các named argument được dùng làm thuộc tính:
 
 ```php
 $obj = literal(
@@ -2732,19 +2732,19 @@ $obj->languages; // ['PHP', 'Ruby']
 <a name="method-logger"></a>
 #### `logger()` {.collection-method}
 
-The `logger` function can be used to write a `debug` level message to the [log](/docs/{{version}}/logging):
+Hàm `logger` có thể được dùng để ghi message ở level `debug` vào [log](/docs/{{version}}/logging):
 
 ```php
 logger('Debug message');
 ```
 
-An array of contextual data may also be passed to the function:
+Bạn cũng có thể truyền một mảng dữ liệu ngữ cảnh vào hàm:
 
 ```php
 logger('User has logged in.', ['id' => $user->id]);
 ```
 
-A [logger](/docs/{{version}}/logging) instance will be returned if no value is passed to the function:
+Nếu không truyền giá trị vào hàm, một instance [logger](/docs/{{version}}/logging) sẽ được trả về:
 
 ```php
 logger()->error('You are not allowed here.');
@@ -2753,7 +2753,7 @@ logger()->error('You are not allowed here.');
 <a name="method-method-field"></a>
 #### `method_field()` {.collection-method}
 
-The `method_field` function generates an HTML `hidden` input field containing the spoofed value of the form's HTTP verb. For example, using [Blade syntax](/docs/{{version}}/blade):
+Hàm `method_field` tạo một input HTML `hidden` chứa giá trị giả lập HTTP verb của form. Ví dụ, khi dùng [cú pháp Blade](/docs/{{version}}/blade):
 
 ```blade
 <form method="POST">
@@ -2764,7 +2764,7 @@ The `method_field` function generates an HTML `hidden` input field containing th
 <a name="method-now"></a>
 #### `now()` {.collection-method}
 
-The `now` function creates a new `Illuminate\Support\Carbon` instance for the current time:
+Hàm `now` tạo một instance `Illuminate\Support\Carbon` mới cho thời điểm hiện tại:
 
 ```php
 $now = now();
@@ -2773,7 +2773,7 @@ $now = now();
 <a name="method-old"></a>
 #### `old()` {.collection-method}
 
-The `old` function [retrieves](/docs/{{version}}/requests#retrieving-input) an [old input](/docs/{{version}}/requests#old-input) value flashed into the session:
+Hàm `old` [lấy](/docs/{{version}}/requests#retrieving-input) một giá trị [old input](/docs/{{version}}/requests#old-input) đã được flash vào session:
 
 ```php
 $value = old('value');
@@ -2781,7 +2781,7 @@ $value = old('value');
 $value = old('value', 'default');
 ```
 
-Since the "default value" provided as the second argument to the `old` function is often an attribute of an Eloquent model, Laravel allows you to simply pass the entire Eloquent model as the second argument to the `old` function. When doing so, Laravel will assume the first argument provided to the `old` function is the name of the Eloquent attribute that should be considered the "default value":
+Vì "giá trị mặc định" truyền vào đối số thứ hai của hàm `old` thường là một thuộc tính của Eloquent model, Laravel cho phép bạn truyền trực tiếp toàn bộ Eloquent model làm đối số thứ hai. Khi đó, Laravel sẽ xem đối số thứ nhất của `old` là tên thuộc tính Eloquent cần dùng làm "giá trị mặc định":
 
 ```blade
 {{ old('name', $user->name) }}
@@ -2794,7 +2794,7 @@ Since the "default value" provided as the second argument to the `old` function 
 <a name="method-once"></a>
 #### `once()` {.collection-method}
 
-The `once` function executes the given callback and caches the result in memory for the duration of the request. Any subsequent calls to the `once` function with the same callback will return the previously cached result:
+Hàm `once` thực thi callback được cung cấp và cache kết quả trong bộ nhớ trong suốt vòng đời request. Các lần gọi `once` tiếp theo với cùng callback sẽ trả về kết quả đã được cache trước đó:
 
 ```php
 function random(): int
@@ -2809,7 +2809,7 @@ random(); // 123 (cached result)
 random(); // 123 (cached result)
 ```
 
-When the `once` function is executed from within an object instance, the cached result will be unique to that object instance:
+Khi `once` được thực thi bên trong một object instance, kết quả cache sẽ là riêng biệt cho chính instance đó:
 
 ```php
 <?php
@@ -2835,7 +2835,7 @@ $secondService->all(); // (cached result)
 <a name="method-optional"></a>
 #### `optional()` {.collection-method}
 
-The `optional` function accepts any argument and allows you to access properties or call methods on that object. If the given object is `null`, properties and methods will return `null` instead of causing an error:
+Hàm `optional` nhận bất kỳ đối số nào và cho phép truy cập thuộc tính hoặc gọi method trên object đó. Nếu object được truyền vào là `null`, việc truy cập thuộc tính hoặc method sẽ trả về `null` thay vì gây lỗi:
 
 ```php
 return optional($user->address)->street;
@@ -2843,7 +2843,7 @@ return optional($user->address)->street;
 {!! old('name', optional($user)->name) !!}
 ```
 
-The `optional` function also accepts a closure as its second argument. The closure will be invoked if the value provided as the first argument is not null:
+Hàm `optional` cũng nhận closure làm đối số thứ hai. Closure sẽ được gọi nếu giá trị ở đối số thứ nhất không phải `null`:
 
 ```php
 return optional(User::find($id), function (User $user) {
@@ -2854,7 +2854,7 @@ return optional(User::find($id), function (User $user) {
 <a name="method-policy"></a>
 #### `policy()` {.collection-method}
 
-The `policy` method retrieves a [policy](/docs/{{version}}/authorization#creating-policies) instance for a given class:
+Hàm `policy` lấy instance [policy](/docs/{{version}}/authorization#creating-policies) cho class được chỉ định:
 
 ```php
 $policy = policy(App\Models\User::class);
@@ -2863,7 +2863,7 @@ $policy = policy(App\Models\User::class);
 <a name="method-redirect"></a>
 #### `redirect()` {.collection-method}
 
-The `redirect` function returns a [redirect HTTP response](/docs/{{version}}/responses#redirects), or returns the redirector instance if called with no arguments:
+Hàm `redirect` trả về một [HTTP redirect response](/docs/{{version}}/responses#redirects), hoặc trả về redirector instance nếu được gọi không có đối số:
 
 ```php
 return redirect($to = null, $status = 302, $headers = [], $secure = null);
@@ -2876,13 +2876,13 @@ return redirect()->route('route.name');
 <a name="method-report"></a>
 #### `report()` {.collection-method}
 
-The `report` function will report an exception using your [exception handler](/docs/{{version}}/errors#handling-exceptions):
+Hàm `report` báo cáo exception thông qua [exception handler](/docs/{{version}}/errors#handling-exceptions) của ứng dụng:
 
 ```php
 report($e);
 ```
 
-The `report` function also accepts a string as an argument. When a string is given to the function, the function will create an exception with the given string as its message:
+Hàm `report` cũng chấp nhận một chuỗi làm đối số. Khi truyền chuỗi, hàm sẽ tạo exception với chuỗi đó làm message:
 
 ```php
 report('Something went wrong.');
@@ -2891,7 +2891,7 @@ report('Something went wrong.');
 <a name="method-report-if"></a>
 #### `report_if()` {.collection-method}
 
-The `report_if` function will report an exception using your [exception handler](/docs/{{version}}/errors#handling-exceptions) if a given boolean expression evaluates to `true`:
+Hàm `report_if` sẽ báo cáo exception qua [exception handler](/docs/{{version}}/errors#handling-exceptions) nếu biểu thức boolean được cung cấp cho kết quả `true`:
 
 ```php
 report_if($shouldReport, $e);
@@ -2902,7 +2902,7 @@ report_if($shouldReport, 'Something went wrong.');
 <a name="method-report-unless"></a>
 #### `report_unless()` {.collection-method}
 
-The `report_unless` function will report an exception using your [exception handler](/docs/{{version}}/errors#handling-exceptions) if a given boolean expression evaluates to `false`:
+Hàm `report_unless` sẽ báo cáo exception qua [exception handler](/docs/{{version}}/errors#handling-exceptions) nếu biểu thức boolean được cung cấp cho kết quả `false`:
 
 ```php
 report_unless($reportingDisabled, $e);
@@ -2913,7 +2913,7 @@ report_unless($reportingDisabled, 'Something went wrong.');
 <a name="method-request"></a>
 #### `request()` {.collection-method}
 
-The `request` function returns the current [request](/docs/{{version}}/requests) instance or obtains an input field's value from the current request:
+Hàm `request` trả về instance [request](/docs/{{version}}/requests) hiện tại hoặc lấy giá trị một input field từ request hiện tại:
 
 ```php
 $request = request();
@@ -2924,7 +2924,7 @@ $value = request('key', $default);
 <a name="method-rescue"></a>
 #### `rescue()` {.collection-method}
 
-The `rescue` function executes the given closure and catches any exceptions that occur during its execution. All exceptions that are caught will be sent to your [exception handler](/docs/{{version}}/errors#handling-exceptions); however, the request will continue processing:
+Hàm `rescue` thực thi closure được cung cấp và bắt mọi exception phát sinh trong quá trình thực thi. Tất cả exception bị bắt sẽ được gửi tới [exception handler](/docs/{{version}}/errors#handling-exceptions); tuy nhiên request vẫn tiếp tục được xử lý:
 
 ```php
 return rescue(function () {
@@ -2932,7 +2932,7 @@ return rescue(function () {
 });
 ```
 
-You may also pass a second argument to the `rescue` function. This argument will be the "default" value that should be returned if an exception occurs while executing the closure:
+Bạn cũng có thể truyền đối số thứ hai cho `rescue`. Đối số này là giá trị "mặc định" được trả về nếu exception xảy ra khi thực thi closure:
 
 ```php
 return rescue(function () {
@@ -2946,7 +2946,7 @@ return rescue(function () {
 });
 ```
 
-A `report` argument may be provided to the `rescue` function to determine if the exception should be reported via the `report` function:
+Bạn có thể truyền argument `report` cho function `rescue` để quyết định exception có được report thông qua function `report` hay không:
 
 ```php
 return rescue(function () {
@@ -2959,7 +2959,7 @@ return rescue(function () {
 <a name="method-resolve"></a>
 #### `resolve()` {.collection-method}
 
-The `resolve` function resolves a given class or interface name to an instance using the [service container](/docs/{{version}}/container):
+Hàm `resolve` phân giải tên class hoặc interface thành một instance bằng [service container](/docs/{{version}}/container):
 
 ```php
 $api = resolve('HelpSpot\API');
@@ -2968,7 +2968,7 @@ $api = resolve('HelpSpot\API');
 <a name="method-response"></a>
 #### `response()` {.collection-method}
 
-The `response` function creates a [response](/docs/{{version}}/responses) instance or obtains an instance of the response factory:
+Hàm `response` tạo một instance [response](/docs/{{version}}/responses) hoặc lấy instance của response factory:
 
 ```php
 return response('Hello World', 200, $headers);
@@ -2979,7 +2979,7 @@ return response()->json(['foo' => 'bar'], 200, $headers);
 <a name="method-retry"></a>
 #### `retry()` {.collection-method}
 
-The `retry` function attempts to execute the given callback until the given maximum attempt threshold is met. If the callback does not throw an exception, its return value will be returned. If the callback throws an exception, it will automatically be retried. If the maximum attempt count is exceeded, the exception will be thrown:
+Hàm `retry` cố gắng thực thi callback cho đến khi đạt số lần thử tối đa được chỉ định. Nếu callback không ném exception, giá trị trả về của callback sẽ được trả về. Nếu callback ném exception, nó sẽ tự động được thử lại. Khi vượt quá số lần thử tối đa, exception sẽ được ném ra:
 
 ```php
 return retry(5, function () {
@@ -2987,7 +2987,7 @@ return retry(5, function () {
 }, 100);
 ```
 
-The sleep duration also accepts a `CarbonInterval` instance:
+Thời lượng chờ cũng chấp nhận một instance `CarbonInterval`:
 
 ```php
 use function Illuminate\Support\seconds;
@@ -2997,7 +2997,7 @@ return retry(5, function () {
 }, seconds(5));
 ```
 
-If you would like to manually calculate the number of milliseconds to sleep between attempts, you may pass a closure as the third argument to the `retry` function:
+Nếu muốn tự tính số mili giây cần chờ giữa các lần thử, bạn có thể truyền một closure làm đối số thứ ba cho hàm `retry`:
 
 ```php
 use Exception;
@@ -3009,7 +3009,7 @@ return retry(5, function () {
 });
 ```
 
-For convenience, you may provide an array as the first argument to the `retry` function. This array will be used to determine how many milliseconds to sleep between subsequent attempts:
+Để thuận tiện, bạn có thể truyền một mảng làm đối số đầu tiên cho hàm `retry`. Mảng này được dùng để xác định số mili giây cần chờ giữa các lần thử kế tiếp:
 
 ```php
 return retry([100, 200], function () {
@@ -3017,7 +3017,7 @@ return retry([100, 200], function () {
 });
 ```
 
-To only retry under specific conditions, you may pass a closure as the fourth argument to the `retry` function:
+Để chỉ thử lại trong những điều kiện cụ thể, bạn có thể truyền một closure làm đối số thứ tư cho hàm `retry`:
 
 ```php
 use App\Exceptions\TemporaryException;
@@ -3033,19 +3033,19 @@ return retry(5, function () {
 <a name="method-session"></a>
 #### `session()` {.collection-method}
 
-The `session` function may be used to get or set [session](/docs/{{version}}/session) values:
+Hàm `session` có thể được dùng để lấy hoặc thiết lập các giá trị [session](/docs/{{version}}/session):
 
 ```php
 $value = session('key');
 ```
 
-You may set values by passing an array of key / value pairs to the function:
+Bạn có thể thiết lập giá trị bằng cách truyền vào hàm một mảng các cặp key / value:
 
 ```php
 session(['chairs' => 7, 'instruments' => 3]);
 ```
 
-The session store will be returned if no value is passed to the function:
+Session store sẽ được trả về nếu không truyền giá trị cho hàm:
 
 ```php
 $value = session()->get('key');
@@ -3056,7 +3056,7 @@ session()->put('key', $value);
 <a name="method-tap"></a>
 #### `tap()` {.collection-method}
 
-The `tap` function accepts two arguments: an arbitrary `$value` and a closure. The `$value` will be passed to the closure and then be returned by the `tap` function. The return value of the closure is irrelevant:
+Hàm `tap` nhận hai đối số: một `$value` bất kỳ và một closure. `$value` được truyền vào closure rồi được chính `tap` trả về; giá trị trả về của closure không được sử dụng:
 
 ```php
 $user = tap(User::first(), function (User $user) {
@@ -3066,7 +3066,7 @@ $user = tap(User::first(), function (User $user) {
 });
 ```
 
-If no closure is passed to the `tap` function, you may call any method on the given `$value`. The return value of the method you call will always be `$value`, regardless of what the method actually returns in its definition. For example, the Eloquent `update` method typically returns an integer. However, we can force the method to return the model itself by chaining the `update` method call through the `tap` function:
+Nếu không truyền closure cho hàm `tap`, bạn có thể gọi bất kỳ method nào trên `$value` đã cho. Giá trị trả về của method được gọi sẽ luôn là `$value`, bất kể method đó thực tế được định nghĩa trả về gì. Ví dụ, method `update` của Eloquent thường trả về một số nguyên. Tuy nhiên, ta có thể buộc chuỗi gọi trả về chính model bằng cách gọi `update` thông qua hàm `tap`:
 
 ```php
 $user = tap($user)->update([
@@ -3075,7 +3075,7 @@ $user = tap($user)->update([
 ]);
 ```
 
-To add a `tap` method to a class, you may add the `Illuminate\Support\Traits\Tappable` trait to the class. The `tap` method of this trait accepts a Closure as its only argument. The object instance itself will be passed to the Closure and then be returned by the `tap` method:
+Để thêm method `tap` vào một class, bạn có thể dùng trait `Illuminate\Support\Traits\Tappable`. Method `tap` của trait này nhận một Closure làm đối số duy nhất. Chính object instance sẽ được truyền vào Closure và sau đó được method `tap` trả về:
 
 ```php
 return $user->tap(function (User $user) {
@@ -3086,7 +3086,7 @@ return $user->tap(function (User $user) {
 <a name="method-throw-if"></a>
 #### `throw_if()` {.collection-method}
 
-The `throw_if` function throws the given exception if a given boolean expression evaluates to `true`:
+Hàm `throw_if` ném exception được cung cấp nếu biểu thức boolean cho kết quả `true`:
 
 ```php
 throw_if(! Auth::user()->isAdmin(), AuthorizationException::class);
@@ -3101,7 +3101,7 @@ throw_if(
 <a name="method-throw-unless"></a>
 #### `throw_unless()` {.collection-method}
 
-The `throw_unless` function throws the given exception if a given boolean expression evaluates to `false`:
+Hàm `throw_unless` ném exception được cung cấp nếu biểu thức boolean cho kết quả `false`:
 
 ```php
 throw_unless(Auth::user()->isAdmin(), AuthorizationException::class);
@@ -3116,7 +3116,7 @@ throw_unless(
 <a name="method-today"></a>
 #### `today()` {.collection-method}
 
-The `today` function creates a new `Illuminate\Support\Carbon` instance for the current date:
+Hàm `today` tạo một instance `Illuminate\Support\Carbon` mới cho ngày hiện tại:
 
 ```php
 $today = today();
@@ -3125,7 +3125,7 @@ $today = today();
 <a name="method-trait-uses-recursive"></a>
 #### `trait_uses_recursive()` {.collection-method}
 
-The `trait_uses_recursive` function returns all traits used by a trait:
+Hàm `trait_uses_recursive` trả về tất cả trait được một trait sử dụng:
 
 ```php
 $traits = trait_uses_recursive(\Illuminate\Notifications\Notifiable::class);
@@ -3134,7 +3134,7 @@ $traits = trait_uses_recursive(\Illuminate\Notifications\Notifiable::class);
 <a name="method-transform"></a>
 #### `transform()` {.collection-method}
 
-The `transform` function executes a closure on a given value if the value is not [blank](#method-blank) and then returns the return value of the closure:
+Hàm `transform` thực thi closure với giá trị được cung cấp nếu giá trị đó không [blank](#method-blank), sau đó trả về kết quả của closure:
 
 ```php
 $callback = function (int $value) {
@@ -3146,7 +3146,7 @@ $result = transform(5, $callback);
 // 10
 ```
 
-A default value or closure may be passed as the third argument to the function. This value will be returned if the given value is blank:
+Bạn có thể truyền default value hoặc closure làm argument thứ ba cho function. Giá trị này sẽ được trả về nếu value đã cho là blank:
 
 ```php
 $result = transform(null, $callback, 'The value is blank');
@@ -3157,7 +3157,7 @@ $result = transform(null, $callback, 'The value is blank');
 <a name="method-validator"></a>
 #### `validator()` {.collection-method}
 
-The `validator` function creates a new [validator](/docs/{{version}}/validation) instance with the given arguments. You may use it as an alternative to the `Validator` facade:
+Hàm `validator` tạo một instance [validator](/docs/{{version}}/validation) mới với các đối số được cung cấp. Bạn có thể dùng hàm này thay cho facade `Validator`:
 
 ```php
 $validator = validator($data, $rules, $messages);
@@ -3166,7 +3166,7 @@ $validator = validator($data, $rules, $messages);
 <a name="method-value"></a>
 #### `value()` {.collection-method}
 
-The `value` function returns the value it is given. However, if you pass a closure to the function, the closure will be executed and its returned value will be returned:
+Hàm `value` trả về giá trị được truyền vào. Tuy nhiên, nếu truyền một closure, closure sẽ được thực thi và kết quả của nó sẽ được trả về:
 
 ```php
 $result = value(true);
@@ -3180,7 +3180,7 @@ $result = value(function () {
 // false
 ```
 
-Additional arguments may be passed to the `value` function. If the first argument is a closure then the additional parameters will be passed to the closure as arguments, otherwise they will be ignored:
+Bạn có thể truyền thêm argument cho function `value`. Nếu argument đầu tiên là closure thì các parameter bổ sung sẽ được truyền vào closure; nếu không, chúng sẽ bị bỏ qua:
 
 ```php
 $result = value(function (string $name) {
@@ -3193,7 +3193,7 @@ $result = value(function (string $name) {
 <a name="method-view"></a>
 #### `view()` {.collection-method}
 
-The `view` function retrieves a [view](/docs/{{version}}/views) instance:
+Hàm `view` lấy một instance [view](/docs/{{version}}/views):
 
 ```php
 return view('auth.login');
@@ -3202,7 +3202,7 @@ return view('auth.login');
 <a name="method-with"></a>
 #### `with()` {.collection-method}
 
-The `with` function returns the value it is given. If a closure is passed as the second argument to the function, the closure will be executed and its returned value will be returned:
+Hàm `with` trả về giá trị được truyền vào. Nếu đối số thứ hai là closure, closure sẽ được thực thi và kết quả của nó được trả về:
 
 ```php
 $callback = function (mixed $value) {
@@ -3225,7 +3225,7 @@ $result = with(5, null);
 <a name="method-when"></a>
 #### `when()` {.collection-method}
 
-The `when` function returns the value it is given if a given condition evaluates to `true`. Otherwise, `null` is returned. If a closure is passed as the second argument to the function, the closure will be executed and its returned value will be returned:
+Hàm `when` trả về giá trị được truyền vào nếu điều kiện cho kết quả `true`; nếu không, `null` được trả về. Nếu đối số thứ hai là closure, closure sẽ được thực thi và kết quả của nó được trả về:
 
 ```php
 $value = when(true, 'Hello World');
@@ -3233,7 +3233,7 @@ $value = when(true, 'Hello World');
 $value = when(true, fn () => 'Hello World');
 ```
 
-The `when` function is primarily useful for conditionally rendering HTML attributes:
+Hàm `when` đặc biệt hữu ích khi render có điều kiện các thuộc tính HTML:
 
 ```blade
 <div {!! when($condition, 'wire:poll="calculate"') !!}>
@@ -3247,7 +3247,7 @@ The `when` function is primarily useful for conditionally rendering HTML attribu
 <a name="benchmarking"></a>
 ### Benchmarking
 
-Sometimes you may wish to quickly test the performance of certain parts of your application. On those occasions, you may utilize the `Benchmark` support class to measure the number of milliseconds it takes for the given callbacks to complete:
+Đôi khi bạn cần nhanh chóng kiểm tra hiệu năng của một số phần trong ứng dụng. Khi đó, bạn có thể dùng support class `Benchmark` để đo số mili giây mà các callback được cung cấp cần để hoàn thành:
 
 ```php
 <?php
@@ -3263,30 +3263,30 @@ Benchmark::dd([
 ]);
 ```
 
-By default, the given callbacks will be executed once (one iteration), and their duration will be displayed in the browser / console.
+Mặc định, các callback được cung cấp sẽ được thực thi một lần (một iteration), và thời gian thực thi sẽ được hiển thị trong browser / console.
 
-To invoke a callback more than once, you may specify the number of iterations that the callback should be invoked as the second argument to the method. When executing a callback more than once, the `Benchmark` class will return the average number of milliseconds it took to execute the callback across all iterations:
+Để gọi callback nhiều hơn một lần, bạn có thể truyền số lần lặp làm đối số thứ hai của method. Khi callback được thực thi nhiều lần, class `Benchmark` sẽ trả về số mili giây trung bình cần để thực thi callback qua tất cả các lần lặp:
 
 ```php
 Benchmark::dd(fn () => User::count(), iterations: 10); // 0.5 ms
 ```
 
-Sometimes, you may want to benchmark the execution of a callback while still obtaining the value returned by the callback. The `value` method will return a tuple containing the value returned by the callback and the number of milliseconds it took to execute the callback:
+Đôi khi bạn muốn benchmark việc thực thi callback nhưng vẫn lấy được giá trị mà callback trả về. Method `value` trả về một tuple gồm giá trị của callback và số mili giây cần để thực thi callback:
 
 ```php
 [$count, $duration] = Benchmark::value(fn () => User::count());
 ```
 
 <a name="dates"></a>
-### Dates and Time
+### Ngày và thời gian
 
-Laravel includes [Carbon](https://carbon.nesbot.com/guide/getting-started/introduction.html), a powerful date and time manipulation library. To create a new `Carbon` instance, you may invoke the `now` function. This function is globally available within your Laravel application:
+Laravel tích hợp [Carbon](https://carbon.nesbot.com/guide/getting-started/introduction.html), một thư viện mạnh mẽ để thao tác ngày và giờ. Để tạo một instance `Carbon` mới, bạn có thể gọi hàm `now`. Hàm này khả dụng toàn cục trong ứng dụng Laravel:
 
 ```php
 $now = now();
 ```
 
-Or, you may create a new `Carbon` instance using the `Illuminate\Support\Carbon` class:
+Hoặc, bạn có thể tạo một instance `Carbon` mới bằng class `Illuminate\Support\Carbon`:
 
 ```php
 use Illuminate\Support\Carbon;
@@ -3294,7 +3294,7 @@ use Illuminate\Support\Carbon;
 $now = Carbon::now();
 ```
 
-Laravel also augments `Carbon` instances with `plus` and `minus` methods, allowing easy manipulation of the instance's date and time:
+Laravel cũng bổ sung các method `plus` và `minus` cho instance `Carbon`, giúp thao tác ngày và giờ của instance thuận tiện hơn:
 
 ```php
 return now()->plus(minutes: 5);
@@ -3306,12 +3306,12 @@ return now()->minus(hours: 8);
 return now()->minus(weeks: 4);
 ```
 
-For a thorough discussion of Carbon and its features, please consult the [official Carbon documentation](https://carbon.nesbot.com/guide/getting-started/introduction.html).
+Để tìm hiểu đầy đủ về Carbon và các tính năng của thư viện này, hãy tham khảo [tài liệu Carbon chính thức](https://carbon.nesbot.com/guide/getting-started/introduction.html).
 
 <a name="interval-functions"></a>
 #### Interval Functions
 
-Laravel also offers `milliseconds`, `seconds`, `minutes`, `hours`, `days`, `weeks`, `months`, and `years` functions that return `CarbonInterval` instances, which extend PHP's [DateInterval](https://www.php.net/manual/en/class.dateinterval.php) class. These functions may be used anywhere that Laravel accepts a `DateInterval` instance:
+Laravel còn cung cấp các hàm `milliseconds`, `seconds`, `minutes`, `hours`, `days`, `weeks`, `months` và `years`, trả về các instance `CarbonInterval` mở rộng class [DateInterval](https://www.php.net/manual/en/class.dateinterval.php) của PHP. Bạn có thể dùng các hàm này ở bất kỳ nơi nào Laravel chấp nhận một instance `DateInterval`:
 
 ```php
 use Illuminate\Support\Facades\Cache;
@@ -3324,9 +3324,9 @@ Cache::put('metrics', $metrics, minutes(10));
 <a name="deferred-functions"></a>
 ### Deferred Functions
 
-While Laravel's [queued jobs](/docs/{{version}}/queues) allow you to queue tasks for background processing, sometimes you may have simple tasks you would like to defer without configuring or maintaining a long-running queue worker.
+Mặc dù [queued job](/docs/{{version}}/queues) của Laravel cho phép đưa tác vụ vào queue để xử lý nền, đôi khi bạn chỉ có các tác vụ đơn giản cần trì hoãn mà không muốn cấu hình hoặc duy trì một queue worker chạy lâu dài.
 
-Deferred functions allow you to defer the execution of a closure until after the HTTP response has been sent to the user, keeping your application feeling fast and responsive. To defer the execution of a closure, simply pass the closure to the `Illuminate\Support\defer` function:
+Deferred function cho phép trì hoãn việc thực thi một closure cho tới sau khi HTTP response đã được gửi về người dùng, giúp ứng dụng luôn phản hồi nhanh và mượt. Để trì hoãn một closure, chỉ cần truyền closure đó vào function `Illuminate\Support\defer`:
 
 ```php
 use App\Services\Metrics;
@@ -3343,19 +3343,19 @@ Route::post('/orders', function (Request $request) {
 });
 ```
 
-By default, deferred functions will only be executed if the HTTP response, Artisan command, or queued job from which `Illuminate\Support\defer` is invoked completes successfully. This means that deferred functions will not be executed if a request results in a `4xx` or `5xx` HTTP response. If you would like a deferred function to always execute, you may chain the `always` method onto your deferred function:
+Mặc định, deferred function chỉ được thực thi nếu HTTP response, Artisan command hoặc queued job nơi `Illuminate\Support\defer` được gọi hoàn tất thành công. Điều này có nghĩa deferred function sẽ không chạy nếu request trả về HTTP response `4xx` hoặc `5xx`. Nếu muốn deferred function luôn được thực thi, bạn có thể chain method `always`:
 
 ```php
 defer(fn () => Metrics::reportOrder($order))->always();
 ```
 
 > [!WARNING]
-> If you have the [Swoole PHP extension](https://www.php.net/manual/en/book.swoole.php) installed, Laravel's `defer` function may conflict with Swoole's own global `defer` function, leading to web server errors. Make sure you call Laravel's `defer` helper by explicitly namespacing it: `use function Illuminate\Support\defer;`
+> Nếu đã cài [Swoole PHP extension](https://www.php.net/manual/en/book.swoole.php), hàm `defer` của Laravel có thể xung đột với hàm `defer` global của Swoole và gây lỗi web server. Hãy bảo đảm bạn gọi helper `defer` của Laravel bằng namespace tường minh: `use function Illuminate\Support\defer;`
 
 <a name="cancelling-deferred-functions"></a>
 #### Cancelling Deferred Functions
 
-If you need to cancel a deferred function before it is executed, you can use the `forget` method to cancel the function by its name. To name a deferred function, provide a second argument to the `Illuminate\Support\defer` function:
+Nếu cần hủy một deferred function trước khi nó được thực thi, bạn có thể dùng method `forget` để hủy function theo tên. Để đặt tên cho deferred function, hãy truyền đối số thứ hai cho hàm `Illuminate\Support\defer`:
 
 ```php
 defer(fn () => Metrics::report(), 'reportMetrics');
@@ -3364,9 +3364,9 @@ defer()->forget('reportMetrics');
 ```
 
 <a name="disabling-deferred-functions-in-tests"></a>
-#### Disabling Deferred Functions in Tests
+#### Tắt deferred function trong test
 
-When writing tests, it may be useful to disable deferred functions. You may call `withoutDefer` in your test to instruct Laravel to invoke all deferred functions immediately:
+Khi viết test, đôi lúc bạn cần vô hiệu hóa cơ chế defer. Bạn có thể gọi `withoutDefer` trong test để yêu cầu Laravel thực thi ngay tất cả deferred function:
 
 ```php tab=Pest
 test('without defer', function () {
@@ -3390,7 +3390,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-If you would like to disable deferred functions for all tests within a test case, you may call the `withoutDefer` method from the `setUp` method on your base `TestCase` class:
+Nếu muốn vô hiệu hóa deferred function cho toàn bộ test trong một test case, bạn có thể gọi method `withoutDefer` từ method `setUp` trên class `TestCase` cơ sở:
 
 ```php
 <?php
@@ -3413,7 +3413,7 @@ abstract class TestCase extends BaseTestCase
 <a name="lottery"></a>
 ### Lottery
 
-Laravel's lottery class may be used to execute callbacks based on a set of given odds. This can be particularly useful when you only want to execute code for a percentage of your incoming requests:
+Lottery class của Laravel có thể dùng để thực thi callback dựa trên tỷ lệ xác suất được chỉ định. Cơ chế này đặc biệt hữu ích khi bạn chỉ muốn chạy code cho một tỷ lệ nhất định trong số request đi vào:
 
 ```php
 use Illuminate\Support\Lottery;
@@ -3424,7 +3424,7 @@ Lottery::odds(1, 20)
     ->choose();
 ```
 
-You may combine Laravel's lottery class with other Laravel features. For example, you may wish to only report a small percentage of slow queries to your exception handler. And, since the lottery class is callable, we may pass an instance of the class into any method that accepts callables:
+Bạn có thể kết hợp class lottery của Laravel với các tính năng Laravel khác. Ví dụ, bạn có thể chỉ muốn báo cáo một tỷ lệ nhỏ các query chậm tới exception handler. Vì class lottery có thể được gọi như callable, ta có thể truyền một instance của class này vào bất kỳ method nào chấp nhận callable:
 
 ```php
 use Carbon\CarbonInterval;
@@ -3440,7 +3440,7 @@ DB::whenQueryingForLongerThan(
 <a name="testing-lotteries"></a>
 #### Testing Lotteries
 
-Laravel provides some simple methods to allow you to easily test your application's lottery invocations:
+Laravel cung cấp một số method đơn giản để bạn dễ dàng kiểm thử các lần gọi lottery trong ứng dụng:
 
 ```php
 // Lottery will always win...
@@ -3459,7 +3459,7 @@ Lottery::determineResultsNormally();
 <a name="pipeline"></a>
 ### Pipeline
 
-Laravel's `Pipeline` facade provides a convenient way to "pipe" a given input through a series of invokable classes, closures, or callables, giving each class the opportunity to inspect or modify the input and invoke the next callable in the pipeline:
+Facade `Pipeline` của Laravel cung cấp cách thuận tiện để "pipe" một input qua chuỗi invokable class, closure hoặc callable; mỗi bước có cơ hội kiểm tra hoặc thay đổi input rồi gọi callable tiếp theo trong pipeline:
 
 ```php
 use Closure;
@@ -3482,11 +3482,11 @@ $user = Pipeline::send($user)
     ->then(fn (User $user) => $user);
 ```
 
-As you can see, each invokable class or closure in the pipeline is provided the input and a `$next` closure. Invoking the `$next` closure will invoke the next callable in the pipeline. As you may have noticed, this is very similar to [middleware](/docs/{{version}}/middleware).
+Như bạn thấy, mỗi invokable class hoặc closure trong pipeline nhận input và một closure `$next`. Khi gọi closure `$next`, callable tiếp theo trong pipeline sẽ được thực thi. Cơ chế này rất giống [middleware](/docs/{{version}}/middleware).
 
-When the last callable in the pipeline invokes the `$next` closure, the callable provided to the `then` method will be invoked. Typically, this callable will simply return the given input. For convenience, if you simply want to return the input after it has been processed, you may use the `thenReturn` method.
+Khi callable cuối cùng trong pipeline gọi closure `$next`, callable được truyền cho method `then` sẽ được thực thi. Thông thường, callable này chỉ trả về input đã nhận. Nếu chỉ muốn trả về input sau khi đã được xử lý, bạn có thể dùng method `thenReturn`.
 
-Of course, as discussed previously, you are not limited to providing closures to your pipeline. You may also provide invokable classes. If a class name is provided, the class will be instantiated via Laravel's [service container](/docs/{{version}}/container), allowing dependencies to be injected into the invokable class:
+Dĩ nhiên, như đã đề cập, bạn không bị giới hạn ở closure khi cung cấp các bước cho pipeline. Bạn cũng có thể truyền invokable class. Nếu truyền tên class, class đó sẽ được khởi tạo thông qua [service container](/docs/{{version}}/container) của Laravel, vì vậy dependency có thể được inject vào invokable class:
 
 ```php
 $user = Pipeline::send($user)
@@ -3498,7 +3498,7 @@ $user = Pipeline::send($user)
     ->thenReturn();
 ```
 
-The `withinTransaction` method may be invoked on the pipeline to automatically wrap all steps of the pipeline within a single database transaction:
+Bạn có thể gọi method `withinTransaction` trên pipeline để tự động bao toàn bộ các bước của pipeline trong một database transaction duy nhất:
 
 ```php
 $user = Pipeline::send($user)
@@ -3514,7 +3514,7 @@ $user = Pipeline::send($user)
 <a name="sleep"></a>
 ### Sleep
 
-Laravel's `Sleep` class is a light-weight wrapper around PHP's native `sleep` and `usleep` functions, offering greater testability while also exposing a developer friendly API for working with time:
+Class `Sleep` của Laravel là một wrapper nhẹ quanh các hàm native `sleep` và `usleep` của PHP, giúp code dễ kiểm thử hơn đồng thời cung cấp API thân thiện để làm việc với thời gian:
 
 ```php
 use Illuminate\Support\Sleep;
@@ -3528,7 +3528,7 @@ while ($waiting) {
 }
 ```
 
-The `Sleep` class offers a variety of methods that allow you to work with different units of time:
+Class `Sleep` cung cấp nhiều method để làm việc với các đơn vị thời gian khác nhau:
 
 ```php
 // Return a value after sleeping...
@@ -3559,7 +3559,7 @@ Sleep::sleep(2);
 Sleep::usleep(5000);
 ```
 
-To easily combine units of time, you may use the `and` method:
+Để dễ dàng kết hợp nhiều đơn vị thời gian, bạn có thể dùng method `and`:
 
 ```php
 Sleep::for(1)->second()->and(10)->milliseconds();
@@ -3568,7 +3568,7 @@ Sleep::for(1)->second()->and(10)->milliseconds();
 <a name="testing-sleep"></a>
 #### Testing Sleep
 
-When testing code that utilizes the `Sleep` class or PHP's native sleep functions, your test will pause execution. As you might expect, this makes your test suite significantly slower. For example, imagine you are testing the following code:
+Khi kiểm thử code sử dụng class `Sleep` hoặc các hàm sleep native của PHP, test sẽ thực sự tạm dừng thực thi. Điều này khiến test suite chậm đi đáng kể. Ví dụ, giả sử bạn đang kiểm thử đoạn code sau:
 
 ```php
 $waiting = /* ... */;
@@ -3582,7 +3582,7 @@ while ($waiting) {
 }
 ```
 
-Typically, testing this code would take _at least_ one second. Luckily, the `Sleep` class allows us to "fake" sleeping so that our test suite stays fast:
+Thông thường, việc kiểm thử đoạn code này sẽ mất _ít nhất_ một giây. May mắn là class `Sleep` cho phép ta "fake" việc sleep để test suite vẫn chạy nhanh:
 
 ```php tab=Pest
 it('waits until ready', function () {
@@ -3601,9 +3601,9 @@ public function test_it_waits_until_ready()
 }
 ```
 
-When faking the `Sleep` class, the actual execution pause is bypassed, leading to a substantially faster test.
+Khi fake class `Sleep`, khoảng dừng thực thi thực tế sẽ được bỏ qua, giúp test chạy nhanh hơn đáng kể.
 
-Once the `Sleep` class has been faked, it is possible to make assertions against the expected "sleeps" that should have occurred. To illustrate this, let's imagine we are testing code that pauses execution three times, with each pause increasing by a single second. Using the `assertSequence` method, we can assert that our code "slept" for the proper amount of time while keeping our test fast:
+Sau khi class `Sleep` được fake, bạn có thể assertion các lần "sleep" dự kiến phải xảy ra. Ví dụ, giả sử ta kiểm thử code tạm dừng ba lần, mỗi lần tăng thêm một giây. Với method `assertSequence`, ta có thể xác nhận code đã "sleep" đúng khoảng thời gian mà vẫn giữ test chạy nhanh:
 
 ```php tab=Pest
 it('checks if ready three times', function () {
@@ -3634,7 +3634,7 @@ public function test_it_checks_if_ready_three_times()
 }
 ```
 
-Of course, the `Sleep` class offers a variety of other assertions you may use when testing:
+Class `Sleep` cũng cung cấp nhiều assertion khác mà bạn có thể sử dụng khi testing:
 
 ```php
 use Carbon\CarbonInterval as Duration;
@@ -3655,7 +3655,7 @@ Sleep::assertNeverSlept();
 Sleep::assertInsomniac();
 ```
 
-Sometimes it may be useful to perform an action whenever a fake sleep occurs. To achieve this, you may provide a callback to the `whenFakingSleep` method. In the following example, we use Laravel's [time manipulation helpers](/docs/{{version}}/mocking#interacting-with-time) to instantly progress time by the duration of each sleep:
+Đôi khi bạn cần thực hiện một hành động mỗi khi fake sleep xảy ra. Để làm điều này, bạn có thể truyền callback cho method `whenFakingSleep`. Trong ví dụ sau, ta dùng [helper thao tác thời gian](/docs/{{version}}/mocking#interacting-with-time) của Laravel để lập tức tiến thời gian thêm đúng khoảng thời lượng của mỗi lần sleep:
 
 ```php
 use Carbon\CarbonInterval as Duration;
@@ -3670,7 +3670,7 @@ Sleep::whenFakingSleep(function (Duration $duration) {
 });
 ```
 
-As progressing time is a common requirement, the `fake` method accepts a `syncWithCarbon` argument to keep Carbon in sync when sleeping within a test:
+Vì việc làm thời gian tiến lên là nhu cầu phổ biến, method `fake` chấp nhận argument `syncWithCarbon` để giữ Carbon đồng bộ khi sleep trong test:
 
 ```php
 Sleep::fake(syncWithCarbon: true);
@@ -3682,16 +3682,16 @@ Sleep::for(1)->second();
 $start->diffForHumans(); // 1 second ago
 ```
 
-Laravel uses the `Sleep` class internally whenever it is pausing execution. For example, the [retry](#method-retry) helper uses the `Sleep` class when sleeping, allowing for improved testability when using that helper.
+Laravel sử dụng class `Sleep` nội bộ mỗi khi cần tạm dừng thực thi. Ví dụ, helper [retry](#method-retry) dùng `Sleep` khi chờ giữa các lần thử, nhờ đó việc kiểm thử helper này thuận tiện hơn.
 
 <a name="timebox"></a>
 ### Timebox
 
-Laravel's `Timebox` class ensures that the given callback always takes a fixed amount of time to execute, even if its actual execution completes sooner. This is particularly useful for cryptographic operations and user authentication checks, where attackers might exploit variations in execution time to infer sensitive information.
+Class `Timebox` của Laravel đảm bảo callback được cung cấp luôn mất một khoảng thời gian cố định để thực thi, ngay cả khi việc thực thi thực tế hoàn thành sớm hơn. Điều này đặc biệt hữu ích cho các thao tác mật mã và kiểm tra xác thực người dùng, nơi kẻ tấn công có thể khai thác chênh lệch thời gian thực thi để suy đoán thông tin nhạy cảm.
 
-If the execution exceeds the fixed duration, `Timebox` has no effect. It is up to the developer to choose a sufficiently long time as the fixed duration to account for worst-case scenarios.
+Nếu thời gian thực thi vượt quá khoảng cố định, `Timebox` không có tác dụng. Developer cần chọn khoảng thời gian cố định đủ dài để bao quát trường hợp xấu nhất.
 
-The call method accepts a closure and a time limit in microseconds, and then executes the closure and waits until the time limit is reached:
+Method `call` nhận một closure và giới hạn thời gian tính bằng microsecond, sau đó thực thi closure và chờ cho đến khi đạt giới hạn thời gian:
 
 ```php
 use Illuminate\Support\Timebox;
@@ -3701,14 +3701,14 @@ use Illuminate\Support\Timebox;
 }, microseconds: 10000);
 ```
 
-If an exception is thrown within the closure, this class will respect the defined delay and re-throw the exception after the delay.
+Nếu closure ném ra exception, class này vẫn tuân theo khoảng delay đã định nghĩa và ném lại exception sau khi hết delay.
 
 <a name="uri"></a>
 ### URI
 
-Laravel's `Uri` class provides a convenient and fluent interface for creating and manipulating URIs. This class wraps the functionality provided by the underlying League URI package and integrates seamlessly with Laravel's routing system.
+Class `Uri` của Laravel cung cấp interface fluent và thuận tiện để tạo và thao tác URI. Class này bao bọc chức năng của package League URI bên dưới và tích hợp liền mạch với hệ thống routing của Laravel.
 
-You can create a `Uri` instance easily using static methods:
+Bạn có thể dễ dàng tạo một instance `Uri` bằng các static method:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -3730,7 +3730,7 @@ $uri = Uri::action(InvokableController::class);
 $uri = $request->uri();
 ```
 
-Once you have a URI instance, you can fluently modify it:
+Sau khi có một instance URI, bạn có thể chỉnh sửa nó theo fluent API:
 
 ```php
 $uri = Uri::of('https://example.com')
@@ -3745,7 +3745,7 @@ $uri = Uri::of('https://example.com')
 <a name="inspecting-uris"></a>
 #### Inspecting URIs
 
-The `Uri` class also allows you to easily inspect the various components of the underlying URI:
+Class `Uri` cũng cho phép bạn dễ dàng kiểm tra các thành phần khác nhau của URI bên dưới:
 
 ```php
 $scheme = $uri->scheme();
@@ -3761,40 +3761,40 @@ $fragment = $uri->fragment();
 <a name="manipulating-query-strings"></a>
 #### Manipulating Query Strings
 
-The `Uri` class offers several methods that may be used to manipulate a URI's query string. The `withQuery` method may be used to merge additional query string parameters into the existing query string:
+Class `Uri` cung cấp một số method để thao tác query string của URI. Method `withQuery` có thể được dùng để merge thêm các tham số query string vào query string hiện có:
 
 ```php
 $uri = $uri->withQuery(['sort' => 'name']);
 ```
 
-The `withQueryIfMissing` method may be used to merge additional query string parameters into the existing query string if the given keys do not already exist in the query string:
+Method `withQueryIfMissing` có thể được dùng để merge thêm các tham số vào query string hiện có nếu các key được cung cấp chưa tồn tại trong query string:
 
 ```php
 $uri = $uri->withQueryIfMissing(['page' => 1]);
 ```
 
-The `replaceQuery` method may be used to complete replace the existing query string with a new one:
+Method `replaceQuery` có thể được dùng để thay thế hoàn toàn query string hiện có bằng query string mới:
 
 ```php
 $uri = $uri->replaceQuery(['page' => 1]);
 ```
 
-The `pushOntoQuery` method may be used to push additional parameters onto a query string parameter that has an array value:
+Method `pushOntoQuery` có thể được dùng để thêm các giá trị vào một tham số query string có giá trị dạng mảng:
 
 ```php
 $uri = $uri->pushOntoQuery('filter', ['active', 'pending']);
 ```
 
-The `withoutQuery` method may be used to remove parameters from the query string:
+Method `withoutQuery` có thể được dùng để loại bỏ các tham số khỏi query string:
 
 ```php
 $uri = $uri->withoutQuery(['page']);
 ```
 
 <a name="generating-responses-from-uris"></a>
-#### Generating Responses From URIs
+#### Tạo response từ URI
 
-The `redirect` method may be used to generate a `RedirectResponse` instance to the given URI:
+Method `redirect` có thể được dùng để tạo một instance `RedirectResponse` tới URI được chỉ định:
 
 ```php
 $uri = Uri::of('https://example.com');
@@ -3802,7 +3802,7 @@ $uri = Uri::of('https://example.com');
 return $uri->redirect();
 ```
 
-Or, you may simply return the `Uri` instance from a route or controller action, which will automatically generate a redirect response to the returned URI:
+Hoặc, bạn có thể đơn giản return instance `Uri` từ route hay controller action; Laravel sẽ tự động tạo redirect response tới URI được trả về:
 
 ```php
 use Illuminate\Support\Facades\Route;
@@ -3813,6 +3813,8 @@ Route::get('/redirect', function () {
         ->withQuery(['sort' => 'name']);
 });
 ```
+
+---
 
 ## Tài liệu chính thức
 

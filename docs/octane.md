@@ -1,63 +1,63 @@
 # Laravel Octane
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Server Prerequisites](#server-prerequisites)
+- [Giới thiệu](#introduction)
+- [Cài đặt](#installation)
+- [Yêu cầu máy chủ](#server-prerequisites)
     - [FrankenPHP](#frankenphp)
     - [RoadRunner](#roadrunner)
     - [Swoole](#swoole)
-- [Serving Your Application](#serving-your-application)
-    - [Serving Your Application via HTTPS](#serving-your-application-via-https)
-    - [Serving Your Application via Nginx](#serving-your-application-via-nginx)
-    - [Watching for File Changes](#watching-for-file-changes)
-    - [Specifying the Worker Count](#specifying-the-worker-count)
-    - [Specifying the Max Request Count](#specifying-the-max-request-count)
-    - [Specifying the Max Execution Time](#specifying-the-max-execution-time)
-    - [Reloading the Workers](#reloading-the-workers)
-    - [Stopping the Server](#stopping-the-server)
-- [Dependency Injection and Octane](#dependency-injection-and-octane)
-    - [Container Injection](#container-injection)
-    - [Request Injection](#request-injection)
-    - [Configuration Repository Injection](#configuration-repository-injection)
-- [Managing Memory Leaks](#managing-memory-leaks)
-- [Concurrent Tasks](#concurrent-tasks)
-- [Ticks and Intervals](#ticks-and-intervals)
-- [The Octane Cache](#the-octane-cache)
-    - [Cache Intervals](#cache-intervals)
+- [Phục vụ ứng dụng](#serving-your-application)
+    - [Phục vụ ứng dụng qua HTTPS](#serving-your-application-via-https)
+    - [Phục vụ ứng dụng qua Nginx](#serving-your-application-via-nginx)
+    - [Theo dõi thay đổi file](#watching-for-file-changes)
+    - [Chỉ định số lượng worker](#specifying-the-worker-count)
+    - [Chỉ định số request tối đa](#specifying-the-max-request-count)
+    - [Chỉ định thời gian thực thi tối đa](#specifying-the-max-execution-time)
+    - [Tải lại worker](#reloading-the-workers)
+    - [Dừng máy chủ](#stopping-the-server)
+- [Dependency Injection và Octane](#dependency-injection-and-octane)
+    - [Inject Container](#container-injection)
+    - [Inject Request](#request-injection)
+    - [Inject Configuration Repository](#configuration-repository-injection)
+- [Quản lý rò rỉ bộ nhớ](#managing-memory-leaks)
+- [Tác vụ đồng thời](#concurrent-tasks)
+- [Tick và khoảng thời gian](#ticks-and-intervals)
+- [Octane Cache](#the-octane-cache)
+    - [Khoảng thời gian cache](#cache-intervals)
 - [Tables](#tables)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-[Laravel Octane](https://github.com/laravel/octane) supercharges your application's performance by serving your application using high-powered application servers, including [FrankenPHP](https://frankenphp.dev/), [Open Swoole](https://openswoole.com/), [Swoole](https://github.com/swoole/swoole-src), and [RoadRunner](https://roadrunner.dev). Octane boots your application once, keeps it in memory, and then feeds it requests at supersonic speeds.
+[Laravel Octane](https://github.com/laravel/octane) tăng cường mạnh mẽ hiệu năng ứng dụng bằng cách phục vụ ứng dụng thông qua các application server hiệu năng cao, bao gồm [FrankenPHP](https://frankenphp.dev/), [Open Swoole](https://openswoole.com/), [Swoole](https://github.com/swoole/swoole-src) và [RoadRunner](https://roadrunner.dev). Octane khởi động ứng dụng một lần, giữ ứng dụng trong bộ nhớ, sau đó chuyển các request đến ứng dụng với tốc độ cực cao.
 
 <a name="installation"></a>
-## Installation
+## Cài đặt
 
-Octane may be installed via the Composer package manager:
+Bạn có thể cài đặt Octane thông qua trình quản lý package Composer:
 
 ```shell
 composer require laravel/octane
 ```
 
-After installing Octane, you may execute the `octane:install` Artisan command, which will install Octane's configuration file into your application:
+Sau khi cài đặt Octane, bạn có thể chạy lệnh Artisan `octane:install`; lệnh này sẽ cài đặt file cấu hình của Octane vào ứng dụng:
 
 ```shell
 php artisan octane:install
 ```
 
 <a name="server-prerequisites"></a>
-## Server Prerequisites
+## Yêu cầu máy chủ
 
 <a name="frankenphp"></a>
 ### FrankenPHP
 
-[FrankenPHP](https://frankenphp.dev) is a PHP application server, written in Go, that supports modern web features like early hints, Brotli, and Zstandard compression. When you install Octane and choose FrankenPHP as your server, Octane will automatically download and install the FrankenPHP binary for you.
+[FrankenPHP](https://frankenphp.dev) là một PHP application server được viết bằng Go, hỗ trợ các tính năng web hiện đại như early hints, nén Brotli và Zstandard. Khi cài đặt Octane và chọn FrankenPHP làm server, Octane sẽ tự động tải xuống và cài đặt binary FrankenPHP cho bạn.
 
 <a name="frankenphp-via-laravel-sail"></a>
-#### FrankenPHP via Laravel Sail
+#### FrankenPHP qua Laravel Sail
 
-If you plan to develop your application using [Laravel Sail](/docs/{{version}}/sail), you should run the following commands to install Octane and FrankenPHP:
+Nếu dự định phát triển ứng dụng bằng [Laravel Sail](/docs/{{version}}/sail), bạn nên chạy các lệnh sau để cài đặt Octane và FrankenPHP:
 
 ```shell
 ./vendor/bin/sail up
@@ -65,13 +65,13 @@ If you plan to develop your application using [Laravel Sail](/docs/{{version}}/s
 ./vendor/bin/sail composer require laravel/octane
 ```
 
-Next, you should use the `octane:install` Artisan command to install the FrankenPHP binary:
+Tiếp theo, bạn nên dùng lệnh Artisan `octane:install` để cài đặt binary FrankenPHP:
 
 ```shell
 ./vendor/bin/sail artisan octane:install --server=frankenphp
 ```
 
-Finally, add a `SUPERVISOR_PHP_COMMAND` environment variable to the `laravel.test` service definition in your application's `docker-compose.yml` file. This environment variable will contain the command that Sail will use to serve your application using Octane instead of the PHP development server:
+Cuối cùng, hãy thêm biến môi trường `SUPERVISOR_PHP_COMMAND` vào định nghĩa service `laravel.test` trong file `docker-compose.yml` của ứng dụng. Biến môi trường này chứa lệnh mà Sail sẽ dùng để phục vụ ứng dụng bằng Octane thay cho PHP development server:
 
 ```yaml
 services:
@@ -82,7 +82,7 @@ services:
       XDG_DATA_HOME:  /var/www/html/data # [tl! add]
 ```
 
-To enable HTTPS, HTTP/2, and HTTP/3, apply these modifications instead:
+Để bật HTTPS, HTTP/2 và HTTP/3, hãy áp dụng các thay đổi sau thay thế:
 
 ```yaml
 services:
@@ -98,14 +98,14 @@ services:
       XDG_DATA_HOME:  /var/www/html/data # [tl! add]
 ```
 
-Typically, you should access your FrankenPHP Sail application via `https://localhost`, as using `https://127.0.0.1` requires additional configuration and is [discouraged](https://frankenphp.dev/docs/known-issues/#using-https127001-with-docker).
+Thông thường, bạn nên truy cập ứng dụng FrankenPHP Sail qua `https://localhost`, vì việc sử dụng `https://127.0.0.1` yêu cầu cấu hình bổ sung và [không được khuyến khích](https://frankenphp.dev/docs/known-issues/#using-https127001-with-docker).
 
 <a name="frankenphp-via-docker"></a>
-#### FrankenPHP via Docker
+#### FrankenPHP qua Docker
 
-Using FrankenPHP's official Docker images can offer improved performance and the use of additional extensions not included with static installations of FrankenPHP. In addition, the official Docker images provide support for running FrankenPHP on platforms it doesn't natively support, such as Windows. FrankenPHP's official Docker images are suitable for both local development and production usage.
+Sử dụng Docker image chính thức của FrankenPHP có thể mang lại hiệu năng tốt hơn và cho phép dùng thêm các extension không có trong bản cài đặt FrankenPHP tĩnh. Ngoài ra, các Docker image chính thức hỗ trợ chạy FrankenPHP trên những nền tảng mà nó không hỗ trợ native, chẳng hạn Windows. Docker image chính thức của FrankenPHP phù hợp cho cả phát triển local lẫn môi trường production.
 
-You may use the following Dockerfile as a starting point for containerizing your FrankenPHP powered Laravel application:
+Bạn có thể dùng Dockerfile sau làm điểm khởi đầu để container hóa ứng dụng Laravel chạy bằng FrankenPHP:
 
 ```dockerfile
 FROM dunglas/frankenphp
@@ -119,7 +119,7 @@ COPY . /app
 ENTRYPOINT ["php", "artisan", "octane:frankenphp"]
 ```
 
-Then, during development, you may utilize the following Docker Compose file to run your application:
+Sau đó, trong quá trình phát triển, bạn có thể dùng file Docker Compose sau để chạy ứng dụng:
 
 ```yaml
 # compose.yaml
@@ -134,30 +134,30 @@ services:
       - .:/app
 ```
 
-If the `--log-level` option is explicitly passed to the `php artisan octane:start` command, Octane will use FrankenPHP's native logger and, unless configured differently, will produce structured JSON logs.
+Nếu option `--log-level` được truyền tường minh vào lệnh `php artisan octane:start`, Octane sẽ sử dụng logger native của FrankenPHP và, trừ khi được cấu hình khác đi, sẽ tạo log JSON có cấu trúc.
 
-You may consult [the official FrankenPHP documentation](https://frankenphp.dev/docs/docker/) for more information on running FrankenPHP with Docker.
+Bạn có thể tham khảo [tài liệu FrankenPHP chính thức](https://frankenphp.dev/docs/docker/) để biết thêm thông tin về cách chạy FrankenPHP với Docker.
 
 <a name="frankenphp-caddyfile"></a>
-#### Custom Caddyfile Configuration
+#### Cấu hình Caddyfile tùy chỉnh
 
-When using FrankenPHP, you may specify a custom Caddyfile using the `--caddyfile` option when starting Octane:
+Khi sử dụng FrankenPHP, bạn có thể chỉ định một Caddyfile tùy chỉnh bằng option `--caddyfile` khi khởi động Octane:
 
 ```shell
 php artisan octane:start --server=frankenphp --caddyfile=/path/to/your/Caddyfile
 ```
 
-This allows you to customize FrankenPHP's configuration beyond the default settings, such as adding custom middleware, configuring advanced routing, or setting up custom directives. You may consult the [official Caddy documentation](https://caddyserver.com/docs/caddyfile) for more information on Caddyfile syntax and configuration options.
+Điều này cho phép bạn tùy chỉnh cấu hình FrankenPHP vượt ra ngoài các thiết lập mặc định, chẳng hạn thêm middleware tùy chỉnh, cấu hình routing nâng cao hoặc thiết lập directive tùy chỉnh. Bạn có thể tham khảo [tài liệu Caddy chính thức](https://caddyserver.com/docs/caddyfile) để biết thêm về cú pháp Caddyfile và các tùy chọn cấu hình.
 
 <a name="roadrunner"></a>
 ### RoadRunner
 
-[RoadRunner](https://roadrunner.dev) is powered by the RoadRunner binary, which is built using Go. The first time you start a RoadRunner based Octane server, Octane will offer to download and install the RoadRunner binary for you.
+[RoadRunner](https://roadrunner.dev) hoạt động dựa trên binary RoadRunner được xây dựng bằng Go. Trong lần đầu khởi động Octane server dựa trên RoadRunner, Octane sẽ đề nghị tải xuống và cài đặt binary RoadRunner cho bạn.
 
 <a name="roadrunner-via-laravel-sail"></a>
-#### RoadRunner via Laravel Sail
+#### RoadRunner qua Laravel Sail
 
-If you plan to develop your application using [Laravel Sail](/docs/{{version}}/sail), you should run the following commands to install Octane and RoadRunner:
+Nếu dự định phát triển ứng dụng bằng [Laravel Sail](/docs/{{version}}/sail), bạn nên chạy các lệnh sau để cài đặt Octane và RoadRunner:
 
 ```shell
 ./vendor/bin/sail up
@@ -165,7 +165,7 @@ If you plan to develop your application using [Laravel Sail](/docs/{{version}}/s
 ./vendor/bin/sail composer require laravel/octane spiral/roadrunner-cli spiral/roadrunner-http
 ```
 
-Next, you should start a Sail shell and use the `rr` executable to retrieve the latest Linux based build of the RoadRunner binary:
+Tiếp theo, bạn nên mở Sail shell và dùng executable `rr` để lấy bản build RoadRunner mới nhất dành cho Linux:
 
 ```shell
 ./vendor/bin/sail shell
@@ -174,7 +174,7 @@ Next, you should start a Sail shell and use the `rr` executable to retrieve the 
 ./vendor/bin/rr get-binary
 ```
 
-Then, add a `SUPERVISOR_PHP_COMMAND` environment variable to the `laravel.test` service definition in your application's `docker-compose.yml` file. This environment variable will contain the command that Sail will use to serve your application using Octane instead of the PHP development server:
+Sau đó, hãy thêm biến môi trường `SUPERVISOR_PHP_COMMAND` vào định nghĩa service `laravel.test` trong file `docker-compose.yml` của ứng dụng. Biến này chứa lệnh mà Sail sẽ dùng để phục vụ ứng dụng bằng Octane thay cho PHP development server:
 
 ```yaml
 services:
@@ -183,7 +183,7 @@ services:
       SUPERVISOR_PHP_COMMAND: "/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --server=roadrunner --host=0.0.0.0 --rpc-port=6001 --port='${APP_PORT:-80}'" # [tl! add]
 ```
 
-Finally, ensure the `rr` binary is executable and build your Sail images:
+Cuối cùng, hãy đảm bảo binary `rr` có quyền thực thi rồi build các Sail image:
 
 ```shell
 chmod +x ./rr
@@ -194,7 +194,7 @@ chmod +x ./rr
 <a name="swoole"></a>
 ### Swoole
 
-If you plan to use the Swoole application server to serve your Laravel Octane application, you must install the Swoole PHP extension. Typically, this can be done via PECL:
+Nếu dự định dùng Swoole application server để phục vụ ứng dụng Laravel Octane, bạn phải cài đặt PHP extension Swoole. Thông thường, việc này có thể thực hiện qua PECL:
 
 ```shell
 pecl install swoole
@@ -203,23 +203,23 @@ pecl install swoole
 <a name="openswoole"></a>
 #### Open Swoole
 
-If you want to use the Open Swoole application server to serve your Laravel Octane application, you must install the Open Swoole PHP extension. Typically, this can be done via PECL:
+Nếu muốn dùng Open Swoole application server để phục vụ ứng dụng Laravel Octane, bạn phải cài đặt PHP extension Open Swoole. Thông thường, việc này có thể thực hiện qua PECL:
 
 ```shell
 pecl install openswoole
 ```
 
-Using Laravel Octane with Open Swoole grants the same functionality provided by Swoole, such as concurrent tasks, ticks, and intervals.
+Sử dụng Laravel Octane với Open Swoole cung cấp cùng các chức năng như Swoole, chẳng hạn concurrent task, tick và interval.
 
 <a name="swoole-via-laravel-sail"></a>
-#### Swoole via Laravel Sail
+#### Swoole qua Laravel Sail
 
 > [!WARNING]
-> Before serving an Octane application via Sail, ensure you have the latest version of Laravel Sail and execute `./vendor/bin/sail build --no-cache` within your application's root directory.
+> Trước khi phục vụ ứng dụng Octane qua Sail, hãy đảm bảo bạn đang dùng phiên bản Laravel Sail mới nhất và chạy `./vendor/bin/sail build --no-cache` trong thư mục gốc của ứng dụng.
 
-Alternatively, you may develop your Swoole based Octane application using [Laravel Sail](/docs/{{version}}/sail), the official Docker based development environment for Laravel. Laravel Sail includes the Swoole extension by default. However, you will still need to adjust the `docker-compose.yml` file used by Sail.
+Ngoài ra, bạn có thể phát triển ứng dụng Octane dựa trên Swoole bằng [Laravel Sail](/docs/{{version}}/sail), môi trường phát triển dựa trên Docker chính thức của Laravel. Laravel Sail mặc định đã bao gồm extension Swoole. Tuy nhiên, bạn vẫn cần điều chỉnh file `docker-compose.yml` mà Sail sử dụng.
 
-To get started, add a `SUPERVISOR_PHP_COMMAND` environment variable to the `laravel.test` service definition in your application's `docker-compose.yml` file. This environment variable will contain the command that Sail will use to serve your application using Octane instead of the PHP development server:
+Để bắt đầu, hãy thêm biến môi trường `SUPERVISOR_PHP_COMMAND` vào định nghĩa service `laravel.test` trong file `docker-compose.yml` của ứng dụng. Biến này chứa lệnh mà Sail sẽ dùng để phục vụ ứng dụng bằng Octane thay cho PHP development server:
 
 ```yaml
 services:
@@ -228,16 +228,16 @@ services:
       SUPERVISOR_PHP_COMMAND: "/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --server=swoole --host=0.0.0.0 --port='${APP_PORT:-80}'" # [tl! add]
 ```
 
-Finally, build your Sail images:
+Cuối cùng, hãy build các Sail image:
 
 ```shell
 ./vendor/bin/sail build --no-cache
 ```
 
 <a name="swoole-configuration"></a>
-#### Swoole Configuration
+#### Cấu hình Swoole
 
-Swoole supports a few additional configuration options that you may add to your `octane` configuration file if necessary. Because they rarely need to be modified, these options are not included in the default configuration file:
+Swoole hỗ trợ một số tùy chọn cấu hình bổ sung mà bạn có thể thêm vào file cấu hình `octane` khi cần. Vì hiếm khi cần thay đổi, các tùy chọn này không được đưa vào file cấu hình mặc định:
 
 ```php
 'swoole' => [
@@ -249,20 +249,20 @@ Swoole supports a few additional configuration options that you may add to your 
 ```
 
 <a name="serving-your-application"></a>
-## Serving Your Application
+## Phục vụ ứng dụng
 
-The Octane server can be started via the `octane:start` Artisan command. By default, this command will utilize the server specified by the `server` configuration option of your application's `octane` configuration file:
+Bạn có thể khởi động Octane server bằng lệnh Artisan `octane:start`. Theo mặc định, lệnh này sử dụng server được chỉ định bởi option cấu hình `server` trong file cấu hình `octane` của ứng dụng:
 
 ```shell
 php artisan octane:start
 ```
 
-By default, Octane will start the server on port 8000, so you may access your application in a web browser via `http://localhost:8000`.
+Theo mặc định, Octane khởi động server trên cổng 8000, vì vậy bạn có thể truy cập ứng dụng bằng trình duyệt tại `http://localhost:8000`.
 
 <a name="keeping-octane-running-in-production"></a>
-#### Keeping Octane Running in Production
+#### Duy trì Octane hoạt động trong môi trường production
 
-If you are deploying your Octane application to production, you should use a process monitor such as Supervisor to ensure the Octane server stays running. A sample Supervisor configuration file for Octane might look like the following:
+Nếu bạn triển khai ứng dụng Octane lên môi trường production, bạn nên sử dụng một trình giám sát tiến trình như Supervisor để đảm bảo Octane server luôn hoạt động. Một file cấu hình Supervisor mẫu cho Octane có thể như sau:
 
 ```ini
 [program:octane]
@@ -277,23 +277,23 @@ stopwaitsecs=3600
 ```
 
 <a name="serving-your-application-via-https"></a>
-### Serving Your Application via HTTPS
+### Phục vụ ứng dụng qua HTTPS
 
-By default, applications running via Octane generate links prefixed with `http://`. The `OCTANE_HTTPS` environment variable, used within your application's `config/octane.php` configuration file, can be set to `true` when serving your application via HTTPS. When this configuration value is set to `true`, Octane will instruct Laravel to prefix all generated links with `https://`:
+Theo mặc định, các ứng dụng chạy qua Octane tạo liên kết có tiền tố `http://`. Biến môi trường `OCTANE_HTTPS`, được sử dụng trong file cấu hình `config/octane.php` của ứng dụng, có thể được đặt thành `true` khi phục vụ ứng dụng qua HTTPS. Khi giá trị cấu hình này được đặt thành `true`, Octane sẽ yêu cầu Laravel thêm tiền tố `https://` vào tất cả liên kết được tạo:
 
 ```php
 'https' => env('OCTANE_HTTPS', false),
 ```
 
 <a name="serving-your-application-via-nginx"></a>
-### Serving Your Application via Nginx
+### Phục vụ ứng dụng qua Nginx
 
 > [!NOTE]
-> If you aren't quite ready to manage your own server configuration or aren't comfortable configuring all of the various services needed to run a robust Laravel Octane application, check out [Laravel Cloud](https://cloud.laravel.com), which offers fully-managed Laravel Octane support.
+> Nếu bạn chưa sẵn sàng tự quản lý cấu hình server hoặc chưa quen với việc cấu hình tất cả các dịch vụ cần thiết để vận hành một ứng dụng Laravel Octane mạnh mẽ, hãy tham khảo [Laravel Cloud](https://cloud.laravel.com), nền tảng cung cấp hỗ trợ Laravel Octane được quản lý hoàn toàn.
 
-In production environments, you should serve your Octane application behind a traditional web server such as Nginx or Apache. Doing so will allow the web server to serve your static assets such as images and stylesheets, as well as manage your SSL certificate termination.
+Trong môi trường production, bạn nên phục vụ ứng dụng Octane phía sau một web server truyền thống như Nginx hoặc Apache. Cách này cho phép web server phục vụ các tài nguyên tĩnh như hình ảnh và stylesheet, đồng thời xử lý việc kết thúc kết nối SSL (SSL termination).
 
-In the Nginx configuration example below, Nginx will serve the site's static assets and proxy requests to the Octane server that is running on port 8000:
+Trong ví dụ cấu hình Nginx bên dưới, Nginx sẽ phục vụ các tài nguyên tĩnh của trang web và proxy các request đến Octane server đang chạy trên cổng 8000:
 
 ```nginx
 map $http_upgrade $connection_upgrade {
@@ -350,100 +350,100 @@ server {
 ```
 
 <a name="watching-for-file-changes"></a>
-### Watching for File Changes
+### Theo dõi thay đổi file
 
-Since your application is loaded in memory once when the Octane server starts, any changes to your application's files will not be reflected when you refresh your browser. For example, route definitions added to your `routes/web.php` file will not be reflected until the server is restarted. For convenience, you may use the `--watch` flag to instruct Octane to automatically restart the server on any file changes within your application:
+Vì ứng dụng được nạp vào bộ nhớ một lần khi Octane server khởi động, mọi thay đổi đối với các file của ứng dụng sẽ không được phản ánh khi bạn refresh trình duyệt. Ví dụ, các định nghĩa route được thêm vào file `routes/web.php` sẽ không có hiệu lực cho đến khi server được khởi động lại. Để thuận tiện, bạn có thể sử dụng cờ `--watch` để yêu cầu Octane tự động khởi động lại server khi có bất kỳ thay đổi file nào trong ứng dụng:
 
 ```shell
 php artisan octane:start --watch
 ```
 
-Before using this feature, you should ensure that [Node](https://nodejs.org) is installed within your local development environment. In addition, you should install the [Chokidar](https://github.com/paulmillr/chokidar) file-watching library within your project:
+Trước khi sử dụng tính năng này, bạn nên đảm bảo [Node](https://nodejs.org) đã được cài đặt trong môi trường phát triển local. Ngoài ra, bạn nên cài đặt thư viện theo dõi file [Chokidar](https://github.com/paulmillr/chokidar) trong project:
 
 ```shell
 npm install --save-dev chokidar
 ```
 
-You may configure the directories and files that should be watched using the `watch` configuration option within your application's `config/octane.php` configuration file.
+Bạn có thể cấu hình các thư mục và file cần theo dõi bằng option cấu hình `watch` trong file cấu hình `config/octane.php` của ứng dụng.
 
 <a name="specifying-the-worker-count"></a>
-### Specifying the Worker Count
+### Chỉ định số lượng worker
 
-By default, Octane will start an application request worker for each CPU core provided by your machine. These workers will then be used to serve incoming HTTP requests as they enter your application. You may manually specify how many workers you would like to start using the `--workers` option when invoking the `octane:start` command:
+Theo mặc định, Octane sẽ khởi động một application request worker cho mỗi CPU core trên máy của bạn. Các worker này sau đó được sử dụng để phục vụ các HTTP request đi vào ứng dụng. Bạn có thể chỉ định thủ công số lượng worker muốn khởi động bằng option `--workers` khi gọi lệnh `octane:start`:
 
 ```shell
 php artisan octane:start --workers=4
 ```
 
-If you are using the Swoole application server, you may also specify how many ["task workers"](#concurrent-tasks) you wish to start:
+Nếu đang sử dụng Swoole application server, bạn cũng có thể chỉ định số lượng ["task worker"](#concurrent-tasks) muốn khởi động:
 
 ```shell
 php artisan octane:start --workers=4 --task-workers=6
 ```
 
 <a name="specifying-the-max-request-count"></a>
-### Specifying the Max Request Count
+### Chỉ định số lượng request tối đa
 
-To help prevent stray memory leaks, Octane gracefully restarts any worker once it has handled 500 requests. To adjust this number, you may use the `--max-requests` option:
+Để giúp ngăn chặn các memory leak ngoài ý muốn, Octane sẽ khởi động lại worker một cách an toàn sau khi worker đó xử lý 500 request. Để điều chỉnh con số này, bạn có thể sử dụng option `--max-requests`:
 
 ```shell
 php artisan octane:start --max-requests=250
 ```
 
 <a name="specifying-the-max-execution-time"></a>
-### Specifying the Max Execution Time
+### Chỉ định thời gian thực thi tối đa
 
-By default, Laravel Octane sets a maximum execution time of 30 seconds for incoming requests via the `max_execution_time` option in your application's `config/octane.php` configuration file:
+Theo mặc định, Laravel Octane đặt thời gian thực thi tối đa là 30 giây cho các request đến thông qua option `max_execution_time` trong file cấu hình `config/octane.php` của ứng dụng:
 
 ```php
 'max_execution_time' => 30,
 ```
 
-This setting defines the maximum number of seconds that an incoming request is allowed to execute before being terminated. Setting this value to `0` will disable the execution time limit entirely. This configuration option is particularly useful for applications that handle long-running requests, such as file uploads, data processing, or API calls to external services.
+Thiết lập này xác định số giây tối đa mà một request đến được phép thực thi trước khi bị chấm dứt. Đặt giá trị này thành `0` sẽ vô hiệu hóa hoàn toàn giới hạn thời gian thực thi. Option cấu hình này đặc biệt hữu ích cho các ứng dụng xử lý request chạy lâu, chẳng hạn như upload file, xử lý dữ liệu hoặc gọi API đến các dịch vụ bên ngoài.
 
 > [!WARNING]
-> When you modify the `max_execution_time` configuration, you must restart the Octane server for the changes to take effect.
+> Khi thay đổi cấu hình `max_execution_time`, bạn phải khởi động lại Octane server để thay đổi có hiệu lực.
 
 <a name="reloading-the-workers"></a>
-### Reloading the Workers
+### Tải lại worker
 
-You may gracefully restart the Octane server's application workers using the `octane:reload` command. Typically, this should be done after deployment so that your newly deployed code is loaded into memory and is used to serve to subsequent requests:
+Bạn có thể khởi động lại an toàn các application worker của Octane server bằng lệnh `octane:reload`. Thông thường, thao tác này nên được thực hiện sau khi deploy để code vừa triển khai được nạp vào bộ nhớ và được sử dụng để phục vụ các request tiếp theo:
 
 ```shell
 php artisan octane:reload
 ```
 
 <a name="stopping-the-server"></a>
-### Stopping the Server
+### Dừng server
 
-You may stop the Octane server using the `octane:stop` Artisan command:
+Bạn có thể dừng Octane server bằng lệnh Artisan `octane:stop`:
 
 ```shell
 php artisan octane:stop
 ```
 
 <a name="checking-the-server-status"></a>
-#### Checking the Server Status
+#### Kiểm tra trạng thái server
 
-You may check the current status of the Octane server using the `octane:status` Artisan command:
+Bạn có thể kiểm tra trạng thái hiện tại của Octane server bằng lệnh Artisan `octane:status`:
 
 ```shell
 php artisan octane:status
 ```
 
 <a name="dependency-injection-and-octane"></a>
-## Dependency Injection and Octane
+## Dependency Injection và Octane
 
-Since Octane boots your application once and keeps it in memory while serving requests, there are a few caveats you should consider while building your application. For example, the `register` and `boot` methods of your application's service providers will only be executed once when the request worker initially boots. On subsequent requests, the same application instance will be reused.
+Vì Octane boot ứng dụng một lần và giữ ứng dụng trong bộ nhớ trong khi phục vụ các request, có một số điểm bạn cần lưu ý khi xây dựng ứng dụng. Ví dụ, các method `register` và `boot` của service provider trong ứng dụng chỉ được thực thi một lần khi request worker khởi động ban đầu. Ở các request tiếp theo, cùng một application instance sẽ được tái sử dụng.
 
-In light of this, you should take special care when injecting the application service container or request into any object's constructor. By doing so, that object may have a stale version of the container or request on subsequent requests.
+Vì vậy, bạn cần đặc biệt cẩn thận khi inject application service container hoặc request vào constructor của bất kỳ object nào. Nếu làm như vậy, object đó có thể giữ một phiên bản container hoặc request đã cũ ở các request tiếp theo.
 
-Octane will automatically handle resetting any first-party framework state between requests. However, Octane does not always know how to reset the global state created by your application. Therefore, you should be aware of how to build your application in a way that is Octane friendly. Below, we will discuss the most common situations that may cause problems while using Octane.
+Octane sẽ tự động xử lý việc reset mọi state của framework first-party giữa các request. Tuy nhiên, Octane không phải lúc nào cũng biết cách reset global state do ứng dụng của bạn tạo ra. Vì vậy, bạn cần biết cách xây dựng ứng dụng thân thiện với Octane. Bên dưới, chúng ta sẽ thảo luận những tình huống phổ biến nhất có thể gây vấn đề khi sử dụng Octane.
 
 <a name="container-injection"></a>
-### Container Injection
+### Inject container
 
-In general, you should avoid injecting the application service container or HTTP request instance into the constructors of other objects. For example, the following binding injects the entire application service container into an object that is bound as a singleton:
+Nhìn chung, bạn nên tránh inject application service container hoặc HTTP request instance vào constructor của các object khác. Ví dụ, binding sau inject toàn bộ application service container vào một object được bind dưới dạng singleton:
 
 ```php
 use App\Service;
@@ -460,9 +460,9 @@ public function register(): void
 }
 ```
 
-In this example, if the `Service` instance is resolved during the application boot process, the container will be injected into the service and that same container will be held by the `Service` instance on subsequent requests. This **may** not be a problem for your particular application; however, it can lead to the container unexpectedly missing bindings that were added later in the boot cycle or by a subsequent request.
+Trong ví dụ này, nếu instance `Service` được resolve trong quá trình boot ứng dụng, container sẽ được inject vào service và chính container đó sẽ được instance `Service` giữ lại ở các request tiếp theo. Điều này **có thể** không gây vấn đề cho ứng dụng cụ thể của bạn; tuy nhiên, nó có thể khiến container bất ngờ thiếu các binding được thêm vào sau đó trong chu kỳ boot hoặc bởi một request tiếp theo.
 
-As a work-around, you could either stop registering the binding as a singleton, or you could inject a container resolver closure into the service that always resolves the current container instance:
+Để khắc phục, bạn có thể ngừng đăng ký binding dưới dạng singleton, hoặc inject một container resolver closure vào service để closure này luôn resolve container instance hiện tại:
 
 ```php
 use App\Service;
@@ -478,12 +478,12 @@ $this->app->singleton(Service::class, function () {
 });
 ```
 
-The global `app` helper and the `Container::getInstance()` method will always return the latest version of the application container.
+Global helper `app` và method `Container::getInstance()` sẽ luôn trả về phiên bản mới nhất của application container.
 
 <a name="request-injection"></a>
-### Request Injection
+### Inject request
 
-In general, you should avoid injecting the application service container or HTTP request instance into the constructors of other objects. For example, the following binding injects the entire request instance into an object that is bound as a singleton:
+Nhìn chung, bạn nên tránh inject application service container hoặc HTTP request instance vào constructor của các object khác. Ví dụ, binding sau inject toàn bộ request instance vào một object được bind dưới dạng singleton:
 
 ```php
 use App\Service;
@@ -500,9 +500,9 @@ public function register(): void
 }
 ```
 
-In this example, if the `Service` instance is resolved during the application boot process, the HTTP request will be injected into the service and that same request will be held by the `Service` instance on subsequent requests. Therefore, all headers, input, and query string data will be incorrect, as well as all other request data.
+Trong ví dụ này, nếu instance `Service` được resolve trong quá trình boot ứng dụng, HTTP request sẽ được inject vào service và chính request đó sẽ được instance `Service` giữ lại ở các request tiếp theo. Do đó, toàn bộ header, input và dữ liệu query string cũng như mọi dữ liệu request khác đều sẽ không chính xác.
 
-As a work-around, you could either stop registering the binding as a singleton, or you could inject a request resolver closure into the service that always resolves the current request instance. Or, the most recommended approach is simply to pass the specific request information your object needs to one of the object's methods at runtime:
+Để khắc phục, bạn có thể ngừng đăng ký binding dưới dạng singleton, hoặc inject một request resolver closure vào service để luôn resolve request instance hiện tại. Hoặc, cách được khuyến nghị nhất là chỉ truyền thông tin request cụ thể mà object cần vào một method của object tại runtime:
 
 ```php
 use App\Service;
@@ -521,15 +521,15 @@ $this->app->singleton(Service::class, function (Application $app) {
 $service->method($request->input('name'));
 ```
 
-The global `request` helper will always return the request the application is currently handling and is therefore safe to use within your application.
+Global helper `request` sẽ luôn trả về request mà ứng dụng hiện đang xử lý, vì vậy có thể sử dụng an toàn trong ứng dụng.
 
 > [!WARNING]
-> It is acceptable to type-hint the `Illuminate\Http\Request` instance on your controller methods and route closures.
+> Có thể type-hint instance `Illuminate\Http\Request` trên các controller method và route closure của bạn.
 
 <a name="configuration-repository-injection"></a>
-### Configuration Repository Injection
+### Inject configuration repository
 
-In general, you should avoid injecting the configuration repository instance into the constructors of other objects. For example, the following binding injects the configuration repository into an object that is bound as a singleton:
+Nhìn chung, bạn nên tránh inject configuration repository instance vào constructor của các object khác. Ví dụ, binding sau inject configuration repository vào một object được bind dưới dạng singleton:
 
 ```php
 use App\Service;
@@ -546,9 +546,9 @@ public function register(): void
 }
 ```
 
-In this example, if the configuration values change between requests, that service will not have access to the new values because it's depending on the original repository instance.
+Trong ví dụ này, nếu các giá trị cấu hình thay đổi giữa các request, service đó sẽ không truy cập được các giá trị mới vì nó đang phụ thuộc vào repository instance ban đầu.
 
-As a work-around, you could either stop registering the binding as a singleton, or you could inject a configuration repository resolver closure to the class:
+Để khắc phục, bạn có thể ngừng đăng ký binding dưới dạng singleton, hoặc inject một configuration repository resolver closure vào class:
 
 ```php
 use App\Service;
@@ -564,12 +564,12 @@ $this->app->singleton(Service::class, function () {
 });
 ```
 
-The global `config` will always return the latest version of the configuration repository and is therefore safe to use within your application.
+Global helper `config` sẽ luôn trả về phiên bản mới nhất của configuration repository, vì vậy có thể sử dụng an toàn trong ứng dụng.
 
 <a name="managing-memory-leaks"></a>
-### Managing Memory Leaks
+### Quản lý memory leak
 
-Remember, Octane keeps your application in memory between requests; therefore, adding data to a statically maintained array will result in a memory leak. For example, the following controller has a memory leak since each request to the application will continue to add data to the static `$data` array:
+Hãy nhớ rằng Octane giữ ứng dụng trong bộ nhớ giữa các request; do đó, việc thêm dữ liệu vào một mảng được duy trì ở dạng static sẽ gây memory leak. Ví dụ, controller sau có memory leak vì mỗi request đến ứng dụng sẽ tiếp tục thêm dữ liệu vào mảng static `$data`:
 
 ```php
 use App\Service;
@@ -589,15 +589,15 @@ public function index(Request $request): array
 }
 ```
 
-While building your application, you should take special care to avoid creating these types of memory leaks. It is recommended that you monitor your application's memory usage during local development to ensure you are not introducing new memory leaks into your application.
+Khi xây dựng ứng dụng, bạn cần đặc biệt cẩn thận để tránh tạo ra các dạng memory leak này. Bạn nên theo dõi mức sử dụng bộ nhớ của ứng dụng trong quá trình phát triển local để đảm bảo không đưa thêm memory leak mới vào ứng dụng.
 
 <a name="concurrent-tasks"></a>
-## Concurrent Tasks
+## Tác vụ đồng thời
 
 > [!WARNING]
-> This feature requires [Swoole](#swoole).
+> Tính năng này yêu cầu [Swoole](#swoole).
 
-When using Swoole, you may execute operations concurrently via light-weight background tasks. You may accomplish this using Octane's `concurrently` method. You may combine this method with PHP array destructuring to retrieve the results of each operation:
+Khi sử dụng Swoole, bạn có thể thực thi đồng thời các operation thông qua các background task nhẹ. Bạn có thể thực hiện việc này bằng method `concurrently` của Octane. Có thể kết hợp method này với cú pháp destructuring mảng của PHP để lấy kết quả của từng operation:
 
 ```php
 use App\Models\User;
@@ -610,30 +610,30 @@ use Laravel\Octane\Facades\Octane;
 ]);
 ```
 
-Concurrent tasks processed by Octane utilize Swoole's "task workers", and execute within an entirely different process than the incoming request. The amount of workers available to process concurrent tasks is determined by the `--task-workers` directive on the `octane:start` command:
+Các tác vụ đồng thời do Octane xử lý sử dụng "task worker" của Swoole và thực thi trong một process hoàn toàn khác với request đến. Số lượng worker khả dụng để xử lý tác vụ đồng thời được xác định bởi directive `--task-workers` trên lệnh `octane:start`:
 
 ```shell
 php artisan octane:start --workers=4 --task-workers=6
 ```
 
-When invoking the `concurrently` method, you should not provide more than 1024 tasks due to limitations imposed by Swoole's task system.
+Khi gọi method `concurrently`, bạn không nên cung cấp nhiều hơn 1024 task do các giới hạn của hệ thống task của Swoole.
 
 <a name="ticks-and-intervals"></a>
-## Ticks and Intervals
+## Tick và interval
 
 > [!WARNING]
-> This feature requires [Swoole](#swoole).
+> Tính năng này yêu cầu [Swoole](#swoole).
 
-When using Swoole, you may register "tick" operations that will be executed every specified number of seconds. You may register "tick" callbacks via the `tick` method. The first argument provided to the `tick` method should be a string that represents the name of the ticker. The second argument should be a callable that will be invoked at the specified interval.
+Khi sử dụng Swoole, bạn có thể đăng ký các operation "tick" được thực thi sau mỗi số giây xác định. Bạn có thể đăng ký callback "tick" thông qua method `tick`. Đối số đầu tiên truyền vào method `tick` phải là một chuỗi đại diện cho tên của ticker. Đối số thứ hai phải là một callable được gọi theo interval đã chỉ định.
 
-In this example, we will register a closure to be invoked every 10 seconds. Typically, the `tick` method should be called within the `boot` method of one of your application's service providers:
+Trong ví dụ này, chúng ta sẽ đăng ký một closure được gọi mỗi 10 giây. Thông thường, method `tick` nên được gọi trong method `boot` của một trong các service provider của ứng dụng:
 
 ```php
 Octane::tick('simple-ticker', fn () => ray('Ticking...'))
     ->seconds(10);
 ```
 
-Using the `immediate` method, you may instruct Octane to immediately invoke the tick callback when the Octane server initially boots, and every N seconds thereafter:
+Bằng method `immediate`, bạn có thể yêu cầu Octane gọi tick callback ngay lập tức khi Octane server khởi động ban đầu và sau đó tiếp tục gọi sau mỗi N giây:
 
 ```php
 Octane::tick('simple-ticker', fn () => ray('Ticking...'))
@@ -642,26 +642,26 @@ Octane::tick('simple-ticker', fn () => ray('Ticking...'))
 ```
 
 <a name="the-octane-cache"></a>
-## The Octane Cache
+## Octane Cache
 
 > [!WARNING]
-> This feature requires [Swoole](#swoole).
+> Tính năng này yêu cầu [Swoole](#swoole).
 
-When using Swoole, you may leverage the Octane cache driver, which provides read and write speeds of up to 2 million operations per second. Therefore, this cache driver is an excellent choice for applications that need extreme read / write speeds from their caching layer.
+Khi sử dụng Swoole, bạn có thể tận dụng Octane cache driver, cung cấp tốc độ đọc và ghi lên đến 2 triệu operation mỗi giây. Vì vậy, cache driver này là lựa chọn rất phù hợp cho các ứng dụng cần tốc độ đọc / ghi cực cao từ tầng cache.
 
-This cache driver is powered by [Swoole tables](https://www.swoole.co.uk/docs/modules/swoole-table). All data stored in the cache is available to all workers on the server. However, the cached data will be flushed when the server is restarted:
+Cache driver này được xây dựng trên [Swoole table](https://www.swoole.co.uk/docs/modules/swoole-table). Toàn bộ dữ liệu lưu trong cache đều khả dụng cho tất cả worker trên server. Tuy nhiên, dữ liệu cache sẽ bị xóa khi server được khởi động lại:
 
 ```php
 Cache::store('octane')->put('framework', 'Laravel', 30);
 ```
 
 > [!NOTE]
-> The maximum number of entries allowed in the Octane cache may be defined in your application's `octane` configuration file.
+> Số lượng entry tối đa được phép trong Octane cache có thể được định nghĩa trong file cấu hình `octane` của ứng dụng.
 
 <a name="cache-intervals"></a>
-### Cache Intervals
+### Cache theo interval
 
-In addition to the typical methods provided by Laravel's cache system, the Octane cache driver features interval based caches. These caches are automatically refreshed at the specified interval and should be registered within the `boot` method of one of your application's service providers. For example, the following cache will be refreshed every five seconds:
+Ngoài các method thông thường do hệ thống cache của Laravel cung cấp, Octane cache driver còn hỗ trợ cache dựa trên interval. Các cache này tự động được refresh theo interval đã chỉ định và nên được đăng ký trong method `boot` của một trong các service provider của ứng dụng. Ví dụ, cache sau sẽ được refresh mỗi năm giây:
 
 ```php
 use Illuminate\Support\Str;
@@ -672,14 +672,14 @@ Cache::store('octane')->interval('random', function () {
 ```
 
 <a name="tables"></a>
-## Tables
+## Table
 
 > [!WARNING]
-> This feature requires [Swoole](#swoole).
+> Tính năng này yêu cầu [Swoole](#swoole).
 
-When using Swoole, you may define and interact with your own arbitrary [Swoole tables](https://www.swoole.co.uk/docs/modules/swoole-table). Swoole tables provide extreme performance throughput and the data in these tables can be accessed by all workers on the server. However, the data within them will be lost when the server is restarted.
+Khi sử dụng Swoole, bạn có thể định nghĩa và tương tác với các [Swoole table](https://www.swoole.co.uk/docs/modules/swoole-table) tùy ý của riêng mình. Swoole table cung cấp throughput hiệu năng cực cao và dữ liệu trong các table này có thể được truy cập bởi tất cả worker trên server. Tuy nhiên, dữ liệu bên trong sẽ bị mất khi server được khởi động lại.
 
-Tables should be defined within the `tables` configuration array of your application's `octane` configuration file. An example table that allows a maximum of 1000 rows is already configured for you. The maximum size of string columns may be configured by specifying the column size after the column type as seen below:
+Các table nên được định nghĩa trong mảng cấu hình `tables` của file cấu hình `octane` trong ứng dụng. Một table mẫu cho phép tối đa 1000 row đã được cấu hình sẵn. Kích thước tối đa của các column kiểu string có thể được cấu hình bằng cách chỉ định kích thước column sau kiểu column như bên dưới:
 
 ```php
 'tables' => [
@@ -690,7 +690,7 @@ Tables should be defined within the `tables` configuration array of your applica
 ],
 ```
 
-To access a table, you may use the `Octane::table` method:
+Để truy cập một table, bạn có thể sử dụng method `Octane::table`:
 
 ```php
 use Laravel\Octane\Facades\Octane;
@@ -704,7 +704,9 @@ return Octane::table('example')->get('uuid');
 ```
 
 > [!WARNING]
-> The column types supported by Swoole tables are: `string`, `int`, and `float`.
+> Các kiểu column được Swoole table hỗ trợ gồm: `string`, `int` và `float`.
+
+---
 
 ## Tài liệu chính thức
 

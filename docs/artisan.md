@@ -1,42 +1,42 @@
 # Artisan Console
 
-- [Introduction](#introduction)
-    - [Tinker (REPL)](#tinker)
-- [Writing Commands](#writing-commands)
-    - [Generating Commands](#generating-commands)
-    - [Command Structure](#command-structure)
-    - [Closure Commands](#closure-commands)
-    - [Isolatable Commands](#isolatable-commands)
-- [Defining Input Expectations](#defining-input-expectations)
-    - [Arguments](#arguments)
-    - [Options](#options)
-    - [Input Arrays](#input-arrays)
-    - [Input Descriptions](#input-descriptions)
-    - [Prompting for Missing Input](#prompting-for-missing-input)
-- [Command I/O](#command-io)
-    - [Retrieving Input](#retrieving-input)
-    - [Prompting for Input](#prompting-for-input)
-    - [Writing Output](#writing-output)
-- [Registering Commands](#registering-commands)
-- [Programmatically Executing Commands](#programmatically-executing-commands)
-    - [Calling Commands From Other Commands](#calling-commands-from-other-commands)
-- [Signal Handling](#signal-handling)
-- [The Dev Command](#the-dev-command)
-    - [Customizing Dev Processes](#customizing-dev-processes)
-    - [Filtering Dev Processes](#filtering-dev-processes)
-- [Stub Customization](#stub-customization)
-- [Events](#events)
+- [Giới thiệu](#introduction)
+- [Tinker (REPL)](#tinker)
+- [Viết command](#writing-commands)
+    - [Tạo command](#generating-commands)
+    - [Cấu trúc command](#command-structure)
+    - [Closure command](#closure-commands)
+    - [Command có thể cô lập](#isolatable-commands)
+- [Định nghĩa input mong đợi](#defining-input-expectations)
+    - [Argument](#arguments)
+    - [Option](#options)
+    - [Mảng input](#input-arrays)
+    - [Mô tả input](#input-descriptions)
+    - [Prompt khi thiếu input](#prompting-for-missing-input)
+- [I/O của command](#command-io)
+    - [Lấy input](#retrieving-input)
+    - [Prompt input](#prompting-for-input)
+    - [Ghi output](#writing-output)
+- [Đăng ký command](#registering-commands)
+- [Thực thi command bằng code](#programmatically-executing-commands)
+    - [Gọi command từ command khác](#calling-commands-from-other-commands)
+- [Xử lý signal](#signal-handling)
+- [Dev Command](#the-dev-command)
+    - [Tùy chỉnh process phát triển](#customizing-dev-processes)
+    - [Lọc process phát triển](#filtering-dev-processes)
+- [Tùy chỉnh stub](#stub-customization)
+- [Event](#events)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Artisan is the command line interface included with Laravel. Artisan exists at the root of your application as the `artisan` script and provides a number of helpful commands that can assist you while you build your application. To view a list of all available Artisan commands, you may use the `list` command:
+Artisan là command-line interface đi kèm Laravel. Artisan nằm ở thư mục gốc của ứng dụng dưới dạng script `artisan` và cung cấp nhiều command hữu ích hỗ trợ bạn trong quá trình xây dựng ứng dụng. Để xem danh sách tất cả Artisan command hiện có, bạn có thể sử dụng command `list`:
 
 ```shell
 php artisan list
 ```
 
-Every command also includes a "help" screen which displays and describes the command's available arguments and options. To view a help screen, precede the name of the command with `help`:
+Mỗi command cũng có màn hình "help" hiển thị và mô tả các argument và option hiện có của command. Để xem màn hình trợ giúp, hãy đặt `help` trước tên command:
 
 ```shell
 php artisan help migrate
@@ -45,7 +45,7 @@ php artisan help migrate
 <a name="laravel-sail"></a>
 #### Laravel Sail
 
-If you are using [Laravel Sail](/docs/{{version}}/sail) as your local development environment, remember to use the `sail` command line to invoke Artisan commands. Sail will execute your Artisan commands within your application's Docker containers:
+Nếu bạn sử dụng [Laravel Sail](/docs/{{version}}/sail) làm môi trường phát triển local, hãy nhớ dùng command line `sail` để gọi Artisan command. Sail sẽ thực thi Artisan command bên trong các Docker container của ứng dụng:
 
 ```shell
 ./vendor/bin/sail artisan list
@@ -54,42 +54,42 @@ If you are using [Laravel Sail](/docs/{{version}}/sail) as your local developmen
 <a name="tinker"></a>
 ### Tinker (REPL)
 
-[Laravel Tinker](https://github.com/laravel/tinker) is a powerful REPL for the Laravel framework, powered by the [PsySH](https://github.com/bobthecow/psysh) package.
+[Laravel Tinker](https://github.com/laravel/tinker) là một REPL mạnh mẽ cho Laravel framework, được xây dựng trên package [PsySH](https://github.com/bobthecow/psysh).
 
 <a name="installation"></a>
-#### Installation
+#### Cài đặt
 
-All Laravel applications include Tinker by default. However, you may install Tinker using Composer if you have previously removed it from your application:
+Mọi ứng dụng Laravel đều bao gồm Tinker theo mặc định. Tuy nhiên, nếu trước đó đã gỡ Tinker khỏi ứng dụng, bạn có thể cài lại bằng Composer:
 
 ```shell
 composer require laravel/tinker
 ```
 
 > [!NOTE]
-> Looking for hot reloading, multiline code editing, and autocompletion when interacting with your Laravel application? Check out [Tinkerwell](https://tinkerwell.app)!
+> Bạn đang tìm hot reloading, chỉnh sửa code nhiều dòng và tự động hoàn thành khi tương tác với ứng dụng Laravel? Hãy xem [Tinkerwell](https://tinkerwell.app)!
 
 <a name="usage"></a>
-#### Usage
+#### Cách sử dụng
 
-Tinker allows you to interact with your entire Laravel application on the command line, including your Eloquent models, jobs, events, and more. To enter the Tinker environment, run the `tinker` Artisan command:
+Tinker cho phép bạn tương tác với toàn bộ ứng dụng Laravel qua command line, bao gồm Eloquent model, job, event và nhiều thành phần khác. Để vào môi trường Tinker, hãy chạy Artisan command `tinker`:
 
 ```shell
 php artisan tinker
 ```
 
-You can publish Tinker's configuration file using the `vendor:publish` command:
+Bạn có thể publish file cấu hình của Tinker bằng command `vendor:publish`:
 
 ```shell
 php artisan vendor:publish --provider="Laravel\Tinker\TinkerServiceProvider"
 ```
 
 > [!WARNING]
-> The `dispatch` helper function and `dispatch` method on the `Dispatchable` class depend on garbage collection to place the job on the queue. Therefore, when using Tinker, you should use `Bus::dispatch` or `Queue::push` to dispatch jobs.
+> Helper function `dispatch` và method `dispatch` trên class `Dispatchable` phụ thuộc vào garbage collection để đưa job vào queue. Vì vậy, khi sử dụng Tinker, bạn nên dùng `Bus::dispatch` hoặc `Queue::push` để dispatch job.
 
 <a name="command-allow-list"></a>
-#### Command Allow List
+#### Danh sách command được phép
 
-Tinker utilizes an "allow" list to determine which Artisan commands are allowed to be run within its shell. By default, you may run the `clear-compiled`, `down`, `env`, `inspire`, `migrate`, `migrate:install`, `up`, and `optimize` commands. If you would like to allow more commands you may add them to the `commands` array in your `tinker.php` configuration file:
+Tinker sử dụng một danh sách "allow" để xác định Artisan command nào được phép chạy trong shell. Mặc định, bạn có thể chạy các command `clear-compiled`, `down`, `env`, `inspire`, `migrate`, `migrate:install`, `up`, và `optimize`. Nếu muốn cho phép thêm command, hãy thêm chúng vào array `commands` trong file cấu hình `tinker.php`:
 
 ```php
 'commands' => [
@@ -98,9 +98,9 @@ Tinker utilizes an "allow" list to determine which Artisan commands are allowed 
 ```
 
 <a name="classes-that-should-not-be-aliased"></a>
-#### Classes That Should Not Be Aliased
+#### Các class không nên được alias
 
-Typically, Tinker automatically aliases classes as you interact with them in Tinker. However, you may wish to never alias some classes. You may accomplish this by listing the classes in the `dont_alias` array of your `tinker.php` configuration file:
+Thông thường, Tinker tự động alias các class khi bạn tương tác với chúng. Tuy nhiên, có thể bạn muốn một số class không bao giờ được alias. Bạn có thể thực hiện điều này bằng cách liệt kê các class trong array `dont_alias` của file cấu hình `tinker.php`:
 
 ```php
 'dont_alias' => [
@@ -109,25 +109,25 @@ Typically, Tinker automatically aliases classes as you interact with them in Tin
 ```
 
 <a name="writing-commands"></a>
-## Writing Commands
+## Viết command
 
-In addition to the commands provided with Artisan, you may build your own custom commands. Commands are typically stored in the `app/Console/Commands` directory; however, you are free to choose your own storage location as long as you instruct Laravel to [scan other directories for Artisan commands](#registering-commands).
+Ngoài các command do Artisan cung cấp, bạn có thể xây dựng command tùy chỉnh của riêng mình. Command thường được lưu trong thư mục `app/Console/Commands`; tuy nhiên, bạn có thể chọn vị trí lưu trữ khác miễn là hướng dẫn Laravel [scan các thư mục khác để tìm Artisan command](#registering-commands).
 
 <a name="generating-commands"></a>
-### Generating Commands
+### Tạo command
 
-To create a new command, you may use the `make:command` Artisan command. This command will create a new command class in the `app/Console/Commands` directory. Don't worry if this directory does not exist in your application - it will be created the first time you run the `make:command` Artisan command:
+Để tạo command mới, bạn có thể sử dụng Artisan command `make:command`. Command này sẽ tạo một command class mới trong thư mục `app/Console/Commands`. Đừng lo nếu thư mục này chưa tồn tại trong ứng dụng — nó sẽ được tạo trong lần đầu bạn chạy Artisan command `make:command`:
 
 ```shell
 php artisan make:command SendEmails
 ```
 
 <a name="command-structure"></a>
-### Command Structure
+### Cấu trúc command
 
-After generating your command, you should define the command's signature and description using the `Signature` and `Description` attributes. The `Signature` attribute also allows you to define [your command's input expectations](#defining-input-expectations). The `handle` method will be called when your command is executed. You may place your command logic in this method.
+Sau khi tạo command, bạn nên định nghĩa signature và description của command bằng các attribute `Signature` và `Description`. Attribute `Signature` cũng cho phép bạn định nghĩa [input mà command mong đợi](#defining-input-expectations). Method `handle` sẽ được gọi khi command được thực thi. Bạn có thể đặt logic của command trong method này.
 
-Let's take a look at an example command. Note that we are able to request any dependencies we need via the command's `handle` method. The Laravel [service container](/docs/{{version}}/container) will automatically inject all dependencies that are type-hinted in this method's signature:
+Hãy xem một command ví dụ. Lưu ý rằng chúng ta có thể yêu cầu mọi dependency cần thiết thông qua method `handle` của command. [Service container](/docs/{{version}}/container) của Laravel sẽ tự động inject tất cả dependency được type-hint trong signature của method này:
 
 ```php
 <?php
@@ -155,12 +155,12 @@ class SendEmails extends Command
 ```
 
 > [!NOTE]
-> For greater code reuse, it is good practice to keep your console commands light and let them defer to application services to accomplish their tasks. In the example above, note that we inject a service class to do the "heavy lifting" of sending the e-mails.
+> Để tái sử dụng code tốt hơn, bạn nên giữ console command gọn nhẹ và giao phần xử lý cho các application service. Trong ví dụ trên, hãy lưu ý rằng chúng ta inject một service class để thực hiện phần xử lý chính của việc gửi email.
 
 <a name="exit-codes"></a>
-#### Exit Codes
+#### Exit code
 
-If nothing is returned from the `handle` method and the command executes successfully, the command will exit with a `0` exit code, indicating success. However, the `handle` method may optionally return an integer to manually specify the command's exit code:
+Nếu method `handle` không trả về gì và command thực thi thành công, command sẽ kết thúc với exit code `0`, biểu thị thành công. Tuy nhiên, method `handle` có thể tùy chọn trả về một số nguyên để chỉ định thủ công exit code của command:
 
 ```php
 $this->error('Something went wrong.');
@@ -168,18 +168,18 @@ $this->error('Something went wrong.');
 return 1;
 ```
 
-If you would like to "fail" the command from any method within the command, you may utilize the `fail` method. The `fail` method will immediately terminate execution of the command and return an exit code of `1`:
+Nếu muốn command "fail" từ bất kỳ method nào bên trong command, bạn có thể sử dụng method `fail`. Method `fail` sẽ lập tức kết thúc việc thực thi command và trả về exit code `1`:
 
 ```php
 $this->fail('Something went wrong.');
 ```
 
 <a name="closure-commands"></a>
-### Closure Commands
+### Closure command
 
-Closure-based commands provide an alternative to defining console commands as classes. In the same way that route closures are an alternative to controllers, think of command closures as an alternative to command classes.
+Command dựa trên closure là một lựa chọn thay thế cho việc định nghĩa console command dưới dạng class. Tương tự như route closure là lựa chọn thay thế cho controller, bạn có thể xem command closure là lựa chọn thay thế cho command class.
 
-Even though the `routes/console.php` file does not define HTTP routes, it defines console-based entry points (routes) into your application. Within this file, you may define all of your closure-based console commands using the `Artisan::command` method. The `command` method accepts two arguments: the [command signature](#defining-input-expectations) and a closure which receives the command's arguments and options:
+Mặc dù file `routes/console.php` không định nghĩa HTTP route, nó định nghĩa các entry point (route) dựa trên console vào ứng dụng. Trong file này, bạn có thể định nghĩa tất cả console command dựa trên closure bằng method `Artisan::command`. Method `command` nhận hai đối số: [command signature](#defining-input-expectations) và một closure nhận các argument và option của command:
 
 ```php
 Artisan::command('mail:send {user}', function (string $user) {
@@ -187,12 +187,12 @@ Artisan::command('mail:send {user}', function (string $user) {
 });
 ```
 
-The closure is bound to the underlying command instance, so you have full access to all of the helper methods you would typically be able to access on a full command class.
+Closure được bind vào command instance bên dưới, vì vậy bạn có toàn quyền truy cập tất cả helper method mà thông thường có thể dùng trên một command class đầy đủ.
 
 <a name="type-hinting-dependencies"></a>
-#### Type-Hinting Dependencies
+#### Type-hint dependency
 
-In addition to receiving your command's arguments and options, command closures may also type-hint additional dependencies that you would like resolved out of the [service container](/docs/{{version}}/container):
+Ngoài việc nhận argument và option của command, command closure cũng có thể type-hint các dependency bổ sung mà bạn muốn resolve từ [service container](/docs/{{version}}/container):
 
 ```php
 use App\Models\User;
@@ -205,9 +205,9 @@ Artisan::command('mail:send {user}', function (DripEmailer $drip, string $user) 
 ```
 
 <a name="closure-command-descriptions"></a>
-#### Closure Command Descriptions
+#### Mô tả closure command
 
-When defining a closure-based command, you may use the `purpose` method to add a description to the command. This description will be displayed when you run the `php artisan list` or `php artisan help` commands:
+Khi định nghĩa command dựa trên closure, bạn có thể dùng method `purpose` để thêm mô tả cho command. Mô tả này sẽ được hiển thị khi chạy các command `php artisan list` hoặc `php artisan help`:
 
 ```php
 Artisan::command('mail:send {user}', function (string $user) {
@@ -216,12 +216,12 @@ Artisan::command('mail:send {user}', function (string $user) {
 ```
 
 <a name="isolatable-commands"></a>
-### Isolatable Commands
+### Command có thể cô lập
 
 > [!WARNING]
-> To utilize this feature, your application must be using the `memcached`, `redis`, `dynamodb`, `database`, `file`, or `array` cache driver as your application's default cache driver. In addition, all servers must be communicating with the same central cache server.
+> Để sử dụng tính năng này, ứng dụng phải dùng cache driver `memcached`, `redis`, `dynamodb`, `database`, `file`, hoặc `array` làm cache driver mặc định. Ngoài ra, tất cả server phải giao tiếp với cùng một cache server trung tâm.
 
-Sometimes you may wish to ensure that only one instance of a command can run at a time. To accomplish this, you may implement the `Illuminate\Contracts\Console\Isolatable` interface on your command class:
+Đôi khi bạn muốn đảm bảo chỉ một instance của command có thể chạy tại một thời điểm. Để làm điều này, bạn có thể implement interface `Illuminate\Contracts\Console\Isolatable` trên command class:
 
 ```php
 <?php
@@ -237,13 +237,13 @@ class SendEmails extends Command implements Isolatable
 }
 ```
 
-When you mark a command as `Isolatable`, Laravel automatically makes the `--isolated` option available for the command without needing to explicitly define it in the command's options. When the command is invoked with that option, Laravel will ensure that no other instances of that command are already running. Laravel accomplishes this by attempting to acquire an atomic lock using your application's default cache driver. If other instances of the command are running, the command will not execute; however, the command will still exit with a successful exit status code:
+Khi đánh dấu một command là `Isolatable`, Laravel tự động cung cấp option `--isolated` cho command mà không cần bạn định nghĩa rõ option này. Khi command được gọi với option đó, Laravel sẽ đảm bảo không có instance nào khác của command đang chạy. Laravel thực hiện điều này bằng cách cố gắng lấy atomic lock thông qua cache driver mặc định của ứng dụng. Nếu có instance khác đang chạy, command sẽ không được thực thi; tuy nhiên, command vẫn kết thúc với exit status code thành công:
 
 ```shell
 php artisan mail:send 1 --isolated
 ```
 
-If you would like to specify the exit status code that the command should return if it is not able to execute, you may provide the desired status code via the `isolated` option:
+Nếu muốn chỉ định exit status code mà command nên trả về khi không thể thực thi, bạn có thể cung cấp status code mong muốn thông qua option `isolated`:
 
 ```shell
 php artisan mail:send 1 --isolated=12
@@ -252,7 +252,7 @@ php artisan mail:send 1 --isolated=12
 <a name="lock-id"></a>
 #### Lock ID
 
-By default, Laravel will use the command's name to generate the string key that is used to acquire the atomic lock in your application's cache. However, you may customize this key by defining an `isolatableId` method on your Artisan command class, allowing you to integrate the command's arguments or options into the key:
+Mặc định, Laravel dùng tên command để tạo string key dùng khi lấy atomic lock trong cache của ứng dụng. Tuy nhiên, bạn có thể tùy chỉnh key này bằng cách định nghĩa method `isolatableId` trên Artisan command class, cho phép đưa argument hoặc option của command vào key:
 
 ```php
 /**
@@ -265,9 +265,9 @@ public function isolatableId(): string
 ```
 
 <a name="lock-expiration-time"></a>
-#### Lock Expiration Time
+#### Thời gian hết hạn lock
 
-By default, isolation locks expire after the command is finished. Or, if the command is interrupted and unable to finish, the lock will expire after one hour. However, you may adjust the lock expiration time by defining an `isolationLockExpiresAt` method on your command:
+Mặc định, isolation lock hết hạn sau khi command hoàn tất. Hoặc nếu command bị gián đoạn và không thể hoàn tất, lock sẽ hết hạn sau một giờ. Tuy nhiên, bạn có thể điều chỉnh thời gian hết hạn bằng cách định nghĩa method `isolationLockExpiresAt` trên command:
 
 ```php
 use DateTimeInterface;
@@ -283,14 +283,14 @@ public function isolationLockExpiresAt(): DateTimeInterface|DateInterval
 ```
 
 <a name="defining-input-expectations"></a>
-## Defining Input Expectations
+## Định nghĩa input mong đợi
 
-When writing console commands, it is common to gather input from the user through arguments or options. Laravel makes it very convenient to define the input you expect from the user using the `signature` property on your commands. The `signature` property allows you to define the name, arguments, and options for the command in a single, expressive, route-like syntax.
+Khi viết console command, việc thu thập input từ người dùng thông qua argument hoặc option là rất phổ biến. Laravel giúp bạn định nghĩa input mong đợi từ người dùng một cách thuận tiện bằng property `signature` trên command. Property `signature` cho phép định nghĩa tên, argument và option của command trong một cú pháp duy nhất, rõ ràng và tương tự route.
 
 <a name="arguments"></a>
-### Arguments
+### Argument
 
-All user supplied arguments and options are wrapped in curly braces. In the following example, the command defines one required argument: `user`:
+Tất cả argument và option do người dùng cung cấp được đặt trong dấu ngoặc nhọn. Trong ví dụ sau, command định nghĩa một argument bắt buộc: `user`:
 
 ```php
 /**
@@ -301,7 +301,7 @@ All user supplied arguments and options are wrapped in curly braces. In the foll
 protected $signature = 'mail:send {user}';
 ```
 
-You may also make arguments optional or define default values for arguments:
+Bạn cũng có thể đặt argument thành tùy chọn hoặc định nghĩa giá trị mặc định cho argument:
 
 ```php
 // Optional argument...
@@ -312,9 +312,9 @@ You may also make arguments optional or define default values for arguments:
 ```
 
 <a name="options"></a>
-### Options
+### Option
 
-Options, like arguments, are another form of user input. Options are prefixed by two hyphens (`--`) when they are provided via the command line. There are two types of options: those that receive a value and those that don't. Options that don't receive a value serve as a boolean "switch". Let's take a look at an example of this type of option:
+Option, giống argument, là một dạng input khác của người dùng. Option được đặt sau hai dấu gạch ngang (`--`) khi truyền qua command line. Có hai loại option: loại nhận value và loại không nhận value. Option không nhận value hoạt động như một "switch" boolean. Hãy xem ví dụ về loại option này:
 
 ```php
 /**
@@ -325,16 +325,16 @@ Options, like arguments, are another form of user input. Options are prefixed by
 protected $signature = 'mail:send {user} {--queue}';
 ```
 
-In this example, the `--queue` switch may be specified when calling the Artisan command. If the `--queue` switch is passed, the value of the option will be `true`. Otherwise, the value will be `false`:
+Trong ví dụ này, switch `--queue` có thể được chỉ định khi gọi Artisan command. Nếu truyền switch `--queue`, giá trị của option sẽ là `true`. Nếu không, giá trị sẽ là `false`:
 
 ```shell
 php artisan mail:send 1 --queue
 ```
 
 <a name="options-with-values"></a>
-#### Options With Values
+#### Option có value
 
-Next, let's take a look at an option that expects a value. If the user must specify a value for an option, you should suffix the option name with a `=` sign:
+Tiếp theo, hãy xem một option cần value. Nếu người dùng phải chỉ định value cho option, bạn nên thêm dấu `=` vào cuối tên option:
 
 ```php
 /**
@@ -345,73 +345,73 @@ Next, let's take a look at an option that expects a value. If the user must spec
 protected $signature = 'mail:send {user} {--queue=}';
 ```
 
-In this example, the user may pass a value for the option like so. If the option is not specified when invoking the command, its value will be `null`:
+Trong ví dụ này, người dùng có thể truyền value cho option như sau. Nếu option không được chỉ định khi gọi command, giá trị của nó sẽ là `null`:
 
 ```shell
 php artisan mail:send 1 --queue=default
 ```
 
-You may assign default values to options by specifying the default value after the option name. If no option value is passed by the user, the default value will be used:
+Bạn có thể gán giá trị mặc định cho option bằng cách chỉ định giá trị mặc định sau tên option. Nếu người dùng không truyền value cho option, giá trị mặc định sẽ được sử dụng:
 
 ```php
 'mail:send {user} {--queue=default}'
 ```
 
 <a name="option-shortcuts"></a>
-#### Option Shortcuts
+#### Shortcut của option
 
-To assign a shortcut when defining an option, you may specify it before the option name and use the `|` character as a delimiter to separate the shortcut from the full option name:
+Để gán shortcut khi định nghĩa option, bạn có thể đặt nó trước tên option và dùng ký tự `|` làm dấu phân cách giữa shortcut và tên đầy đủ của option:
 
 ```php
 'mail:send {user} {--Q|queue=}'
 ```
 
-When invoking the command on your terminal, option shortcuts should be prefixed with a single hyphen and no `=` character should be included when specifying a value for the option:
+Khi gọi command trong terminal, shortcut của option phải có một dấu gạch ngang ở trước và không được chứa ký tự `=` khi chỉ định value cho option:
 
 ```shell
 php artisan mail:send 1 -Qdefault
 ```
 
 <a name="input-arrays"></a>
-### Input Arrays
+### Mảng input
 
-If you would like to define arguments or options to expect multiple input values, you may use the `*` character. First, let's take a look at an example that specifies such an argument:
+Nếu muốn định nghĩa argument hoặc option nhận nhiều giá trị input, bạn có thể dùng ký tự `*`. Trước tiên, hãy xem ví dụ định nghĩa một argument như vậy:
 
 ```php
 'mail:send {user*}'
 ```
 
-When running this command, the `user` arguments may be passed in order to the command line. For example, the following command will set the value of `user` to an array with `1` and `2` as its values:
+Khi chạy command này, các argument `user` có thể được truyền lần lượt trên command line. Ví dụ, command sau sẽ đặt giá trị của `user` thành array chứa `1` và `2`:
 
 ```shell
 php artisan mail:send 1 2
 ```
 
-This `*` character can be combined with an optional argument definition to allow zero or more instances of an argument:
+Ký tự `*` này có thể kết hợp với định nghĩa argument tùy chọn để cho phép không có hoặc có nhiều instance của argument:
 
 ```php
 'mail:send {user?*}'
 ```
 
 <a name="option-arrays"></a>
-#### Option Arrays
+#### Mảng option
 
-When defining an option that expects multiple input values, each option value passed to the command should be prefixed with the option name:
+Khi định nghĩa option nhận nhiều giá trị input, mỗi value của option truyền vào command phải được đặt sau tên option:
 
 ```php
 'mail:send {--id=*}'
 ```
 
-Such a command may be invoked by passing multiple `--id` arguments:
+Một command như vậy có thể được gọi bằng cách truyền nhiều argument `--id`:
 
 ```shell
 php artisan mail:send --id=1 --id=2
 ```
 
 <a name="input-descriptions"></a>
-### Input Descriptions
+### Mô tả input
 
-You may assign descriptions to input arguments and options by separating the argument name from the description using a colon. If you need a little extra room to define your command, feel free to spread the definition across multiple lines:
+Bạn có thể gán mô tả cho input argument và option bằng cách phân tách tên argument với mô tả bằng dấu hai chấm. Nếu cần thêm không gian để định nghĩa command, bạn có thể trải định nghĩa trên nhiều dòng:
 
 ```php
 /**
@@ -425,9 +425,9 @@ protected $signature = 'mail:send
 ```
 
 <a name="prompting-for-missing-input"></a>
-### Prompting for Missing Input
+### Prompt khi thiếu input
 
-If your command contains required arguments, the user will receive an error message when they are not provided. Alternatively, you may configure your command to automatically prompt the user when required arguments are missing by implementing the `PromptsForMissingInput` interface:
+Nếu command chứa argument bắt buộc, người dùng sẽ nhận thông báo lỗi khi không cung cấp chúng. Ngoài ra, bạn có thể cấu hình command tự động prompt người dùng khi thiếu argument bắt buộc bằng cách implement interface `PromptsForMissingInput`:
 
 ```php
 <?php
@@ -450,7 +450,7 @@ class SendEmails extends Command implements PromptsForMissingInput
 }
 ```
 
-If Laravel needs to gather a required argument from the user, it will automatically ask the user for the argument by intelligently phrasing the question using either the argument name or description. If you wish to customize the question used to gather the required argument, you may implement the `promptForMissingArgumentsUsing` method, returning an array of questions keyed by the argument names:
+Nếu Laravel cần thu thập một argument bắt buộc từ người dùng, framework sẽ tự động hỏi bằng cách diễn đạt câu hỏi hợp lý dựa trên tên hoặc mô tả của argument. Nếu muốn tùy chỉnh câu hỏi dùng để thu thập argument bắt buộc, bạn có thể implement method `promptForMissingArgumentsUsing`, trả về một array câu hỏi được key theo tên argument:
 
 ```php
 /**
@@ -466,7 +466,7 @@ protected function promptForMissingArgumentsUsing(): array
 }
 ```
 
-You may also provide placeholder text by using a tuple containing the question and placeholder:
+Bạn cũng có thể cung cấp placeholder text bằng tuple chứa câu hỏi và placeholder:
 
 ```php
 return [
@@ -474,7 +474,7 @@ return [
 ];
 ```
 
-If you would like complete control over the prompt, you may provide a closure that should prompt the user and return their answer:
+Nếu muốn toàn quyền kiểm soát prompt, bạn có thể cung cấp một closure có nhiệm vụ prompt người dùng và trả về câu trả lời của họ:
 
 ```php
 use App\Models\User;
@@ -494,9 +494,9 @@ return [
 ```
 
 > [!NOTE]
-The comprehensive [Laravel Prompts](/docs/{{version}}/prompts) documentation includes additional information on the available prompts and their usage.
+> Tài liệu đầy đủ về [Laravel Prompts](/docs/{{version}}/prompts) cung cấp thêm thông tin về các prompt hiện có và cách sử dụng chúng.
 
-If you wish to prompt the user to select or enter [options](#options), you may include prompts in your command's `handle` method. However, if you only wish to prompt the user when they have also been automatically prompted for missing arguments, then you may implement the `afterPromptingForMissingArguments` method:
+Nếu muốn prompt người dùng chọn hoặc nhập [option](#options), bạn có thể đặt prompt trong method `handle` của command. Tuy nhiên, nếu chỉ muốn prompt người dùng khi họ cũng đã được tự động prompt vì thiếu argument, bạn có thể implement method `afterPromptingForMissingArguments`:
 
 ```php
 use Symfony\Component\Console\Input\InputInterface;
@@ -518,12 +518,12 @@ protected function afterPromptingForMissingArguments(InputInterface $input, Outp
 ```
 
 <a name="command-io"></a>
-## Command I/O
+## I/O của command
 
 <a name="retrieving-input"></a>
-### Retrieving Input
+### Lấy dữ liệu đầu vào
 
-While your command is executing, you will likely need to access the values for the arguments and options accepted by your command. To do so, you may use the `argument` and `option` methods. If an argument or option does not exist, `null` will be returned:
+Trong khi command đang thực thi, bạn thường cần truy cập giá trị của các argument và option mà command chấp nhận. Bạn có thể sử dụng các method `argument` và `option` để thực hiện việc này. Nếu argument hoặc option không tồn tại, `null` sẽ được trả về:
 
 ```php
 /**
@@ -535,13 +535,13 @@ public function handle(): void
 }
 ```
 
-If you need to retrieve all of the arguments as an `array`, call the `arguments` method:
+Nếu cần lấy tất cả argument dưới dạng `array`, hãy gọi method `arguments`:
 
 ```php
 $arguments = $this->arguments();
 ```
 
-Options may be retrieved just as easily as arguments using the `option` method. To retrieve all of the options as an array, call the `options` method:
+Option có thể được lấy tương tự argument bằng method `option`. Để lấy tất cả option dưới dạng mảng, hãy gọi method `options`:
 
 ```php
 // Retrieve a specific option...
@@ -551,7 +551,7 @@ $queueName = $this->option('queue');
 $options = $this->options();
 ```
 
-You may use the `input` method to retrieve a command's arguments and options as an `Illuminate\Console\CommandInput` instance, which provides the same typed accessors that are available on HTTP requests and other data containers:
+Bạn có thể sử dụng method `input` để lấy argument và option của command dưới dạng instance `Illuminate\Console\CommandInput`, cung cấp các accessor có kiểu tương tự những accessor có trên HTTP request và các data container khác:
 
 ```php
 use App\Enums\ReportType;
@@ -567,19 +567,19 @@ public function handle(): void
 }
 ```
 
-The `input` method may also be used to retrieve a single input value from either the arguments or options:
+Method `input` cũng có thể được dùng để lấy một giá trị đầu vào riêng lẻ từ argument hoặc option:
 
 ```php
 $queue = $this->input('queue', 'default');
 ```
 
 <a name="prompting-for-input"></a>
-### Prompting for Input
+### Yêu cầu dữ liệu đầu vào
 
 > [!NOTE]
-> [Laravel Prompts](/docs/{{version}}/prompts) is a PHP package for adding beautiful and user-friendly forms to your command-line applications, with browser-like features including placeholder text and validation.
+> [Laravel Prompts](/docs/{{version}}/prompts) là package PHP giúp thêm các form đẹp mắt, thân thiện với người dùng vào ứng dụng command-line, với những tính năng tương tự trình duyệt như placeholder và validation.
 
-In addition to displaying output, you may also ask the user to provide input during the execution of your command. The `ask` method will prompt the user with the given question, accept their input, and then return the user's input back to your command:
+Ngoài việc hiển thị đầu ra, bạn cũng có thể yêu cầu người dùng cung cấp dữ liệu trong khi command thực thi. Method `ask` sẽ hiển thị câu hỏi, nhận dữ liệu người dùng nhập và trả dữ liệu đó về command:
 
 ```php
 /**
@@ -593,22 +593,22 @@ public function handle(): void
 }
 ```
 
-The `ask` method also accepts an optional second argument which specifies the default value that should be returned if no user input is provided:
+Method `ask` cũng nhận argument thứ hai tùy chọn để chỉ định giá trị mặc định sẽ được trả về nếu người dùng không nhập dữ liệu:
 
 ```php
 $name = $this->ask('What is your name?', 'Taylor');
 ```
 
-The `secret` method is similar to `ask`, but the user's input will not be visible to them as they type in the console. This method is useful when asking for sensitive information such as passwords:
+Method `secret` tương tự `ask`, nhưng dữ liệu người dùng nhập sẽ không hiển thị khi họ gõ trong console. Method này hữu ích khi yêu cầu thông tin nhạy cảm như mật khẩu:
 
 ```php
 $password = $this->secret('What is the password?');
 ```
 
 <a name="asking-for-confirmation"></a>
-#### Asking for Confirmation
+#### Yêu cầu xác nhận
 
-If you need to ask the user for a simple "yes or no" confirmation, you may use the `confirm` method. By default, this method will return `false`. However, if the user enters `y` or `yes` in response to the prompt, the method will return `true`.
+Nếu cần yêu cầu người dùng xác nhận đơn giản "yes hoặc no", bạn có thể sử dụng method `confirm`. Mặc định, method này trả về `false`. Tuy nhiên, nếu người dùng nhập `y` hoặc `yes`, method sẽ trả về `true`.
 
 ```php
 if ($this->confirm('Do you wish to continue?')) {
@@ -616,7 +616,7 @@ if ($this->confirm('Do you wish to continue?')) {
 }
 ```
 
-If necessary, you may specify that the confirmation prompt should return `true` by default by passing `true` as the second argument to the `confirm` method:
+Nếu cần, bạn có thể quy định prompt xác nhận mặc định trả về `true` bằng cách truyền `true` làm argument thứ hai cho method `confirm`:
 
 ```php
 if ($this->confirm('Do you wish to continue?', true)) {
@@ -625,15 +625,15 @@ if ($this->confirm('Do you wish to continue?', true)) {
 ```
 
 <a name="auto-completion"></a>
-#### Auto-Completion
+#### Tự động hoàn thành
 
-The `anticipate` method can be used to provide auto-completion for possible choices. The user can still provide any answer, regardless of the auto-completion hints:
+Method `anticipate` có thể cung cấp tính năng tự động hoàn thành cho các lựa chọn khả dĩ. Người dùng vẫn có thể nhập bất kỳ câu trả lời nào, bất kể các gợi ý tự động hoàn thành:
 
 ```php
 $name = $this->anticipate('What is your name?', ['Taylor', 'Dayle']);
 ```
 
-Alternatively, you may pass a closure as the second argument to the `anticipate` method. The closure will be called each time the user types an input character. The closure should accept a string parameter containing the user's input so far, and return an array of options for auto-completion:
+Ngoài ra, bạn có thể truyền một closure làm argument thứ hai cho method `anticipate`. Closure sẽ được gọi mỗi khi người dùng nhập một ký tự. Closure cần nhận tham số string chứa dữ liệu người dùng đã nhập đến thời điểm đó và trả về một mảng option dùng cho tự động hoàn thành:
 
 ```php
 use App\Models\Address;
@@ -647,9 +647,9 @@ $name = $this->anticipate('What is your address?', function (string $input) {
 ```
 
 <a name="multiple-choice-questions"></a>
-#### Multiple Choice Questions
+#### Câu hỏi nhiều lựa chọn
 
-If you need to give the user a predefined set of choices when asking a question, you may use the `choice` method. You may set the array index of the default value to be returned if no option is chosen by passing the index as the third argument to the method:
+Nếu cần cung cấp một tập lựa chọn định sẵn khi đặt câu hỏi, bạn có thể sử dụng method `choice`. Bạn có thể đặt index trong mảng của giá trị mặc định sẽ được trả về khi không có option nào được chọn bằng cách truyền index làm argument thứ ba:
 
 ```php
 $name = $this->choice(
@@ -659,7 +659,7 @@ $name = $this->choice(
 );
 ```
 
-In addition, the `choice` method accepts optional fourth and fifth arguments for determining the maximum number of attempts to select a valid response and whether multiple selections are permitted:
+Ngoài ra, method `choice` nhận argument thứ tư và thứ năm tùy chọn để xác định số lần thử tối đa nhằm chọn câu trả lời hợp lệ và có cho phép chọn nhiều mục hay không:
 
 ```php
 $name = $this->choice(
@@ -672,9 +672,9 @@ $name = $this->choice(
 ```
 
 <a name="writing-output"></a>
-### Writing Output
+### Ghi đầu ra
 
-To send output to the console, you may use the `line`, `newLine`, `info`, `comment`, `question`, `warn`, `alert`, and `error` methods. Each of these methods will use appropriate ANSI colors for their purpose. For example, let's display some general information to the user. Typically, the `info` method will display in the console as green colored text:
+Để gửi đầu ra tới console, bạn có thể sử dụng các method `line`, `newLine`, `info`, `comment`, `question`, `warn`, `alert` và `error`. Mỗi method sử dụng màu ANSI phù hợp với mục đích của nó. Ví dụ, để hiển thị thông tin chung cho người dùng, method `info` thường hiển thị văn bản màu xanh lá trong console:
 
 ```php
 /**
@@ -688,19 +688,19 @@ public function handle(): void
 }
 ```
 
-To display an error message, use the `error` method. Error message text is typically displayed in red:
+Để hiển thị thông báo lỗi, hãy sử dụng method `error`. Nội dung lỗi thường được hiển thị màu đỏ:
 
 ```php
 $this->error('Something went wrong!');
 ```
 
-You may use the `line` method to display plain, uncolored text:
+Bạn có thể sử dụng method `line` để hiển thị văn bản thuần không màu:
 
 ```php
 $this->line('Display this on the screen');
 ```
 
-You may use the `newLine` method to display a blank line:
+Bạn có thể sử dụng method `newLine` để hiển thị dòng trống:
 
 ```php
 // Write a single blank line...
@@ -711,9 +711,9 @@ $this->newLine(3);
 ```
 
 <a name="tables"></a>
-#### Tables
+#### Bảng
 
-The `table` method makes it easy to correctly format multiple rows / columns of data. All you need to do is provide the column names and the data for the table and Laravel will automatically calculate the appropriate width and height of the table for you:
+Method `table` giúp định dạng đúng dữ liệu gồm nhiều hàng / cột một cách dễ dàng. Bạn chỉ cần cung cấp tên cột và dữ liệu của bảng; Laravel sẽ tự động tính chiều rộng và chiều cao phù hợp:
 
 ```php
 use App\Models\User;
@@ -725,9 +725,9 @@ $this->table(
 ```
 
 <a name="progress-bars"></a>
-#### Progress Bars
+#### Thanh tiến trình
 
-For long running tasks, it can be helpful to show a progress bar that informs users how complete the task is. Using the `withProgressBar` method, Laravel will display a progress bar and advance its progress for each iteration over a given iterable value:
+Với các tác vụ chạy lâu, việc hiển thị thanh tiến trình giúp người dùng biết tác vụ đã hoàn thành đến đâu. Khi sử dụng method `withProgressBar`, Laravel sẽ hiển thị thanh tiến trình và tăng tiến độ sau mỗi lần lặp qua giá trị iterable được cung cấp:
 
 ```php
 use App\Models\User;
@@ -737,7 +737,7 @@ $users = $this->withProgressBar(User::all(), function (User $user) {
 });
 ```
 
-Sometimes, you may need more manual control over how a progress bar is advanced. First, define the total number of steps the process will iterate through. Then, advance the progress bar after processing each item:
+Đôi khi bạn cần kiểm soát thủ công hơn cách thanh tiến trình được tăng. Trước tiên, hãy xác định tổng số bước mà process sẽ lặp qua. Sau đó tăng thanh tiến trình sau khi xử lý từng mục:
 
 ```php
 $users = App\Models\User::all();
@@ -756,12 +756,12 @@ $bar->finish();
 ```
 
 > [!NOTE]
-> For more advanced options, check out the [Symfony Progress Bar component documentation](https://symfony.com/doc/current/components/console/helpers/progressbar.html).
+> Để tìm hiểu các tùy chọn nâng cao hơn, hãy xem [tài liệu component Symfony Progress Bar](https://symfony.com/doc/current/components/console/helpers/progressbar.html).
 
 <a name="registering-commands"></a>
-## Registering Commands
+## Đăng ký command
 
-By default, Laravel automatically registers all commands within the `app/Console/Commands` directory. However, you can instruct Laravel to scan other directories for Artisan commands using the `withCommands` method in your application's `bootstrap/app.php` file:
+Mặc định, Laravel tự động đăng ký tất cả command trong thư mục `app/Console/Commands`. Tuy nhiên, bạn có thể yêu cầu Laravel quét các thư mục khác để tìm Artisan command bằng method `withCommands` trong file `bootstrap/app.php` của ứng dụng:
 
 ```php
 ->withCommands([
@@ -769,7 +769,7 @@ By default, Laravel automatically registers all commands within the `app/Console
 ])
 ```
 
-If necessary, you may also manually register commands by providing the command's class name to the `withCommands` method:
+Nếu cần, bạn cũng có thể đăng ký command thủ công bằng cách truyền tên class của command cho method `withCommands`:
 
 ```php
 use App\Domain\Orders\Commands\SendEmails;
@@ -779,12 +779,12 @@ use App\Domain\Orders\Commands\SendEmails;
 ])
 ```
 
-When Artisan boots, all the commands in your application will be resolved by the [service container](/docs/{{version}}/container) and registered with Artisan.
+Khi Artisan khởi động, tất cả command trong ứng dụng sẽ được [service container](/docs/{{version}}/container) resolve và đăng ký với Artisan.
 
 <a name="programmatically-executing-commands"></a>
-## Programmatically Executing Commands
+## Thực thi command bằng chương trình
 
-Sometimes you may wish to execute an Artisan command outside of the CLI. For example, you may wish to execute an Artisan command from a route or controller. You may use the `call` method on the `Artisan` facade to accomplish this. The `call` method accepts either the command's signature name or class name as its first argument, and an array of command parameters as the second argument. The exit code will be returned:
+Đôi khi bạn có thể muốn thực thi Artisan command bên ngoài CLI, chẳng hạn từ route hoặc controller. Bạn có thể sử dụng method `call` trên facade `Artisan`. Method `call` nhận tên signature hoặc tên class của command làm argument đầu tiên và mảng tham số command làm argument thứ hai. Exit code sẽ được trả về:
 
 ```php
 use Illuminate\Support\Facades\Artisan;
@@ -799,16 +799,16 @@ Route::post('/user/{user}/mail', function (string $user) {
 });
 ```
 
-Alternatively, you may pass the entire Artisan command to the `call` method as a string:
+Ngoài ra, bạn có thể truyền toàn bộ Artisan command cho method `call` dưới dạng string:
 
 ```php
 Artisan::call('mail:send 1 --queue=default');
 ```
 
 <a name="passing-array-values"></a>
-#### Passing Array Values
+#### Truyền giá trị mảng
 
-If your command defines an option that accepts an array, you may pass an array of values to that option:
+Nếu command định nghĩa một option nhận mảng, bạn có thể truyền một mảng giá trị cho option đó:
 
 ```php
 use Illuminate\Support\Facades\Artisan;
@@ -822,9 +822,9 @@ Route::post('/mail', function () {
 ```
 
 <a name="passing-boolean-values"></a>
-#### Passing Boolean Values
+#### Truyền giá trị boolean
 
-If you need to specify the value of an option that does not accept string values, such as the `--force` flag on the `migrate:refresh` command, you should pass `true` or `false` as the value of the option:
+Nếu cần chỉ định giá trị cho một option không nhận giá trị string, chẳng hạn flag `--force` của command `migrate:refresh`, bạn nên truyền `true` hoặc `false` làm giá trị của option:
 
 ```php
 $exitCode = Artisan::call('migrate:refresh', [
@@ -833,9 +833,9 @@ $exitCode = Artisan::call('migrate:refresh', [
 ```
 
 <a name="queueing-artisan-commands"></a>
-#### Queueing Artisan Commands
+#### Đưa Artisan command vào queue
 
-Using the `queue` method on the `Artisan` facade, you may even queue Artisan commands so they are processed in the background by your [queue workers](/docs/{{version}}/queues). Before using this method, make sure you have configured your queue and are running a queue listener:
+Với method `queue` trên facade `Artisan`, bạn có thể đưa Artisan command vào queue để chúng được [queue worker](/docs/{{version}}/queues) xử lý ở background. Trước khi sử dụng method này, hãy đảm bảo queue đã được cấu hình và queue listener đang chạy:
 
 ```php
 use Illuminate\Support\Facades\Artisan;
@@ -850,7 +850,7 @@ Route::post('/user/{user}/mail', function (string $user) {
 });
 ```
 
-Using the `onConnection` and `onQueue` methods, you may specify the connection or queue the Artisan command should be dispatched to:
+Bằng các method `onConnection` và `onQueue`, bạn có thể chỉ định connection hoặc queue mà Artisan command sẽ được dispatch tới:
 
 ```php
 Artisan::queue('mail:send', [
@@ -859,9 +859,9 @@ Artisan::queue('mail:send', [
 ```
 
 <a name="calling-commands-from-other-commands"></a>
-### Calling Commands From Other Commands
+### Gọi command từ command khác
 
-Sometimes you may wish to call other commands from an existing Artisan command. You may do so using the `call` method. This `call` method accepts the command name and an array of command arguments / options:
+Đôi khi bạn có thể muốn gọi command khác từ một Artisan command hiện có. Bạn có thể thực hiện bằng method `call`. Method này nhận tên command cùng mảng argument / option:
 
 ```php
 /**
@@ -877,7 +877,7 @@ public function handle(): void
 }
 ```
 
-If you would like to call another console command and suppress all of its output, you may use the `callSilently` method. The `callSilently` method has the same signature as the `call` method:
+Nếu muốn gọi một console command khác và ẩn toàn bộ đầu ra của nó, bạn có thể sử dụng method `callSilently`. Method `callSilently` có cùng signature với method `call`:
 
 ```php
 $this->callSilently('mail:send', [
@@ -886,9 +886,9 @@ $this->callSilently('mail:send', [
 ```
 
 <a name="signal-handling"></a>
-## Signal Handling
+## Xử lý signal
 
-As you may know, operating systems allow signals to be sent to running processes. For example, the `SIGTERM` signal is how operating systems ask a program to terminate gracefully. If you wish to listen for signals in your Artisan console commands and execute code when they occur, you may use the `trap` method:
+Hệ điều hành cho phép gửi signal tới các process đang chạy. Ví dụ, signal `SIGTERM` là cách hệ điều hành yêu cầu chương trình kết thúc một cách an toàn. Nếu muốn lắng nghe signal trong Artisan console command và thực thi code khi signal xuất hiện, bạn có thể sử dụng method `trap`:
 
 ```php
 /**
@@ -904,7 +904,7 @@ public function handle(): void
 }
 ```
 
-To listen for multiple signals at once, you may provide an array of signals to the `trap` method:
+Để lắng nghe nhiều signal cùng lúc, bạn có thể truyền một mảng signal cho method `trap`:
 
 ```php
 $this->trap([SIGTERM, SIGQUIT], function (int $signal) {
@@ -915,20 +915,20 @@ $this->trap([SIGTERM, SIGQUIT], function (int $signal) {
 ```
 
 <a name="the-dev-command"></a>
-## The Dev Command
+## Command Dev
 
-The `dev` Artisan command starts all of the processes needed for local development in a single terminal window. By default, it concurrently runs the PHP development server, a queue worker, log tailing via [Pail](/docs/{{version}}/logging#tailing-log-messages-using-pail), and Vite asset compilation:
+Artisan command `dev` khởi chạy tất cả process cần thiết cho phát triển local trong một cửa sổ terminal. Mặc định, command này chạy đồng thời PHP development server, một queue worker, theo dõi log qua [Pail](/docs/{{version}}/logging#tailing-log-messages-using-pail) và biên dịch asset bằng Vite:
 
 ```shell
 php artisan dev
 ```
 
-Under the hood, the `dev` command uses the `@laravel/multiplex` npm package to manage the processes, giving each process its own tab with searchable, scrollable output. Each process is labeled and color-coded so you can easily distinguish between them. If a process crashes, it will be restarted automatically, and when you quit, all of the output is written back to your terminal so nothing is lost.
+Bên dưới, command `dev` sử dụng package npm `@laravel/multiplex` để quản lý các process, cung cấp cho mỗi process một tab riêng với đầu ra có thể tìm kiếm và cuộn. Mỗi process có nhãn và màu riêng để dễ phân biệt. Nếu process bị crash, nó sẽ tự động được khởi động lại; khi bạn thoát, toàn bộ đầu ra được ghi trở lại terminal để không mất thông tin.
 
 > [!NOTE]
-> The `dev` command requires Node 22.13 or later. On Windows, it falls back to the `concurrently` npm package and the tabbed interface is not available.
+> Command `dev` yêu cầu Node 22.13 trở lên. Trên Windows, command sẽ fallback sang package npm `concurrently` và giao diện dạng tab không khả dụng.
 
-The default processes are:
+Các process mặc định gồm:
 
 | Name | Command |
 | --- | --- |
@@ -938,12 +938,12 @@ The default processes are:
 | `vite` | `npm run dev` |
 
 > [!NOTE]
-> The `vite` process automatically detects your Node package manager (npm, pnpm, Yarn, or Bun) and uses the appropriate run command.
+> Process `vite` tự động phát hiện Node package manager của bạn (npm, pnpm, Yarn hoặc Bun) và sử dụng run command phù hợp.
 
 <a name="customizing-dev-processes"></a>
-### Customizing Dev Processes
+### Tùy chỉnh các process Dev
 
-You may customize the processes that the `dev` command runs by using the `DevCommands` class, typically within the `boot` method of your application's `AppServiceProvider`. The `register` method accepts a command string and an optional name:
+Bạn có thể tùy chỉnh các process mà command `dev` chạy bằng class `DevCommands`, thường trong method `boot` của `AppServiceProvider`. Method `register` nhận một command string và tên tùy chọn:
 
 ```php
 use Illuminate\Foundation\DevCommands;
@@ -957,13 +957,13 @@ public function boot(): void
 }
 ```
 
-When registering an Artisan command, you may use the `artisan` method which automatically prefixes the command with `php artisan`:
+Khi đăng ký Artisan command, bạn có thể sử dụng method `artisan`; method này tự động thêm prefix `php artisan` vào command:
 
 ```php
 DevCommands::artisan('horizon', 'horizon');
 ```
 
-Likewise, the `node` method prefixes the command with your detected package manager's run command (e.g. `npm run`), and the `nodeExec` method prefixes the command with the package manager's exec command (e.g. `npx`):
+Tương tự, method `node` thêm prefix là run command của package manager được phát hiện (ví dụ `npm run`), còn method `nodeExec` thêm prefix là exec command của package manager (ví dụ `npx`):
 
 ```php
 DevCommands::node('storybook', 'storybook');
@@ -971,13 +971,13 @@ DevCommands::node('storybook', 'storybook');
 DevCommands::nodeExec('tailwindcss -i resources/css/app.css -o public/css/app.css --watch', 'tailwind');
 ```
 
-If you register a process with the same name as a default process, your process will replace the default. For example, you may customize the server process to use a different port:
+Nếu đăng ký process có cùng tên với process mặc định, process của bạn sẽ thay thế process mặc định. Ví dụ, bạn có thể tùy chỉnh server process để sử dụng port khác:
 
 ```php
 DevCommands::artisan('serve --host=localhost --port=9000', 'server');
 ```
 
-You may also customize the color of a process label in your terminal. The available color methods are `blue`, `purple`, `pink`, `orange`, `green`, and `yellow`. You may also pass a custom hex color to the `color` method:
+Bạn cũng có thể tùy chỉnh màu nhãn process trong terminal. Các method màu khả dụng gồm `blue`, `purple`, `pink`, `orange`, `green` và `yellow`. Bạn cũng có thể truyền mã màu hex tùy chỉnh cho method `color`:
 
 ```php
 DevCommands::register('my-command', 'my-process')->green();
@@ -985,33 +985,33 @@ DevCommands::register('my-command', 'my-process')->green();
 DevCommands::register('my-command', 'my-process')->color('#ff6347');
 ```
 
-To see all registered dev processes without starting them, use the `dev:list` command:
+Để xem tất cả dev process đã đăng ký mà không khởi chạy chúng, hãy sử dụng command `dev:list`:
 
 ```shell
 php artisan dev:list
 ```
 
 <a name="restarting-failed-processes"></a>
-#### Restarting Failed Processes
+#### Khởi động lại process bị lỗi
 
-If a process crashes, Laravel will restart it after a short delay, up to five times, before marking it as failed. A process that dies within a second of starting is not restarted, since it likely never started successfully in the first place. Restarting a process manually with `r` resets the counter.
+Nếu một process bị crash, Laravel sẽ khởi động lại process đó sau một khoảng trễ ngắn, tối đa năm lần, trước khi đánh dấu là thất bại. Process dừng trong vòng một giây sau khi khởi động sẽ không được khởi động lại vì nhiều khả năng nó chưa từng khởi động thành công. Khởi động lại process thủ công bằng `r` sẽ reset bộ đếm.
 
-You may disable this behavior for a single run using the `--no-restart` option:
+Bạn có thể tắt hành vi này cho một lần chạy bằng option `--no-restart`:
 
 ```shell
 php artisan dev --no-restart
 ```
 
-Or, you may disable it for your entire application using the `disableAutoRestart` method:
+Hoặc bạn có thể tắt hành vi này cho toàn bộ ứng dụng bằng method `disableAutoRestart`:
 
 ```php
 DevCommands::disableAutoRestart();
 ```
 
 <a name="filtering-dev-processes"></a>
-### Filtering Dev Processes
+### Lọc các process Dev
 
-You may instruct the `dev` command to only run specific processes when it is invoked using the `only` method. Similarly, you may exclude specific processes using the `except` method:
+Bạn có thể yêu cầu command `dev` chỉ chạy các process cụ thể bằng method `only`. Tương tự, bạn có thể loại trừ các process cụ thể bằng method `except`:
 
 ```php
 // Only run the server and vite processes...
@@ -1022,20 +1022,22 @@ DevCommands::except('queue');
 ```
 
 <a name="stub-customization"></a>
-## Stub Customization
+## Tùy chỉnh stub
 
-The Artisan console's `make` commands are used to create a variety of classes, such as controllers, jobs, migrations, and tests. These classes are generated using "stub" files that are populated with values based on your input. However, you may want to make small changes to files generated by Artisan. To accomplish this, you may use the `stub:publish` command to publish the most common stubs to your application so that you can customize them:
+Các command `make` của Artisan console được dùng để tạo nhiều loại class như controller, job, migration và test. Các class này được sinh từ file "stub", trong đó các giá trị được điền dựa trên dữ liệu đầu vào của bạn. Tuy nhiên, bạn có thể muốn điều chỉnh nhỏ các file do Artisan sinh ra. Để làm việc này, hãy dùng command `stub:publish` để publish các stub phổ biến nhất vào ứng dụng và tùy chỉnh chúng:
 
 ```shell
 php artisan stub:publish
 ```
 
-The published stubs will be located within a `stubs` directory in the root of your application. Any changes you make to these stubs will be reflected when you generate their corresponding classes using Artisan's `make` commands.
+Các stub đã publish nằm trong thư mục `stubs` ở root của ứng dụng. Mọi thay đổi đối với các stub này sẽ được phản ánh khi bạn sinh các class tương ứng bằng command `make` của Artisan.
 
 <a name="events"></a>
-## Events
+## Event
 
-Artisan dispatches three events when running commands: `Illuminate\Console\Events\ArtisanStarting`, `Illuminate\Console\Events\CommandStarting`, and `Illuminate\Console\Events\CommandFinished`. The `ArtisanStarting` event is dispatched immediately when Artisan starts running. Next, the `CommandStarting` event is dispatched immediately before a command runs. Finally, the `CommandFinished` event is dispatched once a command finishes executing.
+Artisan dispatch ba event khi chạy command: `Illuminate\Console\Events\ArtisanStarting`, `Illuminate\Console\Events\CommandStarting` và `Illuminate\Console\Events\CommandFinished`. Event `ArtisanStarting` được dispatch ngay khi Artisan bắt đầu chạy. Tiếp theo, `CommandStarting` được dispatch ngay trước khi một command chạy. Cuối cùng, `CommandFinished` được dispatch sau khi command thực thi xong.
+
+---
 
 ## Tài liệu chính thức
 

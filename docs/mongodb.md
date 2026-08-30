@@ -100,6 +100,8 @@ Sau khi cấu hình hoàn tất, bạn có thể sử dụng package `mongodb` v
 
 Để tiếp tục tìm hiểu cách sử dụng MongoDB cùng Laravel, hãy xem [Quick Start guide](https://www.mongodb.com/docs/drivers/php/laravel-mongodb/current/quick-start/) của MongoDB.
 
+---
+
 ## Tài liệu chính thức
 
 Bản dịch này được đối chiếu với [Laravel 13 Documentation chính thức](https://laravel.com/docs/13.x/mongodb). Khi có khác biệt, tài liệu chính thức của Laravel là nguồn tham chiếu ưu tiên.

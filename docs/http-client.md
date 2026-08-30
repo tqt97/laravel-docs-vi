@@ -1,34 +1,34 @@
 # HTTP Client
 
-- [Introduction](#introduction)
-- [Making Requests](#making-requests)
-    - [Request Data](#request-data)
-    - [Headers](#headers)
-    - [Authentication](#authentication)
+- [Giới thiệu](#introduction)
+- [Thực hiện request](#making-requests)
+    - [Dữ liệu request](#request-data)
+    - [Header](#headers)
+    - [Xác thực](#authentication)
     - [Timeout](#timeout)
-    - [Retries](#retries)
-    - [Error Handling](#error-handling)
+    - [Thử lại](#retries)
+    - [Xử lý lỗi](#error-handling)
     - [Guzzle Middleware](#guzzle-middleware)
     - [Guzzle Options](#guzzle-options)
-- [Concurrent Requests](#concurrent-requests)
-    - [Request Pooling](#request-pooling)
-    - [Request Batching](#request-batching)
+- [Request đồng thời](#concurrent-requests)
+    - [Gom request theo pool](#request-pooling)
+    - [Gom request theo batch](#request-batching)
 - [Macros](#macros)
-- [Testing](#testing)
-    - [Faking Responses](#faking-responses)
-    - [Inspecting Requests](#inspecting-requests)
-    - [Preventing Stray Requests](#preventing-stray-requests)
-- [Events](#events)
+- [Kiểm thử](#testing)
+    - [Giả lập response](#faking-responses)
+    - [Kiểm tra request](#inspecting-requests)
+    - [Ngăn request ngoài dự kiến](#preventing-stray-requests)
+- [Event](#events)
 
 <a name="introduction"></a>
-## Introduction
+## Giới thiệu
 
-Laravel provides an expressive, minimal API around the [Guzzle HTTP client](http://docs.guzzlephp.org/en/stable/), allowing you to quickly make outgoing HTTP requests to communicate with other web applications. Laravel's wrapper around Guzzle is focused on its most common use cases and a wonderful developer experience.
+Laravel cung cấp một API tối giản nhưng giàu khả năng biểu đạt trên [Guzzle HTTP client](http://docs.guzzlephp.org/en/stable/), cho phép bạn nhanh chóng gửi các HTTP request ra ngoài để giao tiếp với những ứng dụng web khác. Lớp wrapper của Laravel quanh Guzzle tập trung vào các trường hợp sử dụng phổ biến nhất và mang lại trải nghiệm phát triển thuận tiện.
 
 <a name="making-requests"></a>
-## Making Requests
+## Thực hiện request
 
-To make requests, you may use the `head`, `get`, `post`, `put`, `patch`, and `delete` methods provided by the `Http` facade. First, let's examine how to make a basic `GET` request to another URL:
+Để thực hiện request, bạn có thể dùng các phương thức `head`, `get`, `post`, `put`, `patch` và `delete` do facade `Http` cung cấp. Trước tiên, hãy xem cách gửi một request `GET` cơ bản đến một URL khác:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Http;
 $response = Http::get('http://example.com');
 ```
 
-The `get` method returns an instance of `Illuminate\Http\Client\Response`, which provides a variety of methods that may be used to inspect the response:
+Phương thức `get` trả về một instance của `Illuminate\Http\Client\Response`, cung cấp nhiều phương thức để kiểm tra response:
 
 ```php
 $response->body() : string;
@@ -53,13 +53,13 @@ $response->header($header) : string;
 $response->headers() : array;
 ```
 
-The `Illuminate\Http\Client\Response` object also implements the PHP `ArrayAccess` interface, allowing you to access JSON response data directly on the response:
+Đối tượng `Illuminate\Http\Client\Response` cũng triển khai interface `ArrayAccess` của PHP, cho phép bạn truy cập trực tiếp dữ liệu JSON trên response:
 
 ```php
 return Http::get('http://example.com/users/1')['name'];
 ```
 
-In addition to the response methods listed above, the following methods may be used to determine if the response has a specific status code:
+Ngoài các phương thức response ở trên, bạn có thể dùng các phương thức sau để xác định response có một mã trạng thái cụ thể hay không:
 
 ```php
 $response->ok() : bool;                  // 200 OK
@@ -81,9 +81,9 @@ $response->serverError() : bool;         // 500 Internal Server Error
 ```
 
 <a name="uri-templates"></a>
-#### URI Templates
+#### URI Template
 
-The HTTP client also allows you to construct request URLs using the [URI template specification](https://www.rfc-editor.org/rfc/rfc6570). To define the URL parameters that can be expanded by your URI template, you may use the `withUrlParameters` method:
+HTTP client cũng cho phép xây dựng URL request theo [đặc tả URI template](https://www.rfc-editor.org/rfc/rfc6570). Để định nghĩa các tham số URL có thể được URI template mở rộng, bạn có thể dùng phương thức `withUrlParameters`:
 
 ```php
 Http::withUrlParameters([
@@ -95,18 +95,18 @@ Http::withUrlParameters([
 ```
 
 <a name="dumping-requests"></a>
-#### Dumping Requests
+#### Dump request
 
-If you would like to dump the outgoing request instance before it is sent and terminate the script's execution, you may add the `dd` method to the beginning of your request definition:
+Nếu muốn dump instance của request sắp gửi trước khi nó được gửi đi và dừng thực thi script, bạn có thể thêm phương thức `dd` vào đầu phần định nghĩa request:
 
 ```php
 return Http::dd()->get('http://example.com');
 ```
 
 <a name="request-data"></a>
-### Request Data
+### Dữ liệu request
 
-Of course, it is common when making `POST`, `PUT`, and `PATCH` requests to send additional data with your request, so these methods accept an array of data as their second argument. By default, data will be sent using the `application/json` content type:
+Khi gửi request `POST`, `PUT` và `PATCH`, việc gửi thêm dữ liệu cùng request là rất phổ biến. Vì vậy, các phương thức này nhận một mảng dữ liệu làm đối số thứ hai. Mặc định, dữ liệu được gửi với content type `application/json`:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -118,9 +118,9 @@ $response = Http::post('http://example.com/users', [
 ```
 
 <a name="get-request-query-parameters"></a>
-#### GET Request Query Parameters
+#### Tham số query của request GET
 
-When making `GET` requests, you may either append a query string to the URL directly or pass an array of key / value pairs as the second argument to the `get` method:
+Khi gửi request `GET`, bạn có thể nối query string trực tiếp vào URL hoặc truyền một mảng các cặp key / value làm đối số thứ hai cho phương thức `get`:
 
 ```php
 $response = Http::get('http://example.com/users', [
@@ -129,7 +129,7 @@ $response = Http::get('http://example.com/users', [
 ]);
 ```
 
-Alternatively, the `withQueryParameters` method may be used:
+Ngoài ra, bạn có thể dùng phương thức `withQueryParameters`:
 
 ```php
 Http::retry(3, 100)->withQueryParameters([
@@ -139,9 +139,9 @@ Http::retry(3, 100)->withQueryParameters([
 ```
 
 <a name="sending-form-url-encoded-requests"></a>
-#### Sending Form URL Encoded Requests
+#### Gửi request dạng form URL encoded
 
-If you would like to send data using the `application/x-www-form-urlencoded` content type, you should call the `asForm` method before making your request:
+Nếu muốn gửi dữ liệu với content type `application/x-www-form-urlencoded`, bạn nên gọi phương thức `asForm` trước khi thực hiện request:
 
 ```php
 $response = Http::asForm()->post('http://example.com/users', [
@@ -151,9 +151,9 @@ $response = Http::asForm()->post('http://example.com/users', [
 ```
 
 <a name="sending-a-raw-request-body"></a>
-#### Sending a Raw Request Body
+#### Gửi raw request body
 
-You may use the `withBody` method if you would like to provide a raw request body when making a request. The content type may be provided via the method's second argument:
+Bạn có thể dùng phương thức `withBody` để cung cấp raw request body khi thực hiện request. Content type có thể được truyền qua đối số thứ hai của phương thức:
 
 ```php
 $response = Http::withBody(
@@ -162,9 +162,9 @@ $response = Http::withBody(
 ```
 
 <a name="multi-part-requests"></a>
-#### Multi-Part Requests
+#### Request multipart
 
-If you would like to send files as multi-part requests, you should call the `attach` method before making your request. This method accepts the name of the file and its contents. If needed, you may provide a third argument which will be considered the file's filename, while a fourth argument may be used to provide headers associated with the file:
+Nếu muốn gửi file dưới dạng request multipart, bạn nên gọi phương thức `attach` trước khi thực hiện request. Phương thức này nhận tên file và nội dung file. Khi cần, bạn có thể truyền đối số thứ ba làm filename của file, còn đối số thứ tư dùng để cung cấp các header liên quan đến file:
 
 ```php
 $response = Http::attach(
@@ -172,7 +172,7 @@ $response = Http::attach(
 )->post('http://example.com/attachments');
 ```
 
-Instead of passing the raw contents of a file, you may pass a stream resource:
+Thay vì truyền trực tiếp nội dung thô của file, bạn có thể truyền một stream resource:
 
 ```php
 $photo = fopen('photo.jpg', 'r');
@@ -183,9 +183,9 @@ $response = Http::attach(
 ```
 
 <a name="headers"></a>
-### Headers
+### Header
 
-Headers may be added to requests using the `withHeaders` method. This `withHeaders` method accepts an array of key / value pairs:
+Bạn có thể thêm header vào request bằng phương thức `withHeaders`. Phương thức này nhận một mảng các cặp key / value:
 
 ```php
 $response = Http::withHeaders([
@@ -196,19 +196,19 @@ $response = Http::withHeaders([
 ]);
 ```
 
-You may use the `accept` method to specify the content type that your application is expecting in response to your request:
+Bạn có thể dùng phương thức `accept` để chỉ định content type mà ứng dụng mong đợi trong response:
 
 ```php
 $response = Http::accept('application/json')->get('http://example.com/users');
 ```
 
-For convenience, you may use the `acceptJson` method to quickly specify that your application expects the `application/json` content type in response to your request:
+Để thuận tiện, bạn có thể dùng phương thức `acceptJson` để nhanh chóng chỉ định rằng ứng dụng mong đợi content type `application/json` trong response:
 
 ```php
 $response = Http::acceptJson()->get('http://example.com/users');
 ```
 
-The `withHeaders` method merges new headers into the request's existing headers. If needed, you may replace all of the headers entirely using the `replaceHeaders` method:
+Phương thức `withHeaders` merge các header mới vào những header hiện có của request. Khi cần, bạn có thể thay thế toàn bộ header bằng phương thức `replaceHeaders`:
 
 ```php
 $response = Http::withHeaders([
@@ -221,9 +221,9 @@ $response = Http::withHeaders([
 ```
 
 <a name="authentication"></a>
-### Authentication
+### Xác thực
 
-You may specify basic and digest authentication credentials using the `withBasicAuth` and `withDigestAuth` methods, respectively:
+Bạn có thể chỉ định thông tin xác thực Basic và Digest lần lượt bằng các phương thức `withBasicAuth` và `withDigestAuth`:
 
 ```php
 // Basic authentication...
@@ -234,9 +234,9 @@ $response = Http::withDigestAuth('taylor@laravel.com', 'secret')->post(/* ... */
 ```
 
 <a name="bearer-tokens"></a>
-#### Bearer Tokens
+#### Bearer token
 
-If you would like to quickly add a bearer token to the request's `Authorization` header, you may use the `withToken` method:
+Nếu muốn nhanh chóng thêm bearer token vào header `Authorization` của request, bạn có thể dùng phương thức `withToken`:
 
 ```php
 $response = Http::withToken('token')->post(/* ... */);
@@ -245,30 +245,30 @@ $response = Http::withToken('token')->post(/* ... */);
 <a name="timeout"></a>
 ### Timeout
 
-The `timeout` method may be used to specify the maximum number of seconds to wait for a response. By default, the HTTP client will timeout after 30 seconds:
+Phương thức `timeout` dùng để chỉ định số giây tối đa chờ response. Mặc định, HTTP client sẽ timeout sau 30 giây:
 
 ```php
 $response = Http::timeout(3)->get(/* ... */);
 ```
 
-If the given timeout is exceeded, an instance of `Illuminate\Http\Client\ConnectionException` will be thrown.
+Nếu vượt quá timeout đã chỉ định, một instance của `Illuminate\Http\Client\ConnectionException` sẽ được throw.
 
-You may specify the maximum number of seconds to wait while trying to connect to a server using the `connectTimeout` method. The default is 10 seconds:
+Bạn có thể chỉ định số giây tối đa chờ khi cố gắng kết nối đến server bằng phương thức `connectTimeout`. Giá trị mặc định là 10 giây:
 
 ```php
 $response = Http::connectTimeout(3)->get(/* ... */);
 ```
 
 <a name="retries"></a>
-### Retries
+### Thử lại
 
-If you would like the HTTP client to automatically retry the request if a client or server error occurs, you may use the `retry` method. The `retry` method accepts the maximum number of times the request should be attempted and the number of milliseconds that Laravel should wait in between attempts:
+Nếu muốn HTTP client tự động thử lại request khi xảy ra lỗi phía client hoặc server, bạn có thể dùng phương thức `retry`. Phương thức `retry` nhận số lần thử tối đa và số mili giây Laravel cần chờ giữa các lần thử:
 
 ```php
 $response = Http::retry(3, 100)->post(/* ... */);
 ```
 
-If you would like to manually calculate the number of milliseconds to sleep between attempts, you may pass a closure as the second argument to the `retry` method:
+Nếu muốn tự tính số mili giây chờ giữa các lần thử, bạn có thể truyền một closure làm đối số thứ hai cho phương thức `retry`:
 
 ```php
 use Exception;
@@ -278,13 +278,13 @@ $response = Http::retry(3, function (int $attempt, Exception $exception) {
 })->post(/* ... */);
 ```
 
-For convenience, you may also provide an array as the first argument to the `retry` method. This array will be used to determine how many milliseconds to sleep between subsequent attempts:
+Để thuận tiện, bạn cũng có thể truyền một mảng làm đối số đầu tiên cho phương thức `retry`. Mảng này được dùng để xác định số mili giây cần chờ giữa các lần thử kế tiếp:
 
 ```php
 $response = Http::retry([100, 200])->post(/* ... */);
 ```
 
-If needed, you may pass a third argument to the `retry` method. The third argument should be a callable that determines if the retries should actually be attempted. For example, you may wish to only retry the request if the initial request encounters an `ConnectionException`:
+Khi cần, bạn có thể truyền argument thứ ba cho method `retry`. Argument này phải là một callable quyết định có thực sự retry hay không. Ví dụ, bạn có thể chỉ muốn retry request khi lần request đầu tiên gặp `ConnectionException`:
 
 ```php
 use Illuminate\Http\Client\PendingRequest;
@@ -295,7 +295,7 @@ $response = Http::retry(3, 100, function (Throwable $exception, PendingRequest $
 })->post(/* ... */);
 ```
 
-If a request attempt fails, you may wish to make a change to the request before a new attempt is made. You can achieve this by modifying the request argument provided to the callable you provided to the `retry` method. For example, you might want to retry the request with a new authorization token if the first attempt returned an authentication error:
+Nếu một lần request thất bại, bạn có thể muốn thay đổi request trước khi thực hiện attempt mới. Bạn có thể làm điều này bằng cách chỉnh sửa argument request được truyền vào callable của method `retry`. Ví dụ, bạn có thể retry request với authorization token mới nếu attempt đầu tiên trả về authentication error:
 
 ```php
 use Illuminate\Http\Client\PendingRequest;
@@ -313,19 +313,19 @@ $response = Http::withToken($this->getToken())->retry(2, 0, function (Throwable 
 })->post(/* ... */);
 ```
 
-If all of the requests fail, an instance of `Illuminate\Http\Client\RequestException` will be thrown. If you would like to disable this behavior, you may provide a `throw` argument with a value of `false`. When disabled, the last response received by the client will be returned after all retries have been attempted:
+Nếu tất cả request đều thất bại, một instance của `Illuminate\Http\Client\RequestException` sẽ được throw. Nếu muốn tắt hành vi này, bạn có thể truyền đối số `throw` với giá trị `false`. Khi đó, response cuối cùng mà client nhận được sẽ được trả về sau khi đã thực hiện hết các lần thử lại:
 
 ```php
 $response = Http::retry(3, 100, throw: false)->post(/* ... */);
 ```
 
 > [!WARNING]
-> If all of the requests fail because of a connection issue, a `Illuminate\Http\Client\ConnectionException` will still be thrown even when the `throw` argument is set to `false`.
+> Nếu tất cả request đều thất bại do sự cố kết nối, `Illuminate\Http\Client\ConnectionException` vẫn sẽ được throw ngay cả khi đối số `throw` được đặt thành `false`.
 
 <a name="error-handling"></a>
-### Error Handling
+### Xử lý lỗi
 
-Unlike Guzzle's default behavior, Laravel's HTTP client wrapper does not throw exceptions on client or server errors (`400` and `500` level responses from servers). You may determine if one of these errors was returned using the `successful`, `clientError`, or `serverError` methods:
+Khác với hành vi mặc định của Guzzle, HTTP client wrapper của Laravel không throw exception khi gặp lỗi phía client hoặc server (response nhóm `400` và `500`). Bạn có thể xác định một trong các lỗi này có được trả về hay không bằng các phương thức `successful`, `clientError` hoặc `serverError`:
 
 ```php
 // Determine if the status code is >= 200 and < 300...
@@ -345,9 +345,9 @@ $response->onError(callable $callback);
 ```
 
 <a name="throwing-exceptions"></a>
-#### Throwing Exceptions
+#### Throw exception
 
-If you have a response instance and would like to throw an instance of `Illuminate\Http\Client\RequestException` if the response status code indicates a client or server error, you may use the `throw` or `throwIf` methods:
+Nếu có một response instance và muốn throw `Illuminate\Http\Client\RequestException` khi status code cho biết có lỗi phía client hoặc server, bạn có thể sử dụng phương thức `throw` hoặc `throwIf`:
 
 ```php
 use Illuminate\Http\Client\Response;
@@ -384,15 +384,15 @@ $response->throwIfClientError();
 return $response['user']['id'];
 ```
 
-The `Illuminate\Http\Client\RequestException` instance has a public `$response` property which will allow you to inspect the returned response.
+Instance `Illuminate\Http\Client\RequestException` có thuộc tính public `$response`, cho phép bạn kiểm tra response được trả về.
 
-The `throw` method returns the response instance if no error occurred, allowing you to chain other operations onto the `throw` method:
+Phương thức `throw` trả về instance response nếu không xảy ra lỗi, nhờ đó bạn có thể tiếp tục chain các thao tác khác sau `throw`:
 
 ```php
 return Http::post(/* ... */)->throw()->json();
 ```
 
-If you would like to perform some additional logic before the exception is thrown, you may pass a closure to the `throw` method. The exception will be thrown automatically after the closure is invoked, so you do not need to re-throw the exception from within the closure:
+Nếu muốn thực hiện logic bổ sung trước khi exception được throw, bạn có thể truyền một closure cho method `throw`. Exception sẽ tự động được throw sau khi closure được gọi, vì vậy bạn không cần tự re-throw exception bên trong closure:
 
 ```php
 use Illuminate\Http\Client\Response;
@@ -403,7 +403,7 @@ return Http::post(/* ... */)->throw(function (Response $response, RequestExcepti
 })->json();
 ```
 
-By default, `RequestException` messages are truncated to 120 characters when logged or reported. To customize or disable this behavior, you may utilize the `truncateAt` and `dontTruncate` methods when configuring your application's registered behavior in your `bootstrap/app.php` file:
+Mặc định, message của `RequestException` bị truncate còn 120 ký tự khi được log hoặc report. Để tùy biến hoặc tắt hành vi này, bạn có thể dùng method `truncateAt` và `dontTruncate` khi cấu hình behavior đã đăng ký của ứng dụng trong file `bootstrap/app.php`:
 
 ```php
 use Illuminate\Http\Client\RequestException;
@@ -417,16 +417,16 @@ use Illuminate\Http\Client\RequestException;
 })
 ```
 
-Alternatively, you may customize the exception truncation behavior per request using the `truncateExceptionsAt` method:
+Ngoài ra, bạn có thể tùy biến behavior truncate exception theo từng request bằng method `truncateExceptionsAt`:
 
 ```php
 return Http::truncateExceptionsAt(240)->post(/* ... */);
 ```
 
 <a name="guzzle-middleware"></a>
-### Guzzle Middleware
+### Middleware của Guzzle
 
-Since Laravel's HTTP client is powered by Guzzle, you may take advantage of [Guzzle Middleware](https://docs.guzzlephp.org/en/stable/handlers-and-middleware.html) to manipulate the outgoing request or inspect the incoming response. To manipulate the outgoing request, register a Guzzle middleware via the `withRequestMiddleware` method:
+Vì HTTP client của Laravel được xây trên Guzzle, bạn có thể tận dụng [Guzzle Middleware](https://docs.guzzlephp.org/en/stable/handlers-and-middleware.html) để thay đổi outgoing request hoặc inspect incoming response. Để thay đổi outgoing request, hãy đăng ký Guzzle middleware bằng method `withRequestMiddleware`:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -439,7 +439,7 @@ $response = Http::withRequestMiddleware(
 )->get('http://example.com');
 ```
 
-Likewise, you can inspect the incoming HTTP response by registering a middleware via the `withResponseMiddleware` method:
+Tương tự, bạn có thể inspect incoming HTTP response bằng cách đăng ký middleware qua method `withResponseMiddleware`:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -457,9 +457,9 @@ $response = Http::withResponseMiddleware(
 ```
 
 <a name="global-middleware"></a>
-#### Global Middleware
+#### Middleware toàn cục
 
-Sometimes, you may want to register a middleware that applies to every outgoing request and incoming response. To accomplish this, you may use the `globalRequestMiddleware` and `globalResponseMiddleware` methods. Typically, these methods should be invoked in the `boot` method of your application's `AppServiceProvider`:
+Đôi khi bạn muốn đăng ký middleware áp dụng cho mọi request gửi đi và response nhận về. Khi đó, có thể dùng `globalRequestMiddleware` và `globalResponseMiddleware`. Thông thường, các phương thức này nên được gọi trong `boot` của `AppServiceProvider`:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -474,9 +474,9 @@ Http::globalResponseMiddleware(fn ($response) => $response->withHeader(
 ```
 
 <a name="guzzle-options"></a>
-### Guzzle Options
+### Tùy chọn Guzzle
 
-You may specify additional [Guzzle request options](http://docs.guzzlephp.org/en/stable/request-options.html) for an outgoing request using the `withOptions` method. The `withOptions` method accepts an array of key / value pairs:
+Bạn có thể chỉ định thêm [Guzzle request option](http://docs.guzzlephp.org/en/stable/request-options.html) cho outgoing request bằng method `withOptions`. Method `withOptions` nhận một mảng key / value:
 
 ```php
 $response = Http::withOptions([
@@ -485,9 +485,9 @@ $response = Http::withOptions([
 ```
 
 <a name="global-options"></a>
-#### Global Options
+#### Tùy chọn toàn cục
 
-To configure default options for every outgoing request, you may utilize the `globalOptions` method. Typically, this method should be invoked from the `boot` method of your application's `AppServiceProvider`:
+Để cấu hình tùy chọn mặc định cho mọi request gửi đi, bạn có thể dùng `globalOptions`. Thông thường, phương thức này nên được gọi từ `boot` của `AppServiceProvider`:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -504,14 +504,14 @@ public function boot(): void
 ```
 
 <a name="concurrent-requests"></a>
-## Concurrent Requests
+## Request đồng thời
 
-Sometimes, you may wish to make multiple HTTP requests concurrently. In other words, you want several requests to be dispatched at the same time instead of issuing the requests sequentially. This can lead to substantial performance improvements when interacting with slow HTTP APIs.
+Đôi khi bạn cần thực hiện nhiều HTTP request đồng thời, tức là gửi nhiều request cùng lúc thay vì tuần tự. Cách này có thể cải thiện đáng kể hiệu năng khi làm việc với các HTTP API phản hồi chậm.
 
 <a name="request-pooling"></a>
-### Request Pooling
+### Gom request vào pool
 
-Thankfully, you may accomplish this using the `pool` method. The `pool` method accepts a closure which receives an `Illuminate\Http\Client\Pool` instance, allowing you to easily add requests to the request pool for dispatching:
+Bạn có thể thực hiện việc này bằng phương thức `pool`. Phương thức `pool` nhận một closure với instance `Illuminate\Http\Client\Pool`, cho phép dễ dàng thêm các request vào pool để gửi đi:
 
 ```php
 use Illuminate\Http\Client\Pool;
@@ -528,7 +528,7 @@ return $responses[0]->ok() &&
        $responses[2]->ok();
 ```
 
-As you can see, each response instance can be accessed based on the order it was added to the pool. If you wish, you can name the requests using the `as` method, which allows you to access the corresponding responses by name:
+Như bạn thấy, mỗi response instance có thể được truy cập dựa trên thứ tự request được thêm vào pool. Nếu muốn, bạn có thể đặt tên request bằng method `as`, từ đó truy cập response tương ứng theo tên:
 
 ```php
 use Illuminate\Http\Client\Pool;
@@ -543,7 +543,7 @@ $responses = Http::pool(fn (Pool $pool) => [
 return $responses['first']->ok();
 ```
 
-The maximum concurrency of the request pool may be controlled by providing the `concurrency` argument to the `pool` method. This value determines the maximum number of HTTP requests that may be concurrently in-flight while processing the request pool:
+Maximum concurrency của request pool có thể được kiểm soát bằng argument `concurrency` của method `pool`. Giá trị này xác định số HTTP request tối đa có thể đồng thời in-flight trong lúc xử lý request pool:
 
 ```php
 $responses = Http::pool(fn (Pool $pool) => [
@@ -551,7 +551,7 @@ $responses = Http::pool(fn (Pool $pool) => [
 ], concurrency: 5);
 ```
 
-If a pooled request fails at the connection level (for example, a timeout or DNS failure), the corresponding entry in the `$responses` array will be an `Illuminate\Http\Client\ConnectionException` instance instead of a `Response` instance:
+Nếu một pooled request thất bại ở connection level, chẳng hạn timeout hoặc DNS failure, entry tương ứng trong mảng `$responses` sẽ là instance `Illuminate\Http\Client\ConnectionException` thay vì instance `Response`:
 
 ```php
 foreach ($responses as $response) {
@@ -564,9 +564,9 @@ foreach ($responses as $response) {
 ```
 
 <a name="customizing-concurrent-requests"></a>
-#### Customizing Concurrent Requests
+#### Tùy chỉnh request đồng thời
 
-The `pool` method cannot be chained with other HTTP client methods such as the `withHeaders` or `middleware` methods. If you want to apply custom headers or middleware to pooled requests, you should configure those options on each request in the pool:
+Method `pool` không thể chain với các HTTP client method khác như `withHeaders` hoặc `middleware`. Nếu muốn áp dụng custom header hay middleware cho pooled request, bạn nên cấu hình các option đó trên từng request trong pool:
 
 ```php
 use Illuminate\Http\Client\Pool;
@@ -584,9 +584,9 @@ $responses = Http::pool(fn (Pool $pool) => [
 ```
 
 <a name="request-batching"></a>
-### Request Batching
+### Gom request thành batch
 
-Another way of working with concurrent requests in Laravel is to use the `batch` method. Like the `pool` method, it accepts a closure which receives an `Illuminate\Http\Client\Batch` instance, allowing you to easily add requests to the request pool for dispatching, but it also allows you to define completion callbacks:
+Một cách khác để xử lý concurrent request trong Laravel là dùng method `batch`. Tương tự `pool`, method này nhận một closure nhận instance `Illuminate\Http\Client\Batch`, cho phép bạn dễ dàng thêm request vào request pool để dispatch, đồng thời còn cho phép định nghĩa completion callback:
 
 ```php
 use Illuminate\Http\Client\Batch;
@@ -612,7 +612,7 @@ $responses = Http::batch(fn (Batch $batch) => [
 })->send();
 ```
 
-Like the `pool` method, you can use the `as` method to name your requests:
+Tương tự method `pool`, bạn có thể dùng method `as` để đặt tên request:
 
 ```php
 $responses = Http::batch(fn (Batch $batch) => [
@@ -622,9 +622,9 @@ $responses = Http::batch(fn (Batch $batch) => [
 ])->send();
 ```
 
-After a `batch` is started by calling the `send` method, you can't add new requests to it. Trying to do so will result in a `Illuminate\Http\Client\BatchInProgressException` exception being thrown.
+Sau khi `batch` được start bằng cách gọi method `send`, bạn không thể thêm request mới. Nếu cố làm vậy, Laravel sẽ throw exception `Illuminate\Http\Client\BatchInProgressException`.
 
-The maximum concurrency of the request batch may be controlled via the `concurrency` method. This value determines the maximum number of HTTP requests that may be concurrently in-flight while processing the request batch:
+Maximum concurrency của request batch có thể được kiểm soát bằng method `concurrency`. Giá trị này xác định số HTTP request tối đa có thể đồng thời in-flight trong lúc xử lý batch:
 
 ```php
 $responses = Http::batch(fn (Batch $batch) => [
@@ -633,9 +633,9 @@ $responses = Http::batch(fn (Batch $batch) => [
 ```
 
 <a name="inspecting-batches"></a>
-#### Inspecting Batches
+#### Kiểm tra batch
 
-The `Illuminate\Http\Client\Batch` instance that is provided to batch completion callbacks has a variety of properties and methods to assist you in interacting with and inspecting a given batch of requests:
+Instance `Illuminate\Http\Client\Batch` được truyền cho các batch completion callback có nhiều property và method giúp bạn tương tác với và inspect một request batch cụ thể:
 
 ```php
 // The number of requests assigned to the batch...
@@ -657,9 +657,9 @@ $batch->finished();
 $batch->hasFailures();
 ```
 <a name="deferring-batches"></a>
-#### Deferring Batches
+#### Trì hoãn batch
 
-When the `defer` method is invoked, the batch of requests is not executed immediately. Instead, Laravel will execute the batch after the current application request's HTTP response has been sent to the user, keeping your application feeling fast and responsive:
+Khi method `defer` được gọi, batch request không được thực thi ngay. Thay vào đó, Laravel sẽ thực thi batch sau khi HTTP response của application request hiện tại đã được gửi về người dùng, giúp ứng dụng luôn phản hồi nhanh và mượt:
 
 ```php
 use Illuminate\Http\Client\Batch;
@@ -675,9 +675,9 @@ $responses = Http::batch(fn (Batch $batch) => [
 ```
 
 <a name="macros"></a>
-## Macros
+## Macro
 
-The Laravel HTTP client allows you to define "macros", which can serve as a fluent, expressive mechanism to configure common request paths and headers when interacting with services throughout your application. To get started, you may define the macro within the `boot` method of your application's `App\Providers\AppServiceProvider` class:
+HTTP client của Laravel cho phép bạn định nghĩa "macro", đóng vai trò là cơ chế fluent và dễ diễn đạt để cấu hình các request path và header dùng chung khi tương tác với service trong toàn ứng dụng. Để bắt đầu, bạn có thể định nghĩa macro trong method `boot` của class `App\Providers\AppServiceProvider`:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -695,21 +695,21 @@ public function boot(): void
 }
 ```
 
-Once your macro has been configured, you may invoke it from anywhere in your application to create a pending request with the specified configuration:
+Sau khi macro đã được cấu hình, bạn có thể gọi nó ở bất kỳ đâu trong ứng dụng để tạo pending request với cấu hình đã chỉ định:
 
 ```php
 $response = Http::github()->get('/');
 ```
 
 <a name="testing"></a>
-## Testing
+## Kiểm thử
 
-Many Laravel services provide functionality to help you easily and expressively write tests, and Laravel's HTTP client is no exception. The `Http` facade's `fake` method allows you to instruct the HTTP client to return stubbed / dummy responses when requests are made.
+Nhiều service của Laravel cung cấp các tiện ích giúp viết test dễ dàng và rõ ràng; HTTP client cũng vậy. Phương thức `fake` của facade `Http` cho phép HTTP client trả về response giả lập khi request được thực hiện.
 
 <a name="faking-responses"></a>
-### Faking Responses
+### Giả lập response
 
-For example, to instruct the HTTP client to return empty, `200` status code responses for every request, you may call the `fake` method with no arguments:
+Ví dụ, để yêu cầu HTTP client trả về response rỗng với status code `200` cho mọi request, bạn có thể gọi method `fake` không truyền argument:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -720,9 +720,9 @@ $response = Http::post(/* ... */);
 ```
 
 <a name="faking-specific-urls"></a>
-#### Faking Specific URLs
+#### Giả lập URL cụ thể
 
-Alternatively, you may pass an array to the `fake` method. The array's keys should represent URL patterns that you wish to fake and their associated responses. The `*` character may be used as a wildcard character. You may use the `Http` facade's `response` method to construct stub / fake responses for these endpoints:
+Ngoài ra, bạn có thể truyền một array cho method `fake`. Key của array nên là URL pattern cần fake và value là response tương ứng. Ký tự `*` có thể dùng làm wildcard. Bạn có thể dùng method `response` của facade `Http` để tạo stub / fake response cho các endpoint này:
 
 ```php
 Http::fake([
@@ -734,7 +734,7 @@ Http::fake([
 ]);
 ```
 
-Any requests made to URLs that have not been faked will actually be executed. If you would like to specify a fallback URL pattern that will stub all unmatched URLs, you may use a single `*` character:
+Mọi request tới URL chưa được fake sẽ thực sự được thực thi. Nếu muốn chỉ định fallback URL pattern để stub mọi URL không khớp, bạn có thể dùng một ký tự `*` duy nhất:
 
 ```php
 Http::fake([
@@ -746,7 +746,7 @@ Http::fake([
 ]);
 ```
 
-For convenience, simple string, JSON, and empty responses may be generated by providing a string, array, or integer as the response:
+Để thuận tiện, bạn có thể tạo response string, JSON hoặc empty đơn giản bằng cách truyền string, array hoặc integer làm response:
 
 ```php
 Http::fake([
@@ -757,9 +757,9 @@ Http::fake([
 ```
 
 <a name="faking-connection-exceptions"></a>
-#### Faking Exceptions
+#### Giả lập exception
 
-Sometimes you may need to test your application's behavior if the HTTP client encounters an `Illuminate\Http\Client\ConnectionException` when attempting to make a request. You can instruct the HTTP client to throw a connection exception using the `failedConnection` method:
+Đôi khi bạn cần test behavior của ứng dụng khi HTTP client gặp `Illuminate\Http\Client\ConnectionException` trong lúc thực hiện request. Bạn có thể yêu cầu HTTP client throw connection exception bằng method `failedConnection`:
 
 ```php
 Http::fake([
@@ -767,7 +767,7 @@ Http::fake([
 ]);
 ```
 
-To test your application's behavior if a `Illuminate\Http\Client\RequestException` is thrown, you may use the `failedRequest` method:
+Để test behavior của ứng dụng khi `Illuminate\Http\Client\RequestException` bị throw, bạn có thể dùng method `failedRequest`:
 
 ```php
 $this->mock(GithubService::class);
@@ -778,9 +778,9 @@ $this->mock(GithubService::class);
 ```
 
 <a name="faking-response-sequences"></a>
-#### Faking Response Sequences
+#### Giả lập chuỗi response
 
-Sometimes you may need to specify that a single URL should return a series of fake responses in a specific order. You may accomplish this using the `Http::sequence` method to build the responses:
+Đôi khi bạn cần quy định một URL duy nhất trả về một chuỗi fake response theo thứ tự cụ thể. Bạn có thể dùng method `Http::sequence` để xây dựng các response:
 
 ```php
 Http::fake([
@@ -792,7 +792,7 @@ Http::fake([
 ]);
 ```
 
-When all the responses in a response sequence have been consumed, any further requests will cause the response sequence to throw an exception. If you would like to specify a default response that should be returned when a sequence is empty, you may use the `whenEmpty` method:
+Khi toàn bộ response trong response sequence đã được consume, các request tiếp theo sẽ khiến sequence throw exception. Nếu muốn chỉ định default response được trả về khi sequence rỗng, bạn có thể dùng method `whenEmpty`:
 
 ```php
 Http::fake([
@@ -804,7 +804,7 @@ Http::fake([
 ]);
 ```
 
-If you would like to fake a sequence of responses but do not need to specify a specific URL pattern that should be faked, you may use the `Http::fakeSequence` method:
+Nếu muốn fake một sequence response nhưng không cần chỉ định URL pattern cụ thể, bạn có thể dùng method `Http::fakeSequence`:
 
 ```php
 Http::fakeSequence()
@@ -813,9 +813,9 @@ Http::fakeSequence()
 ```
 
 <a name="fake-callback"></a>
-#### Fake Callback
+#### Callback giả lập
 
-If you require more complicated logic to determine what responses to return for certain endpoints, you may pass a closure to the `fake` method. This closure will receive an instance of `Illuminate\Http\Client\Request` and should return a response instance. Within your closure, you may perform whatever logic is necessary to determine what type of response to return:
+Nếu cần logic phức tạp hơn để quyết định response nào được trả về cho từng endpoint, bạn có thể truyền closure cho method `fake`. Closure này nhận instance `Illuminate\Http\Client\Request` và phải trả về response instance. Bên trong closure, bạn có thể thực hiện logic cần thiết để xác định loại response cần trả về:
 
 ```php
 use Illuminate\Http\Client\Request;
@@ -826,11 +826,11 @@ Http::fake(function (Request $request) {
 ```
 
 <a name="inspecting-requests"></a>
-### Inspecting Requests
+### Kiểm tra request
 
-When faking responses, you may occasionally wish to inspect the requests the client receives in order to make sure your application is sending the correct data or headers. You may accomplish this by calling the `Http::assertSent` method after calling `Http::fake`.
+Khi fake response, đôi khi bạn muốn inspect các request mà client nhận được để bảo đảm ứng dụng gửi đúng data hoặc header. Bạn có thể làm điều này bằng cách gọi method `Http::assertSent` sau `Http::fake`.
 
-The `assertSent` method accepts a closure which will receive an `Illuminate\Http\Client\Request` instance and should return a boolean value indicating if the request matches your expectations. In order for the test to pass, at least one request must have been issued matching the given expectations:
+Method `assertSent` nhận một closure, closure này nhận instance `Illuminate\Http\Client\Request` và phải trả về boolean cho biết request có khớp expectation hay không. Để test pass, phải có ít nhất một request đã được gửi và khớp expectation đã cho:
 
 ```php
 use Illuminate\Http\Client\Request;
@@ -853,7 +853,7 @@ Http::assertSent(function (Request $request) {
 });
 ```
 
-If needed, you may assert that a specific request was not sent using the `assertNotSent` method:
+Khi cần, bạn có thể assert một request cụ thể đã không được gửi bằng method `assertNotSent`:
 
 ```php
 use Illuminate\Http\Client\Request;
@@ -871,7 +871,7 @@ Http::assertNotSent(function (Request $request) {
 });
 ```
 
-You may use the `assertSentCount` method to assert how many requests were "sent" during the test:
+Bạn có thể dùng method `assertSentCount` để assert số lượng request đã được "sent" trong test:
 
 ```php
 Http::fake();
@@ -879,7 +879,7 @@ Http::fake();
 Http::assertSentCount(5);
 ```
 
-Or, you may use the `assertNothingSent` method to assert that no requests were sent during the test:
+Hoặc, bạn có thể dùng method `assertNothingSent` để assert không có request nào được gửi trong test:
 
 ```php
 Http::fake();
@@ -888,9 +888,9 @@ Http::assertNothingSent();
 ```
 
 <a name="recording-requests-and-responses"></a>
-#### Recording Requests / Responses
+#### Ghi lại request / response
 
-You may use the `recorded` method to gather all requests and their corresponding responses. The `recorded` method returns a collection of arrays that contains instances of `Illuminate\Http\Client\Request` and `Illuminate\Http\Client\Response`:
+Bạn có thể dùng method `recorded` để thu thập toàn bộ request và response tương ứng. Method `recorded` trả về collection các array chứa instance `Illuminate\Http\Client\Request` và `Illuminate\Http\Client\Response`:
 
 ```php
 Http::fake([
@@ -906,7 +906,7 @@ $recorded = Http::recorded();
 [$request, $response] = $recorded[0];
 ```
 
-Additionally, the `recorded` method accepts a closure which will receive an instance of `Illuminate\Http\Client\Request` and `Illuminate\Http\Client\Response` and may be used to filter request / response pairs based on your expectations:
+Ngoài ra, method `recorded` nhận một closure, closure này nhận instance `Illuminate\Http\Client\Request` và `Illuminate\Http\Client\Response`, và có thể được dùng để filter các cặp request / response theo expectation của bạn:
 
 ```php
 use Illuminate\Http\Client\Request;
@@ -927,9 +927,9 @@ $recorded = Http::recorded(function (Request $request, Response $response) {
 ```
 
 <a name="preventing-stray-requests"></a>
-### Preventing Stray Requests
+### Ngăn request ngoài dự kiến
 
-If you would like to ensure that all requests sent via the HTTP client have been faked throughout your individual test or complete test suite, you can call the `preventStrayRequests` method. After calling this method, any requests that do not have a corresponding fake response will throw an exception rather than making the actual HTTP request:
+Nếu muốn bảo đảm toàn bộ request gửi qua HTTP client đều được fake trong từng test hoặc toàn bộ test suite, bạn có thể gọi method `preventStrayRequests`. Sau khi gọi method này, mọi request không có fake response tương ứng sẽ throw exception thay vì thực hiện HTTP request thật:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -947,7 +947,7 @@ Http::get('https://github.com/laravel/framework');
 Http::get('https://laravel.com');
 ```
 
-Sometimes, you may wish to prevent most stray requests while still allowing specific requests to execute. To accomplish this, you may pass an array of URL patterns to the `allowStrayRequests` method. Any request matching one of the given patterns will be allowed, while all other requests will continue to throw an exception:
+Đôi khi, bạn muốn chặn hầu hết stray request nhưng vẫn cho phép một số request cụ thể được thực thi. Bạn có thể truyền mảng URL pattern cho method `allowStrayRequests`. Request khớp một trong các pattern sẽ được phép thực thi, còn các request khác vẫn tiếp tục throw exception:
 
 ```php
 use Illuminate\Support\Facades\Http;
@@ -966,11 +966,11 @@ Http::get('https://laravel.com');
 ```
 
 <a name="events"></a>
-## Events
+## Event
 
-Laravel fires three events during the process of sending HTTP requests. The `RequestSending` event is fired prior to a request being sent, while the `ResponseReceived` event is fired after a response is received for a given request. The `ConnectionFailed` event is fired if no response is received for a given request.
+Laravel phát ba event trong quá trình gửi HTTP request. Event `RequestSending` được phát trước khi gửi request, `ResponseReceived` được phát sau khi nhận response của request, và `ConnectionFailed` được phát nếu không nhận được response cho request.
 
-The `RequestSending` and `ConnectionFailed` events both contain a public `$request` property that you may use to inspect the `Illuminate\Http\Client\Request` instance. Likewise, the `ResponseReceived` event contains a `$request` property as well as a `$response` property which may be used to inspect the `Illuminate\Http\Client\Response` instance. You may create [event listeners](/docs/{{version}}/events) for these events within your application:
+Event `RequestSending` và `ConnectionFailed` đều chứa public property `$request` để bạn inspect instance `Illuminate\Http\Client\Request`. Tương tự, event `ResponseReceived` chứa property `$request` cùng property `$response` để inspect instance `Illuminate\Http\Client\Response`. Bạn có thể tạo [event listener](/docs/{{version}}/events) cho các event này trong ứng dụng:
 
 ```php
 use Illuminate\Http\Client\Events\RequestSending;
@@ -986,6 +986,8 @@ class LogRequest
     }
 }
 ```
+
+---
 
 ## Tài liệu chính thức
 
