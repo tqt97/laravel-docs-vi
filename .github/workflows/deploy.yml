@@ -2,7 +2,7 @@ name: Deploy VitePress to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
@@ -32,8 +32,16 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Cache VitePress
+        uses: actions/cache@v4
+        with:
+          path: docs/.vitepress/cache
+          key: ${{ runner.os }}-vitepress-${{ hashFiles('docs/**', 'package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vitepress-
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Validate docs
         run: npm run validate
@@ -41,9 +49,12 @@ jobs:
       - name: Build VitePress
         env:
           DOCS_BASE: /${{ github.event.repository.name }}/
-          SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+          SITE_URL: https://${{ github.repository_owner }}.github.io
           REPO_URL: https://github.com/${{ github.repository }}
         run: npm run docs:build
+
+      - name: Check generated SEO
+        run: npm run seo:check
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
